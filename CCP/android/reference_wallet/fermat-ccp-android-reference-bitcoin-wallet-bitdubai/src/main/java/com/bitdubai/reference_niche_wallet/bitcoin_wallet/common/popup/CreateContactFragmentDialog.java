@@ -32,6 +32,8 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanne
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
+import java.io.ByteArrayOutputStream;
+
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.validateAddress;
 
 /**
@@ -186,14 +188,32 @@ public class CreateContactFragmentDialog extends Dialog implements
             if (validAddress != null) {
 
                 // first i add the contact
-                cryptoWallet.createWalletContact(
-                        validAddress,
-                        contact_name.getText().toString(),
-                        null,
-                        null,
-                        Actors.EXTRA_USER,
-                        referenceWalletSession.getWalletSessionType().getWalletPublicKey()
-                );
+                //check photo is not null
+
+                if(contactImageBitmap!=null){
+
+                    cryptoWallet.createWalletContactWithPhoto(
+                            validAddress,
+                            contact_name.getText().toString(),
+                            null,
+                            null,
+                            Actors.EXTRA_USER,
+                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                            toByteArray(contactImageBitmap)
+                    );
+                }
+                else
+                {
+                    cryptoWallet.createWalletContact(
+                            validAddress,
+                            contact_name.getText().toString(),
+                            null,
+                            null,
+                            Actors.EXTRA_USER,
+                            referenceWalletSession.getWalletSessionType().getWalletPublicKey()
+                    );
+                }
+
 
                 Toast.makeText(activity.getApplicationContext(), "Contact saved!", Toast.LENGTH_SHORT).show();
                 
@@ -247,7 +267,17 @@ public class CreateContactFragmentDialog extends Dialog implements
     }
 
 
-
+    /**
+     * Bitmap to byte[]
+     *
+     * @param bitmap Bitmap
+     * @return byte array
+     */
+    private byte[] toByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }
 
 
 }

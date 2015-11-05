@@ -30,6 +30,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
 
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 
@@ -116,7 +118,7 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
             return walletContactsRegistry;
         } catch (CantInitializeWalletContactsMiddlewareDatabaseException exception) {
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantGetWalletContactRegistryException(CantGetWalletContactRegistryException.DEFAULT_MESSAGE, exception);
         } catch (Exception exception){
 
@@ -145,7 +147,7 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
             walletContactsRegistry.initialize();
         } catch (CantInitializeWalletContactsMiddlewareDatabaseException e) {
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e);
         }
         // execute pending address exchange requests
@@ -165,32 +167,29 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
     }
 
     private void executePendingAddressExchangeRequests(WalletContactsMiddlewareRegistry walletContactsRegistry) {
-//        try {
-//            List<AddressExchangeRequest> addressExchangeRequestRespondedList = cryptoAddressesManager.listPendingRequests(
-//                    actorType
-//            );
-//
-//            System.out.println("----------------------------\n" +
-//                    "WALLET CONTACT MIDDLEWARE  : executePendingAddressExchangeRequests " +  addressExchangeRequestRespondedList.size()
-//                    + "\n-------------------------------------------------");
-//
-//
-//            for (AddressExchangeRequest request : addressExchangeRequestRespondedList) {
-//
-//                if (request.getAction().equals(RequestAction.ACCEPT))
-//                    walletContactsRegistry.handleCryptoAddressReceivedEvent(request);
-//
-//                if (request.getAction().equals(RequestAction.DENY))
-//                    walletContactsRegistry.handleCryptoAddressDeniedEvent(request);
-//
-//            }
-//
-//        } catch(CantListPendingAddressExchangeRequestsException |
-//                CantHandleCryptoAddressDeniedEventException     |
-//                CantHandleCryptoAddressReceivedEventException   e) {
-//
-//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-//        }
+        try {
+            List<CryptoAddressRequest> list = cryptoAddressesManager.listPendingCryptoAddressRequests();
+
+            System.out.println("----------------------------\n" +
+                    "WALLET CONTACT MIDDLEWARE  : executePendingAddressExchangeRequests " +  list.size()
+                    + "\n-------------------------------------------------");
+
+            for (CryptoAddressRequest request : list) {
+
+                if (request.getAction().equals(RequestAction.ACCEPT))
+                    walletContactsRegistry.handleCryptoAddressReceivedEvent(request);
+
+                if (request.getAction().equals(RequestAction.DENY))
+                    walletContactsRegistry.handleCryptoAddressDeniedEvent(request);
+
+            }
+
+        } catch(CantListPendingCryptoAddressRequestsException |
+                CantHandleCryptoAddressDeniedEventException   |
+                CantHandleCryptoAddressReceivedEventException e) {
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
     @Override
@@ -229,7 +228,7 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
             for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet())
                     WalletContactsMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
     }
 
@@ -249,7 +248,7 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
             WalletContactsMiddlewareDeveloperDatabaseFactory dbFactory = new WalletContactsMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             developerDatabaseList = dbFactory.getDatabaseList(developerObjectFactory);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
         return developerDatabaseList;
     }
@@ -261,7 +260,7 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
             WalletContactsMiddlewareDeveloperDatabaseFactory dbFactory = new WalletContactsMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             developerDatabaseTableList = dbFactory.getDatabaseTableList(developerObjectFactory);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
         return developerDatabaseTableList;
     }
@@ -274,9 +273,9 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
             dbFactory.initializeDatabase();
             developerDatabaseTableRecordList = dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeWalletContactsMiddlewareDatabaseException we) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, we);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, we);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
         return developerDatabaseTableRecordList;
     }
