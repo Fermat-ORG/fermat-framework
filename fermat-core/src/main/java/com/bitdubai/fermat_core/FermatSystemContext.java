@@ -39,7 +39,7 @@ public class FermatSystemContext {
 
     private final Map<PlatformReference, AbstractPlatform> platforms;
 
-    private final Object           osContext          ;
+    private final Object osContext;
 
     /**
      * Constructor without params, initializes the platforms Map with an empty concurrent hash map.

@@ -3,28 +3,23 @@ package com.bitdubai.fermat_core;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.OperativeSystems;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantCreateSystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
-
-import java.util.List;
 
 /**
  * The class <code>com.bitdubai.fermat_core.FermatSystem</code>
@@ -38,6 +33,7 @@ public final class FermatSystem {
     private final FermatAddonManager  fermatAddonManager ;
     private final FermatPluginManager fermatPluginManager;
 
+    // TODO DELETE THIS
     public FermatSystem(final Object osContext) {
 
         this.fermatSystemContext = new FermatSystemContext(osContext);
@@ -45,8 +41,25 @@ public final class FermatSystem {
         this.fermatPluginManager = new FermatPluginManager(fermatSystemContext, fermatAddonManager);
     }
 
+    public FermatSystem(final Object osContext, final AbstractPlatform abstractPlatform) throws CantCreateSystemException {
+
+        this.fermatSystemContext = new FermatSystemContext(osContext);
+        this.fermatAddonManager  = new FermatAddonManager(fermatSystemContext);
+        this.fermatPluginManager = new FermatPluginManager(fermatSystemContext, fermatAddonManager);
+
+        try {
+
+            this.registerOsaPlatform(abstractPlatform);
+
+        } catch (final CantRegisterPlatformException e) {
+
+            throw new CantCreateSystemException(e, "", "Error registering OSA Platform.");
+        }
+    }
+
     /**
      * Here we start all the platforms of Fermat, one by one.
+     * OSA Platform will be registered in the instantiation of fermat system class, this way we ensure that it will be a osa platform registered.
      *
      * @throws CantStartSystemException if something goes wrong.
      */
@@ -78,7 +91,7 @@ public final class FermatSystem {
 
     }
 
-    public final void registerOsaPlatform(final AbstractPlatform abstractPlatform) throws CantRegisterPlatformException {
+    private void registerOsaPlatform(final AbstractPlatform abstractPlatform) throws CantRegisterPlatformException {
 
         final PlatformReference pr = abstractPlatform.getPlatformReference();
 
@@ -152,6 +165,16 @@ public final class FermatSystem {
     public final AbstractPlugin getPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException {
 
         return fermatSystemContext.getPluginVersion(pluginVersionReference);
+    }
+
+    // TODO TEMPORAL METHOD
+    public final AbstractPlugin startAndGetPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException ,
+                                                                                                                     CantStartPluginException {
+
+        System.out.println("Starting Plugin: "+ pluginVersionReference.toString2());
+        AbstractPlugin abstractPlugin = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
+        System.out.println("End      Plugin: "+ pluginVersionReference.toString2());
+        return abstractPlugin;
     }
 
 }

@@ -401,10 +401,10 @@ public class Platform implements Serializable {
          * Plugin initialization                                                                                       *
          * ------------------------------------------------------------------------------------------------------------*
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-        initializePlugins();
+         initializePlugins();
 
         /*
-         * Check addon for developer interfaces
+         * Check addon for developer interfacesque
          */
         for (Addons registeredDescriptor : corePlatformContext.getRegisteredAddonskeys()) {
             checkAddonForDeveloperInterfaces(registeredDescriptor);

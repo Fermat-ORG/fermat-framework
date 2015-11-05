@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_osa_android_core.layer.android.plugin_file_system;
+package com.bitdubai.fermat_osa_android_core.layer.system.plugin_file_system;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;

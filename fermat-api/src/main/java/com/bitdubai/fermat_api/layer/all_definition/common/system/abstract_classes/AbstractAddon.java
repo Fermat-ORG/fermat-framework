@@ -37,7 +37,6 @@ public abstract class AbstractAddon implements Addon, Service {
 
     private final AddonVersionReference addonVersionReference;
     private final boolean               dealsWithOsContext   ;
-    private final OperativeSystems      operativeSystem      ;
     private       Object                osContext            ;
 
     protected     ServiceStatus         serviceStatus        ;
@@ -46,16 +45,14 @@ public abstract class AbstractAddon implements Addon, Service {
 
         this.addonVersionReference = addonVersionReference;
         this.dealsWithOsContext    = false;
-        this.operativeSystem       = OperativeSystems.INDIFFERENT;
         this.instantiateAddon();
     }
 
     public AbstractAddon(final AddonVersionReference addonVersionReference,
-                         final OperativeSystems      operativeSystem      ) {
+                         final boolean               dealsWithOsContext   ) {
 
         this.addonVersionReference = addonVersionReference;
-        this.operativeSystem       = operativeSystem;
-        this.dealsWithOsContext    = !operativeSystem.equals(OperativeSystems.INDIFFERENT);
+        this.dealsWithOsContext    = dealsWithOsContext;
         this.instantiateAddon();
     }
 
@@ -71,10 +68,6 @@ public abstract class AbstractAddon implements Addon, Service {
 
     public final boolean isDealsWithOsContext() {
         return dealsWithOsContext;
-    }
-
-    public final OperativeSystems getOperativeSystem() {
-        return operativeSystem;
     }
 
     @Override
