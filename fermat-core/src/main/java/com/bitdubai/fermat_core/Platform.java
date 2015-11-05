@@ -1344,7 +1344,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithPluginDatabaseSystem) {
-                ((DealsWithPluginDatabaseSystem) plugin).setPluginDatabaseSystem((PluginDatabaseSystem) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLATFORM_DATABASE_SYSTEM)));
+                ((DealsWithPluginDatabaseSystem) plugin).setPluginDatabaseSystem((PluginDatabaseSystem) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLUGIN_DATABASE_SYSTEM)));
             }
 
             if (plugin instanceof DealsWithToolManager) {
