@@ -1,8 +1,9 @@
-== FERMAT Marketing Platform: Marketing with Digital Assets 
+== Fermat Marketing Platform
+=== Marketing with Digital Assets 
 
 
 
-
+////
 === _Identity layer_
 Marketer :: +
 
@@ -39,7 +40,13 @@ Marketer :: +
 Voucher Wallet ::
 Coupon Wallet ::
 Discount Wallet :: +
+////
 
+==== Continue Reading
+
+link:book-chapter-21.asciidoc[Next Chapter]
+
+link:book-chapter-19.asciidoc[Previous Chapter]
 
 
 

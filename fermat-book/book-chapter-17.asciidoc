@@ -1,6 +1,15 @@
-== FERMAT Crypto Broker Platform
-In this platform the actors involved are the *cryptobroker* and his customers (*cryptocustomers*). A *cryptobroker* is a person or small organization whose business logic is to buy and sell cryptocurrency for fiat money in his local market, obtaining his profits from the difference in the buy/sell price. We distinguish also two common level of *cryptobrokers*, those acting as *cryptobrokers wholesalers* adn those who deal with final users/customers.   
-=== FERMAT Cryptobroker Wallet
+== Fermat Crypto Broker Platform
+In this platform the actors involved are the *cryptobroker* and his customers (*cryptocustomers*). A *cryptobroker* is a person or small organization whose business logic is to buy and sell cryptocurrency for fiat money in his local market, obtaining his profits from the difference in the buy/sell price. We distinguish also two usual levels of *cryptobrokers*, those acting as *cryptobrokers wholesalers* and those who deal with final users/customers.   
+
+=== New components
+The new components added to the framework offer the following functionalities:
+[horizontal]
+Fiat Index :: to check the exchange rate of fiat currencies.
+Business transactions :: to handle more complex transactions that include negotiation, agreement, sale and purchase of crypto and fiat money.
+Crypto Broker Platform Wallet Manager :: to manage different wallets according to multiple actor identities in the three actor types ( as cryptobroker, cryptocustomer, crypto wholesaler).
+Crypto Broker Wallets :: Crypto Broker Wallet , Crypto Broker Customer Wallet and Crypto Broker Wholesaler Wallet   +
+
+=== Fermat Cryptobroker Wallet
 This Wallet is designed with the theoretical assumption that the broker always has available stock of cryptocurrency and fiat money and that his activity is to be constantly selling this two kind of products obtaining profit. The functionalities offered should help him to run the business in a simple way, taking the responsability of the basic management of the broker's fund (in cryptocurrency and fiat money, in cash and in bank accounts), the management of the contact list of his customers, and a balance of the profits generated. +
 Key functionalities are:
 
@@ -17,9 +26,10 @@ Key functionalities are:
 
 
 
-=== FERMAT Cryptobroker Customer Wallet
+=== Fermat Cryptobroker Customer Wallet
 
 
+////
 === _Actor Network Service layer_
 Crypto Broker :: 
 Crypto Customer :: +
@@ -107,7 +117,14 @@ Suppliers :: +
 Crypto Broker :: 
 Crypto Customer :: +
 
+////
 
+==== Continue reading ...
+////
+link:book-chapter-19.asciidoc[Digital Assets Platform]
+////
 
+link:book-chapter-18.asciidoc[Next Chapter]
 
+link:book-chapter-16.asciidoc[Previous Chapter]
 

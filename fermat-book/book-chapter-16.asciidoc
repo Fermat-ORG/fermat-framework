@@ -1,0 +1,41 @@
+:numbered!:
+
+== Fermat Cash & Fermat Bank Platforms 
+These two platforms form the basic infrastructure to interact with the legacy financial system. +
+
+
+=== New components
+The new components added to the framework offer the following functionalities:
+[horizontal]
+Cash Money transactions :: to keep track of transaction where cash money is involved.
+Bank Money transactions :: to keep track of transaction where bank money is involved.
+Cash Money Wallet ::  only a *reference wallet* to provide services to other high level wallets by holding the accountancy of the end user's amount of cash.
+Bank Money Wallet ::  only a *reference wallet* to provide services to other high level wallets by holding the accountancy of the end user's amount of money in an specific bank account. +
+
+
+////
+==== _Wallet layer_
+Cash Money :: +
+
+==== _Cash Money Transaction layer_
+Give Cash On Hand ::
+Receive Cash On Hand ::
+Send Cash Delivery ::
+Receive Cash Delivery :: +
+
+==== _Wallet layer_
+Bank Money :: +
+
+==== _Bank Money Transaction layer_
+Make Offline Bank Transfer ::
+Receive Offline Bank Transfer :: +
+////
+
+==== Continue reading ...
+////
+link:book-chapter-19.asciidoc[Digital Assets Platform]
+////
+
+link:book-chapter-17.asciidoc[Next Chapter]
+
+link:book-chapter-15.asciidoc[Previous Chapter]

@@ -40,12 +40,14 @@ Are you interested in getting to know Phase I and II deeper? +
 Follow next chapters to get a more detailed description of each one.
 
 :numbered!:
+
+
   
-=== Continue Reading
+=== Continue Reading ...
 
 link:book-chapter-02.asciidoc[Next Chapter]
 
-link:book-intro.asciidoc[Previous Chapter]
+link:book-chapter-00(intro).asciidoc[Previous Chapter]
 
 
 
