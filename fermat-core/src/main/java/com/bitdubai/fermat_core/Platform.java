@@ -19,6 +19,9 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -34,20 +37,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.ObjectSizeFetcher;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DealsWithIdentityDesigner;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentityManager;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.DealsWithIdentityTranslator;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentityManager;
-import com.bitdubai.fermat_api.layer.osa_android.DataBaseSystemOs;
-import com.bitdubai.fermat_api.layer.osa_android.FileSystemOs;
-import com.bitdubai.fermat_api.layer.osa_android.LocationSystemOs;
-import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDeviceLocation;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DealsWithDeveloperIdentity;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentityManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
@@ -207,6 +206,66 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_statistics.interfaces.DealsWithWalletStatisticsNetworkService;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_statistics.interfaces.WalletStatisticsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
+
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.DealsWithOutgoingExtraUser;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.OutgoingExtraUserManager;
+
+import com.bitdubai.fermat_api.layer.osa_android.DataBaseSystemOs;
+import com.bitdubai.fermat_api.layer.osa_android.FileSystemOs;
+import com.bitdubai.fermat_api.layer.osa_android.LocationSystemOs;
+import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.DealsWithToolManager;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DealsWithIdentityDesigner;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentityManager;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DealsWithDeveloperIdentity;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentityManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.DealsWithPublisherIdentity;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.PublisherIdentityManager;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.DealsWithIdentityTranslator;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentityManager;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DealsWithDeveloperModule;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DeveloperModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.DealsWithExtraUsers;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
+import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
+import com.bitdubai.fermat_core.layer.pip_actor.ActorLayer;
+import com.bitdubai.fermat_core.layer.dmp_identity.IdentityLayer;
+
+import com.bitdubai.fermat_core.layer.all_definition.DefinitionLayer;
+import com.bitdubai.fermat_core.layer.dmp_world.WorldLayer;
+import com.bitdubai.fermat_core.layer.cry_crypto_network.CryptoNetworkLayer;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.CryptoNetworks;
+import com.bitdubai.fermat_core.layer.cry_cypto_vault.CryptoVaultLayer;
+import com.bitdubai.fermat_core.layer.cry_crypto_module.CryptoLayer;
+import com.bitdubai.fermat_core.layer.p2p_communication.CommunicationLayer;
+import com.bitdubai.fermat_core.layer.dmp_middleware.MiddlewareLayer;
+import com.bitdubai.fermat_core.layer.dmp_module.ModuleLayer;
+import com.bitdubai.fermat_core.layer.dmp_agent.AgentLayer;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.DealsWithPlatformInfo;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.DealsWithWalletPublisherModule;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.DealsWithWalletStoreModule;
@@ -273,33 +332,6 @@ public class Platform implements Serializable {
      */
     private CorePlatformContext corePlatformContext;
 
-    private Map<Platforms, AbstractPlatform> platformsMap;
-
-    /**
-     * Represent the osContext
-     */
-    private Object osContext;
-
-    /**
-     * Represent the fileSystemOs
-     */
-    private FileSystemOs fileSystemOs;
-
-    /**
-     * Represent the databaseSystemOs
-     */
-    private DataBaseSystemOs databaseSystemOs;
-
-    /**
-     * Represent the locationSystemOs
-     */
-    private LocationSystemOs locationSystemOs;
-
-    /**
-     * Represent the loggerSystemOs
-     */
-    private LoggerSystemOs loggerSystemOs;
-
     private FermatSystem fermatSystem;
 
     public void setFermatSystem(FermatSystem fermatSystem) {
@@ -317,7 +349,6 @@ public class Platform implements Serializable {
         dealsWithDatabaseManagersAddons = new ConcurrentHashMap<>();
         dealsWithLogManagersAddons = new ConcurrentHashMap<>();
 
-        platformsMap = new ConcurrentHashMap<>();
     }
 
     /**
@@ -325,46 +356,6 @@ public class Platform implements Serializable {
      * the OS. I have to transport a reference to that somebody to the OS subsystem in other to allow it to access
      * the OS through this reference.
      */
-    public void setOsContext(Object osContext) {
-        this.osContext = osContext;
-    }
-
-    /**
-     * An unresolved bug in either Android or Gradle does not allow us to create the os object on a library outside the
-     * main module. While this situation persists, we will create it inside the wallet package and receive it throw this
-     * method.
-     */
-    public void setFileSystemOs(FileSystemOs fileSystemOs) {
-        this.fileSystemOs = fileSystemOs;
-    }
-
-    /**
-     * Set the DataBaseSystemOs
-     *
-     * @param databaseSystemOs
-     */
-    public void setDataBaseSystemOs(DataBaseSystemOs databaseSystemOs) {
-        this.databaseSystemOs = databaseSystemOs;
-    }
-
-    /**
-     * Set the LocationSystemOs
-     *
-     * @param locationSystemOs
-     */
-    public void setLocationSystemOs(LocationSystemOs locationSystemOs) {
-        this.locationSystemOs = locationSystemOs;
-    }
-
-    /**
-     * Set the LoggerSystemOs
-     *
-     * @param loggerSystemOs
-     */
-    public void setLoggerSystemOs(LoggerSystemOs loggerSystemOs) {
-        this.loggerSystemOs = loggerSystemOs;
-    }
-
 
     /**
      * Method that start the platform
@@ -443,13 +434,6 @@ public class Platform implements Serializable {
              */
             PlatformLayer mDefinitionLayer = new DefinitionLayer();
             mDefinitionLayer.start();
-
-            /*
-             * Create and star Platform Service Layer
-             */
-            PlatformLayer mPlatformServiceLayer = new PlatformServiceLayer();
-            mPlatformServiceLayer.start();
-
 
             /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
              * ------------------------------------------------------------------------------------------------------------*
@@ -534,7 +518,6 @@ public class Platform implements Serializable {
              * to prevent start again the critical layer in the previous code
              */
             corePlatformContext.registerPlatformLayer(mDefinitionLayer, PlatformLayers.BITDUBAI_DEFINITION_LAYER);
-            corePlatformContext.registerPlatformLayer(mPlatformServiceLayer, PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER);
 
         } catch (CantStartLayerException cantStartLayerException) {
 
@@ -572,8 +555,14 @@ public class Platform implements Serializable {
              *
              * Initialize the Plugin Identity Manager, the one who assigns identities to each plug in.
              */
-            pluginsIdentityManager = new PluginsIdentityManager(fileSystemOs.getPlatformFileSystem());
 
+            try {
+
+                pluginsIdentityManager = new PluginsIdentityManager((PlatformFileSystem)fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLATFORM_FILE_SYSTEM)));
+            } catch (CantGetAddonException | VersionNotFoundException e ) {
+                System.out.println("No sepué asiná el plato file sitem loco");
+                System.out.println(e);
+            }
 
              /* flag temporal para desactivar plugins que tarde demasiado en inicializar,
             y asi poder trabajar en otras partes del sistema de forma relativamente rapida */
@@ -611,7 +600,15 @@ public class Platform implements Serializable {
                 AbstractAddon platformInfoManager = fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.PLATFORM_INFO));
                 corePlatformContext.registerAddon(platformInfoManager, Addons.PLATFORM_INFO);
 
-            } catch (Exception e) {
+                // just starting the addons... (because we re not running in the new core)
+                fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLATFORM_DATABASE_SYSTEM));
+                fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLUGIN_DATABASE_SYSTEM));
+                fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLATFORM_FILE_SYSTEM));
+                fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLUGIN_FILE_SYSTEM));
+                fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.DEVICE_LOCATION));
+                fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.LOG_MANAGER));
+
+            } catch(Exception e) {
                 System.out.println("apa, encontramos un error.");
                 System.out.println(e);
             }
@@ -1380,11 +1377,11 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithLogger) {
-                ((DealsWithLogger) plugin).setLogManager(loggerSystemOs.getLoggerManager());
+                ((DealsWithLogger) plugin).setLogManager((LogManager) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.LOG_MANAGER)));
             }
 
             if (plugin instanceof DealsWithDeviceLocation) {
-                ((DealsWithDeviceLocation) plugin).setLocationManager(locationSystemOs.getLocationSystem());
+                ((DealsWithDeviceLocation) plugin).setLocationManager((LocationManager) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.DEVICE_LOCATION)));
             }
 
             if (plugin instanceof DealsWithWalletModuleCryptoWallet) {
@@ -1396,11 +1393,11 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithPluginFileSystem) {
-                ((DealsWithPluginFileSystem) plugin).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+                ((DealsWithPluginFileSystem) plugin).setPluginFileSystem((PluginFileSystem) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLUGIN_FILE_SYSTEM)));
             }
 
             if (plugin instanceof DealsWithPluginDatabaseSystem) {
-                ((DealsWithPluginDatabaseSystem) plugin).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
+                ((DealsWithPluginDatabaseSystem) plugin).setPluginDatabaseSystem((PluginDatabaseSystem) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLUGIN_DATABASE_SYSTEM)));
             }
 
             if (plugin instanceof DealsWithToolManager) {

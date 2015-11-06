@@ -96,4 +96,12 @@ public class AddonVersionReference {
                 '}';
     }
 
+    public final String toString3() {
+        return "Addon{" +
+                "" + addonDeveloperReference.getAddonReference().getLayerReference().getPlatformReference().getPlatform() +
+                ", " + addonDeveloperReference.getAddonReference().getLayerReference().getLayer() +
+                ", " + addonDeveloperReference.getAddonReference().getAddon()+
+                '}';
+    }
+
 }

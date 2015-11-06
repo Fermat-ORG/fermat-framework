@@ -140,4 +140,12 @@ public class PluginVersionReference {
                 ", version=" + version +
                 '}';
     }
+
+    public final String toString3() {
+        return "Plugin{" +
+                "" + pluginDeveloperReference.getPluginReference().getLayerReference().getPlatformReference().getPlatform() +
+                ", " + pluginDeveloperReference.getPluginReference().getLayerReference().getLayer() +
+                ", " + pluginDeveloperReference.getPluginReference().getPlugin()+
+                '}';
+    }
 }
