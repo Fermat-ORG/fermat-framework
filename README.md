@@ -18,6 +18,8 @@ Fermat is a master plan to avoid getting to that future through waiting for inde
 
 #### The Framework
 
+Crypto networks are peer-to-Peer electronic cash systems that allow online payments to be sent directly from one party to another without going through a financial institution. Stand alone crypto wallets are truth to that principle. But the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallet files or keys, manage identities, interface crypto networks or the legacy financial system.
+
 Fermat is a trust-less financial application framework that enables an ecosystem of any kind of trust-less financial applications, including wallets. It features a Peer-to-Peer network for transporting meta-data and inter-connect clients between each other. It also features a synchronization scheme that transforms a standalone app into a distributed application across several devices still owned by the same user.
 
 The framework evolves from the standalone crypto wallet and enables an ecosystem of trust-less financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down it has the OS API level, then the Blockchain Level, the Communication Level, Platform Level up to the User Interface Level. Its goals are:
