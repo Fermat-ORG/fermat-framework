@@ -11,7 +11,7 @@ import java.util.List;
  * Modified by Franklin 02/10/2015
  */
 /**
- * The interface <code>com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserIdentityManager</code>
+ * The interface <code>IdentityAssetIssuerManager</code>
  * provides the methods to create and obtain intra users associated to a Device User.
  */
 public interface IdentityAssetIssuerManager extends ModuleManager {
