@@ -53,7 +53,7 @@ TIP: Following in this chapter the description of each platform and each layer w
 
 :numbered!:
   
-==== Continue Reading
+=== Continue Reading
 link:book-chapter-04.asciidoc[Next Chapter]
 
 link:book-chapter-02.asciidoc[Previous Chapter]

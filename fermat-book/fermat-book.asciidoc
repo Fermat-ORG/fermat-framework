@@ -5,7 +5,7 @@
 Gustavo H. Corradi <book@fermat.org>
 v.1.0, october, 2015.
 
-include::book-intro.asciidoc[]
+include::book-chapter-00(intro).asciidoc[]
 
 include::book-chapter-01.asciidoc[]
 
@@ -13,47 +13,47 @@ include::book-chapter-02.asciidoc[]
 
 include::book-chapter-03.asciidoc[]
 
-include::fbk-03b.asciidoc[]
+include::book-chapter-04.asciidoc[]
 
-include::fbk-04.asciidoc[]
+include::book-chapter-05.asciidoc[]
 
-include::fbk-05.asciidoc[]
+include::book-chapter-06.asciidoc[]
 
-include::fbk-06.asciidoc[]
+include::book-chapter-07.asciidoc[]
 
-include::fbk-07.asciidoc[]
+include::book-chapter-08.asciidoc[]
 
-include::fbk-08.asciidoc[]
+include::book-chapter-09.asciidoc[]
 
-include::fbk-09.asciidoc[]
+include::book-chapter-10.asciidoc[]
 
-include::fbk-10.asciidoc[]
+include::book-chapter-11.asciidoc[]
 
-include::fbk-11.asciidoc[]
+include::book-chapter-12.asciidoc[]
 
-include::fbk-12.asciidoc[]
+include::book-chapter-13.asciidoc[]
 
-include::fbk-13.asciidoc[]
+include::book-chapter-14.asciidoc[]
 
-include::fbk-14.asciidoc[]
+include::book-chapter-15.asciidoc[]
 
-include::fbk-15.asciidoc[]
+include::book-chapter-16.asciidoc[]
 
-include::fbk-16.asciidoc[]
+include::book-chapter-17.asciidoc[]
 
-include::fbk-17.asciidoc[]
+include::book-chapter-18.asciidoc[]
 
-include::fbk-18.asciidoc[]
+include::book-chapter-19.asciidoc[]
 
-include::fbk-19.asciidoc[]
+include::book-chapter-20.asciidoc[]
 
-include::fbk-20.asciidoc[]
+include::book-chapter-21.asciidoc[]
 
-include::fbk-21.asciidoc[]
-
+////
 include::conventions.asciidoc[]
 
 include::glossary.asciidoc[]
+////
 
 include::index.asciidoc[]
 

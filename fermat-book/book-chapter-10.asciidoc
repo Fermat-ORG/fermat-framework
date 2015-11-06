@@ -9,7 +9,7 @@ This starts in the originating device and then both flows - value and meta data 
 
 :numbered!:
   
-==== Continue Reading
+=== Continue Reading
 link:book-chapter-12.asciidoc[Crypto Currency Platform]
 
 link:book-chapter-11.asciidoc[Next Chapter]
