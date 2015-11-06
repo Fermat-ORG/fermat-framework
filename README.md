@@ -6,11 +6,11 @@ In the last 20 years virtually everything went digital: pictures, music, videos,
 
 #### Why isn't cash money digital yet?
 
-The reason is that digital information can be cloned, and if digital cash could be cloned it would render it useless. When bitcoin was invented it brought with it the solution to the last barrier preventing money to be digital: the solution to the double spend problem.
+The reason is that digital information can be cloned, and if digital cash could be cloned it would render it useless. When bitcoin was invented it brought with it the solution to the last barrier preventing money to go digital: the solution to the _double spend problem_.
 
 We firmly believe that the next decade will witness governments issuing digital currency based on blockchain technology. We expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge.
 
-In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing govermet issued digital money others crypto currencies, and others digital fiat over crypto or even digital assets) but also with respect to their look and feel and their functionalities (wallets will evolve into sophisticated financial applications), should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population and its financial needs.
+In order to meet this demand thousands of wallets should be available. Wallets will evolve into sophisticated financial applications. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population and its financial needs. In fact most of current APPs available for mobile will turn into financial APPs once we provide them with the ability to easily handle digital cash and digital assets. 
 
 #### The Master Plan
 
