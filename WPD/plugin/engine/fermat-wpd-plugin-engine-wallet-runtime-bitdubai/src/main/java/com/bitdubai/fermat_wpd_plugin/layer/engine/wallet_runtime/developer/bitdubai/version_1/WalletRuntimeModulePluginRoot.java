@@ -2003,26 +2003,26 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeTabStrip = new TabStrip();
 
-        runtimeTabStrip.setTabsColor("#1173aa");
+        runtimeTabStrip.setTabsColor("#06356f");
 
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsTextColor("#b9bfcd");
 
-        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+        runtimeTabStrip.setTabsIndicateColor("#12aca1");
 
 
         runtimeTab = new Tab();
-        runtimeTab.setLabel("Send");
+        runtimeTab.setLabel("Sent");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
         runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("REQUEST");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeTabStrip.setStartItem(1);
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("REQUEST");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+//        runtimeTabStrip.addTab(runtimeTab);
+//        runtimeTabStrip.setStartItem(1);
 
         runtimeTab = new Tab();
-        runtimeTab.setLabel("Receive");
+        runtimeTab.setLabel("Received");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
         runtimeTabStrip.addTab(runtimeTab);
         /*

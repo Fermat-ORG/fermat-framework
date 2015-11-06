@@ -14,28 +14,43 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.DealsWithAssetVault;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantConnectToAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.DealsWithAssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantGetGenesisAddressException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.agent.ActorAssetIssuerMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.developerUtils.AssetIssuerActorDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.event_handlers.ActorAssetIssuerCompleteRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantAddPendingAssetIssuerException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantGetAssetIssuersListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuerActorDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantUpdateAssetIssuerException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerActorDao;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -55,9 +70,12 @@ import java.util.UUID;
  * Created by Nerio on 09/09/15.
  */
 //TODO TERMINAR DE IMPLEMENTAR
-public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, DealsWithErrors, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
+public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, DatabaseManagerForDevelopers, DealsWithAssetIssuerActorNetworkServiceManager, DealsWithAssetVault, DealsWithErrors, DealsWithEvents, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
     AssetIssuerActorDao assetIssuerActorDao;
+    private ActorAssetIssuerMonitorAgent actorAssetIssuerMonitorAgent;
+    DeviceUserManager deviceUserManager;
+
     /**
      * Service Interface member variables.
      */
@@ -86,6 +104,10 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
      * DealsWithAssetVault interface member variable
      */
     AssetVaultManager assetVaultManager;
+    /**
+     * DealsWithIntraWalletUsersNetworkService interface member variable
+     */
+    AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -138,6 +160,16 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
     }
 
     @Override
+    public void setAssetIssuerActorNetworkServiceManager(AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager) {
+        this.assetIssuerActorNetworkServiceManager = assetIssuerActorNetworkServiceManager;
+    }
+
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        this.deviceUserManager = deviceUserManager;
+    }
+
+    @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.ActorIssuerPluginRoot");
@@ -184,7 +216,11 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
 
             blockchainNetworkType = BlockchainNetworkType.REG_TEST;
 
-            test();
+            createAndRegisterActorAssetIssuerTest();
+
+            initializeListener();
+
+            startMonitorAgent();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -204,6 +240,7 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
 
     @Override
     public void stop() {
+        this.actorAssetIssuerMonitorAgent.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -241,84 +278,23 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
         return Collections.EMPTY_LIST;
     }
 
-    public CryptoAddress getGenesisAddress() throws CantGetGenesisAddressException {
-        try {
-//            System.out.println("La BlockChain es: " + blockchainNetworkType);
-            CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
-//            System.out.println("========================================================================");
-//            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
-            return genesisAddress;
-        } catch (GetNewCryptoAddressException exception) {
-            throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
-        }
-    }
-
-    private void test() throws CantCreateActorAssetIssuerException {
+    @Override
+    public ActorAssetIssuer getActorByPublicKey(String actorPublicKey) throws CantGetAssetIssuerActorsException,
+                                                                                CantAssetIssuerActorNotFoundException {
 
         try {
-            for (int i = 0; i < 10; i++) {
-//                String assetIssuerActorIdentityToLinkPublicKey = i + UUID.randomUUID().toString();
-                String assetIssuerActorPublicKey = i + UUID.randomUUID().toString();
-                CryptoAddress genesisAddress = getGenesisAddress();
-
-//                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
-//                DeviceLocation location = new DeviceLocation();
-//                location.setLongitude(new Random().nextDouble());
-//                location.setLatitude(new Random().nextDouble());
-                Double locationLatitude = new Random().nextDouble();
-                Double locationLongitude = new Random().nextDouble();
-                String description = "Asset Issuer de Prueba";
-                ConnectionState connectionState = ConnectionState.CONNECTED;
-
-//                AssetIssuerActorRecord record = new AssetIssuerActorRecord("Issuer_" + i, assetIssuerActorPublicKey);
-//                record.setDescription("Asset Issuer de Prueba");
-//                record.setContactState(ConnectionState.CONNECTED);
-//                record.setProfileImage(new byte[0]);
-//                record.setCryptoAddress(cryptoAddress);
-//                record.setLocation(location);
-                AssetIssuerActorRecord record = new AssetIssuerActorRecord(assetIssuerActorPublicKey, "Thunder Issuer_" + new Random().nextInt(10),
-                        connectionState, locationLatitude, locationLongitude, System.currentTimeMillis(),
-                        new byte[0], description);
-                if (i == 0) {
-//                        assetIssuerActorDao.createNewAssetIssuer(assetIssuerActorIdentityToLinkPublicKey, record);
-                    assetIssuerActorDao.createNewAssetIssuer(record);
-                    ActorAssetIssuer actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
-
-                    System.out.println("****************************************Actor Asset Issuer**********************************************");
-                    System.out.println("Actor Asset PublicKey: " + actorAssetIssuer.getPublicKey());
-                    System.out.println("Actor Asset Name: " + actorAssetIssuer.getName());
-                    System.out.println("Actor Asset Description: " + actorAssetIssuer.getDescription());
-                    System.out.println("********************************************************************************************************");
-//                        record.setDescription("Asset Issuer de Prueba cuya información fue modificada.");
-//                        record.setProfileImage(new byte[0]);
-//                        record.setContactState(ConnectionState.DISCONNECTED_LOCALLY);
-//                        record.setName("Modificación hecha por Víctor!");
-//                        try {
-//                            assetIssuerActorDao.updateAssetIssuer(record);
-//                        } catch (CantUpdateAssetIssuerException | AssetIssuerNotFoundException e) {
-//                            System.out.println("*******************************************************");
-//                            System.out.println("ASSET ISSUER: Falló actualizando el record número: " + i);
-//                            e.printStackTrace();
-//                            System.out.println("*******************************************************");
-//                        }
-                }
-                assetIssuerActorDao.createNewAssetIssuerRegistered(record);
-            }
-        } catch (CantAddPendingAssetIssuerException e) {
-//                System.out.println("*******************************************************");
-//                System.out.println("ASSET ISSUER: Falló creando el record número: " + i);
-//                e.printStackTrace();
-//                System.out.println("*******************************************************");
-        } catch (Exception e) {
-            throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ASSET ISSUER ACTOR", FermatException.wrapException(e), "", "");
+            return this.assetIssuerActorDao.getActorByPublicKey(actorPublicKey);
+        } catch (CantGetAssetIssuerActorsException e) {
+            throw new CantGetAssetIssuerActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset Issuer from Data Base", null);
         }
+
     }
 
-    /**
-     * The method <code>getActorPublicKey</code> get All Information about Actor
-     *
-     * @throws CantGetAssetIssuerActorsException
-     */
+    @Override
+    public void createActorAssetIssuerFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage) throws CantCreateActorAssetIssuerException {
+
+    }
+
     @Override
     public ActorAssetIssuer getActorAssetIssuer() throws CantGetAssetIssuerActorsException {
 
@@ -331,14 +307,8 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
         return actorAssetIssuer;
     }
 
-    /**
-     * The method <code>getAllAssetUserActorRegistered</code> get All Actors Registered in Actor Network Service
-     * and used in Sub App Community
-     *
-     * @throws CantGetAssetIssuerActorsException
-     */
     @Override
-    public List<ActorAssetIssuer> getAllAssetIssuerActorRegistered() throws CantGetAssetIssuerActorsException {
+    public List<ActorAssetIssuer> getAllAssetIssuerActorInTableRegistered() throws CantGetAssetIssuerActorsException {
         List<ActorAssetIssuer> list;
         try {
             list = this.assetIssuerActorDao.getAllAssetIssuerActorRegistered();
@@ -348,11 +318,6 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
         return list;
     }
 
-    /**
-     * The method <code>getAllAssetIssuerActorConnected</code> receives All Actors with have CryptoAddress in BD
-     *
-     * @throws CantGetAssetIssuerActorsException
-     */
     @Override
     public List<ActorAssetIssuer> getAllAssetIssuerActorConnected() throws CantGetAssetIssuerActorsException {
         List<ActorAssetIssuer> list; // Asset User Actor list.
@@ -364,18 +329,137 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
         return list;
     }
 
-    /**
-     * The method <code>createActorAssetUserFactory</code> create Actor in Actor Network Service
-     *
-     * @param assetIssuerActorPublicKey
-     * @param assetIssuerActorName
-     * @param assetIssuerActorprofileImage
-     * @param assetIssuerActorlocation
-     * @throws CantCreateActorAssetIssuerException
-     */
     @Override
-    public ActorAssetIssuer createActorAssetIssuerFactory(String assetIssuerActorPublicKey, String assetIssuerActorName, byte[] assetIssuerActorprofileImage, Location assetIssuerActorlocation) throws CantCreateActorAssetIssuerException {
+    public void registerActorInActorNetowrkSerice() throws CantCreateActorAssetIssuerException {
+        try {
+            /*
+             * Send the Actor Asset Issuer Local for Register in Actor Network Service
+             */
+            ActorAssetIssuer actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+//            if (actorAssetIssuer.getConnectionState() != ConnectionState.CONNECTED) {
+            assetIssuerActorNetworkServiceManager.registerActorAssetIssuer(actorAssetIssuer);
+//            } else {
+//                System.out.println("Actor Asset Issuer YA REGISTRADO - NO Puede volver a registrarse");
+//            }
+        } catch (CantRegisterActorAssetIssuerException | CantGetAssetIssuerActorsException e) {
+            e.printStackTrace();
+        }
+    }
 
-        return null;
+    @Override
+    public void connectToActorAssetIssuer(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToAssetIssuerException {
+        for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuers) {
+            //todo Actualizar Estado en base de datos para este Actor ConnectionState = PENDING_REMOTELY_ACCEPTANCE
+                System.out.println("Se necesita conocer como Implementar bien: "+actorAssetIssuer.getName());
+// cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(null, CryptoCurrency.BITCOIN, Actors.DAP_ASSET_ISSUER, Actors.DAP_ASSET_USER, requester.getPublicKey(), actorAssetUser.getPublicKey(), null, BlockchainNetworkType.DEFAULT);
+            try {
+                this.assetIssuerActorDao.updateAssetIssuerConnectionStateRegistered(actorAssetIssuer.getPublicKey(), ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
+            } catch (CantUpdateAssetIssuerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //TODO al confirmarse el registro del Actor cambia su estado local a CONNECTED
+    public void handleCompleteAssetIssuerActorRegistrationNotificationEvent(ActorAssetIssuer actorAssetIssuer) {
+        System.out.println("***************************************************************");
+        System.out.println("Actor Asset Issuer se Registro: " + actorAssetIssuer.getName());
+        try {
+            //TODO Cambiar luego por la publicKey Linked proveniente de Identity
+            this.assetIssuerActorDao.updateAssetIssuerConnectionState(actorAssetIssuer.getPublicKey(),
+                    actorAssetIssuer.getPublicKey(),
+                    ConnectionState.CONNECTED);
+        } catch (CantUpdateAssetIssuerException e) {
+            e.printStackTrace();
+        }
+        System.out.println("***************************************************************");
+    }
+
+    public void createAndRegisterActorAssetIssuerTest() throws CantCreateActorAssetIssuerException {
+
+        try {
+            ActorAssetIssuer actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+            if (actorAssetIssuer == null) {
+//                String assetIssuerActorIdentityToLinkPublicKey = i + UUID.randomUUID().toString();
+                String assetIssuerActorPublicKey = UUID.randomUUID().toString();
+                CryptoAddress genesisAddress = getGenesisAddress();
+
+                Double locationLatitude = new Random().nextDouble();
+                Double locationLongitude = new Random().nextDouble();
+                String description = "Asset Issuer de Prueba";
+                ConnectionState connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+
+                AssetIssuerActorRecord record = new AssetIssuerActorRecord(assetIssuerActorPublicKey,
+                        "Thunder Issuer_" + new Random().nextInt(90),
+                        connectionState,
+                        locationLatitude,
+                        locationLongitude,
+                        System.currentTimeMillis(),
+                        new byte[0],
+                        description);
+                assetIssuerActorDao.createNewAssetIssuer(record);
+                actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+
+                System.out.println("*********************Actor Asset Issuer************************");
+                System.out.println("Actor Asset PublicKey: " + actorAssetIssuer.getPublicKey());
+                System.out.println("Actor Asset Name: " + actorAssetIssuer.getName());
+                System.out.println("Actor Asset Description: " + actorAssetIssuer.getDescription());
+                System.out.println("***************************************************************");
+//                assetIssuerActorDao.createNewAssetIssuerRegistered(record);
+            }
+        } catch (CantAddPendingAssetIssuerException e) {
+            throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER", e, "", "");
+        } catch (Exception e) {
+            throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public CryptoAddress getGenesisAddress() throws CantGetGenesisAddressException {
+        try {
+//            System.out.println("La BlockChain es: " + blockchainNetworkType);
+            CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
+//            System.out.println("========================================================================");
+//            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
+            return genesisAddress;
+        } catch (GetNewCryptoAddressException exception) {
+            throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
+        }
+    }
+
+    /**
+     * Private methods
+     */
+    private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantStartAgentException {
+        if (this.actorAssetIssuerMonitorAgent == null) {
+//            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+            this.actorAssetIssuerMonitorAgent = new ActorAssetIssuerMonitorAgent(this.eventManager,
+                    this.pluginDatabaseSystem,
+                    this.errorManager,
+                    this.pluginId,
+                    this.assetIssuerActorNetworkServiceManager,
+                    this.assetIssuerActorDao,
+                    this);
+//            this.assetUserActorMonitorAgent.setLogManager(this.logManager);
+            this.actorAssetIssuerMonitorAgent.start();
+        } else {
+            this.actorAssetIssuerMonitorAgent.start();
+        }
+    }
+
+    private void initializeListener() {
+        /**
+         * I will initialize the handling of com.bitdubai.platform events.
+         */
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
+
+        /**
+         * Listener Accepted connection event
+         */
+        fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_ISSUER_REGISTRATION_NOTIFICATION);
+        fermatEventListener.setEventHandler(new ActorAssetIssuerCompleteRegistrationNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
     }
 }

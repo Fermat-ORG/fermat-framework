@@ -39,8 +39,11 @@ class BitcoinCryptoNetworkBlockChain implements Serializable{
     public BitcoinCryptoNetworkBlockChain(NetworkParameters networkParameters) throws BlockchainException {
         this.networkParameters= networkParameters;
 
+        /**
+         * initialize the objects
+         */
         try {
-            initialize();
+            initialize(false);
         } catch (BlockStoreException e) {
             throw new BlockchainException(BlockchainException.DEFAULT_MESSAGE, e, "Could not create blockchain to store block headers.", null);
         }
@@ -55,9 +58,11 @@ class BitcoinCryptoNetworkBlockChain implements Serializable{
     }
 
     /**
-     * initialize the objects
+     * Initializes the blochchain and blockstore objects.
+     * @param withError since I'm using this recursively, I will use this parameter to avoid a loop.
+     * @throws BlockStoreException if something went wrong and I can't create the blockchain
      */
-    private void initialize() throws BlockStoreException {
+    private void initialize(boolean withError) throws BlockStoreException {
         /**
          * I will define the SPV blockstore were I will save the blockchain.
          * I will be saving the file under the network type I'm being created for.
@@ -66,16 +71,29 @@ class BitcoinCryptoNetworkBlockChain implements Serializable{
         File blockChainFile = new File(fileName);
         try {
             blockStore = new SPVBlockStore(networkParameters, blockChainFile);
-        } catch (BlockStoreException e) {
+        } catch (Exception e) {
             /**
              * If there is an error saving it to file, I will save it to memory
              */
             blockStore = new MemoryBlockStore(this.networkParameters);
+            System.out.println("*** Crypto Network Warning, error creating file to store blockchain, will save it to memory.");
+            System.out.println("*** Crypto Network: " + e.toString());
         }
 
         /**
          * I initialize the blockchain object
          */
-        blockChain = new BlockChain(this.networkParameters, blockStore);
+        try{
+            blockChain = new BlockChain(this.networkParameters, blockStore);
+        } catch (Exception e){
+            if (withError)
+                throw new BlockStoreException(e);
+            /**
+             * In case we have an issue like a corrupted blockstore, will delete the blockchain file
+             */
+            blockChainFile.delete();
+            initialize(true);
+        }
+
     }
 }

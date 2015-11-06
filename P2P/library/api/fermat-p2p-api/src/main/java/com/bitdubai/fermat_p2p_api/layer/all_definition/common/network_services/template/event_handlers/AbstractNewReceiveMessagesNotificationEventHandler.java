@@ -52,10 +52,6 @@ public abstract class AbstractNewReceiveMessagesNotificationEventHandler impleme
         }
     }
 
-    protected void handleNewMessages(final FermatMessage message) {
+    protected abstract void handleNewMessages(final FermatMessage message) throws FermatException;
 
-        this.networkService.handleNewMessages(
-                message
-        );
-    }
 }

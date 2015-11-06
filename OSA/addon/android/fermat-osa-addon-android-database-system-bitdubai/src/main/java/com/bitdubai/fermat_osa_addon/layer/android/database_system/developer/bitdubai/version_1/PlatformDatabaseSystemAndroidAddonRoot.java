@@ -5,7 +5,6 @@ import android.util.Base64;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -37,7 +36,7 @@ public class PlatformDatabaseSystemAndroidAddonRoot extends AbstractAddon implem
     public PlatformDatabaseSystemAndroidAddonRoot() {
         super(
                 new AddonVersionReference(new Version()),
-                OperativeSystems.ANDROID
+                true
         );
     }
 

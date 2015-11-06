@@ -43,7 +43,7 @@ public class PluginFileSystemAndroidAddonRoot extends AbstractAddon implements P
     public PluginFileSystemAndroidAddonRoot() {
         super(
                 new AddonVersionReference(new Version()),
-                OperativeSystems.ANDROID
+                true
         );
     }
 

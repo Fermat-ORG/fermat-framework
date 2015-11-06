@@ -23,7 +23,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -57,7 +56,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.NewReceiveMessagesNotificationEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.AbstractCommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantCreateRequestException;
@@ -107,13 +106,13 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.CLOUD_CLIENT)
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     private List<FermatEventListener> listenersAdded;
@@ -126,7 +125,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     /**
      * Represent the cryptoPaymentRequestNetworkServiceConnectionManager
      */
-    private AbstractCommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -153,9 +152,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      * Represent the dataBase
      */
     private Database dataBase;
-
-    private ECCKeyPair identity;
-
 
     /**
      * Represent the registrationProcessNetworkServiceAgent
@@ -187,7 +183,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      * Service Interface implementation
      */
     @Override
-    public void start() throws CantStartPluginException {
+    public void startNetworkService() throws CantStartPluginException {
 
         System.out.println("********* Crypto Addresses: Starting. ");
 
@@ -213,11 +209,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
 
         try {
-
-            /*
-             * Create a new key pair for this execution
-             */
-            identity = new ECCKeyPair();
 
             /*
              * Initialize the data base
@@ -506,16 +497,15 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      * we'll return to the actor all the pending requests pending a local action.
      * State : PENDING_ACTION.
      *
-     * @param actorType  type of actor asking for pending requests
      *
      * @throws CantListPendingCryptoAddressRequestsException      if something goes wrong.
      */
     @Override
-    public List<CryptoAddressRequest> listPendingCryptoAddressRequests(Actors actorType) throws CantListPendingCryptoAddressRequestsException {
+    public List<CryptoAddressRequest> listAllPendingRequests() throws CantListPendingCryptoAddressRequestsException {
 
         try {
 
-            return cryptoAddressesNetworkServiceDao.listPendingRequestsByActorType(actorType);
+            return cryptoAddressesNetworkServiceDao.listAllPendingRequests();
 
         } catch (CantListPendingCryptoAddressRequestsException e){
 
@@ -690,7 +680,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     @Override
     public void initializeCommunicationNetworkServiceConnectionManager() {
-        this.communicationNetworkServiceConnectionManager = new AbstractCommunicationNetworkServiceConnectionManager(
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
                 this.getPlatformComponentProfilePluginRoot(),
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
@@ -735,16 +725,16 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                                                                          final NetworkServiceType       fromOtherNetworkServiceType   ) {
 
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
-                platformComponentType         ,
-                networkServiceType            ,
-                alias                         ,
-                identityPublicKey             ,
-                location                      ,
-                distance                      ,
-                name                          ,
-                extraData                     ,
-                firstRecord                   ,
-                numRegister                   ,
+                platformComponentType,
+                networkServiceType,
+                alias,
+                identityPublicKey,
+                location,
+                distance,
+                name,
+                extraData,
+                firstRecord,
+                numRegister,
                 fromOtherPlatformComponentType,
                 fromOtherNetworkServiceType
         );
@@ -757,20 +747,15 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            System.out.println("********* Crypto Addresses: Initializing and starting Executor Agent. ");
-
             cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
                     this,
                     errorManager,
                     eventManager,
-                    pluginDatabaseSystem,
-                    pluginId,
+                    cryptoAddressesNetworkServiceDao,
                     wsCommunicationsCloudClientManager
             );
 
             cryptoAddressesExecutorAgent.start();
-
-            System.out.println("********* Crypto Addresses: Successful initialize and start of Executor Agent. ");
 
         } catch(CantStartAgentException e) {
 
@@ -780,8 +765,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
-
-        System.out.println(" ******* Crypto Addresses: Ahora si me estoy registrando como la gente.....");
 
         /*
          * If the component registered have my profile and my identity public key
@@ -901,22 +884,22 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION    ;
             RequestType   type          = RequestType  .RECEIVED          ;
             RequestAction action        = RequestAction.REQUEST           ;
 
             cryptoAddressesNetworkServiceDao.createAddressExchangeRequest(
-                    requestMessage.getRequestId()                  ,
-                    null                                           ,
-                    requestMessage.getCryptoCurrency()             ,
-                    requestMessage.getIdentityTypeRequesting()     ,
-                    requestMessage.getIdentityTypeResponding()     ,
+                    requestMessage.getRequestId(),
+                    null,
+                    requestMessage.getCryptoCurrency(),
+                    requestMessage.getIdentityTypeRequesting(),
+                    requestMessage.getIdentityTypeResponding(),
                     requestMessage.getIdentityPublicKeyRequesting(),
                     requestMessage.getIdentityPublicKeyResponding(),
-                    protocolState                                  ,
-                    type                                           ,
-                    action                                         ,
-                    requestMessage.getCryptoAddressDealer()        ,
+                    protocolState,
+                    type,
+                    action,
+                    requestMessage.getCryptoAddressDealer(),
                     requestMessage.getBlockchainNetworkType()
             );
 
@@ -940,7 +923,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION;
 
             cryptoAddressesNetworkServiceDao.acceptAddressExchangeRequest(
                     acceptMessage.getRequestId(),
@@ -968,7 +951,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION;
 
             cryptoAddressesNetworkServiceDao.denyAddressExchangeRequest(
                     denyMessage.getRequestId(),
@@ -1018,14 +1001,4 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-    @Override
-    public void setId(final UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
 }

@@ -98,7 +98,7 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActor
     public void start() throws CantStartPluginException {
         try {
             assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(assetIssuerWalletManager, actorAssetUserManager, assetDistributionManager, pluginId, pluginFileSystem);
-            getTransactionsAssetAll("", "");
+            //getTransactionsAssetAll("", "");
             System.out.println("******* Asset Issuer Wallet Module Init ******");
 
             this.serviceStatus = ServiceStatus.STARTED;

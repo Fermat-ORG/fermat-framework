@@ -251,7 +251,7 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
             mDrawerToggle = new ActionBarDrawerToggle(
                     getActivity(),                    /* host Activity */
                     mDrawerLayout,                    /* DrawerLayout object */
-                    R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
+                    R.drawable.ic_actionbar_menu_,             /* nav drawer image to replace 'Up' caret */
                     R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                     R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
             ) {
@@ -465,7 +465,7 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
     public void changeNavigationDrawerAdapter(ListAdapter adapter){
         mDrawerListView.setAdapter( adapter);
         mDrawerListView.deferNotifyDataSetChanged();
-        //mDrawerListView.invalidate();
+        mDrawerListView.invalidate();
         //
     };
 

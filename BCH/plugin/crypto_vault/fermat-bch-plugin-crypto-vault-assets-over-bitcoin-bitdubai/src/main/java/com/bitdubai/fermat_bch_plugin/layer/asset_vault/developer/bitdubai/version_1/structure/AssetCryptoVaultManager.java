@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
@@ -18,10 +19,12 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidSeedException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.Crypto;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
@@ -150,8 +153,77 @@ public class AssetCryptoVaultManager  {
      * @throws CantSendAssetBitcoinsToUserException
      */
     public void sendBitcoinAssetToUser(String genesisTransactionId, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
-        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+        /**
+         * I get the network for this address.
+         */
+        BlockchainNetworkType networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
 
+        /**
+         * I will create a new wallet from my own set of keys
+         */
+
+
+
+    }
+
+    /**
+     * Will make sure that we have a listening network running for this address that we are trying to send bitcoins to.
+     * @param cryptoAddress
+     * @throws CantSendAssetBitcoinsToUserException
+     */
+    private BlockchainNetworkType validateNetorkIsActiveForCryptoAddress(CryptoAddress cryptoAddress) throws CantSendAssetBitcoinsToUserException {
+        /**
+         * I need to make sure that we have generated a key on the network type to which the address belongs
+         * to, so we can be sure that the Crypto Network is listening on this network.
+         */
+        try {
+            List<BlockchainNetworkType> networkTypes = getDao().getActiveNetworkTypes();
+            BlockchainNetworkType addressNetworkType = BitcoinNetworkSelector.getBlockchainNetworkType(getNetworkParametersFromAddress(cryptoAddress.getAddress()));
+
+            /**
+             * If the address Network Type is not registered, then I won't go on because I know I'm not listening to it.
+             */
+            if (!networkTypes.contains(addressNetworkType)){
+                StringBuilder output = new StringBuilder("The specified address belongs to a Bitcoin network we are not listening to.");
+                output.append(System.lineSeparator());
+                output.append("BlockchainNetworkType: " + addressNetworkType.toString());
+                output.append(System.lineSeparator());
+                output.append("Active Networks are: " + networkTypes.toString());
+                throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+            }
+
+            return addressNetworkType;
+        } catch (CantExecuteDatabaseOperationException e) {
+            /**
+             * If I can't validate this. I will continue because I may be listening to this network already.
+             */
+            e.printStackTrace();
+            return BlockchainNetworkType.DEFAULT;
+        } catch (AddressFormatException e) {
+            /**
+             * If the passed address doesn't have the correct format, I can't go on.
+             */
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "The specified address is not in the right format: " + cryptoAddress.getAddress(), null);
+        }
+    }
+
+    /**
+     * Calculates the network parameters from the specified address.
+     * @param addressTo
+     * @return
+     * @throws AddressFormatException in case the address is not in the correct format.
+     */
+    private NetworkParameters getNetworkParametersFromAddress(String addressTo) throws AddressFormatException {
+        NetworkParameters networkParameters = Address.getParametersFromAddress(addressTo);
+
+        /**
+         * if the network parameters calculated is different that the Default network I will double check
+         */
+        if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.DEFAULT){
+            //todo find another way to validate the network to which the address belongs to.
+        }
+
+        return networkParameters;
     }
 
     /**

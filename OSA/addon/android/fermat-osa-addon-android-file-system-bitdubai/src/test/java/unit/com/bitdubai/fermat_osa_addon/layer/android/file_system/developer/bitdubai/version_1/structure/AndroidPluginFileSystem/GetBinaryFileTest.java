@@ -37,7 +37,7 @@ public class GetBinaryFileTest {
     private PluginBinaryFile testFile2;
 
     private UUID testId;
-    private Context testContext;
+    private String testContext;
     private String testDirectory;
     private String testFileName;
     private FilePrivacy testPrivacyLevel;
@@ -47,7 +47,8 @@ public class GetBinaryFileTest {
     public void setUpValues(){
         testId = UUID.randomUUID();
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
-        testContext = shadowOf(mockActivity).getApplicationContext();
+        testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
+
         testDirectory = "ROBOLECTRICTEST";
         testFileName = "TESTFILE.dat";
         testPrivacyLevel = FilePrivacy.PUBLIC;
@@ -56,8 +57,7 @@ public class GetBinaryFileTest {
 
     @Test
     public void GetTextFile_FileExists_TheFileIsLoaded() throws Exception{
-        testFileSystem = new AndroidPluginFileSystem();
-        testFileSystem.setContext(testContext);
+        testFileSystem = new AndroidPluginFileSystem(testContext);
         testFile1 = testFileSystem.createBinaryFile(testId,testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         testFile1.setContent("TESTCONTENT".getBytes("UTF-8"));
         testFile1.persistToMedia();
@@ -69,8 +69,7 @@ public class GetBinaryFileTest {
 
     @Test
     public void GetTextFile_FileDoesntExists_ThrowsException() throws Exception{
-        testFileSystem = new AndroidPluginFileSystem();
-        testFileSystem.setContext(testContext);
+        testFileSystem = new AndroidPluginFileSystem(testContext);
         catchException(testFileSystem).getTextFile(testId, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(caughtException()).isNotNull();
         caughtException().printStackTrace();
@@ -78,7 +77,7 @@ public class GetBinaryFileTest {
 
     @Test
     public void GetTextFile_NoContext_ThrowsException() throws Exception{
-        testFileSystem = new AndroidPluginFileSystem();
+        testFileSystem = new AndroidPluginFileSystem(null);
         catchException(testFileSystem).getTextFile(testId, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(caughtException()).isNotNull();
         caughtException().printStackTrace();

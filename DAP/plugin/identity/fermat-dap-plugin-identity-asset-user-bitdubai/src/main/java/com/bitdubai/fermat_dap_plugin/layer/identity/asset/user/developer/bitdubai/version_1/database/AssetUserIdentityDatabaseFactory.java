@@ -19,6 +19,7 @@ import java.util.UUID;
  */
 public class AssetUserIdentityDatabaseFactory implements DealsWithErrors, DealsWithPluginDatabaseSystem {
 
+
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -56,11 +57,9 @@ public class AssetUserIdentityDatabaseFactory implements DealsWithErrors, DealsW
 
             table = databaseFactory.newTableFactory(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME);
 
-            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, true);
-            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PRIVATE_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
-            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
-            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
-            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
+            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, true);
+            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
 
             table.addIndex(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_FIRST_KEY_COLUMN);
 
@@ -101,4 +100,5 @@ public class AssetUserIdentityDatabaseFactory implements DealsWithErrors, DealsW
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
     }
+
 }

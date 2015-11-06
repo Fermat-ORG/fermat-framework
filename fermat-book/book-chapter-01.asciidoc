@@ -10,7 +10,7 @@ Precisely aknowledging this weak points in the industry, and choosing *collabora
 The goal is to have a framework for developing financial applications in a trust-less environment. What are the services that had to be granted at the lower levels to enable this?
 
 The basic infrastructure ::  
-the _Fermat Core Platform_ is the part of the system which initilizes the entire set of modules, starting every plugin and putting them to run. This creates the interconection that let all the services to be offered as being integral part of one unified system.
+the _Fermat Core Platform_ is the part of the system which initilizes the entire set of components, starting every plugin and putting them to run. This creates the interconection that let all the services to be offered as being integral part of one unified system.
 The basic services ::
 ** connection to the different Operating Systems that will run Fermat on a chosen device.
 ** interconnectivity to cryptonetworks and blockchain services providers to enable the *transport of value*.

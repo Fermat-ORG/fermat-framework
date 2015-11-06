@@ -36,9 +36,8 @@ public class FermatAddonManager {
         try {
             final AbstractAddon abstractAddon = systemContext.getAddonVersion(addonVersionReference);
 
-            if (abstractAddon.isStarted()) {
+            if (abstractAddon.isStarted())
                 return abstractAddon;
-            }
 
             final List<AddonVersionReference> neededAddons = abstractAddon.getNeededAddons();
 
@@ -46,9 +45,6 @@ public class FermatAddonManager {
                 AbstractAddon reference = startAddonAndReferences(avr);
                 abstractAddon.assignAddonReference(reference);
             }
-
-            if (abstractAddon.isDealsWithOsContext())
-                abstractAddon.setOsContext(systemContext.getOsContext());
 
             startAddon(abstractAddon);
 
@@ -78,7 +74,6 @@ public class FermatAddonManager {
             return;
 
         try {
-
             if(abstractAddon.isDealsWithOsContext())
                 abstractAddon.setOsContext(systemContext.getOsContext());
 

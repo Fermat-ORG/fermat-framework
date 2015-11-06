@@ -27,13 +27,15 @@ public class ReceivedNewDigitalAssetMetadataNotificationEventHandler implements 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if(this.assetReceptionRecorderService.getStatus()== ServiceStatus.STARTED) {
-
+            Logger LOG = Logger.getGlobal();
             try {
+                LOG.info("ASSET RECEPTION event detected - type: "+fermatEvent.getEventType());
+                LOG.info("ASSET RECEPTION event detected - source: "+fermatEvent.getSource());
                 this.assetReceptionRecorderService.receivedNewDigitalAssetMetadataNotificationEvent((ReceivedNewDigitalAssetMetadataNotificationEvent) fermatEvent);
             } catch(CantSaveEventException exception){
                 throw new CantSaveEventException(exception,"Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Check the cause");
             } catch(ClassCastException exception){
-                Logger LOG = Logger.getGlobal();
+
                 LOG.info("ASSET RECEPTION EXCEPTION DETECTOR----------------------------------");
                 exception.printStackTrace();
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Cannot cast this event");
