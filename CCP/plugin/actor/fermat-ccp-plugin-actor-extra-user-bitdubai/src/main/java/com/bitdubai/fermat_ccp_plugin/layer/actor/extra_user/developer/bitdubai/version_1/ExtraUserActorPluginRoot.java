@@ -105,11 +105,6 @@ public class ExtraUserActorPluginRoot extends AbstractPlugin implements
     public static final String EXTRA_USERS_PRIVATE_KEYS_DIRECTORY_NAME = "extraUserIdentityPrivateKeys";
 
     /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-    /**
      * Service Interface implementation.
      */
     @Override
@@ -441,7 +436,6 @@ public class ExtraUserActorPluginRoot extends AbstractPlugin implements
             return new ArrayList<>();
         }
     }
-
 
     /**
      * DealsWithErrors Interface implementation.
