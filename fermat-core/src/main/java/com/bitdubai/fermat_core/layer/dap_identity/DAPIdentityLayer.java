@@ -25,9 +25,9 @@ public class DAPIdentityLayer implements PlatformLayer {
     @Override
     public void start() throws CantStartLayerException {
 
-        assetUserIdentity = getPlugin(new AssetIssuerIdentitySubsystem());
+        assetIssuerIdentity = getPlugin(new AssetIssuerIdentitySubsystem());
 
-        assetIssuerIdentity = getPlugin(new AssetUserIdentitySubsystem());
+        assetUserIdentity = getPlugin(new AssetUserIdentitySubsystem());
 
         redeemPointIdentity = getPlugin(new RedeemPointIdentitySubsystem());
     }

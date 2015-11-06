@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
@@ -103,13 +102,9 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
         this.actorAssetUserManager = actorAssetUserManager;
     }
 
-    private AssetUserIdentityDao getAssetUserIdentityDao(){
+    private AssetUserIdentityDao getAssetUserIdentityDao() throws CantInitializeAssetUserIdentityDatabaseException{
         AssetUserIdentityDao assetUserIdentityDao = new AssetUserIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
         return assetUserIdentityDao;
-    }
-
-    public void  initializeDatabase() throws CantInitializeAssetUserIdentityDatabaseException {
-        getAssetUserIdentityDao().initializeDatabase();
     }
 
     public List<IdentityAssetUser> getIdentityAssetUsersFromCurrentDeviceUser() throws CantListAssetUsersException {
@@ -120,7 +115,7 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
 
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            assetUserList = getAssetUserIdentityDao().getAllIntraUserFromCurrentDeviceUser(loggedUser);
+            assetUserList = getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(loggedUser);
 
 
             return assetUserList;
@@ -162,7 +157,7 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            if(getAssetUserIdentityDao().getAllIntraUserFromCurrentDeviceUser(loggedUser).size() > 0)
+            if(getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(loggedUser).size() > 0)
                 return true;
             else
                 return false;
@@ -177,17 +172,21 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
 
     public void registerIdentities() throws CantListAssetUserIdentitiesException {
         try {
-            List<IdentityAssetUser> identityAssetUsers = getAssetUserIdentityDao().getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
-            for(IdentityAssetUser identityAssetUser : identityAssetUsers){
-                actorAssetUserManager.createActorAssetUserFactory(identityAssetUser.getPublicKey(), identityAssetUser.getAlias(), identityAssetUser.getProfileImage());
+            List<IdentityAssetUser> identityAssetUsers = getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
+            if (identityAssetUsers.size() > 0) {
+                for (IdentityAssetUser identityAssetUser : identityAssetUsers) {
+                    actorAssetUserManager.createActorAssetUserFactory(identityAssetUser.getPublicKey(), identityAssetUser.getAlias(), identityAssetUser.getProfileImage());
+                }
             }
         }
         catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant List Asset User Identities", "");
+            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
         } catch (CantListAssetUserIdentitiesException e) {
             throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant List Asset User Identities", "");
         } catch (CantCreateAssetUserActorException e) {
             throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Create Actor Asset User", "");
+        } catch (CantInitializeAssetUserIdentityDatabaseException e) {
+            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Initialize Asset User Identity Database", "");
         }
     }
 }
