@@ -152,10 +152,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    /**
-     * Represent the platformComponentProfile
-     */
-    private PlatformComponentProfile platformComponentProfile;
+
 
     /**
      * Represent the platformComponentType
@@ -324,7 +321,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * because at this moment, is create the platformComponentProfile for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager(){
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfilePluginRoot, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
     }
 
     /**
@@ -796,7 +793,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     cryptoTransmissionMetadataDAO,
                     communicationNetworkServiceConnectionManager,
                     wsCommunicationsCloudClientManager,
-                    platformComponentProfile,
+                    platformComponentProfileRegistered,
                     errorManager,
                     new ArrayList<PlatformComponentProfile>(),
                     identity
@@ -940,7 +937,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * @see NetworkService#getPlatformComponentProfilePluginRoot()
      */
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
-        return platformComponentProfile;
+        return platformComponentProfilePluginRoot;
     }
 
     /**
@@ -967,7 +964,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * @param platformComponentProfile
      */
     public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
-        this.platformComponentProfile = platformComponentProfile;
+        this.platformComponentProfilePluginRoot = platformComponentProfile;
     }
 
     /**
@@ -1044,7 +1041,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
          */
         try {
 
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfilePluginRoot, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
