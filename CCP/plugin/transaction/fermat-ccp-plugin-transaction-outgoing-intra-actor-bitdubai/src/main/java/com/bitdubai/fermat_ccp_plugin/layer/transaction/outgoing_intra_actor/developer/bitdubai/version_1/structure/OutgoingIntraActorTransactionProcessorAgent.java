@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -36,12 +38,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by eze on 2015.09.19..
  */
-public class OutgoingIntraActorTransactionProcessorAgent  {
+public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
     private ErrorManager                               errorManager;
     private CryptoVaultManager                         cryptoVaultManager;
     private BitcoinWalletManager                       bitcoinWalletManager;
-    private OutgoingIntraActorDao outgoingIntraActorDao;
+    private OutgoingIntraActorDao                      outgoingIntraActorDao;
     private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
     private CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager;
 
@@ -69,6 +71,9 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
         this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager);
         this.agentThread               = new Thread(this.transactionProcessorAgent);
         this.agentThread.start();
+
+        this.status = AgentStatus.STARTED;
+        System.out.println("CryptoTransmissionAgent - started ");
     }
 
     public boolean isRunning() {
@@ -160,14 +165,12 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
         private void doTheMainTask() {
             try {
 
+             List<OutgoingIntraActorTransactionWrapper> transactionList = dao.getNewTransactions();
+
 //                System.out.print("-----------------------\n" +
 //                        "OUTGOING INTRA USER TRANSACTION START - Get Pending Transactions!!!!! -----------------------\n" +
 //                        "-----------------------\n STATE: ");
 
-
-                List<OutgoingIntraActorTransactionWrapper> transactionList = dao.getNewTransactions();
-
-//                System.out.print("PROCESSING : " + transactionList.size() + " pendings transactions.");
 
 
             /* For each transaction:
@@ -179,6 +182,7 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
                         if (thereAreEnoughFunds(transaction)) {
                             debitFromAvailableBalance(transaction);
                             dao.setToPIA(transaction);
+                            System.out.print("Debit new transaction.");
                         } else {
                             dao.cancelTransaction(transaction);
                             // TODO: Lanzar un evento de fondos insuficientes

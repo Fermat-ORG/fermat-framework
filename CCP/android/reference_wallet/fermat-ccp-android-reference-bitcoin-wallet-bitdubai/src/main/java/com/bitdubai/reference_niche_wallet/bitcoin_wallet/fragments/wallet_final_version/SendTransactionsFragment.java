@@ -596,7 +596,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
             if(!amount.getText().toString().equals("") && amount.getText()!=null) {
                 try {
-                    String notes=null;
+                    String notes="";
                     if(txt_notes.getText().toString().length()!=0){
                         notes = txt_notes.getText().toString();
                     }

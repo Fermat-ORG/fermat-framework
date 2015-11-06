@@ -236,6 +236,7 @@ import java.util.logging.Logger;
  * @version 1.0
  * @since Java JDK 1.7
  */
+
 public class Platform implements Serializable {
 
     /**
