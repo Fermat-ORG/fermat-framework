@@ -1,8 +1,8 @@
 /*
-package unit.com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.DeveloperBitDubai;
+package unit.com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.DeveloperBitDubai;
 
-import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.DeveloperBitDubai;
-import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.IntraWalletUserActorPluginRoot;
+import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.IntraWalletUserActorPluginRoot;
 
 import junit.framework.TestCase;
 
