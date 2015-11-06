@@ -64,7 +64,9 @@ public final class FermatPluginManager {
 
                 final PlatformFileSystem platformFileSystem = (PlatformFileSystem) addonManager.startAddonAndReferences(platformFileSystemReference);
 
-                return new FermatPluginIdsManager(platformFileSystem);
+                this.pluginIdsManager = new FermatPluginIdsManager(platformFileSystem);
+
+                return  this.pluginIdsManager;
 
             } catch (final CantStartAddonException  |
                            VersionNotFoundException e) {
