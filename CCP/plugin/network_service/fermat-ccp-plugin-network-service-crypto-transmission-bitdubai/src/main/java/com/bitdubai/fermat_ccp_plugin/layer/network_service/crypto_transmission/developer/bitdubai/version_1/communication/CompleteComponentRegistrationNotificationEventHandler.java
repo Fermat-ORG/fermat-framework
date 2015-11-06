@@ -50,10 +50,10 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
 
         if (((Service) this.networkService).getStatus().equals(ServiceStatus.STARTED)) {
 
+            System.out.println("Crypto Transmition CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
 
             CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) platformEvent;
 

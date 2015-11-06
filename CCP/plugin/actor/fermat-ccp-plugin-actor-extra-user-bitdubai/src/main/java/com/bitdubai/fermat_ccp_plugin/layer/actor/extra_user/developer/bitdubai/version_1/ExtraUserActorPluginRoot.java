@@ -2,8 +2,6 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -55,7 +53,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -81,6 +78,7 @@ public class ExtraUserActorPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
+
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
@@ -105,11 +103,6 @@ public class ExtraUserActorPluginRoot extends AbstractPlugin implements
 
     public static final String EXTRA_USERS_PROFILE_IMAGE_DIRECTORY_NAME = "extraUserIdentityProfileImages";
     public static final String EXTRA_USERS_PRIVATE_KEYS_DIRECTORY_NAME = "extraUserIdentityPrivateKeys";
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     /**
      * Service Interface implementation.
@@ -443,7 +436,6 @@ public class ExtraUserActorPluginRoot extends AbstractPlugin implements
             return new ArrayList<>();
         }
     }
-
 
     /**
      * DealsWithErrors Interface implementation.
