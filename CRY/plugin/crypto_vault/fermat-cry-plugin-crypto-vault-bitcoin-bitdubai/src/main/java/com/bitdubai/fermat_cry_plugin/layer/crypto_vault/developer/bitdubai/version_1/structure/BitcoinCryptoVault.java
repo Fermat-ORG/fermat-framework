@@ -80,6 +80,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by rodrigo on 09/06/15.
@@ -471,7 +472,8 @@ public class BitcoinCryptoVault implements
 
             // I'm experimenting addind a fixed high value for the fee. Since I'm getting Insufficient priority (66) messages.
 
-            request.feePerKb = Coin.valueOf(1000);
+            //request.feePerKb = Coin.valueOf(1100);
+            request.fee = Coin.valueOf(15000);
 
             /**
              * If OP_return was specified then I will add an output to the transaction
@@ -519,7 +521,9 @@ public class BitcoinCryptoVault implements
         } catch (CantExecuteQueryException cantExecuteQueryException) {
 
             throw new CouldNotSendMoneyException("I coudln't persist the internal transaction Id.", cantExecuteQueryException, "Transaction ID: " + fermatTxId.toString(), "An error in the Database plugin..");
-        } catch(Exception exception){
+        }  catch (InterruptedException | ExecutionException | TimeoutException | IOException e) {
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "Time out broadcasting the transaction to peers.", "No peers found that accepted this transaction because low fee");
+        }   catch(Exception exception){
             throw new CouldNotSendMoneyException("Fatal error sending bitcoins.", exception, "Address to:" + addressTo.getAddress() + ", transaction Id:" + fermatTxId.toString(), "Unkwnown.");
         }
     }

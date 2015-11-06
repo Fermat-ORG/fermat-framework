@@ -208,8 +208,6 @@ public class IdentityUserPluginRoot implements DealsWithActorAssetUser, Database
                     this.deviceUserManager,
                     this.actorAssetUserManager);
 
-            identityAssetUserManager.initializeDatabase();
-
             registerIdentities();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

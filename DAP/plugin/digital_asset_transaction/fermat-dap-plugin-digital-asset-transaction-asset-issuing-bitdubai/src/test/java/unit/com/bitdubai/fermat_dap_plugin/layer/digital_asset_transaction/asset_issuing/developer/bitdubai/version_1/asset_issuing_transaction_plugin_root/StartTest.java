@@ -22,6 +22,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
@@ -181,15 +182,19 @@ public class StartTest {
 
     @Test
     public void test_Throws_DatabaseNotFoundException() throws Exception {
-        //TODO fix error
-        /*when(pluginDatabaseSystem.openDatabase(this.pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenThrow(new DatabaseNotFoundException("error"));
-        when(assetIssuingTransactionDatabaseFactory.createDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenReturn(mockDatabase);
+        assetIssuingPluginRoot.setAssetIssuerManager(null);
         catchException(assetIssuingPluginRoot).start();
-        assertThat(caughtException())
+        Exception thrown = caughtException();
+        assertThat(thrown)
                 .isNotNull()
-                .isInstanceOf(DatabaseNotFoundException.class);*/
+                .isInstanceOf(CantStartPluginException.class);
+        assertThat(thrown.getCause())
+                .isNotNull()
+                .isInstanceOf(CantSetObjectException.class);
+        assetIssuingPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
     }
 
+    //TODO develop tests of exceptions
     public void test_Throws_CantOpenDatabaseException() throws Exception {
 
     }
