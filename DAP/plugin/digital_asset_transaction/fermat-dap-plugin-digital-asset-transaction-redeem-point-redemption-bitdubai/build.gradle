@@ -1,12 +1,12 @@
 apply plugin: 'java'
 
 sourceCompatibility = 1.7
+version = '1.0'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':fermat-api')
+    compile project(':fermat-dap-api')
     compile project(':fermat-pip-api')
-    compile project(':fermat-dmp-plugin-middleware-bank-notes-bitdubai')
-    compile project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai')
-    compile project(':fermat-dap-plugin-wallet-redeem-point-wallet-bitdubai')
-    compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
+
 }
