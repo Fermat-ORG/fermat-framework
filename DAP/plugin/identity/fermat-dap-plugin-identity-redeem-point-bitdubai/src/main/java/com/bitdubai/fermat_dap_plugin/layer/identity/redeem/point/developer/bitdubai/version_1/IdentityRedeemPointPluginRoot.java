@@ -18,12 +18,16 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.DealsWithActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.database.AssetRedeemPointIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantListAssetRedeemPointIdentitiesException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.structure.IdentityAssetRedeemPointManagerImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -43,8 +47,9 @@ import java.util.UUID;
 
 /**
  * Created by Nerio on 07/09/15.
+ * Modified by Franklin 03/11/2015
  */
-public class IdentityRedeemPointPluginRoot implements DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithLogger, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, RedeemPointIdentityManager, LogManagerForDevelopers, Plugin, Service, Serializable {
+public class IdentityRedeemPointPluginRoot implements DealsWithActorAssetRedeemPoint, DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithLogger, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, RedeemPointIdentityManager, LogManagerForDevelopers, Plugin, Service, Serializable {
     /**
      * Service Interface member variables.
      */
@@ -87,6 +92,11 @@ public class IdentityRedeemPointPluginRoot implements DatabaseManagerForDevelope
      * DealsWithDeviceUsers Interface member variables.
      */
     private DeviceUserManager deviceUserManager;
+
+    /**
+     * DealsWithActorAssetRedeemPoint Interface member variables.
+     */
+    private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
     public static final String ASSET_REDEEM_POINT_PROFILE_IMAGE_FILE_NAME = "assetRedeemPointIdentityProfileImage";
     public static final String ASSET_REDEEM_POINT_PRIVATE_KEYS_FILE_NAME  = "assetRedeemPointIdentityPrivateKey";
@@ -190,11 +200,9 @@ public class IdentityRedeemPointPluginRoot implements DatabaseManagerForDevelope
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
                     this.pluginId,
-                    this.deviceUserManager);
+                    this.deviceUserManager,
+                    this.actorAssetRedeemPointManager);
 
-            identityAssetRedeemPointManager.initializeDatabase();
-
-            //TODO:Revisar como registrar con el Network Service
             registerIdentities();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -263,8 +271,14 @@ public class IdentityRedeemPointPluginRoot implements DatabaseManagerForDevelope
         return identityAssetRedeemPointManager.hasIntraUserIdentity();
     }
 
+    @Override
+    public void setActorAssetRedeemPointManager(ActorAssetRedeemPointManager actorAssetRedeemPointManager) throws CantSetObjectException {
 
-    public void registerIdentities(){
+    }
+
+    public void registerIdentities()  throws CantListAssetRedeemPointIdentitiesException {
         identityAssetRedeemPointManager.registerIdentities();
     }
+
+
 }
