@@ -20,7 +20,7 @@ Fermat is a master plan to avoid getting to that future through waiting for inde
 
 Fermat is a trust-less financial application framework that enables an ecosystem of any kind of trust-less financial applications, including wallets. It features a Peer-to-Peer network for transporting meta-data and inter-connect clients between each other. It also features a synchronization scheme that transforms a standalone app into a distributed application across several devices still owned by the same user.
 
-The framework evolves from the standalone crypto wallet and enables an ecosystem of trust-less financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down it has the OS API level, then the Blockchain Level, the Communication Level, Platform Level up to the User Interface Level. Its goal is to allow even non-developers to build their own desktop and mobile trust-less financial applications in a similar way a non-developer builds a Worldpress site: re-using plugins and themes. 
+The framework evolves from the standalone crypto wallet and enables an ecosystem of trust-less financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down it has the OS API level, then the Blockchain Level, the Communication Level, Platform Level up to the User Interface Level. Its goal is to allow even non-developers to build their own desktop and mobile trust-less financial applications in a similar way a non-developer builds a **Worldpress** site: re-using Plug-ins and themes. 
 
 #### Open Source
 
@@ -34,7 +34,7 @@ We believe the open source community collectively has more talent than any of us
 
 We are asking each of you to help lead the way.  Because we’re already connected with you as we are also developers and designers, and we want to build our relationship with you into a network of developers across the world to share new ideas and forge new collaborations. Working together, we can build the tools and technology the people need to become financially independent, have access to world wide financial products and be safe of nasty third parties spying on them or trying to tell them what they can and can not do with their money. We believe in financial freedom.
 
-We want to hear from you on how we can build this network. We are arround 30 developers working full time on Fermat by now and our goal is to be 300. To learn more about how to participate, just go to [how-to-participate](https://github.com/bitDubai/participate-now). We hope every single one of you will join us.  Because Fermat needs you.  The world needs you.  We need your skills, your imagination and your optimism.  And with this new network, we know we can be partners for decades to come.
+We want to hear from you on how we can build this network. We are arround 30 developers working full time on Fermat by now and our goal is to be 300. To learn more about how to participate, just read the [how-to-participate-guide](https://github.com/bitDubai/participate-now). We hope every single one of you will join us.  Because Fermat needs you.  The world needs you.  We need your skills, your imagination and your optimism.  And with this new network, we know we can be partners for decades to come.
 
 We believe in people with passion who are crazy enough to think they can change the world. With a lot of hard work, we believe we are going to change the world.
 
