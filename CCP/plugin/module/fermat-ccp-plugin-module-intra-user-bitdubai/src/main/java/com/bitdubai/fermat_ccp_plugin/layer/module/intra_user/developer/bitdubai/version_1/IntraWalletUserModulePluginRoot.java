@@ -86,22 +86,22 @@ import java.util.Map;
  * @since Java JDK 1.7
  */
 
-public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIdentityIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers, IntraUserModuleManager, Plugin, Service  {
+public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
+        DealsWithErrors,
+        DealsWithIntraUsersNetworkService,
+        DealsWithCCPIdentityIntraWalletUser,
+        DealsWithCCPIntraWalletUsers,
+        DealsWithPluginFileSystem,
+        LogManagerForDevelopers,
+        IntraUserModuleManager  {
 
 
-    private static String INTRA_USER_LOGIN_FILE_NAME = "intraUsersLogin";
-
-    private String intraUserLoggedPublicKey;
-
-    private PluginTextFile intraUserLoginXml;
-
-    private IntraUserSettings intraUserSettings = new IntraUserSettings();
 
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.INTRA_WALLET_USER  )
@@ -117,6 +117,13 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements D
     private com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser intraWalletUser;
 
 
+    private static String INTRA_USER_LOGIN_FILE_NAME = "intraUsersLogin";
+
+    private String intraUserLoggedPublicKey;
+
+    private PluginTextFile intraUserLoginXml;
+
+    private IntraUserSettings intraUserSettings = new IntraUserSettings();
 
 
 
