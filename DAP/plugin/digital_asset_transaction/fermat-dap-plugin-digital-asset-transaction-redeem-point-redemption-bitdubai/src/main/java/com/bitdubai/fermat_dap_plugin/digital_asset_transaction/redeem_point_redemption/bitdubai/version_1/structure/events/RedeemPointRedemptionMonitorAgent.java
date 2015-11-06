@@ -271,7 +271,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
                                 assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
                                         assetMetadataTransaction,
-                                        actorAssetUserManager.getActorByPublicKey(userPublicKey).get(0).getCryptoAddress(),
+                                        actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
                                         actorAssetRedeemPointManager.getActorAssetRedeemPoint().getCryptoAddress());
 
                                 AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.BOOK);
@@ -317,7 +317,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
                                         transactionId,
                                         userPublicKey,
                                         actorAssetRedeemPointManager.getActorAssetRedeemPoint().getPublicKey(),
-                                        actorAssetUserManager.getActorByPublicKey(userPublicKey).get(0).getCryptoAddress(),
+                                        actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
                                         actorAssetRedeemPointManager.getActorAssetRedeemPoint().getCryptoAddress());
 
                                 //CREDIT ON AVAILABLE BALANCE.
