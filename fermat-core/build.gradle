@@ -108,6 +108,7 @@ dependencies {
     compile project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai')
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
+    compile project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai')
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
