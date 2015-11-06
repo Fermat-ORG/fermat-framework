@@ -213,8 +213,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
             CharSequence itemTitle = item.getTitle();
 
-            if(item.getItemId() ==  R.id.actionbar_send){
-                referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS,true);
+            if(item.getItemId() ==  R.id.actionbar_send){;
+                referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS,Boolean.TRUE);
                 changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
                 return true;
             }
