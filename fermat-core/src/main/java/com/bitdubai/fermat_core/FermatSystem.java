@@ -85,22 +85,29 @@ public final class FermatSystem {
 
     }
 
-    private void registerOsaPlatform(final AbstractPlatform abstractPlatform) throws CantRegisterPlatformException {
+    /**
+     * Through the method <code>registerOsaPlatform</code> we validate minimally that we're dealing with an osaPlatform.
+     *
+     * @param osaPlatform  instance of osa platform.
+     *
+     * @throws CantRegisterPlatformException if something goes wrong.
+     */
+    private void registerOsaPlatform(final AbstractPlatform osaPlatform) throws CantRegisterPlatformException {
 
-        if (abstractPlatform == null)
+        if (osaPlatform == null)
             throw new CantRegisterPlatformException("abstractPlatform=null", "You have pass through parameter an OSA Platform instance.");
 
-        final PlatformReference pr = abstractPlatform.getPlatformReference();
+        final PlatformReference pr = osaPlatform.getPlatformReference();
 
         if (pr.getPlatform() != null && pr.getPlatform().equals(Platforms.OPERATIVE_SYSTEM_API))
-            fermatSystemContext.registerPlatform(abstractPlatform);
+            fermatSystemContext.registerPlatform(osaPlatform);
         else
-            throw new CantRegisterPlatformException(abstractPlatform.getPlatformReference().toString(), "Is not referenced like an OSA specific Platform.");
+            throw new CantRegisterPlatformException(osaPlatform.getPlatformReference().toString(), "Is not referenced like an OSA specific Platform.");
 
     }
 
     /**
-     * Throw the method <code>getModuleManager</code> the graphic interface can access to the modules of
+     * Through the method <code>getModuleManager</code> the graphic interface can access to the modules of
      * its sub-apps and wallets.
      *
      * @param pluginVersionReference plugin version reference data.
@@ -133,7 +140,7 @@ public final class FermatSystem {
     }
 
     /**
-     * Throw the method <code>getAddon</code> the graphic interface can access to the addons of fermat
+     * Through the method <code>getAddon</code> the graphic interface can access to the addons of fermat
      *
      * @param addonVersionReference addon version reference data.
      *
