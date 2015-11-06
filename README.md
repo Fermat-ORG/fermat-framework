@@ -14,7 +14,7 @@ In order to meet this demand thousands of wallets should be available. Wallets w
 
 #### The Master Plan
 
-Fermat is a master plan to avoid getting to that future through waiting for independent entrepreneurs to build each of these wallets and financial apps one at the time and from scratch, repeating every time all the math, accounting, cryptography and algorithms that are common to all these APPs. Fermat handles all that and by doing the heavy lifting enables any developer in the world to easily create niche wallets and financtial APPs on top of its shared infraestructure.
+Fermat is a master plan to avoid getting into that future by waiting for independent entrepreneurs to build each of these wallets and financial apps one at the time and from scratch, repeating every time all the math, accounting, cryptography and algorithms that are common to all these APPs. Fermat handles all that and by doing the heavy lifting enables any developer in the world to easily create niche wallets and financtial APPs on top of its shared infraestructure.
 
 #### The Framework
 
@@ -22,7 +22,9 @@ Crypto networks are peer-to-Peer electronic cash systems that allow online payme
 
 Fermat is a trust-less financial application framework that enables any kind of trust-less applications, including digital wallets. It features a Peer-to-Peer network for transporting meta-data and inter-connect network clients between each other. It also features a synchronization scheme that transforms a standalone app into a distributed application across several devices still owned by the same user.
 
-The framework evolves from the stand-alone crypto wallet and enables an ecosystem of trust-less financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down from the OS API level, then the Blockchain Level, the Communication Level, Platform Level up to the User Interface Level. Its goals are:
+The framework evolves from the stand-alone crypto wallet and enables an ecosystem of trust-less financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down from the OS API level, then the Blockchain Level, the Communication Level, Platform Level up to the User Interface Level. 
+
+#### Fermat goals are:
 
 * To allow even non-developers to build their own desktop and mobile trust-less financial applications in a similar way a non-developer builds a **Worldpress** site: re-using Plug-ins and _themes_. 
 
