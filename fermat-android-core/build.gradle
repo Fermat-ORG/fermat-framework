@@ -16,6 +16,11 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
+
+        exclude 'lib/x86_64/darwin/libscrypt.dylib'
+        exclude 'lib/x86_64/freebsd/libscrypt.so'
+        exclude 'lib/x86_64/linux/libscrypt.so'
+        exclude 'org/bitcoinj/crypto/cacerts'
     }
 
     defaultConfig {
@@ -28,7 +33,7 @@ android {
     }
 
     dexOptions {
-        javaMaxHeapSize "6g"
+        javaMaxHeapSize "7g"
         incremental true
     }
 
@@ -67,23 +72,11 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile project(':fermat-api')
     compile project(':fermat-core')
-    // OSA Projects
-    compile project(':fermat-osa-addon-android-database-system-bitdubai')
-    compile project(':fermat-osa-addon-android-file-system-bitdubai')
-    compile project(':fermat-osa-addon-android-device-location-bitdubai')
-    compile project(':fermat-osa-addon-android-logger-bitdubai')
+    compile project(':fermat-osa-android-core')
+
     // DMP Projects (Wallets)
     compile project(':fermat-ccp-android-reference-bitcoin-wallet-bitdubai')
     compile project(':fermat-ccp-android-clone-reference-nich-wallet')
-    /*
-                Wallets on the pipeline:
-                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai')
-                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai')
-                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai')
-                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai')
-                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai')
-                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai')
-                */
 
     // DMP Projects (Sub APPs)
     compile project(':fermat-ccp-android-sub-app-intra-user-identity-bitdubai')

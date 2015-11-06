@@ -30,10 +30,14 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -50,8 +54,9 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_con
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory.ReferenceFragmentsEnumType;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceFragmentsEnumType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -139,12 +144,13 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         referenceWalletSession =(ReferenceWalletSession) walletSession;
 
         setRetainInstance(true);
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog()
-                .penaltyDeath().build());
+
+        setHasOptionsMenu(false);
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
 
         errorManager = walletSession.getErrorManager();
+
 
         cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
 
@@ -163,13 +169,24 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         rootView = inflater.inflate(R.layout.main_act, container, false);
         setupViews(rootView);
 
-
          walletContactRecords = new ArrayList<>();
         try {
-            walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
-        } catch (CantGetAllWalletContactsException e) {
+            walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getWalletSessionType().getWalletPublicKey(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
+
+          //  cryptoWallet.deleteWalletContact(walletContactRecords.get(0).getContactId());
+
+        }
+        catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
+        }
+        catch (CantGetActiveLoginIdentityException e) {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
+        }
+        catch (Exception e) {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "unknown error- " + e.getMessage());
         }
 
         mItems = new ArrayList<>();
@@ -342,10 +359,25 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
                     InstalledWallet installedWallet = walletSession.getWalletSessionType();
 
-                    ((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
+                    Boolean isFromActionBarSend = (Boolean)referenceWalletSession.getData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS);
+
+                    if(isFromActionBarSend!=null) {
+                        if (isFromActionBarSend) {
+                            referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, Boolean.FALSE);
+                            changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY);
+
+                        } else {
+                            //((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
+                            changeActivity(Activities.CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY);
+                        }
+                    } else {
+                    //((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
+                    changeActivity(Activities.CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY);
+                     }
+
 
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,ex);
                     showMessage(getActivity(), "Unexpected error get Contact Detalil - " + ex.getMessage());
                 }
             }

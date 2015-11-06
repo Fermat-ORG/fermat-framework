@@ -37,7 +37,6 @@ public abstract class AbstractAddon implements Addon, Service {
 
     private final AddonVersionReference addonVersionReference;
     private final boolean               dealsWithOsContext   ;
-    private final OperativeSystems      operativeSystem      ;
     private       Object                osContext            ;
 
     protected     ServiceStatus         serviceStatus        ;
@@ -46,16 +45,14 @@ public abstract class AbstractAddon implements Addon, Service {
 
         this.addonVersionReference = addonVersionReference;
         this.dealsWithOsContext    = false;
-        this.operativeSystem       = OperativeSystems.INDIFFERENT;
         this.instantiateAddon();
     }
 
     public AbstractAddon(final AddonVersionReference addonVersionReference,
-                         final OperativeSystems      operativeSystem      ) {
+                         final boolean               dealsWithOsContext   ) {
 
         this.addonVersionReference = addonVersionReference;
-        this.operativeSystem       = operativeSystem;
-        this.dealsWithOsContext    = !operativeSystem.equals(OperativeSystems.INDIFFERENT);
+        this.dealsWithOsContext    = dealsWithOsContext;
         this.instantiateAddon();
     }
 
@@ -71,10 +68,6 @@ public abstract class AbstractAddon implements Addon, Service {
 
     public final boolean isDealsWithOsContext() {
         return dealsWithOsContext;
-    }
-
-    public final OperativeSystems getOperativeSystem() {
-        return operativeSystem;
     }
 
     @Override
@@ -169,7 +162,6 @@ public abstract class AbstractAddon implements Addon, Service {
                         NeededAddonReference addonReference = (NeededAddonReference) a;
 
                         AddonVersionReference avr = new AddonVersionReference(
-                                addonReference.operativeSystem(),
                                 addonReference.platform(),
                                 addonReference.layer(),
                                 addonReference.addon(),
@@ -216,8 +208,7 @@ public abstract class AbstractAddon implements Addon, Service {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(abstractAddon));
 
-                System.out.println("Processing Addon: " + this.addonVersionReference.toString2()+
-                                    " - >>> Assigned reference: "+avr.toString2());
+                System.out.println("---------->>> Assigned reference: "+avr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
                         "classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),

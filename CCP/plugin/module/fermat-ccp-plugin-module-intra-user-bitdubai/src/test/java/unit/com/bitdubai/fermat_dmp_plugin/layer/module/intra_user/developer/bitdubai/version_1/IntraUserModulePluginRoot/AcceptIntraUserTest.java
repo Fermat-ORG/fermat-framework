@@ -3,7 +3,7 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
+import IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -60,7 +60,7 @@ public class AcceptIntraUserTest extends TestCase {
      *//*
 
     @Mock
-    private IntraWalletUserManager mockIntraWalletUserManager;
+    private IntraWalletUserIdentityManager mockIntraWalletUserManager;
 
 
     */
@@ -99,7 +99,7 @@ public class AcceptIntraUserTest extends TestCase {
         testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
         testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
 
-        testIntraUserModulePluginRoot.setIntraWalletUserManager(mockIntraWalletUserManager);
+        testIntraUserModulePluginRoot.setIntraWalletUserIdentityManager(mockIntraWalletUserManager);
         testIntraUserModulePluginRoot.setIntraUserNetworkServiceManager(mockIntraUserNetworkServiceManager);
 
         setUpMockitoRules();

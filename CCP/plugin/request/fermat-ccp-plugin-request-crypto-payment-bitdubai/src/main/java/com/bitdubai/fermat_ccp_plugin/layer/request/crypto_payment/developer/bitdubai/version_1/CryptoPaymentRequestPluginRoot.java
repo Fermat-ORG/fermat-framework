@@ -3,11 +3,14 @@ package com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bi
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -20,10 +23,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.Crypt
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentRegistry;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.DealsWithOutgoingIntraActor;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
-import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestApprovedEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestDeniedEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestReceivedEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestRefusedEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestNewsEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteCryptoPaymentRequestPendingEventActionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteUnfinishedActionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestEventActionsException;
@@ -40,7 +40,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * The plugin <code>Crypto Payment</code> of <code>Request</code> is responsible for managing crypto payments request in
@@ -60,50 +59,33 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
         DealsWithPluginDatabaseSystem,
         DealsWithWalletManager {
 
-    public CryptoPaymentRequestPluginRoot() {
-        super(new PluginVersionReference(new Version()));
-    }
-
-    /**
-     * DealsWithCryptoPaymentRequestNetworkService Interface member variables
-     */
-    private CryptoPaymentRequestManager cryptoPaymentRequestManager;
-
-    /*
-     * DealsWithErrors Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    /*
-     * DealsWithEvents Interface member variables
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private EventManager eventManager;
-    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-    /**
-     * DealsWithOutgoingIntraActor Interface member variables
-     */
-    private OutgoingIntraActorManager outgoingIntraActorManager;
-
-    /*
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    /*
-     * Plugin Interface member variables.
-     */
-    private UUID pluginId;
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_PAYMENT_REQUEST)
+    private CryptoPaymentRequestManager cryptoPaymentRequestManager;
 
-    /*
-     * DealsWithWalletManager Interface member variables.
-     */
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.OUTGOING_INTRA_ACTOR  )
+    private OutgoingIntraActorManager outgoingIntraActorManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE     , plugin = Plugins.WALLET_MANAGER        )
     private WalletManagerManager walletManagerManager;
 
-    /*
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+
+    private final List<FermatEventListener> listenersAdded;
+
+    public CryptoPaymentRequestPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+
+        listenersAdded = new ArrayList<>();
+    }
 
     @Override
     public CryptoPaymentRegistry getCryptoPaymentRegistry() throws CantGetCryptoPaymentRegistryException {
@@ -156,16 +138,6 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
     @Override
     public void start() throws CantStartPluginException {
 
-        // adding listeners to the events
-
-        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REQUEST_APPROVED, new CryptoPaymentRequestApprovedEventHandler(cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
-
-        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REQUEST_DENIED, new CryptoPaymentRequestDeniedEventHandler  (cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
-
-        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REQUEST_RECEIVED, new CryptoPaymentRequestReceivedEventHandler(cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId, walletManagerManager));
-
-        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REQUEST_REFUSED, new CryptoPaymentRequestRefusedEventHandler (cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
-
         // executing pending event actions
         try {
             CryptoPaymentRequestEventActions eventActions = new CryptoPaymentRequestEventActions(
@@ -177,6 +149,11 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
 
             eventActions.initialize();
 
+            FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.CRYPTO_PAYMENT_REQUEST_NEWS);
+            fermatEventListener.setEventHandler(new CryptoPaymentRequestNewsEventHandler(this, eventActions));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
             eventActions.executePendingRequestEventActions();
 
             this.serviceStatus = ServiceStatus.STARTED;
@@ -185,7 +162,7 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
                 CantExecuteCryptoPaymentRequestPendingEventActionsException e) {
 
             reportUnexpectedException(e);
-            throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
+            throw new CantStartPluginException(e, this.getPluginVersionReference());
         }
 
         // executing unfinished actions
@@ -207,27 +184,10 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
                 CantExecuteUnfinishedActionsException               e) {
 
             reportUnexpectedException(e);
-            throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
+            throw new CantStartPluginException(e, this.getPluginVersionReference());
         }
 
 
-    }
-
-    private void addCryptoPaymentRequestListener(FermatEventEnum fermatEventEnum, FermatEventHandler fermatEventHandler) {
-        FermatEventListener fermatEventListener = eventManager.getNewListener(fermatEventEnum);
-        fermatEventListener.setEventHandler(fermatEventHandler);
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
@@ -242,7 +202,7 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
     }
 
     private void reportUnexpectedException(Exception e) {
-        this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
     }
 
     @Override
@@ -277,14 +237,6 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
     @Override
     public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystemManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystemManager;
-    }
-
-    /**
-     * Plugin Interface implementation.
-     */
-    @Override
-    public void setId(final UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
     /**

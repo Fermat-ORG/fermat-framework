@@ -2003,26 +2003,26 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeTabStrip = new TabStrip();
 
-        runtimeTabStrip.setTabsColor("#1173aa");
+        runtimeTabStrip.setTabsColor("#06356f");
 
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsTextColor("#b9bfcd");
 
-        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+        runtimeTabStrip.setTabsIndicateColor("#12aca1");
 
 
         runtimeTab = new Tab();
-        runtimeTab.setLabel("Send");
+        runtimeTab.setLabel("Sent");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
         runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("REQUEST");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeTabStrip.setStartItem(1);
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("REQUEST");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+//        runtimeTabStrip.addTab(runtimeTab);
+//        runtimeTabStrip.setStartItem(1);
 
         runtimeTab = new Tab();
-        runtimeTab.setLabel("Receive");
+        runtimeTab.setLabel("Received");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
         runtimeTabStrip.addTab(runtimeTab);
         /*
@@ -2134,13 +2134,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 //         * Menu
 //         */
 //
-//        runtimeMainMenu = new MainMenu();
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMainMenu.addMenuItem(runtimeMenuItem);
-//
-//
-//        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeMainMenu = new MainMenu();
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setIcon("send");
+        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeActivity.setMainMenu(runtimeMainMenu);
 //
 //        /**
 //         *  Fin de menu
@@ -2427,6 +2427,173 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.setSideMenu(runtimeSideMenu);
 
         //fin navigation
+
+
+        /**
+         * Send form Activity
+         */
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY.getCode());
+        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Send");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#12aca1");
+        //runtimeActivity.setColor("#d07b62");
+
+        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+
+        runtimeTabStrip = new TabStrip();
+
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_SEND_FORM_FRAGMENT.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_SEND_FORM_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_SEND_FORM_FRAGMENT.getKey(), runtimeFragment);
+
+        //Navigation
+
+        runtimeSideMenu = new SideMenu();
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setIcon("picture");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setIcon("home");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Contacts");
+        runtimeMenuItem.setIcon("contacts");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Request History");
+        runtimeMenuItem.setIcon("request");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Transactions");
+        runtimeMenuItem.setIcon("transactions");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Logout");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        //fin navigation
+
+        /**
+         * Contact detail Activity
+         */
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY.getCode());
+        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS);
+
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Contact detail");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#12aca1");
+        //runtimeActivity.setColor("#d07b62");
+
+        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+
+        runtimeTabStrip = new TabStrip();
+
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey(), runtimeFragment);
+
+        //Navigation
+
+        runtimeSideMenu = new SideMenu();
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setIcon("picture");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setIcon("home");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Contacts");
+        runtimeMenuItem.setIcon("contacts");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Request History");
+        runtimeMenuItem.setIcon("request");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Transactions");
+        runtimeMenuItem.setIcon("transactions");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Logout");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        //fin navigation
+
+
 
 
         return runtimeWalletNavigationStructure;

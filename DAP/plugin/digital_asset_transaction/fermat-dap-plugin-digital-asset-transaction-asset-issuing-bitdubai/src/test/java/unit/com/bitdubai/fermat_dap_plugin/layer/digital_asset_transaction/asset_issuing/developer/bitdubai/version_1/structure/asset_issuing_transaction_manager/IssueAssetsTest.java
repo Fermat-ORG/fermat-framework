@@ -19,6 +19,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.IntraActorCryptoTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
@@ -58,6 +59,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class IssueAssetsTest {
     AssetIssuingTransactionManager assetIssuingTransactionManager;
+    DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
     UUID pluginId;
 
     @Mock
@@ -73,9 +75,6 @@ public class IssueAssetsTest {
     PluginFileSystem pluginFileSystem;
 
     @Mock
-    ErrorManager errorManager;
-
-    @Mock
     AssetVaultManager assetVaultManager;
 
     @Mock
@@ -84,12 +83,13 @@ public class IssueAssetsTest {
     @Mock
     OutgoingIntraActorManager outgoingIntraActorManager;
 
-    DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
+    @Mock
+    ErrorManager errorManager;
 
     @Mock
-    DigitalAssetIssuingVault digitalAssetIssuingVault;
+    AssetIssuingTransactionDao assetIssuingTransactionDao;
 
-    DigitalAsset digitalAssetToIssue;
+    String assetPublicKey;
 
     @Mock
     DigitalAssetContract digitalAssetContract;
@@ -100,34 +100,37 @@ public class IssueAssetsTest {
     @Mock
     IdentityAssetIssuer identityAssetIssuer;
 
+    DigitalAsset digitalAsset;
+
     @Mock
-    AssetIssuingTransactionDao assetIssuingTransactionDao;
+    DigitalAssetIssuingVault digitalAssetIssuingVault;
 
     @Mock
     PluginTextFile pluginTextFile;
 
-    @Mock
-    BitcoinWalletWallet bitcoinWalletWallet;
+    BlockchainNetworkType blockchainNetworkType;
 
     @Mock
     BitcoinWalletBalance bitcoinWalletBalance;
 
     @Mock
-    CryptoAddress cryptoAddress;
+    CryptoAddress genesisAddress;
 
-    BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.REG_TEST;
-    final String LOCAL_STORAGE_PATH="digital-asset-issuing/";
-    String path;
+    @Mock
+    IntraActorCryptoTransactionManager intraActorCryptoTransactionManager;
+
     int assetsAmount;
     String walletPublicKey;
-    String daPublicKey = "daPublicKey";
+    String description;
     String name;
-    String fileName;
-    String transactionId = "defe0d66-cd65-4f8f-bc07-afa563815496";
+    String publicKey;
+    String digitalAssetFileStoragePath;
+    String digitalAssetFileName;
 
     @Before
     public void setUp() throws Exception {
         pluginId = UUID.randomUUID();
+
         assetIssuingTransactionManager = new AssetIssuingTransactionManager(pluginId,
                 cryptoVaultManager,
                 bitcoinWalletManager,
@@ -148,65 +151,55 @@ public class IssueAssetsTest {
                 this.cryptoAddressBookManager,
                 this.outgoingIntraActorManager);
         digitalAssetCryptoTransactionFactory.setErrorManager(errorManager);
-        digitalAssetCryptoTransactionFactory.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
         digitalAssetCryptoTransactionFactory.setAssetIssuingTransactionDao(assetIssuingTransactionDao);
-
-        path = LOCAL_STORAGE_PATH + daPublicKey;
-        name = "name";
-        fileName = name + ".xml";
-
-        digitalAssetToIssue = new DigitalAsset();
-        digitalAssetToIssue.setContract(digitalAssetContract);
-        digitalAssetToIssue.setResources(resources);
-        digitalAssetToIssue.setDescription("description");
-        digitalAssetToIssue.setName(name);
-        digitalAssetToIssue.setPublicKey(daPublicKey);
-        digitalAssetToIssue.setIdentityAssetIssuer(identityAssetIssuer);
+        digitalAssetCryptoTransactionFactory.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
 
         assetsAmount = 1;
-        walletPublicKey = "publicKey";
+        walletPublicKey = "walletPublicKey";
+        description = "description";
+        name = "name";
+        publicKey = "publicKey";
+        digitalAssetFileStoragePath = "digital-asset-issuing/publicKey";
+        digitalAssetFileName = "name.xml";
 
-        MemberModifier.field(AssetIssuingTransactionManager.class, "digitalAssetCryptoTransactionFactory").set(assetIssuingTransactionManager , digitalAssetCryptoTransactionFactory);
-        MemberModifier.field(DigitalAssetCryptoTransactionFactory.class, "SEND_BTC_FROM_CRYPTO_VAULT").set(digitalAssetCryptoTransactionFactory , true);
+        digitalAsset = new DigitalAsset();
+        digitalAsset.setIdentityAssetIssuer(identityAssetIssuer);
+        digitalAsset.setPublicKey(publicKey);
+        digitalAsset.setName(name);
+        digitalAsset.setDescription(description);
+        digitalAsset.setContract(digitalAssetContract);
+        digitalAsset.setResources(resources);
 
-        setUpMockitoRules();
+        blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+
+        MemberModifier.field(AssetIssuingTransactionManager.class, "digitalAssetCryptoTransactionFactory").set(assetIssuingTransactionManager, digitalAssetCryptoTransactionFactory);
+        MemberModifier.field(DigitalAssetCryptoTransactionFactory.class, "digitalAsset").set(digitalAssetCryptoTransactionFactory, digitalAsset);
+        MemberModifier.field(DigitalAssetCryptoTransactionFactory.class, "bitcoinWalletBalance").set(digitalAssetCryptoTransactionFactory, bitcoinWalletBalance);
+
+        mockitoRules();
     }
 
-    private void setUpMockitoRules() throws Exception {
-        when(assetIssuingTransactionDao.isPublicKeyUsed(daPublicKey)).thenReturn(false);
-        when(pluginFileSystem.createTextFile(pluginId, path, fileName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT)).thenReturn(pluginTextFile);
-        doNothing().when(assetIssuingTransactionDao).persistDigitalAsset(daPublicKey,
-                path,
-                assetsAmount,
-                blockchainNetworkType,
-                walletPublicKey);
-        when(bitcoinWalletManager.loadWallet(walletPublicKey)).thenReturn(bitcoinWalletWallet);
-        when(bitcoinWalletBalance.getBalance()).thenReturn(anyLong());
-        when(bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE)).thenReturn(bitcoinWalletBalance);
-        when(assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType)).thenReturn(cryptoAddress);
-        doNothing().when(assetIssuingTransactionDao).persistGenesisAddress(transactionId, null);
-        doNothing().when(cryptoAddressBookManager).registerCryptoAddress(null,
-                "testDeliveredByActorPublicKey",
-                Actors.INTRA_USER,
-                "testDeliveredToActorPublicKey",
-                Actors.DAP_ASSET_ISSUER,
-                Platforms.DIGITAL_ASSET_PLATFORM,
-                VaultType.ASSET_VAULT,
-                CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                this.walletPublicKey,
-                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
-        doNothing().when(assetIssuingTransactionDao).updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.GENESIS_SETTLED);
+    private void mockitoRules() throws Exception {
+        when(pluginFileSystem.createTextFile(pluginId, digitalAssetFileStoragePath, digitalAssetFileName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT)).thenReturn(pluginTextFile);
+        doNothing().when(assetIssuingTransactionDao).persistDigitalAsset(
+                digitalAsset.getPublicKey(),
+                this.digitalAssetFileStoragePath,
+                this.assetsAmount,
+                this.blockchainNetworkType,
+                this.walletPublicKey);
+        when(assetVaultManager.getNewAssetVaultCryptoAddress(blockchainNetworkType)).thenReturn(genesisAddress);
+        when(outgoingIntraActorManager.getTransactionManager()).thenReturn(intraActorCryptoTransactionManager);
 
     }
 
     @Test
     public void test_OK() throws Exception {
-        assetIssuingTransactionManager.issueAssets(digitalAssetToIssue, assetsAmount, walletPublicKey, blockchainNetworkType);
+        assetIssuingTransactionManager.issueAssets(digitalAsset, assetsAmount, walletPublicKey, blockchainNetworkType);
     }
 
     @Test
     public void test_Throws_CantIssueDigitalAssetsException() throws Exception {
-        catchException(assetIssuingTransactionManager).issueAssets(digitalAssetToIssue, assetsAmount, walletPublicKey, null);
+        catchException(assetIssuingTransactionManager).issueAssets(digitalAsset, assetsAmount, walletPublicKey, null);
         Exception thrown = caughtException();
         assertThat(thrown)
                 .isNotNull()

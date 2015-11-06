@@ -36,12 +36,9 @@ public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implemen
     @Override
     public final void start() throws CantStartPluginException {
 
-        System.out.println("if i'm not null i will show you something: "+errorManager);
-
         this.fermatEventMonitor = new EventManagerPlatformServiceEventMonitor(this.errorManager);
 
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     /**
@@ -49,6 +46,9 @@ public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implemen
      */
     private final ConcurrentHashMap<String, List<FermatEventListener>> listenersMap;
 
+    /**
+     * Constructor without parameters.
+     */
     public EventManagerPlatformServiceAddonRoot() {
         super(new AddonVersionReference(new Version()));
 
