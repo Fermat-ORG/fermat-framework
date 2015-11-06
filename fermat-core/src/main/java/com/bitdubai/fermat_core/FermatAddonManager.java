@@ -34,10 +34,13 @@ public class FermatAddonManager {
                                                                                                                  VersionNotFoundException {
 
         try {
+
             final AbstractAddon abstractAddon = systemContext.getAddonVersion(addonVersionReference);
 
             if (abstractAddon.isStarted())
                 return abstractAddon;
+
+            System.out.println("Init Addon Start-Up: " + addonVersionReference.toString3());
 
             final List<AddonVersionReference> neededAddons = abstractAddon.getNeededAddons();
 
@@ -47,6 +50,7 @@ public class FermatAddonManager {
             }
 
             startAddon(abstractAddon);
+            System.out.println("End  Addon Start-Up: " + addonVersionReference.toString3());
 
             return abstractAddon;
         } catch (CantListNeededReferencesException e) {

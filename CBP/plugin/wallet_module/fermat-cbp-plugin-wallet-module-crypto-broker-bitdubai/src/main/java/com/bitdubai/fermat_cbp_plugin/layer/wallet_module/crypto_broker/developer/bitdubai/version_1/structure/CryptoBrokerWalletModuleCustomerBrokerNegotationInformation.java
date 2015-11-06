@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
+package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -8,8 +8,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,12 +20,19 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * Created by nelson on 28/10/15.
+ * Customer and Broker Negotiation Information
+ *
+ * @author Nelson Ramirez
+ * @version 1.0
+ * @since 05/11/15.
  */
-public class NegotiationInformationTestData implements CustomerBrokerNegotiationInformation {
+public class CryptoBrokerWalletModuleCustomerBrokerNegotationInformation implements CustomerBrokerNegotiationInformation {
+
+    // -- for test purposes
     private static final Random random = new Random(321515131);
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
     private static final Calendar calendar = Calendar.getInstance();
+    // for test purposes --
 
     private ActorIdentity customerIdentity;
     private ActorIdentity brokerIdentity;
@@ -32,7 +41,8 @@ public class NegotiationInformationTestData implements CustomerBrokerNegotiation
     private NegotiationStatus status;
     private long date;
 
-    public NegotiationInformationTestData(String customerAlias, String merchandise, String paymentMethod, String paymentCurrency, NegotiationStatus status) {
+
+    public CryptoBrokerWalletModuleCustomerBrokerNegotationInformation(String customerAlias, String merchandise, String paymentMethod, String paymentCurrency, NegotiationStatus status) {
 
         this.customerIdentity = new ActorIdentityImpl(customerAlias, new byte[0]);
         this.brokerIdentity = new ActorIdentityImpl("BrokerAlias", new byte[0]);
@@ -51,13 +61,15 @@ public class NegotiationInformationTestData implements CustomerBrokerNegotiation
         date = calendar.getTimeInMillis();
 
         clauses = new HashSet<>();
-        clauses.add(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY_QUANTITY, currencyQty, ClauseStatus.DRAFT));
-        clauses.add(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY, merchandise, ClauseStatus.DRAFT));
-        clauses.add(new ClauseInformationImpl(ClauseType.BROKER_BANK, "Banesco", ClauseStatus.DRAFT));
-        clauses.add(new ClauseInformationImpl(ClauseType.BROKER_BANK_ACCOUNT, "2165645454654", ClauseStatus.DRAFT));
-        clauses.add(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY, paymentCurrency, ClauseStatus.DRAFT));
-        clauses.add(new ClauseInformationImpl(ClauseType.BROKER_PAYMENT_METHOD, paymentMethod, ClauseStatus.DRAFT));
-        clauses.add(new ClauseInformationImpl(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
+        clauses.add(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, currencyQty, ClauseStatus.DRAFT));
+        clauses.add(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, merchandise, ClauseStatus.DRAFT));
+        clauses.add(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_BANK, "Banesco", ClauseStatus.DRAFT));
+        clauses.add(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_BANK_ACCOUNT, "2165645454654", ClauseStatus.DRAFT));
+        clauses.add(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, paymentCurrency, ClauseStatus.DRAFT));
+        clauses.add(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, paymentMethod, ClauseStatus.DRAFT));
+        clauses.add(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
+        clauses.add(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, "18-11-2015", ClauseStatus.DRAFT));
+        clauses.add(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, "20-11-2015", ClauseStatus.DRAFT));
     }
 
     @Override
@@ -67,7 +79,7 @@ public class NegotiationInformationTestData implements CustomerBrokerNegotiation
 
     @Override
     public ActorIdentity getBroker() {
-        return null;
+        return brokerIdentity;
     }
 
     @Override
@@ -77,7 +89,7 @@ public class NegotiationInformationTestData implements CustomerBrokerNegotiation
 
     @Override
     public Collection<ClauseInformation> getClauses() {
-        return null;
+        return clauses;
     }
 
     @Override
@@ -89,6 +101,7 @@ public class NegotiationInformationTestData implements CustomerBrokerNegotiation
     public long getLastUpdate() {
         return date;
     }
+
 
     private class ActorIdentityImpl implements ActorIdentity {
 
@@ -107,7 +120,7 @@ public class NegotiationInformationTestData implements CustomerBrokerNegotiation
 
         @Override
         public String getPublicKey() {
-            return "54as65d4a8sd4ds8fasdf6a85";
+            return "54as65d4a8sd4ds8fv2vr3as2df6a85";
         }
 
         @Override
@@ -128,34 +141,6 @@ public class NegotiationInformationTestData implements CustomerBrokerNegotiation
         @Override
         public String createMessageSignature(String message) throws CantCreateMessageSignatureException {
             return null;
-        }
-    }
-
-    private class ClauseInformationImpl implements ClauseInformation {
-
-        private ClauseType clauseType;
-        private String value;
-        private ClauseStatus status;
-
-        public ClauseInformationImpl(ClauseType clauseType, String value, ClauseStatus status) {
-            this.clauseType = clauseType;
-            this.value = value;
-            this.status = status;
-        }
-
-        @Override
-        public ClauseType getType() {
-            return clauseType;
-        }
-
-        @Override
-        public String getValue() {
-            return value;
-        }
-
-        @Override
-        public ClauseStatus getStatus() {
-            return status;
         }
     }
 }

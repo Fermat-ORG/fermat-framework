@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
@@ -16,7 +18,10 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
@@ -83,6 +88,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.LogManager;
 
 
 /**
@@ -108,51 +114,28 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 {
     private IntraWalletUserActorDao intraWalletUserActorDao;
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    ErrorManager errorManager;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
 
-    /**
-     * DealsWithEvents Interface member variables.
-     */
-    EventManager eventManager;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
-    /**
-     * DealsWithDeviceUsers Interface member variables.
-     */
-    private DeviceUserManager deviceUserManager;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
 
-    List<FermatEventListener> listenersAdded = new ArrayList<>();
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.INTRA_WALLET_USER)
+    private IntraUserManager intraUserNetworkServiceManager;
+
+    private final List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealsWithLogger interface member variable
      */
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
-    /**
-     * DealsWithIntraWalletUsersNetworkService interface member variable
-     */
-    IntraUserManager intraUserNetworkServiceManager;
-
-    /**
-     * DealsWithPlatformDatabaseSystem Interface member variables.
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-
-
-    /**
-     * FileSystem Interface member variables.
-     */
-    PluginFileSystem pluginFileSystem;
-
-
-    /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
 
     /**
      * Service Interface member variables.
@@ -169,15 +152,6 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         super(new PluginVersionReference(new Version()));
 
     }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
-    }
-
-
-
-
 
     /**
      * ActorIntraWalletUserManager interface implementation.
@@ -546,30 +520,6 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
     }
 
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    /**
-     * PlugIn Interface implementation.
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
     /**
      * DatabaseManagerForDevelopers Interface implementation.
      */
@@ -755,10 +705,6 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     public final void setPluginFileSystem(final PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
     }
-
-
-
-
 }
 
 

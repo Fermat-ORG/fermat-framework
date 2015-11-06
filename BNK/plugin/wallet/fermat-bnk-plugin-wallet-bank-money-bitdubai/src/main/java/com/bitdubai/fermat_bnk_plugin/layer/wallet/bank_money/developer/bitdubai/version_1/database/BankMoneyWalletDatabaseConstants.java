@@ -13,6 +13,11 @@ package com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitduba
 public class BankMoneyWalletDatabaseConstants {
 
     /**
+     * Database name
+     */
+    static final String DATABASE_NAME = "BankMoney";
+
+    /**
      * Bank Money database table definition.
      */
     static final String BANK_MONEY_TABLE_NAME = "bank_money";
