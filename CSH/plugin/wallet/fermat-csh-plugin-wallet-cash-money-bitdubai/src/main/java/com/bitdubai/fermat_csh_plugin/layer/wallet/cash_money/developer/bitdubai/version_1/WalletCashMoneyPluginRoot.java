@@ -185,8 +185,8 @@ public class WalletCashMoneyPluginRoot implements  DealsWithErrors, DealsWithLog
             throw new CantTransactionCashMoneyException(
                     CantTransactionCashMoneyException.DEFAULT_MESSAGE,
                     e,
-                    "Cant Transaction CashMoney Exception",
-                    "Cant Transaction CashMoney Exception"
+                    "Cant Transaction CashMoneyManagerImp Exception",
+                    "Cant Transaction CashMoneyManagerImp Exception"
             );
         }
     }
