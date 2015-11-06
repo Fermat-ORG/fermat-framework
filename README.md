@@ -28,7 +28,7 @@ The framework evolves from the standalone crypto wallet and enables an ecosystem
 
 * To act as a local back-end for native-Fermat-APPs and wallets, but also to any other mobile APP running on the same device.
 
-* To be a full-stack Framework to develop financial applications that cannot be banned or easily attacked as it is fully decentralized. 
+* To be a full-stack Framework to develop financial applications that cannot be banned or easily attacked as they are fully decentralized. 
 
 
 #### Open Source
