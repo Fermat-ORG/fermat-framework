@@ -933,7 +933,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
             FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_ASSET_REDEEM_POINT_REGISTRATION_NOTIFICATION);
             event.setSource(EventSource.ACTOR_ASSET_REDEEM_POINT);
 
-            ((ActorAssetRedeemPointCompleteRegistrationNotificationEvent) event).setActorAssetUser(actorAssetUserNewRegsitered);
+            ((ActorAssetRedeemPointCompleteRegistrationNotificationEvent) event).setActorAssetRedeemPoint(actorAssetUserNewRegsitered);
 
             eventManager.raiseEvent(event);
 

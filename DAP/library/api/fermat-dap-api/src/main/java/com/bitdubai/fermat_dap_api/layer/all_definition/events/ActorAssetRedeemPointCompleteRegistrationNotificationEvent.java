@@ -14,7 +14,7 @@ public class ActorAssetRedeemPointCompleteRegistrationNotificationEvent extends 
         return actorAssetRedeemPoint;
     }
 
-    public void setActorAssetUser(ActorAssetRedeemPoint actorAssetRedeemPoint) {
+    public void setActorAssetRedeemPoint(ActorAssetRedeemPoint actorAssetRedeemPoint) {
         this.actorAssetRedeemPoint = actorAssetRedeemPoint;
     }
 
