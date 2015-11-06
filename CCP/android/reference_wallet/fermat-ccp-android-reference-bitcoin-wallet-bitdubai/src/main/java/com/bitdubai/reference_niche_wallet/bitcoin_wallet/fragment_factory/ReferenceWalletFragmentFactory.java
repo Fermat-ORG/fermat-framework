@@ -12,6 +12,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestSendHistoryFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendTransactionFragment2;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendTransactionsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.TransactionsReceivedHistory;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.TransactionsSendHistory;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.RequestsReceivedFragment;
@@ -49,8 +50,8 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
                     //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.SendFragment.newInstance(0);
                    // currentFragment = SendFragment.newInstance();
-                    currentFragment = SendTransactionsFragment.newInstance();
-                   // currentFragment = SendTransactionFragment2.newInstance();
+                   // currentFragment = SendTransactionsFragment.newInstance();
+                    currentFragment = SendTransactionFragment2.newInstance();
                     break;
 
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS:
