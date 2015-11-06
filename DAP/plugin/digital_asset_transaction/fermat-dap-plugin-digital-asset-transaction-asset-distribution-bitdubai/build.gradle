@@ -1,9 +1,5 @@
 apply plugin: 'java'
-/*apply plugin: 'maven'
-apply plugin: 'findbugs'
-apply plugin: 'checkstyle'
-apply plugin: 'pmd'
-apply plugin: 'jacoco'*/
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.7
 version = '1.0'
@@ -19,21 +15,9 @@ dependencies {
     compile project(':fermat-dap-api')
     compile project(':fermat-bch-api')
     compile project(':fermat-ccp-api')
-//Commented by Manuel Perez, this imports was broken the app in execution time
-//    testCompile group: 'junit', name: 'junit', version: '4.11'
-//    testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
-//    testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
-}
-/*
-pmd {
-    toolVersion = '5.1.3'
-}
-
-tasks.withType(FindBugs) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
+    testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
 }
 
 def jacocoHtmlReport = ""
@@ -50,4 +34,4 @@ task testCoverage(dependsOn: jacocoTestReport) << {
 
 jacocoTestReport.dependsOn clean, test
 jacocoTestReport.mustRunAfter test
-test.mustRunAfter clean*/
+test.mustRunAfter clean
