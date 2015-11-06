@@ -24,7 +24,7 @@ Fermat is a trust-less financial application framework that enables any kind of 
 
 The framework evolves from the stand-alone crypto wallet and enables an ecosystem of trust-less financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down from the OS API level, then the Blockchain Level, the Communication Level, Platform Level up to the User Interface Level. 
 
-#### Fermat goals are:
+#### Fermat Goals
 
 * To allow even non-developers to build their own desktop and mobile trust-less financial applications in a similar way a non-developer builds a **Worldpress** site: re-using Plug-ins and _themes_. 
 
