@@ -28,8 +28,11 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
  *
  * Created by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
-public class ErrorManagerPlatformServiceAddonRoot extends AbstractAddon implements ErrorManager {
+public final class ErrorManagerPlatformServiceAddonRoot extends AbstractAddon implements ErrorManager {
 
+    /**
+     * Constructor without parameters.
+     */
     public ErrorManagerPlatformServiceAddonRoot() {
         super(new AddonVersionReference(new Version()));
     }
@@ -108,11 +111,11 @@ public class ErrorManagerPlatformServiceAddonRoot extends AbstractAddon implemen
         processException(exceptionSource.toString(), "Unknow", exception);
     }
 
-    private final void processException(final String source, final String severity, final Exception exception){
+    private void processException(final String source, final String severity, final Exception exception){
         printErrorReport(source, severity, FermatException.wrapException(exception));
     }
 
-    private final void printErrorReport(final String source, final String severity, final FermatException exception){
+    private void printErrorReport(final String source, final String severity, final FermatException exception){
         System.err.println(new ErrorReport(source, severity, exception).generateReport());
     }
 
