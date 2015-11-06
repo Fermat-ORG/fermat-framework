@@ -20,6 +20,9 @@ public enum Activities {
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST("CWRWBWBV1PR"),
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS("CWRWBWBV1C"),
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_SETTINGS("CWRWBWBV1S"),
+
+    CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY("CCPBWSFA"),
+
     /**
      * Intra user
      */
@@ -331,6 +334,8 @@ public enum Activities {
                 return DEVELOP_MODE;
             case "WPD":
                 return WPD_DESKTOP;
+            case "CCPBWSFA":
+                return CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
