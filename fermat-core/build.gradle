@@ -66,6 +66,7 @@ dependencies {
     compile project(':fermat-dap-plugin-digital-asset-transaction-redeem-point-redemption-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-issuer-redemption-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-user-redemption-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai')
     compile project(':fermat-dap-plugin-middleware-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai')
