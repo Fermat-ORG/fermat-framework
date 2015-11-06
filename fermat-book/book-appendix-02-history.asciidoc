@@ -2,7 +2,7 @@
 == Appendix 02: Fermat's History
 
 
-=== The Story
+=== Greek origins
 
 
 Pythagoras had to pay his first student to convince him to study with him. He gave him three oboli (about a penny) per lesson until one day he said there was no more money. The student replied that he preferred to pay, provided that they continued with the lessons. The rumor ran through the Greek islands and so the Pythagorean School, also known as the Secret Brotherhood, a philosophical / religious monastic order counting 300 members, was formed. By then counting and calculating had been widely practiced by the Babylonians and Egyptians but the Pythagoreans went far beyond that. “All is Number” was their motto attesting to their conviction that numbers were the key to life itself. Pythagoras strongly believed that relationships between numbers could reveal, through logical demonstration, all the secrets of the universe, hence he started producing his theorems. The Brotherhood walked briskly with his theorems but did nothing to share the secrets of the universe arousing the ire of the people who one day set the school on fire.
@@ -74,6 +74,6 @@ I am anything but superstitious, however, it goes without saying that the questi
 
 “Have you been aware that the word ‘inception’ in Arabic used as your logo would read ‘bitcoin’ just by adding one dot to it?”
 
-Luis Fernando Molina
+*Luis Fernando Molina +
+Fermat's Project Founder*
 
-Fermat's Project Founder

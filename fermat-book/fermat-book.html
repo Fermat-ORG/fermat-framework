@@ -546,6 +546,9 @@ Fermat&#8217;s architechture includes the possibility of interconnecting the tru
 <div class="paragraph">
 <p><a href="book-appendix-02-history.asciidoc">Appendix: Fermat History</a></p>
 </div>
+<div class="paragraph">
+<p><a href="book-appendix-03-money.asciidoc">Appendix: Money and Crypto Currency</a></p>
+</div>
 </div>
 </div>
 </div>
@@ -1479,10 +1482,51 @@ This starts in the originating device and then both flows - value and meta data 
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_what_is_a_digital_asset">What is a Digital Asset ?</h3>
+<div class="paragraph">
+<p>A Digital Asset is a digital representation of a product or service that can be obtained in exchange of the asset. Another way of saying this, is that it is a representation of something of value that comes with a "right to use" for the assets possesor. ( The asset can be <strong>redeemed</strong> and the end user gets the product or service represented by it)<br>
+To create a digital asset two main components are needed:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">the asset meta-data </dt>
+<dd>
+<p>a set of information of what is represented by the asset and the conditions attached to it (<strong>asset contract</strong>)</p>
+</dd>
+<dt class="hdlist1">the validation code </dt>
+<dd>
+<p>a method that proofs that the asset is genuine and that it cannot be duplicated or forged+
+Fermat incorporates the management of Digital Assets over crypto, being the crypto component what ensures it authenticity among other very useful features granted by using blockchain technology.<br>
+The application of Digital Assets is as wide as the digital world. There are some assets types that are familiar and some that sound like sci-fi.<br></p>
+</dd>
+</dl>
+</div>
+<div class="ulist horizontal">
+<div class="title">Some types and sub-types</div>
+<ul class="horizontal">
+<li>
+<p><strong>Digital Assets used in Marketing</strong>: Coupons and Discounts</p>
+</li>
+<li>
+<p><strong>Vouchers for services</strong>: Tourism vouchers, Mobile Phone Vouchers ( Mobile Phone Pre-paid Credit Refill Cards )</p>
+</li>
+<li>
+<p><strong>Corporate world</strong>: Company&#8217;s shares</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fermat_digital_assets">Fermat Digital Assets</h3>
+<div class="paragraph">
+<p>Other Digital Assets over crypto implementations available in the market are dependant on the cryptocurrency chosen ( Bitcoin, Litecoin, Ripple, etc) but thanks to Fermat infrastructural connectivity to several cryptonetworks, Fermat Digital Assets can be issued in different cryptocurrencies. The whole set of functionalities to i Digital Assets handling in Fermat is provided by <em>Fermat Digital Assets Platform</em>, and from it a new whole branch on <em>platforms based in digital assets</em> is created. The first application is taken by <em>Fermat Marketing Platform</em> which focuses on applications for the Marketing Agencies world.</p>
+</div>
 <div class="sect3">
 <h4 id="_continue_reading_12">Continue Reading</h4>
 <div class="paragraph">
 <p><a href="book-chapter-19.asciidoc">Digital Assets Platform</a></p>
+</div>
+<div class="paragraph">
+<p><a href="book-chapter-20.asciidoc">Marketing Platform</a></p>
 </div>
 <div class="paragraph">
 <p><a href="book-chapter-12.asciidoc">Next Chapter</a></p>
@@ -2096,10 +2140,113 @@ Cash Out Point
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_blockchain_beyond_currency">Blockchain beyond currency</h3>
+<div class="paragraph">
+<p>With the adoption of <em>Digital Asset Management</em> within Fermat, the framework stablishes two disctint branches and its interconnected platform sets, one managing cryptocurrencies and therefore dealing with different cases of money transactions and another one, starting with this platform, to manage transactions and services based on digital assets.<br></p>
+</div>
+<div class="olist arabic">
+<div class="title">Asset Characteristics</div>
+<ol class="arabic">
+<li>
+<p>They are created by an <strong>asset issuer</strong></p>
+</li>
+<li>
+<p>They have an <strong>expiration date</strong></p>
+</li>
+<li>
+<p>They belong to a certain <strong>asset type</strong> and <strong>asset sub-type</strong></p>
+</li>
+<li>
+<p>They have an associated <strong>meta-data</strong> (image, sound, multimedia file, etc)</p>
+</li>
+<li>
+<p>They have compulsory conditions to complay enclosed in the <strong>asset contract</strong>, related separately to the <strong>issuer</strong>, to its <strong>type</strong> and <strong>sub-type</strong></p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_new_identities_2">New Identities</h3>
+<div class="paragraph">
+<p>The new identities introduced to run the basic life cycle of an digital asset are:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Asset Issuer </dt>
+<dd>
+<p>creator and owner of the asset. He "hashes" the assets meta-data and link it to a <em>crypto transaction</em> of a small crypto currency amount to a predefined <strong>asset issuer crypto address</strong>, and by this conjunct actions the asset is <strong>issued</strong>.</p>
+</dd>
+<dt class="hdlist1">Asset User </dt>
+<dd>
+<p>is the original recipient of the asset. After receiving it (as a part of a distribution campaign for example), he can perform several actions later described in the available transactions for digital asset, but the most frequent could be the transfer to a <em>redeem point</em> to exchange it for the product/service represented by it.</p>
+</dd>
+<dt class="hdlist1">Redeem Point </dt>
+<dd>
+<p>is the point where the asset is exchanged for the service/product.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_new_components_7">New Components</h3>
+<div class="paragraph">
+<p>The business logic of the use of digital assets and the new interelations between the actores involved need the folowing services to be granted:<br></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Wallets 
+</td>
+<td class="hdlist2">
+<p>one for each actor: Asset Issuer Wallet, Asset User Wallet, Redeem Point Wallet.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Transactions 
+</td>
+<td class="hdlist2">
+<p>Issuing, Distribution and Reception of digital assets.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Issuing 
+</td>
+<td class="hdlist2">
+<p>tools to create an asset: <em>Asset Factory</em></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Redemption 
+</td>
+<td class="hdlist2">
+<p>three possible ways: by the Issuer, by the User and by a Redeem Point.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Appropiation 
+</td>
+<td class="hdlist2">
+<p>possibility of keeping the asset and <strong>appropiating</strong> the inherited crypto currency amount ( transforming it into its <strong>nominal value</strong> )</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Community 
+</td>
+<td class="hdlist2">
+<p>tools to linking the Digital Assets actors among them ( Issuer, User and Redeem Point Communities )</p>
+</td>
+</tr>
+</table>
+</div>
 <div class="sect3">
 <h4 id="_continue_reading_20">Continue Reading</h4>
 <div class="paragraph">
-<p><a href="book-chapter-12.asciidoc">Fermat Digital Assets Management</a></p>
+<p><a href="book-chapter-11.asciidoc">Fermat Digital Assets Management</a></p>
 </div>
 <div class="paragraph">
 <p><a href="book-chapter-20.asciidoc">Next Chapter</a></p>
@@ -2396,7 +2543,7 @@ Cash Out Point
 <h2 id="_appendix_02_fermat_s_history">Appendix 02: Fermat&#8217;s History</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_the_story">The Story</h3>
+<h3 id="_greek_origins">Greek origins</h3>
 <div class="paragraph">
 <p>Pythagoras had to pay his first student to convince him to study with him. He gave him three oboli (about a penny) per lesson until one day he said there was no more money. The student replied that he preferred to pay, provided that they continued with the lessons. The rumor ran through the Greek islands and so the Pythagorean School, also known as the Secret Brotherhood, a philosophical / religious monastic order counting 300 members, was formed. By then counting and calculating had been widely practiced by the Babylonians and Egyptians but the Pythagoreans went far beyond that. “All is Number” was their motto attesting to their conviction that numbers were the key to life itself. Pythagoras strongly believed that relationships between numbers could reveal, through logical demonstration, all the secrets of the universe, hence he started producing his theorems. The Brotherhood walked briskly with his theorems but did nothing to share the secrets of the universe arousing the ire of the people who one day set the school on fire.</p>
 </div>
@@ -2491,22 +2638,26 @@ Cash Out Point
 <p>“Have you been aware that the word ‘inception’ in Arabic used as your logo would read ‘bitcoin’ just by adding one dot to it?”</p>
 </div>
 <div class="paragraph">
-<p>Luis Fernando Molina</p>
+<p><strong>Luis Fernando Molina<br>
+Fermat&#8217;s Project Founder</strong></p>
 </div>
-<div class="paragraph">
-<p>Fermat&#8217;s Project Founder</p>
 </div>
-<div class="sect3">
-<h4 id="_what_s_behind_money">What&#8217;s behind money?</h4>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_appendix_03_money_and_crypto_currency">Appendix 03: Money and Crypto Currency</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_what_s_behind_money">What&#8217;s behind money?</h3>
 <div class="paragraph">
 <p>In our daily live we have accepted money as something present in almost every activity of human endeavour, and most of us use it without reflecting on its origin or its deeper meaning. Making it simple, money is an agreed mean of exchanging value. By its universal adoption it allows a flow of products and services between the different actors in a producer-consumer chain ( or better, in a "web" of commercial interactions) and following this, an exchange of the value associated with each step, rewarding each actor with a portion of the entire value, what we call "profit".
 During the early ages trading was made directly exchanging certain goods for other goods, then as trading was growing at scale, the necessity of unification of mass and measures lead to the rising of money representing in some way the value of what was being exchange and a relative consensus over it. Later on, with the rising of the different nations which created a certain unification under certain name, language and goverment and rules to be applied to a determined territory and its inhabitants, this nations extended their souveranity also to the issue of a national currency and the printing of "official" paper money. At the begginning the amount of paper money was guaranteed by a national reserve on gold, but most of goverment abandoned the <strong>gold standard</strong> after the 1930 world crisis, and after 1971 the US goverment severed definitely the link between US Dollar to gold. This means, that the current money we use only depends on the "trust" we deposit on the goverment that rules its emission and this "legal curse" is enforced by law. There is NOT ANY OTHER intrinsec propierty on paper money to ensure its value than this!! When talking about corruption in some of our political and financial institutions, we can easily perceive how often this trust has been abused. This kind of money enforced by law which value is not linked to any specific asset has been called <strong>fiat money</strong>.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_cryptocurrency">Cryptocurrency</h4>
+<div class="sect2">
+<h3 id="_cryptocurrency">Cryptocurrency</h3>
 <div class="paragraph">
-<p>When Bitcoin solved the issues that prevented other digital currencies to become a viable digital money ( "authenticity" (of the issuing and ownership) and the "double-spend" problem) it opened a whole new world in financial systems and economy, where cryptography provides the basis for trusting the legitimacy of a user&#8217;s claim to value. So, this new kind of currency that is entirely virtual and that is implied in transactions that transfer value from sender to recipient based on crytographic signatures is what we call <strong>cryptocurrency</strong></p>
+<p>When Bitcoin solved the issues that prevented other digital currencies to become a viable <em>digital money</em> ( <strong>authenticity</strong> of the issuing and ownership and the <strong>"double-spend"</strong> problem) it opened a whole new world in financial systems and economy, where cryptography provides the basis for trusting the legitimacy of a user&#8217;s claim to value. So, this new kind of currency that is entirely virtual and that is implied in transactions that transfer value from sender to recipient based on crytographic signatures is what we call <strong>cryptocurrency</strong>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2516,8 +2667,8 @@ During the early ages trading was made directly exchanging certain goods for oth
 </td>
 <td class="content">
 The undeniable achievement of Bitcoin&#8217;s electronic signature protocol based on <strong>crytography</strong> is the creation of a distributed public ledger of peer-to-peer electronic transactions that is transparent and at the same time preserves the anonimity and the security needed to become a safe way of transporting <strong>value</strong>, based on <strong>consensus agreement</strong>. This technology opens the door to a new paradigma in economics, computer science, financial operations, and world-wide commerce.<br>
-Sakamoto&#8217;s invention makes possible to unveil the world of financial transactions, to get rid of the necessity of <strong>trust</strong> into a third party institution or central goverments, to make money a secure thing, and transactions transparent and effortless. It returns to the money&#8217;s owner the absolute control over his richnes.<br>
-The cryptocurrency scheme encourages us to adopt a radical new point of view on money and the concept of value itself and its transport, so radical, that it will take us  time and effort to really grasp it, because it leads to the unconditionally honoring and empowering of each individual.
+Nakamoto&#8217;s invention makes possible to unveil the world of financial transactions, to get rid of the necessity of <strong>trust</strong> into a third party institution or central goverments, to make money a secure thing, and transactions transparent and effortless. It returns to the money&#8217;s owner the absolute control over his richnes.<br>
+This <strong>trust-less</strong> (or <strong>trust-free</strong>) cryptocurrency scheme encourages us to adopt a radical new point of view on money and the concept of value itself and its transport, so radical, that it will take us  time and effort to really grasp it, because it leads to the unconditionally honoring and empowering of each individual.
 </td>
 </tr>
 </table>
@@ -2537,7 +2688,6 @@ Taking Bitcoin as "the" paradigmatic model of every cryptocurrency, we need to h
 </td>
 </tr>
 </table>
-</div>
 </div>
 </div>
 </div>
