@@ -35,8 +35,6 @@ public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.l
     /**
      * Navigation Estructure
      */
-
-
     /**
      * Basic wallet plugin
      */
