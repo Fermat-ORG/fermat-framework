@@ -5,7 +5,6 @@ import android.util.Base64;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -14,10 +13,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.exceptions.CantHashDatabaseNameException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -28,10 +25,11 @@ import java.util.UUID;
  * Encapsulates all the necessary functions to manage the database , its tables and records.
  * For interfaces PluginDatabase the modules need to authenticate with their plugin ids
  *
- * Created by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
+ * Created by nattyco
+ * Modified by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
 
-public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implements PluginDatabaseSystem {
+public final class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implements PluginDatabaseSystem {
 
     private Context context;
 
@@ -39,7 +37,7 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
     public PluginDatabaseSystemAndroidAddonRoot() {
         super(
                 new AddonVersionReference(new Version()),
-                true
+                true // true because uses system context (the core will assign the context if needed)
         );
     }
 
@@ -56,44 +54,31 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
             );
         }
     }
+    /**
+     * PluginDatabaseSystem Interface implementation.
+     */
 
     @Override
     public final Database openDatabase(final UUID   ownerId     ,
                                        final String databaseName) throws CantOpenDatabaseException ,
-                                                                         DatabaseNotFoundException {
+                                                                   DatabaseNotFoundException {
 
         try {
-            AndroidDatabase database;
+
             String hasDBName = hashDataBaseName(databaseName);
-            database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
+            AndroidDatabase database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
             database.openDatabase();
             return database;
-        } catch (final CantHashDatabaseNameException e){
+
+        } catch (final NoSuchAlgorithmException e) {
 
             throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+        } catch (final DatabaseNotFoundException exception){
+
+            throw exception;
         } catch (final Exception e){
 
-            throw new CantOpenDatabaseException(e, null, "Unhandled Exception.");
-        }
-    }
-
-    @Override
-    public final Database createDatabase (final UUID   ownerId     ,
-                                          final String databaseName) throws CantCreateDatabaseException {
-
-        try {
-            AndroidDatabase database;
-            String hasDBName = hashDataBaseName(databaseName);
-            database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
-            database.createDatabase(hasDBName);
-            return database;
-        }
-        catch (final CantHashDatabaseNameException e){
-
-            throw new CantCreateDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (Exception e){
-
-            throw new CantCreateDatabaseException(e, null, "Unhandled Exception.");
+            throw new CantOpenDatabaseException(e, null, "Unhandled Exception");
         }
 
     }
@@ -101,42 +86,65 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
     @Override
     public final void deleteDatabase(final UUID   ownerId     ,
                                      final String databaseName) throws CantOpenDatabaseException ,
-                                                                       DatabaseNotFoundException {
+                                                                 DatabaseNotFoundException {
+
+        try {
+
+            String hasDBName = hashDataBaseName(databaseName);
+            AndroidDatabase database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
+            database.deleteDatabase();
+
+        } catch (final NoSuchAlgorithmException e){
+
+            throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+        } catch (final DatabaseNotFoundException exception){
+
+            throw exception;
+        } catch (final Exception e){
+
+            throw new CantOpenDatabaseException(e, null, "Unhandled Exception");
+        }
+
+    }
+
+    @Override
+    public final Database createDatabase(final UUID   ownerId     ,
+                                         final String databaseName) throws CantCreateDatabaseException {
 
         try {
             String hasDBName = hashDataBaseName(databaseName);
-            AndroidDatabase database;
-            database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
-            database.deleteDatabase();
+            AndroidDatabase database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
+            database.createDatabase(hasDBName);
+            return database;
 
-        } catch (final CantHashDatabaseNameException e){
+        } catch (final NoSuchAlgorithmException e){
 
-            throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+            throw new CantCreateDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
         } catch (final Exception e){
 
-            throw new CantOpenDatabaseException(e, null, "Unhandled Exception.");
+            throw new CantCreateDatabaseException(e, null, "Unhandled Exception");
         }
+
     }
 
-    private String hashDataBaseName(final String databaseName) throws CantHashDatabaseNameException {
+    private String hashDataBaseName(final String databaseName) throws NoSuchAlgorithmException {
+
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(databaseName.getBytes(Charset.forName("UTF-8")));
+        byte[] digest = md.digest();
+        byte[] encoded = Base64.encode(digest, 1);
 
         try {
 
-            final MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(databaseName.getBytes(Charset.forName("UTF-8")));
-            byte[] digest = md.digest();
-            byte[] encoded = Base64.encode(digest, 1);
-
             String encryptedString = new String(encoded, "UTF-8");
 
-            return encryptedString.replace("/","");
+            encryptedString = encryptedString.replace("/","");
 
-        } catch(final UnsupportedEncodingException e){
+            return encryptedString.replace("\n","");
 
-            throw new CantHashDatabaseNameException(e, "databaseName: "+ databaseName, "Unsupported encoding exception.");
-        } catch(final NoSuchAlgorithmException e){
+        } catch (final Exception e) {
 
-            throw new CantHashDatabaseNameException(e, "databaseName: "+ databaseName, "No such algorithm.");
+            throw new NoSuchAlgorithmException (e);
         }
     }
 }

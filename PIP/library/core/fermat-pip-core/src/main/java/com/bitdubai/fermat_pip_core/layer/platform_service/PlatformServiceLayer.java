@@ -10,7 +10,7 @@ import com.bitdubai.fermat_pip_core.layer.platform_service.location_manager.Loca
 import com.bitdubai.fermat_pip_core.layer.platform_service.platform_info.PlatformInfoSubsystem;
 
 /**
- * The class <code>com.bitdubai.fermat_pip_core.layer.platform_service.PlatformServiceLayer</code>
+ * The class <code>com.bitdubai.fermat_pip_core.layer.platform_service.UserLayer</code>
  * haves all the necessary business logic to start the Platform Service Layer of the PIP Platform.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 26/10/2015.

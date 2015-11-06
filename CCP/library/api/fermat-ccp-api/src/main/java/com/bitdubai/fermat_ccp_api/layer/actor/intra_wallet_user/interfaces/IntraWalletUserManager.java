@@ -16,7 +16,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.Intr
 import java.util.List;
 
 /**
- * The interface <code>IntraWalletUserManager</code>
+ * The interface <code>IntraWalletUserIdentityManager</code>
  * defines the methods to administrate the intra users,
  */
 public interface IntraWalletUserManager {

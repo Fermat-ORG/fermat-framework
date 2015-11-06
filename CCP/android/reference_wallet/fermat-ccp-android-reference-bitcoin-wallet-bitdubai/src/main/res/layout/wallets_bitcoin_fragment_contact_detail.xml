@@ -15,8 +15,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_default_account"
+            android:scaleType="centerCrop"
+            android:src="@drawable/tessa_profile_picture"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:shadowColor="#000"
             android:shadowDy="10"
             android:shadowRadius="8"
-            android:text="Francisco Vásquez"
+            android:text="Matias Furszyfer"
             android:textColor="#FFF"
             android:textSize="20dp"
             android:textStyle="bold" />

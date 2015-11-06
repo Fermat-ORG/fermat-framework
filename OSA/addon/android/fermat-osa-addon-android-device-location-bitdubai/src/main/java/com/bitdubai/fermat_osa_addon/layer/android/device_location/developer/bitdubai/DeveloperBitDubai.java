@@ -4,10 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bitdubai.version_1.DeviceLocationAndroidAddonRoot;
+import com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bitdubai.version_1.DeviceLocationSystemAddonRoot;
 
 /**
  * The class <code>com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bitdubai.DeveloperBitDubai</code>
@@ -27,7 +24,7 @@ public class DeveloperBitDubai extends AbstractAddonDeveloper {
     public void start() throws CantStartAddonDeveloperException {
         try {
 
-            this.registerVersion(new DeviceLocationAndroidAddonRoot());
+            this.registerVersion(new DeviceLocationSystemAddonRoot());
 
         } catch (CantRegisterVersionException e) {
 
