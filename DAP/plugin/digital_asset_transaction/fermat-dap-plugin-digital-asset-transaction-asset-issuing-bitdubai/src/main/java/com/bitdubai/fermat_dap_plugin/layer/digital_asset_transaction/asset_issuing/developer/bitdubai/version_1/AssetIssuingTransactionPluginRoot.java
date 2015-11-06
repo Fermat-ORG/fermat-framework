@@ -24,8 +24,8 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Re
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUsers;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.DealsWithCCPActorIntraWalletUsers;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
@@ -112,7 +112,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithActorAssetIssuer, DealsWithCCPIntraWalletUsers, DealsWithAssetVault, DealsWithAssetIssuerWallet, DealsWithBitcoinWallet, DealsWithBitcoinNetwork, DealsWithCryptoVault,DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, /*DealsWithCryptoVault,*/ DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraActor, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service/*, TransactionProtocolManager*/ {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithActorAssetIssuer, DealsWithCCPActorIntraWalletUsers, DealsWithAssetVault, DealsWithAssetIssuerWallet, DealsWithBitcoinWallet, DealsWithBitcoinNetwork, DealsWithCryptoVault,DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, /*DealsWithCryptoVault,*/ DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraActor, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service/*, TransactionProtocolManager*/ {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetIssuingTransactionManager assetIssuingTransactionManager;
@@ -137,7 +137,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     BitcoinNetworkManager bitcoinNetworkManager;
     CryptoVaultManager cryptoVaultManager;
     ActorAssetIssuerManager actorAssetIssuerManager;
-    IntraWalletUserManager intraWalletUserManager;
+    IntraWalletUserActorManager intraWalletUserManager;
 
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
@@ -510,7 +510,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
-    public void setIntraWalletUserIdentityManager(IntraWalletUserManager intraWalletUserManager) {
+    public void setIntraWalletUserIdentityManager(IntraWalletUserActorManager intraWalletUserManager) {
         this.intraWalletUserManager=intraWalletUserManager;
     }
 

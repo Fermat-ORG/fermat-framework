@@ -183,7 +183,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         List<IdentityAssetIssuer> list = new ArrayList<IdentityAssetIssuer>(); // Issuer list.
         DatabaseTable table; // Intra User table.
 
-        // Get Issuer identities list.
+        // Get Asset Issuers identities list.
         try {
 
             /**
@@ -199,12 +199,13 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
             }
 
 
-            // 2) Find the Issuer.
+            // 2) Find the Identity Issuers.
+
             table.setStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
+            // 3) Get Identity Issuers.
 
-            // 3) Get Issuer.
             for (DatabaseTableRecord record : table.getRecords ()) {
 
                 // Add records to list.

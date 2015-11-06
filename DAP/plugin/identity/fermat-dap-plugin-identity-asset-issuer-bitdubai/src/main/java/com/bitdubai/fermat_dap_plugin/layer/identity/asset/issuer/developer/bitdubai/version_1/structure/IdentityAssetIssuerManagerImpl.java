@@ -155,7 +155,7 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
         }
     }
 
-    public boolean  hasIntraUserIdentity() throws CantListAssetIssuersException{
+    public boolean  hasIntraIssuerIdentity() throws CantListAssetIssuersException{
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
@@ -168,7 +168,7 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
         }  catch (CantListAssetIssuerIdentitiesException e) {
             throw new CantListAssetIssuersException("CAN'T GET IF ASSET ISSUER IDENTITIES EXISTS", e, "", "");
         }catch (Exception e) {
-            throw new CantListAssetIssuersException("CAN'T GET ASSET ISSUER USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
+            throw new CantListAssetIssuersException("CAN'T GET ASSET ISSUER ISSUER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
     }
 

@@ -2,10 +2,10 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateNotificationException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.NotificationNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
