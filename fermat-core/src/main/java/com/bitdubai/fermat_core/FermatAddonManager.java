@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
@@ -21,7 +20,7 @@ import java.util.List;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/10/2015.
  */
-public class FermatAddonManager {
+public final class FermatAddonManager {
 
     private final FermatSystemContext systemContext  ;
 

@@ -49,15 +49,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interface
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.DealsWithAssetRedeemPointWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.RedeemPointRedemptionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDAO;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionEventListException;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException;
-import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantPersistTransactionMetadataException;
-import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.RecordsNotFoundException;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.AssetRedeemPointWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -77,6 +72,10 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
     {
         this.status = ServiceStatus.CREATED;
     }
+// TODO AVOID USING OF DEALS WITH, PASS THE REFERENCE THROUGH PARAMETERS
+
+// TODO IMPLEMENT FERMAT AGENT CLASS
+
 
     private ErrorManager errorManager;
     private LogManager logManager;
@@ -278,9 +277,9 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
 
 
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
-                                assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
+                               /* assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
                                         digitalAsset,
-                                        digitalAsset.getIdentityAssetIssuer().getPublicKey(),
+                                        digitalAsset.getIdentityAssetIssuer().getPublicKey(),TODO COMMENTED DUE TO BAD REFERENCE ADDED IN BUILD.GRADLE
                                         digitalAsset.getName(),
                                         digitalAsset.getDescription(),
                                         actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
@@ -297,7 +296,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
                                 AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.BOOK);
 
                                 //CREDIT ON BOOK BALANCE
-                                walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.BOOK);
+                                walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.BOOK);*/
 
                                 //PERSIST METADATA
                                 dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
@@ -329,9 +328,9 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
                                 DigitalAssetMetadata metadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
                                 DigitalAsset digitalAsset = metadata.getDigitalAsset();
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
-                                assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
+                                /*assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
                                         digitalAsset,
-                                        digitalAsset.getIdentityAssetIssuer().getPublicKey(),
+                                        digitalAsset.getIdentityAssetIssuer().getPublicKey(), TODO COMMENTED DUE TO BAD REFERENCE ADDED IN BUILD.GRADLE
                                         digitalAsset.getName(),
                                         digitalAsset.getDescription(),
                                         actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
@@ -352,7 +351,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
 
                                 //I GOT IT, EVERYTHING WENT OK!
                                 dao.updateTransactionStatusById(DistributionStatus.ASSET_ACCEPTED, transactionId);
-                                dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);
+                                dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);*/
                             }
 
                             //UPDATE EVENT STATUS
