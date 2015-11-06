@@ -14,17 +14,17 @@ In order to meet this demand thousands of wallets should be available. Wallets w
 
 #### The Master Plan
 
-Fermat is a master plan to avoid getting to that future through waiting for independent entrepreneurs to build each of these wallets and financial apps one at the time and from scratch, repeating every time all the math, accounting, cryptography and algorithms that are common to all these apps. Fermat handles all that and by doing the heavy lifting enables any developer in the world to easily create niche wallets on top of its shared infraestructure.
+Fermat is a master plan to avoid getting to that future through waiting for independent entrepreneurs to build each of these wallets and financial apps one at the time and from scratch, repeating every time all the math, accounting, cryptography and algorithms that are common to all these APPs. Fermat handles all that and by doing the heavy lifting enables any developer in the world to easily create niche wallets and financtial APPs on top of its shared infraestructure.
 
 #### The Framework
 
 Crypto networks are peer-to-Peer electronic cash systems that allow online payments to be sent directly from one party to another without going through a financial institution. Stand-alone crypto wallets are truth to that principle. But the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallet files or keys, manage identities, interface crypto networks or the legacy financial system.
 
-Fermat is a trust-less financial application framework that enables an ecosystem of any kind of trust-less financial applications, including wallets. It features a Peer-to-Peer network for transporting meta-data and inter-connect network clients between each other. It also features a synchronization scheme that transforms a standalone app into a distributed application across several devices still owned by the same user.
+Fermat is a trust-less financial application framework that enables any kind of trust-less applications, including digital wallets. It features a Peer-to-Peer network for transporting meta-data and inter-connect network clients between each other. It also features a synchronization scheme that transforms a standalone app into a distributed application across several devices still owned by the same user.
 
-The framework evolves from the standalone crypto wallet and enables an ecosystem of trust-less financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down it has the OS API level, then the Blockchain Level, the Communication Level, Platform Level up to the User Interface Level. Its goals are:
+The framework evolves from the stand-alone crypto wallet and enables an ecosystem of trust-less financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down from the OS API level, then the Blockchain Level, the Communication Level, Platform Level up to the User Interface Level. Its goals are:
 
-* To allow even non-developers to build their own desktop and mobile trust-less financial applications in a similar way a non-developer builds a **Worldpress** site: re-using Plug-ins and themes. 
+* To allow even non-developers to build their own desktop and mobile trust-less financial applications in a similar way a non-developer builds a **Worldpress** site: re-using Plug-ins and _themes_. 
 
 * To act as a local back-end for native-Fermat-APPs and wallets, but also to any other mobile APP running on the same device.
 
@@ -35,13 +35,13 @@ The framework evolves from the standalone crypto wallet and enables an ecosystem
 
 The challange is huge, but we know the difference between the impossible and the possible lies in a team's determination. We have the will to excel and the will to reach our vision for this world. 
 
-We have the talent, the drive, and the determination to enable the next generation of financial applications that will allow people to hold their own digital value by themselves in a secure way and participate with their funds in a multitude of transactions and business oportunities across the globe.
+We have the talent, the drive, and the determination to enable the next generation of financial applications. They will allow people to hold their own digital value by themselves in a secure way and to participate with their funds in a multitude of transactions and business oportunities across the globe.
 
 We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization.
 
 #### Developer Network
 
-We are asking each of you to help lead the way.  Because we’re already connected with you as we are also developers and designers, and we want to build our relationship with you into a network of developers across the world to share new ideas and forge new collaborations. Working together, we can build the tools and technology the people need to become financially independent, have access to world wide financial products and be safe of nasty third parties spying on them or trying to tell them what they can and can not do with their money. We believe in financial freedom.
+We are asking each of you to help lead the way.  Because we’re already connected with you as we are also developers and designers, and we want to build our relationship with you into a network of developers across the world to share new ideas and forge new collaborations. Working together, we can build the tools and technology the people need to become financially independent, have access from any country to financial products and be safe of nasty third parties spying on them or trying to tell them what they can and can not do with their money. We believe in financial freedom.
 
 We want to hear from you on how we can build this network. We are arround 30 developers working full time on Fermat by now and our goal is to be 300. To learn more about how to participate, just read the [how-to-participate-guide](https://github.com/bitDubai/participate-now). We hope every single one of you will join us.  Because Fermat needs you.  The world needs you.  We need your skills, your imagination and your optimism.  And with this new network, we know we can be partners for decades to come.
 
@@ -95,18 +95,18 @@ You can learn more, see some cool visualizations of Fermat's architecture and it
 <br>
 ### Fermat's Purpose
 
-* Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way.__*
+* Empower people with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way.*
 
-* Give back the sovereignty over each one's own resources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.__*
+* Give back the sovereignty over each one's own resources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.*
 
 <br>
 ### Fermat's Mission
 
-* To get cryptocurrencies mass adopted as soon as possible.__*
+* To get cryptocurrencies mass adopted as soon as possible.*
 
-* To build the best possible integrated system able to handle the finances of not only all the human world population but also of companies and machines in the context of the IoT.__*  
+* To build the best possible system able to manage the finances of people.*  
 
-* To achieve “parity” with the state-of-the-art and to push towards new frontiers in computer science.__*
+* To achieve “parity” with the state-of-the-art and to push towards new frontiers in computer science.*
 
 <br>
 ### Fermat Principles
