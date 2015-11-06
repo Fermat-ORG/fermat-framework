@@ -1,7 +1,10 @@
 package com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1;
 
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.developers_utils.IssuerRedemptionDeveloperDatabaseFactory;
+import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDao;
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDatabaseConstants;
+import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDatabaseFactory;
+import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.events.IssuerRedemptionRecorderService;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
@@ -17,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -25,6 +29,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_redemption.interfaces.IssuerRedemptionManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -44,9 +50,11 @@ import java.util.UUID;
  */
 public class IssuerRedemptionPluginRoot implements IssuerRedemptionManager, DatabaseManagerForDevelopers,DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service {
 
+    Database issuerRedemptionDatabase;
     DeviceUserManager deviceUserManager;
     ErrorManager errorManager;
     EventManager eventManager;
+    IssuerRedemptionRecorderService issuerRedemptionRecorderService;
     LogManager logManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
@@ -136,6 +144,44 @@ public class IssuerRedemptionPluginRoot implements IssuerRedemptionManager, Data
     @Override
     public void start() throws CantStartPluginException {
         this.serviceStatus = ServiceStatus.STARTED;
+        try{
+            this.issuerRedemptionDatabase = this.pluginDatabaseSystem.openDatabase(this.pluginId, IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_DATABASE);
+        }catch (DatabaseNotFoundException | CantOpenDatabaseException exception) {
+
+            try {
+                createAssetIssuingTransactionDatabase();
+            } catch (CantCreateDatabaseException innerException) {
+                throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset Issuing plugin - "+this.pluginId, "Cannot open or create the plugin database");
+            }
+        }try{
+            IssuerRedemptionDao issuerRedemptionDao=new IssuerRedemptionDao(pluginDatabaseSystem,pluginId);
+            this.issuerRedemptionRecorderService =new IssuerRedemptionRecorderService(issuerRedemptionDao, eventManager);
+            try{
+                //printSomething("Event manager:"+this.eventManager);
+                this.issuerRedemptionRecorderService.start();
+            } catch(CantStartServiceException exception){
+                //This plugin must be stopped if this happens.
+                this.serviceStatus = ServiceStatus.STOPPED;
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                throw new CantStartPluginException("Event Recorded could not be started", exception, Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION.getKey(), "The plugin event recorder is not started");
+            }
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.serviceStatus=ServiceStatus.STOPPED;
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in Issuer Redemption plugin", "Error in constructor method IssuerRedemptionDao");
+        } catch (CantStartServiceException exception) {
+            this.serviceStatus=ServiceStatus.STOPPED;
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Issuing Redemption plugin", "cannot start monitor agent");
+        }
+
+    }
+
+    /**
+     * This method will create the plugin database
+     * @throws CantCreateDatabaseException
+     */
+    private void createAssetIssuingTransactionDatabase() throws CantCreateDatabaseException {
+        IssuerRedemptionDatabaseFactory databaseFactory = new IssuerRedemptionDatabaseFactory(this.pluginDatabaseSystem);
+        issuerRedemptionDatabase = databaseFactory.createDatabase(pluginId, IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_DATABASE);
     }
 
     @Override
