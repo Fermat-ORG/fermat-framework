@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 /**
  * Created by ciencias on 2/13/15.
- *
  */
 public enum Plugins implements FermatEnum {
 
@@ -86,14 +85,15 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST                     ("BCCPCPR"  ),
     BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION           ("BCCPOIAT" ),
 
-    BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE ("BCTNS"),
+
+    BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE("BCTNS"),
 
 
     // End  CCP Plugins
 
     //CCM Plugins
 
-    BITDUBAI_CCM_INTRA_WALLET_USER_ACTOR                    ("BCCMIWUA" ),
+    BITDUBAI_CCM_INTRA_WALLET_USER_ACTOR("BCCMIWUA"),
 
     // Init DAP Plugins
     BITDUBAI_DAP_ASSET_ISSUER_ACTOR                       ("BDAPAIA"   ),
@@ -124,60 +124,62 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE       ("BDAPAIANS" ),
     BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE ("BDAPARANS" ),
     BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE       ("BDAPATNS"  ),
+
     // End  DAP Plugins
 
     // Init WPD Plugins
-    BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE          ("BWPDWMDM"),
-    BITDUBAI_WPD_WALLET_FACTORY_MIDDLEWARE              ("BWPDWFM"),
-    BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE              ("BWPDWMM"),
-    BITDUBAI_WPD_WALLET_PUBLISHER_MIDDLEWARE            ("BWPDWPM"),
-    BITDUBAI_WPD_WALLET_SETTINGS_MIDDLEWARE             ("BWPDWSEM"),
-    BITDUBAI_WPD_WALLET_STORE_MIDDLEWARE                ("BWPDWSTM"),
-    BITDUBAI_WPD_PUBLISHER_IDENTITY                     ("BWPDPI"),
-    BITDUBAI_WPD_WALLET_COMMUNITY_NETWORK_SERVICE       ("BWPDWCNS"),
-    BITDUBAI_WPD_WALLET_RESOURCES_NETWORK_SERVICE       ("BWPDWRNS"),
-    BITDUBAI_WPD_WALLET_STATISTICS_NETWORK_SERVICE      ("BWPDWSNS"),
-    BITDUBAI_WPD_WALLET_STORE_NETWORK_SERVICE           ("BWPDSNS"),
-    BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE          ("BWPDWFSAM"),
-    BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE        ("BWPDWPSAM"),
-    BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE            ("BWPDWSSAM"),
+    BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE("BWPDWMDM"),
+    BITDUBAI_WPD_WALLET_FACTORY_MIDDLEWARE("BWPDWFM"),
+    BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE("BWPDWMM"),
+    BITDUBAI_WPD_WALLET_PUBLISHER_MIDDLEWARE("BWPDWPM"),
+    BITDUBAI_WPD_WALLET_SETTINGS_MIDDLEWARE("BWPDWSEM"),
+    BITDUBAI_WPD_WALLET_STORE_MIDDLEWARE("BWPDWSTM"),
+    BITDUBAI_WPD_PUBLISHER_IDENTITY("BWPDPI"),
+    BITDUBAI_WPD_WALLET_COMMUNITY_NETWORK_SERVICE("BWPDWCNS"),
+    BITDUBAI_WPD_WALLET_RESOURCES_NETWORK_SERVICE("BWPDWRNS"),
+    BITDUBAI_WPD_WALLET_STATISTICS_NETWORK_SERVICE("BWPDWSNS"),
+    BITDUBAI_WPD_WALLET_STORE_NETWORK_SERVICE("BWPDSNS"),
+    BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE("BWPDWFSAM"),
+    BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE("BWPDWPSAM"),
+    BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE("BWPDWSSAM"),
     // End  WPD Plugins
 
     //Init CBP Plugins
-    BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY ("BCBPCBI"),
-    BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY ("BCBPCCI"),
-    BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE ("BCBPCBISAM"),
-    BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE ("BCBPCCISAM"),
+    BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY("BCBPCBI"),
+    BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY("BCBPCCI"),
+    BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE("BCBPCBISAM"),
+    BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE("BCBPCCISAM"),
+    BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE("BCBPCBWM"),
     //End CBP Plugins
 
     // Init new Plugins
 
-    BITCOIN_ASSET_VAULT      ("BAV" ),
-    BITCOIN_NETWORK          ("BN" ),
-    BITCOIN_VAULT            ("BV" ),
-    BITCOIN_WALLET           ("BW" ),
-    BITCOIN_WATCH_ONLY_VAULT ("BWOV" ),
-    CRYPTO_ADDRESSES         ("CA" ),
-    CRYPTO_ADDRESS_BOOK      ("CAB" ),
-    CRYPTO_PAYMENT_REQUEST   ("CPR"  ),
-    CRYPTO_TRANSMISSION      ("CT" ),
-    CRYPTO_WALLET            ("CW"  ),
-    DEVICE_USER              ("DU"),
-    EXTRA_WALLET_USER        ("EWU" ),
-    INCOMING_CRYPTO          ("IC" ),
-    INCOMING_EXTRA_USER      ("IEU" ),
-    INCOMING_INTRA_USER      ("IIU" ),
-    INTRA_WALLET_USER        ("IWU" ),
-    OUTGOING_EXTRA_USER      ("OEU" ),
-    OUTGOING_INTRA_ACTOR     ("OIA" ),
-    WALLET_CONTACTS          ("WC"  ),
-    WALLET_MANAGER           ("WM"),
-    WS_CLOUD_CLIENT          ("WCL" ),
+    BITCOIN_ASSET_VAULT("BAV"),
+    BITCOIN_NETWORK("BN"),
+    BITCOIN_VAULT("BV"),
+    BITCOIN_WALLET("BW"),
+    BITCOIN_WATCH_ONLY_VAULT("BWOV"),
+    CRYPTO_ADDRESSES("CA"),
+    CRYPTO_ADDRESS_BOOK("CAB"),
+    CRYPTO_PAYMENT_REQUEST("CPR"),
+    CRYPTO_TRANSMISSION("CT"),
+    CRYPTO_WALLET("CW"),
+    DEVICE_USER("DU"),
+    EXTRA_WALLET_USER("EWU"),
+    INCOMING_CRYPTO("IC"),
+    INCOMING_EXTRA_USER("IEU"),
+    INCOMING_INTRA_USER("IIU"),
+    INTRA_WALLET_USER("IWU"),
+    OUTGOING_EXTRA_USER("OEU"),
+    OUTGOING_INTRA_ACTOR("OIA"),
+    WALLET_CONTACTS("WC"),
+    WALLET_MANAGER("WM"),
+    WS_CLOUD_CLIENT("WCL"),
 
 
     // todo temporal
 
-    CRYPTO_ADDRESSES__MIDDLEWARE_TEMP ("cryptoaddmidtemp") ,
+    CRYPTO_ADDRESSES__MIDDLEWARE_TEMP("cryptoaddmidtemp"),
     // End  new Plugins
 
     ;
@@ -356,78 +358,138 @@ public enum Plugins implements FermatEnum {
             case "BCCPCPR"  : return BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST                ;
             case "BCCPOIAT" : return BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION      ;
             case "BCTNS": return BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE;
+            // End  CCP Plugins
 
             // Init DAP Plugins
-            case "BDAPAIA":    return BITDUBAI_DAP_ASSET_ISSUER_ACTOR;
-            case "BDAPAUA":    return BITDUBAI_DAP_ASSET_USER_ACTOR;
-            case "BDAPRPA":    return BITDUBAI_DAP_REDEEM_POINT_ACTOR;
-            case "BDAPAII":    return BITDUBAI_DAP_ASSET_ISSUER_IDENTITY;
-            case "BDAPAUI":    return BITDUBAI_DAP_ASSET_USER_IDENTITY;
-            case "BDAPRPI":    return BITDUBAI_DAP_REDEEM_POINT_IDENTITY;
-            case "BDAIWMO":    return BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE;
-            case "BDAUWMO":    return BITDUBAI_DAP_ASSET_USER_WALLET_MODULE;
-            case "BDARWMO":    return BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE;
-            case "BDAPAICSAM": return BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE;
-            case "BDAPAUCSAM": return BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE;
-            case "BDAPRPCSAM": return BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE;
-            case "BDAPAWU":    return BITDUBAI_DAP_ASSET_USER_WALLET;
-            case "BDAPAWRD":   return BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET;
-            case "BDAPAUANS":  return BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE;
-            case "BDAPAIANS":  return BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE;
-            case "BDAPARANS":  return BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE;
-            case "BDAPATNS":   return BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE;
+            case "BDAPAIA":
+                return BITDUBAI_DAP_ASSET_ISSUER_ACTOR;
+            case "BDAPAUA":
+                return BITDUBAI_DAP_ASSET_USER_ACTOR;
+            case "BDAPRPA":
+                return BITDUBAI_DAP_REDEEM_POINT_ACTOR;
+            case "BDAPAII":
+                return BITDUBAI_DAP_ASSET_ISSUER_IDENTITY;
+            case "BDAPAUI":
+                return BITDUBAI_DAP_ASSET_USER_IDENTITY;
+            case "BDAPRPI":
+                return BITDUBAI_DAP_REDEEM_POINT_IDENTITY;
+            case "BDAIWMO":
+                return BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE;
+            case "BDAUWMO":
+                return BITDUBAI_DAP_ASSET_USER_WALLET_MODULE;
+            case "BDARWMO":
+                return BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE;
+            case "BDAPAICSAM":
+                return BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE;
+            case "BDAPAUCSAM":
+                return BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE;
+            case "BDAPRPCSAM":
+                return BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE;
+            case "BDAPAWU":
+                return BITDUBAI_DAP_ASSET_USER_WALLET;
+            case "BDAPAWRD":
+                return BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET;
+            case "BDAPAUANS":
+                return BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE;
+            case "BDAPAIANS":
+                return BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE;
+            case "BDAPARANS":
+                return BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE;
+            case "BDAPATNS":
+                return BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE;
             // End  DAP Plugins
 
             // Init WPD Plugins
-            case "BWPDWMDM":  return BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE;
-            case "BWPDPI":    return BITDUBAI_WPD_PUBLISHER_IDENTITY;
-            case "BWPDWFM":   return BITDUBAI_WPD_WALLET_FACTORY_MIDDLEWARE;
-            case "BWPDWMM":   return BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE;
-            case "BWPDWPM":   return BITDUBAI_WPD_WALLET_PUBLISHER_MIDDLEWARE;
-            case "BWPDWSEM":  return BITDUBAI_WPD_WALLET_SETTINGS_MIDDLEWARE;
-            case "BWPDWSTM":  return BITDUBAI_WPD_WALLET_STORE_MIDDLEWARE;
-            case "BWPDWCNS":  return BITDUBAI_WPD_WALLET_COMMUNITY_NETWORK_SERVICE;
-            case "BWPDWRNS":  return BITDUBAI_WPD_WALLET_RESOURCES_NETWORK_SERVICE;
-            case "BWPDWSNS":  return BITDUBAI_WPD_WALLET_STATISTICS_NETWORK_SERVICE;
-            case "BWPDSNS":   return BITDUBAI_WPD_WALLET_STORE_NETWORK_SERVICE;
-            case "BWPDWFSAM": return BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE;
-            case "BWPDWPSAM": return BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE;
-            case "BWPDWSSAM": return BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE;
+            case "BWPDWMDM":
+                return BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE;
+            case "BWPDPI":
+                return BITDUBAI_WPD_PUBLISHER_IDENTITY;
+            case "BWPDWFM":
+                return BITDUBAI_WPD_WALLET_FACTORY_MIDDLEWARE;
+            case "BWPDWMM":
+                return BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE;
+            case "BWPDWPM":
+                return BITDUBAI_WPD_WALLET_PUBLISHER_MIDDLEWARE;
+            case "BWPDWSEM":
+                return BITDUBAI_WPD_WALLET_SETTINGS_MIDDLEWARE;
+            case "BWPDWSTM":
+                return BITDUBAI_WPD_WALLET_STORE_MIDDLEWARE;
+            case "BWPDWCNS":
+                return BITDUBAI_WPD_WALLET_COMMUNITY_NETWORK_SERVICE;
+            case "BWPDWRNS":
+                return BITDUBAI_WPD_WALLET_RESOURCES_NETWORK_SERVICE;
+            case "BWPDWSNS":
+                return BITDUBAI_WPD_WALLET_STATISTICS_NETWORK_SERVICE;
+            case "BWPDSNS":
+                return BITDUBAI_WPD_WALLET_STORE_NETWORK_SERVICE;
+            case "BWPDWFSAM":
+                return BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE;
+            case "BWPDWPSAM":
+                return BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE;
+            case "BWPDWSSAM":
+                return BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE;
             // End  WPD Plugins
 
             //Init CBP Plugins
-            case "BCBPCBI": return BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY;
-            case "BCBPCCI": return BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY;
-            case "BCBPCBISAM": return BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE;
-            case "BCBPCCISAM": return BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE;
+            case "BCBPCBI":
+                return BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY;
+            case "BCBPCCI":
+                return BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY;
+            case "BCBPCBISAM":
+                return BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE;
+            case "BCBPCCISAM":
+                return BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE;
+            case "BCBPCBWM":
+                return BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE;
             //End CBP Plugins
 
             // Init new Plugins
 
-            case "BAV":  return BITCOIN_ASSET_VAULT     ;
-            case "BN":   return BITCOIN_NETWORK         ;
-            case "BV":   return BITCOIN_VAULT           ;
-            case "BW":   return BITCOIN_WALLET          ;
-            case "BWOV": return BITCOIN_WATCH_ONLY_VAULT;
-            case "CA":   return CRYPTO_ADDRESSES        ;
-            case "CAB":  return CRYPTO_ADDRESS_BOOK     ;
-            case "CPR":  return CRYPTO_PAYMENT_REQUEST  ;
-            case "CT":   return CRYPTO_TRANSMISSION     ;
-            case "CW":   return CRYPTO_WALLET           ;
-            case "DU":   return DEVICE_USER             ;
-            case "EWU":  return EXTRA_WALLET_USER       ;
-            case "IEU":  return INCOMING_EXTRA_USER     ;
-            case "IIU":  return INCOMING_INTRA_USER     ;
-            case "IWU":  return INTRA_WALLET_USER       ;
-            case "OEU":  return OUTGOING_EXTRA_USER     ;
-            case "OIA":  return OUTGOING_INTRA_ACTOR    ;
-            case "WC":   return WALLET_CONTACTS         ;
-            case "WM":   return WALLET_MANAGER          ;
-            case "WCL":  return WS_CLOUD_CLIENT         ;
+            case "BAV":
+                return BITCOIN_ASSET_VAULT;
+            case "BN":
+                return BITCOIN_NETWORK;
+            case "BV":
+                return BITCOIN_VAULT;
+            case "BW":
+                return BITCOIN_WALLET;
+            case "BWOV":
+                return BITCOIN_WATCH_ONLY_VAULT;
+            case "CA":
+                return CRYPTO_ADDRESSES;
+            case "CAB":
+                return CRYPTO_ADDRESS_BOOK;
+            case "CPR":
+                return CRYPTO_PAYMENT_REQUEST;
+            case "CT":
+                return CRYPTO_TRANSMISSION;
+            case "CW":
+                return CRYPTO_WALLET;
+            case "DU":
+                return DEVICE_USER;
+            case "EWU":
+                return EXTRA_WALLET_USER;
+            case "IEU":
+                return INCOMING_EXTRA_USER;
+            case "IIU":
+                return INCOMING_INTRA_USER;
+            case "IWU":
+                return INTRA_WALLET_USER;
+            case "OEU":
+                return OUTGOING_EXTRA_USER;
+            case "OIA":
+                return OUTGOING_INTRA_ACTOR;
+            case "WC":
+                return WALLET_CONTACTS;
+            case "WM":
+                return WALLET_MANAGER;
+            case "WCL":
+                return WS_CLOUD_CLIENT;
 
 
             // temporal
-            case "cryptoaddmidtemp": return CRYPTO_ADDRESSES__MIDDLEWARE_TEMP;
+            case "cryptoaddmidtemp":
+                return CRYPTO_ADDRESSES__MIDDLEWARE_TEMP;
 
 
             // End  new Plugins

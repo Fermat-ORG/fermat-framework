@@ -58,7 +58,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
 
-    public AssetUserIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetUserIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) throws CantInitializeAssetUserIdentityDatabaseException{
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
@@ -66,7 +66,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
         try {
             initializeDatabase();
         } catch (CantInitializeAssetUserIdentityDatabaseException e) {
-            e.printStackTrace();
+            throw new CantInitializeAssetUserIdentityDatabaseException(e.getMessage());
         }
     }
 
@@ -176,7 +176,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public List<IdentityAssetUser> getAllIntraUserFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListAssetUserIdentitiesException {
+    public List<IdentityAssetUser> getIdentityAssetUsersFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListAssetUserIdentitiesException {
 
 
         // Setup method.

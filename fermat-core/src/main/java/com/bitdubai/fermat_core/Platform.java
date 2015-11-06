@@ -94,6 +94,7 @@ import com.bitdubai.fermat_core.layer.cry_crypto_network.CryptoNetworkLayer;
 import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
 import com.bitdubai.fermat_core.layer.cry_cypto_vault.CryptoVaultLayer;
 import com.bitdubai.fermat_core.layer.dap_actor.DAPActorLayer;
+import com.bitdubai.fermat_core.layer.cbp.wallet_module.CBPWalletModuleLayer;
 import com.bitdubai.fermat_core.layer.dap_actor_network_service.DAPActorNetworkServiceLayer;
 import com.bitdubai.fermat_core.layer.dap_identity.DAPIdentityLayer;
 import com.bitdubai.fermat_core.layer.dap_middleware.DAPMiddlewareLayer;
@@ -430,7 +431,8 @@ public class Platform implements Serializable {
 
             //Init CBP Layers
             corePlatformContext.registerPlatformLayer(new CBPIdentityLayer(), PlatformLayers.BITDUBAI_CBP_IDENTITY_LAYER);
-            corePlatformContext.registerPlatformLayer(new CBPSubAppModuleLayer(), PlatformLayers.BITDUBAI_CBP_SUB_APP_MODULE_LAYER);
+            corePlatformContext.registerPlatformLayer(new CBPSubAppModuleLayer(),PlatformLayers.BITDUBAI_CBP_SUB_APP_MODULE_LAYER);
+            corePlatformContext.registerPlatformLayer(new CBPWalletModuleLayer(),PlatformLayers.BITDUBAI_CBP_WALLET_MODULE_LAYER);
             //End CBP Layers
 
             /*
@@ -1209,6 +1211,9 @@ public class Platform implements Serializable {
 
                 Plugin cryptoCustomerIdentitySubAppModule = ((CBPSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_SUB_APP_MODULE_LAYER)).getCryptoCustomerIdentity();
                 injectPluginReferencesAndStart(cryptoCustomerIdentitySubAppModule, Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE);
+
+                Plugin cryptoBrokerWalletSubAppModule = ((CBPWalletModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_WALLET_MODULE_LAYER)).getCryptoBrokerWallet();
+                injectPluginReferencesAndStart(cryptoBrokerWalletSubAppModule, Plugins.BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE);
             }
 
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {

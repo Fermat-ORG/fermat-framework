@@ -257,6 +257,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             this.serviceStatus=ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetCryptoTransactionFactory", "Error in constructor method AssetIssuingTransactionDao");
         }catch(CantStartAgentException exception){
+            this.serviceStatus=ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "cannot start monitor agent");
         }catch(Exception exception){
             this.serviceStatus=ServiceStatus.STOPPED;

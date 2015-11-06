@@ -105,14 +105,10 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
         this.actorAssetIssuerManager = actorAssetIssuerManager;
     }
 
-    private AssetIssuerIdentityDao getAssetIssuerIdentityDao(){
+    private AssetIssuerIdentityDao getAssetIssuerIdentityDao() throws CantInitializeAssetIssuerIdentityDatabaseException {
         AssetIssuerIdentityDao assetIssuerIdentityDao = new AssetIssuerIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
         return assetIssuerIdentityDao;
     }
-
-//    public void  initializeDatabase() throws CantInitializeAssetIssuerIdentityDatabaseException{
-//        getAssetIssuerIdentityDao().initializeDatabase();
-//    }
 
     public List<IdentityAssetIssuer> getIdentityAssetIssuersFromCurrentDeviceUser() throws CantListAssetIssuersException {
 
@@ -122,7 +118,7 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
 
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            assetIssuerList = getAssetIssuerIdentityDao().getAllIntraUserFromCurrentDeviceUser(loggedUser);
+            assetIssuerList = getAssetIssuerIdentityDao().getIdentityAssetIssuersFromCurrentDeviceUser(loggedUser);
 
             return assetIssuerList;
 
@@ -163,7 +159,7 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            if(getAssetIssuerIdentityDao().getAllIntraUserFromCurrentDeviceUser(loggedUser).size() > 0)
+            if(getAssetIssuerIdentityDao().getIdentityAssetIssuersFromCurrentDeviceUser(loggedUser).size() > 0)
                 return true;
             else
                 return false;
@@ -178,17 +174,21 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
 
     public void registerIdentities() throws CantListAssetIssuerIdentitiesException {
         try {
-            List<IdentityAssetIssuer> identityAssetIssuers = getAssetIssuerIdentityDao().getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
-            for(IdentityAssetIssuer identityAssetIssuer : identityAssetIssuers){
-                actorAssetIssuerManager.createActorAssetIssuerFactory(identityAssetIssuer.getPublicKey(), identityAssetIssuer.getAlias(), identityAssetIssuer.getProfileImage());
+            List<IdentityAssetIssuer> identityAssetIssuers = getAssetIssuerIdentityDao().getIdentityAssetIssuersFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
+            if (identityAssetIssuers.size() > 0) {
+                for (IdentityAssetIssuer identityAssetIssuer : identityAssetIssuers) {
+                    actorAssetIssuerManager.createActorAssetIssuerFactory(identityAssetIssuer.getPublicKey(), identityAssetIssuer.getAlias(), identityAssetIssuer.getProfileImage());
+                }
             }
         }
         catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant List Asset Issuer Identities", "");
+            throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
         } catch (CantListAssetIssuerIdentitiesException e) {
             throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant List Asset Issuer Identities", "");
         } catch (CantCreateActorAssetIssuerException e) {
             throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Create ActorAsset Issuer", "");
+        } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
+            throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Initialize Asset Issuer Identity Database", "");
         }
     }
 }
