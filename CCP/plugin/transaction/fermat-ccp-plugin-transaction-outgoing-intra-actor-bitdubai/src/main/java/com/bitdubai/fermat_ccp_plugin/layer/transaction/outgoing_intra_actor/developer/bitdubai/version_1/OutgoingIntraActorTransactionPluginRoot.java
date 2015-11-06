@@ -190,6 +190,8 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
                                                                                             this.cryptoTransmissionNetworkServiceManager);
             this.transactionProcessorAgent.start();
 
+            this.serviceStatus = ServiceStatus.STARTED;
+
         } catch (CantInitializeOutgoingIntraActorDaoException e) {
             reportUnexpectedException(e);
         } catch (Exception e) {
