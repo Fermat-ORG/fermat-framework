@@ -34,7 +34,17 @@ public final class FermatSystem {
     private final FermatAddonManager  fermatAddonManager ;
     private final FermatPluginManager fermatPluginManager;
 
-    public FermatSystem(final Object osContext, final AbstractPlatform abstractPlatform) throws CantCreateSystemException {
+    /**
+     * Through this Constructor, we aloud to create a new instance of the Fermat System, but we
+     * should pass it an OS context and an OSA Platform.
+     *
+     * @param osContext      operative system context instance.
+     * @param osaPlatform    OSA Platform instance.
+     *
+     * @throws CantCreateSystemException if something goes wrong.
+     */
+    public FermatSystem(final Object           osContext       ,
+                        final AbstractPlatform osaPlatform) throws CantCreateSystemException {
 
         this.fermatSystemContext = new FermatSystemContext(osContext);
         this.fermatAddonManager  = new FermatAddonManager(fermatSystemContext);
@@ -42,7 +52,7 @@ public final class FermatSystem {
 
         try {
 
-            this.registerOsaPlatform(abstractPlatform);
+            this.registerOsaPlatform(osaPlatform);
 
         } catch (final CantRegisterPlatformException e) {
 
@@ -64,16 +74,6 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new CCPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
-/*
-            final List<PluginVersionReference> referenceList = new FermatPluginReferencesCalculator(fermatSystemContext).listReferencesByInstantiationOrder(
-                new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET, Developers.BITDUBAI, new Version())
-            );
-
-            System.out.println("\n\nMostrando orden de instanciación de plugins calculada automáticamente a partir del Crypto Wallet Module: \n");
-            for (PluginVersionReference pvr : referenceList)
-                System.out.println(pvr);
-
-            System.out.println("\nFin de la lista de instanciación.\n\n");*/
 
         } catch(CantRegisterPlatformException e) {
 
@@ -87,12 +87,15 @@ public final class FermatSystem {
 
     private void registerOsaPlatform(final AbstractPlatform abstractPlatform) throws CantRegisterPlatformException {
 
+        if (abstractPlatform == null)
+            throw new CantRegisterPlatformException("abstractPlatform=null", "You have pass through parameter an OSA Platform instance.");
+
         final PlatformReference pr = abstractPlatform.getPlatformReference();
 
-        if (pr.getPlatform().equals(Platforms.OPERATIVE_SYSTEM_API))
+        if (pr.getPlatform() != null && pr.getPlatform().equals(Platforms.OPERATIVE_SYSTEM_API))
             fermatSystemContext.registerPlatform(abstractPlatform);
         else
-            throw new CantRegisterPlatformException(abstractPlatform.getPlatformReference().toString(), "Is not an OSA specific Platform");
+            throw new CantRegisterPlatformException(abstractPlatform.getPlatformReference().toString(), "Is not referenced like an OSA specific Platform.");
 
     }
 
