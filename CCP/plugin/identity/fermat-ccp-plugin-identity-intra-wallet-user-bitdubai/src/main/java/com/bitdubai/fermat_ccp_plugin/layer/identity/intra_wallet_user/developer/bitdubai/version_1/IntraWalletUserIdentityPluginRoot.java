@@ -27,7 +27,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 
@@ -78,7 +78,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
                    DealsWithPluginDatabaseSystem,
                    DealsWithPluginFileSystem,
                    DealsWithIntraUsersNetworkService,//
-                   IntraWalletUserManager,
+                    IntraWalletUserIdentityManager,
                    LogManagerForDevelopers {
 
 

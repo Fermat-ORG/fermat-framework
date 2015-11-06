@@ -5,5 +5,5 @@ package com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces;
  * provides the methods to set an instance of the Intra User plugin of the Identity layer
  */
 public interface DealsWithCCPIdentityIntraWalletUser {
-     void setIdentityIntraUserManager(IntraWalletUserManager intraWalletUserManager);
+     void setIdentityIntraUserManager(IntraWalletUserIdentityManager intraWalletUserIdentityManager);
 }

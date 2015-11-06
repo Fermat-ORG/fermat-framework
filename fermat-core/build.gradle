@@ -30,7 +30,6 @@ dependencies {
     // End  PIP Projects (Plugins)
     //BCH projects
     compile project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
-    //compile project(':fermat-osa-addon-android-database-system-bitdubai')
 
     // CCP Projects (Plugins)
     compile project(':fermat-dmp-plugin-identity-designer-bitdubai')
@@ -40,7 +39,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-middleware-wallet-skin-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai')
     // DMP Projects (Addons)
-   // compile project(':fermat-dmp-addon-license-wallet-bitdubai')
     //DAP Projects (Plugins)
     compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-actor-asset-user-bitdubai')

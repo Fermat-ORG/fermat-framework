@@ -2,11 +2,11 @@ package com.bitdubai.android_core.app.common.version_1.Sessions;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
@@ -61,7 +61,7 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
 //                                            AssetFactoryModuleManager assetFactoryModuleManager,
 //                                            CryptoBrokerIdentityModuleManager cryptoBrokerIdentityModuleManager,
 //                                            CryptoCustomerIdentityModuleManager cryptoCustomerIdentityModuleManager,
-//                                            IntraWalletUserManager intraWalletUserManager) {
+//                                            IntraWalletUserIdentityManager intraWalletUserManager) {
 
         switch (subApps) {
             case CWP_WALLET_FACTORY:
@@ -83,7 +83,7 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                 lstSubAppSession.put(subApps, walletPublisherSubAppSession);
                 return walletPublisherSubAppSession;
             case CWP_INTRA_USER_IDENTITY:
-                IntraUserIdentitySubAppSession intraUserIdentitySubAppSession = new IntraUserIdentitySubAppSession(subApps,errorManager,(IntraWalletUserManager)moduleManager);
+                IntraUserIdentitySubAppSession intraUserIdentitySubAppSession = new IntraUserIdentitySubAppSession(subApps,errorManager,(IntraWalletUserIdentityManager)moduleManager);
                 lstSubAppSession.put(subApps,intraUserIdentitySubAppSession);
                 return intraUserIdentitySubAppSession;
             case CCP_INTRA_USER_COMMUNITY:

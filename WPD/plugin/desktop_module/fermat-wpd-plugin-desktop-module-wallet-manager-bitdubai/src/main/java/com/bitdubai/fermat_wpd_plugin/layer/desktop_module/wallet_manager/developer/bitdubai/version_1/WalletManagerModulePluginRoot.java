@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNew
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIdentityIntraWalletUser;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetIfIntraWalletUsersExistsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletCreateNewIntraUserIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -151,7 +151,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
      * DealsWithWalletManager Interface member variables.
      */
 
-    IntraWalletUserManager intraWalletUserManager;
+    IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
 
     /**
@@ -463,7 +463,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
     public void createNewIntraWalletUser(String alias, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
         try
         {
-           intraWalletUserManager.createNewIntraWalletUser(alias,profileImage);
+           intraWalletUserIdentityManager.createNewIntraWalletUser(alias,profileImage);
 
         }
         catch( CantCreateNewIntraWalletUserException e)
@@ -482,7 +482,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
     public boolean hasIntraUserIdentity() throws CantGetIfIntraWalletUsersExistsException {
         try
         {
-            return intraWalletUserManager.hasIntraUserIdentity();
+            return intraWalletUserIdentityManager.hasIntraUserIdentity();
         }
         catch( CantListIntraWalletUsersException e)
         {
@@ -854,8 +854,8 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 
 
     @Override
-    public void setIdentityIntraUserManager(IntraWalletUserManager intraWalletUserManager) {
-        this.intraWalletUserManager = intraWalletUserManager;
+    public void setIdentityIntraUserManager(IntraWalletUserIdentityManager intraWalletUserIdentityManager) {
+        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
     }
 }
 

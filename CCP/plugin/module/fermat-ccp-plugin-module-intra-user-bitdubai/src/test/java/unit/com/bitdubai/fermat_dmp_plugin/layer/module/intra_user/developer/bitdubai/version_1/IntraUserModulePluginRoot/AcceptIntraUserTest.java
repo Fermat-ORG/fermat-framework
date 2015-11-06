@@ -60,7 +60,7 @@ public class AcceptIntraUserTest extends TestCase {
      *//*
 
     @Mock
-    private IntraWalletUserManager mockIntraWalletUserManager;
+    private IntraWalletUserIdentityManager mockIntraWalletUserManager;
 
 
     */
@@ -99,7 +99,7 @@ public class AcceptIntraUserTest extends TestCase {
         testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
         testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
 
-        testIntraUserModulePluginRoot.setIntraWalletUserManager(mockIntraWalletUserManager);
+        testIntraUserModulePluginRoot.setIntraWalletUserIdentityManager(mockIntraWalletUserManager);
         testIntraUserModulePluginRoot.setIntraUserNetworkServiceManager(mockIntraUserNetworkServiceManager);
 
         setUpMockitoRules();
