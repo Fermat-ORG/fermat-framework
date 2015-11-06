@@ -51,7 +51,7 @@ Each Plug-in has an internal class model. Usually it is a hiearchy where one of 
 <br>
 #### Event Handlers
 
-An Envent Hander is a type of Class that is called by the Framework's Event Manager whenever and event the Plug-in is suscribed to is triggered. A single Plug-in can have as meny Event Handlers as needed. Somewhere within the Internal Structure the Plug-in subscribes itself to different type of events, declaring at that point which Event Handler class must be called.
+An Event Hander is a type of Class that is called by the Framework's Event Manager whenever and event the Plug-in is suscribed to is triggered. A single Plug-in can have as many Event Handlers as needed. Somewhere within the Internal Structure the Plug-in subscribes itself to different type of events, declaring at that point which Event Handler class must be called.
 
 <br>
 #### Exceptions
@@ -62,13 +62,13 @@ a. **Internal** : These are exceptions that are thrown and handled within the sa
 
 b. **External** : These are exceptions that are thrown within a Plug-in and are expected to be catched by it's caller. 
 
-| NOTE | It is not allowd for an exception that is thrown in Plug-in A go through Plug-in B unhandled and reach Plug-in C. |
+| NOTE | It is not allowed for an exception that is thrown in Plug-in A go through Plug-in B unhandled and reach Plug-in C. |
 | ------------- | :------------- |
 
 <br>
 #### Agents
 
-We define Agents as objects which at runtime will create a new thread of execution. We have developed this pattern in order to standarize and simplify the handling of processes that need to run from time to time and perform certain tasks. 
+We define Agents as objects which at runtime will create a new execution thread. We have developed this pattern in order to standarize and simplify the handling of processes that need to run from time to time and perform certain tasks. 
 
 <br>
 ### Othe Elements
@@ -97,9 +97,9 @@ This section will help you undestand the workflow needed to be followed in order
 
 #### Issues
 
-It is mandatory that you create an initial set of github issues before you proceed further on the workflow. This will show the rest of the temas that someone is working in this functionality and avoid conflicting work early on. It will also hook the team leader into your workflow and allow him to guide and advise you when needed.
+It is mandatory that you create an initial set of github issues before you proceed further on the workflow. This will show the rest of topics that someone is working in this functionality and avoid conflicting work early on. It will also hook the team leader into your workflow and allow him to guide and advise you when needed.
 
-A basic hierarchy of issues is created as a first step. The issues are linked one to the other just by placing a link on the first commet.
+A basic hierarchy of issues is created as a first step. The issues are linked one to the other just by placing a link on the first commit.
 
 ##### Naming Convention
 
@@ -259,7 +259,7 @@ It is expected to have here child issues in the form  '_Plugin Name_' Production
 ## Part III: How to do it
 
 <br>
-### Analisys
+### Analysis
 ------------
 
 #### Pulic Interfaces
@@ -508,7 +508,7 @@ To implement a database on a plug-in should follow a predetermined structure des
 * 'Name of the plug-in' Constants This class must include the names of each of the tables and columns of the database plugin. The nomenclature used must follow these rules:
  - You must use public static String objects.
  - The name of this object must be uppercase
- - You must specify what information claramante stores this column.
+ - You must specify what information clearly stores this column.
  - You must assign a String object before mentioned with a brief description of the content of this column, you should use lowercase and avoid special characters and use as a word separator character '_'.
 Here are some examples:
   1. Name of the database, PLUGIN_NAME_DATABASE public static final String = "plugin_database" .;
@@ -516,7 +516,7 @@ Here are some examples:
   3. PLUGIN_TABLE_COLUMN_NAME public static final String = "any_column_name";
 * 'Name of the plug-in' DatabaseFactory. This class is responsible for creating the tables in the database Where it is to keep the information.
 
-Additionally, if required that information the database can be displayed through the SubApp Develop, present at runtime on the App Fermat, the implementation of the class' name plug-in'DeveloperDatabaseFactory is required. This class will be instantiated by the PluginRooit class Plug-in par achieve the aforementioned display.
+Additionally, if required that information the database can be displayed through the SubApp Develop, present at runtime on the App Fermat, the implementation of the class' name plug-in'DeveloperDatabaseFactory is required. This class will be instantiated by the PluginRoot class Plug-in par achieve the aforementioned display.
 
 To facilitate the work of creating these classes, Fermat has developed a script in Groovy, which automates the creation of these classes, following the established design, this plugin is available at: https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/documentation_en.md and https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/script.groovy
 
@@ -525,7 +525,7 @@ To facilitate the work of creating these classes, Fermat has developed a script 
 
 As the basic purpose of an agent is to run a parallel process or simultaneous to the main run of Plug-in, usually in order to achieve this we need to create classes that extend the Thread class, and rewrite the main "run (method) " which is to be run primarily when starting a new thread or process which represent this agent.
 
-We must consider that we should not create indiscriminate agents, we always use as there is no better alternative for carrying out the task or process to be performed, as using excessively Agents they may compromise the stability and system speed.
+We must consider that we should not create indiscriminate agents, we always use as there is no better alternative for carrying out the task or process to be performed, as using excessively Agents they may compromise the stability and performance.
 
 Whenever you choose this solution for the activity or task required by our plug-in, we should take into account the following points:
 
