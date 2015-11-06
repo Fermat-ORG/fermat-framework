@@ -43,6 +43,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.Receiv
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.NegotiationInformationTestData;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -212,7 +213,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
             CharSequence itemTitle = item.getTitle();
 
-            if(item.getItemId() ==  R.id.actionbar_send){
+            if(item.getItemId() ==  R.id.actionbar_send){;
+                referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS,Boolean.TRUE);
                 changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
                 return true;
             }

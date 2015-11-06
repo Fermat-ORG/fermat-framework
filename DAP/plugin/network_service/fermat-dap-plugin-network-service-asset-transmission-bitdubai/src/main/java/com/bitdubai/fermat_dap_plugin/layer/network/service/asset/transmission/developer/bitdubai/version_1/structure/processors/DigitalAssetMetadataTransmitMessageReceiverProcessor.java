@@ -11,11 +11,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionJsonAttNames;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.DigitalAssetMetadataTransactionImpl;
+
+
+
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -62,7 +66,9 @@ public class DigitalAssetMetadataTransmitMessageReceiverProcessor extends Fermat
             /*
              * Convert the xml to object
              */
-            DigitalAssetMetadata digitalAssetMetadata = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetadataXml, DigitalAssetMetadata.class);
+            DigitalAssetMetadata digitalAssetMetadata= null;
+            digitalAssetMetadata  = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetadataXml, digitalAssetMetadata);
+
 
             /*
              * Construct a new digitalAssetMetadataTransaction
@@ -74,7 +80,7 @@ public class DigitalAssetMetadataTransmitMessageReceiverProcessor extends Fermat
             digitalAssetMetadataTransaction.setReceiverId(fermatMessage.getReceiver());
             digitalAssetMetadataTransaction.setReceiverType(receiverType);
             digitalAssetMetadataTransaction.setDigitalAssetMetadata(digitalAssetMetadata);
-           // digitalAssetMetadataTransaction.setDistributionStatus(DistributionStatus.CRYPTO_RECEIVED); TODO: REVISAR STATUS
+            digitalAssetMetadataTransaction.setDistributionStatus(DistributionStatus.ASSET_DISTRIBUTED);
             digitalAssetMetadataTransaction.setType(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT);
             digitalAssetMetadataTransaction.setProcessed(DigitalAssetMetadataTransactionImpl.NO_PROCESSED);
 

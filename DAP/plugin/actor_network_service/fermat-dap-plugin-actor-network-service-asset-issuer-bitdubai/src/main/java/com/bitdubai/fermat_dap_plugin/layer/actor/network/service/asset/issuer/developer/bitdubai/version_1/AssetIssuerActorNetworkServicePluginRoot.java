@@ -743,6 +743,73 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
 
     @Override
     public List<ActorAssetIssuer> getListActorAssetIssuerRegistered() throws CantRequestListActorAssetIssuerRegisteredException {
+
+        try {
+
+            if (this.isRegister()) {
+
+                if(actorAssetIssuerRegisteredList != null && !actorAssetIssuerRegisteredList.isEmpty()){ actorAssetIssuerRegisteredList.clear(); }
+
+                DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                        constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_ISSUER, //applicant = who made the request
+                                NetworkServiceType.UNDEFINED,
+                                null,                     // alias
+                                null,                     // identityPublicKey
+                                null,                     // location
+                                null,                     // distance
+                                null,                     // name
+                                null,                     // extraData
+                                null,                     // offset
+                                null,                     // max
+                                null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                null);
+
+
+                List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
+
+
+                if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
+
+
+                    for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
+
+                        ActorAssetIssuer actorAssetIssuerNew = new AssetIssuerActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), p.getLocation());
+
+                        actorAssetIssuerRegisteredList.add(actorAssetIssuerNew);
+
+                    }
+
+                } else {
+                    return actorAssetIssuerRegisteredList;
+                }
+
+            }else{
+                return actorAssetIssuerRegisteredList;
+            }
+
+        } catch (CantRequestListException e) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Cant Request List Actor Asset User Registered";
+
+            CantRequestListActorAssetIssuerRegisteredException pluginStartException = new CantRequestListActorAssetIssuerRegisteredException(CantRequestListActorAssetIssuerRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
+
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+        }
+
         return actorAssetIssuerRegisteredList;
     }
 
