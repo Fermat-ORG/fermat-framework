@@ -18,7 +18,7 @@ Fermat is a master plan to avoid getting to that future through waiting for inde
 
 #### The Framework
 
-Crypto networks are peer-to-Peer electronic cash systems that allow online payments to be sent directly from one party to another without going through a financial institution. Stand alone crypto wallets are truth to that principle. But the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallet files or keys, manage identities, interface crypto networks or the legacy financial system.
+Crypto networks are peer-to-Peer electronic cash systems that allow online payments to be sent directly from one party to another without going through a financial institution. Stand-alone crypto wallets are truth to that principle. But the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallet files or keys, manage identities, interface crypto networks or the legacy financial system.
 
 Fermat is a trust-less financial application framework that enables an ecosystem of any kind of trust-less financial applications, including wallets. It features a Peer-to-Peer network for transporting meta-data and inter-connect clients between each other. It also features a synchronization scheme that transforms a standalone app into a distributed application across several devices still owned by the same user.
 
@@ -27,6 +27,9 @@ The framework evolves from the standalone crypto wallet and enables an ecosystem
 * To allow even non-developers to build their own desktop and mobile trust-less financial applications in a similar way a non-developer builds a **Worldpress** site: re-using Plug-ins and themes. 
 
 * To act as a local back-end for native-Fermat-APPs and wallets, but also to any other mobile APP running on the same device.
+
+* To be the a full-stack Framework to develop financial applications that cannot be banned or easily attacked as it is fully decentralized. 
+
 
 #### Open Source
 
