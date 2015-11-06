@@ -510,7 +510,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
-    public void setIntraWalletUserManager(IntraWalletUserManager intraWalletUserManager) {
+    public void setIntraWalletUserIdentityManager(IntraWalletUserManager intraWalletUserManager) {
         this.intraWalletUserManager=intraWalletUserManager;
     }
 
