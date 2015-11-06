@@ -42,7 +42,7 @@ public class PlatformFileSystemAndroidAddonRoot extends AbstractAddon implements
     public PlatformFileSystemAndroidAddonRoot() {
         super(
                 new AddonVersionReference(new Version()),
-                true
+                true // indicates need of os context
         );
     }
 
@@ -68,7 +68,8 @@ public class PlatformFileSystemAndroidAddonRoot extends AbstractAddon implements
                                                                                    CantCreateFileException {
 
         try {
-            AndroidPlatformTextFile newFile = new AndroidPlatformTextFile(
+
+            final AndroidPlatformTextFile newFile = new AndroidPlatformTextFile(
                     context.getFilesDir().getPath(),
                     directoryName                  ,
                     hashFileName(fileName)         ,
