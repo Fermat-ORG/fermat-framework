@@ -129,9 +129,6 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
         //Start the Threads
         toReceive.start();
         toSend.start();
-
-        System.out.println("CommunicationNetworkServiceRemoteAgent - started ");
-
     }
 
     /**
