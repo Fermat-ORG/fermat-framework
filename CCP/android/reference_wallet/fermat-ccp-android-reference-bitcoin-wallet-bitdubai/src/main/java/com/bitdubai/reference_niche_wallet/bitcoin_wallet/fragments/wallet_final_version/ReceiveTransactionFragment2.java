@@ -1,14 +1,20 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.graphics.Color;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,15 +28,10 @@ import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
@@ -39,17 +40,16 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.NegotiationInformationTestData;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.makeText;
 
 
 /**
@@ -92,6 +92,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setHasOptionsMenu(true);
+
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
 
         lstCryptoWalletTransactionsBook = new ArrayList<>();
@@ -119,7 +121,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     }
     private void setUp(LayoutInflater inflater){
         //setUpHeader(inflater);
-        setUpDonut(inflater);
+        //setUpDonut(inflater);
     }
 
     private void setUpDonut(LayoutInflater inflater){
@@ -191,6 +193,38 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 //            e.printStackTrace();
 //        }
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+        menu.clear();
+
+        inflater.inflate(R.menu.home_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+
+            int id = item.getItemId();
+
+            CharSequence itemTitle = item.getTitle();
+
+            if(item.getItemId() ==  R.id.actionbar_send){
+                referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS,true);
+                changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

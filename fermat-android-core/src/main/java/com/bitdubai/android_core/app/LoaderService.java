@@ -8,20 +8,14 @@ import android.os.IBinder;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
 import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
 import com.bitdubai.fermat_api.CantStartPlatformException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
-import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.LoggerAddonRoot;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
@@ -40,11 +34,7 @@ public class LoaderService extends Service {
     private static boolean WAS_START_ACTIVITY_LOADED = false;
 
 
-    private AndroidOsFileSystem fileSystemOs;
     private CorePlatformContext platformContext;
-    private AndroidOsDataBaseSystem databaseSystemOs;
-    private AndroidOsLocationSystem locationSystemOs;
-    private LoggerSystemOs loggerSystemOs;
 
     private Platform platform;
 
@@ -95,27 +85,6 @@ public class LoaderService extends Service {
             Context context = getApplicationContext();
 
             platform = ((ApplicationSession)getApplication()).getFermatPlatform();
-
-
-            //set Os Addons in platform
-            fileSystemOs = new AndroidOsFileSystem(context.getFilesDir().getPath());
-            platform.setFileSystemOs(fileSystemOs);
-
-             databaseSystemOs = new AndroidOsDataBaseSystem(context.getFilesDir().getPath());
-            platform.setDataBaseSystemOs(databaseSystemOs);
-
-            //    locationSystemOs = new AndroidOsLocationSystem();
-            //    locationSystemOs.setContext(context);
-            //    platform.setLocationSystemOs(locationSystemOs);
-
-            loggerSystemOs = new LoggerAddonRoot(new AddonVersionReference(new Version()));
-            try {
-                ((com.bitdubai.fermat_api.Service) loggerSystemOs).start();
-                platform.setLoggerSystemOs(loggerSystemOs);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            }
 
             //execute start platform
             try {

@@ -5,6 +5,6 @@ package com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces;
  */
 public interface DealsWithCCPIntraWalletUsers {
 
-    void setIntraWalletUserManager(IntraWalletUserManager intraWalletUserManager);
+    void setIntraWalletUserIdentityManager(IntraWalletUserManager intraWalletUserManager);
 
 }
