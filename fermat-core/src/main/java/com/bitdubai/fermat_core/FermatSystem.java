@@ -34,14 +34,6 @@ public final class FermatSystem {
     private final FermatAddonManager  fermatAddonManager ;
     private final FermatPluginManager fermatPluginManager;
 
-    // TODO DELETE THIS
-    public FermatSystem(final Object osContext) {
-
-        this.fermatSystemContext = new FermatSystemContext(osContext);
-        this.fermatAddonManager  = new FermatAddonManager(fermatSystemContext);
-        this.fermatPluginManager = new FermatPluginManager(fermatSystemContext, fermatAddonManager);
-    }
-
     public FermatSystem(final Object osContext, final AbstractPlatform abstractPlatform) throws CantCreateSystemException {
 
         this.fermatSystemContext = new FermatSystemContext(osContext);
