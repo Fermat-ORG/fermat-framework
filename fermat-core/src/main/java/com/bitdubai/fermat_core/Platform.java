@@ -202,7 +202,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.DealsWithExtraUsers;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
-import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
 import com.bitdubai.fermat_core.layer.pip_actor.ActorLayer;
 import com.bitdubai.fermat_core.layer.dmp_identity.IdentityLayer;
 
@@ -404,7 +403,6 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new CryptoNetworkLayer(), PlatformLayers.BITDUBAI_CRYPTO_NETWORK_LAYER);
             corePlatformContext.registerPlatformLayer(new CryptoVaultLayer(), PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER);
             corePlatformContext.registerPlatformLayer(new CryptoLayer(), PlatformLayers.BITDUBAI_CRYPTO_LAYER);
-            corePlatformContext.registerPlatformLayer(new CryptoRouterLayer(), PlatformLayers.BITDUBAI_CRYPTO_ROUTER_LAYER);
             corePlatformContext.registerPlatformLayer(new CommunicationLayer(), PlatformLayers.BITDUBAI_COMMUNICATION_LAYER);
             corePlatformContext.registerPlatformLayer(new MiddlewareLayer(), PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER);
             corePlatformContext.registerPlatformLayer(new ModuleLayer(), PlatformLayers.BITDUBAI_MODULE_LAYER);
@@ -663,13 +661,6 @@ public class Platform implements Serializable {
                 Plugin assetsCryptoVault = ((CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER)).getmAssetsVault();
                 injectPluginReferencesAndStart(assetsCryptoVault, Plugins.BITDUBAI_ASSETS_CRYPTO_VAULT);
 
-           /*
-            * Plugin Incoming Crypto Crypto Router
-            * ----------------------------------
-            */
-                Plugin incomingCryptoTransaction = ((CryptoRouterLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_ROUTER_LAYER)).getIncomingCrypto();
-                injectPluginReferencesAndStart(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
-
             }
 
             /*
@@ -680,6 +671,17 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(walletManagerMiddleware, Plugins.BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE);
 
 
+            try {
+
+                       /*
+                        * Plugin Incoming Crypto Crypto Router
+                        * ----------------------------------
+                        */
+                Plugin incomingCryptoTransaction = fermatSystem.getPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_ROUTER, Plugins.INCOMING_CRYPTO));
+                injectPluginReferencesAndStart(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
 
             if (CCP) {
 
@@ -1087,17 +1089,6 @@ public class Platform implements Serializable {
 
             }
 
-
-
-            /*
-             * Plugin Template Network Service
-             * -----------------------------
-             *
-                Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
-                injectLayerReferences(templateNetworkService);
-                injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
-             */
-
 //           /*
 //            * Plugin Asset User Actor Network Service
 //            * ----------------------------------------
@@ -1116,101 +1107,6 @@ public class Platform implements Serializable {
 //            Plugin assetTransmissionNetworkService = ((DAPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_NETWORK_SERVICE_LAYER)).getAssetTransmissionNetworService();
 //            injectLayerReferences(assetTransmissionNetworkService);
 //            injectPluginReferencesAndStart(assetTransmissionNetworkService, Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE);
-
-
-            /*
-             * Plugin Blockchain Info Index
-             * -----------------------------
-             */
-            // Plugin blockchainInfoWorld = ((WorldLayer)  mWorldLayer).getBlockchainInfo();
-            //injectLayerReferences(blockchainInfoWorld);
-            // injectPluginReferencesAndStart(blockchainInfoWorld, Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
-
-            /*
-             * Plugin Shape Shift Index
-             * -----------------------------
-             */
-            // Plugin shapeShiftWorld = ((WorldLayer)  mWorldLayer).getShapeShift();
-            //injectLayerReferences(shapeShiftWorld);
-            // injectPluginReferencesAndStart(shapeShiftWorld, Plugins.BITDUBAI_SHAPE_SHIFT_WORLD);
-
-            /*
-             * Plugin Coinapult Index
-             * -----------------------------
-             */
-            // Plugin coinapultWorld = ((WorldLayer)  mWorldLayer).getCoinapult();
-            //injectLayerReferences(coinapultWorld);
-            // injectPluginReferencesAndStart(coinapultWorld, Plugins.BITDUBAI_COINAPULT_WORLD);
-
-            /*
-             * Plugin Coinbase Index
-             * -----------------------------
-             */
-            // Plugin coinbaseWorld = ((WorldLayer)  mWorldLayer).getCoinbase();
-            //injectLayerReferences(coinbaseWorld);
-            // injectPluginReferencesAndStart(coinbaseWorld, Plugins.BITDUBAI_COINBASE_WORLD);
-
-            /*
-             * Plugin Location Index
-             * -----------------------------
-             */
-            // Plugin locationWorld = ((WorldLayer)  mWorldLayer).getLocation();
-            //injectLayerReferences(locationWorld);
-            // injectPluginReferencesAndStart(locationWorld, Plugins.BITDUBAI_LOCATION_WORLD);
-
-            /*
-             * Plugin Crypto Index Index
-             * -----------------------------
-             */
-            // Plugin cryptoIndexWorld = ((WorldLayer)  mWorldLayer).getCryptoIndex();
-            //injectLayerReferences(cryptoIndexWorld);
-            // injectPluginReferencesAndStart(cryptoIndexWorld, Plugins.BITDUBAI_CRYPTO_INDEX);
-
-
-            /*
-             * Plugin Discount Wallet Basic Wallet
-             * -----------------------------
-             */
-            //Plugin discountWalletBasicWallet = ((BasicWalletLayer) mBasicWalletLayer).getDiscountWallet();
-            //injectPluginReferencesAndStart(discountWalletBasicWallet, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
-
-           /*
-            * Plugin Intra User Actor
-            * -----------------------------
-            */
-            //   Plugin intraUserActor = ((com.bitdubai.fermat_core.layer.dmp_actor.CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getActorIntraUser();
-            //injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_INTRA_USER_ACTOR);
-
-            /*
-             * Plugin Crypto Loss Protected Wallet Niche Type Wallet
-             * ----------------------------------
-             */
-            //TODO lo comente porque la variable cryptoLossProtectedWalletWalletModule es null y da error al inicializar la APP (Natalia)
-            //Plugin cryptoLossProtectedWalletWalletModule = ((WalletModuleLayer) mWalletModuleLayer).getmCryptoLossProtectedWallet();
-            //injectPluginReferencesAndStart(cryptoLossProtectedWalletWalletModule, Plugins.BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE);
-
-            /*
-             * Plugin Fiat Over Crypto Loss Protected Wallet Wallet Niche Type Wallet
-             * ----------------------------------
-             */
-            //TODO lo comente porque la variable fiatOverCryptoLossProtectedWalletWalletModule es null  y da error al levantar la APP (Natalia)
-            //Plugin fiatOverCryptoLossProtectedWalletWalletModule = ((WalletModuleLayer) mWalletModuleLayer).getmFiatOverCryptoLossProtectedWallet();
-            //injectPluginReferencesAndStart(fiatOverCryptoLossProtectedWalletWalletModule, Plugins.BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE);
-
-            /**
-             * Plugin Crypto Loss Protected Wallet Niche Type Wallet
-             * ----------------------------------
-             */
-            //TODO lo comente porque la variable cryptoLossProtectedWalletWalletModule es null y da error al inicializar la APP (Natalia)
-            //Plugin cryptoLossProtectedWalletWalletModule = ((WalletModuleLayer) mWalletModuleLayer).getmCryptoLossProtectedWallet();
-            //injectPluginReferencesAndStart(cryptoLossProtectedWalletWalletModule, Plugins.BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE);
-
-            /*
-             * Plugin Wallet factory
-             * -----------------------------
-             */
-//              Plugin walletFactoryModule =  ((ModuleLayer) mModuleLayer).getWalletFactory();
-//              injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE);
 
             if(CBP){
                 Plugin cryptoBrokerIdentity = ((CBPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_IDENTITY_LAYER)).getCryptoBrokerIdentity();
@@ -1298,11 +1194,13 @@ public class Platform implements Serializable {
         /*
          * Get the error manager instance
          */
-        ErrorManager errorManager = (ErrorManager) corePlatformContext.getAddon(Addons.ERROR_MANAGER);
+
+
 
         try {
+
             if (plugin instanceof DealsWithBitcoinWallet) {
-                ((DealsWithBitcoinWallet) plugin).setBitcoinWalletManager((BitcoinWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET));
+                ((DealsWithBitcoinWallet) plugin).setBitcoinWalletManager((BitcoinWalletManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.BASIC_WALLET, Plugins.BITCOIN_WALLET)));
             }
 
             if (plugin instanceof DealsWithBitcoinCryptoNetwork) {
@@ -1326,7 +1224,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithErrors) {
-                ((DealsWithErrors) plugin).setErrorManager(errorManager);
+                ((DealsWithErrors) plugin).setErrorManager((ErrorManager) fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER)));
             }
 
             if (plugin instanceof DealsWithEvents) {
@@ -1334,7 +1232,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithExtraUsers) {
-                ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ACTOR_EXTRA_USER));
+                ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.ACTOR, Plugins.EXTRA_WALLET_USER)));
             }
 
             if (plugin instanceof DealsWithLogger) {
@@ -1346,11 +1244,11 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithWalletModuleCryptoWallet) {
-                ((DealsWithWalletModuleCryptoWallet) plugin).setWalletModuleCryptoWalletManager((CryptoWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE));
+                ((DealsWithWalletModuleCryptoWallet) plugin).setWalletModuleCryptoWalletManager((CryptoWalletManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET)));
             }
 
             if (plugin instanceof DealsWithOutgoingExtraUser) {
-                ((DealsWithOutgoingExtraUser) plugin).setOutgoingExtraUserManager((OutgoingExtraUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION));
+                ((DealsWithOutgoingExtraUser) plugin).setOutgoingExtraUserManager((OutgoingExtraUserManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION, Plugins.OUTGOING_EXTRA_USER)));
             }
 
             if (plugin instanceof DealsWithPluginFileSystem) {
@@ -1366,11 +1264,11 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithCryptoAddressBook) {
-                ((DealsWithCryptoAddressBook) plugin).setCryptoAddressBookManager((CryptoAddressBookManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK));
+                ((DealsWithCryptoAddressBook) plugin).setCryptoAddressBookManager((CryptoAddressBookManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_MODULE, Plugins.CRYPTO_ADDRESS_BOOK)));
             }
 
             if (plugin instanceof DealsWithWalletContacts) {
-                ((DealsWithWalletContacts) plugin).setWalletContactsManager((WalletContactsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE));
+                ((DealsWithWalletContacts) plugin).setWalletContactsManager((WalletContactsManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.MIDDLEWARE, Plugins.WALLET_CONTACTS)));
             }
 
             if (plugin instanceof DealsWithWalletFactory) {
@@ -1402,7 +1300,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithIncomingCrypto) {
-                ((DealsWithIncomingCrypto) plugin).setIncomingCryptoManager((IncomingCryptoManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION));
+                ((DealsWithIncomingCrypto) plugin).setIncomingCryptoManager((IncomingCryptoManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_ROUTER, Plugins.INCOMING_CRYPTO)));
             }
             if (plugin instanceof DealsWithDeviceUser) {
                 ((DealsWithDeviceUser) plugin).setDeviceUserManager((DeviceUserManager) corePlatformContext.getAddon(Addons.DEVICE_USER));
@@ -1412,7 +1310,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithPlatformInfo) {
-                ((DealsWithPlatformInfo) plugin).setPlatformInfoManager((PlatformInfoManager) corePlatformContext.getAddon(Addons.PLATFORM_INFO));
+                ((DealsWithPlatformInfo) plugin).setPlatformInfoManager((PlatformInfoManager) fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.PLATFORM_INFO)));
             }
 
             if (plugin instanceof DealsWithWalletPublisherMiddlewarePlugin) {
@@ -1420,7 +1318,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithCCPIntraWalletUsers) {
-                ((DealsWithCCPIntraWalletUsers) plugin).setIntraWalletUserIdentityManager((IntraWalletUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR));
+                ((DealsWithCCPIntraWalletUsers) plugin).setIntraWalletUserIdentityManager((IntraWalletUserManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.ACTOR, Plugins.INTRA_WALLET_USER)));
             }
 
             if (plugin instanceof DealsWithIntraUsersModule) {
@@ -1431,11 +1329,9 @@ public class Platform implements Serializable {
                 ((DealsWithIdentityDesigner) plugin).setDesignerIdentityManager((DesignerIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DESIGNER_IDENTITY));
             }
 
-            if (plugin instanceof DealsWithCCPIdentityIntraWalletUser) {
-                Plugin plugin1 = corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
-                System.out.println(plugin1.getClass());
-                ((DealsWithCCPIdentityIntraWalletUser) plugin).setIdentityIntraUserManager((IntraWalletUserIdentityManager) plugin1);
-            }
+            if (plugin instanceof DealsWithCCPIdentityIntraWalletUser)
+                ((DealsWithCCPIdentityIntraWalletUser) plugin).setIdentityIntraUserManager((IntraWalletUserIdentityManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY, Plugins.INTRA_WALLET_USER)));
+
 
             if (plugin instanceof DealsWithDeveloperIdentity) {
                 ((DealsWithDeveloperIdentity) plugin).setDeveloperIdentityManager((DeveloperIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_IDENTITY));
@@ -1547,27 +1443,27 @@ public class Platform implements Serializable {
                 ((DealsWithAssetRedeemPointWalleSubAppModule) plugin).setWalletAssetRedeemPointManager((AssetRedeemPointWalletSubAppModule) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE));
             }
 
-            if (plugin instanceof DealsWithWsCommunicationsCloudClientManager) {
-                ((DealsWithWsCommunicationsCloudClientManager) plugin).setWsCommunicationsCloudClientConnectionManager((WsCommunicationsCloudClientManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL));
-            }
+            if (plugin instanceof DealsWithWsCommunicationsCloudClientManager) //////////////////////////////////////////////////////////////////////////////////////////////////////
+                ((DealsWithWsCommunicationsCloudClientManager) plugin).setWsCommunicationsCloudClientConnectionManager((WsCommunicationsCloudClientManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.WS_CLOUD_CLIENT)));
+
             if (plugin instanceof DealsWithOutgoingIntraActor) {
-                ((DealsWithOutgoingIntraActor) plugin).setOutgoingIntraActorManager((OutgoingIntraActorManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION));
+                ((DealsWithOutgoingIntraActor) plugin).setOutgoingIntraActorManager((OutgoingIntraActorManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION, Plugins.OUTGOING_INTRA_ACTOR)));
             }
 
             if (plugin instanceof DealsWithCryptoAddressesNetworkService) {
-                ((DealsWithCryptoAddressesNetworkService) plugin).setCryptoAddressesManager((CryptoAddressesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE));
+                ((DealsWithCryptoAddressesNetworkService) plugin).setCryptoAddressesManager((CryptoAddressesManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_ADDRESSES)));
             }
 
             if (plugin instanceof DealsWithCryptoPayment) {
-                ((DealsWithCryptoPayment) plugin).setCryptoPaymentManager((CryptoPaymentManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST));
+                ((DealsWithCryptoPayment) plugin).setCryptoPaymentManager((CryptoPaymentManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.REQUEST, Plugins.CRYPTO_PAYMENT_REQUEST)));
             }
 
             if (plugin instanceof DealsWithCryptoPaymentRequestNetworkService) {
-                ((DealsWithCryptoPaymentRequestNetworkService) plugin).setCryptoPaymentRequestManager((CryptoPaymentRequestManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));
+                ((DealsWithCryptoPaymentRequestNetworkService) plugin).setCryptoPaymentRequestManager((CryptoPaymentRequestManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_PAYMENT_REQUEST)));
             }
 
             if (plugin instanceof DealsWithCryptoTransmissionNetworkService) {
-                ((DealsWithCryptoTransmissionNetworkService) plugin).setCryptoTransmissionNetworkService((CryptoTransmissionNetworkServiceManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE));
+                ((DealsWithCryptoTransmissionNetworkService) plugin).setCryptoTransmissionNetworkService((CryptoTransmissionNetworkServiceManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_TRANSMISSION)));
             }
 
             if (plugin instanceof DealsWithCryptoBrokerIdentities){
@@ -1594,35 +1490,35 @@ public class Platform implements Serializable {
             ((Service) plugin).start();
 
 
-        } catch (CantStartPluginException cantStartPluginException) {
-
-            /**
-             * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
-             * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
-             */
-            errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, cantStartPluginException);
-
-        } catch (PluginNotRecognizedException pluginNotRecognizedException) {
-
-            /**
-             * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
-             * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
-             */
-            errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, pluginNotRecognizedException);
-
+        } catch (CantGetAddonException | VersionNotFoundException e) {
+            System.out.println("can't get error manager");
+            System.out.println(e);
         } catch (Exception e) {
 
             /**
              * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
              * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
              */
-            errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            reportUnexpectedError(UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
         }
 
         long end = System.currentTimeMillis();
 
         pluginsStartUpTime.put(descriptor, end - init);
         pluginsSizeReport.put(descriptor, ObjectSizeFetcher.sizeOf(plugin));
+    }
+
+    private void reportUnexpectedError(UnexpectedPlatformExceptionSeverity severity, Exception e) {
+        try {
+            ErrorManager errorManager = (ErrorManager) fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER));
+            errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, severity, e);
+        } catch (CantGetAddonException | VersionNotFoundException z) {
+            System.out.println("can't get error manager");
+            System.out.println(z);
+        } catch (Exception z) {
+            System.out.println("unhandled exception");
+            System.out.println(z.toString());
+        }
     }
 
     /**
