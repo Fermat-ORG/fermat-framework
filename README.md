@@ -20,7 +20,7 @@ Fermat is a master plan to avoid getting to that future through waiting for inde
 
 Fermat is a trust-less financial application framework that enables an ecosystem of any kind of trust-less financial applications, including wallets. It features a Peer-to-Peer network for transporting meta-data and inter-connect clients between each other. It also features a synchronization scheme that transforms a standalone app into a distributed application across several devices still owned by the same user.
 
-The framework evolves from the standalone crypto wallet and enables the development of trust-less financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down it has the OS API level, then the Blockchain Level, the Communication Level, Platform Level up to the User Interface Level. Its goal is to allow even non-developers to build their own desktop and mobile trust-less financial applications in a similar way a non-developer builds a Worldpress site: re-using plugins and themes. 
+The framework evolves from the standalone crypto wallet and enables an ecosystem of trust-less financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down it has the OS API level, then the Blockchain Level, the Communication Level, Platform Level up to the User Interface Level. Its goal is to allow even non-developers to build their own desktop and mobile trust-less financial applications in a similar way a non-developer builds a Worldpress site: re-using plugins and themes. 
 
 #### Open Source
 
