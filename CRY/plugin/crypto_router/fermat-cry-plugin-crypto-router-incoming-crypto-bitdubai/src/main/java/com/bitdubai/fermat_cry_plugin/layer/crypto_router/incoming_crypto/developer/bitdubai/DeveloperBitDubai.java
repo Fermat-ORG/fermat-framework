@@ -1,47 +1,37 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai;
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
 
 /**
- * Created by loui on 18/03/15.
- * Modified by Arturo Vallone 25/04/2015
+ * Created by Leon Acosta (laion.cj91@gmail.com) on 30/10/2015.
  */
-public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
-
-    /**
-     * PluginDeveloper Interface member variables.
-     */
-    Plugin plugin;
-
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
     public DeveloperBitDubai() {
-
-        /**
-         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
-         * it is easy to choose.
-         */
-        plugin = new IncomingCryptoTransactionPluginRoot();
-
+        super(new PluginDeveloperReference(Developers.BITDUBAI));
     }
 
-
-    /**
-     *PluginDeveloper Interface implementation.
-     */
     @Override
-    public Plugin getPlugin() {
-        return plugin;
+    public void start() throws CantStartPluginDeveloperException {
+        try {
+
+            this.registerVersion(new IncomingCryptoTransactionPluginRoot());
+
+        } catch (CantRegisterVersionException e) {
+
+            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+        }
     }
 
 
-    /**
-     *PluginLicensor Interface implementation.
-     */
     @Override
     public int getAmountToPay() {
         return 100;
@@ -54,7 +44,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
     @Override
     public String getAddress() {
-        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
+        return "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh";
     }
 
     @Override
