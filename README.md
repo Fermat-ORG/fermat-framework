@@ -18,18 +18,19 @@ The framework evolves from the standalone crypto wallet and enables the developm
 
 The challange is huge, but we know the difference between the impossible and the possible lies in a team's determination. We have the will to excel and the will to reach our vision for this world. 
 
-We have the talent, the drive, and the determination to enable the next generation of financial applications that will allow people to hold their own digital value by themselves in a secure way and participate with their funds in a multitude of transactions and business oportunities.
+We have the talent, the drive, and the determination to enable the next generation of financial applications that will allow people to hold their own digital value by themselves in a secure way and participate with their funds in a multitude of transactions and business oportunities across the globe.
 
 We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization.
  
-We are asking each of you to help lead the way.  Because we’re already connected with you as we are also developers and designers, and we want to build our relationship with you into a network of developers across the world to share new ideas and forge new collaborations. Working together, we can build the tools and technology the people need to become financially independent, have access to world wide financial products and be safe of nasty third parties spying on them or trying to tell them what they can and can not do with their money.
+We are asking each of you to help lead the way.  Because we’re already connected with you as we are also developers and designers, and we want to build our relationship with you into a network of developers across the world to share new ideas and forge new collaborations. Working together, we can build the tools and technology the people need to become financially independent, have access to world wide financial products and be safe of nasty third parties spying on them or trying to tell them what they can and can not do with their money. We believe in financial freedom.
 
-We want to hear from you on how we can build this network. We are arround 30 developers working full time on Fermat by now and our goal is to be 300. To learn more about how to participate, just go [how-to-participate](https://github.com/bitDubai/fermat/tree/master/fermat-documentation). We hope every single one of you will join us.  Because Fermat needs you.  The world needs you.  We need your skills, your imagination and your optimism.  And with this new network, we know we can be partners for decades to come.
+We want to hear from you on how we can build this network. We are arround 30 developers working full time on Fermat by now and our goal is to be 300. To learn more about how to participate, just go to [how-to-participate](https://github.com/bitDubai/participate-now). We hope every single one of you will join us.  Because Fermat needs you.  The world needs you.  We need your skills, your imagination and your optimism.  And with this new network, we know we can be partners for decades to come.
 
 We believe in people with passion who are crazy enough to think they can change the world. With a lot of hard work, we believe we are going to change the world.
 
 We are not going to stop until we do it.
 
+<br>
 ## The Challenge
 
 While designing Fermat we tried to find the answer to the following questions:
@@ -45,6 +46,7 @@ While designing Fermat we tried to find the answer to the following questions:
 
 The answers to each of these questions are addressed within Fermat.
 
+<br>
 ## What is Fermat?
 
 Fermat is a system for experimentation on what needs to be done to get crypto currencies mass adopted.
@@ -71,20 +73,23 @@ So take Fermat out for a spin and let us know how we can make it your favorite p
 
 You can learn more, see some cool visualizations of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
 
+<br>
 ### Fermat's Purpose
 
-> *__Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way.__*
+* Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way.__*
 
-> *__Give back the sovereignty over each one's own resources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.__*
+* Give back the sovereignty over each one's own resources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.__*
 
+<br>
 ### Fermat's Mission
 
-> *__To get cryptocurrencies mass adopted as soon as possible.__*
+* To get cryptocurrencies mass adopted as soon as possible.__*
 
-> *__To build the best possible integrated system able to handle the finances of not only all the human world population but also of companies and machines in the context of the IoT.__*  
+* To build the best possible integrated system able to handle the finances of not only all the human world population but also of companies and machines in the context of the IoT.__*  
 
-> *__To achieve “parity” with the state-of-the-art and to push towards new frontiers in computer science.__*
+* To achieve “parity” with the state-of-the-art and to push towards new frontiers in computer science.__*
 
+<br>
 ### Fermat Principles
 
 ##### 1. Fermat must not allow censorship.
@@ -179,11 +184,13 @@ You can learn more, see some cool visualizations of Fermat's architecture and it
 * Crypto Distribution Network concept.
 * Crypto Brokers concept.
 
+<br>
 ## How to Install and Run Fermat
 
 #### Download
 
 Installers for the latest stable build for Android can be [downloaded here](http://fermat.org/fermat.apk). Mac, Windows and Linux (Debian/Ubuntu) will be supported in the near future.
+
 
 #### Usage
 
@@ -204,6 +211,7 @@ State of the code: Under development for 6 months. No realeses yet. 20+ full tim
 
 Future path of development: Active (First release with very limited features schedulled for December 2015).
 
+<br>
 ## I Want to Join the Team!
 
 Awesome!
