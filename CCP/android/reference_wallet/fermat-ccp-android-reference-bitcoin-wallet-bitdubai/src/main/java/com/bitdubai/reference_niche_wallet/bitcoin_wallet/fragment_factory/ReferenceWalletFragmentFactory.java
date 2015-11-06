@@ -49,6 +49,7 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
                     //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.SendFragment.newInstance(0);
                     //currentFragment = SendFragment.newInstance();
+
                     currentFragment = SendTransactionFragment2.newInstance();
                     break;
 
