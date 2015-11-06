@@ -53,6 +53,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.Crypt
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
 import com.bitdubai.fermat_core.layer.cbp.identity.CBPIdentityLayer;
 import com.bitdubai.fermat_core.layer.cbp.sub_app_module.CBPSubAppModuleLayer;
+import com.bitdubai.fermat_core.layer.cbp.wallet_module.CBPWalletModuleLayer;
 import com.bitdubai.fermat_core.layer.dap_actor_network_service.DAPActorNetworkServiceLayer;
 import com.bitdubai.fermat_core.layer.dap_network_service.DAPNetworkServiceLayer;
 import com.bitdubai.fermat_core.layer.dap_sub_app_module.DAPSubAppModuleLayer;
@@ -443,6 +444,7 @@ public class Platform implements Serializable {
             //Init CBP Layers
             corePlatformContext.registerPlatformLayer(new CBPIdentityLayer(), PlatformLayers.BITDUBAI_CBP_IDENTITY_LAYER);
             corePlatformContext.registerPlatformLayer(new CBPSubAppModuleLayer(),PlatformLayers.BITDUBAI_CBP_SUB_APP_MODULE_LAYER);
+            corePlatformContext.registerPlatformLayer(new CBPWalletModuleLayer(),PlatformLayers.BITDUBAI_CBP_WALLET_MODULE_LAYER);
             //End CBP Layers
 
             /*
@@ -1223,6 +1225,9 @@ public class Platform implements Serializable {
 
                 Plugin cryptoCustomerIdentitySubAppModule = ((CBPSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_SUB_APP_MODULE_LAYER)).getCryptoCustomerIdentity();
                 injectPluginReferencesAndStart(cryptoCustomerIdentitySubAppModule, Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE);
+
+                Plugin cryptoBrokerWalletSubAppModule = ((CBPWalletModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_WALLET_MODULE_LAYER)).getCryptoBrokerWallet();
+                injectPluginReferencesAndStart(cryptoBrokerWalletSubAppModule, Plugins.BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE);
             }
 
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
