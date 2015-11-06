@@ -10,7 +10,7 @@ The reason is that digital information can be cloned, and if digital cash could 
 
 We firmly believe that the next decade will witness governments issuing digital currency based on blockchain technology. We expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge.
 
-In order to meet this demand thousands of wallets should be available. Wallets will evolve into sophisticated financial applications. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population and its financial needs. In fact most of current APPs available for mobile will turn into financial APPs once we provide them with the ability to easily handle digital cash and digital assets. 
+In order to meet this demand thousands of wallets should be available. Wallets will evolve into sophisticated financial applications. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population and its financial needs. In fact most of current mobile APPs will turn into financial APPs once we provide them with the ability to easily handle digital cash and digital assets. 
 
 #### The Master Plan
 
