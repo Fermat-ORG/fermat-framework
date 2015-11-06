@@ -25,12 +25,12 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
  */
 public class DeviceLocationSystemAddonRoot extends AbstractAddon implements LocationManager, LocationListener {
 
-    private Context         context              ;
+    private Context context;
 
     public DeviceLocationSystemAddonRoot() {
         super(
                 new AddonVersionReference(new Version()),
-                true
+                true //indicates that you need the context
         );
     }
 

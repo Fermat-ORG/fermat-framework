@@ -39,7 +39,6 @@ public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implemen
         this.fermatEventMonitor = new EventManagerPlatformServiceEventMonitor(this.errorManager);
 
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     /**
@@ -47,6 +46,9 @@ public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implemen
      */
     private final ConcurrentHashMap<String, List<FermatEventListener>> listenersMap;
 
+    /**
+     * Constructor without parameters.
+     */
     public EventManagerPlatformServiceAddonRoot() {
         super(new AddonVersionReference(new Version()));
 

@@ -66,17 +66,17 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
     }
 
     public void receivedNewDigitalAssetMetadataNotificationEvent(ReceivedNewDigitalAssetMetadataNotificationEvent event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("ASSET RECEPTION EVENT TEST, I GOT AN EVENT:\n"+event);
+        Logger LOG = Logger.getGlobal();
+        LOG.info("ASSET RECEPTION EVENT TEST, I GOT AN EVENT:\n"+event);
         startMonitorAgent();
         this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("ASSET RECEPTION CHECK THE DATABASE");
+        LOG.info("ASSET RECEPTION CHECK THE DATABASE");
     }
 
     public void incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent(IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        startMonitorAgent();
+        //startMonitorAgent();
         this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
     }
@@ -84,7 +84,7 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
     public void incomingAssetOnBlockchainWaitingTransferenceAssetUserEvent(IncomingAssetOnBlockchainWaitingTransferenceAssetUserEvent event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        startMonitorAgent();
+        //startMonitorAgent();
         this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
     }

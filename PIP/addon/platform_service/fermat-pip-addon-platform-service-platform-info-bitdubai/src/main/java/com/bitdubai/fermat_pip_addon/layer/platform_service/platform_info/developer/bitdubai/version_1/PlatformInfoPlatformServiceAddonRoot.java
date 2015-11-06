@@ -22,16 +22,15 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfac
  */
 public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implements PlatformInfoManager {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER       )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLATFORM_FILE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLATFORM_FILE_SYSTEM)
     private PlatformFileSystem platformFileSystem;
 
     /**
-     * PlatformInfoManager interface variables.
+     * PlatformInfoManager interface member variables.
      */
-
     private PlatformInfoPlatformService platformInfoPlatformService;
 
     /**
@@ -40,6 +39,10 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
     public PlatformInfoPlatformServiceAddonRoot() {
         super(new AddonVersionReference(new Version()));
     }
+
+    /**
+     * PlatformInfoManager interface implementation.
+     */
 
     @Override
     public PlatformInfo getPlatformInfo() throws CantLoadPlatformInformationException {

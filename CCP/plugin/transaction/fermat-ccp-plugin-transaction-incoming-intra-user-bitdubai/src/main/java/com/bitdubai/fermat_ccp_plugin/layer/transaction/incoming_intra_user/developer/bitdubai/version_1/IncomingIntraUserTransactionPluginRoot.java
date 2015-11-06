@@ -7,12 +7,17 @@ package com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.dev
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -72,55 +77,31 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
                    DealsWithCryptoAddressBook,
                    IncomingIntraUserManager {
 
-    public IncomingIntraUserTransactionPluginRoot() {
-        super(new PluginVersionReference(new Version()));
-    }
-
-    /*
-             * DealsWithBitcoinWallet Interface member variables
-             */
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
     private BitcoinWalletManager bitcoinWalletManager;
 
-    /*
-     * DealsWithCryptoAddressBook Interface member variables
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private EventManager eventManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_ROUTER   , plugin = Plugins.INCOMING_CRYPTO)
+    private IncomingCryptoManager incomingCryptoManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_MODULE   , plugin = Plugins.CRYPTO_ADDRESS_BOOK)
     private CryptoAddressBookManager cryptoAddressBookManager;
 
-    /*
-     * DealsWithCryptoTransmissionNetworkService Interface member variables
-     */
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM        , layer = Layers.NETWORK_SERVICE   , plugin = Plugins.CRYPTO_TRANSMISSION)
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
 
 
-    /*
-     * DealsWithErrors Interface member variables
-     */
-    private ErrorManager errorManager;
-
-    /*
-     * DealsWithEvents Interface member variables
-     */
-    private EventManager eventManager;
-
-    /*
-     * DealsWithIncomingCrypto member Interface variables
-     */
-    private IncomingCryptoManager incomingCryptoManager;
-
-    /*
-     * DealsWithPluginDatabaseSystem Interface member variables
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /*
-     * Plugin Interface member variables
-     */
-    private UUID pluginId;
-
-    /*
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    public IncomingIntraUserTransactionPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     /*
      * Incoming Intra User member variables
@@ -227,14 +208,6 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
     }
 
     /*
-     * Plugin methods implementation
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    /*
      * Service methods implementation
      */
     @Override
@@ -307,16 +280,6 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
             throw new CantStartPluginException("An unexpected exception happened",FermatException.wrapException(e),"","");
         }
 
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
