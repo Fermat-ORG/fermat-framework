@@ -66,14 +66,23 @@ project(':fermat-ccp-plugin-basic-wallet-bitcoin-wallet-bitdubai').projectDir = 
 include ':fermat-ccp-plugin-identity-intra-user-bitdubai'
 project(':fermat-ccp-plugin-identity-intra-user-bitdubai').projectDir = new File('CCP/plugin/identity/fermat-ccp-plugin-identity-intra-user-bitdubai')
 
+include ':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai'
+project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai').projectDir = new File('CCP/plugin/middleware/fermat-ccp-plugin-middleware-wallet-contacts-bitdubai')
+
+include ':fermat-ccp-plugin-module-intra-user-bitdubai'
+project(':fermat-ccp-plugin-module-intra-user-bitdubai').projectDir = new File('CCP/plugin/module/fermat-ccp-plugin-module-intra-user-bitdubai')
+
 include ':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai'
 project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
 
 include ':fermat-ccp-plugin-network-service-crypto-payment-request-bitdubai'
 project(':fermat-ccp-plugin-network-service-crypto-payment-request-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-payment-request-bitdubai')
 
-include ':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai'
-project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai').projectDir = new File('CCP/plugin/middleware/fermat-ccp-plugin-middleware-wallet-contacts-bitdubai')
+include ':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai'
+project(':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-transmission-bitdubai')
+
+include ':fermat-ccp-plugin-network-service-intra-actor-bitdubai'
+project(':fermat-ccp-plugin-network-service-intra-actor-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-intra-actor-bitdubai')
 
 include ':fermat-ccp-plugin-request-crypto-payment-bitdubai'
 project(':fermat-ccp-plugin-request-crypto-payment-bitdubai').projectDir = new File('CCP/plugin/request/fermat-ccp-plugin-request-crypto-payment-bitdubai')
@@ -90,6 +99,9 @@ project(':fermat-ccp-plugin-transaction-outgoing-extra-user-bitdubai').projectDi
 include ':fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai'
 project(':fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai').projectDir = new File('CCP/plugin/transaction/fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai')
 
+include ':fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai'
+project(':fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai').projectDir = new File('CCP/plugin/wallet_module/fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai')
+
 include ':fermat-ccp-android-reference-bitcoin-wallet-bitdubai'
 project(':fermat-ccp-android-reference-bitcoin-wallet-bitdubai').projectDir = new File('CCP/android/reference_wallet/fermat-ccp-android-reference-bitcoin-wallet-bitdubai')
 
@@ -101,9 +113,6 @@ project(':fermat-ccp-android-sub-app-intra-user-identity-bitdubai').projectDir =
 
 include ':fermat-ccp-android-sub-app-intra-user-community-bitdubai'
 project(':fermat-ccp-android-sub-app-intra-user-community-bitdubai').projectDir = new File('CCP/android/sub_apps/fermat-ccp-android-sub-app-intra-user-community-bitdubai')
-
-include ':fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai'
-project(':fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai').projectDir = new File('CCP/plugin/wallet_module/fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai')
 
 // End  CCP Projects
 
@@ -243,11 +252,6 @@ project(':fermat-dmp-plugin-identity-translator-bitdubai').projectDir = new File
 include ':fermat-dmp-plugin-identity-designer-bitdubai'
 project(':fermat-dmp-plugin-identity-designer-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-designer-bitdubai')
 
-include ':fermat-ccp-plugin-module-intra-user-bitdubai'
-project(':fermat-ccp-plugin-module-intra-user-bitdubai').projectDir = new File('CCP/plugin/module/fermat-ccp-plugin-module-intra-user-bitdubai')
-
-
-
 //World layer projects on the pipeline:
 /*
 include ':fermat-dmp-plugin-world-blockchain-info-bitdubai'
@@ -269,13 +273,6 @@ include ':fermat-dmp-plugin-world-coinbase-bitdubai'
 project(':fermat-dmp-plugin-world-coinbase-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai')
 
 */
-
-include ':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai'
-project(':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-transmission-bitdubai')
-
-
-include ':fermat-ccp-plugin-network-service-intra-actor-bitdubai'
-project(':fermat-ccp-plugin-network-service-intra-actor-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-intra-actor-bitdubai')
 
 // engine
 include ':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai'
