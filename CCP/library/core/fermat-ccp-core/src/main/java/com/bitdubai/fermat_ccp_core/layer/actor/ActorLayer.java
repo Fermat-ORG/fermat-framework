@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_ccp_core.layer.actor.extra_wallet_user.ExtraWalletUserPluginSubsystem;
-import com.bitdubai.fermat_ccp_core.layer.actor.intra_wallet_user.IntraWalletUserPluginSubsystem;
+import com.bitdubai.fermat_ccp_core.layer.actor.intra_user.IntraWalletUserPluginSubsystem;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 06/10/2015.

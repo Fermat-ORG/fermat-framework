@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -13,7 +14,10 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -65,37 +69,35 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ExtraUserActorPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, ExtraUserManager, LogManagerForDevelopers, Plugin, Service {
+public class ExtraUserActorPluginRoot extends AbstractPlugin implements
+        DatabaseManagerForDevelopers,
+        DealsWithErrors,
+        DealsWithLogger,
+        DealsWithPluginDatabaseSystem,
+        DealsWithPluginFileSystem,
+        ExtraUserManager,
+        LogManagerForDevelopers {
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
+
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
 
     public ExtraUserActorPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    ErrorManager errorManager;
 
-    /**
-     * DealsWithLogger interface member variable
-     */
-    LogManager logManager;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
-
-    /**
-     * DealsWithPlatformDatabaseSystem Interface member variables.
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * DealsWithPluginFileSystem Interface member variables.
-     */
-    PluginFileSystem pluginFileSystem;
-
-    /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
 
     /**
      * ExtraUserManager Interface member variables.
@@ -130,16 +132,6 @@ public class ExtraUserActorPluginRoot extends AbstractPlugin implements Database
 
         logManager.log(ExtraUserActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Extra User Actor Plugin Successfully initialized...", null, null);
 
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -485,13 +477,4 @@ public class ExtraUserActorPluginRoot extends AbstractPlugin implements Database
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
     }
-
-    /**
-     * Plugin Interface implementation.
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
 }

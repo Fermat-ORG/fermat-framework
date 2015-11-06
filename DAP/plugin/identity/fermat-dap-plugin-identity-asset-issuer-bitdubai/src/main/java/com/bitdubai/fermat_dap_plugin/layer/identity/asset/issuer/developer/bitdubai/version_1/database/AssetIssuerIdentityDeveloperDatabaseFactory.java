@@ -71,7 +71,8 @@ public class AssetIssuerIdentityDeveloperDatabaseFactory implements DealsWithPlu
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+//            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DB_NAME);
             database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
@@ -93,6 +94,7 @@ public class AssetIssuerIdentityDeveloperDatabaseFactory implements DealsWithPlu
                   /*
                    * We create the new database
                    */
+//                database = assetIssuerIdentityDatabaseFactory.createDatabase(pluginId);
                 database = assetIssuerIdentityDatabaseFactory.createDatabase(pluginId);
                 database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
@@ -131,8 +133,8 @@ public class AssetIssuerIdentityDeveloperDatabaseFactory implements DealsWithPlu
         /**
          * Table Asset Issuer addition.
          */
-        DeveloperDatabaseTable intraUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME, AssetIssuerColumns);
-        tables.add(intraUserTable);
+        DeveloperDatabaseTable assetIssuerTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME, AssetIssuerColumns);
+        tables.add(assetIssuerTable);
 
 
 
