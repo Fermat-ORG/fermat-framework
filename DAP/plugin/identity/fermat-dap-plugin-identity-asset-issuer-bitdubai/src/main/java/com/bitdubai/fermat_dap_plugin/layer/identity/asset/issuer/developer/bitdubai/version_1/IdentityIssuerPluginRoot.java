@@ -253,8 +253,8 @@ public class IdentityIssuerPluginRoot implements DealsWithActorAssetIssuer, Data
     }
 
     @Override
-    public boolean hasAssetUserIdentity() throws CantListAssetIssuersException {
-        return identityAssetIssuerManager.hasIntraUserIdentity();
+    public boolean hasIntraIssuerIdentity() throws CantListAssetIssuersException {
+        return identityAssetIssuerManager.hasIntraIssuerIdentity();
     }
 
     @Override
