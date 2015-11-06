@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -32,6 +33,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.DealsWithAssetUserWallet;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.developer_utils.AssetAppropriationDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.events.AssetAppropriationMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.events.AssetAppropriationRecorderService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -52,7 +54,7 @@ import java.util.regex.Pattern;
  */
 public class AssetAppropriationPluginRoot implements AssetAppropriationManager, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem,
         LogManagerForDevelopers, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithEvents,
-        DealsWithAssetUserWallet, Plugin, Service {
+        DealsWithAssetUserWallet, DealsWithPluginFileSystem, Plugin, Service {
 
     //VARIABLE DECLARATION
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
@@ -108,6 +110,12 @@ public class AssetAppropriationPluginRoot implements AssetAppropriationManager, 
                 "recorderService : " + recorderService + "\n";
 
         try {
+            //CREATES ASSET APPROPRIATION DATABASE AND ITS TABLES.
+            AssetAppropriationDatabaseFactory databaseFactory = new AssetAppropriationDatabaseFactory(pluginDatabaseSystem);
+            if (!databaseFactory.isDatabaseCreated(pluginId)) {
+                databaseFactory.createDatabase(pluginId);
+            }
+
             recorderService = new AssetAppropriationRecorderService(pluginId, eventManager, pluginDatabaseSystem);
             recorderService.start();
             monitorAgent = new AssetAppropriationMonitorAgent(pluginFileSystem, pluginId, pluginDatabaseSystem, logManager, errorManager);
@@ -241,6 +249,11 @@ public class AssetAppropriationPluginRoot implements AssetAppropriationManager, 
     @Override
     public void setAssetUserManager(AssetUserWalletManager assetUserWalletManager) {
         this.assetUserWalletManager = assetUserWalletManager;
+    }
+
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     //INNER CLASSES
