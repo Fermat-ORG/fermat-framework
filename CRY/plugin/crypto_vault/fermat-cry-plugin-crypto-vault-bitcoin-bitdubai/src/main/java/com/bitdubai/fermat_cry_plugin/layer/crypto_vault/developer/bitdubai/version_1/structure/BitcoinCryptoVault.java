@@ -498,7 +498,6 @@ public class BitcoinCryptoVault implements
             });
 
 
-            System.out.println(broadcast.future().toString());
             broadcast.future().get(10, TimeUnit.SECONDS);
 
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
