@@ -56,7 +56,6 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.C
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.DealsWithCryptoBrokerIdentities;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.DealsWithCryptoCustomerIdentities;
-import com.bitdubai.fermat_ccm_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.DealsWithExtraUsers;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.DealsWithCCPActorIntraWalletUsers;
@@ -551,8 +550,7 @@ public class Platform implements Serializable {
                 fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.LOG_MANAGER));
 
             } catch(Exception e) {
-                System.out.println("apa, encontramos un error.");
-                System.out.println(e);
+                reportUnexpectedError(UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
             }
 
             //--------------------------------
@@ -668,7 +666,7 @@ public class Platform implements Serializable {
                 Plugin incomingCryptoTransaction = fermatSystem.getPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_ROUTER, Plugins.INCOMING_CRYPTO));
                 injectPluginReferencesAndStart(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
             } catch (Exception e) {
-                System.out.println(e);
+                reportUnexpectedError(UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
             }
 
             if (CCP) {
@@ -729,10 +727,7 @@ public class Platform implements Serializable {
                     Plugin cryptoWalletWalletModule = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET));
                     injectPluginReferencesAndStart(cryptoWalletWalletModule, Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    if (e instanceof FermatException) {
-                        System.out.println(e);
-                    }
+                    reportUnexpectedError(UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
                 }
 
                 if (WPD) {
