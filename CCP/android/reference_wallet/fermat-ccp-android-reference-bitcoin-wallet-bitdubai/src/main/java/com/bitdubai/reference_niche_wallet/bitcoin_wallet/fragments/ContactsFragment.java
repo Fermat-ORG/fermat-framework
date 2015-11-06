@@ -51,7 +51,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_con
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory.ReferenceFragmentsEnumType;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceFragmentsEnumType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -140,8 +140,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         referenceWalletSession =(ReferenceWalletSession) walletSession;
 
         setRetainInstance(true);
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog()
-                .penaltyDeath().build());
+
+        setHasOptionsMenu(false);
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
 
@@ -164,7 +164,6 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.main_act, container, false);
         setupViews(rootView);
-
 
          walletContactRecords = new ArrayList<>();
         try {

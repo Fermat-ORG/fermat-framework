@@ -39,20 +39,17 @@ public class FermatSystemContext {
 
     private final Map<PlatformReference, AbstractPlatform> platforms;
 
-    private final Object           osContext          ;
-    private final OperativeSystems operativeSystem    ;
+    private final Object osContext;
 
     /**
      * Constructor without params, initializes the platforms Map with an empty concurrent hash map.
      * The platforms array contains all the references to the platforms.
      * The key is an element of the Platforms enum, and the value is the Platform in-self.
      */
-    public FermatSystemContext(final Object           osContext      ,
-                               final OperativeSystems operativeSystem) {
+    public FermatSystemContext(final Object osContext) {
 
-        this.osContext       = osContext;
-        this.operativeSystem = operativeSystem;
-        this.platforms       = new ConcurrentHashMap<>();
+        this.osContext = osContext;
+        this.platforms = new ConcurrentHashMap<>();
     }
 
     /**
@@ -243,10 +240,6 @@ public class FermatSystemContext {
 
     public final Object getOsContext() {
         return osContext;
-    }
-
-    public final OperativeSystems getOperativeSystem() {
-        return operativeSystem;
     }
 
 }

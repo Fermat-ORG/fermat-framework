@@ -171,7 +171,6 @@ public abstract class AbstractPlugin implements Plugin, Service {
                         NeededAddonReference addonReference = (NeededAddonReference) a;
 
                         AddonVersionReference avr = new AddonVersionReference(
-                                addonReference.operativeSystem(),
                                 addonReference.platform(),
                                 addonReference.layer(),
                                 addonReference.addon(),
@@ -186,7 +185,6 @@ public abstract class AbstractPlugin implements Plugin, Service {
                         NeededPluginReference pluginReference = (NeededPluginReference) a;
 
                         PluginVersionReference pvr = new PluginVersionReference(
-                                pluginReference.operativeSystem(),
                                 pluginReference.platform(),
                                 pluginReference.layer(),
                                 pluginReference.plugin(),
@@ -234,8 +232,8 @@ public abstract class AbstractPlugin implements Plugin, Service {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(abstractAddon));
 
-                System.out.println("Processing Plugin: " + this.pluginVersionReference.toString2() +
-                        "\n                   - >>> Assigned addon reference: " + avr.toString2());
+                System.out.println("Processing Plugin: " + this.pluginVersionReference.toString3() +
+                        "\n                   - >>> Assigned addon reference: " + avr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
                         "classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),
@@ -274,8 +272,8 @@ public abstract class AbstractPlugin implements Plugin, Service {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(abstractPlugin));
 
-                System.out.println("Processing Plugin: " + this.pluginVersionReference.toString2() +
-                        "\n                   - >>> Assigned plugin reference: " + pvr.toString2());
+                System.out.println("Processing Plugin: " + this.pluginVersionReference.toString3() +
+                        "\n                   - >>> Assigned plugin reference: " + pvr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
                         "classExpected: "+refManager.getName() + " --- classReceived: " + abstractPlugin.getClass().getName(),

@@ -87,6 +87,7 @@ public enum PlatformLayers implements FermatEnum {
     // End WPD Layers
 
     //Init CBP Layers
+    BITDUBAI_CBP_WALLET_MODULE_LAYER ("BCBPWML", Developers.BITDUBAI),
     BITDUBAI_CBP_IDENTITY_LAYER ("BCBPIL", Developers.BITDUBAI),
     BITDUBAI_CBP_SUB_APP_MODULE_LAYER ("BCBPSAML", Developers.BITDUBAI),
     //END CBP Layers

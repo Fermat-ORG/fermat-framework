@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.Base64;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -14,10 +14,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.exceptions.CantHashDatabaseNameException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -35,10 +33,11 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
 
     private Context context;
 
+
     public PluginDatabaseSystemAndroidAddonRoot() {
         super(
                 new AddonVersionReference(new Version()),
-                OperativeSystems.ANDROID
+                true
         );
     }
 
@@ -55,87 +54,90 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
             );
         }
     }
+    /**
+     * PluginDatabaseSystem Interface implementation.
+     */
 
     @Override
-    public final Database openDatabase(final UUID   ownerId     ,
-                                       final String databaseName) throws CantOpenDatabaseException ,
-                                                                         DatabaseNotFoundException {
-
-        try {
-            AndroidDatabase database;
+    public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+        try{
             String hasDBName = hashDataBaseName(databaseName);
-            database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
+            AndroidDatabase database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
             database.openDatabase();
             return database;
-        } catch (final CantHashDatabaseNameException e){
-
-            throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (final Exception e){
-
-            throw new CantOpenDatabaseException(e, null, "Unhandled Exception.");
+        } catch (NoSuchAlgorithmException e) {
+            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(e);
+            String context = "Database Name : " + databaseName;
+            String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
+            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
+        } catch (DatabaseNotFoundException exception){
+            throw exception;
+        } catch (Exception e){
+            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
         }
+
     }
 
     @Override
-    public final Database createDatabase (final UUID   ownerId     ,
-                                          final String databaseName) throws CantCreateDatabaseException {
-
-        try {
-            AndroidDatabase database;
+    public void deleteDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+        try{
             String hasDBName = hashDataBaseName(databaseName);
-            database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
+            AndroidDatabase database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
+            database.deleteDatabase();
+        } catch (NoSuchAlgorithmException e){
+            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(e);
+            String context = "Database Name : " + databaseName;
+            String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
+            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
+        }
+        catch (Exception e){
+            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
+        }
+
+    }
+
+    @Override
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+        try{
+            String hasDBName = hashDataBaseName(databaseName);
+            AndroidDatabase database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
             database.createDatabase(hasDBName);
             return database;
         }
-        catch (final CantHashDatabaseNameException e){
-
-            throw new CantCreateDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (Exception e){
-
-            throw new CantCreateDatabaseException(e, null, "Unhandled Exception.");
+        catch (NoSuchAlgorithmException e){
+            String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(e);
+            String context = "Database Name : " + databaseName;
+            String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
+            throw new CantCreateDatabaseException(message, cause, context, possibleReason);
+        }
+        catch (Exception e){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
         }
 
     }
 
-    @Override
-    public final void deleteDatabase(final UUID   ownerId     ,
-                                     final String databaseName) throws CantOpenDatabaseException ,
-                                                                       DatabaseNotFoundException {
-
-        try {
-            String hasDBName = hashDataBaseName(databaseName);
-            AndroidDatabase database;
-            database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
-            database.deleteDatabase();
-
-        } catch (final CantHashDatabaseNameException e){
-
-            throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (final Exception e){
-
-            throw new CantOpenDatabaseException(e, null, "Unhandled Exception.");
-        }
-    }
-
-    private String hashDataBaseName(final String databaseName) throws CantHashDatabaseNameException {
-
-        try {
-
-            final MessageDigest md = MessageDigest.getInstance("SHA-256");
+    private String hashDataBaseName(String databaseName) throws NoSuchAlgorithmException {
+        String encryptedString;
+        try{
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(databaseName.getBytes(Charset.forName("UTF-8")));
             byte[] digest = md.digest();
             byte[] encoded = Base64.encode(digest, 1);
 
-            String encryptedString = new String(encoded, "UTF-8");
+            try {
+                encryptedString = new String(encoded, "UTF-8");
+            } catch (Exception e) {
+                throw new NoSuchAlgorithmException (e);
+            }
 
-            return encryptedString.replace("/","");
 
-        } catch(final UnsupportedEncodingException e){
-
-            throw new CantHashDatabaseNameException(e, "databaseName: "+ databaseName, "Unsupported encoding exception.");
-        } catch(final NoSuchAlgorithmException e){
-
-            throw new CantHashDatabaseNameException(e, "databaseName: "+ databaseName, "No such algorithm.");
+        }catch(NoSuchAlgorithmException e){
+            throw e;
         }
+        encryptedString = encryptedString.replace("/","");
+        return encryptedString.replace("\n","");
     }
 }

@@ -3,7 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserSearchResult;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
@@ -32,7 +32,7 @@ public class IntraUserModuleSearch implements IntraUserSearch {
      * DealsWithCCPIdentityIntraWalletUser interface member variable
      */
 
-    IntraWalletUserManager intraWalletUserManager;
+    IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     private String nameToSearch;
 
@@ -40,9 +40,9 @@ public class IntraUserModuleSearch implements IntraUserSearch {
      * Constructor
      */
 
-   public IntraUserModuleSearch(IntraUserManager intraUserNSManager, IntraWalletUserManager intraWalletUserManager){
+   public IntraUserModuleSearch(IntraUserManager intraUserNSManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager){
        this.intraUserNSManager = intraUserNSManager;
-       this.intraWalletUserManager = intraWalletUserManager;
+       this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
 
    }
     /**
@@ -74,7 +74,7 @@ public class IntraUserModuleSearch implements IntraUserSearch {
              */
 
         //TODO Harcoder
-            List<IntraWalletUser> intraWalletUserList = this.intraWalletUserManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+            List<IntraWalletUser> intraWalletUserList = this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
 
 
             /**

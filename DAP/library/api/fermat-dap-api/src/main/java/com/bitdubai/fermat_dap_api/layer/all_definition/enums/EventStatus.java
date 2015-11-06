@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 02/10/15.
  */
-public enum EventStatus {
+public enum EventStatus implements FermatEnum {
     NOTIFIED("NOTD"),
     PENDING("PEND");
 
@@ -15,9 +16,10 @@ public enum EventStatus {
         this.code=code;
     }
 
+    @Override
     public String getCode() { return this.code ; }
 
-    public EventStatus getByCode(String code) throws InvalidParameterException {
+    public static EventStatus getByCode(String code) throws InvalidParameterException {
         switch (code){
             case "NOTD":
                 return EventStatus.NOTIFIED;

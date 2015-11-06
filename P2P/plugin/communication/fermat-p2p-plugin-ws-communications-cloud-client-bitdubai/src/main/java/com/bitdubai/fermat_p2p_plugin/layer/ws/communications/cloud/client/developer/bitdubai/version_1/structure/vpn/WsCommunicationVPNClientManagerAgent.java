@@ -34,11 +34,6 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     private static long SLEEP_TIME = 60000;
 
     /**
-     * Represent the requestedVpnConnections
-     */
-    private Map<NetworkServiceType, Map<String, PlatformComponentProfile>> requestedVpnConnections;
-
-    /**
      * Represent the vpnClientActiveCache;
      */
     private Map<NetworkServiceType, Map<String, WsCommunicationVPNClient>> vpnClientActiveCache;
@@ -52,7 +47,6 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      * Constructor
      */
     public WsCommunicationVPNClientManagerAgent(){
-       this.requestedVpnConnections = new ConcurrentHashMap<>();
        this.vpnClientActiveCache = new ConcurrentHashMap<>();
        this.isRunning = Boolean.FALSE;
     }
@@ -133,31 +127,58 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
                 //If empty
                 if (vpnClientActiveCache.isEmpty()){
+                    System.out.println(" WsCommunicationVPNClientManagerAgent - Auto stop ");
                     //Auto stop
                     isRunning = Boolean.FALSE;
+                    this.interrupt();
                 }
 
                 for (NetworkServiceType networkServiceType : vpnClientActiveCache.keySet()) {
 
                     for (String remote : vpnClientActiveCache.get(networkServiceType).keySet()) {
 
-                        System.out.println(" WsCommunicationVPNClientManagerAgent - networkServiceType.size() "+vpnClientActiveCache.get(networkServiceType).size());
+                       System.out.println(" WsCommunicationVPNClientManagerAgent - vpnClientActiveCache.get("+networkServiceType+").size() = "+vpnClientActiveCache.get(networkServiceType).size());
 
-                       /* WsCommunicationVPNClient wsCommunicationVPNServer = vpnClientActiveCache.get(networkServiceType).get(remote);
+                       WsCommunicationVPNClient wsCommunicationVPNClient = vpnClientActiveCache.get(networkServiceType).get(remote);
 
-                        //Verified is this vpn is active
-                        if (!wsCommunicationVPNServer.isActive()){
+                        //Verified if this vpn connection is open
+                        if (!wsCommunicationVPNClient.getConnection().isOpen()){
 
-                            wsCommunicationVPNServer.getConnection().close();
-                            vpnClientActiveCache.remove(wsCommunicationVPNServer);
+                            try {
 
-                        } */
+                                /*
+                                 * Verified if a pong message respond pending
+                                 */
+                                if (wsCommunicationVPNClient.isPongMessagePending()){
+                                    throw new RuntimeException("Connection maybe not active");
+                                }
 
+                                wsCommunicationVPNClient.sendPingMessage();
+
+                            }catch (Exception e){
+                                System.out.println(" WsCommunicationVPNClientManagerAgent - Error occurred sending ping to the vpn node, closing the connection to remote node");
+                                wsCommunicationVPNClient.close();
+                                vpnClientActiveCache.get(networkServiceType).remove(remote);
+                            }
+
+                        }else{
+                            //If the connection is no open
+                            wsCommunicationVPNClient.close();
+                            vpnClientActiveCache.get(networkServiceType).remove(remote);
+                        }
+
+                    }
+
+                    //Validate if the cache list is empty
+                    if (vpnClientActiveCache.get(networkServiceType).isEmpty()){
+                        vpnClientActiveCache.remove(networkServiceType);
                     }
 
                 }
 
-                sleep(WsCommunicationVPNClientManagerAgent.SLEEP_TIME);
+                if (!this.isInterrupted()){
+                    sleep(WsCommunicationVPNClientManagerAgent.SLEEP_TIME);
+                }
 
             }
 

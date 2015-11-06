@@ -1,18 +1,18 @@
 package com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.Service;
-
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.*;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.exceptions.CantGetDeviceUserPersonalImageException;
 import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.exceptions.CantPersistDeviceUserException;
@@ -52,38 +52,25 @@ import java.util.List;
  * It is responsible for login in users to the current device.
  */
 
-public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWithEvents, DealsWithPlatformDatabaseSystem, DealsWithPlatformFileSystem, DeviceUserManager, Service {
+public class DeviceUserUserAddonRoot extends AbstractAddon implements
+        DealsWithErrors,
+        DealsWithEvents,
+        DealsWithPlatformFileSystem,
+        DeviceUserManager {
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLATFORM_FILE_SYSTEM)
+    private PlatformFileSystem platformFileSystem;
 
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    ErrorManager errorManager;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    EventManager eventManager;
-
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-    @Override
-    public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
-        this.platformDatabaseSystem = platformDatabaseSystem;
+    public DeviceUserUserAddonRoot() {
+        super(new AddonVersionReference(new Version()));
     }
-
-    /**
-     * DealsWithPlatformDatabaseSystem Interface member variables.
-     */
-    PlatformDatabaseSystem platformDatabaseSystem;
-
-    /**
-     * DealsWithPlatformFileSystem Interface member variables.
-     */
-    PlatformFileSystem platformFileSystem;
-
 
     /**
      * DeviceUserManager Interface member variables.
@@ -93,13 +80,6 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
     final String DEVICE_USER_PUBLIC_KEYS_FILE_NAME = "deviceUserPublicKeys";
 
     final String PERSONAL_IMAGE_SUFFIX = "_personal_image";
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-
 
     /**
      * DeviceUserManager Interface implementation.
@@ -388,35 +368,6 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
         } catch(CantPersistDeviceUserPersonalImageFileException e) {
             throw new CantSetImageException(CantSetImageException.DEFAULT_MESSAGE, e, "Cant persist device user personal image.", "");
         }
-    }
-
-    /**
-     * Service Interface implementation.
-     */
-
-    @Override
-    public void start() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
     }
 
     /**
