@@ -550,8 +550,6 @@ public class Platform implements Serializable {
                 fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.DEVICE_LOCATION));
                 fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.LOG_MANAGER));
 
-
-
             } catch(Exception e) {
                 System.out.println("apa, encontramos un error.");
                 System.out.println(e);
