@@ -270,7 +270,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             registeredActorAssetUser = actorAssetUser;
         }
 
-        digitalAssetsToDistribute=getDistributionHashMapForTesting();
+        digitalAssetsToDistribute=digitalAssetsToDistribute;//getDistributionHashMapForTesting();
 
         for (DigitalAssetMetadata digitalAssetMetadata: digitalAssetsToDistribute.keySet()){
             digitalAssetsToDistribute.put(digitalAssetMetadata, registeredActorAssetUser);

@@ -9,12 +9,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
@@ -35,6 +37,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.googlecode.catchexception.CatchException.catchException;
@@ -83,6 +86,9 @@ public class DistributeAssetsTest {
     private ActorAssetIssuerManager actorAssetIssuerManager;
 
     @Mock
+    private ActorAssetUserManager actorAssetUserManager;
+
+    @Mock
     private BitcoinNetworkManager bitcoinNetworkManager;
 
     @Mock
@@ -104,12 +110,12 @@ public class DistributeAssetsTest {
     private DatabaseTableRecord mockDatabaseTableRecord = Mockito.mock(DatabaseTableRecord.class);
     private Database mockDatabase = Mockito.mock(Database.class);
     private HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute;
-
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     @Before
     public void setUp() throws Exception {
 
         pluginId = UUID.randomUUID();
-
+        assetDistributionPluginRoot = Mockito.mock(AssetDistributionPluginRoot.class);
         assetDistributionPluginRoot = new AssetDistributionPluginRoot();
         assetDistributionPluginRoot.setId(pluginId);
         assetDistributionPluginRoot.setErrorManager(errorManager);
@@ -123,6 +129,8 @@ public class DistributeAssetsTest {
         assetDistributionPluginRoot.setBitcoinNetworkManager(bitcoinNetworkManager);
         assetDistributionPluginRoot.setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
         assetDistributionPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
+        assetDistributionPluginRoot.setActorAssetUserManager(actorAssetUserManager);
+        assetDistributionPluginRoot.setLoggingLevelPerClass(newLoggingLevel);
 
         MockDigitalAssetMetadataForTesting mockDigitalAssetMetadata = new MockDigitalAssetMetadataForTesting();
         ActorAssetUser actorAssetUser = new MockActorAssetUserForTesting();
@@ -149,10 +157,7 @@ public class DistributeAssetsTest {
     public void distributeAssetsTest() throws Exception {
         System.out.println("Test method distributeAssetsTest()");
         assetDistributionPluginRoot.start();
-        catchException(assetDistributionPluginRoot).distributeAssets(digitalAssetsToDistribute, "ASDS-16988807");
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNull();
+        assetDistributionPluginRoot.distributeAssets(digitalAssetsToDistribute, "ASDS-16988807");
     }
 
     /*@Test

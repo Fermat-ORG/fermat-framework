@@ -1,6 +1,7 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.incoming_asset_on_crypto_network_waiting_transference_asset_user_event_handler;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dist
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.junit.Before;
@@ -25,6 +27,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
+import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -45,9 +49,7 @@ public class OnCryptoNetworHandleEventTest {
     private  FermatEventListener fermatEventListener4;
     @Mock
     private  FermatEventListener fermatEventListener5;
-
-    @Mock
-    private  FermatEvent fermatEvent;
+    private IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent fermatEvent;
     @Mock
     private ErrorManager errorManager;
     private UUID pluginId;
@@ -58,10 +60,14 @@ public class OnCryptoNetworHandleEventTest {
     private DatabaseFactory mockDatabaseFactory;
     private Database database = Mockito.mock(Database.class);
     private AssetDistributionDao assetDistributionDao = Mockito.mock(AssetDistributionDao.class);
-    private IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler = Mockito.mock(IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.class);
+    private IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler;
 
     @Before
     public void init() throws Exception {
+        incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler = new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler();
+        fermatEvent = new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent();
+        EventSource eventSource = EventSource.getByCode(EventSource.ASSETS_OVER_BITCOIN_VAULT.getCode());
+        fermatEvent.setSource(eventSource);
         pluginId = UUID.randomUUID();
         assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
         incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.setAssetDistributionRecorderService(assetDistributionRecorderService);
@@ -85,21 +91,21 @@ public class OnCryptoNetworHandleEventTest {
     @Test
     public void handleEventThrowCantSaveEventException () throws FermatException {
         assetDistributionRecorderService.start();
-        try {
-            incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.handleEvent(null);
-        }catch (Exception ex) {
-            assertThat(ex).isInstanceOf(CantSaveEventException.class);
-        }
+        catchException(incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler).handleEvent(null);
+        Exception thrown = caughtException();
+        assertThat(thrown)
+                .isNotNull()
+                .isInstanceOf(CantSaveEventException.class);
     }
 
     @Test
     public void handleEventThrowTransactionServiceNotStartedException () throws FermatException {
         assetDistributionRecorderService.start();
         assetDistributionRecorderService.stop();
-        try {
-            incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.handleEvent(null);
-        }catch (Exception ex) {
-            assertThat(ex).isInstanceOf(TransactionServiceNotStartedException.class);
-        }
+        catchException(incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler).handleEvent(null);
+        Exception thrown = caughtException();
+        assertThat(thrown)
+                .isNotNull()
+                .isInstanceOf(TransactionServiceNotStartedException.class);
     }
 }
