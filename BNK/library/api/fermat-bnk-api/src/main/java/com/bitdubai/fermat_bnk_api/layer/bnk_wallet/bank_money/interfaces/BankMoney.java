@@ -20,4 +20,6 @@ public interface BankMoney {
 
     BankMoneyTransactionSummary getBrokerTransactionSummary(BalanceType balanceType) throws CantTransactionSummaryBankMoneyException;
 
+
+
 }
