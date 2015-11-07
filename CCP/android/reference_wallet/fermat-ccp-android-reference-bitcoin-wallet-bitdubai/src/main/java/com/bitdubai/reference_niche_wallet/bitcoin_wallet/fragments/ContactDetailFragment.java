@@ -199,6 +199,7 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
             linear_layout_extra_user_receive = (LinearLayout) mFragmentView.findViewById(R.id.linear_layout_extra_user_receive);
             send_button.setOnClickListener(this);
             receive_button.setOnClickListener(this);
+            linear_layout_extra_user_receive.setOnClickListener(this);
             if (typeface != null) {
                 edit_text_name.setTypeface(typeface);
                 text_view_address.setTypeface(typeface);
