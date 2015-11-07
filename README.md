@@ -56,31 +56,41 @@ We are not going to stop until we do it.
 
 While designing Fermat we tried to find the answer to the following questions:
 
+* How can we build a P2P network to interconnect all devices bwtween each other in a scalable way?
+* How do we get sure the communication is secure?
+* How do we build a Plug-ins Framework able to run on smart phones?
+* How do we make as much of the code portable to other every OS?
+* How do we enable thousands of developers to collaborate?
+* How do me make the framework multi-wallet or multi-app?
+* How do we let the End User to install more wallets within the same APP and in a P2P way?
+* How do we organize Plug-in in order to be reusable by other Plugin?
+* How do we prevent a bad Plug-in from stealing the digital funds stored on other Plug-ins?
+* How do we make sure information keeps a consistent state even if a phone turns itself off at any time?
+* How can we manage multiple identities used by the End User on different wallets / APPs?
 * How can we isolate ordinary people from the perceived complexity of crypto currencies?
+* How do we integrate merchants, retailers and brands of all sizes in a clever way?
+* How can we allow non-developers to create digital wallets without programming anything at all?
+* How can we create a fair systems with the developers who contribute to the project?
 * How can we use the collective intelligence of the developer community?
 * How can we reuse the entire current infrastructure already in place?
-* How do we integrate legacy financial institutions in a way they feel comfortable?
-* How do we integrate merchants, retailers and brands of all sizes in a clever way?
-* How can we allow people to create digital wallets without programming anything at all?
-* How can we keep people's digital money at their hands without needing to trust third parties? 
-* How can we create a fair systems with the developers who contributed to it?
+
 
 The answers to each of these questions are addressed within Fermat.
 
 <br>
 ## What is Fermat?
 
-Fermat is a system for experimentation on what needs to be done to get crypto currencies mass adopted.
+Fermat is a system for experimentation on what needs to be done to get crypto currencies mass adopted. As it is very easy to develop mobile APPs on Fermat, entrepreneurs can use it to easily test their business models.
 
 Technically Fermat is an open-source P2P system built on a plug-ins architecture that handles a stack of platforms and runs on multiple OS including Android, Linux, iOS, OSX and Windows.
 
-What makes Fermat different from other wallet systems or services?
+#### What makes Fermat different from other wallet systems or services?
 
 * **Fermat is P2P.** This makes it censorship resistent and difficult to be attacked.
 
 * **Fermat is built with plugins.** This enables functionality to be reused and opens the door to any developer to participate.
 
-* **Fermat runs on end users' devices.** This enables users to hold their own money eliminating the need to trust a third party.
+* **Fermat runs on End Users' devices.** This enables users to hold their own funds and digital assets eliminating the need to trust a third party.
 
 * **Fermat is inclusive.** By creating their own plugins, current industry members can integrate with Fermat to offer their services and products to Fermat's user base.
 
