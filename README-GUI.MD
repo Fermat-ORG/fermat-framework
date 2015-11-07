@@ -15,6 +15,14 @@ To accomplish it's mission, a GUI component must have a wireframe.
 
 Several new concepts are introduced...
 
+### Walllet
+
+Una Wallet es un GUI Component que le permite a un usuario poder llevar acabo operaciones financieras como enviar y recibir bitcoins haciendo uso de los diferentes plugins que ofrece Fermat a travez Modules. Cada Wallet tiene un Module asociado, es decir, existe una relacion 1 a 1 entre una wallet y un modulo.
+
+### Sub-App
+
+Una Wallet es un GUI Component que le permite a un usuario poder llevar acabo operaciones no financieras, tales como creacion de identidades dentro de la plataforma, tareas administrativas, etc haciendo uso de los diferentes plugins que ofrece Fermat a travez de Modules. Suelen servir para complementar la funcionalidad de las wallets. Cada Sub-App tiene un Module asociado, es decir, existe una relacion 1 a 1 entre una Sub-App y un Module.
+
 <br>
 
 ## Part II: Workflow
@@ -195,6 +203,8 @@ Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es e
 ### Navigation structure
  
  -- estructura de navegación con ejemplos..
+ 
+  Fermat es una aplicación distinta al resto de las aplicaciones android; esta posee su porpia estructura de navegación, la cual se basa en pantallas y sub-pantallas que se van "pintando" desde objetos cargados en tiempo de ejecución, desde archivos que entregan la información sobre que es lo que se necesita dibujar en cada pantalla/sub pantalla y en que orden
 
 ----------------------
 
@@ -237,9 +247,14 @@ Seguir...
 
 #### Wallet session
 
+Son sesiones que manejan informacion de una wallet, estas heredan de WalletSession
+
 ----------------------
 
 #### Sub app session
+
+Son sesiones que manejan informacion de una subapp, estas heredan de WalletSession
+
 ----------------------
 
 #### Settings
