@@ -715,8 +715,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     @Override
     protected void onResume() {
         super.onResume();
-        getNotificationManager().addObserver(this);
-        getNotificationManager().addCallback(this);
+        try {
+            getNotificationManager().addObserver(this);
+            getNotificationManager().addCallback(this);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -727,8 +731,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     @Override
     protected void onPause() {
         super.onPause();
-        getNotificationManager().deleteObserver(this);
-        getNotificationManager().deleteCallback(this);
+        try {
+            getNotificationManager().deleteObserver(this);
+            getNotificationManager().deleteCallback(this);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -39,9 +39,6 @@ public abstract class AbstractCommunicationBaseEventHandler<E extends Communicat
     @Override
     public final void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
-
-
         if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
             E event = (E) platformEvent;

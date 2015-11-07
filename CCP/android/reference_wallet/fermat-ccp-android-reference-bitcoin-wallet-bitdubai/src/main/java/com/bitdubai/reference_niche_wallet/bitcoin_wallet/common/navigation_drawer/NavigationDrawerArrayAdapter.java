@@ -74,7 +74,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 if(activeIntraUser.getProfileImage()!=null){
                     icon.setImageBitmap(BitmapFactory.decodeByteArray(activeIntraUser.getProfileImage(),0,activeIntraUser.getProfileImage().length));
                 }else{
-                    Picasso.with(context).load(R.drawable.tessa_profile_picture).into(icon);
+                    icon.setImageResource(R.drawable.profile_image);
                 }
 
 

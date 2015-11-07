@@ -28,6 +28,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -49,6 +50,8 @@ public class CreateContactFragmentDialog extends Dialog implements
     private Bitmap contactImageBitmap;
     public Activity activity;
     public Dialog d;
+
+    private CreateContactDialogCallback createContactDialogCallback;
 
 
     /**
@@ -86,7 +89,7 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
 
 
-    public CreateContactFragmentDialog(Activity a, ReferenceWalletSession referenceWalletSession, WalletContact walletContact, String userId,Bitmap contactImageBitmap) {
+    public CreateContactFragmentDialog(Activity a, ReferenceWalletSession referenceWalletSession, WalletContact walletContact, String userId,Bitmap contactImageBitmap,CreateContactDialogCallback createContactDialogCallback) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
@@ -94,6 +97,7 @@ public class CreateContactFragmentDialog extends Dialog implements
         this.walletContact=walletContact;
         this.userId = userId;
         this.contactImageBitmap = contactImageBitmap;
+        this.createContactDialogCallback = createContactDialogCallback;
 
     }
 
@@ -135,6 +139,8 @@ public class CreateContactFragmentDialog extends Dialog implements
                 take_picture_btn.setImageDrawable(null);
             }
 
+            take_picture_btn.setOnClickListener(this);
+
             ImageView scanImage = (ImageView) findViewById(R.id.scan_qr);
 
             scanImage.setOnClickListener(new View.OnClickListener() {
@@ -172,6 +178,8 @@ public class CreateContactFragmentDialog extends Dialog implements
             dismiss();
         }else if( i == R.id.save_contact_btn){
             saveContact();
+        }else if ( i == R.id.take_picture_btn){
+            createContactDialogCallback.openContextImageSelector();
         }
     }
 

@@ -68,10 +68,15 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Construct my profile and register me
                      */
+
+
+                    System.out.print("CRYPTO TRANSMISSION - Construct my profile and register me ----------------------- ");
+
                     PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
                                                                                                                                                  networkService.getAlias().toLowerCase(),
                                                                                                                                                  networkService.getName(),
-                                                                                                                                                 networkService.getNetworkServiceType(),
+
+                    networkService.getNetworkServiceType(),
                                                                                                                                                  networkService.getPlatformComponentType(),
                                                                                                                                                  networkService.getExtraData());
 

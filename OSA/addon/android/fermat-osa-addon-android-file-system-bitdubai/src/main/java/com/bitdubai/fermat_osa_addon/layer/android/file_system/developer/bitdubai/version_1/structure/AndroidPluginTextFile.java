@@ -151,7 +151,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
          * If the directory does not exist, we create it here.
          */
 
-        File storagePath = new File(path +"/"+ this.directoryName);
+        File storagePath = new File(path +"/" + ownerId.toString()+ "/" + this.directoryName);
         if (!storagePath.exists() )
             storagePath.mkdirs();
 
@@ -218,7 +218,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
         /**
          * We open the file and read its encrypted content.
          */
-        File file = new File(path +"/"+ this.directoryName, this.fileName);
+        File file = new File(path +"/" + ownerId.toString()+ "/" +this.directoryName, this.fileName);
         String decryptedContent = "";
         try {
             InputStream inputStream =  new BufferedInputStream(new FileInputStream(file));
@@ -277,7 +277,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
             path = Environment.getExternalStorageDirectory().toString();
         else
             path = contextPath;
-        File file = new File(path +"/"+ this.directoryName, this.fileName);
+        File file = new File(path +"/" + ownerId.toString() +"/"+ this.directoryName, this.fileName);
         file.delete();
     }
 
