@@ -54,7 +54,7 @@ public class AssetRedeemPointRedemptionDatabaseFactory implements DealsWithPlugi
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
-             * Create Asset Reception table.
+             * Create Events Recorder database table.
              */
             DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
 
@@ -73,6 +73,9 @@ public class AssetRedeemPointRedemptionDatabaseFactory implements DealsWithPlugi
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
+            /**
+             * Create Transaction Metadata database table.
+             */
             DatabaseTableFactory metadataTable = databaseFactory.newTableFactory(ownerId, AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
 
             metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_FIRST_KEY_COLUMN, DatabaseDataType.STRING, 36, Boolean.TRUE);
