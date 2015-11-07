@@ -483,6 +483,14 @@ Regarding the rest of the interfaces of Version 1, in this case they don't need 
 As each Plug-in is a _Service_ that can be started, paused and stopped by the Framework, if you need to do something when this is happening, you can override the services methods from AbstractPlugin.
 
 
+
+
+# FROM HERE 
+
+#### SOMEBODY SHOUD CONTINUE THE STYLE, FORMAT AND QUIALITY OF THE EXPLANATION THAT COMES FROM THE TOP -- Luis Molina
+
+
+
 <br>
 #### Public Interfaces
 
