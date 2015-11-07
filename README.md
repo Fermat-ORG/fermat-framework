@@ -26,7 +26,7 @@ The framework evolves from the stand-alone crypto wallet and enables an ecosyste
 
 #### Fermat Goals
 
-* To allow even non-developers to build their own desktop and mobile trust-less financial applications in a similar way a non-developer builds a **Worldpress** site: re-using Plug-ins and _themes_. 
+* To allow even non-developers to build their own desktop and mobile trust-less financial applications in a similar way a non-developer builds a **Wordpress** site: re-using Plug-ins and _themes_. 
 
 * To act as a local back-end for native-Fermat-APPs and wallets, but also to any other mobile APP running on the same device.
 
