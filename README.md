@@ -35,9 +35,9 @@ The framework evolves from the stand-alone crypto wallet and enables an ecosyste
 
 #### Open Source
 
-The challange is huge, but we know the difference between the impossible and the possible lies in a team's determination. We have the will to excel and the will to reach our vision for this world. 
+The challenge is huge, but we know the difference between the impossible and the possible lies in a team's determination. We have the will to excel and the will to reach our vision for this world.
 
-We have the talent, the drive, and the determination to enable the next generation of financial applications. They will allow people to hold their own digital value by themselves in a secure way and to participate with their funds in a multitude of transactions and business oportunities across the globe.
+We have the talent, the drive, and the determination to enable the next generation of financial applications. They will allow people to hold their own digital value by themselves in a secure way and to participate with their funds in a multitude of transactions and business opportunities across the globe.
 
 We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization.
 
