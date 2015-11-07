@@ -4214,6 +4214,44 @@
 
 		<platform code="CSH" name="Cash Handling Platform" logo="CSH_logo.png" dependsOn="WPD">
 
+			<layer name="Reference Wallet">
+				<androids>
+					<android name="Cash Money"
+						description=""
+						difficulty="6"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+			
+			<layer name="Wallet Module" language="java">
+				<plugins>
+					<plugin	name="Cash Money"
+						description=""
+						difficulty="4"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			
 			<layer name="Cash Money Transaction" language="java">
 				<plugins>
 					<plugin name="Give Cash On Hand"
@@ -4303,6 +4341,44 @@
 
 		<platform code="BNK" name="Banking Platform" logo="BNK_logo.png" dependsOn="WPD">
 
+			<layer name="Reference Wallet">
+				<androids>
+					<android name="Bank Money"
+						description=""
+						difficulty="6"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+			
+			<layer name="Wallet Module" language="java">
+				<plugins>
+					<plugin	name="Bank Money"
+						description=""
+						difficulty="4"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			
 			<layer name="Bank Money Transaction" language="java">
 				<plugins>
 					<plugin
