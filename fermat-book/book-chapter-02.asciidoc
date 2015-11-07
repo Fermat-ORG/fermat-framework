@@ -1,4 +1,6 @@
 :numbered!:
+image::https://github.com/bitDubai/fermat-graphic-design/blob/master/3D%20Design/FermatBitcoinCoinModel/FinalRenders/Bitcoin.jpg[Fermat Coin]
+
 == Chapter 2: Fermat as a Platform Stack Framework
 *Fermat* is, technically speaking, an Open Source P2P (Peer-to-Peer) Platform Stack Framework built on a Plug-ins Architecture running on end-user's devices. 
 
