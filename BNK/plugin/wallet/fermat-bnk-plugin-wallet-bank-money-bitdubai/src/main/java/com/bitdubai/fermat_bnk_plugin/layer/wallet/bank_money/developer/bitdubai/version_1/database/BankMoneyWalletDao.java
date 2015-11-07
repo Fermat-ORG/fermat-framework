@@ -11,11 +11,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionBankMoneyException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoney;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalance;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalanceRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransaction;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantAddBankMoneyException;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantAddCreditException;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantAddDebitException;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetBankMoneyTotalBalanceException;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetCurrentBalanceException;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetTransactionsException;
@@ -42,6 +45,11 @@ public class BankMoneyWalletDao {
      * Database connection
      */
     Database database;
+    /**
+     *
+     */
+    BankMoney bankMoney;
+
 
     public BankMoneyWalletDao (PluginDatabaseSystem pluginDatabaseSystem){
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -124,7 +132,7 @@ public class BankMoneyWalletDao {
             throw new CantAddBankMoneyException(CantAddBankMoneyException.DEFAULT_MESSAGE,e,"Cant Add Bank Money Exception","Cant Insert Record Exception");
         }
     }
-    void addDebit(BankMoneyBalanceRecord BankMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException{
+    public void addDebit(BankMoneyBalanceRecord BankMoneyBalanceRecord, BalanceType balanceType) throws CantAddDebitException {
         try {
             double availableAmount;
             double bookAmount;
@@ -147,14 +155,14 @@ public class BankMoneyWalletDao {
                 addBankMoney(BankMoneyBalanceRecord, balanceType, TransactionType.DEBIT, runningBookBalance, runningAvailableBalance, publicKeyBroker, publicKeyCustomer);
             }
                 } catch (CantGetCurrentBalanceException e) {
-            throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE,e,"Cant Register Debit Exception","Cant Get Current Balance Exception");
+            throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE,e,"Cant Add Debit Exception","Cant Get Current Balance Exception");
                 } catch (CantGetBankMoneyTotalBalanceException e) {
                     e.printStackTrace();
                 } catch (CantAddBankMoneyException e) {
-            throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE,e,"Cant Register Debit Exception","Cant Add Bank Money Exception");
+            throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE,e,"Cant Add Debit Exception","Cant Add Bank Money Exception");
         }
     }
-    void addCredit(BankMoneyBalanceRecord BankMoneyBalanceRecord, BalanceType balanceType) throws CantAddCreditException {
+   public void addCredit(BankMoneyBalanceRecord BankMoneyBalanceRecord, BalanceType balanceType) throws CantAddCreditException {
         try {
             double availableAmount;
             double bookAmount;
@@ -217,6 +225,16 @@ public class BankMoneyWalletDao {
             return Double.valueOf(getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME));
     }
 
+    public BankMoneyBalance getBalanceType(BalanceType balanceType) throws CantTransactionBankMoneyException {
+
+            if (balanceType == balanceType.AVAILABLE) {
+                return bankMoney.getBookBalance(BalanceType.getByCode(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME));
+                //return getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME);
+            } else {
+                return bankMoney.getBookBalance(BalanceType.getByCode(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME));
+            }
+
+    }
     /**
      *
      * @return
