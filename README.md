@@ -241,9 +241,9 @@ Take a look at the [Fermat Book](https://github.com/bitDubai/fermat/tree/master/
 
 As of November 2015 the state of the project is the following:
 
-State of the code: Under development for 6 months. No realeses yet. 30+ full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
+**State of the code** : Under development for 6 months. No realeses yet. 30+ full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
-Future path of development: Active (First release with very limited features schedulled for December 2015).
+**Future path of development** : Active (First release with very limited features schedulled for December 2015).
 
 <br>
 ## I Want to Join the Team!
