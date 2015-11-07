@@ -248,18 +248,12 @@ Future path of development: Active (First release with very limited features sch
 <br>
 ## I Want to Join the Team!
 
-Awesome!
-
-*__There are lots of ways you can help.__*
+Awesome! *__There are lots of ways you can help.__*
 
 #### Developers
 
 If you are a developer and want to contribute from a bug-fix up to building a whole financial APP on top of Fermat, please read [contributing-guide](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md),
-then learn how to pull the repo and hack on Fermat.
-
-Then say hi at our [IRC DEV Channel](http://irc.lc/freenode/fermat-dev/) 
-
-You can also find us on [Facebook](https://www.facebook.com/FermatOrg/) 
+then learn how to pull the repo and hack on Fermat. Then say hi at our [IRC DEV Channel](http://irc.lc/freenode/fermat-dev/) or you can also find us on [Facebook](https://www.facebook.com/FermatOrg/). 
 
 #### Others
 
