@@ -139,7 +139,7 @@ public final class Validate {
         } else return objectToGet;
     }
 
-    public static List verifyGetter(List objectToGet) {
+    public static <T> List<T> verifyGetter(List<T> objectToGet) {
         if (isObjectNull(objectToGet)) {
             return Collections.EMPTY_LIST;
         } else return objectToGet;
