@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -29,6 +30,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
@@ -41,10 +43,12 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantD
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.DealsWithAssetUserWallet;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.developer_utils.AssetReceptionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.developer_utils.mocks.MockDigitalAssetMetadataForTesting;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantCheckAssetReceptionProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptionVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptor;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
@@ -232,10 +236,10 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
         } catch (CantStartServiceException exception) {
             this.serviceStatus=ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Reception plugin", "Cannot start event recorder service");
-        }/*catch(Exception exception){
+        }catch(Exception exception){
             System.out.println("ASSET RECEPTION EXCEPTION TEST "+exception);
             exception.printStackTrace();
-        }*/
+        }
 
         this.serviceStatus=ServiceStatus.STARTED;
         //testRaiseEvent();
@@ -354,16 +358,19 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
         printSomething("End event test");
     }
 
-    private void testDeveloperDatabase() throws CantExecuteDatabaseOperationException, CantDefineContractPropertyException, CantPersistDigitalAssetException {
+    private void testDeveloperDatabase() throws CantExecuteDatabaseOperationException, CantDefineContractPropertyException, CantPersistDigitalAssetException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetReceptionProgressException {
         System.out.println("START TEST DEVELOPER DATABASE ASSET RECEPTION");
         MockDigitalAssetMetadataForTesting mockDigitalAssetMetadataForTesting=new MockDigitalAssetMetadataForTesting();
-        System.out.println("ASSET RECEPTION MOCKED DAM:"+mockDigitalAssetMetadataForTesting);
+        System.out.println("ASSET RECEPTION MOCKED DAM:" + mockDigitalAssetMetadataForTesting);
         AssetReceptionDao assetReceptionDao=new AssetReceptionDao(pluginDatabaseSystem,pluginId);
         assetReceptionDao.persistDigitalAsset(
                 mockDigitalAssetMetadataForTesting.getGenesisTransaction(),
                 "testLocalStorage",
                 mockDigitalAssetMetadataForTesting.getDigitalAssetHash(),
                 "testReceiverPublicKey");
+        System.out.println("ASSET RECEPTION status settled: " + ReceptionStatus.ASSET_ACCEPTED+"\nfor GT "+mockDigitalAssetMetadataForTesting.getGenesisTransaction());
+        assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.ASSET_ACCEPTED, mockDigitalAssetMetadataForTesting.getGenesisTransaction());
+        System.out.println("ASSET RECEPTION status from data base is:  "+assetReceptionDao.getGenesisTransactionByReceptionStatus(ReceptionStatus.ASSET_ACCEPTED));
     }
 
 }

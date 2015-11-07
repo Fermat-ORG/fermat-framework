@@ -113,7 +113,7 @@ public class AssetReceptionDao {
         try {
             this.database=openDatabase();
             DatabaseTable databaseTable;
-            databaseTable = database.getTable(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_TABLE_NAME);
+            databaseTable = database.getTable(AssetReceptionDatabaseConstants.ASSET_RECEPTION_TABLE_NAME);
             databaseTable.setStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEPTION_STATUS_COLUMN_NAME, receptionStatus.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_CRYPTO_STATUS_COLUMN_NAME, CryptoStatus.PENDING_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();

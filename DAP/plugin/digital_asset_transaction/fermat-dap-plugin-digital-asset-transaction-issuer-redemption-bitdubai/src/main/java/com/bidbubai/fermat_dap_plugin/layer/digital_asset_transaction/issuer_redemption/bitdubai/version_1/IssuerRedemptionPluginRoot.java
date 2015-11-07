@@ -41,15 +41,18 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 16/09/15.
  */
 public class IssuerRedemptionPluginRoot implements IssuerRedemptionManager, DatabaseManagerForDevelopers,DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service {
 
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     Database issuerRedemptionDatabase;
     DeviceUserManager deviceUserManager;
     ErrorManager errorManager;
@@ -96,6 +99,22 @@ public class IssuerRedemptionPluginRoot implements IssuerRedemptionManager, Data
         return new ArrayList<>();
     }
 
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return IssuerRedemptionPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
+
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
         this.deviceUserManager=deviceUserManager;
@@ -128,12 +147,30 @@ public class IssuerRedemptionPluginRoot implements IssuerRedemptionManager, Data
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.IssuerRedemptionPluginRoot");
+       /**
+         * I return the values.
+         */
+        return returnedClasses;
     }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-
+        /**
+         * I will check the current values and update the LogLevel in those which is different
+         */
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+            /**
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (IssuerRedemptionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                IssuerRedemptionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                IssuerRedemptionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                IssuerRedemptionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
     }
 
     @Override
