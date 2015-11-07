@@ -187,20 +187,21 @@ Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es e
  
  Un componente GUI en fermat se encuentra dividido en dos plugins, las interfaces gráficas y el module de dicha interfaz, este es el que posee las siguientes funcionalidades:
 * Sirve de conexión entre los plugins de la plataforma, consumiendo los servicios que ellas proveen.
-* Encapsula la lógica de presentación...
+* Encapsula la lógica de presentación, recogiendo, ordenando y agrupando datos de los plugins.
 
 ----------------------
 
 
 ### Navigation structure
  
-- Hay que explicarlo con ejemplos.
+ -- estructura de navegación con ejemplos..
 
 ----------------------
 
 ### Android api
 
-- Hay que mostrar el framework que estamos creando..
+ Fermat posse un conjunto de librerías y paquetes desarrollados especialmente para trabajar sobre android.
+Seguir...
 
 ----------------------
 
@@ -214,11 +215,17 @@ Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es e
 
 - Hay que explicar el fragment factory, para que sirve y como se usa.
 
+Cada GUI component posee un folder destinado al fragnent factory, el cual se encarga de conectar lo desarrollado en la estructura de navegación con los fragmentos controladores de dichas pantallas.
+Seguir..
+
 ----------------------
 
 ### Sessions
 
 - Hay que darle una brebe explicación de las sesiones.
+
+Cada GUI component posee un folder destinado a la session. Que dependiendo del tipo de componente que se esté desarrollando puede ser una clase que herede de WalletSession o SubAppSession.
+Seguir...
 
 ----------------------
 
