@@ -3,7 +3,7 @@
 
 
 <br>
-#Contributing Guide
+#Installation Guide
 
 <br>
 ## Introduction
