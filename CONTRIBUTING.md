@@ -47,7 +47,7 @@ Fork the *username*/fermat repo, and submit a pull request there when done.
 <br>
 ### Contributing to the Fermat Book
 
-It is very easy to contribute to the book, just edit the desired file and at the end you will find the "Propose file change" button. Please do it at the editos' fork. You can find it [here](https://github.com/gustl-arg/fermat/tree/master/fermat-book).
+It is very easy to contribute to the book, just edit the desired file and at the end you will find the "Propose file change" button. Please do it at the editors' fork. You can find it [here](https://github.com/gustl-arg/fermat/tree/master/fermat-book).
 
 
 <br>
