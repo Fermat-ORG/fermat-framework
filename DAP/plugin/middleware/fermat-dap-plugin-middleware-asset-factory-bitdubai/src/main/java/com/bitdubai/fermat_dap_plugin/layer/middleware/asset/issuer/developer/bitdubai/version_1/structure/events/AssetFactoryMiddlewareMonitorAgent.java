@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
@@ -191,11 +192,23 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
                 for(AssetFactory assetFactory : assetFactories){
                     if (assetFactory.getState().getCode() != State.DRAFT.getCode())
                     {
-                        int numberOfIssuedAssets = assetIssuingManager.getNumberOfIssuedAssets(assetFactory.getPublicKey());
-                        int totalFaltante = assetFactory.getQuantity() - numberOfIssuedAssets;
-                        if (totalFaltante == 0){
-                            assetFactoryMiddlewareManager.markAssetFactoryState(State.FINAL, assetFactory.getPublicKey());
+                        IssuingStatus issuingStatus = assetIssuingManager.getIssuingStatus(assetFactory.getPublicKey());
+                        if (issuingStatus.getCode() != IssuingStatus.ISSUING.getCode())
+                        {
+                            if (issuingStatus.getCode() == IssuingStatus.ISSUED.getCode())
+                            {
+                                assetFactoryMiddlewareManager.markAssetFactoryState(State.FINAL, assetFactory.getPublicKey());
+                            }else
+                            {
+                                assetFactoryMiddlewareManager.markAssetFactoryState(State.DRAFT, assetFactory.getPublicKey());
+                            }
                         }
+//                        int numberOfIssuedAssets = assetIssuingManager.getNumberOfIssuedAssets(assetFactory.getPublicKey());
+                        //TODO: Revisar si puediesemos persistir la cantidad de Asset transmitidos y tener como un resumen de Asset o sacarlo de una consulta el metodo assetIssuingManager.getNumberOfIssuedAssets(assetFactory.getPublicKey());
+//                        int totalFaltante = assetFactory.getQuantity() - numberOfIssuedAssets;
+//                        if (totalFaltante == 0){
+//                            assetFactoryMiddlewareManager.markAssetFactoryState(State.FINAL, assetFactory.getPublicKey());
+//                        }
                     }
                 }
             } catch (CantSaveAssetFactoryException e) {
