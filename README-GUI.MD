@@ -185,7 +185,9 @@ Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es e
 
 ### Modules
  
-- Hay que explicar para que se usan los module
+ Un componente GUI en fermat se encuentra dividido en dos plugins, las interfaces gráficas y el module de dicha interfaz, este es el que posee las siguientes funcionalidades:
+* Sirve de conexión entre los plugins de la plataforma, consumiendo los servicios que ellas proveen.
+* Encapsula la lógica de presentación...
 
 ----------------------
 
@@ -221,6 +223,7 @@ Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es e
 ----------------------
 
 #### Wallet session
+
 ----------------------
 
 #### Sub app session
