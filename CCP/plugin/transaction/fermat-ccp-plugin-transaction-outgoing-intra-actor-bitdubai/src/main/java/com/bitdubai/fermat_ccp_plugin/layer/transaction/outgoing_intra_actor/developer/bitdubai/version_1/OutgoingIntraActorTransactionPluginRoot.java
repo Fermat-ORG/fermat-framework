@@ -64,6 +64,7 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
+
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
@@ -188,6 +189,8 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
                                                                                             this.transactionHandlerFactory,
                                                                                             this.cryptoTransmissionNetworkServiceManager);
             this.transactionProcessorAgent.start();
+
+            this.serviceStatus = ServiceStatus.STARTED;
 
         } catch (CantInitializeOutgoingIntraActorDaoException e) {
             reportUnexpectedException(e);

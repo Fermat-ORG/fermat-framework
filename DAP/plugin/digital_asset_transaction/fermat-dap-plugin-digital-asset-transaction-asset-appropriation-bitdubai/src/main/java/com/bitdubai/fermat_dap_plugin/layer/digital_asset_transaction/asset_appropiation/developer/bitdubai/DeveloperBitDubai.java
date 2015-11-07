@@ -7,13 +7,24 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.AssetAppropriationPluginRoot;
 
+/**
+ * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 06/11/15.
+ */
 public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
-    Plugin plugin;
 
+    //VARIABLE DECLARATION
+    private Plugin plugin;
+
+    //CONSTRUCTORS
     public DeveloperBitDubai() {
         this.plugin = new AssetAppropriationPluginRoot();
     }
 
+    //PUBLIC METHODS
+
+    //PRIVATE METHODS
+
+    //GETTER AND SETTERS
     @Override
     public Plugin getPlugin() {
         return plugin;
@@ -38,4 +49,5 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
     public TimeFrequency getTimePeriod() {
         return TimeFrequency.MONTHLY;
     }
+    //INNER CLASSES
 }

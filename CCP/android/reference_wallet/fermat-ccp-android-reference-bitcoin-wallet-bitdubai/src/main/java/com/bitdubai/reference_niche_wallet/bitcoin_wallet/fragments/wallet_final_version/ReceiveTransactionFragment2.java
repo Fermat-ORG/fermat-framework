@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
@@ -42,6 +43,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.NegotiationInformationTestData;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationDrawerArrayAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
@@ -50,6 +52,7 @@ import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 
 /**
@@ -122,6 +125,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     private void setUp(LayoutInflater inflater){
         //setUpHeader(inflater);
         //setUpDonut(inflater);
+        setNavigatitDrawer();
     }
 
     private void setUpDonut(LayoutInflater inflater){
@@ -193,6 +197,23 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 //            e.printStackTrace();
 //        }
 
+    }
+
+
+    private void setNavigatitDrawer(){
+        List<String> list = new ArrayList<>();
+        list.add("Home");
+        list.add("Contacts");
+        list.add("Payment request");
+        list.add("Settings");
+        list.add("Logout");
+        list.add("Logout");
+        try {
+            getPaintActivtyFeactures().changeNavigationDrawerAdapter(new NavigationDrawerArrayAdapter(getActivity(),list,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+        } catch (CantGetActiveLoginIdentityException e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetActiveLoginIdentityException- " + e.getMessage());
+        }
     }
 
     @Override

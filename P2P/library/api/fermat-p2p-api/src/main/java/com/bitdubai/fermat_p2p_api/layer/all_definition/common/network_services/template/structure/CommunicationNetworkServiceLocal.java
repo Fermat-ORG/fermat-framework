@@ -105,9 +105,6 @@ public final class CommunicationNetworkServiceLocal implements Observer, Network
      */
     private void onMessageReceived(FermatMessage incomingMessage) {
 
-        System.out.println("CommunicationNetworkServiceLocal - onMessageReceived ");
-        System.out.println(incomingMessage.getContent());
-
         /*
          * set the last message received
          */

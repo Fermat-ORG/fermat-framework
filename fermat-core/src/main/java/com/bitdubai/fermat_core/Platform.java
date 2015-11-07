@@ -162,6 +162,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.DealsWithAssetUserCommunitySubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.DealsWithRedeemPointCommunitySubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.DealsWithAssetAppropriation;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.DealsWithAssetDistribution;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
@@ -237,6 +239,7 @@ import java.util.logging.Logger;
  * @version 1.0
  * @since Java JDK 1.7
  */
+
 public class Platform implements Serializable {
 
     /**
@@ -549,8 +552,6 @@ public class Platform implements Serializable {
                 fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLUGIN_FILE_SYSTEM));
                 fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.DEVICE_LOCATION));
                 fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.LOG_MANAGER));
-
-
 
             } catch(Exception e) {
                 System.out.println("apa, encontramos un error.");
@@ -981,9 +982,8 @@ public class Platform implements Serializable {
             * Plugin Asset Appropriation Transaction
             * -----------------------------
             */
-                //Comented by Manuel Perez, it brokes Asset Distribution
-                //Plugin assetAppropriationTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetDistributionPlugin();
-                //injectPluginReferencesAndStart(assetAppropriationTransaction, Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION);
+                Plugin assetAppropriationTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetAppropriationPlugin();
+                injectPluginReferencesAndStart(assetAppropriationTransaction, Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION);
 
            /*
             * Plugin Asset Reception Transaction
@@ -1353,6 +1353,10 @@ public class Platform implements Serializable {
 
             if (plugin instanceof DealsWithAssetReception) {
                 ((DealsWithAssetReception) plugin).setAssetReceptionManager((AssetReceptionManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION));
+            }
+
+            if (plugin instanceof DealsWithAssetAppropriation){
+                ((DealsWithAssetAppropriation) plugin).setAssetAppropriationManager((AssetAppropriationManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION));
             }
 
             if (plugin instanceof DealsWithActorAssetIssuer) {

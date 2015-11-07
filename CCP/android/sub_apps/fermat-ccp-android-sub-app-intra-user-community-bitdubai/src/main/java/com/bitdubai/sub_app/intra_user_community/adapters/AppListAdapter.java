@@ -39,13 +39,7 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUse
 
             holder.name.setText(data.getName());
 
-            byte[] profileImage = null;
-            try {
-                profileImage = data.getProfileImage();
-            } catch (Exception e) {
-
-            }
-
+            byte[] profileImage = data.getProfileImage();
             if (profileImage != null) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inPurgeable = true;
