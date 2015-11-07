@@ -222,11 +222,11 @@ You can learn more, see some cool visualizations of Fermat's architecture and it
 Installers for the latest stable build for Android can be [downloaded here](http://fermat.org/fermat.apk). Mac, Windows and Linux (Debian/Ubuntu) will be supported in the near future.
 
 
-#### Usage
+#### Installation
 
 In addition to the core features built into Fermat, there is a growing community of developers building _Plug-ins_ and _Niche Wallets_ that add all sorts of useful functionality.
 
-For installation instructions and running from the source code, see the [CONTRIBUTING.md](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md).
+For installation instructions and running from the source code, see the [Installation Guide](https://github.com/bitDubai/fermat/blob/master/README-INSTALLATION.md).
 
 #### Need Help?
 
@@ -252,12 +252,12 @@ Awesome! *__There are lots of ways you can help.__*
 
 #### Developers
 
-If you are a developer and want to contribute from a bug-fix up to building a whole financial APP on top of Fermat, please read the [contributing-guide](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md),
+If you are a developer and want to contribute from a bug-fix up to building a whole financial APP on top of Fermat, please read the [Contributing Guide](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md),
 then learn how to pull the repo and hack on Fermat. Then say hi at our [IRC DEV Channel](http://irc.lc/freenode/fermat-dev/) or you can also find us on [Facebook](https://www.facebook.com/FermatOrg/). 
 
 #### Others
 
-You don't need to be a developer to participate on the project. There are many ways to do it and we explain each one of them at the [participating-guide](https://github.com/bitDubai/participate-now).
+You don't need to be a developer to participate on the project. There are many ways to do it and we explain each one of them at the [How to Prticipate Guide](https://github.com/bitDubai/participate-now).
 
 ![alt text](https://github.com/bitDubai/fermat-graphic-design/blob/master/3D%20Design/FermatBitcoinCoinModel/FinalRenders/Bitcoin.jpg "Fermat Coin")
 
