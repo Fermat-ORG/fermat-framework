@@ -224,6 +224,12 @@ Seguir..
 
 - Hay que darle una brebe explicación de las sesiones.
 
+Uno de los problemas encontrados es la persistencia de datos en memoria ya que el ciclo de vida un fragmento al no estar visible se elimina y se vuelve a crear al llamarlo nuevamente. Estos datos deben estar guardados en algún lugar en caso de que el usuario quiera cambiar de wallet y dejar la sesion abierta. 
+
+Para resolver esto existen las Sessions: son objetos que permiten persisitir en memoria y compartir entre los diferentes fragmentos que pueda tener una wallet o subapp informacion tal como la referencia al module de la wallet o subapp, referencia al Error Mananger (objeto que administra las excepciones generadas en la plataforma Fermat) y cualquier otra data que necesite tracender entre estos fragmentos dentro de un Map que trabaja con una key y el objeto que se necesite guardar.
+
+Las sesiones se crean por cada wallet o subapp y la gestión de dichas sesiones es llevada a cabo a travez de un Wallet Manager y un Subapp Manager, teniendo así la posibilidad de regresar al momento en el que se encontraba el usuario al cambiar de pantalla.
+
 Cada GUI component posee un folder destinado a la session. Que dependiendo del tipo de componente que se esté desarrollando puede ser una clase que herede de WalletSession o SubAppSession.
 Seguir...
 
