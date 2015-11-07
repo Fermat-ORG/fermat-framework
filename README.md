@@ -237,13 +237,13 @@ log into the [IRC DEV Channel](http://irc.lc/freenode/fermat-dev/), and we will 
 
 Take a look at the [Fermat Book](https://github.com/bitDubai/fermat/tree/master/fermat-book) that it is being written in order to help developers learn more about Fermat technology.
 
-#### Status of the Project:
+#### Status of the Project
 
 As of November 2015 the state of the project is the following:
 
 **State of the code** : Under development for 6 months. No realeses yet. 30+ full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
-**Future path of development** : Active (First release with very limited features schedulled for December 2015).
+**Future path of development** : Active. First release with very limited features schedulled for December 2015.
 
 <br>
 ## I Want to Join the Team!
