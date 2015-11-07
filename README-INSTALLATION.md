@@ -128,9 +128,33 @@ This will import all the subprojects and configure the IDE to start developing i
 
 If this is your first execution of the IDE, it might ask you to point to where Java and Gradle are configured as part of the initial settings they need to assemble the *.idea* folder; you must point them to the */opt/java* and */opt/gradle* folder respectively.
 
-You can also modify these values after the project is imported; you can change the JDK location in the *__File->Project Structure__* menu, and the Gradle location through the *__File->Settings__* menu
+You can also modify these values after the project is imported; you can change the JDK location in the *__File->Project Structure__* menu, and the Gradle location through the *__File->Settings__* menu.
 
 <br>
 
-TIP: Android Developer Studio incorporates an SDK Tools package inside of its installation, it's better and more manageable if you configure the tools you've downloaded and handle these dependencies yourself, you can do this in the *__File->Project Structure__* menu. You must always configure this value when using IntelliJ IDEA
+TIP: Android Developer Studio incorporates an SDK Tools package inside of its installation, it's better and more manageable if you configure the tools you've downloaded and handle these dependencies yourself, you can do this in the *__File->Project Structure__* menu. You must always configure this value when using IntelliJ IDEA.
+
+
+
+<br>
+## Part II: Compiling and Running
+
+<br>
+### Compiling
+
+<br>
+### Running
+
+<br>
+### Debbuging
+
+<br>
+### Developer Sub App
+
+**Explain what it is**
+
+#### How enable your Plug-in on the Developer Sub App
+
+**Explain how step by step with code samples**
+
 
