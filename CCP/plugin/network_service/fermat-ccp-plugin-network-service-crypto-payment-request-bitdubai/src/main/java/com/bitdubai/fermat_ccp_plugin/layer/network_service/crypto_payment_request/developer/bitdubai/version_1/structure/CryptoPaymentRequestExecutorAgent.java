@@ -154,7 +154,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                 switch (cpr.getAction()) {
 
                     case INFORM_APPROVAL:
-
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
                                 cpr.getActorPublicKey(),
@@ -163,11 +163,13 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                                 cpr.getIdentityType()
                         )) {
                             confirmRequest(cpr.getRequestId());
+                            System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
                         }
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST -> WAIT MORE.");
                         break;
 
                     case INFORM_DENIAL:
-
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
                                 cpr.getActorPublicKey(),
@@ -176,12 +178,13 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                                 cpr.getIdentityType()
                         )) {
                             confirmRequest(cpr.getRequestId());
+                            System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
                         }
-
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST -> WAIT MORE.");
                         break;
 
                     case INFORM_RECEPTION:
-
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
                                 cpr.getActorPublicKey(),
@@ -190,12 +193,13 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                                 cpr.getIdentityType()
                         )) {
                             confirmRequest(cpr.getRequestId());
+                            System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
                         }
-
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST -> WAIT MORE.");
                         break;
 
                     case INFORM_REFUSAL:
-
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
                                 cpr.getActorPublicKey(),
@@ -204,8 +208,9 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                                 cpr.getIdentityType()
                         )) {
                             confirmRequest(cpr.getRequestId());
+                            System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
                         }
-
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST -> WAIT MORE.");
                         break;
 
                     case REQUEST:
@@ -277,6 +282,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
             reportUnexpectedError(e);
         }
     }
+
 
     private boolean sendMessageToActor(final String jsonMessage      ,
                                        final String identityPublicKey,
