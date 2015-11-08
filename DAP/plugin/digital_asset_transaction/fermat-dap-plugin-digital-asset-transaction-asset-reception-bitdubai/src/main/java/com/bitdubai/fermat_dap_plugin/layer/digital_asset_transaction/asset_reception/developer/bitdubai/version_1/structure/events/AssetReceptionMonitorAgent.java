@@ -130,7 +130,7 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
         this.actorAssetUserManager = actorAssetUserManager;
     }
 
-    public void setActorAssetUserManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
         if(actorAssetIssuerManager ==null){
             throw new CantSetObjectException("actorAssetIssuerManager is null");
         }
@@ -254,7 +254,7 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
 
         private void doTheMainTask() throws CantExecuteQueryException, CantCheckAssetReceptionProgressException {
             //TODO: once this works, please, remove the following line
-            System.out.println("ASSET RECEPTION monitor agent es starting");
+            //System.out.println("ASSET RECEPTION monitor agent es starting");
             try{
                 assetReceptionDao=new AssetReceptionDao(pluginDatabaseSystem,pluginId);
                 if(assetReceptionDao.isPendingNetworkLayerEvents()){
@@ -416,13 +416,13 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
             List<String> genesisTransactionList;
             String senderId;
             ActorAssetUser actorAssetUser=actorAssetUserManager.getActorAssetUser();
-            if(receptionStatus.getCode().equals(ReceptionStatus.ASSET_ACCEPTED)){
+            if(receptionStatus.getCode().equals(ReceptionStatus.ASSET_ACCEPTED.getCode())){
                 distributionStatus=DistributionStatus.ASSET_ACCEPTED;
             }
-            if(receptionStatus.getCode().equals(ReceptionStatus.REJECTED_BY_HASH)){
+            if(receptionStatus.getCode().equals(ReceptionStatus.REJECTED_BY_HASH.getCode())){
                 distributionStatus=DistributionStatus.ASSET_REJECTED_BY_HASH;
             }
-            if(receptionStatus.getCode().equals(ReceptionStatus.REJECTED_BY_CONTRACT)){
+            if(receptionStatus.getCode().equals(ReceptionStatus.REJECTED_BY_CONTRACT.getCode())){
                 distributionStatus=DistributionStatus.ASSET_REJECTED_BY_CONTRACT;
             }
             genesisTransactionList=assetReceptionDao.getGenesisTransactionByReceptionStatus(receptionStatus);
