@@ -473,8 +473,9 @@ public class BitcoinCryptoVault implements
             // I'm experimenting addind a fixed high value for the fee. Since I'm getting Insufficient priority (66) messages.
 
             //request.feePerKb = Coin.valueOf(1100);
-            request.fee = Coin.valueOf(15000);
 
+            request.fee = Coin.valueOf(15000);
+            request.ensureMinRequiredFee = true;
             /**
              * If OP_return was specified then I will add an output to the transaction
              */
