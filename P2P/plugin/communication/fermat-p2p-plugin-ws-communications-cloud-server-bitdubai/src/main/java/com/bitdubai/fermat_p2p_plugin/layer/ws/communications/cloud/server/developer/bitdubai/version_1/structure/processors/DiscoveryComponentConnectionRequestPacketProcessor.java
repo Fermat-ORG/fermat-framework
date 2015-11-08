@@ -68,6 +68,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - Starting processingPackage");
 
         String packetContentJsonStringRepresentation = null;
+        PlatformComponentProfile networkServiceApplicant = null;
 
         try {
 
@@ -86,7 +87,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             /*
              * Get the applicant network service
              */
-            PlatformComponentProfile networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString());
+            networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString());
             System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant.toJson());
 
             /*
@@ -157,6 +158,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
              * Construct the json object
              */
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, networkServiceApplicant.getNetworkServiceType().toString());
             packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in component connection: "+e.getMessage());
 
             /*

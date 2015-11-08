@@ -12,6 +12,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentRegistrationNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureRequestedListNotAvailableNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteClientComponentRegistrationNotificationEventListener;
@@ -44,6 +46,12 @@ public enum P2pEventType implements FermatEventEnum {
         }
     },
 
+    FAILURE_COMPONENT_REGISTRATION_REQUEST_NOTIFICATION("FCRRN"){
+        public FermatEvent getNewEvent() {
+            return new FailureComponentRegistrationNotificationEvent(this);
+        }
+    },
+
     COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION("CL_CCRCN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
             return new CompleteClientComponentRegistrationNotificationEventListener(this, eventMonitor);
@@ -59,6 +67,12 @@ public enum P2pEventType implements FermatEventEnum {
         }
         public FermatEvent getNewEvent() {
             return new CompleteRequestListComponentRegisteredNotificationEvent(this);
+        }
+    },
+
+    FAILURE_REQUESTED_LIST_NOT_AVAILABLE_NOTIFICATION("FRLNAN"){
+        public FermatEvent getNewEvent() {
+            return new FailureRequestedListNotAvailableNotificationEvent(this);
         }
     },
 
@@ -92,6 +106,17 @@ public enum P2pEventType implements FermatEventEnum {
         }
     },
 
+    CLIENT_CONNECTION_CLOSE("CCC"){
+        public FermatEvent getNewEvent() {
+            return new NewNetworkServiceMessageSentNotificationEvent(this);
+        }
+    },
+
+    VPN_CONNECTION_CLOSE("VCC"){
+        public FermatEvent getNewEvent() {
+            return new NewNetworkServiceMessageSentNotificationEvent(this);
+        }
+    }
     ;
 
     /**

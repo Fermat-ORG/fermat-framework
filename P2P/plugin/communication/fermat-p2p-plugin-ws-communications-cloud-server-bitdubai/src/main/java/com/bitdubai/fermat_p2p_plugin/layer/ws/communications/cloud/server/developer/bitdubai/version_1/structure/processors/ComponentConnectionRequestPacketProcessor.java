@@ -9,6 +9,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
@@ -64,6 +65,7 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("ComponentConnectionRequestPacketProcessor - Starting processingPackage");
         String packetContentJsonStringRepresentation = null;
+        NetworkServiceType networkServiceTypeApplicant = null;
 
         try {
 
@@ -84,6 +86,8 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
 
             PlatformComponentProfile peer1 = participantsList.get(0);
             PlatformComponentProfile peer2 = participantsList.get((participantsList.size() - 1));
+
+            networkServiceTypeApplicant = peer1.getNetworkServiceType();
 
             //Create a new vpn
             WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer(), peer1.getNetworkServiceType());
@@ -112,6 +116,7 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
              * Construct the json object
              */
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            packetContent.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
             packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in component connection: "+e.getMessage());
 
             /*

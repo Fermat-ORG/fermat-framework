@@ -1,18 +1,24 @@
 /*
  * @#CommunicationServerPluginRoot.java - 2015
  * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
+ * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDeviceLocation;
@@ -36,7 +42,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 
@@ -49,7 +54,30 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWithEvents, DealsWithLogger, DealsWithDeviceLocation, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin, WsCommunicationsCloudClientManager {
+public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implements
+        DealsWithDeviceLocation,
+        DealsWithErrors,
+        DealsWithEvents,
+        DealsWithLogger,
+        DealsWithPluginFileSystem,
+        LogManagerForDevelopers,
+        WsCommunicationsCloudClientManager {
+
+
+    /**
+     * Addons References definition...
+     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.PLATFORM_SERVICE, addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.PLATFORM_SERVICE, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
 
     /**
      * Represents the value of DISABLE_CLIENT
@@ -75,7 +103,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      * Represent the SERVER_IP
      */
     public static final String SERVER_IP = "52.11.156.16"; //AWS
-    //public static final String SERVER_IP = "192.168.1.2";
+    //public static final String SERVER_IP = "192.168.42.5";
 
     /**
      * Represent the DEFAULT_PORT
@@ -91,35 +119,11 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      * Represent the newLoggingLevel
      */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-    /**
-     * Represent the status of this service
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    /**
-     * Represent the errorManager
-     */
-    private ErrorManager errorManager;
-    /**
-     * Represent the eventManager
-     */
-    private EventManager eventManager;
-    /**
-     * Represent the logManager
-     */
-    private LogManager logManager;
-    /**
-     * Represent the locationManager
-     */
-    private LocationManager locationManager;
+
     /*
      * Hold the list of event listeners
      */
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
-
-    /**
-     * DealsWithPluginIdentity Interface member variables.
-     */
-    private UUID pluginId;
 
     /**
      * Represent the disableClientFlag
@@ -135,7 +139,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      * Constructor
      */
     public WsCommunicationsCloudClientPluginRoot(){
-        super();
+        super(new PluginVersionReference(new Version()));
         this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
 //        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
     }
@@ -175,8 +179,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
          */
         if (eventManager == null            ||
                 logManager  == null         ||
-                    locationManager == null ||
-                        errorManager == null) {
+                locationManager == null ||
+                errorManager == null) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -245,26 +249,6 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * (non-Javadoc)
      *
-     * @see Service#pause()
-     */
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see Service#resume()
-     */
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
      * @see Service#stop()
      */
     @Override
@@ -287,16 +271,6 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
          */
         this.serviceStatus = ServiceStatus.STOPPED;
 
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see Service#getStatus()
-     */
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
     }
 
     /**
@@ -356,7 +330,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-    	//this.pluginFileSystem = pluginFileSystem;
+        //this.pluginFileSystem = pluginFileSystem;
     }
 
     /**
@@ -377,16 +351,6 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see Plugin#setId(UUID)
-     */
-    @Override
-    public void setId(UUID pluginId) {
-       this.pluginId = pluginId;
     }
 
     /**
