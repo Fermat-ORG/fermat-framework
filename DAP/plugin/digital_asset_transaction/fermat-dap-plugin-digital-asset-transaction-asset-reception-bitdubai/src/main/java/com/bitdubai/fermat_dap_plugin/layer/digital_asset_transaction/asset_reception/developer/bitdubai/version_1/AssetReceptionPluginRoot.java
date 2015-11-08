@@ -288,6 +288,9 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
             this.assetReceptionMonitorAgent.setBitcoinNetworkManager(bitcoinNetworkManager);
             this.assetReceptionMonitorAgent.setDigitalAssetDistributionVault(this.digitalAssetReceptionVault);
             this.assetReceptionMonitorAgent.setAssetTransmissionManager(this.assetTransmissionNetworkServiceManager);
+            this.assetReceptionMonitorAgent.setActorAssetUserManager(this.actorAssetUserManager);
+            this.assetReceptionMonitorAgent.setActorAssetIssuerManager(this.actorAssetIssuerManager);
+            this.assetReceptionMonitorAgent.setDigitalAssetReceptor(this.digitalAssetReceptor);
             this.assetReceptionMonitorAgent.start();
         }/*else{
             this.assetReceptionMonitorAgent.start();

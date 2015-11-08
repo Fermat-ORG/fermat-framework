@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -29,7 +30,7 @@ import java.util.concurrent.ExecutorService;
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestSendHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest> {
+public class RequestSendHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest>, View.OnClickListener {
 
     /**
      * MANAGERS
@@ -100,6 +101,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         try {
             rootView = super.onCreateView(inflater, container, savedInstanceState);
             WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+            RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
+            recyclerView.addItemDecoration(itemDecoration);
             return rootView;
         }catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -139,7 +142,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession);
+            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -214,4 +217,17 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
     }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if(id == R.id.btn_refuse_request){
+            Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
+        }
+        else if ( id == R.id.btn_accept_request){
+            Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }

@@ -29,6 +29,21 @@
             />
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textColor="#12aca1"
+                android:paddingLeft="20dp"
+                android:layout_alignParentTop="true"
+                android:visibility="gone"/>
+
 
             <EditText
                 android:id="@+id/contact_name"
@@ -37,7 +52,6 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginBottom="3dip"
                 android:background="@drawable/shape_section"
-
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:hint="Name"
@@ -55,6 +69,12 @@
                 android:textStyle="normal"
                 android:fontFamily="roboto"/>
 
+        </LinearLayout>
+
+
+
+
+
 
     </LinearLayout>
     <View
@@ -63,13 +83,29 @@
         android:background="#e1e1e1"
         android:layout_alignParentBottom="true"></View>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textColor="#12aca1"
+            android:paddingLeft="20dp"
+            android:layout_alignParentTop="true"
+            />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#FFFFFF"
         android:divider="#e1e1e1"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:id="@+id/container">
+
+
 
         <EditText
             android:id="@+id/txt_address"
@@ -112,6 +148,8 @@
 
 
     </LinearLayout>
+
+    </RelativeLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
