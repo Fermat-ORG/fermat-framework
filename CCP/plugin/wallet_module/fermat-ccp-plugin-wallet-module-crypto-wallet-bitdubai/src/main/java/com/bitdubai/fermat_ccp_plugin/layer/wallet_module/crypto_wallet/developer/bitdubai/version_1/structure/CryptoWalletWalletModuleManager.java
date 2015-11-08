@@ -30,11 +30,14 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interf
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGenerateCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRegistryException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListPaymentRequestDateOrderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListReceivePaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListSentPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantSendCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
@@ -140,7 +143,7 @@ public class CryptoWalletWalletModuleManager implements
         DealsWithOutgoingIntraActor,
         DealsWithWalletContacts,
         DealsWithCryptoAddressBook,
-        DealsWithCryptoPayment{ // TODO ADDED TO TEST CRYPTO ADDRESSES PLUGIN
+        DealsWithCryptoPayment{
 
 
     /**
@@ -221,17 +224,17 @@ public class CryptoWalletWalletModuleManager implements
         try {
             walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
 
-            //cryptoPaymentRegistry =  cryptoPaymentManager.getCryptoPaymentRegistry();
+            cryptoPaymentRegistry =  cryptoPaymentManager.getCryptoPaymentRegistry();
 
         } catch (CantGetWalletContactRegistryException e) {
-            throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, e);
-        }
-//        catch(CantGetCryptoPaymentRegistryException e)
-//        {
-//            throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, e,"","Error get crypto Payment Registry object");
 
-          catch (Exception e){
-            throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+            throw new CantInitializeCryptoWalletManagerException(e, "", "Error trying to get wallet manager registry.");
+        } catch(CantGetCryptoPaymentRegistryException e) {
+
+            throw new CantInitializeCryptoWalletManagerException(e, "", "Error get crypto Payment Registry object");
+        }  catch (Exception e){
+
+            throw new CantInitializeCryptoWalletManagerException(e, "", "Unhandled error.");
         }
 
     }
@@ -440,13 +443,13 @@ public class CryptoWalletWalletModuleManager implements
 
                  //get to Crypto Address NS the intra user actor address
                  cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
-                         walletCryptoCurrency ,
+                         walletCryptoCurrency,
                          actorWalletType,
-                         actorConnectedType ,
+                         actorConnectedType,
                          identityWalletPublicKey,
                          actorConnectedPublicKey,
-			 CryptoAddressDealers.CRYPTO_WALLET,
-                         blockchainNetworkType );
+                         CryptoAddressDealers.CRYPTO_WALLET,
+                         blockchainNetworkType);
 
 
 
@@ -581,7 +584,7 @@ public class CryptoWalletWalletModuleManager implements
             WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByContactId(contactId);
 
 
-         byte[] image = getImageByActorType(walletContactRecord.getActorType(), walletContactRecord.getActorPublicKey(),intraUserLoggedInPublicKey);
+         byte[] image = getImageByActorType(walletContactRecord.getActorType(), walletContactRecord.getActorPublicKey(), intraUserLoggedInPublicKey);
 
 
             return new CryptoWalletWalletModuleWalletContact(walletContactRecord, image);
@@ -1589,10 +1592,38 @@ public class CryptoWalletWalletModuleManager implements
         }
     }
 
-    private  String convertTime(long time){
-        Date date = new Date(time);
-        Format format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        return format.format(date);
+    @Override
+    public final void sendCryptoPaymentRequest(final String                walletPublicKey  ,
+                                               final String                identityPublicKey,
+                                               final Actors                identityType     ,
+                                               final String                actorPublicKey   ,
+                                               final Actors                actorType        ,
+                                               final CryptoAddress         cryptoAddress    ,
+                                               final String                description      ,
+                                               final long                  amount           ,
+                                               final BlockchainNetworkType networkType      ) throws CantSendCryptoPaymentRequestException {
+
+        try {
+
+            cryptoPaymentRegistry.generateCryptoPaymentRequest(
+                    walletPublicKey,
+                    identityPublicKey,
+                    identityType,
+                    actorPublicKey,
+                    actorType,
+                    cryptoAddress,
+                    description,
+                    amount,
+                    networkType
+            );
+        } catch (CantGenerateCryptoPaymentRequestException e) {
+
+            throw new CantSendCryptoPaymentRequestException(e, "", "Error found in crypto payment request plugin.");
+        } catch (Exception e) {
+
+            throw new CantSendCryptoPaymentRequestException(e, "", "Unhandled error.");
+        }
+
     }
 
     /**
