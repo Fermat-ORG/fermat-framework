@@ -66,6 +66,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionNewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
@@ -90,7 +91,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 /**
  * Created by Matias Furszyfer on 2015.09.28..
  */
-public class ReceiveTransactionsFragment extends FermatWalletListFragment<CryptoWalletTransaction> implements FermatListItemListeners<CryptoWalletTransaction>, DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler {
+public class ReceiveTransactionsFragment extends FermatWalletListFragment<CryptoWalletTransaction> implements FermatListItemListeners<CryptoWalletTransaction>, DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback {
 
 
 
@@ -340,19 +341,19 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                             CryptoWalletWalletContact walletContactDatabase = cryptoWallet.findWalletContactById(walletContact.contactId,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
 
                             if (walletContact.actorPublicKey.equals(walletContactDatabase.getActorPublicKey())) {
-                                ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(), cryptoWallet, referenceWalletSession.getErrorManager(), walletContact, user_id, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-                                receiveFragmentDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialogInterface) {
-                                        boolean isShow = linear_layout_receive_form.isShown();
-                                        //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
-                                        if (isShow) {
-                                            Fx.slide_up(getActivity(), linear_layout_receive_form);
-                                            linear_layout_receive_form.setVisibility(View.GONE);
-                                        }
-                                    }
-                                });
-                                receiveFragmentDialog.show();
+                                //ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(), cryptoWallet, referenceWalletSession.getErrorManager(), walletContact, user_id, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+//                                receiveFragmentDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                                    @Override
+//                                    public void onDismiss(DialogInterface dialogInterface) {
+//                                        boolean isShow = linear_layout_receive_form.isShown();
+//                                        //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
+//                                        if (isShow) {
+//                                            Fx.slide_up(getActivity(), linear_layout_receive_form);
+//                                            linear_layout_receive_form.setVisibility(View.GONE);
+//                                        }
+//                                    }
+//                                });
+//                                receiveFragmentDialog.show();
                             } else {
                                 Toast.makeText(getActivity(), "no se que hacer", Toast.LENGTH_SHORT).show();
                                 //                            registerForContextMenu(btn_give_address);
@@ -885,7 +886,8 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                 referenceWalletSession,
                 walletContact,
                 user_id,
-                ((withImage) ? contactImageBitmap : null));
+                ((withImage) ? contactImageBitmap : null),
+                this);
         dialog.setOnDismissListener(this);
         dialog.show();
     }
@@ -915,5 +917,10 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     public void uncaughtException(Thread thread, Throwable throwable) {
         referenceWalletSession.getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,new Exception());
         Toast.makeText(getActivity(),"oooopps",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void openContextImageSelector() {
+        Toast.makeText(getActivity(),"pajerooo",Toast.LENGTH_SHORT).show();
     }
 }

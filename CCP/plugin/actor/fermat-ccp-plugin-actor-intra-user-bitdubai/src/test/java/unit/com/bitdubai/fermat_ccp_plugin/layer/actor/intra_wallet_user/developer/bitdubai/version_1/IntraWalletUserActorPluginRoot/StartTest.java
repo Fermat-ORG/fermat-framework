@@ -1,10 +1,10 @@
-//package unit.com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.IntraWalletUserActorPluginRoot;
+//package unit.com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.IntraWalletUserActorPluginRoot;
 //
 //import com.bitdubai.fermat_api.CantStartPluginException;
 //
 //import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-//import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.IntraWalletUserActorPluginRoot;
-//import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserActorDatabaseConstants;
+//import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.IntraWalletUserActorPluginRoot;
+//import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraWalletUserActorDatabaseConstants;
 //import EventType;
 //
 //<<<<<<< HEAD
@@ -17,7 +17,7 @@
 //import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 //import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 //import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-//import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserActorDatabaseFactory;
+//import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraWalletUserActorDatabaseFactory;
 //import ErrorManager;
 //import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 //import EventManager;

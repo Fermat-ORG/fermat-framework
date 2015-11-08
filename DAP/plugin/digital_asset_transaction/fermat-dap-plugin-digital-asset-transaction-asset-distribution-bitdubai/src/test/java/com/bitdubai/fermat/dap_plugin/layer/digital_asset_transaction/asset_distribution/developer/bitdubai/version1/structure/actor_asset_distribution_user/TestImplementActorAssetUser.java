@@ -25,7 +25,7 @@ public class TestImplementActorAssetUser {
         System.out.println(actorXML);
     }
 
-    @Test
+    /*@Test
     public void recoveringFromXMLTest(){
         System.out.println("Recovering from XML Test");
         ActorAssetUser actorAssetUser=new MockActorAssetUser();
@@ -36,6 +36,6 @@ public class TestImplementActorAssetUser {
         ActorAssetDistributionUser xmlActorAssetDistributionUser=new  ActorAssetDistributionUser();
         xmlActorAssetDistributionUser= (ActorAssetDistributionUser) XMLParser.parseXML(actorXML, xmlActorAssetDistributionUser);
         System.out.println("Name from recovered actor: "+xmlActorAssetDistributionUser.getName());
-    }
+    }*/
 
 }

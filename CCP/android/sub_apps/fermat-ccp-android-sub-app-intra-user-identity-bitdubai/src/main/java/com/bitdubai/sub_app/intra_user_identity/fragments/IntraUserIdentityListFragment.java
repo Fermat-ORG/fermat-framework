@@ -13,9 +13,9 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.adapters.IntraUserIdentityInfoAdapter;
@@ -32,13 +32,13 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalletUser>
-        implements FermatListItemListeners<IntraWalletUser> {
+public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalletUserIdentity>
+        implements FermatListItemListeners<IntraWalletUserIdentity> {
 
 
     private IntraWalletUserIdentityManager moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<IntraWalletUser> identityInformationList;
+    private ArrayList<IntraWalletUserIdentity> identityInformationList;
 
 
     public static IntraUserIdentityListFragment newInstance() {
@@ -167,8 +167,8 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
     }
 
     @Override
-    public List<IntraWalletUser> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<IntraWalletUser> data = new ArrayList<>();
+    public List<IntraWalletUserIdentity> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<IntraWalletUserIdentity> data = new ArrayList<>();
 
         try {
             if (moduleManager == null) {
@@ -188,12 +188,12 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
 
 
     @Override
-    public void onItemClickListener(IntraWalletUser data, int position) {
+    public void onItemClickListener(IntraWalletUserIdentity data, int position) {
 
     }
 
     @Override
-    public void onLongItemClickListener(IntraWalletUser data, int position) {
+    public void onLongItemClickListener(IntraWalletUserIdentity data, int position) {
 
     }
 }

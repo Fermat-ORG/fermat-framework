@@ -19,6 +19,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     private int offset = 0;
 
     String walletPublicKey = "reference_wallet";
+    private View rootView;
 
     /**
      * Create a new instance of this fragment
@@ -95,8 +97,14 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        return super.onCreateView(inflater, container, savedInstanceState);
+        try {
+            rootView = super.onCreateView(inflater, container, savedInstanceState);
+            WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+            return rootView;
+        }catch (Exception e){
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+        return container;
     }
 
 

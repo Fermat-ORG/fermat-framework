@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.AssetRedeemPointActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
@@ -24,10 +25,16 @@ import java.util.Observer;
  * Created by franklin on 18/10/15.
  */
 public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
+
     /**
      * Represent the profile of the remote network service
      */
     private PlatformComponentProfile remoteNetworkServiceProfile;
+
+    /**
+     * Represent the profile of the local network service
+     */
+    private NetworkServiceType networkServiceTypePluginRoot;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -56,26 +63,28 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
      * @param errorManager                  instance
      * @param outgoingMessageDao            instance
      */
-    public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao) {
+    public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile,
+                                            ErrorManager errorManager, EventManager eventManager,
+                                            OutgoingMessageDao outgoingMessageDao,
+                                            NetworkServiceType networkServiceTypePluginRoot) {
         this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.outgoingMessageDao = outgoingMessageDao;
+        this.networkServiceTypePluginRoot = networkServiceTypePluginRoot;
     }
+
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceLocal#sendMessage(String, String, String)
      */
-    public void sendMessage(final String senderIdentityPublicKey, String pk,final String messageContent) {
-
+    public void sendMessage(final String senderIdentityPublicKey,final String requestIdentityPublickKey, final String messageContent) {
         try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
-                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
+                    requestIdentityPublickKey,   //Receiver
                     messageContent,                //Message Content
                     FermatMessageContentType.TEXT);//Type
-
             /*
              * Configure the correct status
              */
@@ -88,10 +97,11 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
 
         } catch (Exception e) {
             e.printStackTrace();
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
         }
 
     }
+
 
     /**
      * Notify the client when a incoming message is receive by the incomingTemplateNetworkServiceMessage
@@ -115,9 +125,8 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
         fermatEvent.setSource(AssetRedeemPointActorNetworkServicePluginRoot.EVENT_SOURCE);
         ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
+        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setNetworkServiceTypeApplicant(networkServiceTypePluginRoot);
         eventManager.raiseEvent(fermatEvent);
-
-        System.out.println("CommunicationNetworkServiceLocal - fired event = NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION");
 
     }
 
@@ -138,7 +147,9 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
     }
 
     /**
-     * (non-javadoc)*/
+     * (non-javadoc)
+     * @see NetworkServiceLocal#
+     */
     public FermatMessage getLastMessageReceived() {
         return lastMessageReceived;
     }

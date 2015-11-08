@@ -8,10 +8,12 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactDetai
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.CreateContactFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.ReceiveTransactionFragment2;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestFormFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestHomePaymentFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestSendHistoryFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendTransactionFragment2;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SettingsFragment2;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.TransactionsReceivedHistory;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.TransactionsSendHistory;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.RequestsReceivedFragment;
@@ -48,6 +50,7 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
                     //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.SendFragment.newInstance(0);
+
                     //currentFragment = SendFragment.newInstance();
                     currentFragment = SendTransactionFragment2.newInstance();
                     break;
@@ -100,6 +103,12 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                     break;
                 case CCP_BITCOIN_WALLET_SEND_FORM_FRAGMENT:
                     currentFragment = SendFormFragment.newInstance();
+                    break;
+                case CCP_BITCOIN_WALLET_REQUEST_FORM_FRAGMENT:
+                    currentFragment = RequestFormFragment.newInstance();
+                    break;
+                case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT:
+                    currentFragment = SettingsFragment2.newInstance();
                     break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");

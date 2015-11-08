@@ -169,6 +169,7 @@ public class ConfirmReceptionTest {
         when(actorAssetIssuerManager.getActorAssetIssuer()).thenReturn(actorAssetIssuer);
     }
 
+    //TODO uncomment and develop test_OK
 //    @Test
 //    public void test_OK() throws Exception {
 //        assetIssuingPluginRoot.start();

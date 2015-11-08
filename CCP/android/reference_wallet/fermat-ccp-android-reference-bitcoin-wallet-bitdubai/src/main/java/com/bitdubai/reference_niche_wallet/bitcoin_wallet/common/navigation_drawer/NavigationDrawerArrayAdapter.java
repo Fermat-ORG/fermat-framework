@@ -74,7 +74,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 if(activeIntraUser.getProfileImage()!=null){
                     icon.setImageBitmap(BitmapFactory.decodeByteArray(activeIntraUser.getProfileImage(),0,activeIntraUser.getProfileImage().length));
                 }else{
-                    Picasso.with(context).load(R.drawable.tessa_profile_picture).into(icon);
+                    icon.setImageResource(R.drawable.profile_image);
                 }
 
 
@@ -89,7 +89,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 TextView textView = (TextView) rowView.findViewById(R.id.textView_label);
                 if(textView != null) {
                     textView.setTypeface(tf, 1);
-                    textView.setText(values.get(position-1));
+                    textView.setText(values.get(position));
                 }
 
 
