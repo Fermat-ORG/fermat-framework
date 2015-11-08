@@ -822,9 +822,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
     @Override
     public void handleCompleteClientAssetIssuerActorRegistrationNotificationEvent(ActorAssetIssuer actorAssetIssuerList) {
         System.out.println("==========================================================");
-
         System.out.println("Satisfactoriamente se Registro " + actorAssetIssuerList.getName());
-
         System.out.println("==========================================================");
     }
 
@@ -949,9 +947,6 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
          */
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_ISSUER &&
                 platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.UNDEFINED) {
-
-            System.out.println("Actor Asset Issuer Registered: " + platformComponentProfileRegistered.getIdentityPublicKey());
-            System.out.println("Actor Asset Issuer Alias: " + platformComponentProfileRegistered.getAlias());
 
             Location loca = null;
 

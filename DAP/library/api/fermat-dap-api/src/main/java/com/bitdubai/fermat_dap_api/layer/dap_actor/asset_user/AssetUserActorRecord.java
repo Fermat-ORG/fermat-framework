@@ -107,8 +107,11 @@ public class AssetUserActorRecord implements ActorAssetUser {
         if(cryptoAddress != null)
             this.cryptoAddress      = cryptoAddress         ;
 
-        this.locationLatitude       = locationLatitude      ;
-        this.locationLongitude      = locationLongitude     ;
+        if (locationLatitude != null)
+            this.locationLatitude       = locationLatitude  ;
+        if(locationLongitude != null)
+            this.locationLongitude      = locationLongitude ;
+
         this.registrationDate       = registrationDate      ;
         this.lastConnectionDate     = lastConnectionDate    ;
         this.profileImage           = profileImage.clone()  ;
