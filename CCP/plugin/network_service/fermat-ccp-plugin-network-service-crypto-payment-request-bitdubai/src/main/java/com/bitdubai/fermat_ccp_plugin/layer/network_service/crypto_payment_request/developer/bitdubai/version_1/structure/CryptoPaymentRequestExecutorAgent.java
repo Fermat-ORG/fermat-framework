@@ -210,6 +210,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
                     case REQUEST:
 
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Request. PROCESSING_SEND -> WAITING_RESPONSE.");
+
                         if (sendMessageToActor(
                                 buildJsonRequestMessage(cpr),
                                 cpr.getActorPublicKey(),
@@ -218,7 +220,9 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                                 cpr.getIdentityType()
                         )) {
                             toWaitingResponse(cpr.getRequestId());
+                            System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Request. PROCESSING_SEND -> WAITING_RESPONSE -> OK.");
                         }
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Request. PROCESSING_SEND -> WAITING_RESPONSE -> WAIT MORE.");
 
                         break;
                 }
