@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDev
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bitdubai.DeveloperBitDubaiOld;
+import com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 27/10/2015.
@@ -23,7 +23,7 @@ public class DeviceLocationAddonSubsystem extends AbstractAddonSubsystem {
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-            registerDeveloper(new DeveloperBitDubaiOld(new AddonDeveloperReference(Developers.BITDUBAI)));
+            registerDeveloper(new DeveloperBitDubai(new AddonDeveloperReference(Developers.BITDUBAI)));
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

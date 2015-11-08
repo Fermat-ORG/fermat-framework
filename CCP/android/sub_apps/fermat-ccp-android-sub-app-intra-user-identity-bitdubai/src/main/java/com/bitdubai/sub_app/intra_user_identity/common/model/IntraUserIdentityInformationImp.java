@@ -1,13 +1,11 @@
 package com.bitdubai.sub_app.intra_user_identity.common.model;
 
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantSetNewProfileImageException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantSignIntraWalletUserMessageException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 
 /**
  * Created by nelson on 09/10/15.
  */
-public class IntraUserIdentityInformationImp implements IntraWalletUser {
+public class IntraUserIdentityInformationImp implements IntraWalletUserIdentity {
 
     private String intraUserName;
     private byte[] profileImage;

@@ -45,7 +45,7 @@ public class ManagerFactory {
                 moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE);
                 break;
             case CWP_INTRA_USER_IDENTITY:
-                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY);
                 break;
             case DAP_ASSETS_FACTORY:
                 moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY_MODULE);

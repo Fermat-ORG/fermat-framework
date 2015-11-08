@@ -30,7 +30,6 @@ dependencies {
     // End  PIP Projects (Plugins)
     //BCH projects
     compile project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
-    //compile project(':fermat-osa-addon-android-database-system-bitdubai')
 
     // CCP Projects (Plugins)
     compile project(':fermat-dmp-plugin-identity-designer-bitdubai')
@@ -40,7 +39,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-middleware-wallet-skin-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai')
     // DMP Projects (Addons)
-   // compile project(':fermat-dmp-addon-license-wallet-bitdubai')
     //DAP Projects (Plugins)
     compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-actor-asset-user-bitdubai')
@@ -54,6 +52,7 @@ dependencies {
     compile project(':fermat-dap-plugin-digital-asset-transaction-redeem-point-redemption-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-issuer-redemption-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-user-redemption-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai')
     compile project(':fermat-dap-plugin-middleware-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai')
@@ -108,6 +107,7 @@ dependencies {
     compile project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai')
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
+    compile project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai')
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'

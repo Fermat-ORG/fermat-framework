@@ -25,8 +25,8 @@ public class NegotiationInformationTestData implements CustomerBrokerNegotiation
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
     private static final Calendar calendar = Calendar.getInstance();
 
-    private ActorIdentityImpl customerIdentity;
-    private ActorIdentityImpl brokerIdentity;
+    private ActorIdentity customerIdentity;
+    private ActorIdentity brokerIdentity;
     private Map<ClauseType, String> summary;
     private Collection<ClauseInformation> clauses;
     private NegotiationStatus status;

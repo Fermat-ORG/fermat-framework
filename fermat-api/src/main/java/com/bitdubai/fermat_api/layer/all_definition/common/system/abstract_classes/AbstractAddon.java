@@ -208,11 +208,11 @@ public abstract class AbstractAddon implements Addon, Service {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(abstractAddon));
 
-                System.out.println("Processing Addon: " + this.addonVersionReference.toString2()+
-                                    " - >>> Assigned reference: "+avr.toString2());
+                System.out.println("---------->>> Assigned reference: "+avr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
-                        "classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),
+                        "Working addon: "+this.getAddonVersionReference().toString3()+
+                        " ---- classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),
                         ""
                 );
             }
@@ -221,7 +221,7 @@ public abstract class AbstractAddon implements Addon, Service {
 
             throw new CantAssignReferenceException(
                     e,
-                    "Working addon: "+this.getAddonVersionReference().toString()+ " +++++ Reference to assign: "+ avr.toString(),
+                    "Working addon: "+this.getAddonVersionReference().toString3()+ " +++++ Reference to assign: "+ avr.toString(),
                     "Error assigning references for the addon."
             );
         }

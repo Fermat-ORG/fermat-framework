@@ -34,15 +34,17 @@ public final class FermatSystem {
     private final FermatAddonManager  fermatAddonManager ;
     private final FermatPluginManager fermatPluginManager;
 
-    // TODO DELETE THIS
-    public FermatSystem(final Object osContext) {
-
-        this.fermatSystemContext = new FermatSystemContext(osContext);
-        this.fermatAddonManager  = new FermatAddonManager(fermatSystemContext);
-        this.fermatPluginManager = new FermatPluginManager(fermatSystemContext, fermatAddonManager);
-    }
-
-    public FermatSystem(final Object osContext, final AbstractPlatform abstractPlatform) throws CantCreateSystemException {
+    /**
+     * Through this Constructor, we aloud to create a new instance of the Fermat System, but we
+     * should pass it an OS context and an OSA Platform.
+     *
+     * @param osContext      operative system context instance.
+     * @param osaPlatform    OSA Platform instance.
+     *
+     * @throws CantCreateSystemException if something goes wrong.
+     */
+    public FermatSystem(final Object           osContext       ,
+                        final AbstractPlatform osaPlatform) throws CantCreateSystemException {
 
         this.fermatSystemContext = new FermatSystemContext(osContext);
         this.fermatAddonManager  = new FermatAddonManager(fermatSystemContext);
@@ -50,7 +52,7 @@ public final class FermatSystem {
 
         try {
 
-            this.registerOsaPlatform(abstractPlatform);
+            this.registerOsaPlatform(osaPlatform);
 
         } catch (final CantRegisterPlatformException e) {
 
@@ -72,16 +74,6 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new CCPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
-/*
-            final List<PluginVersionReference> referenceList = new FermatPluginReferencesCalculator(fermatSystemContext).listReferencesByInstantiationOrder(
-                new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET, Developers.BITDUBAI, new Version())
-            );
-
-            System.out.println("\n\nMostrando orden de instanciación de plugins calculada automáticamente a partir del Crypto Wallet Module: \n");
-            for (PluginVersionReference pvr : referenceList)
-                System.out.println(pvr);
-
-            System.out.println("\nFin de la lista de instanciación.\n\n");*/
 
         } catch(CantRegisterPlatformException e) {
 
@@ -93,19 +85,29 @@ public final class FermatSystem {
 
     }
 
-    private void registerOsaPlatform(final AbstractPlatform abstractPlatform) throws CantRegisterPlatformException {
+    /**
+     * Through the method <code>registerOsaPlatform</code> we validate minimally that we're dealing with an osaPlatform.
+     *
+     * @param osaPlatform  instance of osa platform.
+     *
+     * @throws CantRegisterPlatformException if something goes wrong.
+     */
+    private void registerOsaPlatform(final AbstractPlatform osaPlatform) throws CantRegisterPlatformException {
 
-        final PlatformReference pr = abstractPlatform.getPlatformReference();
+        if (osaPlatform == null)
+            throw new CantRegisterPlatformException("abstractPlatform=null", "You have pass through parameter an OSA Platform instance.");
 
-        if (pr.getPlatform().equals(Platforms.OPERATIVE_SYSTEM_API))
-            fermatSystemContext.registerPlatform(abstractPlatform);
+        final PlatformReference pr = osaPlatform.getPlatformReference();
+
+        if (pr.getPlatform() != null && pr.getPlatform().equals(Platforms.OPERATIVE_SYSTEM_API))
+            fermatSystemContext.registerPlatform(osaPlatform);
         else
-            throw new CantRegisterPlatformException(abstractPlatform.getPlatformReference().toString(), "Is not an OSA specific Platform");
+            throw new CantRegisterPlatformException(osaPlatform.getPlatformReference().toString(), "Is not referenced like an OSA specific Platform.");
 
     }
 
     /**
-     * Throw the method <code>getModuleManager</code> the graphic interface can access to the modules of
+     * Through the method <code>getModuleManager</code> the graphic interface can access to the modules of
      * its sub-apps and wallets.
      *
      * @param pluginVersionReference plugin version reference data.
@@ -138,7 +140,7 @@ public final class FermatSystem {
     }
 
     /**
-     * Throw the method <code>getAddon</code> the graphic interface can access to the addons of fermat
+     * Through the method <code>getAddon</code> the graphic interface can access to the addons of fermat
      *
      * @param addonVersionReference addon version reference data.
      *
@@ -173,10 +175,7 @@ public final class FermatSystem {
     public final AbstractPlugin startAndGetPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException ,
                                                                                                                      CantStartPluginException {
 
-        System.out.println("Starting Plugin: "+ pluginVersionReference.toString2());
-        AbstractPlugin abstractPlugin = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
-        System.out.println("End      Plugin: "+ pluginVersionReference.toString2());
-        return abstractPlugin;
+        return fermatPluginManager.startPluginAndReferences(pluginVersionReference);
     }
 
 }

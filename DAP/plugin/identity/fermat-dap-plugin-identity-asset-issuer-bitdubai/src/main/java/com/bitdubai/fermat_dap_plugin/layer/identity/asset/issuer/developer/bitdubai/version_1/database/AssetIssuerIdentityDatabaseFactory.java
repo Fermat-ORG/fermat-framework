@@ -42,7 +42,7 @@ public class AssetIssuerIdentityDatabaseFactory implements DealsWithErrors, Deal
     public Database createDatabase(UUID pluginId) throws CantCreateDatabaseException {
         Database database;
         /**
-         * I will create the database where I am going to store the information of this User.
+         * I will create the database where I am going to store the information of this Issuer.
          */
         try {
             database = this.pluginDatabaseSystem.createDatabase(pluginId, AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DB_NAME);

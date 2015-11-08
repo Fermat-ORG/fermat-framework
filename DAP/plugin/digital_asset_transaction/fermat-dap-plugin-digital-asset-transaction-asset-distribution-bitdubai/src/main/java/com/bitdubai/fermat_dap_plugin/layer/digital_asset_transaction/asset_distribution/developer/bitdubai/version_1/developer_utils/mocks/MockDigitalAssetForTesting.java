@@ -43,11 +43,11 @@ public class MockDigitalAssetForTesting extends DigitalAsset {
         contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, expirationDateTimestamp));
         setContract(contract);
         //Description
-        setDescription("Patriapon - el cupón patriótico");
+        setDescription("Skynet is working for you");
         //Public key
         setPublicKey(new ECCKeyPair().getPublicKey());
         //Name
-        setName("Patriapon");
+        setName("Skynet Coupon");
         //Genesis Amount in satoshis
         setGenesisAmount(100000);
         //State

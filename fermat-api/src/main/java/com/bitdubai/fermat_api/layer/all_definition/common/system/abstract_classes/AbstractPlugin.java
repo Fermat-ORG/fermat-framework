@@ -232,11 +232,11 @@ public abstract class AbstractPlugin implements Plugin, Service {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(abstractAddon));
 
-                System.out.println("Processing Plugin: " + this.pluginVersionReference.toString2() +
-                        "\n                   - >>> Assigned addon reference: " + avr.toString2());
+                System.out.println("---------->>> Assigned reference: "+avr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
-                        "classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),
+                        "Working plugin: "+this.getPluginVersionReference().toString3()+
+                        " ------------ classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),
                         ""
                 );
             }
@@ -272,11 +272,11 @@ public abstract class AbstractPlugin implements Plugin, Service {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(abstractPlugin));
 
-                System.out.println("Processing Plugin: " + this.pluginVersionReference.toString2() +
-                        "\n                   - >>> Assigned plugin reference: " + pvr.toString2());
+                System.out.println("---------->>> Assigned reference: "+pvr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
-                        "classExpected: "+refManager.getName() + " --- classReceived: " + abstractPlugin.getClass().getName(),
+                        "Working plugin: "+this.getPluginVersionReference().toString3()+
+                        " ------------ classExpected: "+refManager.getName() + " --- classReceived: " + abstractPlugin.getClass().getName(),
                         "Field is not assignable by the given reference (bad definition, different type expected). Check the expected plugin and the defined type."
                 );
             }

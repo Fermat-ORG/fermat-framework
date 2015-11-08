@@ -1,16 +1,11 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfoPlatformService;
@@ -21,31 +16,33 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantSetPlatformInformationException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by natalia on 29/07/15.
  * Modified by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
-public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implements
-        PlatformInfoManager {
+public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implements PlatformInfoManager {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager       errorManager      ;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER       )
+    private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.PLATFORM_FILE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLATFORM_FILE_SYSTEM)
     private PlatformFileSystem platformFileSystem;
 
+    /**
+     * PlatformInfoManager interface member variables.
+     */
     private PlatformInfoPlatformService platformInfoPlatformService;
 
+    /**
+     * Constructor without parameters.
+     */
     public PlatformInfoPlatformServiceAddonRoot() {
         super(new AddonVersionReference(new Version()));
     }
 
-    public void start() throws CantStartPluginException {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
+    /**
+     * PlatformInfoManager interface implementation.
+     */
 
     @Override
     public PlatformInfo getPlatformInfo() throws CantLoadPlatformInformationException {
@@ -57,7 +54,7 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
 
             return platformInfoPlatformService.getPlatformInfo();
 
-        } catch(final CantLoadPlatformInformationException e) {
+        } catch (final CantLoadPlatformInformationException e) {
 
             reportUnexpectedError(e);
             throw e;
@@ -82,7 +79,7 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
 
             platformInfoPlatformService.setPlatformInfo(platformInfo);
 
-        } catch(final CantSetPlatformInformationException e) {
+        } catch (final CantSetPlatformInformationException e) {
 
             reportUnexpectedError(e);
             throw e;
@@ -100,55 +97,4 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
     private void reportUnexpectedError(Exception e) {
         errorManager.reportUnexpectedAddonsException(Addons.PLATFORM_INFO, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, e);
     }
-/*
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-
-        final List<AddonVersionReference> addonsNeeded = new ArrayList<>();
-
-        addonsNeeded.add(new AddonVersionReference(Platforms.OPERATIVE_SYSTEM_API, Layers.ANDROID         , Addons.PLATFORM_FILE_SYSTEM, Developers.BITDUBAI, new Version()));
-        addonsNeeded.add(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM   , Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER       , Developers.BITDUBAI, new Version()));
-
-        return addonsNeeded;
-    }*/
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
-    }
-/*
-    @Override
-    protected void validateAndAssignReferences() throws MissingReferencesException {
-
-        AbstractAddon platformFileSystem = this.getAddonReference(new AddonVersionReference(Platforms.OPERATIVE_SYSTEM_API, Layers.ANDROID         , Addons.PLATFORM_FILE_SYSTEM, Developers.BITDUBAI, new Version()));
-        AbstractAddon errorManager       = this.getAddonReference(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM   , Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER       , Developers.BITDUBAI, new Version()));
-
-        if (platformFileSystem != null && platformFileSystem instanceof PlatformFileSystem) {
-
-            this.platformFileSystem = (PlatformFileSystem) platformFileSystem;
-        } else {
-
-            throw new MissingReferencesException(
-                    "platformFileSystem: "+ platformFileSystem,
-                    "There is missing references for Platform Info Addon."
-            );
-        }
-
-        if (errorManager != null && errorManager instanceof ErrorManager) {
-
-            this.errorManager = (ErrorManager) errorManager;
-        } else {
-
-            throw new MissingReferencesException(
-                    "errorManager: "+ errorManager,
-                    "There is missing references for Platform Info Addon."
-            );
-        }
-
-    }*/
 }

@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -19,7 +22,10 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerA
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -28,14 +34,19 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.NegotiationInformationTestData;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.makeText;
 
 
 /**
@@ -81,6 +92,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
 
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
 
@@ -183,6 +196,39 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+        menu.clear();
+
+        inflater.inflate(R.menu.home_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+
+            int id = item.getItemId();
+
+            CharSequence itemTitle = item.getTitle();
+
+            if(item.getItemId() ==  R.id.actionbar_send){
+                referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS,Boolean.TRUE);
+                changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     @Override
     protected void initViews(View layout) {
@@ -265,54 +311,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         } catch (CantListTransactionsException e) {
             e.printStackTrace();
         }
-
-        //if (moduleManager != null) {
-            //try {
-                //cryptoBrokerWallet = moduleManager.listLastActorTransactionsByTransactionType(refe);
-
-                //grouperText = getActivity().getString(R.string.waiting_for_you);
-              //  List<CryptoWalletTransaction> waitingForBroker = new ArrayList<>();
-                //waitingForBroker.addAll(moduleManager.listLastActorTransactionsByTransactionType());
-//                GrouperItem<CustomerBrokerNegotiationInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-//                data.add(waitingForBrokerGrouper);
-//
-//                grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-//                List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
-//                waitingForBroker.addAll(cryptoBrokerWallet.getNegotiationsWaitingForCustomer(0, 10));
-//                GrouperItem<CustomerBrokerNegotiationInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-//                data.add(waitingForCustomerGrouper);
-
-//            } catch (CantGetCryptoBrokerWalletException | CantGetNegotiationsWaitingForBrokerException | CantGetNegotiationsWaitingForCustomerException ex) {
-//                if (errorManager != null) {
-//                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-//                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-//                }
-//            }
-
-        //} else {
-            NegotiationInformationTestData child;
-
-//            grouperText = "waiting";
-//            List<CryptoWalletTransaction> waitingForBroker = new ArrayList<>();
-//            child = new NegotiationInformationTestData("nelsonalfo", "USD", "Crypto Transfer", "BTC", NegotiationStatus.WAITING_FOR_BROKER);
-//            waitingForBroker.add(child);
-//            child = new NegotiationInformationTestData("jorgeegonzalez", "BTC", "Cash in Hand", "USD", NegotiationStatus.WAITING_FOR_BROKER);
-//            waitingForBroker.add(child);
-//            child = new NegotiationInformationTestData("neoperol", "USD", "Cash in Hand", "BsF", NegotiationStatus.WAITING_FOR_BROKER);
-//            waitingForBroker.add(child);
-//            GrouperItem<CustomerBrokerNegotiationInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-//            data.add(waitingForBrokerGrouper);
-//
-//            grouperText = "waiting for customer";
-//            List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
-//            child = new NegotiationInformationTestData("Nelson Orlando", "USD", "Bank Transfer", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
-//            waitingForCustomer.add(child);
-//            child = new NegotiationInformationTestData("Customer 5", "BsF", "Cash Delivery", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
-//            waitingForCustomer.add(child);
-//            GrouperItem<CustomerBrokerNegotiationInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-//            data.add(waitingForCustomerGrouper);
-       // }
-
         return data;
     }
 

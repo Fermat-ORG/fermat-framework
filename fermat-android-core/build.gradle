@@ -73,23 +73,10 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-core')
     compile project(':fermat-osa-android-core')
-    // OSA Projects
-    compile project(':fermat-osa-addon-android-database-system-bitdubai')
-    compile project(':fermat-osa-addon-android-file-system-bitdubai')
-    compile project(':fermat-osa-addon-android-device-location-bitdubai')
-    compile project(':fermat-osa-addon-android-logger-bitdubai')
+
     // DMP Projects (Wallets)
     compile project(':fermat-ccp-android-reference-bitcoin-wallet-bitdubai')
     compile project(':fermat-ccp-android-clone-reference-nich-wallet')
-    /*
-                Wallets on the pipeline:
-                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai')
-                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai')
-                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai')
-                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai')
-                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai')
-                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai')
-                */
 
     // DMP Projects (Sub APPs)
     compile project(':fermat-ccp-android-sub-app-intra-user-identity-bitdubai')

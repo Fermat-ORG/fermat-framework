@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
@@ -24,7 +26,10 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TransactionMetadataState;
@@ -41,6 +46,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantAcceptCryptoRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantGetTransactionStateException;
@@ -100,6 +106,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 
@@ -144,10 +152,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    /**
-     * Represent the platformComponentProfile
-     */
-    private PlatformComponentProfile platformComponentProfile;
+
 
     /**
      * Represent the platformComponentType
@@ -174,40 +179,31 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      */
     private String extraData;
 
-    /**
-     * Represent the wsCommunicationsCloudClientManager
-     */
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
-
-    /**
-     * Represent the status of the network service
-     */
-    private ServiceStatus serviceStatus;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    private EventManager eventManager;
-
-    /**
-     * DealsWithErrors Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variable
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private EventManager eventManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    /**
-     * DealsWithPluginIdentity Interface member variables.
-     */
-    private UUID pluginId;
+
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.WS_CLOUD_CLIENT)
+    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
+
+
 
     /**
      * Hold the listeners references
      */
     private List<FermatEventListener> listenersAdded;
+
+    /**
+     * Connections arrived
+     */
+    private AtomicBoolean connectionArrived;
+
 
     /**
      * Represent the communicationNetworkServiceConnectionManager
@@ -264,10 +260,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      */
     CryptoTransmissionAgent cryptoTransmissionAgent;
 
-    /**
-     * DB
-     */
-    private Database cryptoTRansmissionDatabase;
 
     /**
      * Constructor
@@ -296,8 +288,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
          */
         if (wsCommunicationsCloudClientManager == null ||
                 pluginDatabaseSystem  == null ||
-                    errorManager      == null ||
-                        eventManager  == null) {
+                errorManager      == null ||
+                eventManager  == null) {
 
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -315,9 +307,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
-
 
 
         }
@@ -330,7 +321,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * because at this moment, is create the platformComponentProfile for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager(){
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfilePluginRoot, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
     }
 
     /**
@@ -449,7 +440,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             /*
              * Open new database connection
              */
-            this.cryptoTRansmissionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
+            this.cryptoTrasmissionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -472,7 +463,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 /*
                  * We create the new database
                  */
-                this.cryptoTRansmissionDatabase = cryptoTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId,CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
+                this.cryptoTrasmissionDatabase = cryptoTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId,CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -515,11 +506,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
              */
             initializeDb();
 
-            /**
-             * Initialize crypto db
-             */
-            initializeCryptoTransmissionDb();
-
             /*
              * Initialize Developer Database Factory
              */
@@ -544,13 +530,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
-            initializeCommunicationNetworkServiceConnectionManager();
-
-            /**
-             * Initialice CryptoTransmission databases
-             */
-            //TODO: ver como abrir las dos tablas mias
-
 
             /**
              * Initialice DAO
@@ -560,6 +539,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem,pluginId);
 
 
+            remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
+
+            connectionArrived = new AtomicBoolean(false);
 
             /*
              * Its all ok, set the new status
@@ -568,7 +550,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
 
 
-       } catch (CantInitializeTemplateNetworkServiceDatabaseException exception) {
+
+
+
+        } catch (CantInitializeTemplateNetworkServiceDatabaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -779,7 +764,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      */
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println(" Crypto Transmission CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
 
 
@@ -808,7 +793,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     cryptoTransmissionMetadataDAO,
                     communicationNetworkServiceConnectionManager,
                     wsCommunicationsCloudClientManager,
-                    platformComponentProfile,
+                    platformComponentProfileRegistered,
                     errorManager,
                     new ArrayList<PlatformComponentProfile>(),
                     identity
@@ -952,7 +937,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * @see NetworkService#getPlatformComponentProfilePluginRoot()
      */
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
-        return platformComponentProfile;
+        return platformComponentProfilePluginRoot;
     }
 
     /**
@@ -979,7 +964,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * @param platformComponentProfile
      */
     public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
-        this.platformComponentProfile = platformComponentProfile;
+        this.platformComponentProfilePluginRoot = platformComponentProfile;
     }
 
     /**
@@ -1056,7 +1041,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
          */
         try {
 
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfilePluginRoot, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
