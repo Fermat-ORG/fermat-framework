@@ -1,6 +1,7 @@
 == Chapter 20: Fermat Marketing Platform
 === Marketing with Digital Assets 
-
+The first implementation for Digital Assets aims to provide the Marketing Sector with a valuable tool for medium to large size enterprises 
+to run their campaigns profiting from the advantages of this technology. 
 
 
 ////
