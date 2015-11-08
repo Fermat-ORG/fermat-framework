@@ -449,13 +449,13 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
         listenersAdded.add(fermatEventListener);
 
 
-         /*
-         * Listen and handle New Message Receive Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this, eventManager));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
+//         /*
+//         * Listen and handle New Message Receive Notification Event
+//         */
+//        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+//        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this, eventManager));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
 
     }
 
