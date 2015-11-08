@@ -569,11 +569,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         try {
             ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
             if (actorAssetUser == null) {
-//            for (int i = 9; i < 10; i++) {
-//                String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
                 String assetUserActorPublicKey = UUID.randomUUID().toString();
-//                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
-//                CryptoAddress genesisAddress = getGenesisAddress();
                 Genders genders = Genders.MALE;
                 String age = "25";
                 ConnectionState connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
@@ -600,18 +596,6 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 //                this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record, ConnectionState.CONNECTED,record.getCryptoAddress());
             }
 
-//            registerActorInActorNetowrkSerice();
-//                else {
-            /**
-             * Register User in Table Actor Asset User Registered,
-             * Simulating other users on their devices, Registered in (Actor Network Service User)
-             */
-            // this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record);
-//                }
-//                registerGenesisAddressInCryptoAddressBook(genesisAddress);
-
-
-//            }
         } catch (CantAddPendingAssetUserException e) {
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
         } catch (Exception e) {
@@ -675,32 +659,6 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         listenersAdded.add(cryptoAddressReceivedEventListener);*/
     }
 
-    private void testRaiseEvent() {
-        FermatEvent eventToRaise;
-
-//        System.out.println("Start event TEST Actor Asset User");
-//        eventToRaise = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
-//        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
-//        eventManager.raiseEvent(eventToRaise);
-//        System.out.println("End event TEST Actor Asset User");
-
-//        System.out.println("Start event TEST Actor Asset User");
-//        eventToRaise = eventManager.getNewEvent(EventType.ACTOR_ASSET_USER_REQUEST_CRYPTO_ADDRESS_NOTIFICATION);
-//        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
-//        eventManager.raiseEvent(eventToRaise);
-//        System.out.println("End event TEST Actor Asset User");
-//
-//        System.out.println("Start event TEST Actor Asset User");
-//        eventToRaise = eventManager.getNewEvent(EventType.ACTOR_ASSET_USER_SEND_CRYPTO_ADDRESS_NOTIFICATION);
-//        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
-//        eventManager.raiseEvent(eventToRaise);
-//        System.out.println("End event TEST Actor Asset User");
-    }
-
-    @Override
-    public void setCryptoAddress(ActorAssetUser actorAssetUser) {
-
-    }
 
     public void handleCryptoAddressesNewsEvent() throws CantHandleCryptoAddressesNewsEventException {
         final List<CryptoAddressRequest> list;
@@ -712,11 +670,14 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                     + "\n-------------------------------------------------");
             for (final CryptoAddressRequest request : list) {
 
-                if (request.getAction().equals(RequestAction.ACCEPT))
-                    this.handleCryptoAddressReceivedEvent(request);
+                if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.DAP_ASSET)) {
+
+                    if (request.getAction().equals(RequestAction.ACCEPT))
+                        this.handleCryptoAddressReceivedEvent(request);
 
 //                if (request.getAction().equals(RequestAction.DENY))
 //                    this.handleCryptoAddressDeniedEvent(request);
+                }
             }
         } catch(CantListPendingCryptoAddressRequestsException |
 //                CantHandleCryptoAddressDeniedActionException |
