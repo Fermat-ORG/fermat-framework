@@ -41,9 +41,11 @@ dependencies {
     compile project(':fermat-osa-addon-android-file-system-bitdubai')
     compile project(':fermat-osa-addon-android-device-location-bitdubai')
     compile project(':fermat-osa-addon-android-logger-bitdubai')
-    compile 'com.android.support:appcompat-v7:21.+'
-    compile 'com.android.support:support-v13:21.+'
-    compile 'com.android.support:support-v4:21.+'
+
+    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.android.support:support-v13:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+
     testCompile 'org.robolectric:robolectric:3.0+'
     testCompile 'junit:junit:4.11+'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'

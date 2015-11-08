@@ -42,5 +42,5 @@ public interface IdentityAssetIssuer extends ActiveIdentity {
      * @return the signature
      * @throws CantSingMessageException
      */
-    String createMessageSignature(String message) ;
+    String createMessageSignature(String message) /*throws CantSingMessageException*/;
 }

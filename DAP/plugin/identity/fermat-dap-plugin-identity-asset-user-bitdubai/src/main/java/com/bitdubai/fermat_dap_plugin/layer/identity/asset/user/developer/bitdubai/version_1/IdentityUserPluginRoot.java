@@ -18,12 +18,16 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.database.AssetUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantListAssetUserIdentitiesException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.structure.IdentityAssetUserManagerImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -45,7 +49,7 @@ import java.util.UUID;
  * Created by Nerio on 07/09/15.
  * Modified by Franklin 03/11/2015
  */
-public class IdentityUserPluginRoot implements DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithLogger, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, IdentityAssetUserManager, LogManagerForDevelopers, Plugin, Service, Serializable  {
+public class IdentityUserPluginRoot implements DealsWithActorAssetUser, DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithLogger, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, IdentityAssetUserManager, LogManagerForDevelopers, Plugin, Service, Serializable  {
 
     /**
      * Service Interface member variables.
@@ -77,11 +81,13 @@ public class IdentityUserPluginRoot implements DatabaseManagerForDevelopers, Dea
      * DealsWithLogger Interface member variables.
      */
     LogManager logManager;
-    /**
-     * DealsWithLogger interface member variable
-     */
 
     IdentityAssetUserManagerImpl identityAssetUserManager;
+
+    /**
+     * DealsWithActorAssetUser interface member variable
+     */
+    ActorAssetUserManager actorAssetUserManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -101,7 +107,6 @@ public class IdentityUserPluginRoot implements DatabaseManagerForDevelopers, Dea
     /**
      * DealsWithErrors Interface implementation.
      */
-
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
@@ -130,6 +135,14 @@ public class IdentityUserPluginRoot implements DatabaseManagerForDevelopers, Dea
     @Override
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
+    }
+
+    /**
+     * DealsWithActorAssetUser interface member variable
+     */
+    @Override
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
+        this.actorAssetUserManager = actorAssetUserManager;
     }
 
     @Override
@@ -192,11 +205,9 @@ public class IdentityUserPluginRoot implements DatabaseManagerForDevelopers, Dea
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
                     this.pluginId,
-                    this.deviceUserManager);
+                    this.deviceUserManager,
+                    this.actorAssetUserManager);
 
-            identityAssetUserManager.initializeDatabase();
-
-            //TODO:Revisar como registrar con el Network Service
             registerIdentities();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -264,7 +275,8 @@ public class IdentityUserPluginRoot implements DatabaseManagerForDevelopers, Dea
         return identityAssetUserManager.hasIntraUserIdentity();
     }
 
-    public void registerIdentities(){
+    public void registerIdentities() throws CantListAssetUserIdentitiesException {
         identityAssetUserManager.registerIdentities();
     }
+
 }

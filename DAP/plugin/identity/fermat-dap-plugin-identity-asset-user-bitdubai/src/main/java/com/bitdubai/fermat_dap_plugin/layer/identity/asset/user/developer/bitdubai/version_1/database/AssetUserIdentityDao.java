@@ -58,10 +58,16 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
 
-    public AssetUserIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetUserIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) throws CantInitializeAssetUserIdentityDatabaseException{
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+
+        try {
+            initializeDatabase();
+        } catch (CantInitializeAssetUserIdentityDatabaseException e) {
+            throw new CantInitializeAssetUserIdentityDatabaseException(e.getMessage());
+        }
     }
 
     /**
@@ -79,7 +85,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
      *
      * @throws CantInitializeAssetUserIdentityDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeAssetUserIdentityDatabaseException {
+    private void initializeDatabase() throws CantInitializeAssetUserIdentityDatabaseException {
         try {
 
              /*
@@ -138,7 +144,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
 
         try {
             if (aliasExists (alias)) {
-                throw new CantCreateNewDeveloperException ("Cant create new Asset Issuer, alias exists.", "Asset Issuer Identity", "Cant create new Asset Issuer, alias exists.");
+                throw new CantCreateNewDeveloperException ("Cant create new Asset User, alias exists.", "Asset User Identity", "Cant create new Asset User, alias exists.");
             }
 
             persistNewUserPrivateKeysFile(publicKey, privateKey);
@@ -157,39 +163,39 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
 
         } catch (CantInsertRecordException e){
             // Cant insert record.
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Asset IssuerIdentity", "Cant create new Asset Issuer, insert database problems.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Asset User Identity", "Cant create new Asset User, insert database problems.");
 
         } catch (CantPersistPrivateKeyException e){
             // Cant insert record.
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Asset Issuer Identity", "Cant create new Asset Issuer,persist private key error.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Asset User Identity", "Cant create new Asset User,persist private key error.");
 
         } catch (Exception e) {
             // Failure unknown.
 
-            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Asset Issuer Identity", "Cant create new Asset Issuer, unknown failure.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Asset User Identity", "Cant create new Asset User, unknown failure.");
         }
     }
 
-    public List<IdentityAssetUser> getAllIntraUserFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListAssetUserIdentitiesException {
+    public List<IdentityAssetUser> getIdentityAssetUsersFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListAssetUserIdentitiesException {
 
 
         // Setup method.
         List<IdentityAssetUser> list = new ArrayList<IdentityAssetUser>(); // Intra User list.
         DatabaseTable table; // Intra User table.
 
-        // Get Intra Users identities list.
+        // Get Asset Users identities list.
         try {
 
             /**
              * 1) Get the table.
              */
-            table = this.database.getTable (AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME);
+            table = this.database.getTable(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME);
 
             if (table == null) {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException ("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
+                throw new CantGetUserDeveloperIdentitiesException ("Cant get Asset User identity list, table not found.", "Asset User", "Cant get Intra User identity list, table not found.");
             }
 
 
@@ -205,26 +211,26 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
                 list.add(null);
                 list.add(new IdentityAssetUsermpl(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue (AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getAssetIssuerIdentityPrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        getAssetUserIdentityPrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                        getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem,
                         pluginId));
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListAssetUserIdentitiesException(e.getMessage(), e, "Asset Issuer Identity", "Cant load " + AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantListAssetUserIdentitiesException(e.getMessage(), e, "Asset User Identity", "Cant load " + AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME + " table in memory.");
         } catch (CantGetAssetUserIdentityPrivateKeyException e) {
             // Failure unknown.
-            throw new CantListAssetUserIdentitiesException(e.getMessage(), e, "Asset Issuer Identity", "Can't get private key.");
+            throw new CantListAssetUserIdentitiesException(e.getMessage(), e, "Asset User Identity", "Can't get private key.");
 
         } catch (Exception e) {
-            throw new CantListAssetUserIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Identity", "Cant get Asset Issuer identity list, unknown failure.");
+            throw new CantListAssetUserIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Asset User Identity", "Cant get Asset User identity list, unknown failure.");
         }
 
         // Return the list values.
         return list;
     }
 
-    public byte[] getAssetIssuerProfileImagePrivateKey(String publicKey) throws CantGetAssetUserIdentityProfileImageException {
+    public byte[] getAssetUserProfileImagePrivateKey(String publicKey) throws CantGetAssetUserIdentityProfileImageException {
         byte[] profileImage;
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
@@ -324,7 +330,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
             table = this.database.getTable (AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME);
 
             if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists", "Asset Issuer Identity", "");
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists", "Asset User Identity", "");
             }
 
             table.setStringFilter(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
@@ -334,14 +340,14 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
 
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateNewDeveloperException (em.getMessage(), em, "Asset Issuer  Identity", "Cant load " + AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantCreateNewDeveloperException (em.getMessage(), em, "Asset User  Identity", "Cant load " + AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME + " table in memory.");
 
         } catch (Exception e) {
-            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Asset Issuer  Identity", "unknown failure.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Asset User  Identity", "unknown failure.");
         }
     }
 
-    public String getAssetIssuerIdentityPrivateKey(String publicKey) throws CantGetAssetUserIdentityPrivateKeyException {
+    public String getAssetUserIdentityPrivateKey(String publicKey) throws CantGetAssetUserIdentityPrivateKeyException {
         String privateKey = "";
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,

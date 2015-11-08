@@ -56,7 +56,7 @@ public final class FermatPluginManager {
 
                 final AddonVersionReference platformFileSystemReference = new AddonVersionReference(
                         Platforms.OPERATIVE_SYSTEM_API,
-                        Layers.ANDROID,
+                        Layers.SYSTEM,
                         Addons.PLATFORM_FILE_SYSTEM,
                         Developers.BITDUBAI,
                         new Version()
@@ -64,7 +64,9 @@ public final class FermatPluginManager {
 
                 final PlatformFileSystem platformFileSystem = (PlatformFileSystem) addonManager.startAddonAndReferences(platformFileSystemReference);
 
-                return new FermatPluginIdsManager(platformFileSystem);
+                this.pluginIdsManager = new FermatPluginIdsManager(platformFileSystem);
+
+                return  this.pluginIdsManager;
 
             } catch (final CantStartAddonException  |
                            VersionNotFoundException e) {
@@ -92,9 +94,10 @@ public final class FermatPluginManager {
 
             final AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
 
-            if (abstractPlugin.isStarted()) {
+            if (abstractPlugin.isStarted())
                 return abstractPlugin;
-            }
+
+            System.out.println("Init Plugin Start-Up: " + pluginVersionReference.toString3());
 
             final List<AddonVersionReference> neededAddons = abstractPlugin.getNeededAddons();
 
@@ -113,6 +116,8 @@ public final class FermatPluginManager {
             abstractPlugin.setId(pluginIdsManager.getPluginId(pluginVersionReference));
 
             startPlugin(abstractPlugin);
+
+            System.out.println("End  Plugin Start-Up: " + pluginVersionReference.toString3());
 
             return abstractPlugin;
         } catch (CantListNeededReferencesException e) {

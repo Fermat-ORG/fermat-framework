@@ -20,7 +20,7 @@ public interface CashMoneyManager {
                 ,final String status
                 ,final String balanceType
                 ,final String transactionType
-                ,final float amount
+                ,final double amount
                 ,final String cashCurrencyType
                 ,final String cashReference
                 ,final long runningBookBalance

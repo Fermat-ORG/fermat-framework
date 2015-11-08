@@ -236,6 +236,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public boolean onCreateOptionsMenu(Menu menu) {
 
         try {
+            menu.clear();
             //mainMenu = getActivityUsedType().getMainMenu();
             if (mainMenu != null) {
                 for (com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem : mainMenu.getMenuItems()) {
@@ -714,8 +715,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     @Override
     protected void onResume() {
         super.onResume();
-        getNotificationManager().addObserver(this);
-        getNotificationManager().addCallback(this);
+        try {
+            getNotificationManager().addObserver(this);
+            getNotificationManager().addCallback(this);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -726,8 +731,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     @Override
     protected void onPause() {
         super.onPause();
-        getNotificationManager().deleteObserver(this);
-        getNotificationManager().deleteCallback(this);
+        try {
+            getNotificationManager().deleteObserver(this);
+            getNotificationManager().deleteCallback(this);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -1241,8 +1250,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * CBP
      */
     public CryptoBrokerWalletModuleManager getCryptoBrokerWalletModuleManager() {
-        //return (CryptoBrokerWalletModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BRO);
-        return null;
+        return (CryptoBrokerWalletModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE);
     }
 
     /**

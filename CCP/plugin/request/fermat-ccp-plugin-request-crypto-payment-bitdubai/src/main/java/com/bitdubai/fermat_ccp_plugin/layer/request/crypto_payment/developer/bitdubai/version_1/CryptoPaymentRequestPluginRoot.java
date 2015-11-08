@@ -3,7 +3,12 @@ package com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bi
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -35,7 +40,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * The plugin <code>Crypto Payment</code> of <code>Request</code> is responsible for managing crypto payments request in
@@ -55,40 +59,33 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
         DealsWithPluginDatabaseSystem,
         DealsWithWalletManager {
 
-    public CryptoPaymentRequestPluginRoot() {
-        super(new PluginVersionReference(new Version()));
-    }
-
-    /**
-     * DealsWithCryptoPaymentRequestNetworkService Interface member variables
-     */
-    private CryptoPaymentRequestManager cryptoPaymentRequestManager;
-
-    /*
-     * DealsWithErrors Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    /*
-     * DealsWithEvents Interface member variables
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private EventManager eventManager;
-    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-    /**
-     * DealsWithOutgoingIntraActor Interface member variables
-     */
-    private OutgoingIntraActorManager outgoingIntraActorManager;
-
-    /*
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    /*
-     * DealsWithWalletManager Interface member variables.
-     */
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_PAYMENT_REQUEST)
+    private CryptoPaymentRequestManager cryptoPaymentRequestManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.OUTGOING_INTRA_ACTOR  )
+    private OutgoingIntraActorManager outgoingIntraActorManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE     , plugin = Plugins.WALLET_MANAGER        )
     private WalletManagerManager walletManagerManager;
+
+
+
+    private final List<FermatEventListener> listenersAdded;
+
+    public CryptoPaymentRequestPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+
+        listenersAdded = new ArrayList<>();
+    }
 
     @Override
     public CryptoPaymentRegistry getCryptoPaymentRegistry() throws CantGetCryptoPaymentRegistryException {
