@@ -483,6 +483,14 @@ Regarding the rest of the interfaces of Version 1, in this case they don't need 
 As each Plug-in is a _Service_ that can be started, paused and stopped by the Framework, if you need to do something when this is happening, you can override the services methods from AbstractPlugin.
 
 
+
+
+# FROM HERE 
+
+#### SOMEBODY SHOUD CONTINUE THE STYLE, FORMAT AND QUIALITY OF THE EXPLANATION THAT COMES FROM THE TOP -- Luis Molina
+
+
+
 <br>
 #### Public Interfaces
 
@@ -516,7 +524,7 @@ Here are some examples:
   3. PLUGIN_TABLE_COLUMN_NAME public static final String = "any_column_name";
 * 'Name of the plug-in' DatabaseFactory. This class is responsible for creating the tables in the database Where it is to keep the information.
 
-Additionally, if required that information the database can be displayed through the SubApp Develop, present at runtime on the App Fermat, the implementation of the class' name plug-in'DeveloperDatabaseFactory is required. This class will be instantiated by the PluginRoot class Plug-in par achieve the aforementioned display.
+Additionally, if required that information the database can be displayed through the SubApp Develop, present at runtime on the App Fermat, the implementation of the class' name plug-in'DeveloperDatabaseFactory is required. This class will be instantiated by the PluginRoot class Plug-in for achieve the aforementioned display.
 
 To facilitate the work of creating these classes, Fermat has developed a script in Groovy, which automates the creation of these classes, following the established design, this plugin is available at: https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/documentation_en.md and https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/script.groovy
 

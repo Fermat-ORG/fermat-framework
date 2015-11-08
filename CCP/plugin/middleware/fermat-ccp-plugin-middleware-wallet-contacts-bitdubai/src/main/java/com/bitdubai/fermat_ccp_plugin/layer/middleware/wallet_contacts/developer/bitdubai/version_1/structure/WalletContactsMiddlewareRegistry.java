@@ -361,9 +361,6 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         try {
             final List<CryptoAddressRequest> list = cryptoAddressesManager.listAllPendingRequests();
 
-            System.out.println("----------------------------\n" +
-                    "WALLET CONTACT MIDDLEWARE  : handleCryptoAddressesNewsEvent " + list.size()
-                    + "\n-------------------------------------------------");
 
             for (final CryptoAddressRequest request : list) {
 

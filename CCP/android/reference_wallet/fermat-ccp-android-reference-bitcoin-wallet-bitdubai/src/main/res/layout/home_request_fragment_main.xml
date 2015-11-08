@@ -27,7 +27,7 @@
                 android:paddingLeft="7dip"
                 android:paddingRight="7dip"
                 android:id="@+id/send_form"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <RelativeLayout
                     android:layout_width="match_parent"

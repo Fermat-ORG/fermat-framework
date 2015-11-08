@@ -15,8 +15,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUsers;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.DealsWithCCPActorIntraWalletUsers;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
@@ -61,7 +61,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
         DealsWithCryptoAddressesNetworkService,//
         DealsWithCryptoPayment,//
         DealsWithCryptoTransmissionNetworkService,//
-        DealsWithCCPIntraWalletUsers,//
+        DealsWithCCPActorIntraWalletUsers,//
         DealsWithCryptoVault,
         DealsWithErrors,
         DealsWithExtraUsers,//
@@ -77,7 +77,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT   , plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.LOG_MANAGER)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
@@ -99,7 +99,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
 
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY   , plugin = Plugins.INTRA_WALLET_USER)
-    private IntraWalletUserManager intraWalletUserManager;
+    private IntraWalletUserActorManager intraWalletUserManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION   , plugin = Plugins.OUTGOING_EXTRA_USER)
     private OutgoingExtraUserManager outgoingExtraUserManager;
@@ -135,7 +135,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
             walletModuleCryptoWallet.setOutgoingExtraUserManager(outgoingExtraUserManager);
             walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
             walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
-            walletModuleCryptoWallet.setIntraWalletUserManager(intraWalletUserManager);
+            walletModuleCryptoWallet.setIntraWalletUserIdentityManager(intraWalletUserManager);
             walletModuleCryptoWallet.setCryptoTransmissionNetworkService(cryptoTransmissionNetworkServiceManager);
 //            walletModuleCryptoWallet.setActorIntraUserManager(this.intraUserManager);
             walletModuleCryptoWallet.setCryptoPaymentManager(this.cryptoPaymentManager);
@@ -265,7 +265,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public void setIntraWalletUserManager(com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserManager) {
+    public void setIntraWalletUserIdentityManager(IntraWalletUserActorManager intraWalletUserManager) {
         this.intraWalletUserManager = intraWalletUserManager;
     }
 

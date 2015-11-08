@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
@@ -21,7 +20,7 @@ import java.util.List;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/10/2015.
  */
-public class FermatAddonManager {
+public final class FermatAddonManager {
 
     private final FermatSystemContext systemContext  ;
 
@@ -34,11 +33,13 @@ public class FermatAddonManager {
                                                                                                                  VersionNotFoundException {
 
         try {
+
             final AbstractAddon abstractAddon = systemContext.getAddonVersion(addonVersionReference);
 
-            if (abstractAddon.isStarted()) {
+            if (abstractAddon.isStarted())
                 return abstractAddon;
-            }
+
+            System.out.println("Init Addon Start-Up: " + addonVersionReference.toString3());
 
             final List<AddonVersionReference> neededAddons = abstractAddon.getNeededAddons();
 
@@ -47,10 +48,8 @@ public class FermatAddonManager {
                 abstractAddon.assignAddonReference(reference);
             }
 
-            if (abstractAddon.isDealsWithOsContext())
-                abstractAddon.setOsContext(systemContext.getOsContext());
-
             startAddon(abstractAddon);
+            System.out.println("End  Addon Start-Up: " + addonVersionReference.toString3());
 
             return abstractAddon;
         } catch (CantListNeededReferencesException e) {
@@ -78,7 +77,6 @@ public class FermatAddonManager {
             return;
 
         try {
-
             if(abstractAddon.isDealsWithOsContext())
                 abstractAddon.setOsContext(systemContext.getOsContext());
 

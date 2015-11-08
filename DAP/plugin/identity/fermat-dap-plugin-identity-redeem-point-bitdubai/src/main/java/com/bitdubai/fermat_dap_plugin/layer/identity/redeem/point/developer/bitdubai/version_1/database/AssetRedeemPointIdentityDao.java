@@ -58,10 +58,17 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
 
-    public AssetRedeemPointIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetRedeemPointIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) throws CantInitializeAssetRedeemPointIdentityDatabaseException
+    {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+
+        try {
+            initializeDatabase();
+        } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+            throw new CantInitializeAssetRedeemPointIdentityDatabaseException(e.getMessage());
+        }
     }
 
     /**
@@ -79,7 +86,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
      *
      * @throws CantInitializeAssetRedeemPointIdentityDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeAssetRedeemPointIdentityDatabaseException {
+    private void initializeDatabase() throws CantInitializeAssetRedeemPointIdentityDatabaseException {
         try {
 
              /*
@@ -170,14 +177,14 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
         }
     }
 
-    public List<RedeemPointIdentity> getAllIntraUserFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListAssetRedeemPointIdentitiesException {
+    public List<RedeemPointIdentity> getIdentityAssetRedeemPointsFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListAssetRedeemPointIdentitiesException {
 
 
         // Setup method.
         List<RedeemPointIdentity> list = new ArrayList<>(); // Intra User list.
         DatabaseTable table; // Intra User table.
 
-        // Get Intra Users identities list.
+        // Get Redeem Point identities list.
         try {
 
             /**
@@ -193,12 +200,12 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
             }
 
 
-            // 2) Find the Intra users.
+            // 2) Find the Redeem Point.
             table.setStringFilter(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
 
-            // 3) Get Intra users.
+            // 3) Get Redeem Point.
             for (DatabaseTableRecord record : table.getRecords ()) {
 
                 // Add records to list.

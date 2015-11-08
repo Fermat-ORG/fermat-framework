@@ -1,63 +1,49 @@
 package com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.layer.DAPException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.DealsWithActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DealsWithAssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetRedeemPointWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.DealsWithAssetRedeemPointWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.RedeemPointRedemptionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDAO;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionEventListException;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException;
-import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantPersistTransactionMetadataException;
-import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.RecordsNotFoundException;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.AssetRedeemPointWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -69,7 +55,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 23/10/15.
  */
-public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity, DealsWithAssetTransmissionNetworkServiceManager, DealsWithActorAssetRedeemPoint, DealsWithAssetRedeemPointWallet, DealsWithActorAssetUser, DealsWithPluginFileSystem {
+public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity, DealsWithAssetTransmissionNetworkServiceManager, DealsWithActorAssetRedeemPoint, DealsWithAssetRedeemPointWallet, DealsWithActorAssetUser, DealsWithPluginFileSystem, DealsWithBitcoinNetwork {
 
     //VARIABLE DECLARATION
     private ServiceStatus status;
@@ -82,7 +68,6 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
     private LogManager logManager;
     private AssetTransmissionNetworkServiceManager assetTransmissionManager;
     private PluginDatabaseSystem pluginDatabaseSystem;
-    private Thread agentThread;
     private RedemptionAgent agent;
 
     //VARIABLES ACCESSED BY AGENT INNER CLASS.
@@ -92,8 +77,8 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
     private volatile PluginFileSystem pluginFileSystem;
     private volatile ActorAssetRedeemPointManager actorAssetRedeemPointManager;
     private volatile AssetRedeemPointWalletManager assetRedeemPointWalletManager;
-    private volatile AssetRedeemPointWallet wallet;
     private volatile ActorAssetUserManager actorAssetUserManager;
+    private volatile BitcoinNetworkManager bitcoinNetworkManager;
     private volatile CountDownLatch latch;
 
 
@@ -127,14 +112,9 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
         try {
             logManager.log(RedeemPointRedemptionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: starting...", null, null);
             latch = new CountDownLatch(1);
-            agent = new RedemptionAgent(pluginId, pluginFileSystem);
-            agentThread = new Thread(agent);
-            //TODO LOAD WALLET
-            //wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("WALLET ID");
+            agent = new RedemptionAgent(pluginId, pluginFileSystem, actorAssetUserManager);
+            Thread agentThread = new Thread(agent);
             agentThread.start();
-        } catch (CantSetObjectException e) {
-            //THIS CAN'T NEVER HAPPEN. I ALREADY ENSURE THAT THERE AREN'T NULL REFERENCES.
-            throw new CantStartAgentException();
         } catch (Exception e) {
             throw new CantStartAgentException();
         }
@@ -209,19 +189,26 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
         this.pluginFileSystem = pluginFileSystem;
     }
 
+    @Override
+    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
+        this.bitcoinNetworkManager = bitcoinNetworkManager;
+    }
+
     public boolean isMonitorAgentActive() {
         return status == ServiceStatus.STARTED;
     }
+
 
     //INNER CLASSES
     private class RedemptionAgent extends AbstractDigitalAssetVault implements Runnable {
 
         private volatile boolean agentRunning;
-        private volatile int WAIT_TIME = 20; //SECONDS
+        private static final int WAIT_TIME = 20; //SECONDS
 
-        public RedemptionAgent(UUID pluginId, PluginFileSystem pluginFileSystem) throws CantSetObjectException {
+        public RedemptionAgent(UUID pluginId, PluginFileSystem pluginFileSystem, ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
             super.setPluginId(pluginId);
             super.setPluginFileSystem(pluginFileSystem);
+            super.setActorAssetUserManager(actorAssetUserManager);
             startAgent();
         }
 
@@ -259,8 +246,12 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
                                 DigitalAsset digitalAsset = metadata.getDigitalAsset();
                                 String transactionId = assetMetadataTransaction.getGenesisTransaction();
 
+                                //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
+                                //BUT THAT'S NOT YET IMPLEMENTED.
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
+
                                 dao.updateTransactionStatusById(DistributionStatus.CHECKING_HASH, transactionId);
-                                boolean hashValid = AssetVerification.isDigitalAssetHashValid(metadata);
+                                boolean hashValid = AssetVerification.isDigitalAssetHashValid(bitcoinNetworkManager, metadata);
                                 if (!hashValid) {
                                     dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_HASH, transactionId);
                                     //TODO: SEND MESSAGE.
@@ -279,21 +270,10 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
 
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
                                 assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
-                                        digitalAsset,
-                                        digitalAsset.getIdentityAssetIssuer().getPublicKey(),
-                                        digitalAsset.getName(),
-                                        digitalAsset.getDescription(),
+                                        assetMetadataTransaction,
                                         actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
-                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getCryptoAddress(),
-                                        assetMetadataTransaction.getSenderId(),
-                                        assetMetadataTransaction.getReceiverId(),
-                                        Actors.DAP_ASSET_USER,
-                                        Actors.DAP_ASSET_REDEEM_POINT,
-                                        digitalAsset.getGenesisAmount(),
-                                        System.currentTimeMillis(),
-                                        "MEMO HERE.",
-                                        metadata.getDigitalAssetHash(),
-                                        metadata.getGenesisTransaction());
+                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getCryptoAddress());
+
                                 AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.BOOK);
 
                                 //CREDIT ON BOOK BALANCE
@@ -326,25 +306,19 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
 
                                 String userPublicKey = dao.getSenderPublicKeyById(transactionId);
 
+                                //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
+                                //BUT THAT'S NOT YET IMPLEMENTED.
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
+
                                 DigitalAssetMetadata metadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
-                                DigitalAsset digitalAsset = metadata.getDigitalAsset();
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
                                 assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
-                                        digitalAsset,
-                                        digitalAsset.getIdentityAssetIssuer().getPublicKey(),
-                                        digitalAsset.getName(),
-                                        digitalAsset.getDescription(),
-                                        actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
-                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getCryptoAddress(),
+                                        metadata,
+                                        transactionId,
                                         userPublicKey,
                                         actorAssetRedeemPointManager.getActorAssetRedeemPoint().getPublicKey(),
-                                        Actors.DAP_ASSET_USER,
-                                        Actors.DAP_ASSET_REDEEM_POINT,
-                                        digitalAsset.getGenesisAmount(),
-                                        System.currentTimeMillis(),
-                                        "MEMO HERE.",
-                                        metadata.getDigitalAssetHash(),
-                                        metadata.getGenesisTransaction());
+                                        actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
+                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getCryptoAddress());
 
                                 //CREDIT ON AVAILABLE BALANCE.
                                 AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.AVAILABLE);
@@ -360,6 +334,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
                             break;
 
                         default:
+                            dao.updateEventStatus(EventStatus.NOTIFIED, eventId); //I can't do anything with this event!
                             logManager.log(LogLevel.MODERATE_LOGGING, "RPR Received an event it can't handle.", "The given event: " + dao.getEventTypeById(eventId) + " cannot be handle by the RPR Agent...", null);
                             //I CANNOT HANDLE THIS EVENT.
                             break;

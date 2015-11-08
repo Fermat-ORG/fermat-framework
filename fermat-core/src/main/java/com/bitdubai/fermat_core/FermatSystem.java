@@ -3,28 +3,24 @@ package com.bitdubai.fermat_core;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.OperativeSystems;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantCreateSystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
+import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
-
-import java.util.List;
 
 /**
  * The class <code>com.bitdubai.fermat_core.FermatSystem</code>
@@ -38,16 +34,35 @@ public final class FermatSystem {
     private final FermatAddonManager  fermatAddonManager ;
     private final FermatPluginManager fermatPluginManager;
 
-    public FermatSystem(final Object           osContext      ,
-                        final OperativeSystems operativeSystem) {
+    /**
+     * Through this Constructor, we aloud to create a new instance of the Fermat System, but we
+     * should pass it an OS context and an OSA Platform.
+     *
+     * @param osContext      operative system context instance.
+     * @param osaPlatform    OSA Platform instance.
+     *
+     * @throws CantCreateSystemException if something goes wrong.
+     */
+    public FermatSystem(final Object           osContext       ,
+                        final AbstractPlatform osaPlatform) throws CantCreateSystemException {
 
-        this.fermatSystemContext = new FermatSystemContext(osContext, operativeSystem);
+        this.fermatSystemContext = new FermatSystemContext(osContext);
         this.fermatAddonManager  = new FermatAddonManager(fermatSystemContext);
         this.fermatPluginManager = new FermatPluginManager(fermatSystemContext, fermatAddonManager);
+
+        try {
+
+            this.registerOsaPlatform(osaPlatform);
+
+        } catch (final CantRegisterPlatformException e) {
+
+            throw new CantCreateSystemException(e, "", "Error registering OSA Platform.");
+        }
     }
 
     /**
      * Here we start all the platforms of Fermat, one by one.
+     * OSA Platform will be registered in the instantiation of fermat system class, this way we ensure that it will be a osa platform registered.
      *
      * @throws CantStartSystemException if something goes wrong.
      */
@@ -57,17 +72,8 @@ public final class FermatSystem {
 
             fermatSystemContext.registerPlatform(new BCHPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
+            fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
-/*
-            final List<PluginVersionReference> referenceList = new FermatPluginReferencesCalculator(fermatSystemContext).listReferencesByInstantiationOrder(
-                new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET, Developers.BITDUBAI, new Version())
-            );
-
-            System.out.println("\n\nMostrando orden de instanciación de plugins calculada automáticamente a partir del Crypto Wallet Module: \n");
-            for (PluginVersionReference pvr : referenceList)
-                System.out.println(pvr);
-
-            System.out.println("\nFin de la lista de instanciación.\n\n");*/
 
         } catch(CantRegisterPlatformException e) {
 
@@ -79,20 +85,29 @@ public final class FermatSystem {
 
     }
 
-    public final void registerOsaPlatform(final AbstractPlatform abstractPlatform) throws CantRegisterPlatformException {
+    /**
+     * Through the method <code>registerOsaPlatform</code> we validate minimally that we're dealing with an osaPlatform.
+     *
+     * @param osaPlatform  instance of osa platform.
+     *
+     * @throws CantRegisterPlatformException if something goes wrong.
+     */
+    private void registerOsaPlatform(final AbstractPlatform osaPlatform) throws CantRegisterPlatformException {
 
-        final PlatformReference pr = abstractPlatform.getPlatformReference();
+        if (osaPlatform == null)
+            throw new CantRegisterPlatformException("abstractPlatform=null", "You have pass through parameter an OSA Platform instance.");
 
-        if (pr.getPlatform().equals(Platforms.OPERATIVE_SYSTEM_API) &&
-                !pr.getOperativeSystem().equals(OperativeSystems.INDIFFERENT))
-            fermatSystemContext.registerPlatform(abstractPlatform);
+        final PlatformReference pr = osaPlatform.getPlatformReference();
+
+        if (pr.getPlatform() != null && pr.getPlatform().equals(Platforms.OPERATIVE_SYSTEM_API))
+            fermatSystemContext.registerPlatform(osaPlatform);
         else
-            throw new CantRegisterPlatformException(abstractPlatform.getPlatformReference().toString(), "Is not an OSA specific Platform");
+            throw new CantRegisterPlatformException(osaPlatform.getPlatformReference().toString(), "Is not referenced like an OSA specific Platform.");
 
     }
 
     /**
-     * Throw the method <code>getModuleManager</code> the graphic interface can access to the modules of
+     * Through the method <code>getModuleManager</code> the graphic interface can access to the modules of
      * its sub-apps and wallets.
      *
      * @param pluginVersionReference plugin version reference data.
@@ -125,7 +140,7 @@ public final class FermatSystem {
     }
 
     /**
-     * Throw the method <code>getAddon</code> the graphic interface can access to the addons of fermat
+     * Through the method <code>getAddon</code> the graphic interface can access to the addons of fermat
      *
      * @param addonVersionReference addon version reference data.
      *
@@ -154,6 +169,13 @@ public final class FermatSystem {
     public final AbstractPlugin getPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException {
 
         return fermatSystemContext.getPluginVersion(pluginVersionReference);
+    }
+
+    // TODO TEMPORAL METHOD
+    public final AbstractPlugin startAndGetPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException ,
+                                                                                                                     CantStartPluginException {
+
+        return fermatPluginManager.startPluginAndReferences(pluginVersionReference);
     }
 
 }

@@ -37,8 +37,6 @@ public class TransactionViewHolder extends ChildViewHolder {
     private Resources res;
     private View itemView;
 
-    private ImageView contactIcon;
-    private TextView txt_contactName;
     private TextView txt_amount;
     private TextView txt_notes;
     private TextView txt_time;
@@ -56,8 +54,6 @@ public class TransactionViewHolder extends ChildViewHolder {
         this.itemView = itemView;
         res = itemView.getResources();
 
-        contactIcon = (ImageView) itemView.findViewById(R.id.profile_Image);
-        txt_contactName = (TextView) itemView.findViewById(R.id.txt_contactName);
         txt_amount = (TextView) itemView.findViewById(R.id.txt_amount);
         txt_notes = (TextView) itemView.findViewById(R.id.txt_notes);
         txt_time = (TextView) itemView.findViewById(R.id.txt_time);
@@ -65,23 +61,11 @@ public class TransactionViewHolder extends ChildViewHolder {
 
     public void bind(CryptoWalletTransaction cryptoWalletTransaction) {
 
-        byte[] photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
-        Drawable drawable = getImgDrawable(photo);
-        if(drawable!=null) contactIcon.setImageDrawable(drawable);
-
-        txt_contactName.setText(cryptoWalletTransaction.getInvolvedActor().getName());
-        txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode()));
+        txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " BTC");
 
         txt_notes.setText(cryptoWalletTransaction.getMemo());
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         txt_time.setText(sdf.format(cryptoWalletTransaction.getTimestamp()));
-    }
-
-    private Drawable getImgDrawable(byte[] customerImg) {
-        if (customerImg != null && customerImg.length > 0)
-            return ImagesUtils.getRoundedBitmap(res, customerImg);
-
-        return ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image);
     }
 }

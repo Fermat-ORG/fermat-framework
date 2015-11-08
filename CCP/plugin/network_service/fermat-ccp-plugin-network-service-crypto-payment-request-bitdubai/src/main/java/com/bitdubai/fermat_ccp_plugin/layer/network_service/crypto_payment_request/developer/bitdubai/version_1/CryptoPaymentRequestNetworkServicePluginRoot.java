@@ -13,7 +13,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -101,13 +100,13 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.CLOUD_CLIENT)
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
 
@@ -655,8 +654,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters){
 
-        System.out.println("CryptoPaymentNetworkServicePluginRoot - requestRemoteNetworkServicesRegisteredList");
-
         try {
 
             /*
@@ -738,8 +735,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      */
     public void handleCompleteComponentRegistrationNotificationEvent(final PlatformComponentProfile platformComponentProfileRegistered) {
 
-        System.out.println(" Crypto Payment Request Network Service - Starting method handleCompleteComponentRegistrationNotificationEvent");
-
         /*
          * If the component registered have my profile and my identity public key
          */
@@ -751,7 +746,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
              * Mark as register
              */
             this.register = Boolean.TRUE;
-            System.out.println(" Crypto Payment Request Network Service is now registered.");
 
             try {
 
@@ -767,8 +761,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 cryptoPaymentRequestExecutorAgent.start();
 
                 addCryptoPaymentRequestListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION, new NewReceiveMessagesNotificationEventHandler(this));
-
-                System.out.println(" Crypto Payment Request Network Service Executor Agent is now running and listening New Receive Messages Notification Events.");
 
             } catch(CantStartAgentException e) {
 
@@ -789,10 +781,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
-        System.out.println(" Crypto Payment Request Network Service - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
-
-        System.out.print(" CPR NS - SUCCESSFUL CONNECTION: : " + getName());
-
         remoteNetworkServicesRegisteredList.addAllAbsent(platformComponentProfileRegisteredList);
 
     }
@@ -801,29 +789,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
     }
-
-    /**
-     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
-     */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(final PlatformComponentProfile remoteComponentProfile) {
-
-
-        System.out.println(" Crypto Payment Request Network Service - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
-
-        /*
-         * Tell the manager to handler the new connection established
-         */
-        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
-
-            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
-
-            System.out.print(" CPR NS - INCOMING CONNECTION ADDED: " + remoteComponentProfile.getAlias());
-        }
-
-    }
-
 
     public final void handleNewMessages(final FermatMessage fermatMessage) {
 
