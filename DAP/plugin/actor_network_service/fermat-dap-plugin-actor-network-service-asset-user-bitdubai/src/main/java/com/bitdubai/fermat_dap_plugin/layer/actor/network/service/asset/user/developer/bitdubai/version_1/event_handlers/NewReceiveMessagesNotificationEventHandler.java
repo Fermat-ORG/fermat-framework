@@ -55,7 +55,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
             NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageReceivedNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
 
             // if the message is destined to us.
-            if(newNetworkServiceMessageReceivedNotificationEvent.getNetworkServiceTypeApplicant() == pluginRoot.getPlatformComponentProfilePluginRoot().getNetworkServiceType()) {
+            if(newNetworkServiceMessageReceivedNotificationEvent.getNetworkServiceTypeApplicant() == pluginRoot.getNetworkServiceType()) {
 
 
                 System.out.print("NOTIFICACION EVENTO MENSAJE RECIBIDO TO ASSET USER!!!!");
