@@ -240,8 +240,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
         private void doTheMainTask() throws CantCheckAssetIssuingProgressException, CantExecuteQueryException, CantDeliverDigitalAssetToAssetWalletException {
 
-            Logger LOG = Logger.getGlobal();
-            //LOG.info("Asset Issuing monitor agent DoTheMainTask");
             try {
                 assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 //
@@ -274,13 +272,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
                 setGenesisTransactionFromOutgoingIntraActor();
                 checkTransactionsUnfinished();
-                /**
-                 * The following lines will be used in the future. Please, delete the previous lines
-                 * when the next lines will be ready to be used.
-                 checkTransactionListByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
-                 checkTransactionsCryptoStatus();
-                 checkTransactionListByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
-                 checkTransactionsCryptoStatus();*/
+
 
                 if (isReceivedDigitalAssets()){
                     List<String> genesisTransactionsFromAssetsReceived=getGenesisTransactionsFromDigitalAssetsReceived();
@@ -338,7 +330,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
          * @throws UnexpectedResultReturnedFromDatabaseException
          * @throws CantGetGenesisTransactionException
          */
-        private void checkTransactions(CryptoStatus cryptoStatus) throws CantExecuteQueryException, CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetGenesisTransactionException {
+        /*private void checkTransactions(CryptoStatus cryptoStatus) throws CantExecuteQueryException, CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetGenesisTransactionException {
 
             List<String> genesisTransactionList;
             if (isTransactionToBeNotified(CryptoStatus.PENDING_SUBMIT)){
@@ -359,7 +351,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     }
                 }
             }
-        }
+        }*/
 
         /**
          * This method checks the current transaction CryptoStatus based on events handled. Also, take actions based on the  transaction crypto status
