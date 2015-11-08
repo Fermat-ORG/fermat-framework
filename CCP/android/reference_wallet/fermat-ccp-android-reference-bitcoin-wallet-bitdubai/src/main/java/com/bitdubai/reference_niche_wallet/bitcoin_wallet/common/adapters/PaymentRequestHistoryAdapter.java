@@ -5,11 +5,13 @@ import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -22,6 +24,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  */
 public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest, PaymentHistoryItemViewHolder> {
 
+    private View.OnClickListener mOnClickListener;
     CryptoWallet cryptoWallet;
     ReferenceWalletSession referenceWalletSession;
     Typeface tf;
@@ -29,11 +32,11 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         super(context);
     }
 
-    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, CryptoWallet cryptoWallet, ReferenceWalletSession referenceWalletSession) {
+    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, CryptoWallet cryptoWallet, ReferenceWalletSession referenceWalletSession,View.OnClickListener onClickListener) {
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;
-
+        this.mOnClickListener = onClickListener;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
     }
 
@@ -77,9 +80,11 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     @Override
     protected void bindHolder(PaymentHistoryItemViewHolder holder, PaymentRequest data, int position) {
 
-        holder.getContactIcon().setImageResource(R.drawable.mati_profile);
-
-
+        try {
+            holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), data.getContact().getProfilePicture()));
+        }catch (Exception e){
+            holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.celine_profile_picture));
+        }
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
         holder.getTxt_amount().setTypeface(tf);
@@ -94,8 +99,21 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         holder.getTxt_time().setText(data.getDate());
         holder.getTxt_time().setTypeface(tf);
 
-        holder.getTxt_state().setText(data.getState());//data.getState());
-        holder.getTxt_state().setTypeface(tf);
+        //TOOD: sacado para mostrar
+//        if(data.getState() != null) {
+//            holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
+//            holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+//            holder.getTxt_state().setText(data.getState());
+//            holder.getTxt_state().setTypeface(tf);
+//        }else{
+//            holder.getLinear_layour_container_state().setVisibility(View.GONE);
+//            holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
+//        }
+
+        holder.getBtn_accept_request().setOnClickListener(mOnClickListener);
+        holder.getBtn_refuse_request().setOnClickListener(mOnClickListener);
 
     }
+
+
 }
