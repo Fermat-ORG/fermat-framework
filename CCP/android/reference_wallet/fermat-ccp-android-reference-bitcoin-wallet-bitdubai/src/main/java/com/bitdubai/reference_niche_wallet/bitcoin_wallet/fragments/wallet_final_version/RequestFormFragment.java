@@ -20,21 +20,15 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragm
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantSendCryptoException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.InsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.squareup.picasso.Picasso;
 
@@ -44,8 +38,8 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 /**
  * Created by Matias Furszyfer on 2015.11.05..
  */
-public class SendFormFragment extends FermatWalletFragment implements View.OnClickListener{
 
+public class RequestFormFragment extends FermatWalletFragment implements View.OnClickListener{
 
     /**
      * Plaform reference
@@ -70,8 +64,8 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
     private CryptoWalletWalletContact cryptoWalletWalletContact;
 
 
-    public static SendFormFragment newInstance() {
-        return new SendFormFragment();
+    public static RequestFormFragment newInstance() {
+        return new RequestFormFragment();
     }
 
     @Override
@@ -93,20 +87,17 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
-            rootView = inflater.inflate(R.layout.send_form_base, container, false);
+            rootView = inflater.inflate(R.layout.request_form_base, container, false);
             setUpUI();
             setUpActions();
             setUpUIData();
             return rootView;
         }catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
-
         return null;
     }
-
-
 
     private void setUpUI(){
         contactName = (FermatTextView) rootView.findViewById(R.id.contact_name);
@@ -117,7 +108,6 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
     }
 
     private void setUpActions(){
-
         /**
          * Listeners
          */
@@ -140,10 +130,8 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                     e.printStackTrace();
                 }
             }
-
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
@@ -155,6 +143,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
     }
 
     private void setUpUIData(){
+
         cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
         try {
             imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
@@ -180,56 +169,18 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                 im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             }
             if (cryptoWalletWalletContact != null)
-                sendCrypto();
+                sendRequest();
             else
                 Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
         }
         else if (id == R.id.imageView_contact){
             // if user press the profile image
         }
-
-
     }
 
-
     //TODO: VER QUE PASA  SI EL CONTACTO NO TIENE UNA WALLET ADDRESS
-    private void sendCrypto() {
-        CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress(), cryptoWallet);
-        if (validAddress != null) {
-            EditText amount = (EditText) rootView.findViewById(R.id.amount);
-
-            if(!amount.getText().toString().equals("") && amount.getText()!=null) {
-                try {
-                    String notes=null;
-                    if(txt_notes.getText().toString().length()!=0){
-                        notes = txt_notes.getText().toString();
-                    }
-                    cryptoWallet.send(
-                            Long.parseLong(amount.getText().toString()),
-                            validAddress,
-                            notes,
-                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
-                            intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
-                            Actors.INTRA_USER,
-                            cryptoWalletWalletContact.getActorPublicKey(),
-                            cryptoWalletWalletContact.getActorType(),
-                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
-                    );
-                    Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
-                } catch (InsufficientFundsException e) {
-                    Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
-                } catch (CantSendCryptoException e) {
-                    referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    showMessage(getActivity(), "Error send satoshis - " + e.getMessage());
-                } catch (Exception e) {
-                    referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW,UnexpectedUIExceptionSeverity.UNSTABLE,e);
-                    Toast.makeText(getActivity(),"oooopps",Toast.LENGTH_SHORT).show();
-                }
-            }
-        } else {
-            Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_LONG).show();
-
-        }
+    private void sendRequest(){
+        //TODO: chamo completá todo lo que necesites para mandar del cryptowalletwalletcontact y del referenceWalletSession que tiene el tipo de wallet y toda esa vaina
     }
 
 

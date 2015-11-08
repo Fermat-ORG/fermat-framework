@@ -86,4 +86,4 @@ link:book-appendix-01-principles.asciidoc[Appendix: Fermat Principles in Detail]
 
 link:book-appendix-02-history.asciidoc[Appendix: Fermat History]
 
-
+link:book-appendix-03-money.asciidoc[Appendix: Money and Crypto Currency]

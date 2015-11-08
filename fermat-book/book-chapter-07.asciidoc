@@ -1,13 +1,13 @@
 :numbered!:
 [[layersExplanation]]
-== Fermat layers explanation
+== Chapter 7: Fermat layers explanation
 
 The *_multilayer architecture_* reveals useful when grouping the plugins according to their common functionalities. This gives , on one hand, a certain order and structure to the system and lets identify common challenges to solve when writing code. On the other hand, the conceptual strength of using _layers_ stimulate the creation of future plugins that are revealed as necessary when decomposing a big task in smaller steps to solve and implement. What's more, plugins that are originally conceived to serve a certain function, afterwards appear to be reusable for new developments beyond their initial purpose. +
 We have already explored in the previous sections the main role of the *Core Platform* to deploy the whole system structure, and the first available services provided by the system-wide *_superlayers_* . +
 Now, let us explore the next *_layers_* following on top, which are almost present in every *_Fermat platform_* which follows. +
 *Layers* are built with a considerable atomicity in its components (i.e. each component deals with a very specific and constrained set of events) what really renders the whole Fermat system with a strong, structured and solid foundation and at the same time a large flexibility and adaptability for further development and evolution. +
 
-:numbered:
+:numbered: [start=5]
 
 === _Platform Services layer_
 The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsability from one component to another and specially the management of exceptions and track of all system's *events*.
@@ -108,7 +108,7 @@ In this layer live the part of the *wallet* responsible of the GUI (Graphic User
 
 :numbered!:
   
-=== Continue Reading
+==== Continue Reading
 link:book-chapter-08.asciidoc[Next Chapter]
 
 link:book-chapter-06.asciidoc[Previous Chapter]
