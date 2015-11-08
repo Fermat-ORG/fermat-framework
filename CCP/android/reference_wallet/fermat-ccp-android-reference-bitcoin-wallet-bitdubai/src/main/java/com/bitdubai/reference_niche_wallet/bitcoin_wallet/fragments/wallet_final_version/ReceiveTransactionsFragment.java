@@ -341,19 +341,19 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                             CryptoWalletWalletContact walletContactDatabase = cryptoWallet.findWalletContactById(walletContact.contactId,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
 
                             if (walletContact.actorPublicKey.equals(walletContactDatabase.getActorPublicKey())) {
-                                ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(), cryptoWallet, referenceWalletSession.getErrorManager(), walletContact, user_id, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-                                receiveFragmentDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialogInterface) {
-                                        boolean isShow = linear_layout_receive_form.isShown();
-                                        //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
-                                        if (isShow) {
-                                            Fx.slide_up(getActivity(), linear_layout_receive_form);
-                                            linear_layout_receive_form.setVisibility(View.GONE);
-                                        }
-                                    }
-                                });
-                                receiveFragmentDialog.show();
+                                //ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(), cryptoWallet, referenceWalletSession.getErrorManager(), walletContact, user_id, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+//                                receiveFragmentDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                                    @Override
+//                                    public void onDismiss(DialogInterface dialogInterface) {
+//                                        boolean isShow = linear_layout_receive_form.isShown();
+//                                        //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
+//                                        if (isShow) {
+//                                            Fx.slide_up(getActivity(), linear_layout_receive_form);
+//                                            linear_layout_receive_form.setVisibility(View.GONE);
+//                                        }
+//                                    }
+//                                });
+//                                receiveFragmentDialog.show();
                             } else {
                                 Toast.makeText(getActivity(), "no se que hacer", Toast.LENGTH_SHORT).show();
                                 //                            registerForContextMenu(btn_give_address);

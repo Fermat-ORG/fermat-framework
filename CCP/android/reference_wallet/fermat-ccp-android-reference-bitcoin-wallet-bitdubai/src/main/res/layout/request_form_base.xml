@@ -185,7 +185,7 @@
                         android:gravity="center_vertical"
                         android:textSize="20sp"
                         android:textStyle="normal"
-                        android:hint="Description"
+                        android:hint="Reason"
                         android:textColor="#4f4f4f"
                         android:textColorHint="#4f4f4f"
                         android:paddingTop="7dip"
@@ -214,7 +214,7 @@
                         android:padding="3dp"
                         android:clickable="true"
                         android:textSize="14sp"
-                        android:text="Confirm"
+                        android:text="Confirm request"
                         android:background="#1173aa"
                         android:textColor="#fff"
                         />
