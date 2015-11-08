@@ -847,7 +847,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            reportUnexpectedException(e);
         }
     }
 

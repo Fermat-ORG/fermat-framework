@@ -309,23 +309,27 @@ public class CryptoWalletWalletModuleManager implements
                                        final String actorPublicKey, final String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException,
                                                                            ExtraUserNotFoundException       ,
                                                                            CantGetExtraUserException        {
-        Actor actor;
-        switch (actorType) {
-            case EXTRA_USER:
-                 actor = extraUserManager.getActorByPublicKey(actorPublicKey);
-               return actor.getPhoto();
-            case INTRA_USER:
-                try {
-                    actor = intraUserManager.getActorByPublicKey(intraUserLoggedInPublicKey,actorPublicKey);
+
+        try {
+            Actor actor;
+            switch (actorType) {
+                case EXTRA_USER:
+                    actor = extraUserManager.getActorByPublicKey(actorPublicKey);
                     return actor.getPhoto();
+                case INTRA_USER:
+                    try {
+                        actor = intraUserManager.getActorByPublicKey(intraUserLoggedInPublicKey, actorPublicKey);
+                        return actor.getPhoto();
 
-                }
-                catch(CantGetIntraUserException| IntraUserNotFoundException e){
-                    throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e);
-                }
+                    } catch (CantGetIntraUserException | IntraUserNotFoundException e) {
+                        throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e);
+                    }
 
-            default:
-                throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
+                default:
+                    throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE", null, "", "incomplete switch");
+            }
+        } catch (Exception e) {
+            return new byte[0];
         }
     }
 

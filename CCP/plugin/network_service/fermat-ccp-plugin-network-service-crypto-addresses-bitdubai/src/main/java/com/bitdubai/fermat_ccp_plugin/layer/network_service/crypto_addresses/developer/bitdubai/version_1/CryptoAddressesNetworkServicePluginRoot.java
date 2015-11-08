@@ -18,9 +18,6 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.ConfirmationMessage;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -837,12 +834,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     receiveAcceptance(acceptMessage);
                     break;
 
-                case CONFIRMATION:
-                    // update the request to processing receive state with the given action.
-                    ConfirmationMessage confirmationMessage = gson.fromJson(jsonMessage, ConfirmationMessage.class);
-                    receiveConfirmation(confirmationMessage);
-                    break;
-
                 case DENY:
                     DenyMessage denyMessage = gson.fromJson(jsonMessage, DenyMessage.class);
                     receiveDenial(denyMessage);
@@ -877,7 +868,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE    ;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION    ;
             RequestType   type          = RequestType  .RECEIVED          ;
             RequestAction action        = RequestAction.REQUEST           ;
 
@@ -916,7 +907,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION;
 
             cryptoAddressesNetworkServiceDao.acceptAddressExchangeRequest(
                     acceptMessage.getRequestId(),
@@ -937,58 +928,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     /**
      * I update the record with the new address an then, i indicate the ns agent the action that it must take:
-     * - Action        : ACCEPT.
-     * - Protocol State: PROCESSING_RECEIVE.
-     */
-    private void receiveConfirmation(ConfirmationMessage confirmationMessage) throws CantReceiveAcceptanceException {
-
-        try {
-
-            CryptoAddressRequest car = cryptoAddressesNetworkServiceDao.getPendingRequest(confirmationMessage.getRequestId());
-
-            switch (car.getAction()) {
-                case ACCEPT:
-
-                    System.out.println("********* Crypto Addresses: Receiving Confirmation -> ACCEPT " + car);
-
-                    cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(car.getRequestId());
-
-                    break;
-
-                case DENY:
-
-                    System.out.println("********* Crypto Addresses: Receiving Confirmation -> DENIAL. " + car);
-
-                    cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(car.getRequestId());
-                    break;
-
-                case REQUEST:
-
-                    System.out.println("********* Crypto Addresses: Receiving Confirmation -> REQUEST. " + car);
-
-                    cryptoAddressesNetworkServiceDao.changeProtocolState(car.getRequestId(), ProtocolState.WAITING_RESPONSE);
-
-                    break;
-            }
-
-        } catch(PendingRequestNotFoundException               |
-                CantChangeProtocolStateException              |
-                CantConfirmAddressExchangeRequestException    |
-                CantGetPendingAddressExchangeRequestException e) {
-            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
-            reportUnexpectedException(e);
-            throw new CantReceiveAcceptanceException(e, "", "Error in crypto addresses DAO");
-        } catch (Exception e){
-
-            reportUnexpectedException(e);
-            throw new CantReceiveAcceptanceException(FermatException.wrapException(e), null, "Unhandled Exception.");
-        }
-    }
-
-
-
-    /**
-     * I update the record with the new address an then, i indicate the ns agent the action that it must take:
      * - Action        : DENY.
      * - Protocol State: PROCESSING_RECEIVE.
      */
@@ -996,7 +935,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION;
 
             cryptoAddressesNetworkServiceDao.denyAddressExchangeRequest(
                     denyMessage.getRequestId(),
