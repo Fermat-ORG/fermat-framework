@@ -36,6 +36,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.squareup.picasso.Picasso;
+
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
@@ -154,7 +156,11 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
 
     private void setUpUIData(){
         cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
-        imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
+        try {
+            imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
+        }catch (Exception e){
+            Picasso.with(getActivity()).load(R.drawable.profile_image).into(imageView_contact);
+        }
         contactName.setText(cryptoWalletWalletContact.getActorName());
     }
 
