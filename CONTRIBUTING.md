@@ -11,7 +11,7 @@ You are going to need the following tools in order to develop in Fermat
 * **Git**
 * **Java Standard Development Kit 7**
 * **Gradle**
-* **Android SDK Tools**
+* **Android SDK Tools 23.01**
 * **Android Development Studio or IntelliJ IDEA**
 
 Although there are many ways to configure these tools, we'll provide you with a recommended configuration for your development environment.
