@@ -239,6 +239,7 @@ import java.util.logging.Logger;
  * @version 1.0
  * @since Java JDK 1.7
  */
+
 public class Platform implements Serializable {
 
     /**
@@ -551,8 +552,6 @@ public class Platform implements Serializable {
                 fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLUGIN_FILE_SYSTEM));
                 fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.DEVICE_LOCATION));
                 fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.LOG_MANAGER));
-
-
 
             } catch(Exception e) {
                 System.out.println("apa, encontramos un error.");

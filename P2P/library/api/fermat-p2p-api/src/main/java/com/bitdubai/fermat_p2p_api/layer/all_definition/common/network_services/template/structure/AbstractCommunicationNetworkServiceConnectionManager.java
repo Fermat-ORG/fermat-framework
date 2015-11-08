@@ -113,13 +113,6 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
                                 final PlatformComponentProfile applicantNetworkService,
                                 final PlatformComponentProfile remoteParticipant      ) throws CantEstablishConnectionException {
 
-        System.out.println("********");
-        System.out.println("******** "+pluginVersionReference.toString2()+" -> ConnectTo  -> ");
-        System.out.println("******** applicantParticipant   : "+applicantParticipant);
-        System.out.println("******** applicantNetworkService: "+applicantNetworkService);
-        System.out.println("******** remoteParticipant      : "+remoteParticipant);
-        System.out.println("********");
-
         /*
          * ask to the communicationLayerManager to connect to other network service
          */

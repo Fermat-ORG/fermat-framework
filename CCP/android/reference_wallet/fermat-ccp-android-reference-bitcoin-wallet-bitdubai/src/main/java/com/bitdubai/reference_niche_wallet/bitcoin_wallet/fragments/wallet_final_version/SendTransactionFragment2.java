@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
@@ -287,7 +288,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         ArrayList<GrouperItem> data = new ArrayList<>();
 
         try {
-            String intraUserPk = null;//moduleManager.getActiveIdentities().get(0).getPublicKey();
+            String intraUserPk = referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey();
 
             List<CryptoWalletTransaction> list =moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(),intraUserPk, MAX_TRANSACTIONS, available_offset);
 
@@ -303,12 +304,14 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             for(CryptoWalletTransaction cryptoWalletTransaction : list){
                 List<CryptoWalletTransaction> lst = new ArrayList<>();
                 lst = moduleManager.getTransactions(intraUserPk,BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, 0);
-                GrouperItem<CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction>(lst,false,cryptoWalletTransaction);
+                GrouperItem<CryptoWalletTransaction,CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction,CryptoWalletTransaction>(lst,false,cryptoWalletTransaction);
                 data.add(grouperItem);
             }
 
 
         } catch (CantListTransactionsException e) {
+            e.printStackTrace();
+        } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
         return data;
