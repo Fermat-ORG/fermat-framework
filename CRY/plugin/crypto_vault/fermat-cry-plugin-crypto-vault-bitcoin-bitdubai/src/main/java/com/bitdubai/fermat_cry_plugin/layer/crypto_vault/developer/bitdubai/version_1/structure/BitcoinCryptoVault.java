@@ -470,12 +470,10 @@ public class BitcoinCryptoVault implements
             // after we persist the new Transaction, we'll persist it as a Fermat transaction.
             db.persistnewFermatTransaction(fermatTxId.toString());
 
-            // I'm experimenting addind a fixed high value for the fee. Since I'm getting Insufficient priority (66) messages.
 
-            //request.feePerKb = Coin.valueOf(1100);
-
-            request.fee = Coin.valueOf(15000);
+            // I'm adding a fixed fee for now.
             request.ensureMinRequiredFee = true;
+            request.fee = Coin.valueOf(15000);
             /**
              * If OP_return was specified then I will add an output to the transaction
              */
@@ -487,12 +485,14 @@ public class BitcoinCryptoVault implements
              * complete the transaction and commit it.
              */
             vault.completeTx(request);
-
-
             vault.commitTx(request.tx);
+            /**
+             * I get the transaction hash and persists this transaction in the database.
+             */
+            db.persistNewTransaction(fermatTxId.toString(), request.tx.getHashAsString());
             vault.saveToFile(vaultFile);
 
-            final TransactionBroadcast broadcast =peerGroup.broadcastTransaction(request.tx);
+            final TransactionBroadcast broadcast = peerGroup.broadcastTransaction(request.tx);
             broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
                 @Override
                 public void onBroadcastProgress(double progress) {
@@ -500,15 +500,12 @@ public class BitcoinCryptoVault implements
                 }
             });
 
-
+            broadcast.broadcast().get(10, TimeUnit.SECONDS);
             broadcast.future().get(10, TimeUnit.SECONDS);
 
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
 
-            /**
-             * I get the transaction hash and persists this transaction in the database.
-             */
-            db.persistNewTransaction(fermatTxId.toString(), request.tx.getHashAsString());
+
 
             //returns the created transaction id
             return request.tx.getHashAsString();

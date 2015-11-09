@@ -1,12 +1,13 @@
 /*
  * @#CommunicationServerPluginRoot.java - 2015
  * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
+ * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 
@@ -55,11 +57,6 @@ import java.util.regex.Pattern;
  * @version 1.0
  */
 public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implements
-        DealsWithDeviceLocation,
-        DealsWithErrors,
-        DealsWithEvents,
-        DealsWithLogger,
-        DealsWithPluginFileSystem,
         LogManagerForDevelopers,
         WsCommunicationsCloudClientManager {
 
@@ -67,16 +64,16 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Addons References definition...
      */
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.PLATFORM_SERVICE, addon = Addons.LOG_MANAGER)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.PLATFORM_SERVICE, addon = Addons.DEVICE_LOCATION)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
     private LocationManager locationManager;
 
     /**
@@ -102,8 +99,8 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
-   // public static final String SERVER_IP = "52.11.156.16"; //AWS
-    public static final String SERVER_IP = "192.168.42.5";
+//    public static final String SERVER_IP = "52.11.156.16"; //AWS
+    public static final String SERVER_IP = "192.168.0.103";
 
     /**
      * Represent the DEFAULT_PORT
@@ -179,8 +176,8 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
          */
         if (eventManager == null            ||
                 logManager  == null         ||
-                locationManager == null ||
-                errorManager == null) {
+                    locationManager == null ||
+                        errorManager == null) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -276,16 +273,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * (non-Javadoc)
      *
-     * @see DealsWithLogger#setLogManager(LogManager)
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
      * @see LogManagerForDevelopers#getClassesFullPath()
      */
     @Override
@@ -324,36 +311,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     }
 
     /**
-     * (non-Javadoc)
-     *
-     * @see DealsWithPluginFileSystem#setPluginFileSystem(PluginFileSystem)
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        //this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see DealsWithEvents#setEventManager(EventManager)
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see DealsWithErrors#setErrorManager(ErrorManager)
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
      * Get the DisableClientFlag
      * @return Boolean
      */
@@ -378,16 +335,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     @Override
     public CommunicationsClientConnection getCommunicationsCloudClientConnection() {
         return wsCommunicationsCloudClientConnection;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see DealsWithDeviceLocation#setLocationManager(LocationManager)
-     */
-    @Override
-    public void setLocationManager(LocationManager locationManager) {
-        this.locationManager = locationManager;
     }
 
     /**

@@ -114,7 +114,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
         }else {
 
-            Map<String, WsCommunicationVPNClient> newMap = new HashMap<>();
+            Map<String, WsCommunicationVPNClient> newMap = new ConcurrentHashMap<>();
             newMap.put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
             vpnClientActiveCache.put(remoteParticipantNetworkService.getNetworkServiceType(), newMap);
         }
