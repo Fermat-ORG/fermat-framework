@@ -68,13 +68,6 @@ import java.util.UUID;
 
 public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
         implements DatabaseManagerForDevelopers,
-                   DealsWithBitcoinWallet,
-                   DealsWithCryptoTransmissionNetworkService,
-                   DealsWithErrors,
-                   DealsWithEvents,
-                   DealsWithIncomingCrypto,
-                   DealsWithPluginDatabaseSystem,
-                   DealsWithCryptoAddressBook,
                    IncomingIntraUserManager {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
@@ -83,7 +76,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_ROUTER   , plugin = Plugins.INCOMING_CRYPTO)
@@ -149,62 +142,6 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             return new ArrayList<>();
         }
-    }
-
-    /*
-     * DealsWithBitcoinWallet methods implementation
-     */
-    @Override
-    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
-        this.bitcoinWalletManager = bitcoinWalletManager;
-    }
-
-    /*
-     * DealsWithCryptoAddressBook methods implementation
-     */
-    @Override
-    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
-        this.cryptoAddressBookManager = cryptoAddressBookManager;
-    }
-
-    /*
-     * DealsWithCryptoTransmissionNetworkService methods implementation
-     */
-    @Override
-    public void setCryptoTransmissionNetworkService(CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager) {
-        this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
-    }
-
-    /*
-     * DealsWithErrors methods implementation
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /*
-     * DealsWithEvents methods implementation
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /*
-     * DealsWithIncomingCrypto methods implementation
-     */
-    @Override
-    public void setIncomingCryptoManager(IncomingCryptoManager incomungCryptoManager) {
-        this.incomingCryptoManager = incomungCryptoManager;
-    }
-
-    /*
-     * DealsWithPluginDatabaseSystem methods implementation
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
     /*
