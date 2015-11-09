@@ -1,4 +1,4 @@
-## Fermat: A Trust-less Financial Application Framework
+## Fermat: A Peer-to-Peer Financial Application Framework
 
 Luis Fernando Molina
 
@@ -7,20 +7,24 @@ luis.molina@bitDubai.com
 <br>
 ### Abstract
 
-A trust-less financial application framework would allow standalone crypto wallets to evolve into any kind of trust-less financial applications. Crypto networks provide part of the solution, but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallet files or keys, manage identities, interface crypto networks or the legacy financial system.
+A peer-to-peer financial application framework would allow standalone crypto wallets to evolve into any kind of peer to peer financial applications. 
 
-We propose a Peer-to-Peer network for transporting meta-data and inter-connect clients between each other. A synchronization scheme complements it, transforming a standalone app into a distributed application across several devices still owned by the same user.
+Crypto networks provide part of the solution as a system of electronic cash, but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallets and applications files or keys, manage identities, interface crypto networks or the legacy financial system.
 
-The framework replaces the standalone wallet and enables the development of trust-less financial applications that are both crypto-currency and digital-asset-enabled.
+We propose a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. A synchronization scheme complements it, transforming a standalone app into a distributed application across several devices still owned by the same user.
+
+We propose a framework to replace the standalone wallet application. This framework handles the full stack on top of crypto networks up to the user interface. In this way we enable the development of peer-to-peer financial applications that are both crypto-currency and digital-asset-enabled, and that does not require a trusted third party at any level.
 
 <br>
 ### Introduction
 
-Standalone bitcoin wallets were the first trust-less financial applications since they required not to trust any third party inheriting this property from the bitcoin network itself. As the ecosystem evolved trustfull third parties were introduced again and they took over the wallet space because of technical capabilities that are easier to be built in a centralized way: communication between wallets, synchronization between devices, interfacing the legacy financial system, etc., and they consistently took the biggest share of funding, leaving standalone wallets far behind and at the same time trashing the trust-less property of bitcoin, one of its key features. Applications trying to use the blockchain to transport meta-data were considered spammers and trust-less wallets were effectively left behind.
+Standalone bitcoin wallets were the first first generation of financial applications since they required not to trust any third party, inheriting this property from the bitcoin network itself. As the ecosystem evolved trusted third parties were introduced again and they took over the wallet space because of technical capabilities that are easier to be built in a centralized way: communication between wallets, synchronization between devices, interfacing the legacy financial system, etc., and they consistently took the biggest share of funding, leaving standalone wallets far behind and at the same time trashing the benefit of bitcoin of not relying on trust, one of its key features. Applications trying to use the blockchain to transport meta-data were considered spammers and standalone wallets were effectively left behind.
 
-What is needed on top of all existing protocols is a layer that faces the End User and that finishes the job bitcoin started. By using crypto networks for transporting value or as a registry for digital assets and the Fermat Network for transporting the required meta-data at a client level, would allow financial apps to run any user-level interconnected-functionality without ever going through a trusted third party network or server.
+What is needed on top of all existing protocols is a layer that faces the End User and that finishes the job bitcoin started. By using crypto networks for transporting value or as a registry for digital assets and the Fermat Network for transporting the required meta-data at a network client level, would allow financial apps to run any user-level interconnected-functionality without ever going through a trusted third party.
 
-A plug-in architecture allows any developer to add their own reusable plug-ins. A micro-use-licensing-scheme enforced by the system itself guarantees plug-in, wallet, and app developers a revenue stream. OS dependent GUI components are built on top of the multi-layered plug-in structure to face the end user as niche-wallets or financial applications in general. Apps and wallets with similar functionality are wrapped into platforms, each one introducing new actors and plug-ins, to the ever increasing functionality of the whole system.
+By choosing a plug-ins architecture for the Framework we enable any developer to add their own reusable components. We define micro-use-licensing-scheme as the mechanism for plug-in developers to monetize their work. The Framework itself enforces these micro-use-licenses and guarantees developers a revenue stream. 
+
+OS dependent GUI components are built on top of the multi-layered plug-in structure to face the end user as what we call _niche-wallets_ or financial applications in general. Apps and wallets with similar functionality are wrapped into what we call _platforms_, each one introducing new _actors_ and plug-ins, to the ever increasing functionality of the whole system.
 
 A built-in _wallet-factory_ allows developers to reuse the highest level components and create niche-wallets or niche-financial-apps by combining existing functionality and adding their own code to the combo. A built-in _wallet-editor_ allows non-developers to reuse any of these niche-wallets to build new branded-wallets just by changing their look and feel. A built-in _p2p-wallet-store_ allows end users to choose which wallets or financial apps to install from the ever growing catalog.
 
