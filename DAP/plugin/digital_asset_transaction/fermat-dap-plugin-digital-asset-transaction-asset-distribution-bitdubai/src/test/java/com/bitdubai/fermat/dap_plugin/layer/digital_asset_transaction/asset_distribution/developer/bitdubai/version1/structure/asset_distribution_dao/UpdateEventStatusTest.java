@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
@@ -20,9 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -66,7 +62,7 @@ public class UpdateEventStatusTest {
         mockAssetDistributionDao.updateEventStatus("eventId");
     }
 
-    @Test
+   /* @Test
     public void updateEventStatusThrowsCantExecuteQueryException() throws Exception {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new CantOpenDatabaseException("error"));
         catchException(mockAssetDistributionDao).updateEventStatus("eventId");
@@ -85,5 +81,5 @@ public class UpdateEventStatusTest {
                 .isNotNull()
                 .isInstanceOf(CantExecuteQueryException.class);
         assertThat(thrown.getCause()).isNotNull().isInstanceOf(UnexpectedResultReturnedFromDatabaseException.class);
-    }
+    }*/
 }

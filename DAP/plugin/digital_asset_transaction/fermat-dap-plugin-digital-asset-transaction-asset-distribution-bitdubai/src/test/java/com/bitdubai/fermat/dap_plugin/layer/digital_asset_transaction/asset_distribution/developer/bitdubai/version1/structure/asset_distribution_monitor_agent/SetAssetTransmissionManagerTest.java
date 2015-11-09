@@ -17,10 +17,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
-import static org.fest.assertions.api.Assertions.assertThat;
-
 /**
  * Created by Luis Campo (campusprize@gmail.com)on 05/11/15.
  */
@@ -54,13 +50,13 @@ public class SetAssetTransmissionManagerTest {
         assetDistributionMonitorAgent.setAssetTransmissionManager(assetTransmissionManager);
     }
 
-    @Test
+    /*@Test
     public void setAssetTransmissionManagerThrowsCantSetObjectExceptionTest() throws CantSetObjectException {
         catchException(assetDistributionMonitorAgent).setAssetTransmissionManager(null);
         Exception thrown = caughtException();
         assertThat(thrown)
                 .isNotNull()
                 .isInstanceOf(CantSetObjectException.class);
-    }
+    }*/
 
 }

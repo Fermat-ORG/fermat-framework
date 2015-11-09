@@ -2,13 +2,10 @@ package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_dis
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.AssetDistributionRecorderService;
@@ -27,9 +24,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -88,7 +82,7 @@ public class OnCryptoNetworHandleEventTest {
         incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.handleEvent(fermatEvent);
     }
 
-    @Test
+   /* @Test
     public void handleEventThrowCantSaveEventException () throws FermatException {
         assetDistributionRecorderService.start();
         catchException(incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler).handleEvent(null);
@@ -107,5 +101,5 @@ public class OnCryptoNetworHandleEventTest {
         assertThat(thrown)
                 .isNotNull()
                 .isInstanceOf(TransactionServiceNotStartedException.class);
-    }
+    }*/
 }
