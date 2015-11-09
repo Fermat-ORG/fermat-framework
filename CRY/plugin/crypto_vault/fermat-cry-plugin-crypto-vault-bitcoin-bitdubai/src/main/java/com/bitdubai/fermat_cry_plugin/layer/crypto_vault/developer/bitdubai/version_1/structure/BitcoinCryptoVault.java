@@ -46,16 +46,19 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
+import org.bitcoinj.core.AbstractPeerEventListener;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
@@ -75,7 +78,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by rodrigo on 09/06/15.
@@ -99,6 +104,7 @@ public class BitcoinCryptoVault implements
     File vaultFile;
     String vaultFileName;
     VaultEventListeners vaultEventListeners;
+    PeerGroup peerGroup;
 
 
     /**
@@ -346,9 +352,9 @@ public class BitcoinCryptoVault implements
 
             BlockStore blockStore = new MemoryBlockStore(this.networkParameters);
             BlockChain blockChain = new BlockChain(this.networkParameters,vault, blockStore);
-            PeerGroup peerGroup = new PeerGroup(this.networkParameters,blockChain);
+            peerGroup = new PeerGroup(this.networkParameters,blockChain);
             peerGroup.addWallet(vault);
-            vault.addEventListener(this.vaultEventListeners);
+
 
             if (networkParameters == RegTestParams.get()) {
                 InetSocketAddress inetSocketAddress1 = new InetSocketAddress(REGTEST_SERVER_1_ADDRESS, REGTEST_SERVER_1_PORT);
@@ -365,8 +371,14 @@ public class BitcoinCryptoVault implements
                 peerGroup.addPeerDiscovery(new DnsDiscovery(this.networkParameters));
             }
 
-            peerGroup.start();
-            peerGroup.startBlockChainDownload(null);
+            peerGroup.startAsync();
+            peerGroup.startBlockChainDownload(new AbstractPeerEventListener(){
+                @Override
+                public void onTransaction(Peer peer, Transaction t) {
+                    System.out.println("Transaction from Peer: " + t.toString());
+
+                }
+            });
 
         }catch(Exception exception){
             throw new CantConnectToBitcoinNetwork(CantConnectToBitcoinNetwork.DEFAULT_MESSAGE,exception,null,"Unchecked exception, chech the cause");
@@ -389,7 +401,7 @@ public class BitcoinCryptoVault implements
      */
     private void configureVault() throws CantCreateCryptoWalletException {
         try{
-            vault.autosaveToFile(vaultFile, 0, TimeUnit.NANOSECONDS, null);
+            vault.autosaveToFile(vaultFile, 500, TimeUnit.MILLISECONDS, null);
             vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager, logManager);
             vault.addEventListener(vaultEventListeners);
         }catch(Exception exception){
@@ -454,10 +466,16 @@ public class BitcoinCryptoVault implements
             Wallet.SendRequest request = Wallet.SendRequest.to(address, Coin.valueOf(amount));
 
 
+
             // after we persist the new Transaction, we'll persist it as a Fermat transaction.
             db.persistnewFermatTransaction(fermatTxId.toString());
 
+            // I'm experimenting addind a fixed high value for the fee. Since I'm getting Insufficient priority (66) messages.
 
+            //request.feePerKb = Coin.valueOf(1100);
+
+            request.fee = Coin.valueOf(15000);
+            request.ensureMinRequiredFee = true;
             /**
              * If OP_return was specified then I will add an output to the transaction
              */
@@ -469,16 +487,28 @@ public class BitcoinCryptoVault implements
              * complete the transaction and commit it.
              */
             vault.completeTx(request);
+
+
+            vault.commitTx(request.tx);
+            vault.saveToFile(vaultFile);
+
+            final TransactionBroadcast broadcast =peerGroup.broadcastTransaction(request.tx);
+            broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
+                @Override
+                public void onBroadcastProgress(double progress) {
+                    System.out.println("****CryptoVault: progress broadcast " + progress);
+                }
+            });
+
+
+            broadcast.future().get(10, TimeUnit.SECONDS);
+
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
+
             /**
              * I get the transaction hash and persists this transaction in the database.
              */
             db.persistNewTransaction(fermatTxId.toString(), request.tx.getHashAsString());
-            vault.commitTx(request.tx);
-            vault.saveToFile(vaultFile);
-
-            bitcoinCryptoNetworkManager.broadcastTransaction(request.tx);
-
-            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
 
             //returns the created transaction id
             return request.tx.getHashAsString();
@@ -492,10 +522,9 @@ public class BitcoinCryptoVault implements
         } catch (CantExecuteQueryException cantExecuteQueryException) {
 
             throw new CouldNotSendMoneyException("I coudln't persist the internal transaction Id.", cantExecuteQueryException, "Transaction ID: " + fermatTxId.toString(), "An error in the Database plugin..");
-        } catch (CantBroadcastTransactionException e) {
-            throw new CouldNotSendMoneyException("Can't broadcast the transaction.", e, "Transaction ID: " + fermatTxId.toString(), "Network error.");
-        } catch(Exception exception){
-
+        }  catch (InterruptedException | ExecutionException | TimeoutException | IOException e) {
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "Time out broadcasting the transaction to peers.", "No peers found that accepted this transaction because low fee");
+        }   catch(Exception exception){
             throw new CouldNotSendMoneyException("Fatal error sending bitcoins.", exception, "Address to:" + addressTo.getAddress() + ", transaction Id:" + fermatTxId.toString(), "Unkwnown.");
         }
     }

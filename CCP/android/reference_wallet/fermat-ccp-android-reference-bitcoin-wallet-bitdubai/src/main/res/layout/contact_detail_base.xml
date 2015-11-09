@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fff">
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/accent_material_dark">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/image_view_profile"
+            android:scaleType="centerCrop"
+            android:src="@drawable/celine_profile_picture"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/account_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:shadowColor="#000"
+            android:shadowDy="10"
+            android:shadowRadius="8"
+            android:text="Matias Furszyfer"
+            android:textColor="#4f4f4f"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/body"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:padding="8dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textColor="#12aca1"
+            android:layout_marginLeft="16dp"
+            android:paddingTop="12dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="7dip"
+            android:paddingBottom="3dip"
+            android:paddingTop="3dip"
+            android:paddingRight="7dip">
+
+
+
+            <EditText
+                android:id="@+id/edit_text_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingTop="7dip"
+                android:paddingLeft="14dip"
+                android:paddingRight="14dip"
+                android:paddingBottom="7dip"
+                android:textColor="#4f4f4f"
+                android:textColorHint="#4f4f4f"
+                android:textSize="20sp"
+                android:textStyle="normal"
+                android:text="Matias Furszyfer"
+                android:layout_weight="0.54"
+                android:inputType="numberDecimal"
+                android:state_selected = "true"
+                android:background="@null" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#bbccc7"></View>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address"
+            android:textColor="#12aca1"
+            android:layout_marginLeft="16dp"
+            android:paddingTop="12dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="7dip"
+            android:paddingBottom="3dip"
+            android:paddingTop="3dip"
+            android:paddingRight="7dip"
+            android:id="@+id/linear_notes">
+            <TextView
+                android:id="@+id/text_view_address"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:textStyle="normal"
+                android:textColor="#4f4f4f"
+                android:textColorHint="#4f4f4f"
+                android:paddingTop="7dip"
+                android:paddingLeft="14dip"
+                android:paddingRight="14dip"
+                android:paddingBottom="7dip"
+                android:layout_gravity="end"
+                android:state_selected = "false"
+                android:text="1GoK5Zk3a6ga25a"
+                android:background="@null"/>
+        </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#bbccc7"></View>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/linear_layout_extra_user_receive"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:dividerPadding="7dp">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_contact_share"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Share address to extra user"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="7dp"
+                    android:textColor="#12aca1"/>
+
+
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="7dip"
+            android:paddingBottom="10dip"
+            android:paddingTop="24dp"
+            android:paddingRight="7dip"
+            android:id="@+id/linear_send"
+            android:orientation="horizontal"
+            >
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/receive_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_action_send_now_grey"
+                android:padding="3dp"
+                android:clickable="true"
+                android:text="REQUEST"
+                android:background="#12aca1"
+                android:textColor="#fff"
+                android:layout_weight="1"
+                android:layout_marginRight="8dp"
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/send_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_action_send_now_grey"
+                android:padding="3dp"
+                android:clickable="true"
+                android:text="SEND"
+                android:background="#1173aa"
+                android:textColor="#fff"
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                />
+        </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+
+</LinearLayout>

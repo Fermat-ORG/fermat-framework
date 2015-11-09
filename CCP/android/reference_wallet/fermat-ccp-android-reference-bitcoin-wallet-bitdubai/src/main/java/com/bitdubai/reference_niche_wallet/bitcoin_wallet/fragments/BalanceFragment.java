@@ -27,7 +27,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.ListComponent;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_view.ListComponent;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.preference_settings.ReferenceWalletPreferenceSettings;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -228,6 +228,7 @@ public class BalanceFragment extends FermatWalletFragment {
             BalanceType balanceType = referenceWalletPreferenceSettings.getBalanceType() != null ? referenceWalletPreferenceSettings.getBalanceType() : BalanceType.AVAILABLE;
             lstCryptoWalletTransactions.addAll(
                     cryptoWallet.getTransactions(
+                            referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),
                             balanceType,
                             TransactionType.DEBIT,
                             walletPublicKey,
@@ -238,6 +239,7 @@ public class BalanceFragment extends FermatWalletFragment {
 
             lstCryptoWalletTransactions.addAll(
                     cryptoWallet.getTransactions(
+                            referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),
                             balanceType,
                             TransactionType.CREDIT,
                             walletPublicKey,

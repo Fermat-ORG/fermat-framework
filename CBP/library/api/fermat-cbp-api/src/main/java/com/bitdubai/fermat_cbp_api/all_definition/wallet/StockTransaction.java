@@ -17,6 +17,8 @@ public interface StockTransaction {
 
     TransactionType getTransactionType();
 
+    CurrencyType getCurrencyType();
+
     String getWalletPublicKey();
 
     String getOwnerPublicKey();

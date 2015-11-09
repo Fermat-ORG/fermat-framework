@@ -28,8 +28,13 @@ public class ImagesUtils {
      * @return the RoundedBitmapDrawable with the rounded bitmap
      */
     public static RoundedBitmapDrawable getRoundedBitmap(Resources res, int drawableId) {
-        Bitmap srcBitmap = BitmapFactory.decodeResource(res, drawableId);
-        return getRoundedBitmap(res, srcBitmap);
+        try {
+            Bitmap srcBitmap = BitmapFactory.decodeResource(res, drawableId);
+            return getRoundedBitmap(res, srcBitmap);
+        }catch (Exception e){
+            return null;
+        }
+
     }
 
     /**

@@ -1,1 +1,1 @@
-# fermat-dmp-niche-type-wallet-crypto-wallet-bitdubai
+# fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai

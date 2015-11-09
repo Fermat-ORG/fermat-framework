@@ -13,6 +13,11 @@ package com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitduba
 public class CashMoneyWalletDatabaseConstants {
 
     /**
+     *
+     */
+    public static final String DATABASE_NAME= "CashMoneyConstructor";
+
+    /**
      * Cash Money database table definition.
      */
     static final String CASH_MONEY_TABLE_NAME = "cash_money";
@@ -49,19 +54,6 @@ public class CashMoneyWalletDatabaseConstants {
     static final String CASH_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME = "book_balance";
 
     static final String CASH_MONEY_TOTAL_BALANCES_FIRST_KEY_COLUMN = "wallet_key_broker";
-
-    /** * CashMoneyBalanceRecord Table
-     *
-     */
-    static final String CASH_MONEY_BALANCE_TABLE_NAME = "cash_money_balance";
-
-    static final String CASH_MONEY_CASH_BALANCE_ID_COLUMN_NAME = "cash_transaction_id";
-    static final String CASH_MONEY_CASH_BALANCE_DEBIT_COLUMN_NAME = "cash_money_balance_debit";
-    static final String CASH_MONEY_CASH_BALANCE_CREDIT_COLUMN_NAME = "cash_money_balance_credit";
-    static final String CASH_MONEY_CASH_BALANCE_BALANCE_COLUMN_NAME = "cash_money_balance";
-    static final String CASH_MONEY_CASH_BALANCE_TIMESTAMP_COLUMN_NAME="cash_money_timestam";
-
-    static final String CASH_MONEY_CASH_BALANCE__FIRST_KEY_COLUMN = "cash_money_balance_key";
 
     /**
      *CashMoneyBalance Table

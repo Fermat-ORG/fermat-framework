@@ -20,6 +20,12 @@ public enum Activities {
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST("CWRWBWBV1PR"),
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS("CWRWBWBV1C"),
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_SETTINGS("CWRWBWBV1S"),
+
+    CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY("CCPBWSFA"),
+    CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY("CCPBWRFA"),
+    CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY("CCPBWCDA"),
+    CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY("CCPBWSA"),
+
     /**
      * Intra user
      */
@@ -129,7 +135,7 @@ public enum Activities {
     DEVELOP_MODE("develop_mode"),
 
 
-    WPD_DESKTOP("WPD");
+    WPD_DESKTOP("WPD"), ;
 
     private String code;
 
@@ -331,6 +337,14 @@ public enum Activities {
                 return DEVELOP_MODE;
             case "WPD":
                 return WPD_DESKTOP;
+            case "CCPBWSFA":
+                return CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY;
+            case "CCPBWCDA":
+                return CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY;
+            case "CCPBWRFA":
+                return CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY;
+            case "CCPBWSA":
+                return CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

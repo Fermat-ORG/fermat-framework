@@ -2,15 +2,12 @@ package com.bitdubai.android_core.app.common.version_1.navigation_drawer;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +26,7 @@ public class NavigationDrawerAdapter extends FermatAdapter<MenuItem,MenuItemHold
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.navigation_drawer_row;
+        return R.layout.navigation_row;
     }
 
     @Override

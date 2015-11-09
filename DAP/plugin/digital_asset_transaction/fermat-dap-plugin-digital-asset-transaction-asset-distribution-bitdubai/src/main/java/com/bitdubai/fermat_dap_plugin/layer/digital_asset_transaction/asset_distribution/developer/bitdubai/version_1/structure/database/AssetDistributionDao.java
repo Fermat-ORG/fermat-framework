@@ -143,10 +143,10 @@ public class AssetDistributionDao {
             this.database.closeDatabase();
         }  catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot open or find the Asset Issuing database");
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot open or find the Asset Distribution database");
         } catch (CantInsertRecordException exception) {
             this.database.closeDatabase();
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Issuing database");
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
         } catch(Exception exception){
             this.database.closeDatabase();
             throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
@@ -381,7 +381,7 @@ public class AssetDistributionDao {
         }
     }
 
-    public List<String> getTransactionsHashByCryptoStatus(CryptoStatus cryptoStatus)throws CantCheckAssetDistributionProgressException{
+    /*public List<String> getTransactionsHashByCryptoStatus(CryptoStatus cryptoStatus)throws CantCheckAssetDistributionProgressException{
 
         try{
             this.database=openDatabase();
@@ -406,7 +406,7 @@ public class AssetDistributionDao {
             this.database.closeDatabase();
             throw new CantCheckAssetDistributionProgressException(FermatException.wrapException(exception), "Getting transactions hash.", "Unexpected exception");
         }
-    }
+    }*/
 
     public void updateDigitalAssetCryptoStatusByGenesisTransaction(String genesisTransaction, CryptoStatus cryptoStatus) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
         try{
@@ -438,7 +438,7 @@ public class AssetDistributionDao {
         }
     }
 
-    public void updateDigitalAssetCryptoStatusByTransactionHash(String transactionHash, CryptoStatus cryptoStatus) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+    /*public void updateDigitalAssetCryptoStatusByTransactionHash(String transactionHash, CryptoStatus cryptoStatus) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
         try{
             this.database=openDatabase();
             DatabaseTable databaseTable;
@@ -466,7 +466,7 @@ public class AssetDistributionDao {
             this.database.closeDatabase();
             throw new CantCheckAssetDistributionProgressException(FermatException.wrapException(exception), "Updating Crypto Status.", "Unexpected exception - Transaction hash:" + transactionHash);
         }
-    }
+    }*/
 
     public void updateEventStatus(String eventId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         try{

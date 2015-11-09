@@ -1,0 +1,52 @@
+== Chapter 20: Fermat Marketing Platform
+=== Marketing with Digital Assets 
+
+
+
+////
+=== _Identity layer_
+Marketer :: +
+
+=== _Wallet layer_
+Voucher  ::
+Coupon ::
+Discount:: +
+
+=== _Digital Asset Transaction_
+Incoming Voucher ::
+Outgoing Voucher :: 
+Incoming Coupon ::
+Outgoing Coupon ::
+Incoming Discount ::
+Outgoing Discount :: +
+
+=== _Actor layer_
+Marketer :: +
+
+=== _Sub App Module layer_
+Wallet Branding :: 
+Marketer :: +
+
+=== _Wallet Module layer_
+Voucher Wallet ::
+Coupon Wallet ::
+Discount Wallet :: +
+
+=== _Sub App layer_
+Wallet Branding :: 
+Marketer :: +
+
+=== _Reference Wallet layer_
+Voucher Wallet ::
+Coupon Wallet ::
+Discount Wallet :: +
+////
+
+==== Continue Reading
+
+link:book-chapter-21.asciidoc[Next Chapter]
+
+link:book-chapter-19.asciidoc[Previous Chapter]
+
+
+

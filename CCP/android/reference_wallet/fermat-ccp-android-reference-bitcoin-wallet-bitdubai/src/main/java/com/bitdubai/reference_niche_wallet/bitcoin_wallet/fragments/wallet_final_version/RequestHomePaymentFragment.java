@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
@@ -28,8 +29,10 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -198,7 +201,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
                             cryptoWallet.convertConnectionToContact(walletContact.name,
                                     Actors.INTRA_USER,
                                     walletContact.actorPublicKey,
-                                    new byte[0],
+                                    walletContact.profileImage,
                                     Actors.INTRA_USER,
                                     intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
                                     "reference_wallet"/*referenceWalletSession.getWalletSessionType().getWalletPublicKey()*/ ,
@@ -316,22 +319,33 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
                         im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     }
 
-//                    if(walletContact!= null)
-//                        //TODO: ACA VA EL REQUEST
-//
-//                        //sendCrypto();
-//                    else
-//                        Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
+                    try {
 
-                    //testing metadata
-                         /*   cryptoWallet.sendMetadataLikeChampion(Long.parseLong("100000"),
-                                    null,
-                                    "holasdad",
-                                    referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
-                                    "actor_prueba_juan_public_key",
+                        if (walletContact == null) {
+
+                            Toast.makeText(getActivity(), "Contact not found, please add it first.", Toast.LENGTH_LONG).show();
+                        } else if (walletContact.address == null || walletContact.address.equals("")) {
+
+                            Toast.makeText(getActivity(), "We can't find an address for the contact yet.", Toast.LENGTH_LONG).show();
+                        } else {
+
+                            cryptoWallet.sendCryptoPaymentRequest(
+                                    walletPublicKey,
+                                    intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
                                     Actors.INTRA_USER,
-                                    "actor_prueba_robert_public_key",
-                                    Actors.INTRA_USER);*/
+                                    walletContact.actorPublicKey,
+                                    Actors.INTRA_USER,
+                                    new CryptoAddress(walletContact.address, CryptoCurrency.BITCOIN),
+                                    txt_notes.getText().toString(),
+                                    Long.valueOf(editTextAmount.getText().toString()),
+                                    BlockchainNetworkType.DEFAULT
+                            );
+                        }
+
+                    } catch (Exception e) {
+
+                        reportUnexpectedError(e);
+                    }
 
                 }
             });
@@ -366,6 +380,11 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH,e);
         }
         return null;
+    }
+
+    void reportUnexpectedError(final Exception e) {
+
+        referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.TASK, UnexpectedUIExceptionSeverity.UNSTABLE, e);
     }
 
     @Override
@@ -478,7 +497,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
                 String contactAddress = "";
                 if(wcr.getReceivedCryptoAddress().size() > 0)
                     contactAddress = wcr.getReceivedCryptoAddress().get(0).getAddress();
-                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress,wcr.isConnection()));
+                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress,wcr.isConnection(),wcr.getProfilePicture()));
             }
         }
         catch (CantGetAllWalletContactsException e) {

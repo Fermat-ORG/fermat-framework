@@ -118,44 +118,24 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         /**
          * Table Incoming_Transactions columns.
          */
-        List<String> incoming_TransactionsColumns = new ArrayList<String>();
+        List<String> transactionsColumns = new ArrayList<String>();
 
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TRX_ID_COLUMN_NAME);
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_HASH_COLUMN_NAME);
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME);
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME);
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME);
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME);
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_VALUE_COLUMN_NAME);
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_OP_RETURN_COLUMN_NAME);
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME);
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_VALUE_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_OP_RETURN_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_LAST_UPDATE_COLUMN_NAME);
         /**
-         * Table Incoming_Transactions addition.
+         * Table Transactions addition.
          */
-        DeveloperDatabaseTable incoming_TransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TABLE_NAME, incoming_TransactionsColumns);
-        tables.add(incoming_TransactionsTable);
+        DeveloperDatabaseTable TransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME, transactionsColumns);
+        tables.add(TransactionsTable);
 
-        /**
-         * Table Outgoing_Transactions columns.
-         */
-        List<String> outgoing_TransactionsColumns = new ArrayList<String>();
-
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TRX_ID_COLUMN_NAME);
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_HASH_COLUMN_NAME);
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME);
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME);
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME);
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME);
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_VALUE_COLUMN_NAME);
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_OP_RETURN_COLUMN_NAME);
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME);
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME);
-        /**
-         * Table Outgoing_Transactions addition.
-         */
-        DeveloperDatabaseTable outgoing_TransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TABLE_NAME, outgoing_TransactionsColumns);
-        tables.add(outgoing_TransactionsTable);
 
         /**
          * Table CryptoVaults_Stats columns.

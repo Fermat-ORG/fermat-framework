@@ -26,9 +26,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.google.zxing.WriterException;
 
 /**
@@ -39,7 +39,7 @@ public class ReceiveFragmentDialog extends Dialog implements
         View.OnClickListener {
 
 
-    private final String userId;
+    private final String identityPublicKey;
     private final String walletPublicKey;
     public Activity activity;
     public Dialog d;
@@ -59,7 +59,7 @@ public class ReceiveFragmentDialog extends Dialog implements
     /**
      *  Contact member
      */
-    private WalletContact walletContact;
+    private CryptoWalletWalletContact walletContact;
     private String user_address_wallet = "";
 
     /**
@@ -91,14 +91,14 @@ public class ReceiveFragmentDialog extends Dialog implements
      */
 
 
-    public ReceiveFragmentDialog(Activity a,CryptoWallet cryptoWallet,ErrorManager errorManager,WalletContact walletContact,String userId,String walletPublcKey) {
+    public ReceiveFragmentDialog(Activity a,CryptoWallet cryptoWallet,ErrorManager errorManager,CryptoWalletWalletContact walletContact,String identityPublicKey,String walletPublcKey) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
         this.cryptoWallet=cryptoWallet;
         this.walletContact=walletContact;
         this.errorManager=errorManager;
-        this.userId = userId;
+        this.identityPublicKey = identityPublicKey;
         this.walletPublicKey = walletPublcKey;
     }
 
@@ -108,7 +108,7 @@ public class ReceiveFragmentDialog extends Dialog implements
         super.onCreate(savedInstanceState);
         setUpScreenComponents();
 
-        user_address_wallet= getWalletAddress(walletContact.actorPublicKey);
+        user_address_wallet= getWalletAddress(walletContact.getActorPublicKey());
 
         showQRCodeAndAddress();
 
@@ -135,7 +135,7 @@ public class ReceiveFragmentDialog extends Dialog implements
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
             CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
-                    userId,
+                    identityPublicKey,
                     Actors.INTRA_USER,
                     actorPublicKey,
                     Actors.EXTRA_USER,

@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.holders.IntraUserIdentityInfoViewHolder;
 import com.bitdubai.sub_app.intra_user_identity.util.UtilsFuncs;
@@ -19,10 +19,10 @@ import java.util.ArrayList;
  *
  * @author Nelson Ramirez
  */
-public class IntraUserIdentityInfoAdapter extends FermatAdapter<IntraWalletUser, IntraUserIdentityInfoViewHolder> {
+public class IntraUserIdentityInfoAdapter extends FermatAdapter<IntraWalletUserIdentity, IntraUserIdentityInfoViewHolder> {
 
 
-    public IntraUserIdentityInfoAdapter(Context context, ArrayList<IntraWalletUser> dataSet) {
+    public IntraUserIdentityInfoAdapter(Context context, ArrayList<IntraWalletUserIdentity> dataSet) {
         super(context, dataSet);
     }
 
@@ -37,12 +37,12 @@ public class IntraUserIdentityInfoAdapter extends FermatAdapter<IntraWalletUser,
     }
 
     @Override
-    protected void bindHolder(final IntraUserIdentityInfoViewHolder holder, final IntraWalletUser data, final int position) {
+    protected void bindHolder(final IntraUserIdentityInfoViewHolder holder, final IntraWalletUserIdentity data, final int position) {
         holder.getIdentityName().setText(data.getAlias());
 
         byte[] profileImage = data.getProfileImage();
         Bitmap imageBitmap = profileImage == null ?
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.deniz_profile_picture) :
+                BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image) :
                 BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
 
         Bitmap roundedBitmap = UtilsFuncs.getRoundedShape(imageBitmap);

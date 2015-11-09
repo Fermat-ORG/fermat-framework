@@ -240,8 +240,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
         private void doTheMainTask() throws CantCheckAssetIssuingProgressException, CantExecuteQueryException, CantDeliverDigitalAssetToAssetWalletException {
 
-            Logger LOG = Logger.getGlobal();
-            //LOG.info("Asset Issuing monitor agent DoTheMainTask");
             try {
                 assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 //
@@ -274,13 +272,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
                 setGenesisTransactionFromOutgoingIntraActor();
                 checkTransactionsUnfinished();
-                /**
-                 * The following lines will be used in the future. Please, delete the previous lines
-                 * when the next lines will be ready to be used.
-                 checkTransactionListByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
-                 checkTransactionsCryptoStatus();
-                 checkTransactionListByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
-                 checkTransactionsCryptoStatus();*/
+
 
                 if (isReceivedDigitalAssets()){
                     List<String> genesisTransactionsFromAssetsReceived=getGenesisTransactionsFromDigitalAssetsReceived();
@@ -338,7 +330,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
          * @throws UnexpectedResultReturnedFromDatabaseException
          * @throws CantGetGenesisTransactionException
          */
-        private void checkTransactions(CryptoStatus cryptoStatus) throws CantExecuteQueryException, CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetGenesisTransactionException {
+        /*private void checkTransactions(CryptoStatus cryptoStatus) throws CantExecuteQueryException, CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetGenesisTransactionException {
 
             List<String> genesisTransactionList;
             if (isTransactionToBeNotified(CryptoStatus.PENDING_SUBMIT)){
@@ -359,7 +351,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     }
                 }
             }
-        }
+        }*/
 
         /**
          * This method checks the current transaction CryptoStatus based on events handled. Also, take actions based on the  transaction crypto status
@@ -387,7 +379,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     if(eventType.equals(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER.getCode())){
                         if (isTransactionToBeNotified(CryptoStatus.PENDING_SUBMIT)){
                             genesisTransactionList=assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
-                            System.out.println("ASSET ISSUING found "+genesisTransactionList.size()+" genesis transactions in pending submit");
+                            System.out.println("ASSET ISSUING found " + genesisTransactionList.size() + " genesis transactions in pending submit");
                             for(String genesisTransaction: genesisTransactionList){
                                 System.out.println("ASSET ISSUING checking status On Crypto Network genesis transaction: "+genesisTransaction);
                                 CryptoTransaction cryptoGenesisTransaction=getCryptoTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK, genesisTransaction);
@@ -402,7 +394,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                 assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
 
                             }
-                            assetIssuingTransactionDao.updateEventStatus(eventId);
+
                         }
                     }
                     if(eventType.equals(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER.getCode())){
@@ -436,6 +428,9 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     if(eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER)){
                         //TODO: to handle
                     }
+
+                    assetIssuingTransactionDao.updateEventStatus(eventId);
+
                 }
             }
 
@@ -522,8 +517,15 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 String genesisTransaction=outgoingIntraActorManager.getTransactionManager().getSendCryptoTransactionHash(transactionUUID);
                 System.out.println("ASSET ISSUING Outgoing returns "+genesisTransaction);
                 if(genesisTransaction==null){
+                    System.out.println("ASSET ISSUING is null - continue asking");
                     continue;
                 }
+                if(genesisTransaction.isEmpty()){
+                    System.out.println("ASSET ISSUING is empty - continue asking");
+                    continue;
+                }
+                System.out.println("ASSET ISSUING Persisting in database Outgoing Id: "+outgoingId);
+                System.out.println("ASSET ISSUING Persisting in database genesis transaction: "+genesisTransaction);
                 assetIssuingTransactionDao.persistGenesisTransaction(outgoingId, genesisTransaction);
                 String internalId=assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                 digitalAssetIssuingVault.setGenesisTransaction(internalId, genesisTransaction);
@@ -634,6 +636,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     return cryptoTransaction;
                 }
             }
+            System.out.println("ASSET ISSUING there was an undetected error looking the crypto status by crypto status.");
             return null;
             //return transactionList;
         }

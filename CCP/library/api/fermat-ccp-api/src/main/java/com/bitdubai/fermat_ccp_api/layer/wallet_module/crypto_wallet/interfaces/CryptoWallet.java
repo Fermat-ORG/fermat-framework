@@ -6,11 +6,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
-import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.*;
 
 import java.io.Serializable;
@@ -29,29 +28,31 @@ public interface CryptoWallet extends Serializable {
     /**
      * List all wallet contact related to an specific wallet.
      *
-     * @param walletPublicKey publick key of the wallet in which we are working.
+     * @param walletPublicKey public key of the wallet in which we are working.
+     * @param intraUserLoggedInPublicKey public key of the intra user identity to use wallet.
      *
      * @return a list of instances of wallet contact records
      *
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
-    List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException;
+    List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey, String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException;
 
 
     /**
      * List  wallet contact and intra user connections related to an specific wallet.
      *
      * @param walletPublicKey
-     * @param intraUserPublicKey
+     * @param intraUserLoggedInPublicKey
      * @return
      * @throws CantGetAllWalletContactsException
      */
-    List<CryptoWalletWalletContact> listAllActorContactsAndConnections(String walletPublicKey,String intraUserPublicKey) throws CantGetAllWalletContactsException;
+    List<CryptoWalletWalletContact> listAllActorContactsAndConnections(String walletPublicKey,String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException;
 
     /**
      * List all wallet contact related to an specific wallet.
      *
      * @param walletPublicKey public key of the wallet in which we are working.
+    * @param intraUserLoggedInPublicKey public key of the wallet intra user identity.
      * @param max             quantity of instance you want to return
      * @param offset          the point of start in the list you're trying to bring.
      *
@@ -60,6 +61,7 @@ public interface CryptoWallet extends Serializable {
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
     List<CryptoWalletWalletContact> listWalletContactsScrolling(String  walletPublicKey,
+                                                                String intraUserLoggedInPublicKey,
                                                                 Integer max,
                                                                 Integer offset) throws CantGetAllWalletContactsException;
 
@@ -202,11 +204,12 @@ public interface CryptoWallet extends Serializable {
      * find a wallet contact having in count its id
      *
      * @param contactId specific id of the contact that you're trying to find
+     * @param intraUserLoggedInPublicKey public key of the wallet intra user identity.
      * @return instance of a crypto wallet contact
      * @throws CantFindWalletContactException
      * @throws WalletContactNotFoundException
      */
-    CryptoWalletWalletContact findWalletContactById(UUID contactId) throws CantFindWalletContactException, WalletContactNotFoundException;
+    CryptoWalletWalletContact findWalletContactById(UUID contactId, String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException;
 
     /**
      * Throw the method <code>isValidAddress</code> you can validate in the specific vault if a specific crypto address is valid.
@@ -274,7 +277,7 @@ public interface CryptoWallet extends Serializable {
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,
+    List<CryptoWalletTransaction> getTransactions(String intraUserLoggedInPublicKey,BalanceType balanceType,
                                                                                                              TransactionType transactionType,
                                                                                                              String walletPublicKey,
                                                                                                              int max,
@@ -294,10 +297,11 @@ public interface CryptoWallet extends Serializable {
      * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> listTransactionsByActor(BalanceType balanceType,
-                                                                                                                     String walletPublicKey,
-                                                                                                                     String actorPublicKey,
-                                                                                                                     int max,
-                                                                                                                     int offset) throws CantListTransactionsException;
+                                                          String walletPublicKey,
+                                                          String actorPublicKey,
+                                                          String intraUserLoggedInPublicKey,
+                                                          int max,
+                                                          int offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>getActorTransactionHistory</code> you can get the transaction history of an specific actor.
@@ -331,6 +335,7 @@ public interface CryptoWallet extends Serializable {
     List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                                                                         TransactionType transactionType,
                                                                                                                                         String walletPublicKey,
+                                                                             String actorPublicKey,
                                                                                                                                         int max,
                                                                                                                                         int offset) throws CantListTransactionsException;
 
@@ -378,7 +383,7 @@ public interface CryptoWallet extends Serializable {
      * @throws CantListCryptoWalletIntraUserIdentityException
      */
 
-    List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
+    List<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
 
     /**
      *
@@ -399,6 +404,31 @@ public interface CryptoWallet extends Serializable {
                                   String deliveredToActorPublicKey,
                                   Actors deliveredToActorType);
 
-    List<IntraWalletUser> getActiveIdentities();
+    List<IntraWalletUserIdentity> getActiveIdentities();
+
+    /**
+     * Through the method <code>sendCryptoPaymentRequest</code> you can generate and send a crypto payment request.
+     *
+     * @param walletPublicKey
+     * @param identityPublicKey
+     * @param identityType
+     * @param actorPublicKey
+     * @param actorType
+     * @param cryptoAddress
+     * @param description
+     * @param amount
+     * @param networkType
+     *
+     * @throws CantSendCryptoPaymentRequestException  if something goes wrong.
+     */
+     void sendCryptoPaymentRequest(final String                walletPublicKey  ,
+                                   final String                identityPublicKey,
+                                   final Actors                identityType     ,
+                                   final String                actorPublicKey   ,
+                                   final Actors                actorType        ,
+                                   final CryptoAddress         cryptoAddress    ,
+                                   final String                description      ,
+                                   final long                  amount           ,
+                                   final BlockchainNetworkType networkType      ) throws CantSendCryptoPaymentRequestException;
 
 }

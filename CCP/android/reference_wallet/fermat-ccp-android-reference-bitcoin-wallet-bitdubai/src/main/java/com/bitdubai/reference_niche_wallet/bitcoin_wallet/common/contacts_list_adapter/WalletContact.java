@@ -12,17 +12,20 @@ public class WalletContact {
 
     public String address;
 
+    public byte[] profileImage;
+
     public boolean isConnection;
 
     public WalletContact() {
     }
 
-    public WalletContact(UUID contactId, String actorPublicKey, String name, String address, boolean isConnection) {
+    public WalletContact(UUID contactId, String actorPublicKey, String name, String address, boolean isConnection,byte[] profileImage) {
         this.contactId = contactId;
         this.actorPublicKey = actorPublicKey;
         this.name = name;
         this.address = address != null ? address : "";
         this.isConnection = isConnection;
+        this.profileImage = profileImage;
     }
 
     @Override
@@ -45,5 +48,9 @@ public class WalletContact {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
     }
 }

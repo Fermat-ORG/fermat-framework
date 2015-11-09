@@ -19,12 +19,12 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * The abstract class <code>com.bitdubai.fermat_core.FermatPluginIdsManager</code> haves all the main functionality
+ * The class <code>com.bitdubai.fermat_core.FermatPluginIdsManager</code> haves all the main functionality
  * to manage fermat plugins ids.
  *
  * Created by Leon Acosta (laion.cj01@gmail.com) on 20/10/2015.
  */
-public class FermatPluginIdsManager {
+public final class FermatPluginIdsManager {
 
     private final String PLUGIN_IDS_DIRECTORY_NAME = DeviceDirectory.SYSTEM.getName();
 

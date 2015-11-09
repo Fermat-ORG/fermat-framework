@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.database.AssetUserActorDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.database.AssetUserActorDatabaseFactory;
@@ -341,8 +342,8 @@ public class AssetUserActorDao implements Serializable {
 
                         record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME, actorAssetUser.getGenders().getCode());
 
-                        System.out.println("Actor Asset User AÑADIDO a tabla REGISTER: "+ actorAssetUser.getName());
-                        System.out.println("Actor Asset User AÑADIDO a tabla REGISTER: "+ ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+                        System.out.println("Actor Asset User AÑADIDO a tabla REGISTER: " + actorAssetUser.getName());
+                        System.out.println("Actor Asset User AÑADIDO a tabla REGISTER: " + ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
 
 
                         //TODO se le coloca estado PENDING_LOCALLY_ACCEPTANCE indicando registro local  "Visible en Community". - conversar para crear 2 posibles NUEVOS ESTADOS
@@ -405,7 +406,7 @@ public class AssetUserActorDao implements Serializable {
                 // 3) Get Asset User record and update state.
                 for (DatabaseTableRecord record : table.getRecords()) {
                     System.out.println("Actor Asset User Actualizando tabla REGISTER - Desde lista VACIA: "+record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NAME_COLUMN_NAME));
-                    System.out.println("Actor Asset User Actualizando tabla REGISTER - Desde lista VACIA: "+ ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+                    System.out.println("Actor Asset User Actualizando tabla REGISTER - Desde lista VACIA: "+ ConnectionState.DISCONNECTED_REMOTELY);
                     record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
 
 //                if(cryptoAddress != null) {
@@ -534,7 +535,6 @@ public class AssetUserActorDao implements Serializable {
 
         // Get Asset Users identities list.
         try {
-
             /**
              * 1) Get the table.
              */
@@ -605,6 +605,40 @@ public class AssetUserActorDao implements Serializable {
         return assetUserActorRecord;
     }
 
+    public ActorAssetUser getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException {
+        ActorAssetUser assetUserActorRecord = null;
+        DatabaseTable table;
+
+        // Get Asset Users identities list.
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+            // 3) Get Asset Users Record.
+            assetUserActorRecord = this.addRecords(table.getRecords());
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetUserActorsException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME + " table in memory.");
+        } catch (CantGetAssetUserActorProfileImageException e) {
+            throw new CantGetAssetUserActorsException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            throw new CantGetAssetUserActorsException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
+        // Return the values.
+        return assetUserActorRecord;
+    }
+
     public List<ActorAssetUser> getAllAssetUserActorRegistered() throws CantGetAssetUsersListException {
         List<ActorAssetUser> list = new ArrayList<>(); // Asset User Actor list.
 
@@ -623,10 +657,7 @@ public class AssetUserActorDao implements Serializable {
                  */
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
             }//TODO Filtro de Busqueda en Tabla NO colocado para que traiga toda la informacion que contiene
-            // 2) Find  Asset Users Registered by Connection State = CONNECTED.
-//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, "CTC", DatabaseFilterType.EQUAL);
 
-//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             // 3) Get Asset Users Record.
             this.addRecordsTableRegisteredToList(list, table.getRecords());
@@ -659,7 +690,7 @@ public class AssetUserActorDao implements Serializable {
             }
             // 2) Find  Asset Users by Connection State.
             //TODO Actor Asset User en Tabla REGISTERED con Connection State CONNECTED indicara que se tiene CryptoAddress
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, "CTC", DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 

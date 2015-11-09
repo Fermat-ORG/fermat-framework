@@ -155,7 +155,7 @@ public class DistributeAssetsTest {
                 .isNull();
     }
 
-    @Test
+    /*@Test
     public void distributeAssetsThrowsCantDistributeDigitalAssetsExceptionTest() throws CantDistributeDigitalAssetsException, CantStartPluginException {
         System.out.println("Test method distributeAssetsDigitalAssetsToDistributeNullTest()");
         assetDistributionPluginRoot.start();
@@ -164,6 +164,6 @@ public class DistributeAssetsTest {
         assertThat(thrown)
                 .isNotNull()
                 .isInstanceOf(CantDistributeDigitalAssetsException.class);
-    }
+    }*/
 
 }

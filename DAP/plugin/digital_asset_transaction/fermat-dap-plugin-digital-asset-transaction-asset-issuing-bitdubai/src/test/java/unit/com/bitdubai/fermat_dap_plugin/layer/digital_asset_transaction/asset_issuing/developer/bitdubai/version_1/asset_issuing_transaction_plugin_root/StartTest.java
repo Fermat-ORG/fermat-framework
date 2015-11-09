@@ -19,7 +19,10 @@ import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interf
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
@@ -83,6 +86,9 @@ public class StartTest {
     AssetIssuerWalletManager assetIssuerWalletManager;
 
     @Mock
+    ActorAssetIssuerManager actorAssetIssuerManager;
+
+    @Mock
     CryptoVaultManager cryptoVaultManager;
 
     @Mock
@@ -115,6 +121,9 @@ public class StartTest {
     AssetIssuingTransactionDatabaseFactory assetIssuingTransactionDatabaseFactory;
 
     @Mock
+    ActorAssetIssuer actorAssetIssuer;
+
+    @Mock
     DatabaseFactory mockDatabaseFactory;
 
     DatabaseTable mockDatabaseTable = Mockito.mock(DatabaseTable.class);
@@ -123,8 +132,6 @@ public class StartTest {
 
     @Before
     public void setUp() throws Exception {
-        assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
-
         pluginId = UUID.randomUUID();
 
         assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
@@ -135,6 +142,7 @@ public class StartTest {
         assetIssuingPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
         assetIssuingPluginRoot.setPluginFileSystem(pluginFileSystem);
         assetIssuingPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
+        assetIssuingPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
         assetIssuingPluginRoot.setCryptoVaultManager(cryptoVaultManager);
         assetIssuingPluginRoot.setBitcoinWalletManager(bitcoinWalletManager);
         assetIssuingPluginRoot.setAssetVaultManager(assetVaultManager);
@@ -161,6 +169,8 @@ public class StartTest {
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER)).thenReturn(fermatEventListener3);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER)).thenReturn(fermatEventListener4);
         when(eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION)).thenReturn(fermatEventListener5);
+
+        when(actorAssetIssuerManager.getActorAssetIssuer()).thenReturn(actorAssetIssuer);
     }
 
     @Test
@@ -172,15 +182,19 @@ public class StartTest {
 
     @Test
     public void test_Throws_DatabaseNotFoundException() throws Exception {
-        //TODO fix error
-        /*when(pluginDatabaseSystem.openDatabase(this.pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenThrow(new DatabaseNotFoundException("error"));
-        when(assetIssuingTransactionDatabaseFactory.createDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenReturn(mockDatabase);
+        assetIssuingPluginRoot.setAssetIssuerManager(null);
         catchException(assetIssuingPluginRoot).start();
-        assertThat(caughtException())
+        Exception thrown = caughtException();
+        assertThat(thrown)
                 .isNotNull()
-                .isInstanceOf(DatabaseNotFoundException.class);*/
+                .isInstanceOf(CantStartPluginException.class);
+        assertThat(thrown.getCause())
+                .isNotNull()
+                .isInstanceOf(CantSetObjectException.class);
+        assetIssuingPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
     }
 
+    //TODO develop tests of exceptions
     public void test_Throws_CantOpenDatabaseException() throws Exception {
 
     }
@@ -194,18 +208,20 @@ public class StartTest {
                 .isInstanceOf(CantStartPluginException.class);*/
     }
 
-    @Test
-    public void test_Throws_CantSetObjectException() throws Exception {
-        assetIssuingPluginRoot.setAssetIssuerManager(null);
-
-        catchException(assetIssuingPluginRoot).start();
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantStartPluginException.class);
-        assertThat(thrown.getCause()).isInstanceOf(CantSetObjectException.class);
-        assertThat(assetIssuingPluginRoot.getStatus()).isEqualTo(ServiceStatus.STOPPED);
-    }
+//    @Test
+//    public void test_Throws_CantSetObjectException() throws Exception {
+//        assetIssuingPluginRoot.setAssetIssuerManager(null);
+//
+//        catchException(assetIssuingPluginRoot).start();
+//        Exception thrown = caughtException();
+//        assertThat(thrown)
+//                .isNotNull()
+//                .isInstanceOf(CantStartPluginException.class);
+//        assertThat(thrown.getCause()).isInstanceOf(CantSetObjectException.class);
+//        assertThat(assetIssuingPluginRoot.getStatus()).isEqualTo(ServiceStatus.STOPPED);
+//
+//        assetIssuingPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
+//    }
 
     @Test
     public void test_Throws_CantExecuteDatabaseOperationException() throws Exception {

@@ -130,7 +130,7 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
         this.actorAssetUserManager = actorAssetUserManager;
     }
 
-    public void setActorAssetUserManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
         if(actorAssetIssuerManager ==null){
             throw new CantSetObjectException("actorAssetIssuerManager is null");
         }
@@ -226,7 +226,7 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                     logManager.log(AssetReceptionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CantCheckAssetReceptionProgressException | CantExecuteQueryException exception) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 }
 
             }
@@ -243,18 +243,18 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                 try {
                     database = assetIssuingTransactionDatabaseFactory.createDatabase(pluginId, userPublicKey);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,cantCreateDatabaseException);
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,cantCreateDatabaseException);
                     throw new CantInitializeAssetMonitorAgentException(cantCreateDatabaseException,"Initialize Monitor Agent - trying to create the plugin database","Please, check the cause");
                 }
             } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantInitializeAssetMonitorAgentException(exception,"Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
             }
         }
 
         private void doTheMainTask() throws CantExecuteQueryException, CantCheckAssetReceptionProgressException {
             //TODO: once this works, please, remove the following line
-            System.out.println("ASSET RECEPTION monitor agent es starting");
+            //System.out.println("ASSET RECEPTION monitor agent es starting");
             try{
                 assetReceptionDao=new AssetReceptionDao(pluginDatabaseSystem,pluginId);
                 if(assetReceptionDao.isPendingNetworkLayerEvents()){
@@ -416,13 +416,13 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
             List<String> genesisTransactionList;
             String senderId;
             ActorAssetUser actorAssetUser=actorAssetUserManager.getActorAssetUser();
-            if(receptionStatus.getCode().equals(ReceptionStatus.ASSET_ACCEPTED)){
+            if(receptionStatus.getCode().equals(ReceptionStatus.ASSET_ACCEPTED.getCode())){
                 distributionStatus=DistributionStatus.ASSET_ACCEPTED;
             }
-            if(receptionStatus.getCode().equals(ReceptionStatus.REJECTED_BY_HASH)){
+            if(receptionStatus.getCode().equals(ReceptionStatus.REJECTED_BY_HASH.getCode())){
                 distributionStatus=DistributionStatus.ASSET_REJECTED_BY_HASH;
             }
-            if(receptionStatus.getCode().equals(ReceptionStatus.REJECTED_BY_CONTRACT)){
+            if(receptionStatus.getCode().equals(ReceptionStatus.REJECTED_BY_CONTRACT.getCode())){
                 distributionStatus=DistributionStatus.ASSET_REJECTED_BY_CONTRACT;
             }
             genesisTransactionList=assetReceptionDao.getGenesisTransactionByReceptionStatus(receptionStatus);
@@ -440,7 +440,7 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
         }
 
         private ActorAssetIssuer getActorAssetIssuer(String senderId) throws CantGetAssetIssuerActorsException {
-            List<ActorAssetIssuer> actorAssetIssuerList=actorAssetIssuerManager.getAllAssetIssuerActorRegistered();
+            List<ActorAssetIssuer> actorAssetIssuerList=actorAssetIssuerManager.getAllAssetIssuerActorInTableRegistered();
             for(ActorAssetIssuer actorAssetIssuer : actorAssetIssuerList){
                 if(actorAssetIssuer.getPublicKey().equals(senderId)){
                     return actorAssetIssuer;

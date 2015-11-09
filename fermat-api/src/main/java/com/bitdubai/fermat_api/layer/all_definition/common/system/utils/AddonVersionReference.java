@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.system.utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -8,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 /**
- * The class <code>AddonVersionReference</code>
+ * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference</code>
  * haves all the information of a Addon Version Reference.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/10/2015.
@@ -40,21 +39,6 @@ public class AddonVersionReference {
                                  final Version    version  ){
 
         PlatformReference platformReference = new PlatformReference(platform);
-        LayerReference layerReference = new LayerReference(platformReference, layer);
-        AddonReference addonReference = new AddonReference(layerReference, addonEnum);
-
-        this.addonDeveloperReference = new AddonDeveloperReference(addonReference, developer);
-        this.version                 = version;
-    }
-
-    public AddonVersionReference(final OperativeSystems operativeSystem,
-                                 final Platforms        platform       ,
-                                 final Layers           layer          ,
-                                 final Addons           addonEnum      ,
-                                 final Developers       developer      ,
-                                 final Version          version        ){
-
-        PlatformReference platformReference = new PlatformReference(operativeSystem, platform);
         LayerReference layerReference = new LayerReference(platformReference, layer);
         AddonReference addonReference = new AddonReference(layerReference, addonEnum);
 
@@ -95,10 +79,29 @@ public class AddonVersionReference {
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return "AddonVersionReference{" +
                 "addonDeveloperReference=" + addonDeveloperReference +
                 ", version=" + version +
                 '}';
     }
+
+    public final String toString2() {
+        return "AddonVersionReference{" +
+                "platform=" + addonDeveloperReference.getAddonReference().getLayerReference().getPlatformReference().getPlatform() +
+                ", layer=" + addonDeveloperReference.getAddonReference().getLayerReference().getLayer() +
+                ", addon=" + addonDeveloperReference.getAddonReference().getAddon()+
+                ", developer=" + addonDeveloperReference.getDeveloper()+
+                ", version=" + version +
+                '}';
+    }
+
+    public final String toString3() {
+        return "Addon{" +
+                "" + addonDeveloperReference.getAddonReference().getLayerReference().getPlatformReference().getPlatform() +
+                ", " + addonDeveloperReference.getAddonReference().getLayerReference().getLayer() +
+                ", " + addonDeveloperReference.getAddonReference().getAddon()+
+                '}';
+    }
+
 }

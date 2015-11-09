@@ -17,4 +17,14 @@ public class CantGetCryptoBrokerWalletException extends FermatException {
     public CantGetCryptoBrokerWalletException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    /**
+     * Call CantGetCryptoBrokerWalletException(message, cause, "", "")
+     *
+     * @param message the short description of the why this exception happened, there is a public static constant called DEFAULT_MESSAGE that can be used here
+     * @param cause   the exception that triggered the throwing of the current exception, if there are no other exceptions to be declared here, the cause should be null
+     */
+    public CantGetCryptoBrokerWalletException(String message, Exception cause) {
+        this(message, cause, "", "");
+    }
 }
