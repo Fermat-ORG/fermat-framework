@@ -474,6 +474,11 @@ public enum Plugins implements FermatEnum {
             case "WM":    return WALLET_MANAGER;
             case "WCL":   return WS_CLOUD_CLIENT;
 
+
+            case "cryptoaddmidtemp":   return CRYPTO_ADDRESSES__MIDDLEWARE_TEMP;
+//TEMPORAL
+
+
             // End  new Plugins
 
             default:

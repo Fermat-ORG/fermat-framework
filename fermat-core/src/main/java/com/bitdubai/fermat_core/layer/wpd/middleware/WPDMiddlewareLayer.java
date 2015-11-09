@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_core.layer.wpd.middleware.wallet_factory.WalletFactorySubsystem;
-import com.bitdubai.fermat_core.layer.wpd.middleware.wallet_manager.WalletManagerSubsystem;
 import com.bitdubai.fermat_core.layer.wpd.middleware.wallet_publisher.WalletPublisherSubsystem;
 import com.bitdubai.fermat_core.layer.wpd.middleware.wallet_settings.WalletSettingsSubsystem;
 import com.bitdubai.fermat_core.layer.wpd.middleware.wallet_store.WalletStoreSubsystem;
@@ -21,8 +20,6 @@ public class WPDMiddlewareLayer implements PlatformLayer {
 
     private Plugin mWalletFactoryPlugin;
 
-    private Plugin mWalletManagerPlugin;
-
     private Plugin mWalletPublisherPlugin;
 
     private Plugin mWalletSettingsPlugin;
@@ -36,8 +33,6 @@ public class WPDMiddlewareLayer implements PlatformLayer {
     public void start() throws CantStartLayerException {
 
         mWalletFactoryPlugin = getPlugin(new WalletFactorySubsystem());
-
-        mWalletManagerPlugin = getPlugin(new WalletManagerSubsystem());
 
         mWalletPublisherPlugin = getPlugin(new WalletPublisherSubsystem());
 
@@ -57,10 +52,6 @@ public class WPDMiddlewareLayer implements PlatformLayer {
 
     public Plugin getWalletFactoryPlugin() {
         return mWalletFactoryPlugin;
-    }
-
-    public Plugin getWalletManagerPlugin() {
-        return mWalletManagerPlugin;
     }
 
     public Plugin getWalletPublisherPlugin() {
