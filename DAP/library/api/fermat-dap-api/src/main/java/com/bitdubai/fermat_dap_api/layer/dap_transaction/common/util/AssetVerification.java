@@ -3,7 +3,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util;
 import com.bitdubai.fermat_api.layer.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
@@ -16,7 +16,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.ObjectNotSetE
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -75,7 +74,7 @@ public final class AssetVerification {
         }
     }
 
-    public static boolean isDigitalAssetHashValid(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws CantGetGenesisTransactionException, DAPException {
+    public static boolean isDigitalAssetHashValid(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException, DAPException {
         String digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
         String digitalAssetGenesisTransaction = digitalAssetMetadata.getGenesisTransaction();
         CryptoTransaction cryptoTransaction = getCryptoTransactionFromCryptoNetwork(bitcoinNetworkManager, digitalAssetGenesisTransaction);
@@ -83,7 +82,7 @@ public final class AssetVerification {
         return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
     }
 
-    private static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction) throws DAPException, CantGetGenesisTransactionException {
+    private static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction) throws DAPException, CantGetCryptoTransactionException {
         List<CryptoTransaction> cryptoTransactionList =
                 bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
         for (CryptoTransaction cryptoTransaction : cryptoTransactionList) {

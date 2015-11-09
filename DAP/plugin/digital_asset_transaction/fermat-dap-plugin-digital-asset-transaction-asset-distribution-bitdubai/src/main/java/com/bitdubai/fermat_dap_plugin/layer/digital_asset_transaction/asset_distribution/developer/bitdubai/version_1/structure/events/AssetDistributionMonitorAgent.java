@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
@@ -322,7 +322,7 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
                 throw new CantCheckAssetDistributionProgressException(exception,"Exception in asset distribution monitor agent","Cannot send crypto currency to asset user");
             } catch (UnexpectedResultReturnedFromDatabaseException exception) {
                 throw new CantCheckAssetDistributionProgressException(exception,"Exception in asset distribution monitor agent","Unexpected result in database query");
-            } catch (CantGetGenesisTransactionException exception) {
+            } catch (CantGetCryptoTransactionException exception) {
                 throw new CantCheckAssetDistributionProgressException(exception,"Exception in asset distribution monitor agent","Cannot get genesis transaction from asset vault");
             } catch (CantDeliverPendingTransactionsException exception) {
                 throw new CantCheckAssetDistributionProgressException(exception,"Exception in asset distribution monitor agent","Cannot deliver pending transactions");
@@ -348,12 +348,12 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
          * This method check the pending transactions registered in database and take actions according to CryptoStatus
          * @throws CantExecuteQueryException
          * @throws CantCheckAssetDistributionProgressException
-         * @throws CantGetGenesisTransactionException
+         * @throws CantGetCryptoTransactionException
          * @throws UnexpectedResultReturnedFromDatabaseException
          * @throws CantGetDigitalAssetFromLocalStorageException
          * @throws CantDeliverDigitalAssetToAssetWalletException
          */
-        private void checkPendingTransactions() throws CantExecuteQueryException, CantCheckAssetDistributionProgressException, CantGetGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException, CantGetDigitalAssetFromLocalStorageException, CantDeliverDigitalAssetToAssetWalletException {
+        private void checkPendingTransactions() throws CantExecuteQueryException, CantCheckAssetDistributionProgressException, CantGetCryptoTransactionException, UnexpectedResultReturnedFromDatabaseException, CantGetDigitalAssetFromLocalStorageException, CantDeliverDigitalAssetToAssetWalletException {
             //TODO: update to listen Outgoing Crypto events
             System.out.println("ASSET DISTRIBUTION is crypto pending events");
             List<String> eventIdList=assetDistributionDao.getPendingCryptoRouterEvents();
@@ -468,9 +468,9 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
          * @param cryptoStatus
          * @param genesisTransaction
          * @return null if the transaction cannot be found in crypto network
-         * @throws CantGetGenesisTransactionException
+         * @throws CantGetCryptoTransactionException
          */
-        private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetGenesisTransactionException {
+        private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetCryptoTransactionException {
             //List<CryptoTransaction> transactionList=new ArrayList<>();
             /**
              * Mock for testing
@@ -487,13 +487,13 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
             List<CryptoTransaction> transactionListFromCryptoNetwork=bitcoinNetworkManager.getGenesisTransaction(genesisTransaction);
             if(transactionListFromCryptoNetwork==null){
                 System.out.println("ASSET Distribution transaction List From Crypto Network for "+genesisTransaction+" is null");
-                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE,null,
+                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,
                         "Getting the cryptoStatus from CryptoNetwork",
                         "The crypto status from genesis transaction "+genesisTransaction+" return null");
             }
             if(transactionListFromCryptoNetwork.isEmpty()){
                 System.out.println("ASSET DISTRIBUTION transaction List From Crypto Network for "+genesisTransaction+" is empty");
-                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE,null,
+                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,
                         "Getting the cryptoStatus from CryptoNetwork",
                         "The genesis transaction "+genesisTransaction+" cannot be found in crypto network");
             }

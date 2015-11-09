@@ -239,7 +239,7 @@ public class IssuerRedemptionMonitorAgent implements Agent,DealsWithLogger,Deals
                 throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Exception in OutgoingIntraActor plugin");
             } catch (UnexpectedResultReturnedFromDatabaseException exception) {
                 throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Unexpected result in database query");
-            } catch (CantGetGenesisTransactionException exception){
+            } catch (CantGetCryptoTransactionException exception){
                 throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Cannot get genesis transaction from asset vault");
             } catch (CantDeleteDigitalAssetFromLocalStorageException exception) {
                 this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
