@@ -55,9 +55,6 @@ import java.util.regex.Pattern;
 
 public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         BitcoinCryptoNetworkManager,
-        DealsWithErrors,
-        DealsWithPluginFileSystem,
-        DealsWithLogger,
         LogManagerForDevelopers {
 
 
@@ -121,31 +118,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
-    }
-
-    /**
-     * DealsWithError interface implementation
-     *
-     * @param errorManager
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * DealsWithPluginFileSystem interface implementation
-     *
-     * @param pluginFileSystem
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**

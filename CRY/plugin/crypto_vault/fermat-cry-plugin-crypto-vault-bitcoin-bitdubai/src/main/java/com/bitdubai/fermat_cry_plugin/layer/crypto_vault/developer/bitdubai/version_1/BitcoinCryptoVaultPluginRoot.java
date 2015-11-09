@@ -74,13 +74,6 @@ import java.util.regex.Pattern;
 public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
         CryptoVaultManager,
         DatabaseManagerForDevelopers,
-        DealsWithBitcoinCryptoNetwork,
-        DealsWithEvents,
-        DealsWithErrors,
-        DealsWithPluginDatabaseSystem,
-        DealsWithDeviceUser,
-        DealsWithLogger,
-        DealsWithPluginFileSystem,
         LogManagerForDevelopers {
 
 
@@ -118,25 +111,12 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
     BitcoinCryptoVault vault;
     TransactionNotificationAgent transactionNotificationAgent;
 
-
-
     Database database;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-
-
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-
-    /**
-     * DealsWithBitcoinCryptoNetwork interface implementation
-     * @param bitcoinCryptoNetworkManager
-     */
-    @Override
-    public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
-        this.bitcoinCryptoNetworkManager = bitcoinCryptoNetworkManager;
-    }
 
     @Override
     public List<String> getClassesFullPath() {
@@ -220,53 +200,8 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
     public boolean isValidAddress(CryptoAddress addressTo) {
         return vault.isValidAddress(addressTo);
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     *DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPlugIndatabaseSystem interace implementation
-     * @param pluginDatabaseSystem
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager = deviceUserManager;
-    }
-
-    /**
-     * DealsWithPluginFileSystem interface implementation
-     * @param pluginFileSystem
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 
     //TODO Franklin, aqui falta la gestion de excepciones genericas

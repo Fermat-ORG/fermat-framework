@@ -2,7 +2,12 @@ package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.CryptoVaultAssetsOverBitcoinPluginRoot;
@@ -10,24 +15,24 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 /**
  * Created by rodrigo on 8/31/15.
  */
-public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
-    Plugin plugin;
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
+
+    public DeveloperBitDubai() {
+        super(new PluginDeveloperReference(Developers.BITDUBAI));
+    }
 
     @Override
-    public Plugin getPlugin() {
-        return plugin;
+    public void start() throws CantStartPluginDeveloperException {
+        try {
+
+            this.registerVersion(new CryptoVaultAssetsOverBitcoinPluginRoot());
+
+        } catch (CantRegisterVersionException e) {
+
+            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+        }
     }
 
-    public DeveloperBitDubai () {
-
-        /**
-         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
-         * it is easy to choose.
-         */
-
-        plugin = new CryptoVaultAssetsOverBitcoinPluginRoot();
-
-    }
 
     @Override
     public int getAmountToPay() {
@@ -41,11 +46,12 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
     @Override
     public String getAddress() {
-        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
+        return "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh";
     }
 
     @Override
     public TimeFrequency getTimePeriod() {
         return TimeFrequency.MONTHLY;
     }
+
 }

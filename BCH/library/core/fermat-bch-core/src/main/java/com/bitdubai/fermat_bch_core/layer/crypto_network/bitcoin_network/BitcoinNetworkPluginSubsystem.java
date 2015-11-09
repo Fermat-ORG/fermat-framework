@@ -15,7 +15,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 public class BitcoinNetworkPluginSubsystem extends AbstractPluginSubsystem {
 
     public BitcoinNetworkPluginSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK));
+        super(new PluginReference(Plugins.BITCOIN_NETWORK));
     }
 
     @Override

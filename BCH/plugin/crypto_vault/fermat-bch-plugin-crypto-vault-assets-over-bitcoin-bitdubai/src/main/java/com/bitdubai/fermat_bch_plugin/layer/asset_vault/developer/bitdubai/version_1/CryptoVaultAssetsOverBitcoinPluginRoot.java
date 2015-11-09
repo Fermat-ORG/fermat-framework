@@ -3,14 +3,23 @@ package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -26,6 +35,7 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -41,17 +51,31 @@ import java.util.concurrent.Executors;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinNetwork, DealsWithDeviceUser,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
+public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin implements
+        AssetVaultManager,
+        DatabaseManagerForDevelopers {
 
-    AssetCryptoVaultManager assetCryptoVaultManager;
+    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.USER            , addon  = Addons .DEVICE_USER           )
+    private DeviceUserManager deviceUserManager;
 
-    /**
-     * DealsWithBitcoinNetwork interface variable and implementation
-     */
-    BitcoinNetworkManager bitcoinNetworkManager;
-    @Override
-    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
-        this.bitcoinNetworkManager = bitcoinNetworkManager;
+    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon  = Addons .ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon  = Addons .PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon  = Addons .PLUGIN_FILE_SYSTEM    )
+    private PluginFileSystem pluginFileSystem;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
+    private BitcoinNetworkManager bitcoinNetworkManager;
+
+
+    private AssetCryptoVaultManager assetCryptoVaultManager;
+
+
+    public CryptoVaultAssetsOverBitcoinPluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
 
     /**
@@ -94,48 +118,6 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
         return developerDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
-    /**
-     * DealsWithDeviceUser interface variable and implementation
-     */
-    DeviceUserManager deviceUserManager;
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager = deviceUserManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface variable and implementation
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * DealsWithPluginFileSystem interface variable and implementation
-     */
-    PluginFileSystem pluginFileSystem;
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * Plugin interface imeplementation
-     * @param pluginId
-     */
-    UUID pluginId;
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
-    /**
-     * Service interface implementation
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
     @Override
     public void start() throws CantStartPluginException {
 
@@ -212,29 +194,6 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void pause() {
-
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
     }
 
     @Override

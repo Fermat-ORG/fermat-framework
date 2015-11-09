@@ -43,9 +43,7 @@ import java.util.List;
  */
 public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         BitcoinNetworkManager,
-        DatabaseManagerForDevelopers,
-        DealsWithEvents,
-        DealsWithPluginDatabaseSystem {
+        DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
@@ -63,17 +61,12 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     /**
      * BitcoinNetworkManager variable
      */
-    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
+    private BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
 
     /**
      * DatabaseManagerForDevelopers interface implementations
      */
-    BitcoinCryptoNetworkDeveloperDatabaseFactory bitcoinCryptoNetworkDeveloperDatabaseFactory;
+    private BitcoinCryptoNetworkDeveloperDatabaseFactory bitcoinCryptoNetworkDeveloperDatabaseFactory;
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         if (bitcoinCryptoNetworkDeveloperDatabaseFactory == null){
@@ -95,11 +88,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         return bitcoinCryptoNetworkDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
     @Override

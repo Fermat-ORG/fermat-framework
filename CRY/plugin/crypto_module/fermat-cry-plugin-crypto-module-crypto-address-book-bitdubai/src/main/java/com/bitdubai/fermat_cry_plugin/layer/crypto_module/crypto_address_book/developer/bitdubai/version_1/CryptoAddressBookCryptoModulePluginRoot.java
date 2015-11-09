@@ -63,9 +63,6 @@ public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin impl
         Crypto,
         CryptoAddressBookManager,
         DatabaseManagerForDevelopers,
-        DealsWithErrors,
-        DealsWithLogger,
-        DealsWithPluginDatabaseSystem,
         LogManagerForDevelopers {
 
 
@@ -319,29 +316,5 @@ public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin impl
         } catch (Exception e) {
             return DEFAULT_LOG_LEVEL;
         }
-    }
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithLogger interface implementation
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }
