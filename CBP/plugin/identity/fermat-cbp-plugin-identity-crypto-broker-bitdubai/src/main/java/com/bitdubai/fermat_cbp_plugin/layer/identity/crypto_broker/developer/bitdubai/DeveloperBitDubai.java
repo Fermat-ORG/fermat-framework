@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai;
+package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
@@ -8,10 +8,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.CryptoBrokerIdentitySubAppModulePluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.CryptoBrokerIdentityPluginRoot;
 
 /**
- * Created by ciencias on 20.01.15.
+ * Created by jorge on 28-09-2015.
  */
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
@@ -23,7 +23,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            this.registerVersion(new CryptoBrokerIdentitySubAppModulePluginRoot());
+            this.registerVersion(new CryptoBrokerIdentityPluginRoot());
 
         } catch (CantRegisterVersionException e) {
 
