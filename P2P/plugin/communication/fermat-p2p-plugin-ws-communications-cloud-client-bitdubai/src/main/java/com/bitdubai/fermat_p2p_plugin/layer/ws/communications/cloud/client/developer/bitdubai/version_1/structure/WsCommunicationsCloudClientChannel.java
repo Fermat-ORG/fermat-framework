@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientChannel</code>
@@ -89,7 +90,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
     /**
      * Holds the packet processors objects
      */
-    private Map<FermatPacketType, List<FermatPacketProcessor>> packetProcessorsRegister;
+    private Map<FermatPacketType, CopyOnWriteArrayList<FermatPacketProcessor>> packetProcessorsRegister;
 
     /**
      * Represent is the client is register with the server
@@ -347,7 +348,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
             /*
              * Create a new list and add the fermatPacketProcessor
              */
-            List<FermatPacketProcessor> fermatPacketProcessorList = new ArrayList<>();
+            CopyOnWriteArrayList<FermatPacketProcessor> fermatPacketProcessorList = new CopyOnWriteArrayList<>();
             fermatPacketProcessorList.add(fermatPacketProcessor);
 
             /*

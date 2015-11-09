@@ -37,7 +37,7 @@ public enum Layers implements FermatEnum {
 
     ;
 
-    private String code;
+    private final String code;
 
     Layers(final String code) {
         this.code = code;

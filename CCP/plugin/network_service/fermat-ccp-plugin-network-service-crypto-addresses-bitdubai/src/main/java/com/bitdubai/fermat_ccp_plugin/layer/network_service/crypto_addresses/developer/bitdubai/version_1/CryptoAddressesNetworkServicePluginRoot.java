@@ -100,7 +100,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         DealsWithErrors,
         DealsWithEvents,
         DealsWithPluginDatabaseSystem,
-        NetworkService,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
@@ -795,11 +794,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile){
 
-        System.out.println("*********  CryptoAddresses - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
-
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-
-
     }
 
     /**
@@ -807,31 +802,19 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     public void handleCompleteComponentConnectionRequestNotificationEvent(final PlatformComponentProfile remoteComponentProfile) {
 
-
-        System.out.println("*********  CryptoAddresses - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
-
         /*
          * Tell the manager to handler the new connection established
          */
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
-
+        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty())
             remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
-
-            System.out.print(" CPR NS - INCOMING CONNECTION ADDED: " + remoteComponentProfile.getAlias());
-        }
-
     }
 
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
-
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
-
         remoteNetworkServicesRegisteredList.addAllAbsent(platformComponentProfileRegisteredList);
-
     }
 
     public void handleNewMessages(final FermatMessage fermatMessage) {
@@ -861,6 +844,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
                     receiveRequest(requestMessage);
                     break;
+
                 default:
                     throw new CantHandleNewMessagesException(
                             "message type: " +networkServiceMessage.getMessageType().name(),
