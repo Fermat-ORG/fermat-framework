@@ -4,6 +4,9 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -12,8 +15,12 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -50,35 +57,33 @@ import java.util.UUID;
  * Created by jorge on 28-09-2015.
  * Modified by Yordin Alayn 10.09.15
  */
-public class CryptoCustomerIdentityPluginRoot implements    CryptoCustomerIdentityManager,
-                                                            DatabaseManagerForDevelopers,
-                                                            DealsWithPluginDatabaseSystem,
-                                                            LogManagerForDevelopers,
-                                                            DealsWithErrors,
-                                                            DealsWithLogger,
-                                                            DealsWithDeviceUser,
-                                                            DealsWithPluginFileSystem,
-                                                            Plugin,
-                                                            Service{
+public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
+        CryptoCustomerIdentityManager,
+        DatabaseManagerForDevelopers,
+        DealsWithPluginDatabaseSystem,
+        DealsWithErrors,
+        DealsWithDeviceUser,
+        DealsWithPluginFileSystem {
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
+    private DeviceUserManager deviceUserManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.ERROR_MANAGER)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.ERROR_MANAGER)
+    private PluginFileSystem pluginFileSystem;
+
+
+    public CryptoCustomerIdentityPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     /*Variables.*/
     private CryptoCustomerIdentityDatabaseDao cryptoCustomerIdentityDatabaseDao;
-
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    private static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
-
-    private ErrorManager errorManager;
-
-    private LogManager logManager;
-
-    private DeviceUserManager deviceUserManager;
-
-    private PluginFileSystem pluginFileSystem;
-
-    private UUID pluginId;
-
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     public static final String CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME = "cryptoCustomerIdentityProfileImage";
 
@@ -149,40 +154,10 @@ public class CryptoCustomerIdentityPluginRoot implements    CryptoCustomerIdenti
 
     }
 
-    /*LogManagerForDevelopers Interface implementation.*/
-    @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.CryptoCustomerIdentityPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerIdentityImpl");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseDao");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants");
-        return returnedClasses;
-    }
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            if (CryptoCustomerIdentityPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                CryptoCustomerIdentityPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                CryptoCustomerIdentityPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                CryptoCustomerIdentityPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            }
-        }
-    }
-
     /*DealWithErrors Interface implementation.*/
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
-    }
-
-    /*DealsWithLogger Interface implementation.*/
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
     }
 
     /*DealsWithDeviceUser Interface implementation.*/
@@ -197,13 +172,6 @@ public class CryptoCustomerIdentityPluginRoot implements    CryptoCustomerIdenti
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    /*PlugIn Interface implementation.*/
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
     /*Service Interface implementation.*/
     @Override
     public void start() throws CantStartPluginException {
@@ -216,25 +184,4 @@ public class CryptoCustomerIdentityPluginRoot implements    CryptoCustomerIdenti
             throw new CantStartPluginException(cantInitializeExtraUserRegistryException, Plugins.BITDUBAI_DESIGNER_IDENTITY);
         }
     }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
 }

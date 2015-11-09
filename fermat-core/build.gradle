@@ -10,7 +10,6 @@ repositories {
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-ccm-api')
-    compile project(':fermat-cbp-api')
     compile project(':fermat-dap-api')
     compile project(':fermat-wpd-api')
 
@@ -18,6 +17,11 @@ dependencies {
     compile project(':fermat-p2p-api')
     compile project(':fermat-p2p-core')
     // End  P2P Projects (Plugins)
+
+    // Init CBP Projects (Plugins)
+    compile project(':fermat-cbp-api')
+    compile project(':fermat-cbp-core')
+    // End  CBP Projects (Plugins)
 
     // Init CCP Projects (Plugins)
     compile project(':fermat-ccp-api')
@@ -67,7 +71,6 @@ dependencies {
     compile project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai')
     // CRY Projects
     compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
-    compile project(':fermat-cry-plugin-crypto-module-crypto-address-book-bitdubai')
     compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
     compile project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
     // OSA Projects   --- Hace falta esto aca??
@@ -103,11 +106,7 @@ dependencies {
     //    compile project(':fermat-dap-android-sub-app-asset-user-community-bitdubai')
     //    compile project(':fermat-dap-android-sub-app-redeem-point-community-bitdubai')
     //CBP Projects
-    compile project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai')
-    compile project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai')
-    compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
-    compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
-    compile project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai')
+
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
