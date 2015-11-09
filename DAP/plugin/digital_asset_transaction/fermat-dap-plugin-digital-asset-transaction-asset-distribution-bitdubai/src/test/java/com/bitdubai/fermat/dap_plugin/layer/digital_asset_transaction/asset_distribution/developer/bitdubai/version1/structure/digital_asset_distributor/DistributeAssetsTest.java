@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -122,7 +122,7 @@ public class DistributeAssetsTest {
     }
 
     private void setUpMockitoRules() throws Exception {
-        when(bitcoinNetworkManager.getGenesisTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(listGenesisTransaction);
+        when(bitcoinNetworkManager.getCryptoTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(listGenesisTransaction);
     }
 
     @Test
@@ -131,8 +131,8 @@ public class DistributeAssetsTest {
     }
 
     @Test
-    public void distributeAssetsTestThrowsCCantDistributeDigitalAssetsExceptionTest () throws CantDistributeDigitalAssetsException, CantGetGenesisTransactionException {
-        when(bitcoinNetworkManager.getGenesisTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(null);
+    public void distributeAssetsTestThrowsCCantDistributeDigitalAssetsExceptionTest () throws CantDistributeDigitalAssetsException, CantGetCryptoTransactionException {
+        when(bitcoinNetworkManager.getCryptoTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(null);
 
         try {
             digitalAssetDistributor.distributeAssets(null);

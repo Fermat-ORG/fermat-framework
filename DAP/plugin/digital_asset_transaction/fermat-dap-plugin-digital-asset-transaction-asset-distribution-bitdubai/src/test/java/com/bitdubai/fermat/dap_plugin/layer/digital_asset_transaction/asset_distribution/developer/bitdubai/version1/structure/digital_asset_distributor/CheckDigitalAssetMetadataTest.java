@@ -94,7 +94,7 @@ public class CheckDigitalAssetMetadataTest {
     }
 
     private void setUpMockitoRules() throws Exception {
-        when(bitcoinNetworkManager.getGenesisTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(listGenesisTransaction);
+        when(bitcoinNetworkManager.getCryptoTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(listGenesisTransaction);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class CheckDigitalAssetMetadataTest {
 
     @Test
     public void checkDigitalAssetMetadataThrowsCantGetGenesisTransactionExceptionListGenesisTransactionNullTest () throws CantDeliverDigitalAssetException, CantGetCryptoTransactionException {
-        when(bitcoinNetworkManager.getGenesisTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(null);
+        when(bitcoinNetworkManager.getCryptoTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(null);
         try {
             digitalAssetDistributor.checkDigitalAssetMetadata(mockDigitalAssetMetadata);
             fail("The method didn't throw when I expected it to");
