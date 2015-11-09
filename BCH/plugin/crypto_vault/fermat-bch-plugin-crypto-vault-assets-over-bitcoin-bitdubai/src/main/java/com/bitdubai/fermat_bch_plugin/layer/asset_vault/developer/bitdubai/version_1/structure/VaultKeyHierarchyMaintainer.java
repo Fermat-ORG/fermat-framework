@@ -298,16 +298,16 @@ class VaultKeyHierarchyMaintainer implements Agent {
          */
         private int getCurrentUsedKeys(HierarchyAccount hierarchyAccount) {
             try {
-                int currentGeneratedKeys = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
+                int currentUsedKeys = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
 
                 /**
                  * If for wathever reason we got zero, I can't allow it because I will throw
                  * a divided by zero error.
                  */
-                if (currentGeneratedKeys == 0)
-                    currentGeneratedKeys = 1;
+                if (currentUsedKeys == 0)
+                    currentUsedKeys = 1;
 
-                return currentGeneratedKeys;
+                return currentUsedKeys;
             } catch (CantExecuteDatabaseOperationException e) {
                 return 1;
             }
@@ -324,7 +324,11 @@ class VaultKeyHierarchyMaintainer implements Agent {
              * I can never return 0 or it will fail by dividing by 0
              */
             try {
-                return getDao().getCurrentGeneratedKeys(hierarchyAccount.getId());
+                int currentGeneratedKeys = getDao().getCurrentGeneratedKeys(hierarchyAccount.getId());
+                if (currentGeneratedKeys == 0)
+                    currentGeneratedKeys = 1;
+
+                return currentGeneratedKeys;
             } catch (CantExecuteDatabaseOperationException e) {
                 return 1;
             }
