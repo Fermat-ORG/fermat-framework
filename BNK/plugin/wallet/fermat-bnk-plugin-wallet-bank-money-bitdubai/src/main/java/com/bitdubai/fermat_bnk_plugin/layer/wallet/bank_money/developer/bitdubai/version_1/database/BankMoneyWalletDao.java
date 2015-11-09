@@ -13,7 +13,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionBankMoneyException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoney;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalance;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalanceRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransaction;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantAddBankMoneyException;
@@ -216,14 +215,22 @@ public class BankMoneyWalletDao {
             return Double.valueOf(getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME));
     }
 
-    public BankMoneyBalance getBalanceType(BalanceType balanceType) throws CantTransactionBankMoneyException {
+    public List<BankMoneyTransaction> getBalanceType(BalanceType balanceType) throws CantTransactionBankMoneyException {
+       try {
+            DatabaseTable table = database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_TABLE_NAME);
+            table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BALANCE_TYPE_COLUMN_NAME,balanceType.getCode(),DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return createTransactionList(table.getRecords());
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantTransactionBankMoneyException(CantTransactionBankMoneyException.DEFAULT_MESSAGE,e,"","");
+        }
 
-            if (balanceType == balanceType.AVAILABLE) {
+           /* if (balanceType == balanceType.AVAILABLE) {
                 return bankMoney.getBookBalance(BalanceType.getByCode(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME));
                 //return getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME);
             } else {
                 return bankMoney.getBookBalance(BalanceType.getByCode(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME));
-            }
+            }*/
 
     }
     /**
@@ -256,13 +263,14 @@ public class BankMoneyWalletDao {
         }
     }
     private List<BankMoneyTransaction> createTransactionList(Collection<DatabaseTableRecord> records){
-        List<BankMoneyTransaction> cashMoneyTransactionsList = new ArrayList<>();
+        List<BankMoneyTransaction> list = new ArrayList<>();
 
         for(DatabaseTableRecord record : records)
-            cashMoneyTransactionsList.add(constructTransactionBankMoney(record));
+            list.add(constructTransactionBankMoney(record));
 
-        return cashMoneyTransactionsList;
+        return list;
     }
+
     private BankMoneyTransaction constructTransactionBankMoney(DatabaseTableRecord record){
 
         UUID   bankTransactionId                       =record.getUUIDValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME);
@@ -302,4 +310,5 @@ public class BankMoneyWalletDao {
                 memo,
                 status);
     }
+
 }
