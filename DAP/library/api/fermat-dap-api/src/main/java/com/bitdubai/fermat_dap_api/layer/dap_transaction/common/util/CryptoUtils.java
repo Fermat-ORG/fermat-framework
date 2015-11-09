@@ -25,7 +25,7 @@ public class CryptoUtils {
 
     public static CryptoTransaction getCryptoTransactionByCryptoStatus(BitcoinNetworkManager bitcoinNetworkManager, CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetGenesisTransactionException {
 
-        List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getGenesisTransaction(genesisTransaction);
+        List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
         if (transactionListFromCryptoNetwork == null) {
             throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE, null,
                     "Getting the cryptoStatus from CryptoNetwork",

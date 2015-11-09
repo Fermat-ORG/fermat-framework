@@ -85,7 +85,7 @@ public final class AssetVerification {
 
     private static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction) throws DAPException, CantGetGenesisTransactionException {
         List<CryptoTransaction> cryptoTransactionList =
-                bitcoinNetworkManager.getGenesisTransaction(genesisTransaction);
+                bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
         for (CryptoTransaction cryptoTransaction : cryptoTransactionList) {
             if (cryptoTransaction.getTransactionHash().equals(genesisTransaction)) {
                 return cryptoTransaction;

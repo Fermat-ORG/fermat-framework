@@ -32,7 +32,7 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @return
      * @throws CantGetGenesisTransactionException
      */
-    List<CryptoTransaction> getGenesisTransaction(String txHash) throws CantGetGenesisTransactionException;
+    List<CryptoTransaction> getCryptoTransaction(String txHash) throws CantGetGenesisTransactionException;
 
     /**
      * Broadcast a well formed, commited and signed transaction into the specified network
