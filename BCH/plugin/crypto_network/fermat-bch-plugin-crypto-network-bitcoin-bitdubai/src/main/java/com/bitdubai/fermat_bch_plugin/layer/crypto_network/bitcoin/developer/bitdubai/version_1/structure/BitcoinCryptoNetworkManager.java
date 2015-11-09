@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Nullable;
+
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptonetwork.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager</code>
  * Starts the monitoring agent that will listen to transactions. Based on the passed public Keys from the network type
@@ -119,7 +121,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             /**
              * load (if any) existing wallet.
              */
-            wallet = getWallet(blockchainNetworkType);
+            wallet = getWallet(blockchainNetworkType, keyList);
+
 
             /**
              * add new keys (if any).
@@ -173,20 +176,28 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * by forming the name wallet_[NETWORK]. If it doesn't exists, then I will create a new object for this network.
      * @return
      */
-    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType){
+    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList){
         Wallet wallet;
         String fileName = WALLET_FILENAME + blockchainNetworkType.getCode();
         walletFile = new File(fileName);
         try {
             wallet  =Wallet.loadFromFile(walletFile);
         } catch (UnreadableWalletException e) {
-            wallet = new Wallet(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
+            /**
+             * If I couldn't load the wallet from file, I'm assuming is a new wallet and I will create it.
+             */
+            wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
         }
 
         /**
-         * Will set the autosave information
+         * Will set the autosave information and save it.
          */
         wallet.autosaveToFile(walletFile, 1, TimeUnit.SECONDS, null);
+        try {
+            wallet.saveToFile(walletFile);
+        } catch (IOException e) {
+            e.printStackTrace(); // I will continue because the key addition will trigger an autosave anyway.
+        }
 
         return wallet;
     }
@@ -354,7 +365,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         /**
          * load the wallet from the passed network. The network type was defined when the UTXO provider was set.
          */
-        Wallet wallet = this.getWallet(utxoProviderNetworkParameter);
+        Wallet wallet = this.getWallet(utxoProviderNetworkParameter, null);
         List<UTXO> utxoList = new ArrayList<>();
 
         /**
@@ -417,7 +428,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @return
      */
     public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
-        Wallet wallet = getWallet(blockchainNetworkType);
+        Wallet wallet = getWallet(blockchainNetworkType, null);
         return wallet.getTransaction(Sha256Hash.of(transactionHash.getBytes()));
     }
 }
