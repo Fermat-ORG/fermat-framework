@@ -1,13 +1,13 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_cbp_api.all_definition.world.Currency;
 
 /**
  * Created by Alex on 11/2/2015.
  */
 
-public enum FiatCurrencyType implements FermatEnum {
+public enum FiatCurrency implements Currency {
 
     VENEZUELAN_BOLIVAR("VEF"),
     ARGENTINE_PESO("ARS"),
@@ -23,17 +23,16 @@ public enum FiatCurrencyType implements FermatEnum {
     NEW_ZEALAND_DOLLAR("NZD"),
     AUSTRALIAN_DOLLAR("AUD"),
     JAPANESE_YEN("JPY"),
-    CHINESE_YUAN("CNY"),
-    BITCOIN("BTC");
+    CHINESE_YUAN("CNY");
 
     private String code;
 
-    FiatCurrencyType(String code) { this.code = code; }
+    FiatCurrency(String code) { this.code = code; }
 
     @Override
     public String getCode() { return this.code; }
 
-    public static FiatCurrencyType getFiatCurrencyTypeByCode(String currencyCode) throws InvalidParameterException {
+    public static FiatCurrency getFiatCurrencyTypeByCode(String currencyCode) throws InvalidParameterException {
         switch(currencyCode)
         {
             case "VEF": return VENEZUELAN_BOLIVAR;
@@ -51,10 +50,9 @@ public enum FiatCurrencyType implements FermatEnum {
             case "AUD": return AUSTRALIAN_DOLLAR;
             case "JPY": return JAPANESE_YEN;
             case "CNY": return CHINESE_YUAN;
-            case "BTC": return BITCOIN;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null,
-                        "Received currencyCode: " + currencyCode, "This is an invalid FiatCurrencyType code");
+                        "Received currencyCode: " + currencyCode, "This is an invalid FiatCurrency code");
 
         }
     }
