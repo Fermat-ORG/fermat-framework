@@ -11,6 +11,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dist
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
+
+import static org.junit.Assert.fail;
 
 /**
  * Created by Luis Campo (campusprize@gmail.com)on 05/11/15.
@@ -56,13 +59,14 @@ public class SetDigitalAssetDistributionVaultTest {
         assetDistributionMonitorAgent.setDigitalAssetDistributionVault(digitalAssetDistributionVault);
     }
 
-    /*@Test
+    @Test
     public void setDigitalAssetDistributionVaultThrowsCantSetObjectExceptionTest() throws CantSetObjectException {
-        catchException(assetDistributionMonitorAgent).setDigitalAssetDistributionVault(null);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantSetObjectException.class);
-    }*/
+        try {
+            assetDistributionMonitorAgent.setDigitalAssetDistributionVault(null);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantSetObjectException);
+        }
+    }
 
 }
