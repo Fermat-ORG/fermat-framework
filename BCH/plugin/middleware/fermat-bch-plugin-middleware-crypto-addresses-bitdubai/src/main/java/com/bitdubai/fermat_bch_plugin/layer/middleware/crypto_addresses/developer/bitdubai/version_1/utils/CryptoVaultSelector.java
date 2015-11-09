@@ -65,16 +65,16 @@ public final class CryptoVaultSelector {
     }
 
     public final CryptoVaultManager getAssetVault(final CryptoCurrency cryptoCurrency) throws InvalidParameterException {
-/*
+
         switch (CryptoCurrencyVault.getByCryptoCurrency(cryptoCurrency)) {
 
             case BITCOIN_VAULT: return cryptoVaultManager;
 
-            default:*/
+            default:
                 throw new InvalidParameterException(
                         "Unexpected cryptoCurrency: " + cryptoCurrency.toString() + " - " + cryptoCurrency.getCode()
                 );
-       // }
+        }
     }
 
     public final FermatVaultEnum getVaultEnum(final VaultType      vaultType     ,
@@ -83,6 +83,7 @@ public final class CryptoVaultSelector {
         switch (vaultType) {
 
             case CRYPTO_CURRENCY_VAULT: return CryptoCurrencyVault.getByCryptoCurrency(cryptoCurrency);
+            case ASSET_VAULT:           return CryptoCurrencyVault.getByCryptoCurrency(cryptoCurrency);
 
             default: throw new InvalidParameterException("VaultType: "+vaultType.toString()+ " - CryptoCurrency: "+ cryptoCurrency, "Vault not recognized.");
         }

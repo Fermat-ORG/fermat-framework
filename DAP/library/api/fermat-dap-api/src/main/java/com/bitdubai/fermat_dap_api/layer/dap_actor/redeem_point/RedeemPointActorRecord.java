@@ -38,8 +38,8 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     /**
      *  Method for Set Actor in Actor Network Service Redeem Point
      */
-    public RedeemPointActorRecord(String name,
-                                  String publicKey,
+    public RedeemPointActorRecord(String publicKey,
+                                  String name,
                                   byte[] profileImage,
                                   Location location) {
 

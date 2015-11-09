@@ -29,6 +29,7 @@ public final class WalletManagerSelector {
         switch(platform) {
 
             case CRYPTO_CURRENCY_PLATFORM: return walletManagerManager;
+            case DIGITAL_ASSET_PLATFORM:   return walletManagerManager;
 
             default:
                 throw new CantIdentifyWalletManagerException("Unexpected Platform: "+platform.toString()+" - "+ platform.getCode());
