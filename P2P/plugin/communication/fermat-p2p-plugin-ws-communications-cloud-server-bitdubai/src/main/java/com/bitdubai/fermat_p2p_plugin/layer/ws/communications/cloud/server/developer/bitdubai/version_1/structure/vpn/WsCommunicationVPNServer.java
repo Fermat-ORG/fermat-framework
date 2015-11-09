@@ -83,6 +83,11 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     private NetworkServiceType networkServiceTypeApplicant;
 
     /**
+     * Holds all pong message by connection
+     */
+    private Map<Integer, Boolean> pendingPongMessageByConnection;
+
+    /**
      * Constructor with parameters
      *
      * @param address
@@ -96,7 +101,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         this.vpnClientIdentityByParticipants = new ConcurrentHashMap<>();
         this.wsCommunicationCloudServer      = wsCommunicationCloudServer;
         this.networkServiceTypeApplicant     = networkServiceTypeApplicant;
-
+        this.pendingPongMessageByConnection  = new ConcurrentHashMap<>();
 
         participantsConnections.clear();
         vpnClientIdentityByParticipants.clear();
@@ -115,7 +120,10 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         for (WebSocket conn:connections()) {
             System.out.println(" WsCommunicationVPNClient - Sending ping message to remote node (" + conn.getRemoteSocketAddress() + ")");
             conn.sendFrame(frame);
+            pendingPongMessageByConnection.put(conn.hashCode(), Boolean.TRUE);
         }
+
+
     }
 
     /**
@@ -128,8 +136,10 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     @Override
     public void onWebsocketPong(WebSocket conn, Framedata f) {
         System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node (" + conn.getRemoteSocketAddress() + ") connection is alive");
-        //System.out.println(" WsCommunicationsCloudClientChannel - conn = " + conn);
-        //System.out.println(" WsCommunicationsCloudClientChannel - f = "+f);
+        if (f.getOpcode() == Framedata.Opcode.PONG){
+            System.out.println(" WsCommunicationCloudServer - Pong message receiveRemote from node ("+conn.getRemoteSocketAddress()+") connection is alive");
+            pendingPongMessageByConnection.remove(conn.hashCode());
+        }
     }
 
 
@@ -259,15 +269,15 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         System.out.println(" WsCommunicationVPNServer - Starting method onClose");
         System.out.println(" WsCommunicationVPNServer - " + clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code + " reason = " + reason + " remote = " + remote);
 
-        if (participantsConnections.size() <= 1){
-
-            Iterator<WebSocket> iterator = connections().iterator();
-            while (iterator.hasNext()){
-                WebSocket conn = iterator.next();
-                conn.closeConnection(505, " All participantsConnections close her connections ");
-            }
-
+        Iterator<WebSocket> iterator = connections().iterator();
+        while (iterator.hasNext()){
+            WebSocket conn = iterator.next();
+            conn.closeConnection(505, " All participantsConnections close her connections ");
         }
+
+        participantsConnections.clear();
+        vpnClientIdentityByParticipants.clear();
+        registeredParticipants.clear();
 
     }
 
@@ -411,6 +421,14 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Get the PendingPongMessageByConnection
+     * @return Map<Integer, Boolean>
+     */
+    public Map<Integer, Boolean> getPendingPongMessageByConnection() {
+        return pendingPongMessageByConnection;
     }
 
 }
