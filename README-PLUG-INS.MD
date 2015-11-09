@@ -734,7 +734,7 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
 ```
   **IMPORTANT:** 
 * Agents should have the ability to auto stop, when their task is completed.
-* It is recommended as good practice that before calling the method *public static native void sleep(long millis) throws InterruptedException;* is always evaluated if the thread has not been interrupted by another process before putting it into downtime.
+* It is recommended as good practice that before calling the method "*public static native void sleep(long millis) throws InterruptedException;*" is always evaluated if the thread has not been interrupted by another process before putting it into downtime.
   
   Code example:
 
