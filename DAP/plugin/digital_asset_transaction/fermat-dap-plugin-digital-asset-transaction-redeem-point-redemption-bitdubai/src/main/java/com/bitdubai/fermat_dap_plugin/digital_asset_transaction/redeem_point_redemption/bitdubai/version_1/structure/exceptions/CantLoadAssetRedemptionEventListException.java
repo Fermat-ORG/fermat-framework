@@ -9,7 +9,7 @@ public class CantLoadAssetRedemptionEventListException extends DAPException {
 
     //VARIABLE DECLARATION
 
-    public static final String DEFAULT_MESSAGE = "There was an error while searching the event list.";
+    public static final String DEFAULT_MESSAGE = "There was an error while searching the redeem point redemption event list.";
 
     //CONSTRUCTORS
 

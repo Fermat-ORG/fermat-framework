@@ -175,10 +175,7 @@ public final class FermatSystem {
     public final AbstractPlugin startAndGetPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException ,
                                                                                                                      CantStartPluginException {
 
-        System.out.println("Starting Plugin: "+ pluginVersionReference.toString2());
-        AbstractPlugin abstractPlugin = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
-        System.out.println("End      Plugin: "+ pluginVersionReference.toString2());
-        return abstractPlugin;
+        return fermatPluginManager.startPluginAndReferences(pluginVersionReference);
     }
 
 }

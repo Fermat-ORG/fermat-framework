@@ -63,7 +63,7 @@
 //     * DealWithIntraUserIdentityManager Interface member variables.
 //     */
 //    @Mock
-//    private com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserIdentityManager mockIntraUserIdentityManager;
+//    private IntraWalletUserIdentityManager mockIntraUserIdentityManager;
 //
 //
 //    /**

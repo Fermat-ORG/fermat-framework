@@ -235,7 +235,8 @@ public abstract class AbstractPlugin implements Plugin, Service {
                 System.out.println("---------->>> Assigned reference: "+avr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
-                        "classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),
+                        "Working plugin: "+this.getPluginVersionReference().toString3()+
+                        " ------------ classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),
                         ""
                 );
             }
@@ -274,7 +275,8 @@ public abstract class AbstractPlugin implements Plugin, Service {
                 System.out.println("---------->>> Assigned reference: "+pvr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
-                        "classExpected: "+refManager.getName() + " --- classReceived: " + abstractPlugin.getClass().getName(),
+                        "Working plugin: "+this.getPluginVersionReference().toString3()+
+                        " ------------ classExpected: "+refManager.getName() + " --- classReceived: " + abstractPlugin.getClass().getName(),
                         "Field is not assignable by the given reference (bad definition, different type expected). Check the expected plugin and the defined type."
                 );
             }
