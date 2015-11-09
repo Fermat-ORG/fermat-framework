@@ -2,9 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent"
+    android:layout_width="400dp"
     android:background="#FFFFFF"
    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#12aca1">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text=" Create contact"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            />
+
+
+    </LinearLayout>
 
 
     <LinearLayout
@@ -21,8 +42,8 @@
 
         <ImageView
             android:id="@+id/take_picture_btn"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_margin="7dip"
             android:background="@drawable/btn_new_contact_picture"
             android:src="@drawable/ic_camera_green"
@@ -42,7 +63,7 @@
                 android:textColor="#12aca1"
                 android:paddingLeft="20dp"
                 android:layout_alignParentTop="true"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
 
             <EditText
@@ -51,7 +72,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginBottom="3dip"
-                android:background="@drawable/shape_section"
+
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:hint="Name"
@@ -62,12 +83,13 @@
                 android:paddingTop="7dip"
                 android:singleLine="true"
                 android:textColor="#666666"
-
+                android:textColorHint="#666666"
                 android:textSize="12sp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:textStyle="normal"
-                android:fontFamily="roboto"/>
+                android:fontFamily="roboto"
+                />
 
         </LinearLayout>
 
@@ -81,20 +103,25 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#e1e1e1"
-        android:layout_alignParentBottom="true"></View>
+        ></View>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set address"
+        android:textColor="#12aca1"
+        android:paddingLeft="24dp"
+        android:layout_alignParentTop="true"
+        android:paddingTop="7dp"
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:textColor="#12aca1"
-            android:paddingLeft="20dp"
-            android:layout_alignParentTop="true"
-            />
+
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -106,18 +133,16 @@
         android:id="@+id/container">
 
 
-
         <EditText
             android:id="@+id/txt_address"
             android:layout_width="200dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="3dip"
-            android:background="@drawable/shape_section"
-
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:hint="Address"
+            android:textColorHint="#666666"
             android:inputType="textCapWords"
             android:paddingBottom="7dip"
             android:paddingLeft="15dip"
@@ -132,19 +157,19 @@
 
         <ImageView
             android:id="@+id/paste_from_clipboard_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:padding="10dp"
             android:layout_weight="1.5"
-            android:src="@drawable/ic_action_send_now_grey" />
+            android:src="@drawable/ic_copy" />
 
         <ImageView
             android:id="@+id/scan_qr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:padding="10dp"
             android:layout_weight="1.5"
-            android:src="@drawable/ic_action_camera_grey" />
+            android:src="@drawable/ic_qr" />
 
 
     </LinearLayout>
