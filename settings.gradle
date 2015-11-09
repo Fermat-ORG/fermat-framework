@@ -9,6 +9,10 @@ project(':fermat-bnk-api').projectDir = new File('BNK/library/api/fermat-bnk-api
 
 include ':fermat-cbp-api'
 project(':fermat-cbp-api').projectDir = new File('CBP/library/api/fermat-cbp-api')
+
+include ':fermat-cbp-core'
+project(':fermat-cbp-core').projectDir = new File('CBP/library/core/fermat-cbp-core')
+
 include ':fermat-cry-api'
 project(':fermat-cry-api').projectDir = new File('CRY/library/api/fermat-cry-api')
 include ':fermat-csh-api'
