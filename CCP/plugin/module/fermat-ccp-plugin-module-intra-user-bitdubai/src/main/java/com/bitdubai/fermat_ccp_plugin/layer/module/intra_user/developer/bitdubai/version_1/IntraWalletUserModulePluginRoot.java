@@ -290,7 +290,6 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
 
         try {
             return  intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
-
         }
         catch (ErrorSearchingSuggestionsException e) {
             throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
