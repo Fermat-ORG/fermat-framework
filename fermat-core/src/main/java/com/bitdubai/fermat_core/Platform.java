@@ -1224,7 +1224,7 @@ public class Platform implements Serializable {
                 ((DealsWithIncomingCrypto) plugin).setIncomingCryptoManager((IncomingCryptoManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_ROUTER, Plugins.INCOMING_CRYPTO)));
             }
             if (plugin instanceof DealsWithDeviceUser) {
-                ((DealsWithDeviceUser) plugin).setDeviceUserManager((DeviceUserManager) corePlatformContext.getAddon(Addons.DEVICE_USER));
+                ((DealsWithDeviceUser) plugin).setDeviceUserManager((DeviceUserManager) fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.USER, Addons.DEVICE_USER)));
             }
             if (plugin instanceof DealsWithWalletStoreModule) {
                 ((DealsWithWalletStoreModule) plugin).setWalletStoreModuleManager((WalletStoreModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE));
@@ -1252,11 +1252,6 @@ public class Platform implements Serializable {
 
             if (plugin instanceof DealsWithCCPIdentityIntraWalletUser)
                 ((DealsWithCCPIdentityIntraWalletUser) plugin).setIdentityIntraUserManager((IntraWalletUserIdentityManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY, Plugins.INTRA_WALLET_USER)));
-
-
-            if (plugin instanceof DealsWithDeveloperIdentity) {
-                ((DealsWithDeveloperIdentity) plugin).setDeveloperIdentityManager((DeveloperIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_IDENTITY));
-            }
 
             if (plugin instanceof DealsWithPublisherIdentity) {
                 ((DealsWithPublisherIdentity) plugin).setPublisherIdentityManager((PublisherIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_PUBLISHER_IDENTITY));

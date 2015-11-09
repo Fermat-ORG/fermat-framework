@@ -30,11 +30,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 29/10/2015.
  */
-public abstract class AbstractNetworkService extends AbstractPlugin implements NetworkService, DealsWithPluginFileSystem {
-
-    // Necessary References
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    protected     PluginFileSystem         pluginFileSystem        ;
+public abstract class AbstractNetworkService extends AbstractPlugin implements NetworkService {
 
     /**
      * Network Service details.
@@ -108,21 +104,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         this.platformComponentProfile = platformComponentProfile;
     }
 
-    @Override
-    public void start() throws CantStartPluginException {
-
-        try {
-            loadKeyPair();
-
-            startNetworkService();
-            this.serviceStatus = ServiceStatus.STARTED;
-        } catch (CantLoadKeyPairException e) {
-            throw new CantStartPluginException(e, "", "error trying to load the key pair.");
-        }
-    }
-
-    public abstract void startNetworkService() throws CantStartPluginException;
-
     public abstract void initializeCommunicationNetworkServiceConnectionManager();
 
 
@@ -130,10 +111,10 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     private static final String PLUGIN_IDS_FILE_NAME      = "networkServiceKeyPairsFile";
     private static final String PAIR_SEPARATOR            = ";"         ;
 
-    private void loadKeyPair() throws CantLoadKeyPairException {
+    protected final void loadKeyPair(final PluginFileSystem pluginFileSystem) throws CantLoadKeyPairException {
 
         try {
-            final PluginTextFile identityFile = getNetworkServiceIdentityFile();
+            final PluginTextFile identityFile = pluginFileSystem.getTextFile(pluginId, PLUGIN_IDS_DIRECTORY_NAME, buildNetworkServiceKeyPairFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             final String identityFileContent = identityFile.getContent();
 
@@ -172,16 +153,4 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     private String buildNetworkServiceKeyPairFileName() {
         return PLUGIN_IDS_FILE_NAME + "_" + pluginId;
     }
-
-    private PluginTextFile getNetworkServiceIdentityFile() throws CantCreateFileException, FileNotFoundException {
-
-        return pluginFileSystem.getTextFile(pluginId, PLUGIN_IDS_DIRECTORY_NAME, buildNetworkServiceKeyPairFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-    }
-
-// todo delete
-    @Override
-    public void setPluginFileSystem(final PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
 }

@@ -88,8 +88,8 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK)
-    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK)
+    private BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
 
 
     public BitcoinCryptoVaultPluginRoot() {
