@@ -38,7 +38,7 @@ The Framework core is in charge of initializing Add-ons and Plug-ins and managin
 
 A set of Plug-ins is needed for each crypto network to be supported. One for interfacing the network, pushing outgoing transactions and monitoring incoming transactions. Another couple being the digital vaults where the crypto currency value and digital assets are stored.
 
-Wallets are higher level abstractions and have their own set of Plug-ins for keeping the accounting of each kind of them. This means that we split the accounting from the handling of the value by having components at different layers to handle each ativity.
+Wallets are higher level abstractions and have their own set of Plug-ins for keeping the accounting of each kind of them. This means that we split the accounting from the handling of the value by having components at different layers to handle each activity.
 
 <br>
 ### Fermat Network
@@ -68,12 +68,12 @@ The Framework is responsible to enforce the license agreements, charge the end u
 
 #### To network nodes
 
-Network clients establishes a _Home Node_ where they check themselves and their actors in so as to be found by other network clients. They must pay a subscription fee to their _Home Node_ for it's services. Finding and calling other clients through other nodes is free for the caller. Those nodes income is covered by network clients for which They are their _Home Node_.
+Network clients establishes a _Home Node_ where they check themselves and their actors in so as to be found by other network clients. They must pay a subscription fee to their _Home Node_ for its services. Finding and calling other clients through other nodes is free for the caller. Those nodes income is covered by those network clients for whom they act as their _Home Node_.
 
 <br>
 ### Platforms
 
-We define as a _Platform_ to a set of interrelated functionality. _Platforms_ may consume services from other _platforms_ and their dependencies form a hierarchical stack. 
+We define as a _Platform_  a set of interrelated functionality. _Platforms_ may consume services from other _platforms_ and their dependencies form a hierarchical stack. 
 
 Each _Platform_ may introduce to the system new workflows, Add-ons, Plug-ins, GUI components (Apps, wallets) and Actors. This enables the system to target different use cases with different actors involved. 
 
