@@ -230,25 +230,25 @@ public class CryptoBrokerWalletDatabaseDao {
     }
 
     /*COLLECTION*/
-    public Collection <Stock> getCollectionStocks() throws CantGetCollectionStocksCryptoBrokerWalletException {
-        Collection<Stock> stockCollection = new ArrayList<Stock>();
-        /*try{
-            DatabaseTable stocksTaable = this.database.getTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME);
-            stocksTaable.loadToMemory();
-
-            List<DatabaseTableRecord> records = stocksTaable.getRecords();
-            stocksTaable.clearAllFilters();
-
-            for (DatabaseTableRecord record : records) {
-                stockCollection.add(getStockBalanceFromRecord(record));
-            }
-        } catch (CantLoadTableToMemoryException exception){
-            throw new CantGetCollectionStocksCryptoBrokerWalletException(CantGetCollectionStocksCryptoBrokerWalletException.DEFAULT_MESSAGE, exception, null, "Check the cause");
-        } catch (Exception exception){
-            throw new CantGetCollectionStocksCryptoBrokerWalletException(CantGetCollectionStocksCryptoBrokerWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
-        }*/
-        return stockCollection;
-    }
+//    public Collection <Stock> getCollectionStocks() throws CantGetCollectionStocksCryptoBrokerWalletException {
+//        Collection<Stock> stockCollection = new ArrayList<Stock>();
+//        try{
+//            DatabaseTable stocksTaable = this.database.getTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME);
+//            stocksTaable.loadToMemory();
+//
+//            List<DatabaseTableRecord> records = stocksTaable.getRecords();
+//            stocksTaable.clearAllFilters();
+//
+//            for (DatabaseTableRecord record : records) {
+//                stockCollection.add(getStockBalanceFromRecord(record));
+//            }
+//        } catch (CantLoadTableToMemoryException exception){
+//            throw new CantGetCollectionStocksCryptoBrokerWalletException(CantGetCollectionStocksCryptoBrokerWalletException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+//        } catch (Exception exception){
+//            throw new CantGetCollectionStocksCryptoBrokerWalletException(CantGetCollectionStocksCryptoBrokerWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+//        }
+//        return stockCollection;
+//    }
 
     private float calculateBookRunningBalance(final float transactionAmount, String publicKeyWallet) throws CantGetBalanceRecordException {
         return getCurrentBalance(BalanceType.BOOK, publicKeyWallet) + transactionAmount;
