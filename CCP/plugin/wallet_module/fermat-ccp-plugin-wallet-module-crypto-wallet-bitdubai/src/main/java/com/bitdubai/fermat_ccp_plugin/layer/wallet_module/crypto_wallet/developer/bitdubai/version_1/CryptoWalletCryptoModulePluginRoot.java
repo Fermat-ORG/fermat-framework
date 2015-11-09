@@ -84,7 +84,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE   , plugin = Plugins.CRYPTO_ADDRESSES)
     private CryptoAddressesManager cryptoAddressesNSManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY   , plugin = Plugins.INTRA_WALLET_USER)
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR   , plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserActorManager intraWalletUserManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION   , plugin = Plugins.OUTGOING_EXTRA_USER)
