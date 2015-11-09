@@ -55,14 +55,14 @@ public class PluginVersionReference {
 
         String[] keySplit = key.split(Pattern.quote(KEY_SEPARATOR));
 
-        if(keySplit.length != 6)
+        if(keySplit.length != 5)
             throw new InvalidParameterException("Key: " + key, "This key should respect the separation pattern using \"" + KEY_SEPARATOR + "\"");
 
-        final String platformString   = keySplit[1];
-        final String layerString      = keySplit[2];
-        final String pluginEnumString = keySplit[3];
-        final String developerString  = keySplit[4];
-        final String versionString    = keySplit[5];
+        final String platformString   = keySplit[0];
+        final String layerString      = keySplit[1];
+        final String pluginEnumString = keySplit[2];
+        final String developerString  = keySplit[3];
+        final String versionString    = keySplit[4];
 
         final Platforms        platform        = Platforms       .getByCode(platformString);
         final Layers           layer           = Layers          .getByCode(layerString);
