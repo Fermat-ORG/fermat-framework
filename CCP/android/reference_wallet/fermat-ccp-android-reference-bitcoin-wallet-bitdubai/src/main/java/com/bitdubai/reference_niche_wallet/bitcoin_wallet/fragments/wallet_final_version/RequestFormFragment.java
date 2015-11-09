@@ -20,10 +20,15 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragm
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantSendCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
@@ -168,20 +173,50 @@ public class RequestFormFragment extends FermatWalletFragment implements View.On
             if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
                 im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             }
-            if (cryptoWalletWalletContact != null)
-                sendRequest();
-            else
-                Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
+
+            sendRequest();
+
         }
         else if (id == R.id.imageView_contact){
             // if user press the profile image
         }
     }
 
-    //TODO: VER QUE PASA  SI EL CONTACTO NO TIENE UNA WALLET ADDRESS
     private void sendRequest(){
+
+        try {
+
+            if (cryptoWalletWalletContact == null) {
+                Toast.makeText(getActivity(), "Contact not found, please add it first.", Toast.LENGTH_LONG).show();
+            } else if (cryptoWalletWalletContact.getCompatibility().equals(Compatibility.INCOMPATIBLE)) {
+                Toast.makeText(getActivity(), "The user doesn't have a compatible wallet.", Toast.LENGTH_LONG).show();
+            } else if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
+                Toast.makeText(getActivity(), "We can't find an address for the contact yet.", Toast.LENGTH_LONG).show();
+            } else {
+                cryptoWallet.sendCryptoPaymentRequest(
+                        cryptoWalletWalletContact.getWalletPublicKey(),
+                        intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
+                        Actors.INTRA_USER,
+                        cryptoWalletWalletContact.getActorPublicKey(),
+                        cryptoWalletWalletContact.getActorType(),
+                        cryptoWalletWalletContact.getReceivedCryptoAddress().get(0),
+                        txt_notes.getText().toString(),
+                        Long.valueOf(editTextAmount.getText().toString()),
+                        BlockchainNetworkType.DEFAULT
+                );
+            }
+
+        } catch (Exception e) {
+
+            reportUnexpectedError(e);
+        }
+
         //TODO: chamo completá todo lo que necesites para mandar del cryptowalletwalletcontact y del referenceWalletSession que tiene el tipo de wallet y toda esa vaina
+
     }
 
+    void reportUnexpectedError(final Exception e) {
 
+        referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.TASK, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+    }
 }

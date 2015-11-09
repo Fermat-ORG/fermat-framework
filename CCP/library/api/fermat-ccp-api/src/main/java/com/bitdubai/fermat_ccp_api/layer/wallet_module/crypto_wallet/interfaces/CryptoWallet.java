@@ -383,7 +383,7 @@ public interface CryptoWallet extends Serializable {
      * @throws CantListCryptoWalletIntraUserIdentityException
      */
 
-    List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
+    List<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
 
     /**
      *
@@ -405,5 +405,30 @@ public interface CryptoWallet extends Serializable {
                                   Actors deliveredToActorType);
 
     List<IntraWalletUserIdentity> getActiveIdentities();
+
+    /**
+     * Through the method <code>sendCryptoPaymentRequest</code> you can generate and send a crypto payment request.
+     *
+     * @param walletPublicKey
+     * @param identityPublicKey
+     * @param identityType
+     * @param actorPublicKey
+     * @param actorType
+     * @param cryptoAddress
+     * @param description
+     * @param amount
+     * @param networkType
+     *
+     * @throws CantSendCryptoPaymentRequestException  if something goes wrong.
+     */
+     void sendCryptoPaymentRequest(final String                walletPublicKey  ,
+                                   final String                identityPublicKey,
+                                   final Actors                identityType     ,
+                                   final String                actorPublicKey   ,
+                                   final Actors                actorType        ,
+                                   final CryptoAddress         cryptoAddress    ,
+                                   final String                description      ,
+                                   final long                  amount           ,
+                                   final BlockchainNetworkType networkType      ) throws CantSendCryptoPaymentRequestException;
 
 }
