@@ -2,14 +2,12 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.GrouperViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.TransactionViewHolder;
@@ -46,7 +44,7 @@ public class ReceivetransactionsExpandableAdapter
      */
     @Override
     public GrouperViewHolder onCreateParentViewHolder(ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.cbw_grouper_list_item, parent, false);
+        View view = mInflater.inflate(R.layout.ccp_grouper_list_item, parent, false);
         return new GrouperViewHolder(view,res);
     }
 
@@ -59,7 +57,7 @@ public class ReceivetransactionsExpandableAdapter
      */
     @Override
     public TransactionViewHolder onCreateChildViewHolder(ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.cbw_negotiation_list_item, parent, false);
+        View view = mInflater.inflate(R.layout.ccp_transaction_list_item, parent, false);
         return new TransactionViewHolder(view);
     }
 
@@ -72,7 +70,7 @@ public class ReceivetransactionsExpandableAdapter
      */
     @Override
     public void onBindParentViewHolder(GrouperViewHolder parentViewHolder, int position, GrouperItem parentListItem) {
-        parentViewHolder.bind(parentListItem.getChildCount(), parentListItem.getCryptoWalletTransaction());
+        parentViewHolder.bind(parentListItem.getChildCount(),(CryptoWalletTransaction) parentListItem.getCryptoWalletTransaction());
     }
 
     /**

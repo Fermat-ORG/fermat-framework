@@ -310,9 +310,9 @@ public class AssetIssuingTransactionDao {
         return getStringValueFromAssetIssuingTableByFieldCode(transactionId, fieldCode, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME);
     }
 
-    private String getWalletPublicKeyByDigitalAssetPublicKey(String digitalAssetPublicKey) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+    /*private String getWalletPublicKeyByDigitalAssetPublicKey(String digitalAssetPublicKey) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
         return getStringValueFromAssetIssuingTableByFieldCode(digitalAssetPublicKey, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_WALLET_PUBLIC_KEY_COLUMN_NAME, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME);
-    }
+    }*/
 
     private String getStringValueFromAssetIssuingTableByFieldCode(String value, String fieldCode, String indexColumn) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
         try {
@@ -340,9 +340,9 @@ public class AssetIssuingTransactionDao {
         }
     }
 
-    public String getDigitalAssetGenesisTransactionByHash(String transactionHash) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+    /*public String getDigitalAssetGenesisTransactionByHash(String transactionHash) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
         return getStringValueFromAssetIssuingTableByFieldCode(transactionHash, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME);
-    }
+    }*/
 
     public TransactionStatus getDigitalAssetTransactionStatus(String transactionId) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
 
@@ -501,7 +501,7 @@ public class AssetIssuingTransactionDao {
         return !pendingAssetsPublicKey.isEmpty();
     }
 
-    public int getNumberOfPendingAssets(String publicKey) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+    /*public int getNumberOfPendingAssets(String publicKey) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
 
         try {
             this.database.openDatabase();
@@ -534,7 +534,7 @@ public class AssetIssuingTransactionDao {
             this.database.closeDatabase();
             throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Checking pending assets to issue", "Unexpected exception");
         }
-    }
+    }*/
 
     public void persistOutgoingIntraActorUUID(String transactionID, UUID outgoingId) throws CantPersistsTransactionUUIDException {
         try {

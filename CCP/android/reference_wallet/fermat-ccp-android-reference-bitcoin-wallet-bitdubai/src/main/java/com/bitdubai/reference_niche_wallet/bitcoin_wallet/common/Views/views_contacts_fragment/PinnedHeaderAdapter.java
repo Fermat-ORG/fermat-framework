@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.util.MemoryUtils;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 
@@ -148,26 +149,20 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 switch (type) {
                     case TYPE_ITEM:
                         convertView = mLayoutInflater.inflate(R.layout.row_view, null);
-
                         holder.imageView =(ImageView) convertView.findViewById(R.id.imageView_contact);
-
                         walletContact = (CryptoWalletWalletContact) mListItems.get(position);
-
                         //guardo el contacto
                         contactPositionItem.put(position, walletContact);
 
                         if (walletContact.getProfilePicture().length>0) {
-                            //holder.imageView.setImageBitmap(ImagesUtils.getRoundedShape(BitmapFactory.decodeByteArray(walletContact.getProfilePicture(),0,walletContact.getProfilePicture().length)));
-                            holder.imageView.setImageBitmap(MemoryUtils.decodeSampledBitmapFromByteArray(walletContact.getProfilePicture(), 60, 60));
+                            holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), walletContact.getProfilePicture()));
                         } else {
-                            Picasso.with(mContext).load(R.drawable.person1).into(holder.imageView);
+                            holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(),R.drawable.profile_image));
                         }
                         text = walletContact.getActorName();
-
                         //contact image
-                        ImageView contact_image = (ImageView)convertView.findViewById(R.id.imageView_contact);
-                        contact_image.setImageResource(R.drawable.caroline_profile_picture);
-
+//                        ImageView contact_image = (ImageView)convertView.findViewById(R.id.imageView_contact);
+//                        contact_image.setImageResource(R.drawable.caroline_profile_picture);
                         break;
                     case TYPE_SECTION:
                         convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
@@ -239,8 +234,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
             mCurrentSectionPosition = getCurrentSectionPosition(position);
             header.setText(mListItems.get(mCurrentSectionPosition).toString());
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
 

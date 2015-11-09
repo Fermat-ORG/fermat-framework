@@ -4,6 +4,9 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -12,9 +15,11 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -93,25 +98,29 @@ import java.util.logging.Logger;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerMiddlewarePluginRoot implements
+public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
-        DealsWithErrors,
-        DealsWithEvents,
-        DealsWithLogger
-        ,DealsWithWalletResources,
-        DealsWithPluginDatabaseSystem,
-        LogManagerForDevelopers,
-        Plugin, Service,
+        DealsWithWalletResources,
         WalletManagerManager {
 
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    private EventManager eventManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.USER            , addon = Addons.DEVICE_USER         )
+    private DeviceUserManager deviceUserManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    public WalletManagerMiddlewarePluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
+
+
     String walletPublicKey = "reference_wallet";
-
-    /**
-     * DealsWithDeviceUser member variables
-     */
-    DeviceUserManager deviceUserManager;
-
-
     /**
      * WalletManagerMiddlewarePluginRoot member variables
      */
@@ -120,22 +129,9 @@ public class WalletManagerMiddlewarePluginRoot implements
     private List<InstalledWallet> installedWallets = null;
 
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    ErrorManager errorManager;
 
-
-    /**
-     * DealsWithLogger interface member variable
-     */
-    LogManager logManager;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    /**
-     * DealsWithEvents interface member variable
-     */
-    EventManager eventManager;
 
 
     /**
@@ -144,20 +140,6 @@ public class WalletManagerMiddlewarePluginRoot implements
     WalletResourcesInstalationManager walletResources;
 
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     /**
      * This method let the client create a new wallet of a type already intalled by the user.
@@ -291,95 +273,6 @@ public class WalletManagerMiddlewarePluginRoot implements
         }
 
         this.serviceStatus = ServiceStatus.STARTED;
-        //TODO:delete this line
-        //testMethod();
-
-    }
-    @Override
-    public void pause(){
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume(){
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop(){
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-    /**
-     * DealWithErrors Interface implementation. 
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * Plugin methods implementation.
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    /**
-     * DealsWithLogger Interface implementation.
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * LogManagerForDevelopers Interface implementation.
-     */
-    @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.WalletManagerMiddlewarePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstalledWallet");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstalledSkin");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstalledLanguage");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstallationProcess");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstallationInformation");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.database.WalletManagerMiddlewareDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.database.WalletManagerMiddlewareDatabaseConstants");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.database.WalletManagerMiddlewareDao");
-
-        /**
-        * I return the values.
-        */
-        return returnedClasses;
-    }
-
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        /**
-         * I will check the current values and update the LogLevel in those which is different
-         */
-
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            /**
-             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-             */
-            if (WalletManagerMiddlewarePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                WalletManagerMiddlewarePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                WalletManagerMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                WalletManagerMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            }
-        }
-
     }
 
     /*
@@ -455,7 +348,7 @@ public class WalletManagerMiddlewarePluginRoot implements
             /**
              * Call Wallet Resource to install Language
              */
-            walletResources.installLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(),installedWallet.getWalletScreenSize(), languageId, language.value(),installedWallet.getWalletPublicKey());
+            walletResources.installLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(), languageId, language.value(), installedWallet.getWalletPublicKey());
 
             /**
              * Save language in the Data Base
@@ -620,7 +513,7 @@ public class WalletManagerMiddlewarePluginRoot implements
             /**
              * Conected with Wallet Resource to uninstall resources
              */
-           walletResources.uninstallSkinForWallet( skinId,installedWallet.getWalletPublicKey());
+           walletResources.uninstallSkinForWallet(skinId, installedWallet.getWalletPublicKey());
             /**
              * I delete skin from database
              */
@@ -773,25 +666,6 @@ public class WalletManagerMiddlewarePluginRoot implements
     }
 
     /*
-     * DealsWithPluginDatabaseSystem interface methods implementation
-     */
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /*
-     * DealsWithEvents interface methods implementation
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager=eventManager;
-    }
-
-
-    /*
     * DealsWithWalletResources interface methods implementation
     */
     @Override
@@ -804,25 +678,4 @@ public class WalletManagerMiddlewarePluginRoot implements
         WalletManagerMiddlewareDatabaseFactory databaseFactory = new WalletManagerMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
         database = databaseFactory.createDatabase(pluginId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE);
     }
-
-    //TODO:Delete this method
-    private void testMethod(){
-
-        UUID testUUID=UUID.randomUUID();
-        Version testVersion=new Version(1,1,0);
-        Logger LOG = Logger.getGlobal();
-        try {
-            //createNewWallet(testUUID,"testWallet");
-            WalletCategory wc=WalletCategory.NICHE_WALLET;
-            String walletPlatformIdentifier="testID";
-            WalletInstallationProcess wIP=installWallet(wc, walletPlatformIdentifier);
-            wIP.startInstallation(WalletType.NICHE,"testWallet","123456","654321","098765",null,testUUID,testVersion, ScreenSize.MEDIUM.toString(),testUUID,testVersion,"Skin",null,testUUID,testVersion,Languages.LATIN_AMERICAN_SPANISH, "es","MAP","1.0.0");
-            LOG.info("Rastro Atómico:"+wIP.getInstallationProgress().getCode());
-        } catch (Exception e) {
-            LOG.info("TEST ERROR:"+e.getMessage());
-            e.printStackTrace();
-        }
-
-    }
-
 }

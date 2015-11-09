@@ -130,6 +130,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_OP_RETURN_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_LAST_UPDATE_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME);
         /**
          * Table Transactions addition.
          */

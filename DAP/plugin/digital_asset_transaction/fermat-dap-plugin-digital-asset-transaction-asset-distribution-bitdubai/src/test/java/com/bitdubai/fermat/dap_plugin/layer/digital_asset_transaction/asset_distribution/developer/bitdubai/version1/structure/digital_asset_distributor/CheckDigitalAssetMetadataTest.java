@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -104,7 +104,7 @@ public class CheckDigitalAssetMetadataTest {
     }
 
     @Test
-    public void checkDigitalAssetMetadataThrowsCantGetGenesisTransactionExceptionListGenesisTransactionNullTest () throws CantDeliverDigitalAssetException, CantGetGenesisTransactionException {
+    public void checkDigitalAssetMetadataThrowsCantGetGenesisTransactionExceptionListGenesisTransactionNullTest () throws CantDeliverDigitalAssetException, CantGetCryptoTransactionException {
         when(bitcoinNetworkManager.getGenesisTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(null);
         catchException(digitalAssetDistributor).checkDigitalAssetMetadata(mockDigitalAssetMetadata);
         Exception thrown = caughtException();
@@ -114,7 +114,7 @@ public class CheckDigitalAssetMetadataTest {
     }
 
     @Test
-    public void checkDigitalAssetMetadataThrowsCantGetGenesisTransactionExceptionDigitalAssetModifyTest () throws CantDeliverDigitalAssetException, CantGetGenesisTransactionException {
+    public void checkDigitalAssetMetadataThrowsCantGetGenesisTransactionExceptionDigitalAssetModifyTest () throws CantDeliverDigitalAssetException, CantGetCryptoTransactionException {
         cryptoTransaction.setOp_Return("ffg55dsds55dsdsrfeetgga5");
         digitalAssetDistributor.cryptoTransaction = cryptoTransaction;
         catchException(digitalAssetDistributor).checkDigitalAssetMetadata(mockDigitalAssetMetadata);

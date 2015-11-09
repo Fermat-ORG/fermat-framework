@@ -45,7 +45,7 @@ public abstract class AbstractCommunicationBaseEventHandler<E extends Communicat
 
 
 
-            if(event.getNetworkServiceTypeApplicant() == networkService.getPlatformComponentProfilePluginRoot().getNetworkServiceType()){
+            if(event.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceType()){
 
                 processEvent(event);
 

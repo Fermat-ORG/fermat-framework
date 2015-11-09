@@ -7,15 +7,15 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import java.util.List;
 
 
-public class GrouperItem<CHILD_TYPE> implements ParentListItem {
+public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
 
     private List<CHILD_TYPE> childItemList;
     private int childCount;
     private boolean initiallyExpanded;
 
-    private CryptoWalletTransaction cryptoWalletTransaction;
+    private ITEM cryptoWalletTransaction;
 
-    public GrouperItem( List<CHILD_TYPE> childItemList, boolean initiallyExpanded,CryptoWalletTransaction cryptoWalletTransaction) {
+    public GrouperItem( List<CHILD_TYPE> childItemList, boolean initiallyExpanded,ITEM cryptoWalletTransaction) {
         this.initiallyExpanded = initiallyExpanded;
         this.childItemList = childItemList;
         this.cryptoWalletTransaction = cryptoWalletTransaction;
@@ -61,7 +61,7 @@ public class GrouperItem<CHILD_TYPE> implements ParentListItem {
         this.initiallyExpanded = initiallyExpanded;
     }
 
-    public CryptoWalletTransaction getCryptoWalletTransaction() {
+    public ITEM getCryptoWalletTransaction() {
         return cryptoWalletTransaction;
     }
 }

@@ -1,5 +1,5 @@
 :numbered!:
-== Fermat BlockChain Superlayer
+== Chapter 5: Fermat BlockChain Superlayer
 This superlayer provides the entire Fermat multiplatform system the necessary functionalities to manage *blockchain technology*: connecting to the _crypto networks_, reading the _transactions_, "storing" the value related to Fermat end user's transactions, etc.
 
 === _Crypto Networks layer_
@@ -20,7 +20,8 @@ So, each *vault component* uses its _master key_ in the way of a HD wallet, to i
 Bitcoin Vault :: it stores the entire system's children keys that let all Fermat Bitcoin Wallets *unlock* the funds owned by their users, so it can be thinked that this vault "stores" the available _Bitcoin_ funds of the entire system. (*value storage*). 
 Assets over Bitcoin :: it "stores" (in the sense above mentioned) each little amount of_Bitcoin_ used to validate a *Digital Asset* ( called assets _proof of existence_ ). It is more a *metada storage* of what is represented by the *asset* than a a storage of *value*. +
 Bitcoin Watch Only Vault :: it stores "receive only" type of Bitcoin transactions, what means that the transaction is showed in the ledger, but there is no _privat key_ available to claim the Bitcoins transfered. This type of *addresses* are used in the _Digital Asset Platform_ to allow *redeem points* wallet to work, showing they have received an Asset to be redeem by the *Assets Issuer*. +
-=== _Crypto components layer_
+
+=== _Crypto Components layer_
 Crypto Address Book :: it keeps a list of every cryptoaddress requested by any component of Fermat, recording who originated the request, from which platform, and any other necessary information to identify the address when consumed from any plugin. It is the _authority_ to recognize every address belonging to Fermat from the rest of addresses available in the blockchain ledger.
 
 === _Crypto Router layer_
@@ -31,7 +32,7 @@ Outgoing Crypto :: it delivers the transaction to the corresponding *cryptonetwo
 
 :numbered!:
   
-=== Continue Reading
+==== Continue Reading
 link:book-chapter-06.asciidoc[Next Chapter]
 
 link:book-chapter-04.asciidoc[Previous Chapter]
