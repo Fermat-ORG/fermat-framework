@@ -523,6 +523,7 @@ public class Platform implements Serializable {
             addonsToInstantiate.add(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM          , Addons.DEVICE_LOCATION));
             addonsToInstantiate.add(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM          , Addons.LOG_MANAGER));
 
+            pluginsToInstantiate.put(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_MODULE, Plugins.CRYPTO_ADDRESS_BOOK), Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK);
 
             if (PIP) {
            /*
