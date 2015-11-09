@@ -5,10 +5,10 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by rodrigo on 9/29/15.
  */
-public class CantGetGenesisTransactionException extends FermatException {
+public class CantGetCryptoTransactionException extends FermatException {
     public static final String DEFAULT_MESSAGE = "Cant get Genesis transaction from asset vault.";
 
-    public CantGetGenesisTransactionException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetCryptoTransactionException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

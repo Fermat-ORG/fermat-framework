@@ -194,7 +194,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
             try {
                 bitcoinNetworkManager.monitorNetworkFromKeyList(CryptoVaults.ASSETS_OVER_BITCOIN, getActiveNetworks(), allAccountsKeyList);
             } catch (CantMonitorBitcoinNetworkException e) {
-                //todo handle
+                e.printStackTrace();
             }
 
         }
@@ -298,9 +298,18 @@ class VaultKeyHierarchyMaintainer implements Agent {
          */
         private int getCurrentUsedKeys(HierarchyAccount hierarchyAccount) {
             try {
-                return getDao().getCurrentUsedKeys(hierarchyAccount.getId());
+                int currentUsedKeys = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
+
+                /**
+                 * If for wathever reason we got zero, I can't allow it because I will throw
+                 * a divided by zero error.
+                 */
+                if (currentUsedKeys == 0)
+                    currentUsedKeys = 1;
+
+                return currentUsedKeys;
             } catch (CantExecuteDatabaseOperationException e) {
-                return 0;
+                return 1;
             }
         }
 
@@ -315,7 +324,11 @@ class VaultKeyHierarchyMaintainer implements Agent {
              * I can never return 0 or it will fail by dividing by 0
              */
             try {
-                return getDao().getCurrentGeneratedKeys(hierarchyAccount.getId());
+                int currentGeneratedKeys = getDao().getCurrentGeneratedKeys(hierarchyAccount.getId());
+                if (currentGeneratedKeys == 0)
+                    currentGeneratedKeys = 1;
+
+                return currentGeneratedKeys;
             } catch (CantExecuteDatabaseOperationException e) {
                 return 1;
             }
