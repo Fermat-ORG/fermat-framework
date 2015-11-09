@@ -126,4 +126,22 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
         return networkType;
     }
 
+    @Override
+    public String toString() {
+        return "CryptoPaymentRequestNetworkServiceRecord{" +
+                "requestId=" + requestId +
+                ", identityPublicKey='" + identityPublicKey + '\'' +
+                ", identityType=" + identityType +
+                ", actorPublicKey='" + actorPublicKey + '\'' +
+                ", actorType=" + actorType +
+                ", description='" + description + '\'' +
+                ", cryptoAddress=" + cryptoAddress +
+                ", amount=" + amount +
+                ", startTimeStamp=" + startTimeStamp +
+                ", direction=" + direction +
+                ", action=" + action +
+                ", protocolState=" + protocolState +
+                ", networkType=" + networkType +
+                '}';
+    }
 }

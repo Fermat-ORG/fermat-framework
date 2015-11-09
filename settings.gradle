@@ -9,6 +9,10 @@ project(':fermat-bnk-api').projectDir = new File('BNK/library/api/fermat-bnk-api
 
 include ':fermat-cbp-api'
 project(':fermat-cbp-api').projectDir = new File('CBP/library/api/fermat-cbp-api')
+
+include ':fermat-cbp-core'
+project(':fermat-cbp-core').projectDir = new File('CBP/library/core/fermat-cbp-core')
+
 include ':fermat-cry-api'
 project(':fermat-cry-api').projectDir = new File('CRY/library/api/fermat-cry-api')
 include ':fermat-csh-api'
@@ -483,10 +487,10 @@ project(':fermat-dap-android-sub-app-redeem-point-community-bitdubai').projectDi
 
 include ':fermat-bch-plugin-crypto-network-bitcoin-bitdubai'
 project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_network/fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
-
+/*TODO COMMENTED IS NOT IN USE
 include ':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai'
 project(':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai')
-
+*/
 include ':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
 project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
 

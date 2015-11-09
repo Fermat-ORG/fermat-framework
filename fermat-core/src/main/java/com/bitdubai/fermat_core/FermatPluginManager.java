@@ -152,6 +152,9 @@ public final class FermatPluginManager {
                     "There was a captured problem during the plugin start."
             );
         } catch (Exception e) {
+            System.out.println("***********************AQUI ESTOY");
+            System.out.println(e);
+            System.out.println("***********************AQUI ESTOY FIN");
 
             throw new CantStartPluginException(
                     e,

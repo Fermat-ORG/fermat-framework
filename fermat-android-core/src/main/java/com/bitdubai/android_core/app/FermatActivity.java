@@ -1415,20 +1415,18 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         switch(action) {
             case (MotionEvent.ACTION_DOWN) :
-                Log.d(DEBUG_TAG,"Action was DOWN");
+
                 return true;
             case (MotionEvent.ACTION_MOVE) :
-                Log.d(DEBUG_TAG,"Action was MOVE");
+
                 return true;
             case (MotionEvent.ACTION_UP) :
-                Log.d(DEBUG_TAG,"Action was UP");
+
                 return true;
             case (MotionEvent.ACTION_CANCEL) :
-                Log.d(DEBUG_TAG,"Action was CANCEL");
+
                 return true;
             case (MotionEvent.ACTION_OUTSIDE) :
-                Log.d(DEBUG_TAG,"Movement occurred outside bounds " +
-                        "of current screen element");
                 return true;
             default :
                 return super.onTouchEvent(event);
@@ -1448,7 +1446,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             switch (eventaction) {
                 case MotionEvent.ACTION_DOWN:
-                    Log.d(DEBUG_TAG, "Action was MOVE");
+
 
 //                    TranslateAnimation anim = new TranslateAnimation(0, 0, header.getX() - header.getHeight(), 0);
 //                    anim.setDuration(1000);
@@ -1474,16 +1472,16 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 //                    });
 //
 //                    header.startAnimation(anim);
-                    Log.d(TAG, TAG + "::onTouchEvent: parent ACTION_DOWN");
+
 
 
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    Log.d(DEBUG_TAG, "Action was DOWN");
+
                     break;
 
                 case MotionEvent.ACTION_UP:
-                    Log.d(DEBUG_TAG, "Action was MOVE");
+
 
 //                    TranslateAnimation anim1 = new TranslateAnimation(0, 0, 0, y);
 //                    anim1.setDuration(1000);
@@ -1508,7 +1506,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 //                        }
 //                    });
 //                    header.startAnimation(anim1);
-                    Log.d(TAG, TAG + "::onTouchEvent: parent ACTION_UP");
+
                     break;
                 default:
                     break;

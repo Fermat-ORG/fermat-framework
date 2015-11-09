@@ -6,6 +6,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -23,6 +28,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.Crypt
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentRegistry;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.DealsWithOutgoingIntraActor;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.database.CryptoPaymentRequestDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestNewsEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteCryptoPaymentRequestPendingEventActionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteUnfinishedActionsException;
@@ -52,17 +58,12 @@ import java.util.List;
  */
 public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
         CryptoPaymentManager,
-        DealsWithCryptoPaymentRequestNetworkService,
-        DealsWithErrors,
-        DealsWithEvents,
-        DealsWithOutgoingIntraActor,
-        DealsWithPluginDatabaseSystem,
-        DealsWithWalletManager {
+        DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -206,45 +207,24 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void setCryptoPaymentRequestManager(final CryptoPaymentRequestManager cryptoPaymentRequestManager) {
-        this.cryptoPaymentRequestManager = cryptoPaymentRequestManager;
-    }
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return new CryptoPaymentRequestDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
 
-    /*
-         * DealsWithErrors Interface implementation
-         */
-    @Override
-    public void setErrorManager(final ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /*
-     * DealsWithEvents Interface implementation
-     */
-    @Override
-    public void setEventManager(final EventManager eventManager) {
-        this.eventManager = eventManager;
     }
 
     @Override
-    public void setOutgoingIntraActorManager(final OutgoingIntraActorManager outgoingIntraActorManager) {
-        this.outgoingIntraActorManager = outgoingIntraActorManager;
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return new CryptoPaymentRequestDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
     }
 
-    /*
-         * DealsWithPluginDatabaseSystem Interface implementation
-         */
     @Override
-    public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystemManager) {
-        this.pluginDatabaseSystem = pluginDatabaseSystemManager;
-    }
-
-    /**
-     * DealsWithWalletManager Interface implementation.
-     */
-    @Override
-    public void setWalletManagerManager(final WalletManagerManager walletManagerManager) {
-        this.walletManagerManager = walletManagerManager;
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        try {
+            return new CryptoPaymentRequestDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ArrayList<>();
+        }
     }
 
 }
