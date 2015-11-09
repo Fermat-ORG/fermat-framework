@@ -7,14 +7,13 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.world.Index;
+import com.bitdubai.fermat_cbp_api.all_definition.world.IndexManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_world.cbp_fiat_index.exceptions.CantGetIndexException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_world.cbp_fiat_index.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure.IndexHelper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -35,7 +34,7 @@ import java.util.regex.Pattern;
 
  */
 
-public class FiatIndexPluginRoot implements FiatIndexManager,DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class FiatIndexPluginRoot implements IndexManager<FiatCurrency>, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
     IndexHelper indexHelper = new IndexHelper();
 
@@ -85,7 +84,7 @@ public class FiatIndexPluginRoot implements FiatIndexManager,DealsWithErrors, De
                 }
             }
         } catch (Exception exception) {
-           // this.errorManager.reportUnexpectedPluginException(Plugins., UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            // this.errorManager.reportUnexpectedPluginException(Plugins., UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
 
@@ -178,30 +177,30 @@ public class FiatIndexPluginRoot implements FiatIndexManager,DealsWithErrors, De
 
 
     @Override
-    public FiatCurrencyType getReferenceCurrency() {
-        return FiatCurrencyType.US_DOLLAR;
+    public FiatCurrency getReferenceCurrency() {
+        return FiatCurrency.US_DOLLAR;
     }
 
     @Override
-    public Collection<FiatCurrencyType> getSupportedCurrencies() {
-        Collection<FiatCurrencyType> c = new HashSet<>();
-        for (FiatCurrencyType f : FiatCurrencyType.values())
+    public Collection<FiatCurrency> getSupportedCurrencies() {
+        Collection<FiatCurrency> c = new HashSet<>();
+        for (FiatCurrency f : FiatCurrency.values())
             c.add(f);
         return c;
     }
 
     @Override
-    public Index getCurrentIndex(FiatCurrencyType currency) throws CantGetIndexException {
+    public Index getCurrentIndex(FiatCurrency currency) throws CantGetIndexException {
         return indexHelper.getCurrentIndex(currency);
     }
 
     @Override
-    public Index getIndexInDate(FiatCurrencyType currency, long timestamp) throws CantGetIndexException {
+    public Index getIndexInDate(FiatCurrency currency, long timestamp) throws CantGetIndexException {
         return null;
     }
 
     @Override
-    public Collection<Index> getQueriedIndexHistory(FiatCurrencyType currency) {
+    public Collection<Index> getQueriedIndexHistory(FiatCurrency currency) {
         return null;
     }
 }

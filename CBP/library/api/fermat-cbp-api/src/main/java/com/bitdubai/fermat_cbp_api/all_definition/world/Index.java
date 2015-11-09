@@ -1,20 +1,15 @@
 package com.bitdubai.fermat_cbp_api.all_definition.world;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrencyType;
-
 /**
  * Created by jorge on 30-10-2015.
  */
-public interface Index {
-    void setCurrency(FiatCurrencyType currency);
-    void setReferenceCurrency(FiatCurrencyType currency);
-    void setSalePrice(double salePrice);
-    void setPurchasePrice(double purchasePrice);
-    void setTimeStamp(long timestamp);
+public interface Index<T extends Currency> {
 
-    FiatCurrencyType getCurrency();
-    FiatCurrencyType getReferenceCurrency();
+    //Note: T is a generic which may only be a FiatCurrency or a CryptoCurrency.
+
+    T getCurrency();
+    T getReferenceCurrency();
     double getSalePrice();
     double getPurchasePrice();
-    long getTimeStamp();
+    long getTimestamp();
 }
