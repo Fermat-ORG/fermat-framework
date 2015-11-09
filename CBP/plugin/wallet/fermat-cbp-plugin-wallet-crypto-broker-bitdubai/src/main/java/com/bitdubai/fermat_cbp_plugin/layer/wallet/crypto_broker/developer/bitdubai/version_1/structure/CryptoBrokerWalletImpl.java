@@ -97,8 +97,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     public Collection<Stock> getStocks() throws CantGetStockCollectionCryptoBrokerWalletException {
         Collection<Stock> stocks = new ArrayList<Stock>();
 //        try {
-//
-//            stocks = databaseDao.getCollectionStoks();
+
 //        } catch (CantLoadTableToMemoryException e) {
 //            throw new CantGetStockCollectionCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T GET COLLECTION STOCK CRYPTO BROKER WALLET", "");
 //        } catch (InvalidParameterException e) {
@@ -147,21 +146,6 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         }
     }
 
-    public boolean equals(Object o){
-        if(!(o instanceof CryptoBrokerStockTransactionRecord))
-            return false;
-        CryptoBrokerStockTransactionRecord compare = (CryptoBrokerStockTransactionRecord) o;
-        return ownerPublicKey.equals(compare.getOwnerPublicKey()) && walletKeyPair.getPublicKey().equals(compare.getWalletPublicKey());
-    }
-
-    @Override
-    public int hashCode(){
-        int c = 0;
-        c += ownerPublicKey.hashCode();
-        c += walletKeyPair.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
-    }
-
     private StockTransaction stockTransactionRecord(WalletTransaction transaction){
         KeyPair walletKeyPair = AsymmetricCryptography.createKeyPair(transaction.getWalletPublicKey());
         StockTransaction record = new CryptoBrokerStockTransactionRecordImpl(
@@ -200,5 +184,20 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
                 memo
         );
         return record;
+    }
+
+    public boolean equals(Object o){
+        if(!(o instanceof CryptoBrokerStockTransactionRecord))
+            return false;
+        CryptoBrokerStockTransactionRecord compare = (CryptoBrokerStockTransactionRecord) o;
+        return ownerPublicKey.equals(compare.getOwnerPublicKey()) && walletKeyPair.getPublicKey().equals(compare.getWalletPublicKey());
+    }
+
+    @Override
+    public int hashCode(){
+        int c = 0;
+        c += ownerPublicKey.hashCode();
+        c += walletKeyPair.hashCode();
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }
