@@ -36,7 +36,7 @@
             android:name="com.bitdubai.android_core.app.StartActivity"
             android:icon="@drawable/fermat"
             android:label="Fermat"
-            android:theme="@style/CustomActionBarTheme">
+            android:theme="@style/AppTheme.NoActionBarStart">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
