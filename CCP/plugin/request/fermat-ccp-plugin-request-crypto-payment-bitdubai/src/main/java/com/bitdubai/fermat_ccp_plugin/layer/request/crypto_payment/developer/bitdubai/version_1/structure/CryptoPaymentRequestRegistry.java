@@ -91,7 +91,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                              BlockchainNetworkType networkType      ) throws CantGenerateCryptoPaymentRequestException {
 
 
-
+        System.out.println("********** Crypto Payment Request -> generating request. SENT - NOT_SENT_YET.");
         try {
             /**
              * i generate the crypto payment request setting:
@@ -129,6 +129,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
             // if i can save it, i send it to the network service.
 
+            System.out.println("********** Crypto Payment Request -> generating request. SENT - NOT_SENT_YET -> WAITING RECEPTION CONFIRMATION.");
+
             fromNotSentYetToWaitingReceptionConfirmation(
                     requestId,
                     identityPublicKey,
@@ -141,6 +143,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     startTimeStamp,
                     networkType
             );
+
+            System.out.println("********** Crypto Payment Request -> generating request. SENT - WAITING RECEPTION CONFIRMATION -> OK.");
 
         } catch(CantGenerateCryptoPaymentRequestException e) {
 

@@ -104,11 +104,6 @@ import java.util.logging.LogManager;
 
 public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
-        DealsWithErrors,
-        DealsWithEvents,
-        DealsWithPluginDatabaseSystem,
-        DealsWithPluginFileSystem,
-        DealsWithIntraUsersNetworkService,
         IntraWalletUserActorManager,
         LogManagerForDevelopers
 {
@@ -679,31 +674,6 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
             throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", FermatException.wrapException(e), "", "");
 
         }
-    }
-
-    @Override
-    public final void setEventManager(final EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    @Override
-    public final void setErrorManager(final ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public final void setIntraUserNetworkServiceManager(final IntraUserManager intraUserManager) {
-        this.intraUserNetworkServiceManager = intraUserManager;
-    }
-
-    @Override
-    public final void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public final void setPluginFileSystem(final PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 }
 

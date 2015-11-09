@@ -15,6 +15,14 @@ To accomplish it's mission, a GUI component must have a wireframe.
 
 Several new concepts are introduced...
 
+### Walllet
+
+Una Wallet es un GUI Component que le permite a un usuario poder llevar acabo operaciones financieras como enviar y recibir bitcoins haciendo uso de los diferentes plugins que ofrece Fermat a travez Modules. Cada Wallet tiene un Module asociado, es decir, existe una relacion 1 a 1 entre una wallet y un modulo.
+
+### Sub-App
+
+Una Wallet es un GUI Component que le permite a un usuario poder llevar acabo operaciones no financieras, tales como creacion de identidades dentro de la plataforma, tareas administrativas, etc haciendo uso de los diferentes plugins que ofrece Fermat a travez de Modules. Suelen servir para complementar la funcionalidad de las wallets. Cada Sub-App tiene un Module asociado, es decir, existe una relacion 1 a 1 entre una Sub-App y un Module.
+
 <br>
 
 ## Part II: Workflow
@@ -185,20 +193,25 @@ Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es e
 
 ### Modules
  
-- Hay que explicar para que se usan los module
+ Un componente GUI en fermat se encuentra dividido en dos plugins, las interfaces gráficas y el module de dicha interfaz, este es el que posee las siguientes funcionalidades:
+* Sirve de conexión entre los plugins de la plataforma, consumiendo los servicios que ellas proveen.
+* Encapsula la lógica de presentación, recogiendo, ordenando y agrupando datos de los plugins.
 
 ----------------------
 
 
 ### Navigation structure
  
-- Hay que explicarlo con ejemplos.
+ -- estructura de navegación con ejemplos..
+ 
+  Fermat es una aplicación distinta al resto de las aplicaciones android; esta posee su porpia estructura de navegación, la cual se basa en pantallas y sub-pantallas que se van "pintando" desde objetos cargados en tiempo de ejecución, desde archivos que entregan la información sobre que es lo que se necesita dibujar en cada pantalla/sub pantalla y en que orden
 
 ----------------------
 
 ### Android api
 
-- Hay que mostrar el framework que estamos creando..
+ Fermat posse un conjunto de librerías y paquetes desarrollados especialmente para trabajar sobre android.
+Seguir...
 
 ----------------------
 
@@ -212,18 +225,36 @@ Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es e
 
 - Hay que explicar el fragment factory, para que sirve y como se usa.
 
+Cada GUI component posee un folder destinado al fragnent factory, el cual se encarga de conectar lo desarrollado en la estructura de navegación con los fragmentos controladores de dichas pantallas.
+Seguir..
+
 ----------------------
 
 ### Sessions
 
 - Hay que darle una brebe explicación de las sesiones.
 
+Uno de los problemas encontrados es la persistencia de datos en memoria ya que el ciclo de vida un fragmento al no estar visible se elimina y se vuelve a crear al llamarlo nuevamente. Estos datos deben estar guardados en algún lugar en caso de que el usuario quiera cambiar de wallet y dejar la sesion abierta. 
+
+Para resolver esto existen las Sessions: son objetos que permiten persisitir en memoria y compartir entre los diferentes fragmentos que pueda tener una wallet o subapp informacion tal como la referencia al module de la wallet o subapp, referencia al Error Mananger (objeto que administra las excepciones generadas en la plataforma Fermat) y cualquier otra data que necesite tracender entre estos fragmentos dentro de un Map que trabaja con una key y el objeto que se necesite guardar.
+
+Las sesiones se crean por cada wallet o subapp y la gestión de dichas sesiones es llevada a cabo a travez de un Wallet Manager y un Subapp Manager, teniendo así la posibilidad de regresar al momento en el que se encontraba el usuario al cambiar de pantalla.
+
+Cada GUI component posee un folder destinado a la session. Que dependiendo del tipo de componente que se esté desarrollando puede ser una clase que herede de WalletSession o SubAppSession.
+Seguir...
+
 ----------------------
 
 #### Wallet session
+
+Son sesiones que manejan informacion de una wallet, estas heredan de WalletSession
+
 ----------------------
 
 #### Sub app session
+
+Son sesiones que manejan informacion de una subapp, estas heredan de WalletSession
+
 ----------------------
 
 #### Settings

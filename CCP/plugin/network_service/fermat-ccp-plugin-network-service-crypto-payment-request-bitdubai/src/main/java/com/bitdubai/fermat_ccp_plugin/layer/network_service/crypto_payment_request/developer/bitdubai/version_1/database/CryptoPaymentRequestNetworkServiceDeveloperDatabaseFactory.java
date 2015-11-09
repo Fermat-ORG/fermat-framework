@@ -125,17 +125,20 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
 
         try {
 
+            initializeDatabase();
+
             DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
 
             selectedTable.loadToMemory();
 
             List<DatabaseTableRecord> records = selectedTable.getRecords();
 
-            List<String> developerRow = new ArrayList<>();
+
 
             List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
 
             for (DatabaseTableRecord row : records) {
+                List<String> developerRow = new ArrayList<>();
 
                 for (DatabaseRecord field : row.getValues())
                     developerRow.add(field.getValue());
@@ -146,6 +149,9 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
             return returnedRecords;
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+            return new ArrayList<>();
+        }catch (CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException cantLoadTableToMemory) {
 
             return new ArrayList<>();
         }

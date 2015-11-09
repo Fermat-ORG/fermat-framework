@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nullable;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptonetwork.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager</code>
@@ -119,7 +121,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             /**
              * load (if any) existing wallet.
              */
-            wallet = getWallet(blockchainNetworkType);
+            wallet = getWallet(blockchainNetworkType, keyList);
+
 
             /**
              * add new keys (if any).
@@ -173,20 +176,28 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * by forming the name wallet_[NETWORK]. If it doesn't exists, then I will create a new object for this network.
      * @return
      */
-    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType){
+    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList){
         Wallet wallet;
         String fileName = WALLET_FILENAME + blockchainNetworkType.getCode();
         walletFile = new File(fileName);
         try {
             wallet  =Wallet.loadFromFile(walletFile);
         } catch (UnreadableWalletException e) {
-            wallet = new Wallet(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
+            /**
+             * If I couldn't load the wallet from file, I'm assuming is a new wallet and I will create it.
+             */
+            wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
         }
 
         /**
-         * Will set the autosave information
+         * Will set the autosave information and save it.
          */
         wallet.autosaveToFile(walletFile, 1, TimeUnit.SECONDS, null);
+        try {
+            wallet.saveToFile(walletFile);
+        } catch (IOException e) {
+            e.printStackTrace(); // I will continue because the key addition will trigger an autosave anyway.
+        }
 
         return wallet;
     }
@@ -312,13 +323,13 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * Gets the CryptoTransaction list that matches the specified hash
      * @param txHash
      * @return
-     * @throws CantGetGenesisTransactionException
+     * @throws CantGetCryptoTransactionException
      */
-    public List<CryptoTransaction> getGenesisTransaction(String txHash) throws CantGetGenesisTransactionException {
+    public List<CryptoTransaction> getGenesisTransaction(String txHash) throws CantGetCryptoTransactionException {
         try {
             return getDao().getIncomingCryptoTransaction(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE, e, "database operation issue.", "database error");
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database operation issue.", "database error");
         }
     }
 
@@ -354,7 +365,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         /**
          * load the wallet from the passed network. The network type was defined when the UTXO provider was set.
          */
-        Wallet wallet = this.getWallet(utxoProviderNetworkParameter);
+        Wallet wallet = this.getWallet(utxoProviderNetworkParameter, null);
         List<UTXO> utxoList = new ArrayList<>();
 
         /**
@@ -417,7 +428,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @return
      */
     public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
-        Wallet wallet = getWallet(blockchainNetworkType);
+        Wallet wallet = getWallet(blockchainNetworkType, null);
         return wallet.getTransaction(Sha256Hash.of(transactionHash.getBytes()));
     }
 }

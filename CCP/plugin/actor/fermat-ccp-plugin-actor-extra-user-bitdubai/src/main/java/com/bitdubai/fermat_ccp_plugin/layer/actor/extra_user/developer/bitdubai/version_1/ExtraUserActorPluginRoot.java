@@ -68,16 +68,11 @@ import java.util.regex.Pattern;
  */
 public class ExtraUserActorPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
-        DealsWithErrors,
-        DealsWithLogger,
-        DealsWithPluginDatabaseSystem,
-        DealsWithPluginFileSystem,
         ExtraUserManager,
         LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
-
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
@@ -435,37 +430,5 @@ public class ExtraUserActorPluginRoot extends AbstractPlugin implements
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ACTOR_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             return new ArrayList<>();
         }
-    }
-
-    /**
-     * DealsWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * DealsWithPluginFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 }

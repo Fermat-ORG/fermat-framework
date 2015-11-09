@@ -1,5 +1,5 @@
 :numbered!:
-== Fermat Plug-ins Platform
+== Chapter 8: Fermat Plug-ins Platform
 
 This platform encapsulates all the components that provide the basic services that build the back end infrastructure of Fermat framework. +
 An essential identity introduced in this platform is the *device user identity*, which is only valid within a specific device, and its public part is never revealed. + 
@@ -114,7 +114,7 @@ Reviews :: +
 === Master Plan Phase II
 Fermat foundations had been layed out by the five platforms and superlayers described in the previous chapters. Now let us enter the Phase II, where different platforms type are built: those to manage _crypto currencies_ and those for _digital assets_. +
 
-._Crypto Currencies platforms
+._Crypto Currencies platforms_
 . *Fermat Wallet Production & Distribution Platform*
 . *Fermat Crypto Currency Platform*
 . *Fermat Crypto Commodity Money*
@@ -129,13 +129,13 @@ Fermat foundations had been layed out by the five platforms and superlayers desc
 . *Fermat Digital Assets Platform*
 . *Fermat Marketing Platform*
 
-._Accesory services
+._Accesory services_
 . *Fermat Distributed Private Network*
 
 Would you like to see the first tangible use of the supporting infrastructure of Fermat ? We invite you in next chapter to meet the _Wallet Production & Distribution Line_.
 
 :numbered!:
-=== Continue Reading
+==== Continue Reading
 link:book-chapter-09.asciidoc[Next Chapter]
 
 link:book-chapter-07.asciidoc[Previous Chapter]

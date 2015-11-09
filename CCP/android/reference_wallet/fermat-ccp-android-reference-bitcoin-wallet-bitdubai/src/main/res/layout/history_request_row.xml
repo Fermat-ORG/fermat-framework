@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="140dp"
     android:background="#FFF"
     >
 
@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="20dp"
+        android:paddingBottom="10dp"
         android:paddingTop="15dp"
         >
 
@@ -20,7 +20,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:background="#cbcbcb">
+                >
 
                 <ImageView android:id="@+id/profile_Image"
                     android:layout_width="55dp"
@@ -39,6 +39,16 @@
             android:paddingLeft="20dp"
             android:orientation="vertical">
 
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_contactName"
+                android:text="Matias Furszyfer"
+                android:textColor="#06356f"
+                android:fontFamily="roboto"
+                />
+
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,16 +57,10 @@
                 android:textSize="18dp"
                 android:textColor="#1d1d26"
                 android:fontFamily="roboto"
+                android:paddingTop="7dp"
                 />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_contactName"
-                android:text="Matias Furszyfer"
-                android:textColor="#6e6e71"
-                android:fontFamily="roboto"
-                />
+
 
         </LinearLayout>
 
@@ -64,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:paddingRight="15dp"
+            android:paddingRight="20dp"
             android:orientation="vertical"
             android:gravity="end"
             android:layout_weight="1"
@@ -76,7 +80,7 @@
                 android:id="@+id/txt_notes"
                 android:text="Conference ticket"
                 android:textSize="12dp"
-                android:textColor="#5b5993"
+                android:textColor="#9a9a9c"
                 android:fontFamily="roboto"
                 />
 
@@ -86,7 +90,7 @@
                 android:id="@+id/txt_time"
                 android:text="03 Feb 2014"
                 android:textSize="10dp"
-                android:textColor="#6e6e71"
+                android:textColor="#9a9a9c"
                 android:fontFamily="roboto"/>
 
         </LinearLayout>
@@ -103,6 +107,8 @@
         android:orientation="horizontal"
         android:gravity="end"
         android:paddingRight="15dp"
+        android:visibility="gone"
+        android:id="@+id/linear_layour_container_state"
         >
 
 
@@ -111,6 +117,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/txt_state"
             android:text="Accepted"
+            android:textColor="#1173aa"
             android:textSize="13dp"
             android:layout_marginRight="10dp"/>
 
@@ -118,11 +125,42 @@
     </LinearLayout>
 
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="5dp"
-        android:background="#bbccc7"></View>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingRight="15dp"
+        android:id="@+id/linear_layour_container_buttons"
+        >
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="25dp"
+            android:id="@+id/btn_refuse_request"
+            android:textSize="12dp"
+            android:text="Deny"
+            android:textColor="#1d1d26"
+            android:layout_marginRight="7dp"
+            android:background="#d3d3d3"
+            />
+
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="25dp"
+            android:id="@+id/btn_accept_request"
+            android:textSize="12dp"
+            android:text="Accept"
+            android:layout_marginLeft="7dp"
+            android:textColor="#fff"
+            android:background="#1173aa"/>
+
+
+
+
+    </LinearLayout>
+
 
 
 

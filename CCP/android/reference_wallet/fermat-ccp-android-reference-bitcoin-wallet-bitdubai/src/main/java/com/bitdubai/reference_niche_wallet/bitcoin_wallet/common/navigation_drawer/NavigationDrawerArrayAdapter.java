@@ -89,7 +89,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 TextView textView = (TextView) rowView.findViewById(R.id.textView_label);
                 if(textView != null) {
                     textView.setTypeface(tf, 1);
-                    textView.setText(values.get(position-1));
+                    textView.setText(values.get(position));
                 }
 
 
