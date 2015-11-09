@@ -290,7 +290,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
 
         try {
 
-            List<IntraUserInformation>  intraUserInformationList = new ArrayList<IntraUserInformation>();
+            List<IntraUserInformation>  intraUserInformationList = new ArrayList<>();
 
             List<IntraUserInformation> intraUserList =  this.intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
 
@@ -300,7 +300,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
                 intraUserInformationList.add(new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(), intraUser.getProfileImage()));
             }
 
-            return intraUserInformationList;
+            return intraUserList;
         }
         catch (ErrorSearchingSuggestionsException e) {
             throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
