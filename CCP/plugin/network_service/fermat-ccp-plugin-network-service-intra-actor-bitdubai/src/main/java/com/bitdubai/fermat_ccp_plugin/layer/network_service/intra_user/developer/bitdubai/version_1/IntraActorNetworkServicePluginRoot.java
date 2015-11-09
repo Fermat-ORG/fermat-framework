@@ -103,8 +103,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.sun.rmi.rmid.ExecPermission;
 
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.Executable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1036,7 +1038,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 JsonObject jsonObject =new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
                 String encoded = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString();
-                byte[] image = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
+                byte[] image = null;
+                try {
+                    image = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
+                }catch (Exception e){
+                    image = null;
+                }
                 lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), image, platformComponentProfile.getAlias()));
             }
 
@@ -1255,7 +1262,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             //build jsonObject Photo
             JsonObject jsonObject = new JsonObject();
-             String encodedImage = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);
+            String encodedImage =null;
+            try {
+                encodedImage = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
             jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE,encodedImage);
            // jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE,actor.getPhoto().toString());
             PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
