@@ -35,9 +35,7 @@ import java.util.List;
  * Created by natalia on 16.09.15.
  */
 public class CryptoCustomerIdentitySubAppModulePluginRoot extends AbstractPlugin implements
-        CryptoCustomerIdentityModuleManager,
-        DealsWithCryptoCustomerIdentities,
-        DealsWithErrors {
+        CryptoCustomerIdentityModuleManager {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -50,22 +48,12 @@ public class CryptoCustomerIdentitySubAppModulePluginRoot extends AbstractPlugin
     }
 
     @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-    }
-
-    @Override
-    public void setCryptoCustomerIdentityManager(CryptoCustomerIdentityManager cryptoCustomerIdentityManager) {
-        this.identityManager = cryptoCustomerIdentityManager;
     }
 
     @Override

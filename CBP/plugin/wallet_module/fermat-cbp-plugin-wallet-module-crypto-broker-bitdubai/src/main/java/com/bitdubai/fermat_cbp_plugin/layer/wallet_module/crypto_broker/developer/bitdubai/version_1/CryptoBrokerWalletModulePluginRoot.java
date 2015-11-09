@@ -37,8 +37,6 @@ import java.util.regex.Pattern;
  * @since 05/11/2015
  */
 public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implements
-        DealsWithErrors,
-        DealsWithLogger,
         LogManagerForDevelopers,
         CryptoBrokerWalletModuleManager {
 
@@ -72,16 +70,6 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
         } catch (Exception e) {
             throw new CantGetCryptoBrokerWalletException(CantGetCryptoBrokerWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
     }
 
     @Override
