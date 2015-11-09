@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
@@ -1061,11 +1062,7 @@ public class Platform implements Serializable {
         try {
 
             Plugin plugin = fermatSystem.startAndGetPluginVersion(pluginVersionReference);
-
-            injectPluginReferencesAndStart(
-                    plugin,
-                    descriptor
-            );
+            corePlatformContext.registerPlugin(plugin, descriptor);
 
         } catch (Exception e) {
 
