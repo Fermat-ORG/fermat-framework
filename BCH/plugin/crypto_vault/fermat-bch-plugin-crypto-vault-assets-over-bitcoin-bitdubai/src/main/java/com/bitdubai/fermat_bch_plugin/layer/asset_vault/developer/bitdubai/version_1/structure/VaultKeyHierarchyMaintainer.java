@@ -299,6 +299,11 @@ class VaultKeyHierarchyMaintainer implements Agent {
         private int getCurrentUsedKeys(HierarchyAccount hierarchyAccount) {
             try {
                 int currentGeneratedKeys = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
+
+                /**
+                 * If for wathever reason we got zero, I can't allow it because I will throw
+                 * a divided by zero error.
+                 */
                 if (currentGeneratedKeys == 0)
                     currentGeneratedKeys = 1;
 
