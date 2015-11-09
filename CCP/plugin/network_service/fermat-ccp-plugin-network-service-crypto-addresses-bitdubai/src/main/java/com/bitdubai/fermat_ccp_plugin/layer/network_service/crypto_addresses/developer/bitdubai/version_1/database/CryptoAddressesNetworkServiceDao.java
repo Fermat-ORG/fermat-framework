@@ -536,8 +536,11 @@ public class CryptoAddressesNetworkServiceDao {
     private DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord                                 record                ,
                                                     final CryptoAddressesNetworkServiceCryptoAddressRequest addressExchangeRequest) {
 
-        record.setUUIDValue  (CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME                            , addressExchangeRequest.getRequestId()                            );
-        record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, addressExchangeRequest.getWalletPublicKey());
+        record.setUUIDValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, addressExchangeRequest.getRequestId());
+
+        if (addressExchangeRequest.getWalletPublicKey() != null)
+            record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME             , addressExchangeRequest.getWalletPublicKey()                  );
+
         record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_TYPE_REQUESTING_COLUMN_NAME      , addressExchangeRequest.getIdentityTypeRequesting()     .getCode());
         record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_TYPE_RESPONDING_COLUMN_NAME      , addressExchangeRequest.getIdentityTypeResponding()     .getCode());
         record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_PUBLIC_KEY_REQUESTING_COLUMN_NAME, addressExchangeRequest.getIdentityPublicKeyRequesting()          );

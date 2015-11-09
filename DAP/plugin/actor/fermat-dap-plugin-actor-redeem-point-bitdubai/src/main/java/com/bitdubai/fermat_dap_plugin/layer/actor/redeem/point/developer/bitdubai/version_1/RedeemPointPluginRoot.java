@@ -362,10 +362,6 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
                 ConnectionState connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
                 Double locationLatitude = new Random().nextDouble();
                 Double locationLongitude = new Random().nextDouble();
-//                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
-//                DeviceLocation location = new DeviceLocation();
-//                location.setLongitude(new Random().nextDouble());
-//                location.setLatitude(new Random().nextDouble());
                 RedeemPointActorRecord record = new RedeemPointActorRecord(redeemPointActorPublicKey,
                         "Thunder Redeem_" + new Random().nextInt(90),
                         connectionState,

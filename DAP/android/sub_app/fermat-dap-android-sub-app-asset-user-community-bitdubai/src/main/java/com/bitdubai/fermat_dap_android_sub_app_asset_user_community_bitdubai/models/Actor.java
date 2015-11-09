@@ -13,10 +13,6 @@ public class Actor extends AssetUserActorRecord {
 
     public boolean selected;
 
-    public Actor(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Double locationLatitude, Double locationLongitude) {
-        super(assetUserActorPublicKey, assetUserActorName, assetUserActorprofileImage, locationLatitude, locationLongitude);
-    }
-
     public Actor(String publicKey, String name, byte[] profileImage, Location location) {
         super(publicKey, name, profileImage, location);
     }

@@ -9,7 +9,6 @@ import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.develope
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.interfaces.CryptoAddressDealer;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.utils.CryptoVaultSelector;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.utils.WalletManagerSelector;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
@@ -18,19 +17,16 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interf
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 
 /**
- * The class <code>com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.structure.address_generators.CryptoWalletCryptoAddressDealer</code>
- * manages all the crypto addresses news for the .
- * <p>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 31/10/2015.
+ * Created by Nerio on 07/11/15.
  */
-public final class CryptoWalletCryptoAddressDealer extends CryptoAddressDealer {
+public class CryptoAssetCryptoAddressDealer extends CryptoAddressDealer {
 
-    private final CryptoAddressesManager   cryptoAddressesManager  ;
+    private final CryptoAddressesManager cryptoAddressesManager  ;
 
-    public CryptoWalletCryptoAddressDealer(final CryptoAddressesManager   cryptoAddressesManager  ,
-                                           final CryptoAddressBookManager cryptoAddressBookManager,
-                                           final CryptoVaultSelector      cryptoVaultSelector     ,
-                                           final WalletManagerSelector    walletManagerSelector   ) {
+    public CryptoAssetCryptoAddressDealer(final CryptoAddressesManager   cryptoAddressesManager  ,
+                                          final CryptoAddressBookManager cryptoAddressBookManager,
+                                          final CryptoVaultSelector      cryptoVaultSelector     ,
+                                          final WalletManagerSelector walletManagerSelector      ) {
 
         super(cryptoAddressBookManager, cryptoVaultSelector, walletManagerSelector);
 
@@ -39,13 +35,10 @@ public final class CryptoWalletCryptoAddressDealer extends CryptoAddressDealer {
 
     @Override
     public void handleCryptoAddressesNew(final CryptoAddressRequest request) throws CantHandleCryptoAddressesNewException {
-
         try {
-
             try {
-
-                Platforms platform  = Platforms.CRYPTO_CURRENCY_PLATFORM;
-                VaultType vaultType = VaultType.CRYPTO_CURRENCY_VAULT;
+                Platforms platform  = Platforms.DIGITAL_ASSET_PLATFORM;
+                VaultType vaultType = VaultType.ASSET_VAULT;
 
                 CryptoAddress cryptoAddress = this.generateAndRegisterCryptoAddress(
                         platform,
@@ -57,14 +50,14 @@ public final class CryptoWalletCryptoAddressDealer extends CryptoAddressDealer {
                         request.getRequestId(),
                         cryptoAddress
                 );
-            } catch(DefaultWalletNotFoundException z) {
 
+            } catch(DefaultWalletNotFoundException z) {
                 cryptoAddressesManager.denyAddressExchangeRequest(request.getRequestId());
             }
 
-        } catch(PendingRequestNotFoundException           |
+        } catch(PendingRequestNotFoundException |
                 CantAcceptAddressExchangeRequestException |
-                CantDenyAddressExchangeRequestException   e) {
+                CantDenyAddressExchangeRequestException e) {
 
             throw new CantHandleCryptoAddressesNewException(e, "", "There was an error with the network service.");
         } catch(CantGenerateAndRegisterCryptoAddressException e) {
