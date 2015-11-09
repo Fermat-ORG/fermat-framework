@@ -194,7 +194,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
             try {
                 bitcoinNetworkManager.monitorNetworkFromKeyList(CryptoVaults.ASSETS_OVER_BITCOIN, getActiveNetworks(), allAccountsKeyList);
             } catch (CantMonitorBitcoinNetworkException e) {
-                //todo handle
+                e.printStackTrace();
             }
 
         }
@@ -298,9 +298,13 @@ class VaultKeyHierarchyMaintainer implements Agent {
          */
         private int getCurrentUsedKeys(HierarchyAccount hierarchyAccount) {
             try {
-                return getDao().getCurrentUsedKeys(hierarchyAccount.getId());
+                int currentGeneratedKeys = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
+                if (currentGeneratedKeys == 0)
+                    currentGeneratedKeys = 1;
+
+                return currentGeneratedKeys;
             } catch (CantExecuteDatabaseOperationException e) {
-                return 0;
+                return 1;
             }
         }
 
