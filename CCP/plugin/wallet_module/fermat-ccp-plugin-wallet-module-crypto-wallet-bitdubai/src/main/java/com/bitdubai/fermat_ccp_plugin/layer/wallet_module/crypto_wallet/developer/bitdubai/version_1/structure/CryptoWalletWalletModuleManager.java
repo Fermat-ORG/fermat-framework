@@ -200,7 +200,7 @@ public class CryptoWalletWalletModuleManager implements
      * DealsWithMoneyRequestNetworkService Interface member variable
      */
 
-   private CryptoPaymentManager cryptoPaymentManager;
+    private CryptoPaymentManager cryptoPaymentManager;
 
     /**
      * DealsWithCryptoPayment Interface member variable
@@ -273,7 +273,7 @@ public class CryptoWalletWalletModuleManager implements
 
 
             for(WalletContactRecord r : walletContactsSearch.getResult()){
-               // System.out.println("wallet contact: "+r);
+                // System.out.println("wallet contact: "+r);
                 byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),intraUserLoggedInPublicKey);
                 contactMap.put(r.getActorPublicKey(), new CryptoWalletWalletModuleWalletContact(r, image));
             }
@@ -282,7 +282,7 @@ public class CryptoWalletWalletModuleManager implements
             List<IntraWalletUserActor> intraUserList = intraUserManager.getConnectedIntraWalletUsers(intraUserLoggedInPublicKey);
 
             for(IntraWalletUserActor intraUser : intraUserList) {
-               // System.out.println("intra user: " + intraUser);
+                // System.out.println("intra user: " + intraUser);
                 if (!contactMap.containsKey(intraUser.getPublicKey()))
                 {
                     contactMap.put(intraUser.getPublicKey(), new CryptoWalletWalletModuleWalletContact( new CryptoWalletWalletModuleIntraUserActor(
@@ -309,8 +309,8 @@ public class CryptoWalletWalletModuleManager implements
 
     private byte[] getImageByActorType(final Actors actorType     ,
                                        final String actorPublicKey, final String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException,
-                                                                           ExtraUserNotFoundException       ,
-                                                                           CantGetExtraUserException        {
+            ExtraUserNotFoundException       ,
+            CantGetExtraUserException        {
 
         try {
             Actor actor;
@@ -403,7 +403,7 @@ public class CryptoWalletWalletModuleManager implements
                     false,
                     intraWalletUser.getProfileImage(),
                     intraWalletUser.getPublicKey()
-                    );
+            );
         } catch (CantGetWalletContactException e) {
             throw new CantEnrichIntraUserException(CantEnrichIntraUserException.DEFAULT_MESSAGE, e, "", "There was a problem trying to enrich the intra user record.");
         }
@@ -421,20 +421,20 @@ public class CryptoWalletWalletModuleManager implements
                                                                  BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException{
         try{
 
-             try {
+            try {
                 WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
 
-                 //get to Crypto Address NS the intra user actor address
-                 cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
-                         walletCryptoCurrency,
-                         actorWalletType,
-                         actorConnectedType,
-                         identityWalletPublicKey,
-                         actorConnectedPublicKey,
-                         CryptoAddressDealers.CRYPTO_WALLET,
-                         blockchainNetworkType);
+                //get to Crypto Address NS the intra user actor address
+                cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
+                        walletCryptoCurrency,
+                        actorWalletType,
+                        actorConnectedType,
+                        identityWalletPublicKey,
+                        actorConnectedPublicKey,
+                        CryptoAddressDealers.CRYPTO_WALLET,
+                        blockchainNetworkType);
 
-                 return new CryptoWalletWalletModuleWalletContact(walletContactRecord);
+                return new CryptoWalletWalletModuleWalletContact(walletContactRecord);
 
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
 
@@ -447,20 +447,20 @@ public class CryptoWalletWalletModuleManager implements
                         walletPublicKey
                 );
 
-                 //get to Crypto Address NS the intra user actor address
-                 cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
-                         walletCryptoCurrency,
-                         actorWalletType,
-                         actorConnectedType,
-                         identityWalletPublicKey,
-                         actorConnectedPublicKey,
-                         CryptoAddressDealers.CRYPTO_WALLET,
-                         blockchainNetworkType);
+                //get to Crypto Address NS the intra user actor address
+                cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
+                        walletCryptoCurrency,
+                        actorWalletType,
+                        actorConnectedType,
+                        identityWalletPublicKey,
+                        actorConnectedPublicKey,
+                        CryptoAddressDealers.CRYPTO_WALLET,
+                        blockchainNetworkType);
 
 
 
 
-                 return new CryptoWalletWalletModuleWalletContact(walletContactRecord, actorPhoto);
+                return new CryptoWalletWalletModuleWalletContact(walletContactRecord, actorPhoto);
             }
 
         } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
@@ -590,7 +590,7 @@ public class CryptoWalletWalletModuleManager implements
             WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByContactId(contactId);
 
 
-         byte[] image = getImageByActorType(walletContactRecord.getActorType(), walletContactRecord.getActorPublicKey(), intraUserLoggedInPublicKey);
+            byte[] image = getImageByActorType(walletContactRecord.getActorType(), walletContactRecord.getActorPublicKey(), intraUserLoggedInPublicKey);
 
 
             return new CryptoWalletWalletModuleWalletContact(walletContactRecord, image);
@@ -644,14 +644,14 @@ public class CryptoWalletWalletModuleManager implements
 
     @Override
     public CryptoAddress requestAddressToKnownUser(String deliveredByActorPublicKey,
-                                        Actors deliveredByActorType,
-                                        String deliveredToActorPublicKey,
-                                        Actors deliveredToActorType,
-                                        Platforms platform,
-                                        VaultType vaultType,
-                                        String vaultIdentifier,
-                                        String walletPublicKey,
-                                        ReferenceWallet walletType) throws CantRequestCryptoAddressException {
+                                                   Actors deliveredByActorType,
+                                                   String deliveredToActorPublicKey,
+                                                   Actors deliveredToActorType,
+                                                   Platforms platform,
+                                                   VaultType vaultType,
+                                                   String vaultIdentifier,
+                                                   String walletPublicKey,
+                                                   ReferenceWallet walletType) throws CantRequestCryptoAddressException {
         try {
             CryptoAddress deliveredCryptoAddress;
             deliveredCryptoAddress = requestCryptoAddressByReferenceWallet(walletType);
@@ -1351,15 +1351,18 @@ public class CryptoWalletWalletModuleManager implements
 
 
             //TODO: Harcoder
-            CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-            lst.add(cryptoWalletPaymentRequest);
-            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+            if(lst.size() == 0){
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+                lst.add(cryptoWalletPaymentRequest);
+                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
 
-            lst.add(cryptoWalletPaymentRequest);
+                lst.add(cryptoWalletPaymentRequest);
+            }
+
 
             return lst;
         } catch (Exception e) {
-                 throw new CantListSentPaymentRequestException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+            throw new CantListSentPaymentRequestException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
 
     }
@@ -1400,11 +1403,13 @@ public class CryptoWalletWalletModuleManager implements
             }
 
             //TODO: Harcoder
-            CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-            lst.add(cryptoWalletPaymentRequest);
-            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
+            if(lst.size() == 0) {
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago", "Starbucks coffe", 500000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
+                lst.add(cryptoWalletPaymentRequest);
+                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago", "Hamburguer from MC donald", 100000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
 
-            lst.add(cryptoWalletPaymentRequest);
+                lst.add(cryptoWalletPaymentRequest);
+            }
 
             return lst;
         } catch (Exception e) {
@@ -1424,7 +1429,7 @@ public class CryptoWalletWalletModuleManager implements
     @Override
     public List<PaymentRequest> listPaymentRequestDateOrder(String walletPublicKey,int max,int offset) throws CantListPaymentRequestDateOrderException {
         try {
-                    //Request order by date desc
+            //Request order by date desc
 
             List<PaymentRequest> lst =  new ArrayList<>();
 
@@ -1508,9 +1513,9 @@ public class CryptoWalletWalletModuleManager implements
     @Override
     public List<IntraWalletUserIdentity> getActiveIdentities() {
 
-       try{
+        try{
 
-           return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+            return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1614,9 +1619,9 @@ public class CryptoWalletWalletModuleManager implements
                     //find actor connected with logget identity
                     actor = intraUserManager.getActorByPublicKey(intraUserLoggedInPublicKey,actorPublicKey);
                     return actor;
-               } catch (CantGetIntraUserException| IntraUserNotFoundException e) {
-                   throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Intra User on DataBase");
-               }
+                } catch (CantGetIntraUserException| IntraUserNotFoundException e) {
+                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Intra User on DataBase");
+                }
 
             default:
                 throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, null, null, null);
