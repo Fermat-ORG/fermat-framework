@@ -140,14 +140,16 @@ public class StartTest {
         Assert.assertEquals(ServiceStatus.STARTED, serviceStatus);
     }
 
-   /* @Test
+   /*@Test
     public void testStartThrowsCantStartPluginException() throws Exception {
         System.out.println("Test AssetDistributionPluginRoot.start() ThrowsCantStartPluginException");
         assetDistributionPluginRoot.setActorAssetIssuerManager(null);
-        catchException(assetDistributionPluginRoot).start();
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantStartPluginException.class);
+
+       try {
+           assetDistributionPluginRoot.start();
+           fail("The method didn't throw when I expected it to");
+       }catch (Exception ex) {
+           Assert.assertTrue(ex instanceof CantStartPluginException);
+       }
     }*/
 }

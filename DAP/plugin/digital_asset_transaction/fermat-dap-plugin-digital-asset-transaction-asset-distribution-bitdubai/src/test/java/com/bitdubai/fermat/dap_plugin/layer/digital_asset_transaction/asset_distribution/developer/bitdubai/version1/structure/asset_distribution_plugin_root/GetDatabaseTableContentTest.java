@@ -11,6 +11,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -165,21 +167,19 @@ public class GetDatabaseTableContentTest {
         Assert.assertNotNull(list);
     }
 
-    /*@Test
+    @Test
     public void getDatabaseTableContentThrowsCantOpenDatabaseException() throws Exception {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new CantOpenDatabaseException("error"));
-
         List<DeveloperDatabaseTableRecord> list = assetDistributionPluginRoot.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
-        assertThat(list).isNotNull();
-        assertThat(list.size()).isEqualTo(0);
+        Assert.assertNotNull(list);
+        Assert.assertEquals(0, list.size());
     }
 
     @Test
     public void getDatabaseTableContentThrowsDatabaseNotFoundException() throws Exception {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new DatabaseNotFoundException("error"));
-
         List<DeveloperDatabaseTableRecord> list = assetDistributionPluginRoot.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
-        assertThat(list).isNotNull();
-        assertThat(list.size()).isEqualTo(0);
-    }*/
+        Assert.assertNotNull(list);
+        Assert.assertEquals(0, list.size());
+    }
 }

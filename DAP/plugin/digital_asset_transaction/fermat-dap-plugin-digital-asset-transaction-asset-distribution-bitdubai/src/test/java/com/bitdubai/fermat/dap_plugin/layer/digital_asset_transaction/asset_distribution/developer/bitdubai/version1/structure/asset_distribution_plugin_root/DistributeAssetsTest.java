@@ -156,14 +156,16 @@ public class DistributeAssetsTest {
     }
 
     /*@Test
-    public void distributeAssetsThrowsCantDistributeDigitalAssetsExceptionTest() throws CantDistributeDigitalAssetsException, CantStartPluginException {
+    public void distributeAssetsThrowsCantDistributeDigitalAssetsExceptionTest() throws CantDistributeDigitalAssetsException, CantStartPluginException, CantStartPluginException {
         System.out.println("Test method distributeAssetsDigitalAssetsToDistributeNullTest()");
         assetDistributionPluginRoot.start();
-        catchException(assetDistributionPluginRoot).distributeAssets(null, null);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantDistributeDigitalAssetsException.class);
+
+        try {
+            assetDistributionPluginRoot.distributeAssets(null, null);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantDistributeDigitalAssetsException);
+        }
     }*/
 
 }
