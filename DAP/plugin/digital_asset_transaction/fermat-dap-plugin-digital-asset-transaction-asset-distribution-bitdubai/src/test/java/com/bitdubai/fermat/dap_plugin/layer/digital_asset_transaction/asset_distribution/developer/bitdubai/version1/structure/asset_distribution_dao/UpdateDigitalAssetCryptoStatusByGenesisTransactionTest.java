@@ -5,11 +5,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantCheckAssetDistributionProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 /**
@@ -64,30 +67,29 @@ public class UpdateDigitalAssetCryptoStatusByGenesisTransactionTest {
         mockAssetDistributionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.PENDING_SUBMIT);
     }
 
-    /*@Test
+    @Test
     public void updateDigitalAssetCryptoStatusByGenesisTransactionThrowsCantPersistsTransactionUUIDException() throws Exception {
         String genesisTransaction = "d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
-        UUID distributionId = UUID.randomUUID();
 
-        when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new CantOpenDatabaseException("error"));
-        catchException(mockAssetDistributionDao).updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.PENDING_SUBMIT);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantCheckAssetDistributionProgressException.class);
+        try {
+            mockAssetDistributionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.PENDING_SUBMIT);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantCheckAssetDistributionProgressException);
+        }
     }
 
     @Test
     public void updateDigitalAssetCryptoStatusByGenesisTransactionThrowsUnexpectedResultReturnedFromDatabaseException() throws Exception {
         String genesisTransaction = "d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
-        UUID distributionId = UUID.randomUUID();
 
         when(databaseTable.getRecords()).thenReturn(recordsForException);
-        catchException(mockAssetDistributionDao).updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.PENDING_SUBMIT);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantCheckAssetDistributionProgressException.class);
-        assertThat(thrown.getCause()).isNotNull().isInstanceOf(UnexpectedResultReturnedFromDatabaseException.class);
-    }*/
+        try {
+            mockAssetDistributionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.PENDING_SUBMIT);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantCheckAssetDistributionProgressException);
+            Assert.assertTrue(ex.getCause() instanceof UnexpectedResultReturnedFromDatabaseException);
+        }
+    }
 }

@@ -5,10 +5,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 /**
@@ -62,24 +65,27 @@ public class UpdateEventStatusTest {
         mockAssetDistributionDao.updateEventStatus("eventId");
     }
 
-   /* @Test
+   @Test
     public void updateEventStatusThrowsCantExecuteQueryException() throws Exception {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new CantOpenDatabaseException("error"));
-        catchException(mockAssetDistributionDao).updateEventStatus("eventId");
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantExecuteQueryException.class);
+       try {
+           mockAssetDistributionDao.updateEventStatus("eventId");
+           fail("The method didn't throw when I expected it to");
+       }catch (Exception ex) {
+           Assert.assertTrue(ex instanceof CantExecuteQueryException);
+       }
     }
 
     @Test
     public void updateEventStatusThrowsUnexpectedResultReturnedFromDatabaseException() throws Exception {
         when(databaseTable.getRecords()).thenReturn(recordsForException);
-        catchException(mockAssetDistributionDao).updateEventStatus("eventId");
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantExecuteQueryException.class);
-        assertThat(thrown.getCause()).isNotNull().isInstanceOf(UnexpectedResultReturnedFromDatabaseException.class);
-    }*/
+
+        try {
+            mockAssetDistributionDao.updateEventStatus("eventId");
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantExecuteQueryException);
+            Assert.assertTrue(ex.getCause() instanceof UnexpectedResultReturnedFromDatabaseException);
+        }
+    }
 }

@@ -1,15 +1,19 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.asset_distribution_dao;
 
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantCheckAssetDistributionProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 /**
@@ -64,26 +69,28 @@ public class UpdateDistributionStatusByGenesisTransactionTest {
         mockAssetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.ASSET_ACCEPTED, genesisTransaction);
     }
 
-   /* @Test
+    @Test
     public void updateDistributionStatusByGenesisTransactionThrowsCantExecuteQueryException() throws Exception {
         String genesisTransaction = "d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new CantOpenDatabaseException("error"));
-        catchException(mockAssetDistributionDao).updateDistributionStatusByGenesisTransaction(DistributionStatus.ASSET_ACCEPTED, genesisTransaction);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantExecuteQueryException.class);
+        try {
+            mockAssetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.ASSET_ACCEPTED, genesisTransaction);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantExecuteQueryException);
+        }
     }
 
-    /*@Test
+    @Test
     public void updateDistributionStatusByGenesisTransactionThrowsUnexpectedResultReturnedFromDatabaseException() throws Exception {
         String genesisTransaction = "d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
         when(databaseTable.getRecords()).thenReturn(recordsForException);
-        catchException(mockAssetDistributionDao).updateDistributionStatusByGenesisTransaction(DistributionStatus.ASSET_ACCEPTED, genesisTransaction);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantExecuteQueryException.class);
-        assertThat(thrown.getCause()).isNotNull().isInstanceOf(UnexpectedResultReturnedFromDatabaseException.class);
-    }*/
+        try {
+            mockAssetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.ASSET_ACCEPTED, genesisTransaction);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantExecuteQueryException);
+            Assert.assertTrue(ex.getCause() instanceof UnexpectedResultReturnedFromDatabaseException);
+        }
+    }
 }
