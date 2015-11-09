@@ -282,7 +282,7 @@ public class UserRedemptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                     List<String> assetRejectedByContractGenesisTransactionList= userRedemptionDao.getGenesisTransactionByAssetRejectedByContractStatus();
                     for(String assetRejectedGenesisTransaction : assetRejectedByContractGenesisTransactionList){
                         String internalId= userRedemptionDao.getTransactionIdByGenesisTransaction(assetRejectedGenesisTransaction);
-                        List<CryptoTransaction> genesisTransactionList =bitcoinNetworkManager.getGenesisTransaction(assetRejectedGenesisTransaction);
+                        List<CryptoTransaction> genesisTransactionList =bitcoinNetworkManager.getCryptoTransaction(assetRejectedGenesisTransaction);
                         if(genesisTransactionList==null||genesisTransactionList.isEmpty()){
                             throw new CantCheckAssetUserRedemptionProgressException("Cannot get the CryptoTransaction from Crypto Network for "+assetRejectedGenesisTransaction);
                         }
@@ -293,7 +293,7 @@ public class UserRedemptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                     List<String> assetRejectedByHashGenesisTransactionList= userRedemptionDao.getGenesisTransactionByAssetRejectedByHashStatus();
                     for(String assetRejectedGenesisTransaction : assetRejectedByHashGenesisTransactionList){
                         String internalId= userRedemptionDao.getTransactionIdByGenesisTransaction(assetRejectedGenesisTransaction);
-                        List<CryptoTransaction> genesisTransactionList =bitcoinNetworkManager.getGenesisTransaction(assetRejectedGenesisTransaction);
+                        List<CryptoTransaction> genesisTransactionList =bitcoinNetworkManager.getCryptoTransaction(assetRejectedGenesisTransaction);
                         if(genesisTransactionList==null||genesisTransactionList.isEmpty()){
                             throw new CantCheckAssetUserRedemptionProgressException("Cannot get the CryptoTransaction from Crypto Network for "+assetRejectedGenesisTransaction);
                         }
@@ -442,7 +442,7 @@ public class UserRedemptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
              * End of mocking
              */
             //TODO: change this line when is implemented in crypto network
-            List<CryptoTransaction> transactionListFromCryptoNetwork=bitcoinNetworkManager.getGenesisTransaction(genesisTransaction);
+            List<CryptoTransaction> transactionListFromCryptoNetwork=bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
             if(transactionListFromCryptoNetwork==null){
                 System.out.println("ASSET USER REDEMPTION transaction List From Crypto Network for "+genesisTransaction+" is null");
                 throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,

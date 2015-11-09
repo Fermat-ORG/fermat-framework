@@ -612,7 +612,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
              * End of mocking
              */
             //TODO: change this line when is implemented in crypto network
-            List<CryptoTransaction> transactionListFromCryptoNetwork=bitcoinNetworkManager.getGenesisTransaction(genesisTransaction);
+            List<CryptoTransaction> transactionListFromCryptoNetwork=bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
             if(transactionListFromCryptoNetwork==null){
                 System.out.println("ASSET ISSUING transaction List From Crypto Network for "+genesisTransaction+" is null");
                 throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,
