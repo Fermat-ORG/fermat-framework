@@ -34,9 +34,7 @@ import java.util.List;
  * Created by Angel 16/10/2015
  */
 public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractPlugin implements
-        CryptoBrokerIdentityModuleManager,
-        DealsWithCryptoBrokerIdentities,
-        DealsWithErrors {
+        CryptoBrokerIdentityModuleManager {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_BROKER)
     private CryptoBrokerIdentityManager identityManager;
@@ -48,15 +46,6 @@ public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractPlugin i
         super(new PluginVersionReference(new Version()));
     }
 
-    /**
-     * DealsWithError interface implementation
-     *
-     * @param errorManager
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
 
     @Override
     public void start() throws CantStartPluginException {
@@ -65,11 +54,6 @@ public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractPlugin i
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-    }
-
-    @Override
-    public void setCryptoBrokerIdentityManager(CryptoBrokerIdentityManager cryptoBrokerIdentityManager) {
-        this.identityManager = cryptoBrokerIdentityManager;
     }
 
     public List<CryptoBrokerIdentity> getAllCryptoBrokersFromCurrentDeviceUser() throws CantGetCryptoBrokerIdentityException {
