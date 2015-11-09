@@ -16,6 +16,7 @@ public final class NewReceiveMessagesNotificationEventHandler extends AbstractNe
 
     @Override
     protected final void handleNewMessages(FermatMessage message) throws FermatException {
+        System.out.println("******************* Crypto Payment Request messages arrived: "+message.getContent());
         ((CryptoPaymentRequestNetworkServicePluginRoot)networkService).handleNewMessages(message);
     }
 }

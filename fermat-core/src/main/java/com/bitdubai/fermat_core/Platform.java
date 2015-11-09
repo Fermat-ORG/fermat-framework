@@ -56,7 +56,6 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.C
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.DealsWithCryptoBrokerIdentities;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.DealsWithCryptoCustomerIdentities;
-import com.bitdubai.fermat_ccm_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.DealsWithExtraUsers;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.DealsWithCCPActorIntraWalletUsers;
@@ -90,7 +89,6 @@ import com.bitdubai.fermat_core.layer.all_definition.DefinitionLayer;
 import com.bitdubai.fermat_core.layer.cbp.identity.CBPIdentityLayer;
 import com.bitdubai.fermat_core.layer.cbp.sub_app_module.CBPSubAppModuleLayer;
 import com.bitdubai.fermat_core.layer.cbp.wallet_module.CBPWalletModuleLayer;
-import com.bitdubai.fermat_core.layer.cry_crypto_module.CryptoLayer;
 import com.bitdubai.fermat_core.layer.cry_crypto_network.CryptoNetworkLayer;
 import com.bitdubai.fermat_core.layer.cry_cypto_vault.CryptoVaultLayer;
 import com.bitdubai.fermat_core.layer.dap_actor.DAPActorLayer;
@@ -393,7 +391,6 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new WorldLayer(), PlatformLayers.BITDUBAI_WORLD_LAYER);
             corePlatformContext.registerPlatformLayer(new CryptoNetworkLayer(), PlatformLayers.BITDUBAI_CRYPTO_NETWORK_LAYER);
             corePlatformContext.registerPlatformLayer(new CryptoVaultLayer(), PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER);
-            corePlatformContext.registerPlatformLayer(new CryptoLayer(), PlatformLayers.BITDUBAI_CRYPTO_LAYER);
             corePlatformContext.registerPlatformLayer(new CommunicationLayer(), PlatformLayers.BITDUBAI_COMMUNICATION_LAYER);
             corePlatformContext.registerPlatformLayer(new MiddlewareLayer(), PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER);
             corePlatformContext.registerPlatformLayer(new ModuleLayer(), PlatformLayers.BITDUBAI_MODULE_LAYER);
@@ -553,9 +550,12 @@ public class Platform implements Serializable {
                 fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.DEVICE_LOCATION));
                 fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.LOG_MANAGER));
 
+                // INIT CRYPTO ADDRESS BOOK BCH PLUGIN
+                Plugin cryptoAddressBookCrypto = fermatSystem.startAndGetPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_MODULE, Plugins.CRYPTO_ADDRESS_BOOK));
+                injectPluginReferencesAndStart(cryptoAddressBookCrypto, Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK);
+
             } catch(Exception e) {
-                System.out.println("apa, encontramos un error.");
-                System.out.println(e);
+                reportUnexpectedError(UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
             }
 
             //--------------------------------
@@ -621,8 +621,7 @@ public class Platform implements Serializable {
 
             }
 
-            Plugin cryptoAddressBookCrypto = ((CryptoLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_LAYER)).getCryptoAddressBook();
-            injectPluginReferencesAndStart(cryptoAddressBookCrypto, Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK);
+
 
             if (CRY) {
            /*
@@ -671,7 +670,7 @@ public class Platform implements Serializable {
                 Plugin incomingCryptoTransaction = fermatSystem.getPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_ROUTER, Plugins.INCOMING_CRYPTO));
                 injectPluginReferencesAndStart(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
             } catch (Exception e) {
-                System.out.println(e);
+                reportUnexpectedError(UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
             }
 
             if (CCP) {
@@ -732,10 +731,7 @@ public class Platform implements Serializable {
                     Plugin cryptoWalletWalletModule = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET));
                     injectPluginReferencesAndStart(cryptoWalletWalletModule, Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    if (e instanceof FermatException) {
-                        System.out.println(e);
-                    }
+                    reportUnexpectedError(UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
                 }
 
                 if (WPD) {

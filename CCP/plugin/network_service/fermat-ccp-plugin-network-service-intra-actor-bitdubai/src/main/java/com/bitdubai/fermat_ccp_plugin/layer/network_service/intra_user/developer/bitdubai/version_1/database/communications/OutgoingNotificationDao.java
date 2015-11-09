@@ -121,7 +121,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                 if (!records.isEmpty())
                     return buildActorNetworkServiceRecord(records.get(0));
                 else
-                    throw new NotificationNotFoundException("",null, "RequestID: "+notificationId, "Can not find an crypto payment request with the given request id.");
+                    throw new NotificationNotFoundException("",null, "RequestID: "+notificationId, "Can not find an intra user request with the given request id.");
 
 
             } catch (CantLoadTableToMemoryException exception) {
@@ -160,7 +160,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
                 cryptoPaymentRequestTable.updateRecord(record);
             } else {
-                throw new RequestNotFoundException("RequestId: "+senderPublicKey, "Cannot find a CryptoPaymentRequest with the given id.");
+                throw new RequestNotFoundException("RequestId: "+senderPublicKey, "Cannot find a intra user request with the given id.");
             }
 
         } catch (CantLoadTableToMemoryException e) {
@@ -199,7 +199,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
                 cryptoPaymentRequestTable.updateRecord(record);
             } else {
-                throw new RequestNotFoundException("RequestId: "+requestId, "Cannot find a CryptoPaymentRequest with the given id.");
+                throw new RequestNotFoundException("RequestId: "+requestId, "Cannot find a intra user request with the given id.");
             }
 
         } catch (CantLoadTableToMemoryException e) {
