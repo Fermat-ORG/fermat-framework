@@ -487,10 +487,10 @@ project(':fermat-dap-android-sub-app-redeem-point-community-bitdubai').projectDi
 
 include ':fermat-bch-plugin-crypto-network-bitcoin-bitdubai'
 project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_network/fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
-
+/*TODO COMMENTED IS NOT IN USE
 include ':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai'
 project(':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai')
-
+*/
 include ':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
 project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
 

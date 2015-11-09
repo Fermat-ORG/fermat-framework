@@ -56,10 +56,7 @@ import java.util.UUID;
  */
 public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implements
         BitcoinWalletManager,
-        DatabaseManagerForDevelopers,
-        DealsWithErrors,
-        DealsWithPluginDatabaseSystem,
-        DealsWithPluginFileSystem {
+        DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -118,34 +115,6 @@ public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implement
         }
         // If we are here the database could not be opened, so we return an empry list
         return databaseTableRecords;
-    }
-
-
-    /**
-     * DealsWithErrors interface implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * DealsWithPluginFileSystem Interface implementation.
-     */
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**

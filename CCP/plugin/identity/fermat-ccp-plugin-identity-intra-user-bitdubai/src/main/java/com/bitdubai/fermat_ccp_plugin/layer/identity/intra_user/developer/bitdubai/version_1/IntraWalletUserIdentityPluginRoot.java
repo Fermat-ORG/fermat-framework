@@ -72,11 +72,6 @@ import java.util.Map;
 
 public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         implements DatabaseManagerForDevelopers,
-                   DealsWithDeviceUser,
-                   DealsWithErrors,
-                   DealsWithPluginDatabaseSystem,
-                   DealsWithPluginFileSystem,
-                   DealsWithIntraUsersNetworkService,//
                     IntraWalletUserIdentityManager,
                    LogManagerForDevelopers {
 
@@ -90,7 +85,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM    )
     private PluginFileSystem pluginFileSystem;
 
-    @NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM       , layer = Layers.USER           , plugin = Plugins.DEVICE_USER        )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM       , layer = Layers.USER           , addon = Addons.DEVICE_USER        )
     private DeviceUserManager deviceUserManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.INTRA_WALLET_USER  )
@@ -106,8 +101,6 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     public IntraWalletUserIdentityPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
-
-
 
 
     /**
@@ -309,43 +302,4 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             }
         }
     }
-
-    /**
-     * DealWithDeviceUser Interface implementation.
-     */
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager = deviceUserManager;
-    }
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-
-    }
-
-    /**
-     * DealWithPluginFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    @Override
-    public void setIntraUserNetworkServiceManager(IntraUserManager intraUserManager) {
-        this.intraActorManager = intraUserManager;
-    }
-
 }

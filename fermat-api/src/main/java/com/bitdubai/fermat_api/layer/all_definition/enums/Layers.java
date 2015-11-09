@@ -21,6 +21,7 @@ public enum Layers implements FermatEnum {
     CRYPTO_ROUTER     ("CRR"),
     CRYPTO_VAULT      ("CRV"),
     DEFINITION        ("DEF"),
+    DESKTOP_MODULE    ("DKM"),
     ENGINE            ("ENG"),
     HARDWARE          ("HAR"),
     IDENTITY          ("IDT"),
@@ -55,6 +56,7 @@ public enum Layers implements FermatEnum {
             case "CRR":  return CRYPTO_ROUTER;
             case "CRV":  return CRYPTO_VAULT;
             case "DEF":  return DEFINITION;
+            case "DKM":  return DESKTOP_MODULE;
             case "ENG":  return ENGINE;
             case "HAR":  return HARDWARE;
             case "IDT":  return IDENTITY;

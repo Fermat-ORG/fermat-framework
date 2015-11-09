@@ -47,13 +47,7 @@ import java.util.List;
  * Created by Leon Acosta (laion.cj91@gmail.com) on 31/10/2015.
  */
 
-public class CryptoAddressesMiddlewarePluginRoot extends AbstractPlugin
-        implements DealsWithCryptoAddressesNetworkService,
-                   DealsWithCryptoVault                  ,
-                   DealsWithCryptoAddressBook            ,
-                   DealsWithWalletManager                ,
-                   DealsWithErrors                       ,
-                   DealsWithEvents                       {
+public class CryptoAddressesMiddlewarePluginRoot extends AbstractPlugin {
 
     /*
      * Init References list..
@@ -62,7 +56,7 @@ public class CryptoAddressesMiddlewarePluginRoot extends AbstractPlugin
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_ADDRESSES)
@@ -159,44 +153,5 @@ public class CryptoAddressesMiddlewarePluginRoot extends AbstractPlugin
         listenersAdded.clear();
 
         this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    /**
-     * DealWithCryptoAddressesNetworkService Interface implementation.
-     */
-    @Override
-    public final void setCryptoAddressesManager(final CryptoAddressesManager cryptoAddressesManager) {
-        this.cryptoAddressesManager = cryptoAddressesManager;
-    }
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-    @Override
-    public final void setErrorManager(final ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-    @Override
-    public final void setEventManager(final EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    @Override
-    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-        this.cryptoVaultManager = cryptoVaultManager;
-    }
-
-    @Override
-    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
-        this.cryptoAddressBookManager = cryptoAddressBookManager;
-    }
-
-    @Override
-    public void setWalletManagerManager(WalletManagerManager walletManagerManager) {
-        this.walletManagerManager = walletManagerManager;
     }
 }
