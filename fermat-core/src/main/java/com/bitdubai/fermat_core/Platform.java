@@ -526,11 +526,6 @@ public class Platform implements Serializable {
             addonsToInstantiate.add(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM          , Addons.DEVICE_LOCATION));
             addonsToInstantiate.add(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM          , Addons.LOG_MANAGER));
 
-            pluginsToInstantiate.put(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_MODULE, Plugins.CRYPTO_ADDRESS_BOOK), Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK);
-
-            if (P2P) {
-                pluginsToInstantiate.put(ref(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.WS_CLOUD_CLIENT), Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL);
-            }
 
             if (PIP) {
            /*
@@ -586,7 +581,7 @@ public class Platform implements Serializable {
 
                 // disabled since we are migrating back to the new crypto network plugin
 
-                //pluginsToInstantiate.put(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_NETWORK, Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK), Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK);
+                pluginsToInstantiate.put(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_NETWORK, Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK), Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK);
 
                 pluginsToInstantiate.put(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_NETWORK, Plugins.BITCOIN_NETWORK), Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK2);
 
@@ -1133,7 +1128,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithBitcoinNetwork) {
-                ((DealsWithBitcoinNetwork) plugin).setBitcoinNetworkManager((BitcoinNetworkManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK2));
+                ((DealsWithBitcoinNetwork) plugin).setBitcoinNetworkManager((BitcoinNetworkManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_NETWORK, Plugins.BITCOIN_NETWORK)));
             }
 
             if (plugin instanceof DealsWithCryptoVault) {
