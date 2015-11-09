@@ -71,7 +71,6 @@ dependencies {
     compile project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai')
     // CRY Projects
     compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
-    compile project(':fermat-cry-plugin-crypto-module-crypto-address-book-bitdubai')
     compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
     compile project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
     // OSA Projects   --- Hace falta esto aca??
