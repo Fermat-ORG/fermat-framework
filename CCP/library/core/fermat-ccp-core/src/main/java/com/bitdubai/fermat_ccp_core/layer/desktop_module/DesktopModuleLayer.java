@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_core.layer.middleware;
+package com.bitdubai.fermat_ccp_core.layer.desktop_module;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
@@ -13,17 +13,16 @@ import com.bitdubai.fermat_ccp_core.layer.middleware.wallet_manager.WalletManage
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class MiddlewareLayer extends AbstractLayer {
+public class DesktopModuleLayer extends AbstractLayer {
 
-    public MiddlewareLayer() {
-        super(Layers.MIDDLEWARE);
+    public DesktopModuleLayer() {
+        super(Layers.DESKTOP_MODULE);
     }
 
     public void start() throws CantStartLayerException {
 
         try {
             registerPlugin(new WalletContactsPluginSubsystem());
-            registerPlugin(new WalletManagerPluginSubsystem());
 
         } catch (CantRegisterPluginException e) {
 

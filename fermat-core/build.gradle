@@ -66,11 +66,9 @@ dependencies {
 
     //WPD Projects (Plugins)
     compile project(':fermat-wpd-plugin-actor-publisher-bitdubai')
-    compile project(':fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai')
     compile project(':fermat-wpd-plugin-engine-wallet-runtime-bitdubai')
     compile project(':fermat-wpd-plugin-identity-publisher-bitdubai')
     compile project(':fermat-wpd-plugin-middleware-wallet-factory-bitdubai')
-    compile project(':fermat-wpd-plugin-middleware-wallet-manager-bitdubai')
     compile project(':fermat-wpd-plugin-middleware-wallet-publisher-bitdubai')
     compile project(':fermat-wpd-plugin-middleware-wallet-settings-bitdubai')
     compile project(':fermat-wpd-plugin-middleware-wallet-store-bitdubai')
