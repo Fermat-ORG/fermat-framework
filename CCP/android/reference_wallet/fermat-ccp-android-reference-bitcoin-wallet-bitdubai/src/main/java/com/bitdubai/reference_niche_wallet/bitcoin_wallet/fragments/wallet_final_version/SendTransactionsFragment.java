@@ -67,12 +67,13 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionNewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_anim.Fx;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigationDrawer.NavigationDrawerArrayAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationDrawerArrayAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -89,7 +90,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 /**
  * Created by Matias Furszyfer on 2015.09.28..
  */
-public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWalletTransaction> implements FermatListItemListeners<CryptoWalletTransaction>, DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler {
+public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWalletTransaction> implements FermatListItemListeners<CryptoWalletTransaction>, DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback {
 
 
     // TODO: preguntar de donde saco el user id
@@ -596,7 +597,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
             if(!amount.getText().toString().equals("") && amount.getText()!=null) {
                 try {
-                    String notes=null;
+                    String notes="";
                     if(txt_notes.getText().toString().length()!=0){
                         notes = txt_notes.getText().toString();
                     }
@@ -647,11 +648,11 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
                 try {
 
-                    lstCryptoWalletTransactionsAvailable.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, available_offset));
+                    lstCryptoWalletTransactionsAvailable.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),MAX_TRANSACTIONS, available_offset));
 
                     available_offset = lstCryptoWalletTransactionsAvailable.size();
 
-                    lstCryptoWalletTransactionsBook.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, book_offset));
+                    lstCryptoWalletTransactionsBook.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),MAX_TRANSACTIONS, book_offset));
 
                     book_offset = lstCryptoWalletTransactionsBook.size();
 
@@ -660,6 +661,9 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                 } catch (CantListTransactionsException e) {
                     e.printStackTrace();
                 }
+             catch (CantGetActiveLoginIdentityException e) {
+                e.printStackTrace();
+            }
 
             }
         };
@@ -787,7 +791,8 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                 referenceWalletSession,
                 walletContact,
                 user_id,
-                ((withImage) ? contactImageBitmap : null));
+                ((withImage) ? contactImageBitmap : null),
+                this);
         dialog.setOnDismissListener(this);
         dialog.show();
     }
@@ -817,5 +822,10 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
     public void uncaughtException(Thread thread, Throwable throwable) {
         referenceWalletSession.getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception());
         Toast.makeText(getActivity(),"oooopps",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void openContextImageSelector() {
+        Toast.makeText(getActivity(),"Sos un pajero",Toast.LENGTH_SHORT).show();
     }
 }

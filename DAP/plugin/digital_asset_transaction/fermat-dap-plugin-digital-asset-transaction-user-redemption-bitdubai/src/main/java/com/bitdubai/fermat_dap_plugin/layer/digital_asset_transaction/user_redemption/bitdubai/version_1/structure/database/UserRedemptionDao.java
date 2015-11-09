@@ -437,7 +437,7 @@ public class UserRedemptionDao {
         try {
             this.database=openDatabase();
             DatabaseTable databaseTable;
-            databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_DATABASE);
+            databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME);
             databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();

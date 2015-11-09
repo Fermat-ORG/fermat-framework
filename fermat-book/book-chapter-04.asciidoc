@@ -1,6 +1,6 @@
 :numbered!:
 [[superlayers]]
-== Fermat Operating Systems Superlayer
+== Chapter 4: Fermat Operating Systems Superlayer
 
 NOTE: We call in Fermat *Superlayer* to a group of layers whose components offer services to be consumed system-wide, i.e. offering an infrastructure that hold the different *platforms* running over Fermat. (it is like a "common ground" where different "towers" (the platforms) are built, sharing basic level services )
 
@@ -33,7 +33,7 @@ Database System :: access to plugin propietary databases +
 
 :numbered!:
   
-=== Continue Reading
+==== Continue Reading
 link:book-chapter-05.asciidoc[Next Chapter]
 
 link:book-chapter-03.asciidoc[Previous Chapter]

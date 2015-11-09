@@ -1,0 +1,39 @@
+== Chapter 18: Fermat Crypto Distribution Network 
+=== Developing Regional Crypto Ecosystems
+In the actual stage of development of the crypto currency industry, there is still a very restraint availability of crypto currency due to the reduced circulation regarding the transaction volume and the number of actors involved in the business. Fermat implementation brings to the market a lot of tools and products to facilitate the exchange of crypto currencies in various ways. A key point in building a crypto distribution network is the role of the cryptobrokers whose business logic is straightforward the constant selling of crypto and fiat money. However, to extend the cryptobroker activities to a larger network of interactions that can build a *local* circulation of crypto currencies, the functionalities covered by the previous _Crypto Brokers Platform_ are not sufficient. This new platform adds what is necesary to achieve this goal. +
+There is a new set of circuits where the crypto and fiat money flow, and several complexities to be taken into account. The new components not only serve to deal with this new interactions but also motivates the adoption of new roles for the different actors stimulating a web of interconnections where value is always being transmitted within a local environment of end users. Thus, a regional crypto ecosystem is created!
+
+
+=== New Identities
+In order to complete the scheme of a _Crypto Distribution Network_ these actors were added:
+[horizontal]
+Crypto Wholesaler :: organizations owing a certain large amount of crypto-credit to sell through a distribution chain.
+Crypto Distributor :: the next level in the distribution chain, buying to wholesalers and re-selling to Top Up Point
+Top Up Point :: shops/organizations/persons who transfer crypto-credit in exchange for fiat-money *(receives money - gives crypto)*
+Cash Out Point :: shops/organizations/persons who gives out money in exchange for a transfer of crypto *(receive crypto - gives money)*
+
+=== New Components:
+These identities add a considerable new sets of interactions that are covered by the new components.
+
+Business transactions :: new transactions types between the new actors, and new contracts.
+Wallets :: Crypto Wholesaler Wallet , Crypto Distributor Wallet, top Up Point Wallet and Cash Out Point Wallet   +
+
+==== Crypto Wholesaler Wallet 
+==== Crypto Distributor Wallet
+==== Top Up Point Wallet 
+==== Cash Out Point Wallet   +
+
+
+
+
+
+===== Continue reading ...
+////
+link:book-chapter-19.asciidoc[Digital Assets Platform]
+////
+
+link:book-chapter-19.asciidoc[Next Chapter]
+
+link:book-chapter-17.asciidoc[Previous Chapter]
+
+

@@ -91,7 +91,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                              BlockchainNetworkType networkType      ) throws CantGenerateCryptoPaymentRequestException {
 
 
-
+        System.out.println("********** Crypto Payment Request -> generating request. SENT - NOT_SENT_YET.");
         try {
             /**
              * i generate the crypto payment request setting:
@@ -129,6 +129,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
             // if i can save it, i send it to the network service.
 
+            System.out.println("********** Crypto Payment Request -> generating request. SENT - NOT_SENT_YET -> WAITING RECEPTION CONFIRMATION.");
+
             fromNotSentYetToWaitingReceptionConfirmation(
                     requestId,
                     identityPublicKey,
@@ -141,6 +143,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     startTimeStamp,
                     networkType
             );
+
+            System.out.println("********** Crypto Payment Request -> generating request. SENT - WAITING RECEPTION CONFIRMATION -> OK.");
 
         } catch(CantGenerateCryptoPaymentRequestException e) {
 
@@ -511,9 +515,9 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
         boolean errorHandlingEvents = false;
 
         try {
-            List<CryptoPayment> cryptoPaymentList = cryptoPaymentRequestDao.listUnfinishedActions();
+            final List<CryptoPayment> cryptoPaymentList = cryptoPaymentRequestDao.listUnfinishedActions();
 
-            for(CryptoPayment cryptoPayment : cryptoPaymentList) {
+            for(final CryptoPayment cryptoPayment : cryptoPaymentList) {
 
                 switch (cryptoPayment.getState()) {
                     case NOT_SENT_YET:
@@ -540,12 +544,52 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                             errorHandlingEvents = true;
                             errorString += cryptoPayment.getState()+" ERROR for REQUEST ID "+ cryptoPayment.getRequestId() + "\n"+e.getMessage()+"\n";
                         }
+
+                        try {
+
+                            fromInApprovingProcessToPaymentProcessStarted(cryptoPayment.getRequestId(), cryptoPayment);
+
+                        } catch(InsufficientFundsException                   |
+                                CantChangeCryptoPaymentRequestStateException |
+                                CantApproveCryptoPaymentRequestException     |
+                                CryptoPaymentRequestNotFoundException        e) {
+
+                            errorHandlingEvents = true;
+                            errorString += cryptoPayment.getState()+" ERROR for REQUEST ID "+ cryptoPayment.getRequestId() + "\n"+e.getMessage()+"\n";
+                        }
+
+                        try {
+
+                            fromPaymentProcessStartedToApproved(cryptoPayment.getRequestId());
+
+                        } catch(CantInformApprovalException                  |
+                                CantChangeCryptoPaymentRequestStateException |
+                                CantApproveCryptoPaymentRequestException     |
+                                CryptoPaymentRequestNotFoundException        e) {
+
+                            errorHandlingEvents = true;
+                            errorString += cryptoPayment.getState()+" ERROR for REQUEST ID "+ cryptoPayment.getRequestId() + "\n"+e.getMessage()+"\n";
+                        }
+
                     case IN_APPROVING_PROCESS:
                         try {
 
                             fromInApprovingProcessToPaymentProcessStarted(cryptoPayment.getRequestId(), cryptoPayment);
 
                         } catch(InsufficientFundsException                   |
+                                CantChangeCryptoPaymentRequestStateException |
+                                CantApproveCryptoPaymentRequestException     |
+                                CryptoPaymentRequestNotFoundException        e) {
+
+                            errorHandlingEvents = true;
+                            errorString += cryptoPayment.getState()+" ERROR for REQUEST ID "+ cryptoPayment.getRequestId() + "\n"+e.getMessage()+"\n";
+                        }
+
+                        try {
+
+                            fromPaymentProcessStartedToApproved(cryptoPayment.getRequestId());
+
+                        } catch(CantInformApprovalException                  |
                                 CantChangeCryptoPaymentRequestStateException |
                                 CantApproveCryptoPaymentRequestException     |
                                 CryptoPaymentRequestNotFoundException        e) {

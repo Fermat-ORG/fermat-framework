@@ -1,4 +1,4 @@
-== Fermat Core Platform
+== Chapter 3: Fermat Core Platform
 This is the *core platform* of Fermat Multi-platform System. It contains the deepest levels of layers in the layers stack. Its components encasulapte the basics definitions and functionalities that let Fermat operate as an _integrated system_. +
 The platform first defines a _plugin identity_ for each plugin (this is done only ONCE for the whole system), which let the plugin be *recognized* as member of Fermat and then access to certain data specifically owned by it (like accesing to the file system or data base systems, etc). Then it put them to run ( see [system initialization] ) and builds the pattern of relationships between the isolated plug-ins, thus deploying all the system wide infrastructure. +
 Fermat Core Platform is written in JAVA as the most of Fermat, and that there is a JAVA implementation for each known operating system, that makes Fermat *code base portable*. + 

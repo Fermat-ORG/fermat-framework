@@ -3,11 +3,13 @@ package com.bitdubai.fermat_core.layer.dap_transaction;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
+import com.bitdubai.fermat_core.layer.dap_transaction.asset_appropriation.AssetAppropriationSubsystem;
 import com.bitdubai.fermat_core.layer.dap_transaction.asset_distribution.AssetDistributionSubsystem;
 import com.bitdubai.fermat_core.layer.dap_transaction.asset_issuing.AssetIssuingSubsystem;
 import com.bitdubai.fermat_core.layer.dap_transaction.asset_reception.AssetReceptionSubsystem;
 import com.bitdubai.fermat_core.layer.dap_transaction.issuer_redemption.IssuerRedemptionSubsystem;
 import com.bitdubai.fermat_core.layer.dap_transaction.user_redemption.UserRedemptionSubsystem;
+import com.bitdubai.fermat_core.layer.dap_transaction.asset_redemption.AssetRedeemPointRedemptionSubsystem;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantStartSubsystemException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.DAPTransactionSubsystem;
 
@@ -20,6 +22,8 @@ public class DAPTransactionLayer implements PlatformLayer {
     private Plugin assetReception;
     private Plugin issuerRedemption;
     private Plugin userRedemption;
+    private Plugin assetRedeemPointRedemption;
+    private Plugin assetAppropriation;
 
     @Override
     public void start() throws CantStartLayerException {
@@ -28,6 +32,8 @@ public class DAPTransactionLayer implements PlatformLayer {
         assetReception=getPlugin(new AssetReceptionSubsystem());
         issuerRedemption=getPlugin(new IssuerRedemptionSubsystem());
         userRedemption=getPlugin(new UserRedemptionSubsystem());
+        assetRedeemPointRedemption=getPlugin(new AssetRedeemPointRedemptionSubsystem());
+        assetAppropriation=getPlugin(new AssetAppropriationSubsystem());
     }
 
     private Plugin getPlugin(DAPTransactionSubsystem dapTransactionSubsystem) throws CantStartLayerException {
@@ -42,7 +48,9 @@ public class DAPTransactionLayer implements PlatformLayer {
     public Plugin getAssetIssuingPlugin() {return assetIssuing;}
     public Plugin getAssetDistributionPlugin() {return assetDistribution;}
     public Plugin getAssetReceptionPlugin() {return assetReception;}
+    public Plugin getAssetRedeemPointRedemptionPlugin(){return assetRedeemPointRedemption;}
     public Plugin getIssuerRedemptionPlugin() {return issuerRedemption;}
     public Plugin getUserRedemptionPlugin() {return userRedemption;}
+    public Plugin getAssetAppropriationPlugin() { return assetAppropriation;}
 
 }

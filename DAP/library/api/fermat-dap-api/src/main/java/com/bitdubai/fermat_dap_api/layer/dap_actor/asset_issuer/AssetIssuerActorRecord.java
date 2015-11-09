@@ -41,13 +41,13 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     /**
      *  Method for Set Actor in Actor Network Service Issuer
      */
-    public AssetIssuerActorRecord(String name,
-                                  String publicKey,
+    public AssetIssuerActorRecord(String publicKey,
+                                  String name,
                                   byte[] profileImage,
                                   Location location) {
 
-        this.name                   = name                      ;
         this.publicKey              = publicKey                 ;
+        this.name                   = name                      ;
         this.profileImage           = profileImage.clone()      ;
         if (location != null) {
             this.locationLatitude   = location.getLatitude()    ;

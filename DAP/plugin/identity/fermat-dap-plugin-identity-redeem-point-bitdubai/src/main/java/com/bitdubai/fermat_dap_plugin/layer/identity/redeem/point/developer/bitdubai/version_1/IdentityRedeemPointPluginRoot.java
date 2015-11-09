@@ -3,15 +3,37 @@ package com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bit
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.DealsWithActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
+import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.database.AssetRedeemPointIdentityDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantListAssetRedeemPointIdentitiesException;
+import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.structure.IdentityAssetRedeemPointManagerImpl;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -25,9 +47,9 @@ import java.util.UUID;
 
 /**
  * Created by Nerio on 07/09/15.
+ * Modified by Franklin 03/11/2015
  */
-public class IdentityRedeemPointPluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
-
+public class IdentityRedeemPointPluginRoot implements DealsWithActorAssetRedeemPoint, DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithLogger, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, RedeemPointIdentityManager, LogManagerForDevelopers, Plugin, Service, Serializable {
     /**
      * Service Interface member variables.
      */
@@ -55,10 +77,29 @@ public class IdentityRedeemPointPluginRoot implements DealsWithErrors, DealsWith
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
     /**
+     * DealsWithLogger Interface member variables.
+     */
+    LogManager logManager;
+    /**
      * DealsWithLogger interface member variable
      */
 
+    IdentityAssetRedeemPointManagerImpl identityAssetRedeemPointManager;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
+    /**
+     * DealsWithDeviceUsers Interface member variables.
+     */
+    private DeviceUserManager deviceUserManager;
+
+    /**
+     * DealsWithActorAssetRedeemPoint Interface member variables.
+     */
+    private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
+
+    public static final String ASSET_REDEEM_POINT_PROFILE_IMAGE_FILE_NAME = "assetRedeemPointIdentityProfileImage";
+    public static final String ASSET_REDEEM_POINT_PRIVATE_KEYS_FILE_NAME  = "assetRedeemPointIdentityPrivateKey";
 
     @Override
     public void setEventManager(EventManager DealsWithEvents) {
@@ -90,16 +131,30 @@ public class IdentityRedeemPointPluginRoot implements DealsWithErrors, DealsWith
         this.pluginFileSystem = pluginFileSystem;
     }
 
+
+    /**
+     * DealsWithLogger Interface implementation.
+     */
+    @Override
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
+    }
+
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        this.deviceUserManager = deviceUserManager;
     }
 
 
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.ActorIssuerPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.IdentityUserPluginRoot");
         /**
          * I return the values.
          */
@@ -139,9 +194,19 @@ public class IdentityRedeemPointPluginRoot implements DealsWithErrors, DealsWith
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
+            identityAssetRedeemPointManager = new IdentityAssetRedeemPointManagerImpl(
+                    this.errorManager,
+                    this.logManager,
+                    this.pluginDatabaseSystem,
+                    this.pluginFileSystem,
+                    this.pluginId,
+                    this.deviceUserManager,
+                    this.actorAssetRedeemPointManager);
+
+            registerIdentities();
         } catch (Exception e) {
-            // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            // throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY);
         }
     }
 
@@ -164,4 +229,56 @@ public class IdentityRedeemPointPluginRoot implements DealsWithErrors, DealsWith
     public ServiceStatus getStatus() {
         return serviceStatus;
     }
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        AssetRedeemPointIdentityDeveloperDatabaseFactory dbFactory = new AssetRedeemPointIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        AssetRedeemPointIdentityDeveloperDatabaseFactory dbFactory = new AssetRedeemPointIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        try {
+            AssetRedeemPointIdentityDeveloperDatabaseFactory dbFactory = new AssetRedeemPointIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            dbFactory.initializeDatabase();
+            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        // If we are here the database could not be opened, so we return an empty list
+        return new ArrayList<>();
+    }
+
+
+    @Override
+    public List<RedeemPointIdentity> getRedeemPointsFromCurrentDeviceUser() throws CantListAssetRedeemPointException {
+        return identityAssetRedeemPointManager.getIdentityAssetRedeemPointsFromCurrentDeviceUser();
+    }
+
+    @Override
+    public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage) throws CantCreateNewRedeemPointException {
+        return identityAssetRedeemPointManager.createNewIdentityAssetRedeemPoint(alias, profileImage);
+    }
+
+    @Override
+    public boolean hasAssetUserIdentity() throws CantListAssetRedeemPointException {
+        return identityAssetRedeemPointManager.hasIntraUserIdentity();
+    }
+
+    @Override
+    public void setActorAssetRedeemPointManager(ActorAssetRedeemPointManager actorAssetRedeemPointManager) throws CantSetObjectException {
+
+    }
+
+    public void registerIdentities()  throws CantListAssetRedeemPointIdentitiesException {
+        identityAssetRedeemPointManager.registerIdentities();
+    }
+
+
 }

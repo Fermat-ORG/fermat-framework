@@ -4,16 +4,24 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -60,66 +68,55 @@ import java.util.regex.Pattern;
  * Created by loui on 18/03/15.
  * Modified by Arturo Vallone 25/04/2015
  */
-public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManager, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithErrors, DealsWithBitcoinNetwork, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, Plugin, Service {
+public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implements
+        IncomingCryptoManager,
+        DatabaseManagerForDevelopers,
+        DealsWithCryptoAddressBook,
+        DealsWithCryptoVault,
+        DealsWithErrors,
+        DealsWithBitcoinNetwork,
+        DealsWithEvents,
+        DealsWithLogger,
+        LogManagerForDevelopers,
+        DealsWithPluginDatabaseSystem {
 
-    /*
-     * DealsWithCryptoAddressBook member variables
-     */
-    private CryptoAddressBookManager cryptoAddressBookManager;
-
-    /*
-     * DealsWithCryptoVault member variables
-     */
-    private CryptoVaultManager cryptoVaultManager;
-
-    /**
-     * DealsWithErrors Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    /**
-     * DealsWithBitcoinNetwork interface member variable
-     */
-    BitcoinNetworkManager bitcoinNetworkManager;
-
-    /**
-     * DealsWithEvents Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
-    /**
-     * DealsWithLogger inteface member variables
-     */
-    LogManager logManager;
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
 
-    /**
-     * IncomingCryptoManager Interface member variables.
-     */
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE        , plugin = Plugins.CRYPTO_ADDRESS_BOOK)
+    private CryptoAddressBookManager cryptoAddressBookManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT        , plugin = Plugins.BITCOIN_VAULT)
+    private CryptoVaultManager cryptoVaultManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK        , plugin = Plugins.BITCOIN_NETWORK)
+    BitcoinNetworkManager bitcoinNetworkManager;
+
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
     private IncomingCryptoRegistry registry;
 
-    /**
-     * Plugin Interface member variables.
-     */
-    private UUID pluginId;
 
-    /**
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
     private TransactionAgent monitor;
     private TransactionAgent relay;
     private TransactionService eventRecorder;
 
+    public IncomingCryptoTransactionPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
+
     /*
-     * DatabaseManagerForDevelopers interface implementation
-     */
+         * DatabaseManagerForDevelopers interface implementation
+         */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         IncomingCryptoDeveloperDatabaseFactory dbFactory = new IncomingCryptoDeveloperDatabaseFactory(errorManager, pluginId.toString(), IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
@@ -303,15 +300,6 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
     }
 
     /**
-     * Plugin interface implementation.
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
-    /**
      * Service Interface implementation.
      */
     @Override
@@ -413,16 +401,6 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
     }
 
     @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
     public void stop() {
 
         this.eventRecorder.stop();
@@ -430,11 +408,6 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
         this.monitor.stop();
 
         this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
     }
 
 }

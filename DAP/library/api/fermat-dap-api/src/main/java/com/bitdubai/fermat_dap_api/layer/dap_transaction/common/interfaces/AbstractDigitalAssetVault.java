@@ -274,10 +274,10 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault{
         try{
             DigitalAssetMetadata digitalAssetMetadataToDeliver=getDigitalAssetMetadataFromLocalStorage(internalId);
             BalanceType balanceType=BalanceType.BOOK;
-            if(assetBalanceType.getCode().equals(AssetBalanceType.BOOK)){
+            if(assetBalanceType.getCode().equals(AssetBalanceType.BOOK.getCode())){
                 balanceType=BalanceType.BOOK;
             }
-            if(assetBalanceType.getCode().equals(AssetBalanceType.AVAILABLE)){
+            if(assetBalanceType.getCode().equals(AssetBalanceType.AVAILABLE.getCode())){
                 balanceType=BalanceType.AVAILABLE;
             }
             System.out.println("ASSET Distribution OR RECEPTION - DELIVER TO WALLET TEST - "+balanceType+"\nHash: "+genesisTransaction.getTransactionHash());
@@ -304,7 +304,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault{
     private void deliverDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
         String actorFromPublicKey="ActorFromPublicKey";
         String actorToPublicKey="ActorToPublicKey";
-        if(dapTransactionType.getCode().equals(DAPTransactionType.DISTRIBUTION)){
+        if(dapTransactionType.getCode().equals(DAPTransactionType.DISTRIBUTION.getCode())){
             AssetIssuerWallet assetWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
             AssetIssuerWalletBalance assetIssuerWalletBalance= assetWallet.getBookBalance(balanceType);
             actorFromPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
@@ -326,7 +326,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault{
                 assetIssuerWalletBalance.debit(assetIssuerWalletTransactionRecordWrapper, balanceType);
             }
         }
-        if(dapTransactionType.getCode().equals(DAPTransactionType.RECEPTION)){
+        if(dapTransactionType.getCode().equals(DAPTransactionType.RECEPTION.getCode())){
             AssetUserWallet assetWallet=this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
             AssetUserWalletBalance assetUserWalletBalance= assetWallet.getBookBalance(balanceType);
             actorToPublicKey=this.actorAssetUserManager.getActorAssetUser().getPublicKey();
