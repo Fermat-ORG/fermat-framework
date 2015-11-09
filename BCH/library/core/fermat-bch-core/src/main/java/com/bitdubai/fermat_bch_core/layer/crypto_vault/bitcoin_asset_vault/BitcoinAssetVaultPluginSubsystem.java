@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 30/10/2015.
@@ -19,11 +20,11 @@ public class BitcoinAssetVaultPluginSubsystem extends AbstractPluginSubsystem {
 
     @Override
     public void start() throws CantStartSubsystemException {
-       /* try {
+        try {
             registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);
-        }*/
+        }
     }
 }

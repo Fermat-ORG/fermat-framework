@@ -49,11 +49,7 @@ import java.util.List;
  */
 public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
         CryptoBrokerIdentityManager,
-        DatabaseManagerForDevelopers,
-        DealsWithPluginDatabaseSystem,
-        DealsWithErrors,
-        DealsWithDeviceUser,
-        DealsWithPluginFileSystem {
+        DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -61,10 +57,10 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.ERROR_MANAGER)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.ERROR_MANAGER)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
     public CryptoBrokerIdentityPluginRoot() {
@@ -134,31 +130,6 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return new ArrayList<>();
-    }
-
-    /*DealsWithPluginDatabaseSystem interface implementation.*/
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-
-    }
-
-    /*DealWithErrors Interface implementation.*/
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /*DealsWithDeviceUser Interface implementation.*/
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager = deviceUserManager;
-    }
-
-    /*DealWithPluginFileSystem Interface implementation.*/
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 
     /*Service Interface implementation.*/
