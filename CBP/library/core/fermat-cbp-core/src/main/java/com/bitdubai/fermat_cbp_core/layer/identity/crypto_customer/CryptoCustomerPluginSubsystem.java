@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.DeveloperBitdubai;
+import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 08/11/2015.
@@ -21,7 +21,7 @@ public class CryptoCustomerPluginSubsystem extends AbstractPluginSubsystem {
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-            registerDeveloper(new DeveloperBitdubai());
+            registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);
