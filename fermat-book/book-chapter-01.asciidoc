@@ -1,4 +1,4 @@
-image::https://github.com/bitDubai/fermat-graphic-design/blob/master/2D%20Design/Fermat/Fermat%20Logotype/logo_jpg/logo_github_readme.jpg[Fermat Logo]
+image::https://github.com/bitDubai/fermat-graphic-design/blob/master/2D%20Design/Fermat/Fermat%20Logotype/logo_jpg/logo_github_readme.jpg[Fermat Logo, 800, 450]
 
 == Chapter 1: Fermat Master Plan
 

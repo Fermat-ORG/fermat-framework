@@ -80,7 +80,7 @@ Learning about Fermat is very easy. It's just a matter of continuing reading thi
 
 image::https://github.com/bitDubai/fermat-graphic-design/blob/master/3D%20Design/FermatBitcoinCoinModel/FinalRenders/Bitcoin.jpg[Fermat Coin, 450, 253]
 
-=== Continue Reading
+=== _Continue Reading ..._
 
 link:book-chapter-01.asciidoc[Next Chapter]
 
