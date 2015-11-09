@@ -79,12 +79,6 @@ import java.util.UUID;
 
 public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
-        DealsWithBitcoinWallet,
-        DealsWithErrors,
-        DealsWithEvents,
-        DealsWithIncomingCrypto,
-        DealsWithPluginDatabaseSystem,
-        DealsWithCryptoAddressBook,
         IncomingExtraUserManager {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
@@ -156,55 +150,6 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
-    }
-
-    /*
-     * DealsWithBitcoinWallet Interface implementation
-     */
-    @Override
-    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager){
-        this.bitcoinWalletManager = bitcoinWalletManager;
-    }
-
-    /**
-     *DealsWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-
-    /**
-     *DealsWithIncomingCrypto Interface implementation.
-     */
-    @Override
-    public void setIncomingCryptoManager(IncomingCryptoManager incomingCryptoManager) {
-        this.incomingCryptoManager = incomingCryptoManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /*
-     * DealsWithCryptoAddressBook  Interface implementation
-     */
-    @Override
-    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager){
-        this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
 
     /**

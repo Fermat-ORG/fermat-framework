@@ -56,19 +56,6 @@ import java.util.regex.Pattern;
  */
 public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implements
         CryptoWalletManager,
-        DealsWithBitcoinWallet,//
-        DealsWithCryptoAddressBook,
-        DealsWithCryptoAddressesNetworkService,//
-        DealsWithCryptoPayment,//
-        DealsWithCryptoTransmissionNetworkService,//
-        DealsWithCCPActorIntraWalletUsers,//
-        DealsWithCryptoVault,
-        DealsWithErrors,
-        DealsWithExtraUsers,//
-        DealsWithLogger,
-        DealsWithOutgoingExtraUser,//
-        DealsWithOutgoingIntraActor,//
-        DealsWithWalletContacts,//
         LogManagerForDevelopers {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
@@ -152,11 +139,6 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("CryptoWalletCryptoModulePluginRoot");
@@ -207,66 +189,4 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
             return DEFAULT_LOG_LEVEL;
         }
     }
-
-
-    @Override
-    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
-        this.bitcoinWalletManager = bitcoinWalletManager;
-    }
-
-    @Override
-    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-        this.cryptoVaultManager = cryptoVaultManager;
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setExtraUserManager(ExtraUserManager extraUserManager) {
-        this.extraUserManager = extraUserManager;
-    }
-
-    @Override
-    public void setOutgoingExtraUserManager(OutgoingExtraUserManager outgoingExtraUserManager) {
-        this.outgoingExtraUserManager = outgoingExtraUserManager;
-    }
-
-    @Override
-    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
-        this.cryptoAddressBookManager = cryptoAddressBookManager;
-    }
-
-    @Override
-    public void setWalletContactsManager(WalletContactsManager walletContactsManager) {
-        this.walletContactsManager = walletContactsManager;
-    }
-
-    @Override
-    public void setCryptoTransmissionNetworkService(CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager) {
-        this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
-    }
-
-    @Override
-    public void setCryptoPaymentManager(CryptoPaymentManager cryptoPaymentManager) {
-        this.cryptoPaymentManager = cryptoPaymentManager;
-    }
-
-    @Override
-    public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) {
-        this.outgoingIntraActorManager = outgoingIntraActorManager;
-    }
-
-    @Override
-    public void setCryptoAddressesManager(CryptoAddressesManager cryptoAddressesNetworkServiceManager) {
-        this.cryptoAddressesNSManager = cryptoAddressesNetworkServiceManager;
-    }
-
-    @Override
-    public void setIntraWalletUserIdentityManager(IntraWalletUserActorManager intraWalletUserManager) {
-        this.intraWalletUserManager = intraWalletUserManager;
-    }
-
 }

@@ -58,12 +58,6 @@ import java.util.List;
  */
 public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
         CryptoPaymentManager,
-        DealsWithCryptoPaymentRequestNetworkService,
-        DealsWithErrors,
-        DealsWithEvents,
-        DealsWithOutgoingIntraActor,
-        DealsWithPluginDatabaseSystem,
-        DealsWithWalletManager,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
@@ -210,48 +204,6 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
 
     private void reportUnexpectedException(Exception e) {
         this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-    }
-
-    @Override
-    public void setCryptoPaymentRequestManager(final CryptoPaymentRequestManager cryptoPaymentRequestManager) {
-        this.cryptoPaymentRequestManager = cryptoPaymentRequestManager;
-    }
-
-    /*
-         * DealsWithErrors Interface implementation
-         */
-    @Override
-    public void setErrorManager(final ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /*
-     * DealsWithEvents Interface implementation
-     */
-    @Override
-    public void setEventManager(final EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    @Override
-    public void setOutgoingIntraActorManager(final OutgoingIntraActorManager outgoingIntraActorManager) {
-        this.outgoingIntraActorManager = outgoingIntraActorManager;
-    }
-
-    /*
-         * DealsWithPluginDatabaseSystem Interface implementation
-         */
-    @Override
-    public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystemManager) {
-        this.pluginDatabaseSystem = pluginDatabaseSystemManager;
-    }
-
-    /**
-     * DealsWithWalletManager Interface implementation.
-     */
-    @Override
-    public void setWalletManagerManager(final WalletManagerManager walletManagerManager) {
-        this.walletManagerManager = walletManagerManager;
     }
 
     @Override

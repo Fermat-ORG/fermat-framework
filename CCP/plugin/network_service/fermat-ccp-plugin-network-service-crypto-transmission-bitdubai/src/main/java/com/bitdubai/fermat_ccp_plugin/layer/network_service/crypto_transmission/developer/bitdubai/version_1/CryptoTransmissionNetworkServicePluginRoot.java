@@ -121,31 +121,16 @@ import java.util.regex.Pattern;
 public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin implements
         CryptoTransmissionNetworkServiceManager,
         NetworkService,
-        DealsWithWsCommunicationsCloudClientManager,
-        DealsWithPluginDatabaseSystem,
-        DealsWithEvents,
-        DealsWithErrors,
-        DealsWithLogger,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
 
     private PlatformComponentProfile platformComponentProfilePluginRoot;
 
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
-    }
-
     /**
      * Represent the EVENT_SOURCE
      */
     public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION;
-
-    /**
-     * Represent the logManager
-     */
-    private LogManager logManager;
 
     /**
      * Represent the newLoggingLevel
@@ -182,12 +167,14 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    private LogManager logManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
@@ -642,42 +629,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     }
 
     /**
-     * (non-Javadoc)
-     * @see DealsWithWsCommunicationsCloudClientManager#setWsCommunicationsCloudClientConnectionManager(WsCommunicationsCloudClientManager)
-     */
-    @Override
-    public void setWsCommunicationsCloudClientConnectionManager(WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
-        this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithErrors#setErrorManager(ErrorManager)
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithEvents#setEventManager(EventManager) )
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /* (non-Javadoc)
-    * @see DealsWithPluginDatabaseSystem#setPluginDatabaseSystem()
-    */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-
-    /**
      * Static method to get the logging level from any class under root.
      * @param className
      * @return
@@ -696,15 +647,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
              */
             return DEFAULT_LOG_LEVEL;
         }
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithLogger#setLogManager(LogManager)
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
     }
 
     /**

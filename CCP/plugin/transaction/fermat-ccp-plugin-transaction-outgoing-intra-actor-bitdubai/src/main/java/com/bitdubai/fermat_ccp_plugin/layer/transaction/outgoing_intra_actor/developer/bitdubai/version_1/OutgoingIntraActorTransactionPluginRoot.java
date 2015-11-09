@@ -49,12 +49,6 @@ import java.util.UUID;
  */
 public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
-        DealsWithBitcoinWallet, //
-        DealsWithCryptoTransmissionNetworkService,//
-        DealsWithCryptoVault,
-        DealsWithErrors,
-        DealsWithEvents,
-        DealsWithPluginDatabaseSystem,
         OutgoingIntraActorManager {
 
 
@@ -108,56 +102,6 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         OutgoingIntraActorTransactionDeveloperDatabaseFactory developerDatabaseFactory = new OutgoingIntraActorTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return developerDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-    }
-
-
-
-    /*
-     * DealsWithBitcoinWallet Interface implementation
-     */
-    @Override
-    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
-        this.bitcoinWalletManager = bitcoinWalletManager;
-    }
-
-    /*
-     * DealsWithCryptoTransmissionNetworkService Interface implementation
-     */
-    @Override
-    public void setCryptoTransmissionNetworkService(CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager) {
-        this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
-    }
-
-    /*
-     * DealsWithCryptoVault Interface implementation
-     */
-    @Override
-    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-        this.cryptoVaultManager = cryptoVaultManager;
-    }
-
-    /*
-     * DealsWithErrors Interface implementation
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /*
-     * DealsWithEvents Interface implementation
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /*
-     * DealsWithPluginDatabaseSystem Interface implementation
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystemManager) {
-        this.pluginDatabaseSystem = pluginDatabaseSystemManager;
     }
 
     /*
