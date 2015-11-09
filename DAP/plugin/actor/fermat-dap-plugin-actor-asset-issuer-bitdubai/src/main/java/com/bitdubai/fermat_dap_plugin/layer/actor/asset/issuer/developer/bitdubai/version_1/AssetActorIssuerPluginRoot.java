@@ -69,7 +69,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 09/09/15.
  */
-//TODO TERMINAR DE IMPLEMENTAR
+
 public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, DatabaseManagerForDevelopers, DealsWithAssetIssuerActorNetworkServiceManager, DealsWithAssetVault, DealsWithErrors, DealsWithEvents, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
     AssetIssuerActorDao assetIssuerActorDao;
