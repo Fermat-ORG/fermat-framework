@@ -72,7 +72,9 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 }
 
                 if(activeIntraUser.getProfileImage()!=null){
+                    if(activeIntraUser.getProfileImage().length>0)
                     icon.setImageBitmap(BitmapFactory.decodeByteArray(activeIntraUser.getProfileImage(),0,activeIntraUser.getProfileImage().length));
+                    else icon.setImageResource(R.drawable.profile_image);
                 }else{
                     icon.setImageResource(R.drawable.profile_image);
                 }
