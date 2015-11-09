@@ -69,6 +69,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
 
         String packetContentJsonStringRepresentation = null;
         PlatformComponentProfile networkServiceApplicant = null;
+        PlatformComponentProfile remoteParticipant = null;
 
         try {
 
@@ -107,7 +108,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             /*
              * Get the component profile to connect as remote participant
              */
-            PlatformComponentProfile remoteParticipant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString());
+            remoteParticipant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString());
             List<PlatformComponentProfile> remoteParticipantList = searchProfile(remoteParticipant.getPlatformComponentType(), remoteParticipant.getNetworkServiceType(), remoteParticipant.getIdentityPublicKey());
             remoteParticipant = remoteParticipantList.get(0);
             System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - remoteParticipant "+remoteParticipant.toJson());
@@ -158,7 +159,8 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
              * Construct the json object
              */
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
-            packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, networkServiceApplicant.getNetworkServiceType().toString());
+            packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, networkServiceApplicant.toJson());
+            packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
             packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in component connection: "+e.getMessage());
 
             /*

@@ -103,6 +103,6 @@ public class FailureRequestedListNoAvailblePacketProcessor extends FermatPacketP
      */
     @Override
     public FermatPacketType getFermatPacketType() {
-        return FermatPacketType.FAILURE_COMPONENT_CONNECTION_REQUEST;
+        return FermatPacketType.FAILURE_REQUESTED_LIST_NOT_AVAILABLE;
     }
 }

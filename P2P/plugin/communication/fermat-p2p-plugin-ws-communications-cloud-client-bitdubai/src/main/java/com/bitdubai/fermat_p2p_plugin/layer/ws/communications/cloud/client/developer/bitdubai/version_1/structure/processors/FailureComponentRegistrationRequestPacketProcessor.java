@@ -71,7 +71,7 @@ public class FailureComponentRegistrationRequestPacketProcessor extends FermatPa
          * Construct the json object
          */
         JsonObject packetContent = jsonParser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
-        NetworkServiceType networkServiceApplicant  = gson.fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString(), NetworkServiceType.class);
+        PlatformComponentProfile networkServiceApplicant  = gson.fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfile.class);
         PlatformComponentProfile platformComponentProfile = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.PROFILE_TO_REGISTER).getAsString());
 
         System.out.println("FailureComponentRegistrationRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant);
@@ -85,7 +85,7 @@ public class FailureComponentRegistrationRequestPacketProcessor extends FermatPa
         /*
          * Configure the values
          */
-        ((FailureComponentRegistrationNotificationEvent)event).setNetworkServiceApplicant(networkServiceApplicant);
+        ((FailureComponentRegistrationNotificationEvent)event).setNetworkServiceApplicant(networkServiceApplicant.getNetworkServiceType());
         ((FailureComponentRegistrationNotificationEvent)event).setPlatformComponentProfile(platformComponentProfile);
 
         /*
@@ -102,6 +102,6 @@ public class FailureComponentRegistrationRequestPacketProcessor extends FermatPa
      */
     @Override
     public FermatPacketType getFermatPacketType() {
-        return FermatPacketType.FAILURE_COMPONENT_CONNECTION_REQUEST;
+        return FermatPacketType.FAILURE_COMPONENT_REGISTRATION_REQUEST;
     }
 }

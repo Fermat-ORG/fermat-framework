@@ -65,7 +65,8 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("ComponentConnectionRequestPacketProcessor - Starting processingPackage");
         String packetContentJsonStringRepresentation = null;
-        NetworkServiceType networkServiceTypeApplicant = null;
+        PlatformComponentProfile peer1 = null;
+        PlatformComponentProfile peer2 = null;
 
         try {
 
@@ -78,16 +79,15 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
             /*
              * Get the list
              */
-            List<PlatformComponentProfile> participantsList = gson.fromJson(packetContentJsonStringRepresentation, new TypeToken<List<PlatformComponentProfileCommunication>>(){}.getType());
+            List<PlatformComponentProfile> participantsList = gson.fromJson(packetContentJsonStringRepresentation, new TypeToken<List<PlatformComponentProfileCommunication>>() {
+            }.getType());
 
             for (PlatformComponentProfile participant: participantsList) {
                 System.out.println("ComponentConnectionRequestPacketProcessor - participant = "+participant.getIdentityPublicKey());
             }
 
-            PlatformComponentProfile peer1 = participantsList.get(0);
-            PlatformComponentProfile peer2 = participantsList.get((participantsList.size() - 1));
-
-            networkServiceTypeApplicant = peer1.getNetworkServiceType();
+            peer1 = participantsList.get(0);
+            peer2 = participantsList.get((participantsList.size() - 1));
 
             //Create a new vpn
             WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer(), peer1.getNetworkServiceType());
@@ -116,7 +116,8 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
              * Construct the json object
              */
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
-            packetContent.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
+            packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, peer1.toJson());
+            packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, peer2.toJson());
             packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in component connection: "+e.getMessage());
 
             /*

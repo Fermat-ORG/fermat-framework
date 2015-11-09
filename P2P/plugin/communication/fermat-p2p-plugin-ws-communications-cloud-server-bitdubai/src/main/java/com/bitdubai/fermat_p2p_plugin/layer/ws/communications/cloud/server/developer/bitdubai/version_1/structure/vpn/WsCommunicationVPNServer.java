@@ -31,6 +31,7 @@ import org.java_websocket.server.WebSocketServer;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -260,12 +261,12 @@ public class WsCommunicationVPNServer extends WebSocketServer{
 
         if (participantsConnections.size() <= 1){
 
-            /*
-             * Close all the connection
-             */
-            for (WebSocket conn: connections()) {
+            Iterator<WebSocket> iterator = connections().iterator();
+            while (iterator.hasNext()){
+                WebSocket conn = iterator.next();
                 conn.closeConnection(505, " All participantsConnections close her connections ");
             }
+
         }
 
     }
@@ -352,21 +353,31 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     }
 
     public void closeAllConnections(){
+
+        System.out.println(" WsCommunicationVPNServer - Starting method closeAllConnections");
         /*
          * Close all the connection
          */
-        for (WebSocket conn: connections()) {
-            conn.closeConnection(404, " - VPN participant is disconnect");
+        Iterator<WebSocket> iterator = connections().iterator();
+        while (iterator.hasNext()){
+            WebSocket conn = iterator.next();
+            conn.closeConnection(404, " - VPN participants are disconnect");
         }
     }
 
     public void closeAllConnections(Exception ex){
+
+        System.out.println(" WsCommunicationVPNServer - Starting method closeAllConnections(Exception)");
         /*
          * Close all the connection
          */
-        for (WebSocket conn: connections()) {
+        Iterator<WebSocket> iterator = connections().iterator();
+
+        while (iterator.hasNext()){
+            WebSocket conn = iterator.next();
             conn.closeConnection(505, " - VPN ERROR :" + ex.getLocalizedMessage());
         }
+
     }
 
 

@@ -89,12 +89,15 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             /*
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile, remoteNsPlatformComponentProfile);
+            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsCloudClientChannel().getEventManager());
 
             /*
              * Is not running
              */
-            if (!wsCommunicationVPNClientManagerAgent.isRunning()){
+            if (!wsCommunicationVPNClientManagerAgent.isRunning() &&
+                    wsCommunicationVPNClientManagerAgent.getState() != Thread.State.RUNNABLE &&
+                        !wsCommunicationVPNClientManagerAgent.isAlive()){
+
                 wsCommunicationVPNClientManagerAgent.start();
             }
 
