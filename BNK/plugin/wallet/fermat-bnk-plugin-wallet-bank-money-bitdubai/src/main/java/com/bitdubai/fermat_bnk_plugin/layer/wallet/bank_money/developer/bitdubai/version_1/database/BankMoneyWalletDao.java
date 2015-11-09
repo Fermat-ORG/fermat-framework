@@ -24,7 +24,6 @@ import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyWalletDatabaseException;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.TransactionBankMoney;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -99,20 +98,18 @@ public class BankMoneyWalletDao {
     }
     public void addBankMoney(BankMoneyBalanceRecord bankMoneyBalanceRecord,
                              BalanceType balanceType,
-                             TransactionType transactionType,
                              long runingBookBalance,
-                             long runingAvalibleBalance,
-                             String publicKeyBroker,
-                             String publicKeyCustomer) throws CantAddBankMoneyException {
+                             long runingAvalibleBalance
+                             ) throws CantAddBankMoneyException {
         try {
         DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TABLE_NAME);
         DatabaseTableRecord record = table.getEmptyRecord();
 
         record.setUUIDValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME, bankMoneyBalanceRecord.getBankTransactionId());
-        record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, publicKeyCustomer);
-        record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME, publicKeyBroker);
+        record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, bankMoneyBalanceRecord.getPublicKeyActorFrom());
+        record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME, bankMoneyBalanceRecord.getPublicKeyActorTo());
         record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
-        record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode());
+        record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, bankMoneyBalanceRecord.getTransactionType().getCode());
         record.setDoubleValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_AMOUNT_COLUMN_NAME, bankMoneyBalanceRecord.getAmount());
         record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_CURRENCY_TYPE_COLUMN_NAME, bankMoneyBalanceRecord.getBankCurrencyType().getCode());
         record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_OPERATION_TYPE_COLUMN_NAME, bankMoneyBalanceRecord.getBankOperationType().getCode());
@@ -139,20 +136,17 @@ public class BankMoneyWalletDao {
             long runningAvailableBalance = 0;
             long runningBookBalance = 0;
 
-            String publicKeyBroker = null;
-            String publicKeyCustomer = null;
-
             if (balanceType == BalanceType.AVAILABLE){
                 availableAmount  = BankMoneyBalanceRecord.getAmount();
                 runningAvailableBalance = (long) (getCurrentBalance(BalanceType.AVAILABLE) + (-availableAmount));
-                addBankMoney(BankMoneyBalanceRecord, balanceType, TransactionType.DEBIT, runningBookBalance, runningAvailableBalance, publicKeyBroker, publicKeyCustomer);
+                addBankMoney(BankMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
 
             }
             if (balanceType == BalanceType.BOOK) {
                 bookAmount = BankMoneyBalanceRecord.getAmount();
 
                 runningBookBalance = (long) (getCurrentBalance(BalanceType.BOOK) + (-bookAmount));
-                addBankMoney(BankMoneyBalanceRecord, balanceType, TransactionType.DEBIT, runningBookBalance, runningAvailableBalance, publicKeyBroker, publicKeyCustomer);
+                addBankMoney(BankMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
             }
                 } catch (CantGetCurrentBalanceException e) {
             throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE,e,"Cant Add Debit Exception","Cant Get Current Balance Exception");
@@ -169,20 +163,17 @@ public class BankMoneyWalletDao {
             long runningAvailableBalance = 0;
             long runningBookBalance = 0;
 
-            String publicKeyBroker = null;
-            String publicKeyCustomer = null;
-
             if (balanceType == BalanceType.AVAILABLE){
                 availableAmount  = BankMoneyBalanceRecord.getAmount();
                 runningAvailableBalance = (long) (getCurrentBalance(BalanceType.AVAILABLE) + (-availableAmount));
-                addBankMoney(BankMoneyBalanceRecord, balanceType, TransactionType.CREDIT, runningBookBalance, runningAvailableBalance, publicKeyBroker, publicKeyCustomer);
+                addBankMoney(BankMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
 
             }
             if (balanceType == BalanceType.BOOK) {
                 bookAmount = BankMoneyBalanceRecord.getAmount();
 
                 runningBookBalance = (long) (getCurrentBalance(BalanceType.BOOK) + (-bookAmount));
-                addBankMoney(BankMoneyBalanceRecord, balanceType, TransactionType.CREDIT, runningBookBalance, runningAvailableBalance, publicKeyBroker, publicKeyCustomer);
+                addBankMoney(BankMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
             }
         } catch (CantGetCurrentBalanceException e) {
             throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE,e,"Cant Add Credit Exception","Cant Get Current Balance Exception");
