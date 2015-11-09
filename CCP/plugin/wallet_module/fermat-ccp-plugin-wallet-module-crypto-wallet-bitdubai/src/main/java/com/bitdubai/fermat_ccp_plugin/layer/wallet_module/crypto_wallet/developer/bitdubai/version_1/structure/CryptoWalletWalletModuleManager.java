@@ -1355,11 +1355,14 @@ public class CryptoWalletWalletModuleManager implements
 
 
             //TODO: Harcoder
-            CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-            lst.add(cryptoWalletPaymentRequest);
-            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+            if(lst.size() == 0){
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+                lst.add(cryptoWalletPaymentRequest);
+                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
 
-            lst.add(cryptoWalletPaymentRequest);
+                lst.add(cryptoWalletPaymentRequest);
+            }
+
 
             return lst;
         } catch (Exception e) {
@@ -1404,11 +1407,13 @@ public class CryptoWalletWalletModuleManager implements
             }
 
             //TODO: Harcoder
-            CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-            lst.add(cryptoWalletPaymentRequest);
-            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
+            if(lst.size() == 0) {
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago", "Starbucks coffe", 500000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
+                lst.add(cryptoWalletPaymentRequest);
+                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago", "Hamburguer from MC donald", 100000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
 
-            lst.add(cryptoWalletPaymentRequest);
+                lst.add(cryptoWalletPaymentRequest);
+            }
 
             return lst;
         } catch (Exception e) {
