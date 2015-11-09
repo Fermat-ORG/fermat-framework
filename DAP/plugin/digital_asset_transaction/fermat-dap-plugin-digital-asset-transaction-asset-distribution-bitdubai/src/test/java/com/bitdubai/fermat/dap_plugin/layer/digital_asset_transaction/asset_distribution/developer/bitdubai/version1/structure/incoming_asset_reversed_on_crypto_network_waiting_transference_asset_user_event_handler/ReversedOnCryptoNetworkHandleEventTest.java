@@ -3,9 +3,11 @@ package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_dis
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.AssetDistributionRecorderService;
@@ -15,6 +17,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.Ev
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +27,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 /**
@@ -84,24 +88,28 @@ public class ReversedOnCryptoNetworkHandleEventTest {
         incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.handleEvent(fermatEvent);
     }
 
-    /*@Test
+    @Test
     public void handleEventThrowCantSaveEventException () throws FermatException {
         assetDistributionRecorderService.start();
-        catchException(incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventHandler).handleEvent(null);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantSaveEventException.class);
+
+        try {
+            incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.handleEvent(null);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantSaveEventException);
+        }
     }
 
     @Test
     public void handleEventThrowTransactionServiceNotStartedException () throws FermatException {
         assetDistributionRecorderService.start();
         assetDistributionRecorderService.stop();
-        catchException(incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventHandler).handleEvent(null);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(TransactionServiceNotStartedException.class);
-    }*/
+
+        try {
+            incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.handleEvent(null);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof TransactionServiceNotStartedException);
+        }
+    }
 }
