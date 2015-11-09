@@ -2,9 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bi
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
@@ -13,7 +12,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -21,9 +22,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
@@ -43,10 +41,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceU
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by jorge on 28-09-2015.
@@ -60,13 +55,16 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
         DealsWithDeviceUser,
         DealsWithPluginFileSystem {
 
-
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.ERROR_MANAGER)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.ERROR_MANAGER)
     private PluginFileSystem pluginFileSystem;
 
     public CryptoBrokerIdentityPluginRoot() {
