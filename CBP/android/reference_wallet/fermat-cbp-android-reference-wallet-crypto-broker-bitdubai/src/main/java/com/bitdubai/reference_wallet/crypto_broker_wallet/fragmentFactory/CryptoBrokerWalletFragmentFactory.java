@@ -27,38 +27,43 @@ import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory
 
 /**
  * Return new instances of the fragments for this wallet
- * <p/>
+ *
  * Created by Nelson Ramirez on 2015-09-30
  */
-public class CryptoBrokerWalletFragmentFactory extends FermatWalletFragmentFactory<CryptoBrokerWalletSession, WalletSettings, CryptoBrokerWalletFragmentsEnumType> {
+public class CryptoBrokerWalletFragmentFactory extends FermatWalletFragmentFactory<CryptoBrokerWalletSession,WalletSettings,CryptoBrokerWalletFragmentsEnumType> {
+
+
+
 
     @Override
-    public FermatWalletFragment getFermatFragment(CryptoBrokerWalletFragmentsEnumType fragments) throws FragmentNotFoundException {
+    public FermatWalletFragment getFermatFragment(CryptoBrokerWalletFragmentsEnumType fragment) throws FragmentNotFoundException {
 
-        if (fragments == CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB)
+
+
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB)
             return OpenNegotiationsTabFragment.newInstance();
-        if (fragments == CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB)
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB)
             return OpenContractsTabFragment.newInstance();
-        if (fragments == CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS)
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS)
             return MarketRateStatisticsFragment.newInstance();
-        if (fragments == CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS)
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS)
             return StockStatisticsFragment.newInstance();
-        if (fragments == CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS)
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS)
             return OpenNegotiationDetailsFragment.newInstance();
-        if (fragments == CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS)
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS)
             return CloseNegotiationDetailsFragment.newInstance();
-        if (fragments == CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS)
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS)
             return OpenContractDetailsFragment.newInstance();
-        if (fragments == CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS)
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS)
             return CloseContractDetailsFragment.newInstance();
-        if (fragments == CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY)
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY)
             return ContractsHistoryActivityFragment.newInstance();
-        if (fragments == CBP_CRYPTO_BROKER_WALLET_EARNINGS)
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_EARNINGS)
             return EarningsActivityFragment.newInstance();
-        if (fragments == CBP_CRYPTO_BROKER_WALLET_SETTINGS)
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_SETTINGS)
             return SettingsActivityFragment.newInstance();
 
-        throw createFragmentNotFoundException(fragments);
+        throw createFragmentNotFoundException(fragment);
     }
 
     @Override

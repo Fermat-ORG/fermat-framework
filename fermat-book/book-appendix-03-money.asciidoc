@@ -21,4 +21,9 @@ TIP: Taking Bitcoin as "the" paradigmatic model of every cryptocurrency, we need
 
 
 :numbered!:
+=== _Continue Reading ..._
+
+link:book-chapter-00(intro).asciidoc[Back to Intro]
+
+link:book-chapter-01.asciidoc[Next Chapter]
 

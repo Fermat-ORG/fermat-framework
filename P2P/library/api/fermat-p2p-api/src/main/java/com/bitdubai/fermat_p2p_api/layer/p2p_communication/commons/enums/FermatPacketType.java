@@ -100,7 +100,12 @@ public enum FermatPacketType {
     /**
      * This type is use whe an component send a message to another component
      */
-    MESSAGE_TRANSMIT ("MSG_TRANS");
+    MESSAGE_TRANSMIT ("MSG_TRANS"),
+
+    /**
+     * This type is use whe an component send a message to another component and occur a failure
+     */
+    FAILURE_MESSAGE_TRANSMIT ("FMSG_TRANS");
 
     /**
      * Represent the code
@@ -150,6 +155,7 @@ public enum FermatPacketType {
             case "COMPL_COMP_CONNECT_REQ" : return FermatPacketType.COMPLETE_COMPONENT_CONNECTION_REQUEST;
             case "FAIL_COMP_CONNECT_REQ"  : return FermatPacketType.FAILURE_COMPONENT_CONNECTION_REQUEST;
             case "MSG_TRANS"              : return FermatPacketType.MESSAGE_TRANSMIT;
+            case "FMSG_TRANS"             : return  FermatPacketType.FAILURE_MESSAGE_TRANSMIT;
 
             default: throw new IllegalArgumentException();
         }

@@ -30,9 +30,7 @@ import org.java_websocket.framing.FramedataImpl1;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -127,7 +125,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     public void sendPingMessage(){
 
-        System.out.println(" WsCommunicationVPNClient - Sending ping message to remote node ("+getConnection().getRemoteSocketAddress()+")");
+        System.out.println(" WsCommunicationVPNClient - Sending ping message to remote node (" + getConnection().getRemoteSocketAddress() + ")");
         FramedataImpl1 frame = new FramedataImpl1(Framedata.Opcode.PING);
         frame.setFin(true);
         getConnection().sendFrame(frame);
@@ -275,8 +273,6 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onClose");
         System.out.println(" WsCommunicationsCloudClientChannel -  code   = " + code + " reason = " + reason + " remote = " + remote);
-       // System.out.println(" WsCommunicationsCloudClientChannel -  getReadyState() = " + getReadyState());
-       // System.out.println(" WsCommunicationsCloudClientChannel -  getConnection().isFlushAndClose() = " + getConnection().isFlushAndClose());
 
         /*
          * Start the agent to try the reconnect
@@ -284,6 +280,13 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         setIsRegister(Boolean.FALSE);
         wsCommunicationsCloudClientAgent.setIsConnected(Boolean.FALSE);
         wsCommunicationsCloudClientAgent.run();
+
+        try {
+            raiseClientConnectionCloseNotificationEvent();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -461,13 +464,25 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * Notify when cloud client component es registered,
      * this event is raise to show the message in a popup of the UI
      */
-    public void launchCompleteClientComponentRegistrationNotificationEvent() {
+    public void riseCompleteClientComponentRegistrationNotificationEvent() {
 
         FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION);
         CompleteClientComponentRegistrationNotificationEvent event =  (CompleteClientComponentRegistrationNotificationEvent) platformEvent;
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         event.setMessage("Cloud client communication, registered and established connection.");
         eventManager.raiseEvent(platformEvent);
+    }
+
+    /**
+     * Notify when cloud client is disconnected
+     */
+    public void raiseClientConnectionCloseNotificationEvent() {
+
+        System.out.println("WsCommunicationsCloudClientChannel - raiseClientConnectionCloseNotificationEvent");
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.CLIENT_CONNECTION_CLOSE);
+        platformEvent.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
+        eventManager.raiseEvent(platformEvent);
+        System.out.println("WsCommunicationsCloudClientChannel - Raised Event = P2pEventType.CLIENT_CONNECTION_CLOSE");
     }
 
     /**
