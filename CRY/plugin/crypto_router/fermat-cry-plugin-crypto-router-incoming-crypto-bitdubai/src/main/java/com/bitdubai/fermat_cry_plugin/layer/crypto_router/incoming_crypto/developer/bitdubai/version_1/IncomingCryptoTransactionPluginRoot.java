@@ -71,35 +71,28 @@ import java.util.regex.Pattern;
 public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implements
         IncomingCryptoManager,
         DatabaseManagerForDevelopers,
-        DealsWithCryptoAddressBook,
-        DealsWithCryptoVault,
-        DealsWithErrors,
-        DealsWithBitcoinNetwork,
-        DealsWithEvents,
-        DealsWithLogger,
-        LogManagerForDevelopers,
-        DealsWithPluginDatabaseSystem {
+        LogManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon  = Addons .ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon  = Addons .EVENT_MANAGER         )
     private EventManager eventManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon  = Addons .PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.LOG_MANAGER)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon  = Addons .LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE        , plugin = Plugins.CRYPTO_ADDRESS_BOOK)
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_MODULE   , plugin = Plugins.CRYPTO_ADDRESS_BOOK)
     private CryptoAddressBookManager cryptoAddressBookManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT        , plugin = Plugins.BITCOIN_VAULT)
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK        , plugin = Plugins.BITCOIN_NETWORK)
-    BitcoinNetworkManager bitcoinNetworkManager;
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK)
+    private BitcoinNetworkManager bitcoinNetworkManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -152,48 +145,6 @@ public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implemen
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
-    }
-
-
-    /*
-     * DealsWithCryptoAddressBook Interface implementation.
-     */
-    @Override
-    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
-        this.cryptoAddressBookManager = cryptoAddressBookManager;
-    }
-
-    /**
-     * DealsWithCryptoVault Interface implementation.
-     */
-    @Override
-    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-        this.cryptoVaultManager = cryptoVaultManager;
-    }
-
-    /**
-     * DealsWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithBitcoinNetwork interface implementatin
-     */
-    @Override
-    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
-        this.bitcoinNetworkManager = bitcoinNetworkManager;
-    }
-
-    /**
-     * DealsWithLogger interface implementation
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-        this.logManager.log(IncomingCryptoTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Incoming Crypto Starting...", null, null);
     }
 
     /**
@@ -272,23 +223,6 @@ public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implemen
              */
             return DEFAULT_LOG_LEVEL;
         }
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
     /**
