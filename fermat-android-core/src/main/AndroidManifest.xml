@@ -36,12 +36,14 @@
             android:name="com.bitdubai.android_core.app.StartActivity"
             android:icon="@drawable/fermat"
             android:label="Fermat"
-            android:theme="@style/CustomActionBarTheme">
+            android:theme="@style/AppTheme.NoActionBarStart">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <!--
@@ -80,6 +82,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.SubAppActivity" />
         </activity>
+
+        <activity
+            android:name="com.bitdubai.android_core.app.common.version_1.test.ScrollingActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
+
+        </activity>
+
 
         <activity
             android:name="com.bitdubai.android_core.app.WizardActivity"

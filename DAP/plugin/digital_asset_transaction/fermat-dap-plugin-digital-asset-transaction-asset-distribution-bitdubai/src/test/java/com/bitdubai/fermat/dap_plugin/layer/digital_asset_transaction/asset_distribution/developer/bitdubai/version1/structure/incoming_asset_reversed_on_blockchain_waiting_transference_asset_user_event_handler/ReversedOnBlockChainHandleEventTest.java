@@ -1,7 +1,7 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.incoming_asset_reversed_on_blockchain_waiting_transference_asset_user_event_handler;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -14,8 +14,10 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dist
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +27,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 /**
@@ -46,8 +48,7 @@ public class ReversedOnBlockChainHandleEventTest {
     @Mock
     private  FermatEventListener fermatEventListener5;
 
-    @Mock
-    private  FermatEvent fermatEvent;
+    private IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEvent fermatEvent;
     @Mock
     private ErrorManager errorManager;
     private UUID pluginId;
@@ -58,10 +59,14 @@ public class ReversedOnBlockChainHandleEventTest {
     private DatabaseFactory mockDatabaseFactory;
     private Database database = Mockito.mock(Database.class);
     private AssetDistributionDao assetDistributionDao = Mockito.mock(AssetDistributionDao.class);
-    private IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler incomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler = Mockito.mock(IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler.class);
+    private IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler incomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler;// = Mockito.mock(IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler.class);
 
     @Before
     public void init() throws Exception {
+        incomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler = new IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler();
+        fermatEvent = new IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEvent ();
+        EventSource eventSource = EventSource.getByCode(EventSource.ASSETS_OVER_BITCOIN_VAULT.getCode());
+        fermatEvent.setSource(eventSource);
         pluginId = UUID.randomUUID();
         assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
         incomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler.setAssetDistributionRecorderService(assetDistributionRecorderService);
@@ -87,8 +92,9 @@ public class ReversedOnBlockChainHandleEventTest {
         assetDistributionRecorderService.start();
         try {
             incomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler.handleEvent(null);
+            fail("The method didn't throw when I expected it to");
         }catch (Exception ex) {
-            assertThat(ex).isInstanceOf(CantSaveEventException.class);
+            Assert.assertTrue(ex instanceof CantSaveEventException);
         }
     }
 
@@ -98,8 +104,9 @@ public class ReversedOnBlockChainHandleEventTest {
         assetDistributionRecorderService.stop();
         try {
             incomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler.handleEvent(null);
+            fail("The method didn't throw when I expected it to");
         }catch (Exception ex) {
-            assertThat(ex).isInstanceOf(TransactionServiceNotStartedException.class);
+            Assert.assertTrue(ex instanceof TransactionServiceNotStartedException);
         }
     }
 }

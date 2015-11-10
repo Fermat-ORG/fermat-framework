@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
@@ -80,6 +82,8 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
             try {
                 setContentView(R.layout.splash_screen);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) getWindow().setStatusBarColor(Color.TRANSPARENT);
 
                 imageView_fermat = (ImageView) findViewById(R.id.imageView_fermat);
 
