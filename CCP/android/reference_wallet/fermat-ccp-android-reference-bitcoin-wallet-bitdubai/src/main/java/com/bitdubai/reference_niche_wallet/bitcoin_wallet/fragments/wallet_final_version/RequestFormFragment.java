@@ -211,7 +211,6 @@ public class RequestFormFragment extends FermatWalletFragment implements View.On
             reportUnexpectedError(e);
         }
 
-        //TODO: chamo completá todo lo que necesites para mandar del cryptowalletwalletcontact y del referenceWalletSession que tiene el tipo de wallet y toda esa vaina
 
     }
 
