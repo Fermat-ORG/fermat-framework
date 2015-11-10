@@ -1,5 +1,5 @@
 :numbered!:
-image::https://github.com/bitDubai/media-kit/tree/master/Readme%20Image/Coins/OSA.jpg[OperatingSystems]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/OSA.jpg[OperatingSystems]
 
 [[superlayers]]
 == Chapter 4: Fermat Operating Systems Superlayer
