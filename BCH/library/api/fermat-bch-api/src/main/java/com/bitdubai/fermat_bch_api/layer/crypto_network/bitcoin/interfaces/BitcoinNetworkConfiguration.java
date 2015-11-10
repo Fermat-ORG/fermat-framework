@@ -9,10 +9,10 @@ import org.bitcoinj.params.TestNet3Params;
  */
 public interface BitcoinNetworkConfiguration {
     public static final NetworkParameters DEFAULT_NETWORK_PARAMETERS = RegTestParams.get();
-    public static final String BITCOIN_FULL_NODE_1_IP = "52.27.201.67";
-    public static final int  BITCOIN_FULL_NODE_1_PORT = 18444;
-    public static final String BITCOIN_FULL_NODE_2_IP = "52.88.160.234";
-    public static final int  BITCOIN_FULL_NODE_2_PORT = 18444;
+    public static final String BITCOIN_FULL_NODE_1_IP = "192.168.1.140";
+    public static final int  BITCOIN_FULL_NODE_1_PORT = 19000;
+    public static final String BITCOIN_FULL_NODE_2_IP = "192.168.1.140";
+    public static final int  BITCOIN_FULL_NODE_2_PORT = 19010;
 
 
     public static final String USER_AGENT_NAME = "Fermat Agent";

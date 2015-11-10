@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -92,7 +92,7 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
             throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "There is a error executing a database operation");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
             throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Unexpected result in databse");
-        } catch (CantGetGenesisTransactionException exception) {
+        } catch (CantGetCryptoTransactionException exception) {
             throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot get the genesis transaction from crypto network");
         } catch (DAPException exception) {
             throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Unexpected DAP exception");
@@ -118,9 +118,9 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
             String genesisTransactionFromDigitalAssetMetadata=digitalAssetMetadata.getGenesisTransaction();
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CHECKING_HASH, genesisTransactionFromDigitalAssetMetadata);
             String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
-            List<CryptoTransaction> cryptoTransactionList = bitcoinNetworkManager.getGenesisTransaction(digitalAssetMetadata.getGenesisTransaction());
+            List<CryptoTransaction> cryptoTransactionList = bitcoinNetworkManager.getCryptoTransaction(digitalAssetMetadata.getGenesisTransaction());
             if(cryptoTransactionList==null||cryptoTransactionList.isEmpty()){
-                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE,null,"Getting the genesis transaction from Crypto Network","The crypto transaction received is null");
+                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,"Getting the genesis transaction from Crypto Network","The crypto transaction received is null");
             }
             this.cryptoTransaction=cryptoTransactionList.get(0);
             String op_ReturnFromAssetVault=cryptoTransaction.getOp_Return();
@@ -130,7 +130,7 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
                         "Op_return:"+op_ReturnFromAssetVault+"\n" +
                         "digitalAssetMetadata:"+digitalAssetMetadata);
             }
-        } catch (CantGetGenesisTransactionException exception) {
+        } catch (CantGetCryptoTransactionException exception) {
             throw new CantReceiveDigitalAssetException(exception,
                     "Receiving the Digital Asset \n"+digitalAssetMetadata,
                     "Cannot get the genesis transaction from Asset vault");
