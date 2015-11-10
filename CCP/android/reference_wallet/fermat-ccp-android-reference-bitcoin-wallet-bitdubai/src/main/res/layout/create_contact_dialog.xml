@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
@@ -12,7 +13,7 @@
         android:background="#12aca1">
 
 
-        <TextView
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text=" Create contact"
@@ -22,6 +23,7 @@
             android:textColor="#fff"
             android:textStyle="bold"
             android:textSize="18sp"
+            app:typeface="ROBOTO_REGULAR"
             />
 
 
@@ -56,14 +58,15 @@
             android:orientation="vertical"
             android:paddingTop="16dp">
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Set name"
                 android:textColor="#12aca1"
                 android:paddingLeft="20dp"
                 android:layout_alignParentTop="true"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                app:typeface="ROBOTO_REGULAR"/>
 
 
             <EditText
@@ -104,7 +107,7 @@
         android:layout_marginTop="7dp"
         ></View>
 
-    <TextView
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Set address"
@@ -112,6 +115,7 @@
         android:paddingLeft="24dp"
         android:layout_alignParentTop="true"
         android:paddingTop="7dp"
+        app:typeface="ROBOTO_REGULAR"
         />
 
     <RelativeLayout
