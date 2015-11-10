@@ -1,6 +1,6 @@
 :numbered!:
 
-image::https://github.com/bitDubai/media-kit/blob/master/Logotype%20Full%20Color/logo_fermat_full_color_900x480.png[FermatLogo]
+https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/logo_fermat_3.png
 
 == Introduction
 
@@ -78,7 +78,7 @@ The community developing the Fermat System agreed on the following founding prin
 
 Learning about Fermat is very easy. It's just a matter of continuing reading this book that will guide you step by step all the way until you reach a complete understanding of this amazing technology.
 
-image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 
 === _Continue Reading ..._
 

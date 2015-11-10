@@ -27,7 +27,7 @@ WiFi :: Fermat
 Mesh :: Fermat+
 ////
 :numbered!:
-image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
   
 ==== _Continue Reading ..._
 link:book-chapter-07.asciidoc[Next Chapter]

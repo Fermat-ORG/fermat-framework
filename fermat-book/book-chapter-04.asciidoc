@@ -35,7 +35,7 @@ Database System :: access to plugin propietary databases +
 
 :numbered!:
 
-image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
   
 ==== Continue Reading ...
 link:book-chapter-05.asciidoc[Next Chapter]

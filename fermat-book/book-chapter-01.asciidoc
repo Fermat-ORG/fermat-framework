@@ -1,4 +1,4 @@
-image::https://github.com/bitDubai/media-kit/blob/master/Logotype%20Full%20Color/logo_fermat_full_color_900x480.png[FermatLogofull]
+https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/logo_fermat_3.png
 
 == Chapter 1: Fermat Master Plan
 
@@ -42,7 +42,7 @@ Follow next chapters to get a more detailed description of each one.
 
 :numbered!:
 
-image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
   
 ==== Continue Reading ...
 
