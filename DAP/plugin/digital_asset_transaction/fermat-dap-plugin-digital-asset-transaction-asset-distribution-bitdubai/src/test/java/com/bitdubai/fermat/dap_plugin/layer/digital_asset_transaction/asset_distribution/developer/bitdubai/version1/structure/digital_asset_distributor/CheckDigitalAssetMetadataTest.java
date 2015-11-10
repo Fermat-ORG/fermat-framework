@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -17,6 +17,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dist
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,9 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -95,7 +94,7 @@ public class CheckDigitalAssetMetadataTest {
     }
 
     private void setUpMockitoRules() throws Exception {
-        when(bitcoinNetworkManager.getGenesisTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(listGenesisTransaction);
+        when(bitcoinNetworkManager.getCryptoTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(listGenesisTransaction);
     }
 
     @Test
@@ -104,23 +103,26 @@ public class CheckDigitalAssetMetadataTest {
     }
 
     @Test
-    public void checkDigitalAssetMetadataThrowsCantGetGenesisTransactionExceptionListGenesisTransactionNullTest () throws CantDeliverDigitalAssetException, CantGetGenesisTransactionException {
-        when(bitcoinNetworkManager.getGenesisTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(null);
-        catchException(digitalAssetDistributor).checkDigitalAssetMetadata(mockDigitalAssetMetadata);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantDeliverDigitalAssetException.class);
+    public void checkDigitalAssetMetadataThrowsCantGetGenesisTransactionExceptionListGenesisTransactionNullTest () throws CantDeliverDigitalAssetException, CantGetCryptoTransactionException {
+        when(bitcoinNetworkManager.getCryptoTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(null);
+        try {
+            digitalAssetDistributor.checkDigitalAssetMetadata(mockDigitalAssetMetadata);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantDeliverDigitalAssetException);
+        }
     }
 
     @Test
-    public void checkDigitalAssetMetadataThrowsCantGetGenesisTransactionExceptionDigitalAssetModifyTest () throws CantDeliverDigitalAssetException, CantGetGenesisTransactionException {
+    public void checkDigitalAssetMetadataThrowsCantGetGenesisTransactionExceptionDigitalAssetModifyTest () throws CantDeliverDigitalAssetException, CantGetCryptoTransactionException {
         cryptoTransaction.setOp_Return("ffg55dsds55dsdsrfeetgga5");
         digitalAssetDistributor.cryptoTransaction = cryptoTransaction;
-        catchException(digitalAssetDistributor).checkDigitalAssetMetadata(mockDigitalAssetMetadata);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantDeliverDigitalAssetException.class);
+
+        try {
+            digitalAssetDistributor.checkDigitalAssetMetadata(mockDigitalAssetMetadata);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantDeliverDigitalAssetException);
+        }
     }
 }

@@ -324,6 +324,12 @@ public class BitcoinCryptoNetworkDatabaseDao {
         }
 
         /**
+         * If I didn't get anything, I will return null
+         */
+        if (databaseTable.getRecords().isEmpty())
+            return null;
+
+        /**
          * Since Im ordering by update date, I will only get the fist record retrieved to form the crypto status
          */
         DatabaseTableRecord record = databaseTable.getRecords().get(0);
@@ -604,7 +610,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @return
      */
     private CryptoTransaction getCryptoTransactionFromRecord(TransactionTypes transactionType, DatabaseTableRecord record) {
-        String addressFromColumnName, addressToColumnName, transactionHashColumnName, valueColumnName, cryptoStatusColumnName;
+        String addressFromColumnName, addressToColumnName, transactionHashColumnName, valueColumnName, cryptoStatusColumnName, op_Return;
         transactionHashColumnName = BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME;
         addressFromColumnName = BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME;
         addressToColumnName = BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME;
@@ -623,8 +629,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         cryptoTransaction.setCryptoAmount(record.getLongValue(valueColumnName));
         cryptoTransaction.setAddressFrom(new CryptoAddress(record.getStringValue(addressFromColumnName), CryptoCurrency.BITCOIN));
         cryptoTransaction.setAddressTo(new CryptoAddress(record.getStringValue(addressToColumnName), CryptoCurrency.BITCOIN));
-
-        //todo define how to get the Op_Return value
+        cryptoTransaction.setOp_Return(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_OP_RETURN_COLUMN_NAME));
         return cryptoTransaction;
     }
 

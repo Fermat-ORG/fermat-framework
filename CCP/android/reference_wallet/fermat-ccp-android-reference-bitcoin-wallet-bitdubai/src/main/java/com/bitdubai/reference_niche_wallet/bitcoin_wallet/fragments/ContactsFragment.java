@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -125,7 +126,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     // loading view
     ProgressBar mLoadingView;
     // empty view
-    TextView mEmptyView;
+    LinearLayout mEmptyView;
 
     Bundle mSavedInstanceState;
 
@@ -261,7 +262,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
-        mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
+        mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
        final FloatingActionButton fabAddPerson = (FloatingActionButton) rootView.findViewById(R.id.fab_add_person);
         fabAddPerson.setOnClickListener(new View.OnClickListener() {

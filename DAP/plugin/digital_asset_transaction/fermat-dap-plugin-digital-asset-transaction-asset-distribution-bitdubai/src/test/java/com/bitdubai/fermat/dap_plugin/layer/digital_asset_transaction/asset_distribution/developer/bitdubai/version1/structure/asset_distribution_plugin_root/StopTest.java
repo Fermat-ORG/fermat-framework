@@ -22,6 +22,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -137,6 +137,6 @@ public class StopTest {
         assetDistributionPluginRoot.start();
         assetDistributionPluginRoot.stop();
         ServiceStatus serviceStatus = assetDistributionPluginRoot.getStatus();
-        assertThat(serviceStatus).isEqualTo(ServiceStatus.STOPPED);
+        Assert.assertEquals(ServiceStatus.STOPPED, serviceStatus);
     }
 }

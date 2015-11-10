@@ -378,7 +378,6 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
         }
     }
 
-
     /**
      * Initialize the event listener and configure
      */
@@ -408,11 +407,6 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
         listenersAdded.add(fermatEventListener);
 
     }
-
-    private void initilizelistener2() {
-
-    }
-
 
     /**
      * This method initialize the database
@@ -857,7 +851,6 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
         System.out.println("Actor Asset Redeem Point: handleCompleteComponentRegistrationNotificationEvent - A.N.S");
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
           /*
          * If the component registered have my profile and my identity public key
@@ -901,9 +894,6 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
          */
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.UNDEFINED){
-
-            System.out.println("Actor Asset User Registered: "+platformComponentProfileRegistered.getIdentityPublicKey());
-            System.out.println("Actor Asset User Alias: "+platformComponentProfileRegistered.getAlias());
 
             Location loca = null;
 

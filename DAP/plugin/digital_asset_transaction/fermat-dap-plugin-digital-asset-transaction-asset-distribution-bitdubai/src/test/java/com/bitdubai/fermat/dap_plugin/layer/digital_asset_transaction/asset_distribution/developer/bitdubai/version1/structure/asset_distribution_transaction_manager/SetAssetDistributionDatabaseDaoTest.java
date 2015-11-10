@@ -11,6 +11,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dist
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,9 +21,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 /**
@@ -58,19 +57,17 @@ public class SetAssetDistributionDatabaseDaoTest {
     @Test
     public void setAssetDistributionDatabaseDaoThrowsCantSetObjectExceptionTest() throws CantSetObjectException {
         System.out.println("Probando metodo setAssetDistributionDatabaseDaoThrowsCantSetObjectExceptionTest()");
-        catchException(mockAssetDistributionTransactionManager).setAssetDistributionDatabaseDao(null);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantSetObjectException.class);
+        try {
+            mockAssetDistributionTransactionManager.setAssetDistributionDatabaseDao(null);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantSetObjectException);
+        }
     }
 
     @Test
     public void setAssetDistributionDatabaseDaoNoExceptionTest() throws CantSetObjectException{
         System.out.println("Probando metodo setAssetDistributionDatabaseDaoNoExceptionTest()");
-        catchException(mockAssetDistributionTransactionManager).setAssetDistributionDatabaseDao(assetDistributionDatabaseDao);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNull();
+        mockAssetDistributionTransactionManager.setAssetDistributionDatabaseDao(assetDistributionDatabaseDao);
     }
 }

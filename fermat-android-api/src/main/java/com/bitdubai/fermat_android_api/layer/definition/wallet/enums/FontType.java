@@ -12,7 +12,7 @@ public enum FontType {
     CAVIAR_DREAMS_BOLD("fonts/Caviar Dreams Bold.ttf"),
     CAVIAR_DREAMS_ITALIC("fonts/CaviarDreams_Italic.ttf"),
     CAVIAR_DREAMS_ITALIC_BOLD("fonts/CaviarDreams_BoldItalic.ttf"),
-    ROBOTO_REGULAR("fonts/roboto.ttf");
+    ROBOTO_REGULAR("fonts/Roboto-Regular.ttf");
 
     private String path;
 

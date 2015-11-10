@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum CryptoAddressDealers implements FermatEnum {
 
     CRYPTO_WALLET   ("CRW"),
+    DAP_ASSET       ("DAPA"),
 
     ;
 
@@ -26,6 +27,7 @@ public enum CryptoAddressDealers implements FermatEnum {
         switch (code){
 
             case "CRW": return CRYPTO_WALLET;
+            case "DAPA": return DAP_ASSET;
 
             default:
                 throw new InvalidParameterException(

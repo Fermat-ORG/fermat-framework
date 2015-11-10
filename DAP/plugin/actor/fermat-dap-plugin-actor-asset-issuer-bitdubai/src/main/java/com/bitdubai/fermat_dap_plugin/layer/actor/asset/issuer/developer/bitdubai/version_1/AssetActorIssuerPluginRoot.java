@@ -69,7 +69,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 09/09/15.
  */
-//TODO TERMINAR DE IMPLEMENTAR
+
 public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, DatabaseManagerForDevelopers, DealsWithAssetIssuerActorNetworkServiceManager, DealsWithAssetVault, DealsWithErrors, DealsWithEvents, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
     AssetIssuerActorDao assetIssuerActorDao;
@@ -212,7 +212,6 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Data
     public void start() throws CantStartPluginException {
         try {
             assetIssuerActorDao = new AssetIssuerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
-            this.serviceStatus = ServiceStatus.STARTED;
 
             blockchainNetworkType = BlockchainNetworkType.REG_TEST;
 
@@ -221,6 +220,8 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Data
             initializeListener();
 
             startMonitorAgent();
+
+            this.serviceStatus = ServiceStatus.STARTED;
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -382,7 +383,7 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Data
             if (actorAssetIssuer == null) {
 //                String assetIssuerActorIdentityToLinkPublicKey = i + UUID.randomUUID().toString();
                 String assetIssuerActorPublicKey = UUID.randomUUID().toString();
-                CryptoAddress genesisAddress = getGenesisAddress();
+//                CryptoAddress genesisAddress = getGenesisAddress();
 
                 Double locationLatitude = new Random().nextDouble();
                 Double locationLongitude = new Random().nextDouble();
@@ -414,17 +415,17 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Data
         }
     }
 
-    public CryptoAddress getGenesisAddress() throws CantGetGenesisAddressException {
-        try {
-//            System.out.println("La BlockChain es: " + blockchainNetworkType);
-            CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
-//            System.out.println("========================================================================");
-//            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
-            return genesisAddress;
-        } catch (GetNewCryptoAddressException exception) {
-            throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
-        }
-    }
+//    public CryptoAddress getGenesisAddress() throws CantGetGenesisAddressException {
+//        try {
+////            System.out.println("La BlockChain es: " + blockchainNetworkType);
+//            CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
+////            System.out.println("========================================================================");
+////            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
+//            return genesisAddress;
+//        } catch (GetNewCryptoAddressException exception) {
+//            throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
+//        }
+//    }
 
     /**
      * Private methods
