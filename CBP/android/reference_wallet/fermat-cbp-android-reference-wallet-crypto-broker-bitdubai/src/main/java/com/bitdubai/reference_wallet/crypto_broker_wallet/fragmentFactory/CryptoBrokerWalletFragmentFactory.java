@@ -2,6 +2,8 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory;
 
 import android.app.Fragment;
 
+import com.bitdubai.fermat_android_api.engine.FermatWalletFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
@@ -19,44 +21,49 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.MarketR
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contracts_history.ContractsHistoryActivityFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.*;
 
 /**
  * Return new instances of the fragments for this wallet
- *
+ * <p/>
  * Created by Nelson Ramirez on 2015-09-30
  */
-public class CryptoBrokerWalletFragmentFactory implements WalletFragmentFactory {
+public class CryptoBrokerWalletFragmentFactory extends FermatWalletFragmentFactory<CryptoBrokerWalletSession, WalletSettings, CryptoBrokerWalletFragmentsEnumType> {
 
     @Override
-    public Fragment getFragment(String code, WalletSession walletSession, WalletSettings WalletSettings, WalletResourcesProviderManager walletResourcesProviderManager) throws FragmentNotFoundException {
-        CryptoBrokerWalletFragmentsEnumType fragment = CryptoBrokerWalletFragmentsEnumType.getValue(code);
+    public FermatWalletFragment getFermatFragment(CryptoBrokerWalletFragmentsEnumType fragments) throws FragmentNotFoundException {
 
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB)
+        if (fragments == CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB)
             return OpenNegotiationsTabFragment.newInstance();
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB)
+        if (fragments == CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB)
             return OpenContractsTabFragment.newInstance();
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS)
+        if (fragments == CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS)
             return MarketRateStatisticsFragment.newInstance();
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS)
+        if (fragments == CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS)
             return StockStatisticsFragment.newInstance();
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS)
+        if (fragments == CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS)
             return OpenNegotiationDetailsFragment.newInstance();
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS)
+        if (fragments == CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS)
             return CloseNegotiationDetailsFragment.newInstance();
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS)
+        if (fragments == CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS)
             return OpenContractDetailsFragment.newInstance();
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS)
+        if (fragments == CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS)
             return CloseContractDetailsFragment.newInstance();
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY)
+        if (fragments == CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY)
             return ContractsHistoryActivityFragment.newInstance();
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_EARNINGS)
+        if (fragments == CBP_CRYPTO_BROKER_WALLET_EARNINGS)
             return EarningsActivityFragment.newInstance();
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_SETTINGS)
+        if (fragments == CBP_CRYPTO_BROKER_WALLET_SETTINGS)
             return SettingsActivityFragment.newInstance();
 
-        throw createFragmentNotFoundException(fragment);
+        throw createFragmentNotFoundException(fragments);
+    }
+
+    @Override
+    public CryptoBrokerWalletFragmentsEnumType getFermatFragmentEnumType(String key) {
+        return CryptoBrokerWalletFragmentsEnumType.getValue(key);
     }
 
     private FragmentNotFoundException createFragmentNotFoundException(FermatFragmentsEnumType fragments) {
