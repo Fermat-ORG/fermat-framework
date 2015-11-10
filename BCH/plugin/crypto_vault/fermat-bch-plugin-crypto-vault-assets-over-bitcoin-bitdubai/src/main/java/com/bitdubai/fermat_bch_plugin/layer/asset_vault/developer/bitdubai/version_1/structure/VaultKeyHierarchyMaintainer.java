@@ -300,13 +300,6 @@ class VaultKeyHierarchyMaintainer implements Agent {
             try {
                 int currentUsedKeys = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
 
-                /**
-                 * If for wathever reason we got zero, I can't allow it because I will throw
-                 * a divided by zero error.
-                 */
-                if (currentUsedKeys == 0)
-                    currentUsedKeys = 1;
-
                 return currentUsedKeys;
             } catch (CantExecuteDatabaseOperationException e) {
                 return 1;
