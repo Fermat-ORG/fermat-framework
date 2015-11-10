@@ -1,13 +1,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="220dp"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="220dp"
     android:layout_height="220dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center_horizontal"
     android:gravity="center"
     android:paddingTop="12dp"
     android:layout_marginTop="10dp"
-    android:layout_marginLeft="12dp">
+    android:layout_marginLeft="12dp"
+    >
 
     <com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar
         android:id="@+id/progress"
@@ -36,42 +35,38 @@
             android:paddingRight="28dp">
 
             <!-- TODO: Update blank fragment layout -->
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="39.00"
                 android:textSize="32sp"
                 android:textColor="#FFF"
                 android:id="@+id/txt_balance_amount"
                 android:textStyle="bold"
-                app:typeface="ROBOTO_REGULAR"
                 />
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="btc"
                 android:id="@+id/txt_balance_amount_type"
                 android:layout_toRightOf="@+id/txt_balance_amount"
                 android:layout_marginTop="14sp"
                 android:textColor="#05ddd2"
                 android:layout_marginLeft="2dp"
-                app:typeface="ROBOTO_REGULAR"
                 />
 
 
         </RelativeLayout>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:id="@+id/txt_type_balance"
             android:text="Available balance"
             android:textSize="14sp"
             android:textColor="#05ddd2"
             android:textStyle="italic"
-            app:typeface="ROBOTO_REGULAR"
             />
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="Touch to change"
             android:textSize="12sp"
             android:id="@+id/txt_touch_to_change"
             android:textColor="#aeb6c6"
             android:textStyle="italic"
-            app:typeface="ROBOTO_REGULAR"
             />
     </LinearLayout>
 

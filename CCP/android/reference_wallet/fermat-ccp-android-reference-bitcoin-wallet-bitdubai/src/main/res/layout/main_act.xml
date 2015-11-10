@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:background="#ffffff"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/tools">
 
 
     <LinearLayout
@@ -34,7 +35,6 @@
             android:layout_toStartOf="@+id/clear_search_image_button"
             android:hint="@string/search_hint"
             android:textSize="14sp"
-
             android:textColor="#ffffff"
             android:singleLine="true"
             />

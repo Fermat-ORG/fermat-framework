@@ -472,7 +472,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon",
-                "bitDubai bitcoin Wallet",
+                "Bitcoin Wallet",
                 "reference_wallet",
                 "wallet_platform_identifier",
                 new Version(1,0,0)
