@@ -4397,7 +4397,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="gillermo20" scope="implementation" percentage="10"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4417,7 +4417,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="gillermo20" scope="implementation" percentage="10"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4437,7 +4437,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="gillermo20" scope="implementation" percentage="10"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4478,7 +4478,7 @@
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="gillermo20" scope="implementation" percentage="20"></author>
+							<author name="guillermo20" scope="implementation" percentage="20"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4494,7 +4494,7 @@
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="gillermo20" scope="implementation" percentage="20"></author>
+							<author name="guillermo20" scope="implementation" percentage="20"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
