@@ -87,10 +87,12 @@ public class GrouperViewHolder extends ParentViewHolder {
 
         byte[] photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
 
-        Drawable drawable = getImgDrawable(photo);
-        if(drawable!=null) contactIcon.setImageDrawable(drawable);
+        if(photo!=null){
+            contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
+        }else  contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image));
 
-        txt_contactName.setText(cryptoWalletTransaction.getInvolvedActor().getName());
+
+            txt_contactName.setText(cryptoWalletTransaction.getInvolvedActor().getName());
         txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");
 
         txt_notes.setText(cryptoWalletTransaction.getMemo());

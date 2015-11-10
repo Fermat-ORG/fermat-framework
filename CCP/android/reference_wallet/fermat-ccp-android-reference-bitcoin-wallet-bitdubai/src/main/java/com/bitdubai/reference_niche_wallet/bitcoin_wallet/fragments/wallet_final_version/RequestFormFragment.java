@@ -153,7 +153,7 @@ public class RequestFormFragment extends FermatWalletFragment implements View.On
         try {
             imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
         }catch (Exception e){
-            Picasso.with(getActivity()).load(R.drawable.profile_image).into(imageView_contact);
+            imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(),R.drawable.profile_image));
         }
         contactName.setText(cryptoWalletWalletContact.getActorName());
     }
@@ -211,7 +211,6 @@ public class RequestFormFragment extends FermatWalletFragment implements View.On
             reportUnexpectedError(e);
         }
 
-        //TODO: chamo completá todo lo que necesites para mandar del cryptowalletwalletcontact y del referenceWalletSession que tiene el tipo de wallet y toda esa vaina
 
     }
 

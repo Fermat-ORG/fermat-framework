@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="#eaeaea"
+    android:background="#f9f9f9"
     >
 
 
@@ -32,6 +33,7 @@
                 android:textColor="#1d1d26"
                 android:fontFamily="roboto"
                 android:layout_gravity="right"
+                app:typeface="ROBOTO_REGULAR"
                 />
 
 
@@ -44,6 +46,7 @@
                 android:textColor="#9a9a9c"
                 android:fontFamily="roboto"
                 android:layout_gravity="right"
+                app:typeface="ROBOTO_REGULAR"
 
 
                 />
@@ -58,6 +61,7 @@
                 android:textColor="#9a9a9c"
                 android:fontFamily="roboto"
                 android:layout_gravity="right"
+                app:typeface="ROBOTO_REGULAR"
                 />
 
         </LinearLayout>

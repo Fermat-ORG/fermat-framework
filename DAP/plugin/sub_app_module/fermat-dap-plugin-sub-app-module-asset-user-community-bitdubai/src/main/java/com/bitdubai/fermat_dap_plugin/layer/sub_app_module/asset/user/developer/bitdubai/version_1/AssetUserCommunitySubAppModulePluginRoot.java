@@ -17,6 +17,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantG
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
@@ -138,9 +139,10 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
     List<ActorAssetUser> actorAssetList;
 
     @Override
-    public List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
+    public List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
 
         actorAssetList = new ArrayList<>();
+        List<AssetUserActorRecord> assetUserActorRecords = null;
 
         try {
             actorAssetUserManager.registerActorInActorNetowrkSerice();
@@ -149,7 +151,16 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
             ActorAssetIssuer actorAssetIssuer;
             actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
 
+             assetUserActorRecords =  new ArrayList<>();
+
+            for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered()){
+                AssetUserActorRecord assetUserActorRecord = new AssetUserActorRecord();
+                assetUserActorRecord = (AssetUserActorRecord) actorAssetUser;
+                assetUserActorRecords.add(assetUserActorRecord);
+            }
+
             List<ActorAssetUser> actorAssetUser = actorAssetUserManager.getAllAssetUserActorInTableRegistered();
+
             actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUser);
 
         } catch (CantCreateAssetUserActorException e) {
@@ -161,7 +172,7 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         } catch (CantConnectToAssetUserException e) {
             e.printStackTrace();
         }
-        return actorAssetList;
+        return assetUserActorRecords;
     }
 
     @Override

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 android:orientation="vertical" android:layout_width="match_parent"
-android:layout_height="100dp"
+android:layout_height="105dp"
 android:background="#eaeaea"
     >
 
@@ -11,7 +12,7 @@ android:background="#eaeaea"
     android:layout_height="wrap_content"
     android:id="@+id/container_data"
     android:paddingBottom="20dp"
-    android:paddingTop="15dp"
+    android:paddingTop="10dp"
     android:layout_marginLeft="16dp"
     >
 
@@ -42,6 +43,7 @@ android:background="#eaeaea"
             android:text="Matias Furszyfer"
             android:textColor="#06356f"
             android:fontFamily="roboto"
+            app:typeface="ROBOTO_REGULAR"
             />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -52,6 +54,7 @@ android:background="#eaeaea"
             android:textSize="18dp"
             android:textColor="#1d1d26"
             android:fontFamily="roboto"
+            app:typeface="ROBOTO_REGULAR"
             />
 
 
@@ -62,7 +65,8 @@ android:background="#eaeaea"
             android:text="03 Feb 2014"
             android:textSize="10dp"
             android:textColor="#9a9a9c"
-            android:fontFamily="roboto"/>
+            android:fontFamily="roboto"
+            app:typeface="ROBOTO_REGULAR"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
@@ -72,6 +76,7 @@ android:background="#eaeaea"
             android:textSize="12dp"
             android:textColor="#9a9a9c"
             android:fontFamily="roboto"
+            app:typeface="ROBOTO_REGULAR"
 
             />
 
@@ -98,7 +103,8 @@ android:background="#eaeaea"
             android:textSize="12dp"
             android:textColor="#343434"
             android:fontFamily="roboto"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            app:typeface="ROBOTO_REGULAR"/>
 
 
         <LinearLayout
@@ -115,6 +121,7 @@ android:background="#eaeaea"
                 android:textSize="12dp"
                 android:textColor="#06356f"
                 android:fontFamily="roboto"
+                app:typeface="ROBOTO_REGULAR"
                 />
 
             <ImageView

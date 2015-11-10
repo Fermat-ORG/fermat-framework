@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.FragmentFactory;
+package com.bitdubai.android_core.app.common.version_1.fragment_factory;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingBottom="2dp"
     android:paddingTop="2dp"
@@ -29,9 +29,10 @@
             android:id="@+id/imageView_contact"
             android:src="@drawable/person1"/>
 
-        <TextView
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/row_title"
             android:layout_width="fill_parent"
+            app:typeface="ROBOTO_REGULAR"
             android:layout_height="wrap_content"
             android:layout_weight="0.4"
             android:gravity="center_vertical"
