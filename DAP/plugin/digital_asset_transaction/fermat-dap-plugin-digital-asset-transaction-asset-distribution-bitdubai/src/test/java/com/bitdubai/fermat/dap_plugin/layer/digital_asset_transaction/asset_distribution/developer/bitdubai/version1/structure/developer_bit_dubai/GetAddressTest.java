@@ -2,10 +2,9 @@ package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_dis
 
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.DeveloperBitDubai;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by Luis Campo (campusprize@gmail.com) on 05/11/15.
@@ -21,6 +20,6 @@ public class GetAddressTest {
 
     @Test
     public void getAddressTest() {
-        assertThat(developerBitDubai.getAddress()).isEqualTo("13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv");
+        Assert.assertEquals("13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv", developerBitDubai.getAddress());
     }
 }
