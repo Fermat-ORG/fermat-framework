@@ -70,19 +70,6 @@
             android:layout_height="fill_parent"
             android:scrollingCache="false" />
 
-        <com.melnykov.fab.FloatingActionButton
-            android:id="@+id/fab_add_person"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="35dp"
-            android:layout_marginRight="35dp"
-
-            android:src="@drawable/ic_contact_newcontact"
-            fab:fab_colorNormal="#1173aa"
-            fab:fab_colorPressed="@color/material_blue_grey_800"
-            fab:fab_colorRipple="@color/ripple_material_dark"/>
     </FrameLayout>
 
 
