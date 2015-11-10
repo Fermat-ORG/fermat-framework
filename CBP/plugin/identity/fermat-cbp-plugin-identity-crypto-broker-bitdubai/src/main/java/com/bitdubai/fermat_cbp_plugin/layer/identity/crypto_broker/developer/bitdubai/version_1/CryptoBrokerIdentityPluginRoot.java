@@ -2,8 +2,9 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bi
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -11,16 +12,16 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
@@ -40,44 +41,34 @@ import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceU
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by jorge on 28-09-2015.
  * Modified by Yordin Alayn 10.09.15
  */
-public class CryptoBrokerIdentityPluginRoot implements  CryptoBrokerIdentityManager,
-                                                        DatabaseManagerForDevelopers,
-                                                        DealsWithPluginDatabaseSystem,
-                                                        LogManagerForDevelopers,
-                                                        DealsWithErrors,
-                                                        DealsWithLogger,
-                                                        DealsWithDeviceUser,
-                                                        DealsWithPluginFileSystem,
-                                                        Plugin,
-                                                        Service{
+public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
+        CryptoBrokerIdentityManager,
+        DatabaseManagerForDevelopers {
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
+    private DeviceUserManager deviceUserManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
+    public CryptoBrokerIdentityPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     /*Variables.*/
     private CryptoBrokerIdentityDatabaseDao cryptoBrokerIdentityDatabaseDao;
-
-    private ErrorManager errorManager;
-
-    private LogManager logManager;
-
-    private DeviceUserManager deviceUserManager;
-
-    private PluginFileSystem pluginFileSystem;
-
-    private static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
-
-    private UUID pluginId;
-
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-    private PluginDatabaseSystem pluginDatabaseSystem;
 
     public static final String CRYPTO_BROKER_IDENTITY_PROFILE_IMAGE_FILE_NAME = "cryptoBrokerIdentityProfileImage";
 
@@ -141,67 +132,6 @@ public class CryptoBrokerIdentityPluginRoot implements  CryptoBrokerIdentityMana
         return new ArrayList<>();
     }
 
-    /*DealsWithPluginDatabaseSystem interface implementation.*/
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-
-    }
-
-    /*LogManagerForDevelopers Interface implementation.*/
-    @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.CryptoBrokerIdentityPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerIdentityImpl");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDatabaseDao");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDatabaseConstants");
-        return returnedClasses;
-    }
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            if (CryptoBrokerIdentityPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                CryptoBrokerIdentityPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                CryptoBrokerIdentityPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                CryptoBrokerIdentityPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            }
-        }
-    }
-
-    /*DealWithErrors Interface implementation.*/
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /*DealsWithLogger Interface implementation.*/
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /*DealsWithDeviceUser Interface implementation.*/
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager = deviceUserManager;
-    }
-
-    /*DealWithPluginFileSystem Interface implementation.*/
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /*PlugIn Interface implementation.*/
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
     /*Service Interface implementation.*/
     @Override
     public void start() throws CantStartPluginException {
@@ -213,25 +143,5 @@ public class CryptoBrokerIdentityPluginRoot implements  CryptoBrokerIdentityMana
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DESIGNER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
             throw new CantStartPluginException(cantInitializeExtraUserRegistryException, Plugins.BITDUBAI_DESIGNER_IDENTITY);
         }
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
     }
 }

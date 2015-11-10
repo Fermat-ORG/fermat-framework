@@ -6,9 +6,10 @@
  */
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -55,15 +56,12 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
@@ -89,7 +87,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
@@ -98,17 +95,18 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingActorRequestConnectionNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.sun.rmi.rmid.ExecPermission;
 
+import java.io.ByteArrayInputStream;
+import java.lang.reflect.Executable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -132,12 +130,6 @@ import java.util.regex.Pattern;
 public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implements
         IntraUserManager,
         NetworkService,
-        DealsWithWsCommunicationsCloudClientManager,
-        DealsWithPluginFileSystem,
-        DealsWithPluginDatabaseSystem,
-        DealsWithEvents,
-        DealsWithErrors,
-        DealsWithLogger,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
@@ -150,10 +142,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      */
     public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_INTRA_ACTOR;
 
-    /**
-     * Represent the logManager
-     */
-    private LogManager logManager;
+
 
     /**
      * Represent the newLoggingLevel
@@ -193,7 +182,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -201,6 +190,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM    )
     private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER    )
+    private LogManager logManager;
 
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
@@ -544,61 +536,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         this.serviceStatus = ServiceStatus.STOPPED;
 
     }
-
-    public ServiceStatus getServiceStatus(){
-        return serviceStatus;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithWsCommunicationsCloudClientManager#setWsCommunicationsCloudClientConnectionManager(WsCommunicationsCloudClientManager)
-     */
-    @Override
-    public void setWsCommunicationsCloudClientConnectionManager(WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
-        this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithErrors#setErrorManager(ErrorManager)
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithEvents#setEventManager(EventManager) )
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /* (non-Javadoc)
-    * @see DealsWithPluginDatabaseSystem#setPluginDatabaseSystem()
-    */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see Plugin#setId(UUID)
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
 
     private void initializeIntraActorAgent(){
 
@@ -1100,8 +1037,14 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             for(PlatformComponentProfile platformComponentProfile : list){
 
                 JsonObject jsonObject =new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
-                byte[] image = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString().getBytes();
-                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(),image, platformComponentProfile.getAlias()));
+                String encoded = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString();
+                byte[] image = null;
+                try {
+                    image = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
+                }catch (Exception e){
+                    image = null;
+                }
+                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), image, platformComponentProfile.getAlias()));
             }
 
 
@@ -1319,8 +1262,15 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             //build jsonObject Photo
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE, actor.getPhoto().toString());
+            String encodedImage =null;
+            try {
+                encodedImage = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
+            jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE,encodedImage);
+           // jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE,actor.getPhoto().toString());
             PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
                     (actor.getName().toLowerCase()),
                     (actor.getName().toLowerCase() + "_" + this.getName()),
@@ -1410,15 +1360,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
              */
             return DEFAULT_LOG_LEVEL;
         }
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithLogger#setLogManager(LogManager)
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
     }
 
     /**

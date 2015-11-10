@@ -120,6 +120,7 @@ public class CryptoPaymentRequestDeveloperDatabaseFactory {
                                                                       final DeveloperDatabaseTable developerDatabaseTable) {
 
         try {
+            initializeDatabase();
 
             DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
 
@@ -138,7 +139,7 @@ public class CryptoPaymentRequestDeveloperDatabaseFactory {
             }
 
             return returnedRecords;
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException | CantInitializeCryptoPaymentRequestDatabaseException cantLoadTableToMemory) {
 
             return new ArrayList<>();
         }

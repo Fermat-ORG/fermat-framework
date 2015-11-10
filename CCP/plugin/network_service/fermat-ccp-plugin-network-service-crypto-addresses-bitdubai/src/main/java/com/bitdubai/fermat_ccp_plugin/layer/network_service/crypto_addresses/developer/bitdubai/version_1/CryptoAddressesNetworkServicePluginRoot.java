@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
@@ -49,7 +50,6 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
@@ -70,18 +70,16 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.CryptoAddressesExecutorAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -96,12 +94,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkService implements
         CryptoAddressesManager,
-        DealsWithWsCommunicationsCloudClientManager,
-        DealsWithErrors,
-        DealsWithEvents,
-        DealsWithPluginDatabaseSystem,
-        NetworkService,
         DatabaseManagerForDevelopers {
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem        ;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.WS_CLOUD_CLIENT)
+    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
@@ -109,11 +111,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.WS_CLOUD_CLIENT)
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     private List<FermatEventListener> listenersAdded;
 
@@ -183,7 +180,15 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      * Service Interface implementation
      */
     @Override
-    public void startNetworkService() throws CantStartPluginException {
+    public void start() throws CantStartPluginException {
+
+        try {
+            loadKeyPair(pluginFileSystem);
+        } catch (CantLoadKeyPairException e) {
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, "", "Problem trying to load the key pair of the plugin.");
+        }
 
         System.out.println("********* Crypto Addresses: Starting. ");
 
@@ -795,11 +800,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile){
 
-        System.out.println("*********  CryptoAddresses - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
-
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-
-
     }
 
     /**
@@ -807,31 +808,19 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     public void handleCompleteComponentConnectionRequestNotificationEvent(final PlatformComponentProfile remoteComponentProfile) {
 
-
-        System.out.println("*********  CryptoAddresses - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
-
         /*
          * Tell the manager to handler the new connection established
          */
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
-
+        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty())
             remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
-
-            System.out.print(" CPR NS - INCOMING CONNECTION ADDED: " + remoteComponentProfile.getAlias());
-        }
-
     }
 
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
-
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
-
         remoteNetworkServicesRegisteredList.addAllAbsent(platformComponentProfileRegisteredList);
-
     }
 
     public void handleNewMessages(final FermatMessage fermatMessage) {
@@ -861,6 +850,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
                     receiveRequest(requestMessage);
                     break;
+
                 default:
                     throw new CantHandleNewMessagesException(
                             "message type: " +networkServiceMessage.getMessageType().name(),
@@ -971,34 +961,5 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     private void reportUnexpectedException(Exception e) {
         errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-    }
-
-    @Override
-    public void setWsCommunicationsCloudClientConnectionManager(final WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
-        this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
-    }
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(final ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-    @Override
-    public void setEventManager(final EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }

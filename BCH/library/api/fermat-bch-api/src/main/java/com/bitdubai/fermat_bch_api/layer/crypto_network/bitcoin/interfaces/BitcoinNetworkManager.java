@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 
@@ -30,9 +30,9 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * Gests all the CryptoTransactions that matchs this transaction Hash
      * @param txHash
      * @return
-     * @throws CantGetGenesisTransactionException
+     * @throws CantGetCryptoTransactionException
      */
-    List<CryptoTransaction> getGenesisTransaction(String txHash) throws CantGetGenesisTransactionException;
+    List<CryptoTransaction> getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException;
 
     /**
      * Broadcast a well formed, commited and signed transaction into the specified network

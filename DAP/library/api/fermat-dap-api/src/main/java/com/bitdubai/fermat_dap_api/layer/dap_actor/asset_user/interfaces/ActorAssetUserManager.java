@@ -73,8 +73,4 @@ public interface ActorAssetUserManager {
      * @throws CantConnectToAssetUserException
      */
     void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException;
-
-
-    void setCryptoAddress(ActorAssetUser actorAssetUser);
-
 }

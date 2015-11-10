@@ -145,7 +145,20 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         try {
             actorAssetUserManager.registerActorInActorNetowrkSerice();
             actorAssetList = actorAssetUserManager.getAllAssetUserActorInTableRegistered();
+
+            ActorAssetIssuer actorAssetIssuer;
+            actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
+
+            List<ActorAssetUser> actorAssetUser = actorAssetUserManager.getAllAssetUserActorInTableRegistered();
+            actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUser);
+
         } catch (CantCreateAssetUserActorException e) {
+            e.printStackTrace();
+        } catch (CantGetAssetIssuerActorsException e) {
+            e.printStackTrace();
+        } catch (CantGetAssetUserActorsException e) {
+            e.printStackTrace();
+        } catch (CantConnectToAssetUserException e) {
             e.printStackTrace();
         }
         return actorAssetList;
@@ -160,6 +173,8 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         //TODO Se necesita PASAR el Actor seleccionado en la Community
         try {
             actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
+//            actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers);
+
             actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers);
         } catch (CantGetAssetIssuerActorsException e) {
             throw new CantConnectToAssetUserException(CantConnectToAssetUserException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
