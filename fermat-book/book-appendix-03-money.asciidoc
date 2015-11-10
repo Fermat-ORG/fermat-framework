@@ -1,4 +1,5 @@
 :numbered!: 
+image::https://github.com/bitDubai/media-kit/blob/master/Logotype%20Full%20Color/logo_fermat_full_color_900x480.png[FermatLogofull]
 == Appendix 03: Money and Crypto Currency 
 
 === What's behind money?
@@ -19,7 +20,7 @@ TIP: Taking Bitcoin as "the" paradigmatic model of every cryptocurrency, we need
 * A decentralized mathematical and deterministic currency issuance (distributed mining) +
 * A decentralized transaction verification system (transaction script) +
 
-image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin, 600, 337]
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
 :numbered!:
 
 === _Continue Reading ..._

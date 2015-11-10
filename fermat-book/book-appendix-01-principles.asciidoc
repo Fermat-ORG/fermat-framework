@@ -1,3 +1,4 @@
+image::https://github.com/bitDubai/media-kit/blob/master/Logotype%20Full%20Color/logo_fermat_full_color_900x480.png[FermatLogofull]
 
 == Appendix 01 - Fermat's Principles in Detail
 

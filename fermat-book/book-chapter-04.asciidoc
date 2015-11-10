@@ -1,5 +1,5 @@
 :numbered!:
-image::https://github.com/bitDubai/fermat-graphic-design/raw/master/3D%20Design/3DLogotypes/CoinVersionRenders/Cover_OSA.jpg[OperatingSystems, 500, 281]
+image::https://github.com/bitDubai//CoinVersionRenders/Cover_OSA.jpg[OperatingSystems]
 
 [[superlayers]]
 == Chapter 4: Fermat Operating Systems Superlayer
@@ -35,7 +35,7 @@ Database System :: access to plugin propietary databases +
 
 :numbered!:
 
-image::https://github.com/bitDubai/fermat-graphic-design/blob/master/3D%20Design/FermatBitcoinCoinModel/FinalRenders/Bitcoin.jpg[Fermat Coin, 450, 253]
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
   
 ==== Continue Reading ...
 link:book-chapter-05.asciidoc[Next Chapter]

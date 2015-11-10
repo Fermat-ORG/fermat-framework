@@ -43,6 +43,7 @@ Internally, the Wallet Store  keeps the identity of the wallet, of its developer
 
 Let's explore the different niches covered by Fermat in the platforms described in next chapters.
 
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
 ==== Continue Reading
 link:book-chapter-10.asciidoc[Next Chapter]
 

@@ -26,7 +26,7 @@ Wallets :: Crypto Wholesaler Wallet , Crypto Distributor Wallet, top Up Point Wa
 
 
 
-
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
 ===== Continue reading ...
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]

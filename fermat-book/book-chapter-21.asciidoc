@@ -4,6 +4,7 @@
 
 
 
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
 
 link:book-chapter-00(intro).asciidoc[Back to Book Intro]
 

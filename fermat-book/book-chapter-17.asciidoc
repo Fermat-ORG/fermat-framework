@@ -120,8 +120,8 @@ Crypto Broker ::
 Crypto Customer :: +
 
 ////
-
-==== Continue reading ...
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
+==== _Continue reading ..._
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]
 ////

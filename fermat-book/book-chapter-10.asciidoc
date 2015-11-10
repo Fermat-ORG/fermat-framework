@@ -8,6 +8,7 @@ This starts in the originating device and then both flows - value and meta data 
 
 
 :numbered!:
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
   
 === Continue Reading
 link:book-chapter-12.asciidoc[Crypto Currency Platform]

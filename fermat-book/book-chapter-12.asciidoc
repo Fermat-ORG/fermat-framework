@@ -52,7 +52,7 @@ The new functionalities added are:
 * to store the *exchange rate* when a BTC amount is received in the wallet
 * to check the *exchange rate* when the user attemps to spend an amount of BTC and to freeze the funds if they are below the *purchase price* 
 
-
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
 ==== Continue Reading
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]

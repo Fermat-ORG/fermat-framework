@@ -29,7 +29,7 @@ Bank Notes Wallet :: +
 === _Reference Wallet layer_
 Bank Notes Wallet :: +
 ////
-
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
 ==== Continue reading ...
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]

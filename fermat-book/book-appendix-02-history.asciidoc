@@ -1,3 +1,4 @@
+image::https://github.com/bitDubai/media-kit/blob/master/Logotype%20Full%20Color/logo_fermat_full_color_900x480.png[FermatLogofull]
 
 == Appendix 02: Fermat's History
 
@@ -77,7 +78,7 @@ I am anything but superstitious, however, it goes without saying that the questi
 *Luis Fernando Molina +
 Fermat's Project Founder*
 
-image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin, 800, 450]
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
 === _Continue Reading ..._
 
 link:book-chapter-00(intro).asciidoc[Back to Intro]

@@ -1,6 +1,6 @@
 :numbered!:
 
-image::https://github.com/bitDubai/fermat-graphic-design/raw/master/3D%20Design/3DLogotypes/CoinVersionRenders/Cover_BCH.jpg[BlockChain, 800, 450]
+image::https://github.com/bitDubai//3DLogotypes/CoinVersionRenders/Cover_BCH.jpg[BlockChain]
 
 == Chapter 5: Fermat BlockChain Superlayer
 This superlayer provides the entire Fermat multiplatform system the necessary functionalities to manage *blockchain technology*: connecting to the _crypto networks_, reading the _transactions_, "storing" the value related to Fermat end user's transactions, etc.
@@ -35,7 +35,7 @@ Outgoing Crypto :: it delivers the transaction to the corresponding *cryptonetwo
 
 :numbered!:
   
-image::https://github.com/bitDubai/fermat-graphic-design/blob/master/3D%20Design/FermatBitcoinCoinModel/FinalRenders/Bitcoin.jpg[Fermat Coin, 450, 253]
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
 
 ==== Continue Reading
 link:book-chapter-06.asciidoc[Next Chapter]

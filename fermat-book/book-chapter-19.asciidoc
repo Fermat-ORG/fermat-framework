@@ -96,7 +96,7 @@ Asset User ::
 Redeem Point :: +
 
 ////
-
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
 ==== Continue Reading
 link:book-chapter-11.asciidoc[Fermat Digital Assets Management]
 

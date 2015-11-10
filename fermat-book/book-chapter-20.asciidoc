@@ -49,7 +49,7 @@ Voucher Wallet ::
 Coupon Wallet ::
 Discount Wallet :: +
 ////
-
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin]
 ==== Continue Reading
 
 link:book-chapter-21.asciidoc[Next Chapter]
