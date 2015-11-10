@@ -18,4 +18,6 @@
     <string name="negotiation_cancelled">Cancelled</string>
     <string name="contract_closed">Close</string>
     <string name="contract_cancelled">Cancelled</string>
+    <string name="receiving">Receiving</string>
+    <string name="sending">Sending</string>
 </resources>

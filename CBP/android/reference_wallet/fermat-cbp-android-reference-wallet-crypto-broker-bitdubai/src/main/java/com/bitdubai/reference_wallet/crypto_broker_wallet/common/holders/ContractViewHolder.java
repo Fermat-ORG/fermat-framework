@@ -22,11 +22,8 @@ import java.text.NumberFormat;
 public class ContractViewHolder extends ChildViewHolder {
     public ImageView customerImage;
     public FermatTextView customerName;
-    public FermatTextView merchandiseAmount;
-    public FermatTextView merchandise;
+    public FermatTextView receivingOrSending;
     public FermatTextView typeOfPayment;
-    public FermatTextView exchangeRateAmount;
-    public FermatTextView paymentCurrency;
     public FermatTextView lastUpdateDate;
     public FermatTextView status;
     private Resources res;
@@ -46,11 +43,8 @@ public class ContractViewHolder extends ChildViewHolder {
 
         customerImage = (ImageView) itemView.findViewById(R.id.cbw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.cbw_customer_name);
-        merchandiseAmount = (FermatTextView) itemView.findViewById(R.id.cbw_merchandise_amount);
-        merchandise = (FermatTextView) itemView.findViewById(R.id.cbw_merchandise);
+        receivingOrSending = (FermatTextView) itemView.findViewById(R.id.cbw_receiving_or_sending);
         typeOfPayment = (FermatTextView) itemView.findViewById(R.id.cbw_type_of_payment);
-        exchangeRateAmount = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_amount);
-        paymentCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_payment_currency);
         lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.cbw_update_date);
         status = (FermatTextView) itemView.findViewById(R.id.cbw_contract_status);
     }
@@ -62,16 +56,16 @@ public class ContractViewHolder extends ChildViewHolder {
         status.setText(getStatusStringRes(contractStatus));
 
         DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-        merchandiseAmount.setText(decimalFormat.format(itemInfo.getAmount()));
-        exchangeRateAmount.setText(decimalFormat.format(itemInfo.getExchangeRateAmount()));
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(getReceivingOrSendingText(contractStatus));
+        stringBuilder.append(decimalFormat.format(itemInfo.getAmount()));
+        stringBuilder.append(itemInfo.getMerchandise());
+        receivingOrSending.setText(stringBuilder.toString());
 
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
         lastUpdateDate.setText(date);
-
         customerName.setText(itemInfo.getCryptoCustomerAlias());
-        merchandise.setText(itemInfo.getMerchandise());
         typeOfPayment.setText(itemInfo.getTypeOfPayment());
-        paymentCurrency.setText(itemInfo.getPaymentCurrency());
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
     }
 
@@ -86,6 +80,12 @@ public class ContractViewHolder extends ChildViewHolder {
             return res.getColor(R.color.contract_closed_list_item_background);
 
         return res.getColor(R.color.contract_cancelled_list_item_background);
+    }
+
+    private String getReceivingOrSendingText(ContractStatus status) {
+        if (status == ContractStatus.PENDING_PAYMENT)
+            return res.getString(R.string.receiving);
+        return res.getString(R.string.sending);
     }
 
     private int getStatusStringRes(ContractStatus status) {
