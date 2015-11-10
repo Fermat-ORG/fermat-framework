@@ -1,5 +1,5 @@
 :numbered!:
-image::https://github.com/bitDubai/media-kit/tree/master/Readme%20Image/Coins/P2P.JPG[FermatP2P]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/P2P.JPG[FermatP2P]
 
 == Chapter 6: Fermat Network and Communication Superlayer
 This superlayer provides connectivity between *devices* by stablishing a _communication channel_ between a plug-in running on a *local device* which requires to consume certain service from its _counterpart_ (i.e. the plug-in with the same task) running on a *remote device*. +
