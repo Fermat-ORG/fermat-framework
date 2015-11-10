@@ -256,7 +256,7 @@ public class CreateContactFragmentDialog extends Dialog implements
             if (clipboard.hasPrimaryClip() && clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
                 mPasteItem.setEnabled(true);
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
-                EditText editText = (EditText) findViewById(R.id.contact_address);
+                EditText editText = (EditText) findViewById(R.id.txt_address);
                 CryptoAddress validAddress = validateAddress(item.getText().toString(), referenceWalletSession.getCryptoWalletManager().getCryptoWallet());
                 if (validAddress != null) {
                     editText.setText(validAddress.getAddress());

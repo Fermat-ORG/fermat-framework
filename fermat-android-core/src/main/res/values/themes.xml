@@ -8,7 +8,6 @@
         <item name="android:panelFullBackground">@android:color/darker_gray</item>
     </style>
 
-    <style name="Base.AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"></style>
 
     <!-- ActionBar styles -->
     <style name="MyActionBar"
