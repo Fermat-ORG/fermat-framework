@@ -95,7 +95,13 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        onRefresh();
+        if (swipeRefresh != null)
+            swipeRefresh.post(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+                }
+            });
     }
 
     @Override
@@ -149,6 +155,8 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
+            if (swipeRefresh != null)
+                swipeRefresh.setRefreshing(true);
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
