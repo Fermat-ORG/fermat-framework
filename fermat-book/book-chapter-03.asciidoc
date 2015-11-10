@@ -1,5 +1,4 @@
-
-image::https://github.com/bitDubai/media-kit/tree/master/Readme%20Image/Coins/COR.jpg[Core]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/COR.jpg[Core]
 
 == Chapter 3: Fermat Core Platform
 This is the *core platform* of Fermat Multi-platform System. It contains the deepest levels of layers in the layers stack. Its components encasulapte the basics definitions and functionalities that let Fermat operate as an _integrated system_. +

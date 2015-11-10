@@ -1,4 +1,4 @@
-image::https://github.com/bitDubai/media-kit/blob/master/Logotype%20Full%20Color/logo_fermat_full_color_900x480.png[FermatLogofull]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/Fermat_Logo_3D.png[FermatLogo]
 
 == Appendix 02: Fermat's History
 
