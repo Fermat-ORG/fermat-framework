@@ -33,7 +33,7 @@
             android:shadowRadius="8"
             android:text="Matias Furszyfer"
             android:textColor="#4f4f4f"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textStyle="bold"
             android:visibility="gone"/>
 
@@ -59,7 +59,8 @@
             android:layout_height="wrap_content"
             android:text="Name"
             android:textColor="#12aca1"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="12sp"
             android:paddingTop="12dp"/>
 
         <LinearLayout
@@ -83,7 +84,7 @@
                 android:paddingBottom="7dip"
                 android:textColor="#4f4f4f"
                 android:textColorHint="#4f4f4f"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="normal"
                 android:text="Matias Furszyfer"
                 android:layout_weight="0.54"
@@ -102,6 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Address"
+            android:textSize="12sp"
             android:textColor="#12aca1"
             android:layout_marginLeft="16dp"
             android:paddingTop="12dp"/>
@@ -119,7 +121,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="normal"
                 android:textColor="#4f4f4f"
                 android:textColorHint="#4f4f4f"
@@ -154,7 +156,7 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Share address to extra user"
+                    android:text="Share address"
                     android:gravity="center_vertical"
                     android:layout_marginLeft="7dp"
                     android:textColor="#12aca1"/>
