@@ -19,15 +19,23 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantConfirmMetaDataNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantGetMetadataNotificationsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.transaction.incoming_intra_user.IncomingIntraUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoMetadataEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.CantProcessMetaDataNotificationsExceptions;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
@@ -91,6 +99,8 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM        , layer = Layers.NETWORK_SERVICE   , plugin = Plugins.CRYPTO_TRANSMISSION)
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
 
+    private final List<FermatEventListener> listenersAdded = new ArrayList<>();
+
 
     public IncomingIntraUserTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -153,6 +163,29 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
         try {
             this.registry = new IncomingIntraUserRegistry(this.pluginDatabaseSystem);
             this.registry.initialize(this.pluginId);
+
+
+            /**
+             * Listener NetWorkService New Notifications event
+             */
+
+            FermatEventListener fermatEventListener;
+            FermatEventHandler fermatEventHandler;
+
+            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
+            fermatEventHandler = new IncomingCryptoMetadataEventHandler();
+            ((IncomingCryptoMetadataEventHandler) fermatEventHandler).setIntraWalletUserManager(this);
+             fermatEventListener.setEventHandler(fermatEventHandler);
+
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
+            /**
+             * I ask the list of pending requests to the Network Service to execute
+             */
+
+            this.processNotifications();
+
         } catch (CantInitializeIncomingIntraUserCryptoRegistryException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Registry could not be initialized",e,"","");
@@ -228,5 +261,47 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
         this.eventRecorderService.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
     }
+
+
+
+    public void processNotifications() throws CantProcessMetaDataNotificationsExceptions
+    {
+        try {
+
+            System.out.println("PROCESSING METADATA NOTIFICATIONS IN INCOMING INTRA USERS ");
+            List<CryptoTransmissionMetadata> metaDataNotifications = cryptoTransmissionNetworkServiceManager.getPendingNotifications();
+
+
+            for (CryptoTransmissionMetadata notification : metaDataNotifications) {
+
+                String intraUserSendingPublicKey = notification.getSenderPublicKey();
+
+                String intraUserToConnectPublicKey = notification.getDestinationPublicKey();
+
+                switch (notification.getCryptoTransmissionStates()) {
+
+
+                }
+
+                /**
+                 * I confirm the application in the Network Service
+                 */
+
+                cryptoTransmissionNetworkServiceManager.confirmNotification(notification.getTransactionId());
+            }
+
+        } catch (CantGetMetadataNotificationsException e) {
+            throw new CantProcessMetaDataNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error get notifications list");
+
+        } catch (CantConfirmMetaDataNotificationException e) {
+            throw new CantProcessMetaDataNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error confirm notification read");
+
+
+        } catch (Exception e) {
+            throw new CantProcessMetaDataNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", FermatException.wrapException(e), "", "");
+
+        }
+    }
+
 
 }
