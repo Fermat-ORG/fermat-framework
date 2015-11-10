@@ -195,11 +195,17 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
         }
     }
 
-    private synchronized List<AssetUserActorRecord> getMoreData() throws Exception {
-        List<AssetUserActorRecord> dataSet = null;
+    private synchronized List<Actor> getMoreData() throws Exception {
+        List<Actor> dataSet = new ArrayList<>();
+        List<AssetUserActorRecord> result = null;
         if (manager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
-        dataSet = manager.getAllActorAssetUserRegistered();
+        result = manager.getAllActorAssetUserRegistered();
+        if (result != null && result.size() > 0) {
+            for (AssetUserActorRecord record : result) {
+                dataSet.add((new Actor(record)));
+            }
+        }
         return dataSet;
     }
 }
