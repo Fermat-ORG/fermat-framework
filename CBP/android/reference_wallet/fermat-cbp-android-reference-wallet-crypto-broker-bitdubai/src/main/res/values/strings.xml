@@ -9,7 +9,8 @@
     <string name="identity_img" translatable="false">person_img</string>
     <string name="arrow" translatable="false">arrow</string>
     <string name="at">\@</string>
-    <string name="buy">Buy</string>
+    <string name="cbw_unit_number">1</string>
+    <string name="buy">Buying</string>
     <string name="unit_number" translatable="false">1</string>
     <string name="waiting_for_you">Waiting for you</string>
     <string name="waiting_for_the_customer">Waiting for the customer</string>

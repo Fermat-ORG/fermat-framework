@@ -7,6 +7,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.preference_settings.CryptoBrokerWalletPreferenceSettings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,11 @@ public class CryptoBrokerWalletSession implements WalletSession {
     Map<String, Object> data;
 
     /**
+     * Wallet Resources
+     */
+    private WalletResourcesProviderManager resourcesProviderManager;
+
+    /**
      * Error manager
      */
     private ErrorManager errorManager;
@@ -37,13 +43,14 @@ public class CryptoBrokerWalletSession implements WalletSession {
     /**
      * Create a session for the Wallet Store SubApp
      *
-     * @param wallet                  the SubApp type
-     * @param errorManager             the error manager
+     * @param wallet        the SubApp type
+     * @param errorManager  the error manager
      * @param moduleManager the module of this SubApp
      */
-    public CryptoBrokerWalletSession(InstalledWallet wallet, ErrorManager errorManager, CryptoBrokerWalletModuleManager moduleManager) {
+    public CryptoBrokerWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletResourcesProviderManager resourcesProviderManager, CryptoBrokerWalletModuleManager moduleManager) {
         this.wallet = wallet;
-        data = new HashMap<String, Object>();
+        data = new HashMap<>();
+        this.resourcesProviderManager = resourcesProviderManager;
         this.errorManager = errorManager;
         this.moduleManager = moduleManager;
     }
@@ -51,7 +58,7 @@ public class CryptoBrokerWalletSession implements WalletSession {
 
     @Override
     public InstalledWallet getWalletSessionType() {
-        return null;
+        return wallet;
     }
 
     /**
@@ -89,12 +96,12 @@ public class CryptoBrokerWalletSession implements WalletSession {
 
     @Override
     public WalletResourcesProviderManager getWalletResourcesProviderManager() {
-        return null;
+        return resourcesProviderManager;
     }
 
     @Override
     public WalletSettings getWalletSettings() {
-        return null;
+        return new CryptoBrokerWalletPreferenceSettings();
     }
 
     /**

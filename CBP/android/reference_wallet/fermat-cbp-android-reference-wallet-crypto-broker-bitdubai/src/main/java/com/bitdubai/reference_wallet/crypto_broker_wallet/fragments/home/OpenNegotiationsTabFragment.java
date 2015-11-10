@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -75,9 +76,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     protected void initViews(View layout) {
         super.initViews(layout);
 
+        ActionBar actionBar = getActivity().getActionBar();
+        if (actionBar != null) {
+            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+        }
+
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
-
         if (openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             View emptyListViewsContainer = layout.findViewById(R.id.empty);
