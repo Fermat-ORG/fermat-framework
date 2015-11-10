@@ -727,7 +727,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
         else {
             pagerSlidingTabStrip.setVisibility(View.VISIBLE);
-            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/roboto.ttf");
+            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf");
             pagerSlidingTabStrip.setTypeface(tf, 1);
             pagerSlidingTabStrip.setDividerColor(Color.TRANSPARENT);
 

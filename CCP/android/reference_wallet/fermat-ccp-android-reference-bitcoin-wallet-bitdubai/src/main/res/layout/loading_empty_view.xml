@@ -15,33 +15,7 @@
         android:visibility="gone"
         />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/empty_view"
-        android:visibility="gone">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/img_contact_empty"
-            />
-
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:padding="15dp"
-            app:typeface="ROBOTO_REGULAR"
-            android:text="You don´t have\nany contact"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/color_black_light"
-            />
-
-    </LinearLayout>
 
 
     

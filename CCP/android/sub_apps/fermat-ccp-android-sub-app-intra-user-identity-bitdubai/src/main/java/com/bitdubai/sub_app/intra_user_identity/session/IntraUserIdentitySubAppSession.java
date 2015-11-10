@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public class IntraUserIdentitySubAppSession implements SubAppsSession {
 
+
+
     /**
      * SubApps type
      */

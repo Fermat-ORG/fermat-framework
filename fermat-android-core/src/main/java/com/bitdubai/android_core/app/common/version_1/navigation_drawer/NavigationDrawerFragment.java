@@ -322,8 +322,12 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
 
                 if(menuOption!=null) {
                     com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = this.menuItem.get(position);
-                   if (menuItem != null)
-                        mCallbacks.onNavigationDrawerItemSelected(position, menuItem.getLinkToActivity().getCode());
+                    if (menuItem != null)
+                        try {
+                            mCallbacks.onNavigationDrawerItemSelected(position, menuItem.getLinkToActivity().getCode());
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
                }
 
             }

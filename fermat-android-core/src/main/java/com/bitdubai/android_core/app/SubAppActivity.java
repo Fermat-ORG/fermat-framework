@@ -495,6 +495,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
      */
     @Override
     public void onNavigationDrawerItemSelected(int position, String activityCode) {
-        changeActivity(activityCode);
+        try {
+            changeActivity(activityCode);
+        }catch (Exception e){
+
+        }
     }
 }

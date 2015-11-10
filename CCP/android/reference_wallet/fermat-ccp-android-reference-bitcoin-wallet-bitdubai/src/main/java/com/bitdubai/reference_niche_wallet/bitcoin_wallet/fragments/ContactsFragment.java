@@ -82,9 +82,11 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  * Created by Matias Furszyfer on 19/07/15.
  */
 
-public class ContactsFragment extends FermatWalletFragment implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler,CreateContactDialogCallback {
+public class ContactsFragment extends FermatWalletFragment implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler,CreateContactDialogCallback, View.OnClickListener {
 
 
+    static final int ID_BTN_EXTRA_USER = 12;
+    static final int ID_BTN_INTRA_USER = 23;
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_LOAD_IMAGE = 2;
@@ -209,10 +211,13 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         ImageView itemIcon = new ImageView(getActivity());
         itemIcon.setImageResource(R.drawable.ic_action_add_person_grey);
         SubActionButton button1 = itemBuilder.setContentView(itemIcon).build();
+        button1.setId(ID_BTN_EXTRA_USER);
+
 
         ImageView itemIcon2 = new ImageView(getActivity());
         itemIcon2.setImageResource(R.drawable.ic_action_add_person_grey);
         SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
+        button2.setId(ID_BTN_INTRA_USER);
 
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .addSubActionView(button1)
@@ -220,6 +225,9 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                         // ...
                 .attachTo(actionButton)
                 .build();
+
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
 
     }
 
@@ -442,7 +450,19 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 
+    @Override
+    public void onClick(View v) {
 
+        int id = v.getId();
+
+        if(id == ID_BTN_EXTRA_USER){
+                walletContact = new WalletContact();
+                walletContact.setName("");
+                lauchCreateContactDialog(false);
+        }else if (id == ID_BTN_INTRA_USER){
+            Toast.makeText(getActivity(),"abro el intra user",Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     /**
