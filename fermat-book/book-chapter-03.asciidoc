@@ -57,7 +57,7 @@ TIP: Following in this chapter the description of each platform and each layer w
 
 image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
   
-=== Continue Reading ...
+=== _Continue Reading ..._
 link:book-chapter-04.asciidoc[Next Chapter]
 
 link:book-chapter-02.asciidoc[Previous Chapter]
