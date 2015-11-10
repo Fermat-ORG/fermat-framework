@@ -48,7 +48,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
+        Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
         View rowView = convertView;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         try {

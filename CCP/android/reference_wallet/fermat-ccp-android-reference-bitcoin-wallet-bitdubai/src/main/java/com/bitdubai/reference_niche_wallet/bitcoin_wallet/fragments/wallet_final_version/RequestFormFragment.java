@@ -153,7 +153,7 @@ public class RequestFormFragment extends FermatWalletFragment implements View.On
         try {
             imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
         }catch (Exception e){
-            Picasso.with(getActivity()).load(R.drawable.profile_image).into(imageView_contact);
+            imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(),R.drawable.profile_image));
         }
         contactName.setText(cryptoWalletWalletContact.getActorName());
     }
