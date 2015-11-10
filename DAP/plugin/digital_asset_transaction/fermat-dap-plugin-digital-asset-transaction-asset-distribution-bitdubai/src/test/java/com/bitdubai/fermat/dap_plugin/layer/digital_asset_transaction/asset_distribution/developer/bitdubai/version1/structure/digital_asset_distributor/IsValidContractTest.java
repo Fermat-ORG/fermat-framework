@@ -3,7 +3,6 @@ package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_dis
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.sql.Timestamp;
@@ -30,7 +29,8 @@ public class IsValidContractTest {
         System.out.println("Timestamp from ContractProperty: "+expirationDate);
 
     }
-
+//Comment by Luis Campo
+    //Generate errors runnig testCoverage
     /*@Test
     public void afterTest(){
         Timestamp expirationDate= (Timestamp)datePropertySetAsActual.getValue();

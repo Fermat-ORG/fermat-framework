@@ -1,7 +1,7 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.received_new_digital_asset_metadata_notification_event_handler;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -14,8 +14,10 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dist
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.ReceivedNewDigitalAssetMetadataNotificationEventHandler;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +27,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 /**
@@ -46,8 +48,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationHandleEventTest {
     @Mock
     private  FermatEventListener fermatEventListener5;
 
-    @Mock
-    private  FermatEvent fermatEvent;
+    private ReceivedNewDigitalAssetMetadataNotificationEvent fermatEvent;
     @Mock
     private ErrorManager errorManager;
     private UUID pluginId;
@@ -58,10 +59,15 @@ public class ReceivedNewDigitalAssetMetadataNotificationHandleEventTest {
     private DatabaseFactory mockDatabaseFactory;
     private Database database = Mockito.mock(Database.class);
     private AssetDistributionDao assetDistributionDao = Mockito.mock(AssetDistributionDao.class);
-    private ReceivedNewDigitalAssetMetadataNotificationEventHandler receivedNewDigitalAssetMetadataNotificationEventHandler = Mockito.mock(ReceivedNewDigitalAssetMetadataNotificationEventHandler.class);
+    private ReceivedNewDigitalAssetMetadataNotificationEventHandler receivedNewDigitalAssetMetadataNotificationEventHandler;
 
     @Before
     public void init() throws Exception {
+        receivedNewDigitalAssetMetadataNotificationEventHandler = new ReceivedNewDigitalAssetMetadataNotificationEventHandler();
+        EventType eventType = EventType.getByCode(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS.getCode());
+        fermatEvent = new ReceivedNewDigitalAssetMetadataNotificationEvent(eventType);
+        EventSource eventSource = EventSource.getByCode(EventSource.ASSETS_OVER_BITCOIN_VAULT.getCode());
+        fermatEvent.setSource(eventSource);
         pluginId = UUID.randomUUID();
         assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
         receivedNewDigitalAssetMetadataNotificationEventHandler.setAssetDistributionRecorderService(assetDistributionRecorderService);
@@ -85,10 +91,12 @@ public class ReceivedNewDigitalAssetMetadataNotificationHandleEventTest {
     @Test
     public void handleEventThrowCantSaveEventException () throws FermatException {
         assetDistributionRecorderService.start();
+
         try {
             receivedNewDigitalAssetMetadataNotificationEventHandler.handleEvent(null);
+            fail("The method didn't throw when I expected it to");
         }catch (Exception ex) {
-            assertThat(ex).isInstanceOf(CantSaveEventException.class);
+            Assert.assertTrue(ex instanceof CantSaveEventException);
         }
     }
 
@@ -96,10 +104,12 @@ public class ReceivedNewDigitalAssetMetadataNotificationHandleEventTest {
     public void handleEventThrowTransactionServiceNotStartedException () throws FermatException {
         assetDistributionRecorderService.start();
         assetDistributionRecorderService.stop();
+
         try {
             receivedNewDigitalAssetMetadataNotificationEventHandler.handleEvent(null);
+            fail("The method didn't throw when I expected it to");
         }catch (Exception ex) {
-            assertThat(ex).isInstanceOf(TransactionServiceNotStartedException.class);
+            Assert.assertTrue(ex instanceof TransactionServiceNotStartedException);
         }
     }
 }

@@ -476,30 +476,30 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         // la direccion a traves del sendCryptoAddress del network service.
     }
 
-    public CryptoAddress getGenesisAddress(UUID requestId) throws CantGetGenesisAddressException {
-        try {
-            CryptoAddressRequest request = cryptoAddressesNetworkServiceManager.getPendingRequest(requestId);
-
-//            System.out.println("La BlockChain es: " + blockchainNetworkType);
-            CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(request.getBlockchainNetworkType());
-
-//            System.out.println("========================================================================");
-//            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
-            registerGenesisAddressInCryptoAddressBook(genesisAddress);
-            cryptoAddressesNetworkServiceManager.acceptAddressExchangeRequest(requestId, genesisAddress);
-        } catch (GetNewCryptoAddressException exception) {
-            throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
-        } catch (PendingRequestNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantGetPendingAddressExchangeRequestException e) {
-            e.printStackTrace();
-        } catch (CantRegisterCryptoAddressBookRecordException e) {
-            e.printStackTrace();
-        } catch (CantAcceptAddressExchangeRequestException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    public CryptoAddress getGenesisAddress(UUID requestId) throws CantGetGenesisAddressException {
+//        try {
+//            CryptoAddressRequest request = cryptoAddressesNetworkServiceManager.getPendingRequest(requestId);
+//
+////            System.out.println("La BlockChain es: " + blockchainNetworkType);
+//            CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(request.getBlockchainNetworkType());
+//
+////            System.out.println("========================================================================");
+////            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
+//            registerGenesisAddressInCryptoAddressBook(genesisAddress);
+//            cryptoAddressesNetworkServiceManager.acceptAddressExchangeRequest(requestId, genesisAddress);
+//        } catch (GetNewCryptoAddressException exception) {
+//            throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
+//        } catch (PendingRequestNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (CantGetPendingAddressExchangeRequestException e) {
+//            e.printStackTrace();
+//        } catch (CantRegisterCryptoAddressBookRecordException e) {
+//            e.printStackTrace();
+//        } catch (CantAcceptAddressExchangeRequestException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     @Override
     public void handleDeliveredCryptoAddresFromRemoteAssetUserEvent(ActorAssetUser actorAssetUser, CryptoAddress cryptoAddress) {
@@ -542,26 +542,26 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
     @Override
     public void handleRequestCryptoAddresFromRemoteAssetUserEvent(ActorAssetIssuer actorAssetIssuer, ActorAssetUser actorAssetUser) {
-        try {
-            System.out.println("=============Actor Asset Inicia Peticion Crypto=========");
-            CryptoAddress genesisAddress = getGenesisAddress(UUID.randomUUID());
-            registerGenesisAddressInCryptoAddressBook(genesisAddress);
-            System.out.println("=====Actor Asset Registrando Crypto Local y Enviando======");
-            this.assetUserActorDao.createNewAssetUser(actorAssetUser);
-            this.assetUserActorNetworkServiceManager.sendCryptoAddress(actorAssetUser, actorAssetIssuer, genesisAddress);
-            System.out.println("=============Actor Asset User envio Crypto================");
-            System.out.println("Actor Asset User: " + actorAssetUser.getName());
-            System.out.println("Actor Asset Crypto Address " + actorAssetUser.getCryptoAddress().getAddress());
-            System.out.println("***************************************************************");
-        } catch (CantGetGenesisAddressException e) {
-            e.printStackTrace();
-        } catch (CantRegisterCryptoAddressBookRecordException e) {
-            e.printStackTrace();
-        } catch (CantSendCryptoAddressException e) {
-            e.printStackTrace();
-        } catch (CantAddPendingAssetUserException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            System.out.println("=============Actor Asset Inicia Peticion Crypto=========");
+//            CryptoAddress genesisAddress = getGenesisAddress(UUID.randomUUID());
+//            registerGenesisAddressInCryptoAddressBook(genesisAddress);
+//            System.out.println("=====Actor Asset Registrando Crypto Local y Enviando======");
+//            this.assetUserActorDao.createNewAssetUser(actorAssetUser);
+//            this.assetUserActorNetworkServiceManager.sendCryptoAddress(actorAssetUser, actorAssetIssuer, genesisAddress);
+//            System.out.println("=============Actor Asset User envio Crypto================");
+//            System.out.println("Actor Asset User: " + actorAssetUser.getName());
+//            System.out.println("Actor Asset Crypto Address " + actorAssetUser.getCryptoAddress().getAddress());
+//            System.out.println("***************************************************************");
+//        } catch (CantGetGenesisAddressException e) {
+//            e.printStackTrace();
+//        } catch (CantRegisterCryptoAddressBookRecordException e) {
+//            e.printStackTrace();
+//        } catch (CantSendCryptoAddressException e) {
+//            e.printStackTrace();
+//        } catch (CantAddPendingAssetUserException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException {
@@ -593,7 +593,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                 System.out.println("Actor Asset Name: " + actorAssetUser.getName());
 //                System.out.println("Actor Asset GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
                 System.out.println("**********************************************************");
-//                this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record, ConnectionState.CONNECTED,record.getCryptoAddress());
+                this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record, ConnectionState.CONNECTED,record.getCryptoAddress());
             }
 
         } catch (CantAddPendingAssetUserException e) {
