@@ -324,6 +324,12 @@ public class BitcoinCryptoNetworkDatabaseDao {
         }
 
         /**
+         * If I didn't get anything, I will return null
+         */
+        if (databaseTable.getRecords().isEmpty())
+            return null;
+
+        /**
          * Since Im ordering by update date, I will only get the fist record retrieved to form the crypto status
          */
         DatabaseTableRecord record = databaseTable.getRecords().get(0);
