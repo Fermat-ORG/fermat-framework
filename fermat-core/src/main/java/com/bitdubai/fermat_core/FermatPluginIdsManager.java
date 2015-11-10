@@ -120,8 +120,11 @@ public final class FermatPluginIdsManager {
         try {
 
             final UUID newId = UUID.randomUUID();
-            savePluginIdsFile(getPluginIdsFile());
+
             pluginIdsMap.put(plugin, newId);
+
+            savePluginIdsFile(getPluginIdsFile());
+
             return newId;
 
         } catch(final CantPersistFileException |
