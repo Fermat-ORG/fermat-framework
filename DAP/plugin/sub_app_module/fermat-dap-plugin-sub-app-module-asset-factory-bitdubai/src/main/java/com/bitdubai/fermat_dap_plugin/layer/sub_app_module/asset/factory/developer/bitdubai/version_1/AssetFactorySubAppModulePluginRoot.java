@@ -145,7 +145,7 @@ public class AssetFactorySubAppModulePluginRoot implements DealsWithAssetFactory
 
     @Override
     public void publishAsset(AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException {
-        assetFactorySupAppModuleManager.publishAssetFactory(assetFactory, blockchainNetworkType);
+        assetFactorySupAppModuleManager.publishAssetFactory(assetFactory, BlockchainNetworkType.DEFAULT);
     }
 
     @Override
