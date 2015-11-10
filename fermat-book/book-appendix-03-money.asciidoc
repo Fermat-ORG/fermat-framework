@@ -19,8 +19,9 @@ TIP: Taking Bitcoin as "the" paradigmatic model of every cryptocurrency, we need
 * A decentralized mathematical and deterministic currency issuance (distributed mining) +
 * A decentralized transaction verification system (transaction script) +
 
-
+image::https://github.com/bitDubai/media-kit/blob/master/BACKGROUND/FermatBitCoins/Bitcoin.jpg[FermatCoin, 600, 337]
 :numbered!:
+
 === _Continue Reading ..._
 
 link:book-chapter-00(intro).asciidoc[Back to Intro]
