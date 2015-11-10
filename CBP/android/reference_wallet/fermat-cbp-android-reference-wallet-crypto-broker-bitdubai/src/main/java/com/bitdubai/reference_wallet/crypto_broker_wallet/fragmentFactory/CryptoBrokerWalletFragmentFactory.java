@@ -39,6 +39,7 @@ public class CryptoBrokerWalletFragmentFactory extends FermatWalletFragmentFacto
     public FermatWalletFragment getFermatFragment(CryptoBrokerWalletFragmentsEnumType fragment) throws FragmentNotFoundException {
 
 
+
         if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB)
             return OpenNegotiationsTabFragment.newInstance();
         if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB)
