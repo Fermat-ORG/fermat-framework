@@ -69,6 +69,8 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("ComponentRegistrationRequestPacketProcessor - processingPackage");
         String packetContentJsonStringRepresentation = null;
+        NetworkServiceType networkServiceTypeApplicant = null;
+        PlatformComponentProfile platformComponentProfileToRegister = null;
 
         try {
             
@@ -82,8 +84,8 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
              * Construct the json object
              */
             JsonObject contentJsonObject = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
-            NetworkServiceType networkServiceTypeApplicant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString(), NetworkServiceType.class);
-            PlatformComponentProfile platformComponentProfileToRegister = new PlatformComponentProfileCommunication().fromJson(contentJsonObject.get(JsonAttNamesConstants.PROFILE_TO_REGISTER).getAsString());
+            networkServiceTypeApplicant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString(), NetworkServiceType.class);
+            platformComponentProfileToRegister = new PlatformComponentProfileCommunication().fromJson(contentJsonObject.get(JsonAttNamesConstants.PROFILE_TO_REGISTER).getAsString());
 
             /*
              * Switch between platform component type
@@ -123,6 +125,8 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
              * Construct the json object
              */
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            packetContent.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
+            packetContent.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToRegister.toJson());
             packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in registration component: "+e.getMessage());
 
             /*

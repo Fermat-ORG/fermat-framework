@@ -23,7 +23,9 @@
     <application
         android:name="com.bitdubai.android_core.app.ApplicationSession"
         android:allowBackup="true"
-        android:largeHeap="true">
+        android:largeHeap="true"
+        android:icon="@drawable/ic_launcher"
+        >
 
 
         <!-- Google Maps Fragment API Key Data -->
