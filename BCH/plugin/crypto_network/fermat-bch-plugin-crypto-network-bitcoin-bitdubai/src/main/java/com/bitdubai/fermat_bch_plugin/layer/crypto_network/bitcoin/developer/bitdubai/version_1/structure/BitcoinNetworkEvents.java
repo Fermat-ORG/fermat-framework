@@ -418,8 +418,35 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
          * Register the new incoming transaction into the database
          */
         try {
-            getDao().saveNewIncomingTransaction(tx.getHashAsString(),
-                    getTransactionCryptoStatus(tx),
+            /**
+             * The Transaction might be in OnBlockChain status because it was confirmed while I was sleep.
+             * If this is the case, I will create a new transaction for onCryptoStatus to follow the procedure
+             */
+            String txHash = tx.getHashAsString();
+            CryptoStatus cryptoStatus = getTransactionCryptoStatus(tx);
+            if (cryptoStatus == CryptoStatus.ON_BLOCKCHAIN){
+                /**
+                 * I get a store crypto Status for this transaction (if one exsits)
+                 */
+                CryptoStatus storedCryptoStatus = getDao().getStoredTransactionCryptoStatus(TransactionTypes.INCOMING, txHash);
+                if (storedCryptoStatus == null){
+                    /**
+                     * If no other cryptoStatus exists, means that I need to create a new transaction for the
+                     * OnBlockChain CryptoStatus
+                     */
+                    try{
+                        saveMissingIncomingTransaction(wallet, tx, CryptoStatus.ON_CRYPTO_NETWORK);
+                    } catch (CantExecuteDatabaseOperationException e){
+                        e.printStackTrace(); //I will continue to at least save the incoming transaction.
+                    }
+                }
+            }
+
+            /**
+             * saves into database the incoming transaction
+             */
+            getDao().saveNewIncomingTransaction(txHash,
+                    cryptoStatus,
                     tx.getConfidence().getDepthInBlocks(),
                     getIncomingTransactionAddressTo(wallet, tx),
                     getIncomingTransactionAddressFrom(tx),
@@ -447,6 +474,23 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 e1.printStackTrace();
             }
         }
+    }
+
+    /**
+     * saves into the database any missed transaction with the corresponding CryptoStatus.
+     * @param wallet
+     * @param tx
+     * @param missedCryptoStatus
+     */
+    private void saveMissingIncomingTransaction(Wallet wallet, Transaction tx, CryptoStatus missedCryptoStatus) throws CantExecuteDatabaseOperationException {
+        getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                missedCryptoStatus,
+                tx.getConfidence().getDepthInBlocks(),
+                getIncomingTransactionAddressTo(wallet, tx),
+                getIncomingTransactionAddressFrom(tx),
+                getIncomingTransactionValue(wallet, tx),
+                getTransactionOpReturn(tx),
+                ProtocolStatus.TO_BE_NOTIFIED);
     }
 
 

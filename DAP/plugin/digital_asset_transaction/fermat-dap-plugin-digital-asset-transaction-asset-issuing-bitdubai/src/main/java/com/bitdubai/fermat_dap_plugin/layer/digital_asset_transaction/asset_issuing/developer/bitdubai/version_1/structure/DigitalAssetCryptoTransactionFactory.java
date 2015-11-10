@@ -648,7 +648,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.cryptoAddressBookManager.registerCryptoAddress(genesisAddress,
                 "testDeliveredByActorPublicKey",
                 Actors.INTRA_USER,
-                this.actorToPublicKey,
+                "AssetIssuerPublicKey",
                 Actors.DAP_ASSET_ISSUER,
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 VaultType.ASSET_VAULT,

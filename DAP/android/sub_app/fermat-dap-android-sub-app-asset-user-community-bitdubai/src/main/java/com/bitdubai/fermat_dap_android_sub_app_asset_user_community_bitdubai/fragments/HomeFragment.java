@@ -24,6 +24,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.ada
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 
@@ -95,7 +96,13 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        onRefresh();
+        if (swipeRefresh != null)
+            swipeRefresh.post(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+                }
+            });
     }
 
     @Override
@@ -149,6 +156,8 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
+            if (swipeRefresh != null)
+                swipeRefresh.setRefreshing(true);
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -186,11 +195,17 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
         }
     }
 
-    private synchronized List<ActorAssetUser> getMoreData() throws Exception {
-        List<ActorAssetUser> dataSet = null;
+    private synchronized List<Actor> getMoreData() throws Exception {
+        List<Actor> dataSet = new ArrayList<>();
+        List<AssetUserActorRecord> result = null;
         if (manager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
-        dataSet = manager.getAllActorAssetUserRegistered();
+        result = manager.getAllActorAssetUserRegistered();
+        if (result != null && result.size() > 0) {
+            for (AssetUserActorRecord record : result) {
+                dataSet.add((new Actor(record)));
+            }
+        }
         return dataSet;
     }
 }

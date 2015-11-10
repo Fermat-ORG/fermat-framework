@@ -1987,7 +1987,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("bitDubai bitcoin Wallet");
+        runtimeTitleBar.setLabel("Bitcoin wallet");
         runtimeTitleBar.setLabelSize(16);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);

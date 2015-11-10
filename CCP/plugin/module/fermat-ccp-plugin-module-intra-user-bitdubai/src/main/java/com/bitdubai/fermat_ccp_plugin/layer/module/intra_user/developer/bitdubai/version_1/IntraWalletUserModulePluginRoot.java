@@ -289,18 +289,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     public List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws CantGetIntraUsersListException {
 
         try {
-
-            List<IntraUserInformation>  intraUserInformationList = new ArrayList<IntraUserInformation>();
-
-            List<IntraUserInformation> intraUserList =  this.intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
-
-            for (IntraUserInformation intraUser : intraUserList) {
-
-                //byte[] image = intraUser.getProfileImage();
-                intraUserInformationList.add(new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(), intraUser.getProfileImage()));
-            }
-
-            return intraUserInformationList;
+            return  intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
         }
         catch (ErrorSearchingSuggestionsException e) {
             throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
