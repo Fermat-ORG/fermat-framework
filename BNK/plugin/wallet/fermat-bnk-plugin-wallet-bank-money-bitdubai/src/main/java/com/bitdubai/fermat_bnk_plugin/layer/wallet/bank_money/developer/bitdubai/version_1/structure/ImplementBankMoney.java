@@ -10,7 +10,6 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTr
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoney;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalance;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalanceRecord;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransaction;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionSummary;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.database.BankMoneyWalletDao;
@@ -27,20 +26,17 @@ public class ImplementBankMoney implements BankMoney, BankMoneyBalance {
 
     PluginDatabaseSystem databaseSystem;
     BankMoneyWalletDao bankMoneyWalletDao= new BankMoneyWalletDao(databaseSystem);
-    BankMoneyManager bankMoneyManager;
-    BankMoney bankMoney;
+
 
 
     @Override
     public BankMoneyBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
-      // return bankMoneyWalletDao.getBalanceType(balanceType);
-        return bankMoneyManager.getTransactionsBankMoney().get(0).getBookBalance(balanceType.BOOK);
+        return (BankMoneyBalance) bankMoneyWalletDao.getBalanceType(balanceType.BOOK);
     }
 
     @Override
     public BankMoneyBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
-        balanceType=bankMoneyWalletDao.getBalanceType(balanceType).get(0).getBalanceType();
-        return bankMoney.getBookBalance(balanceType);
+        return (BankMoneyBalance) bankMoneyWalletDao.getBalanceType(balanceType.AVAILABLE);
     }
 
     @Override

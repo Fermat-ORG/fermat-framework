@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionBankMoneyException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoney;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalance;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalanceRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransaction;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantAddBankMoneyException;
@@ -22,6 +22,7 @@ import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetCurrentBalanceException;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyWalletDatabaseException;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.BankMoneyBalanceList;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.TransactionBankMoney;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class BankMoneyWalletDao {
     /**
      *
      */
-    BankMoney bankMoney;
+
 
 
     public BankMoneyWalletDao (PluginDatabaseSystem pluginDatabaseSystem){
@@ -215,12 +216,12 @@ public class BankMoneyWalletDao {
             return Double.valueOf(getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME));
     }
 
-    public List<BankMoneyTransaction> getBalanceType(BalanceType balanceType) throws CantTransactionBankMoneyException {
+    public List<BankMoneyBalance> getBalanceType(BalanceType balanceType) throws CantTransactionBankMoneyException {
        try {
             DatabaseTable table = database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_TABLE_NAME);
             table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BALANCE_TYPE_COLUMN_NAME,balanceType.getCode(),DatabaseFilterType.EQUAL);
             table.loadToMemory();
-            return createTransactionList(table.getRecords());
+            return createBankMoneyBalanceList(table.getRecords());
         } catch (CantLoadTableToMemoryException e) {
             throw new CantTransactionBankMoneyException(CantTransactionBankMoneyException.DEFAULT_MESSAGE,e,"","");
         }
@@ -270,6 +271,14 @@ public class BankMoneyWalletDao {
 
         return list;
     }
+    private List<BankMoneyBalance> createBankMoneyBalanceList(Collection<DatabaseTableRecord> records){
+        List<BankMoneyBalance> list = new ArrayList<>();
+
+        for(DatabaseTableRecord record : records)
+            list.add(constructBankMoneyBalanceList(record));
+
+        return list;
+    }
 
     private BankMoneyTransaction constructTransactionBankMoney(DatabaseTableRecord record){
 
@@ -310,5 +319,42 @@ public class BankMoneyWalletDao {
                 memo,
                 status);
     }
+    private BankMoneyBalance constructBankMoneyBalanceList(DatabaseTableRecord record){
 
+        UUID bankTransactionId                   =record.getUUIDValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME);
+        String publicKeyActorFrom                =record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
+        String publicKeyActorTo                  =record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME);
+        String balanceType                       =record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BALANCE_TYPE_COLUMN_NAME);
+        String transactionType                   =record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME);
+        double amount                            =record.getDoubleValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_AMOUNT_COLUMN_NAME);
+        String bankCurrencyType                  =record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_CURRENCY_TYPE_COLUMN_NAME);
+        String bankOperationType                 =record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_OPERATION_TYPE_COLUMN_NAME);
+        String bankDocumentReference             =record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_DOCUMENT_REFERENCE_COLUMN_NAME);
+        String bankName                          =record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN_NAME);
+        String bankAccountNumber                 =record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
+        String bankAccountType                   =record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_TYPE_COLUMN_NAME);
+        long runningBookBalance                  =record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME);
+        long runningAvailableBalance             =record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
+        long timestamp                           =record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TIMESTAMP_COLUMN_NAME);
+        String getMemo                           =record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_MEMO_COLUMN_NAME);
+
+
+        return  new BankMoneyBalanceList(
+                bankTransactionId,
+        publicKeyActorFrom,
+        publicKeyActorTo,
+        balanceType,
+        transactionType,
+        amount,
+        bankCurrencyType,
+        bankOperationType,
+        bankDocumentReference,
+        bankName,
+        bankAccountNumber,
+        bankAccountType,
+        runningBookBalance,
+        runningAvailableBalance,
+        timestamp,
+        getMemo);
+    }
 }
