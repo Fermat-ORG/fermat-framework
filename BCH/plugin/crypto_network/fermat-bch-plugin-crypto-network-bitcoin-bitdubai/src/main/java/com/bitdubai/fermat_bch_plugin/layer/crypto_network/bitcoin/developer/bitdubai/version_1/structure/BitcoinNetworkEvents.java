@@ -91,7 +91,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onTransaction(Peer peer, Transaction t) {
-
+        System.out.println("Transaction on Crypto Network 2:" + t.toString());
     }
 
     @Nullable

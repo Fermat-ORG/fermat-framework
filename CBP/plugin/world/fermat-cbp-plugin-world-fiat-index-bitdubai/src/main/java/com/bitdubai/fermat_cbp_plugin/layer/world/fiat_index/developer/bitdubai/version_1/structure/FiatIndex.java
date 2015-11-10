@@ -1,62 +1,35 @@
 package com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.world.Index;
 
 /**
  * Created by jorge on 30-10-2015.
+ * Modified by Alex on 11/8/2015.
  */
 public class FiatIndex implements Index {
 
-    private FiatCurrencyType currencyType;
-    private FiatCurrencyType referenceCurrency;
+    private FiatCurrency currency;
+    private FiatCurrency referenceCurrency;
     double salePrice;
     double purchasePrice;
     long timestamp;
 
-    public FiatIndex(FiatCurrencyType currencyType) {
-        this.currencyType = currencyType;
-        this.referenceCurrency = FiatCurrencyType.US_DOLLAR;
-    }
-
-
-    public FiatIndex(FiatCurrencyType currencyType, FiatCurrencyType referenceCurrency) {
-        this.currencyType = currencyType;
+    public FiatIndex(FiatCurrency currencyType, FiatCurrency referenceCurrency, double salePrice, double purchasePrice, long timestamp) {
+        this.currency = currencyType;
         this.referenceCurrency = referenceCurrency;
-    }
-
-    @Override
-    public void setCurrency(FiatCurrencyType currency) {
-        this.currencyType = currency;
-    }
-
-    @Override
-    public void setReferenceCurrency(FiatCurrencyType currency) {
-        this.referenceCurrency = currency;
-    }
-
-    @Override
-    public void setSalePrice(double salePrice) {
         this.salePrice = salePrice;
-    }
-
-    @Override
-    public void setPurchasePrice(double purchasePrice) {
         this.purchasePrice = purchasePrice;
-    }
-
-    @Override
-    public void setTimeStamp(long timestamp) {
         this.timestamp = timestamp;
     }
 
     @Override
-    public FiatCurrencyType getCurrency() {
-        return currencyType;
+    public FiatCurrency getCurrency() {
+        return currency;
     }
 
     @Override
-    public FiatCurrencyType getReferenceCurrency() {
+    public FiatCurrency getReferenceCurrency() {
         return referenceCurrency;
     }
 
@@ -71,7 +44,7 @@ public class FiatIndex implements Index {
     }
 
     @Override
-    public long getTimeStamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 }

@@ -371,9 +371,9 @@ public class AssetUserActorDao implements Serializable {
                     }
                 }
             }
-            if(actorAssetUserRecord.isEmpty()){
-                this.updateActorAssetUserActorNetworService(ConnectionState.DISCONNECTED_REMOTELY);
-            }
+//            if(actorAssetUserRecord.isEmpty()){
+//                this.updateActorAssetUserActorNetworService(ConnectionState.DISCONNECTED_REMOTELY);
+//            }
             database.closeDatabase();
         } catch (CantInsertRecordException e) {
             throw new CantAddPendingAssetUserException("CAN'T INSERT ASSET USER REGISTERED IN ACTOR NETWORK SERVICE", e, "", "Cant create new ASSET USER REGISTERED IN ACTOR NETWORK SERVICE, insert database problems.");
@@ -811,24 +811,27 @@ public class AssetUserActorDao implements Serializable {
 
     private ActorAssetUser addRecords(List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetAssetUserActorProfileImageException {
         AssetUserActorRecord actorAssetUser = null;
+
         for (DatabaseTableRecord record : records) {
             CryptoAddress cryptoAddress = null;
             if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
-                cryptoAddress = new CryptoAddress(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME),
-                        CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME)));
+                cryptoAddress = new CryptoAddress(
+                                                        record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME       ),
+                        CryptoCurrency.getByCode(       record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME))    );
             }
 
-            actorAssetUser = new AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME),
-                    record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NAME_COLUMN_NAME),
-                    record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_AGE_COLUMN_NAME),
-                    Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GENDER_COLUMN_NAME)),
-                    ConnectionState.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CONNECTION_STATE_COLUMN_NAME)),
-                    record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LATITUDE_COLUMN_NAME),
-                    record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LONGITUDE_COLUMN_NAME),
+            actorAssetUser = new AssetUserActorRecord(
+                                                        record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME           ),
+                                                        record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_NAME_COLUMN_NAME                 ),
+                                                        record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_AGE_COLUMN_NAME                  ),
+                    Genders.getByCode(                  record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_GENDER_COLUMN_NAME)              ),
+                    ConnectionState.getByCode(          record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_CONNECTION_STATE_COLUMN_NAME)    ),
+                                                        record.getDoubleValue(  AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LATITUDE_COLUMN_NAME    ),
+                                                        record.getDoubleValue(  AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LONGITUDE_COLUMN_NAME   ),
                     cryptoAddress,
-                    record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME),
-                    record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME),
-                    getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME)));
+                                                        record.getLongValue(    AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME    ),
+                                                        record.getLongValue(    AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME ),
+                    getAssetUserProfileImagePrivateKey( record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME))         );
         }
         return actorAssetUser;
     }
@@ -837,23 +840,32 @@ public class AssetUserActorDao implements Serializable {
 
         for (DatabaseTableRecord record : records) {
             CryptoAddress cryptoAddress = null;
-            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
-                cryptoAddress = new CryptoAddress(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
-                        CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
-
-                list.add(new AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
-                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NAME_COLUMN_NAME),
-                        getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),
-                        record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
-                        record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME)));
-            }else {
-
-                list.add(new AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
-                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NAME_COLUMN_NAME),
-                        getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),
-                        record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
-                        record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME)));
+            if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
+                cryptoAddress = new CryptoAddress(
+                                                            record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME        ),
+                        CryptoCurrency.getByCode(           record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME))     );
             }
+
+                list.add(new AssetUserActorRecord(
+                                                            record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME            ),
+                                                            record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NAME_COLUMN_NAME                  ),
+                                                            record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_AGE_COLUMN_NAME                   ),
+                        Genders.getByCode(                  record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME)               ),
+                        ConnectionState.getByCode(          record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME)     ),
+                                                            record.getDoubleValue(  AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME    ),
+                                                            record.getDoubleValue(  AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME    ),
+                        cryptoAddress,
+                                                            record.getLongValue(    AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME     ),
+                                                            record.getLongValue(    AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME  ),
+                        getAssetUserProfileImagePrivateKey( record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)))         );
+
+
+//                list.add(new AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
+//                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NAME_COLUMN_NAME),
+//                        getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),
+//                        record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
+//                        record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME)));
+
         }
     }
 
