@@ -750,7 +750,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         // put tabs font
         if (pagerSlidingTabStrip != null) {
-            pagerSlidingTabStrip.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/roboto.ttf"), 1);
+            pagerSlidingTabStrip.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf"), 1);
         }
     }
 
