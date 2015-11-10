@@ -1,5 +1,5 @@
 :numbered!: 
-https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/logo_fermat_3.png
+https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/logo_fermat_3.png[FermatLogo]
 == Chapter 10: Fermat Money Management
 
 Monetary transactions in Fermat are handled separating the *transport of value* (that follows an specific _workflow_) from the accountancy of the money, and this all is separated from the transmission of the aditional information of the transaction ( the meta data ). +

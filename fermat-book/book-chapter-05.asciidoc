@@ -1,6 +1,6 @@
 :numbered!:
 
-image::https://github.com/bitDubai/media-kit/tree/master/Readme%20Image/Coins/BCH.jpg[BlockChain]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/BCH.jpg[BlockChain]
 
 == Chapter 5: Fermat BlockChain Superlayer
 This superlayer provides the entire Fermat multiplatform system the necessary functionalities to manage *blockchain technology*: connecting to the _crypto networks_, reading the _transactions_, "storing" the value related to Fermat end user's transactions, etc.
