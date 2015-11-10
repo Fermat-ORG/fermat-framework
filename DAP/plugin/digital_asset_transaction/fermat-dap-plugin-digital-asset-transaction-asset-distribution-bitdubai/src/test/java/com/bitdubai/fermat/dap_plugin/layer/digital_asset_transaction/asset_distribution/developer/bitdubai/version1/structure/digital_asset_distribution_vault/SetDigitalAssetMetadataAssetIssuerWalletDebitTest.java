@@ -1,7 +1,6 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.digital_asset_distribution_vault;
 
 import com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.mocks.MockDigitalAssetMetadataForTesting;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -26,9 +25,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -94,10 +90,7 @@ public class SetDigitalAssetMetadataAssetIssuerWalletDebitTest {
     public void setDigitalAssetMetadataAssetIssuerWalletDebitSuccesFullTest() throws Exception {
         System.out.println("Test method setDigitalAssetMetadataAssetIssuerWalletDebitSuccesFullTest()");
 
-        catchException(mockDigitalAssetDistributionVault).setDigitalAssetMetadataAssetIssuerWalletDebit(digitalAssetMetadata, genesisTransaction, typeBalance);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNull();
+        mockDigitalAssetDistributionVault.setDigitalAssetMetadataAssetIssuerWalletDebit(digitalAssetMetadata, genesisTransaction, typeBalance);
     }
 
 

@@ -28,6 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -154,7 +154,7 @@ public class GetDatabaseListTest {
         System.out.println("Test AssetDistributionPluginRoot.getDatabaseList()");
         assetDistributionPluginRoot.start();
         List<DeveloperDatabase> list = assetDistributionPluginRoot.getDatabaseList(developerObjectFactory);
-        assertThat(list).isNotNull();
-        assertThat(list).isNotEmpty();
+        Assert.assertNotNull(list);
+        Assert.assertTrue(!list.isEmpty());
     }
 }

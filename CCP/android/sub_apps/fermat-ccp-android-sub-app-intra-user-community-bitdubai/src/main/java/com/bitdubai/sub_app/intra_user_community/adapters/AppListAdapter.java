@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.intra_user_community.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -38,12 +39,9 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUse
         protected void bindHolder(IntraUserInformationHolder holder, IntraUserInformation data, int position) {
 
             holder.name.setText(data.getName());
-
             byte[] profileImage = data.getProfileImage();
             if (profileImage != null) {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPurgeable = true;
-                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length, options);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
                 holder.thumbnail.setImageBitmap(bitmap);
             }
         }

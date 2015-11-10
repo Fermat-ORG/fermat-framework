@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -85,6 +86,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     ReferenceWalletSession referenceWalletSession;
 
+    private Typeface tf;
 
 
     public static ReceiveTransactionFragment2 newInstance() {
@@ -94,6 +96,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
 
         setHasOptionsMenu(true);
 
@@ -160,6 +164,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
 
         txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
+
+        txt_balance_amount.setTypeface(tf);
         //txt_type_balance.setTypeface(tf);
 
         //((TextView) balance_header.findViewById(R.id.txt_touch_to_change)).setTypeface(tf);
@@ -178,6 +184,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
 
+        txt_balance_amount.setTypeface(tf);
+
         txt_balance_amount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,6 +202,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 changeAmountType(txt_balance_amount);
             }
         });
+        txt_amount_type.setTypeface(tf);
 
         txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
         //txt_balance_amount.setTypeface(tf);
