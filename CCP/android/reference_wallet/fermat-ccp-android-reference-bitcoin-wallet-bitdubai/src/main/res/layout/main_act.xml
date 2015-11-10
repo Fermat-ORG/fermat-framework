@@ -2,12 +2,12 @@
 <LinearLayout
     android:id="@+id/fragment_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:background="#ffffff"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <LinearLayout
@@ -59,6 +59,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
+        android:visibility="visible"
         >
 
 
@@ -70,20 +71,37 @@
             android:layout_height="fill_parent"
             android:scrollingCache="false" />
 
-        <com.melnykov.fab.FloatingActionButton
-            android:id="@+id/fab_add_person"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="35dp"
-            android:layout_marginRight="35dp"
-
-            android:src="@drawable/ic_contact_newcontact"
-            fab:fab_colorNormal="#1173aa"
-            fab:fab_colorPressed="@color/material_blue_grey_800"
-            fab:fab_colorRipple="@color/ripple_material_dark"/>
     </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/empty_view"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img_contact_empty"
+            />
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:padding="15dp"
+            app:typeface="ROBOTO_REGULAR"
+            android:text="You don´t have\nany contact"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/color_black_light"
+            />
+
+    </LinearLayout>
 
 
 </LinearLayout>
