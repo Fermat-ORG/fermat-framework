@@ -73,16 +73,16 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
         this.poolConnectionsWaitingForResponse = new HashMap<>();
 
         //TODO: crypto address comentado porque no funciona
-        //Create a thread to send the messages
-//        this.agentThread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                while (isRunning()) {
-//                    sendCycle();
-//                    receiveCycle();
-//                }
-//            }
-//        });
+//        Create a thread to send the messages
+        this.agentThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isRunning()) {
+                    sendCycle();
+                    receiveCycle();
+                }
+            }
+        });
     }
 
     public final void start() throws CantStartAgentException {
