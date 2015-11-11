@@ -6,9 +6,12 @@
  */
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai;
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorNetworkServicePluginRoot;
@@ -20,21 +23,26 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.d
  * <p/>
  *
  * Created by Roberto Requena - (rrequena) on 17/07/15.
- *
- * @version 1.0
+ * Updated by lnacosta (laion.cj91@gmail.com) on 11/11/2015.
  */
-public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
-
-    Plugin plugin;
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
     public DeveloperBitDubai() {
-        plugin = new AssetIssuerActorNetworkServicePluginRoot();
+        super(new PluginDeveloperReference(Developers.BITDUBAI));
     }
 
     @Override
-    public Plugin getPlugin() {
-        return plugin;
+    public void start() throws CantStartPluginDeveloperException {
+        try {
+
+            this.registerVersion(new AssetIssuerActorNetworkServicePluginRoot());
+
+        } catch (CantRegisterVersionException e) {
+
+            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+        }
     }
+
 
     @Override
     public int getAmountToPay() {
@@ -48,11 +56,12 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
     @Override
     public String getAddress() {
-        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
+        return "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh";
     }
 
     @Override
     public TimeFrequency getTimePeriod() {
         return TimeFrequency.MONTHLY;
     }
+
 }
