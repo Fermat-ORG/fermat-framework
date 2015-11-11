@@ -483,6 +483,16 @@ project(':fermat-dap-android-sub-app-asset-user-community-bitdubai').projectDir 
 include ':fermat-dap-android-sub-app-redeem-point-community-bitdubai'
 project(':fermat-dap-android-sub-app-redeem-point-community-bitdubai').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-redeem-point-community-bitdubai')
 
+// android dap identities
+include ':fermat-dap-android-sub-app-asset-issuer-identity-bitdubai'
+project(':fermat-dap-android-sub-app-asset-issuer-identity-bitdubai').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-asset-issuer-identity-bitdubai')
+
+include ':fermat-dap-android-sub-app-asset-user-identity-bitdubai'
+project(':fermat-dap-android-sub-app-asset-user-identity-bitdubai').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-asset-user-identity-bitdubai')
+
+include ':fermat-dap-android-sub-app-redeem-point-identity-bitdubai'
+project(':fermat-dap-android-sub-app-redeem-point-identity-bitdubai').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-redeem-point-identity-bitdubai')
+
 // BCH
 
 include ':fermat-bch-plugin-crypto-network-bitcoin-bitdubai'
