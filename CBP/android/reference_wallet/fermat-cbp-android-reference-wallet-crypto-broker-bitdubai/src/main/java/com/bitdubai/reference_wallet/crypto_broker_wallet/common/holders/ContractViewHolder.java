@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,7 +23,7 @@ import java.text.NumberFormat;
 public class ContractViewHolder extends ChildViewHolder {
     public ImageView customerImage;
     public FermatTextView customerName;
-    public FermatTextView receivingOrSending;
+    public FermatTextView contractAction;
     public FermatTextView typeOfPayment;
     public FermatTextView lastUpdateDate;
     public FermatTextView status;
@@ -43,7 +44,7 @@ public class ContractViewHolder extends ChildViewHolder {
 
         customerImage = (ImageView) itemView.findViewById(R.id.cbw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.cbw_customer_name);
-        receivingOrSending = (FermatTextView) itemView.findViewById(R.id.cbw_receiving_or_sending);
+        contractAction = (FermatTextView) itemView.findViewById(R.id.cbw_receiving_or_sending);
         typeOfPayment = (FermatTextView) itemView.findViewById(R.id.cbw_type_of_payment);
         lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.cbw_update_date);
         status = (FermatTextView) itemView.findViewById(R.id.cbw_contract_status);
@@ -54,19 +55,19 @@ public class ContractViewHolder extends ChildViewHolder {
         ContractStatus contractStatus = itemInfo.getStatus();
         itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
         status.setText(getStatusStringRes(contractStatus));
-
-        DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getReceivingOrSendingText(contractStatus));
-        stringBuilder.append(decimalFormat.format(itemInfo.getAmount()));
-        stringBuilder.append(itemInfo.getMerchandise());
-        receivingOrSending.setText(stringBuilder.toString());
-
-        CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
-        lastUpdateDate.setText(date);
+        contractAction.setText(getContractActionDescription(itemInfo, contractStatus));
         customerName.setText(itemInfo.getCryptoCustomerAlias());
         typeOfPayment.setText(itemInfo.getTypeOfPayment());
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
+
+        CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
+        lastUpdateDate.setText(date);
+    }
+
+    @NonNull
+    private String getContractActionDescription(ContractBasicInformation itemInfo, ContractStatus contractStatus) {
+        DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
+        return getReceivingOrSendingText(contractStatus) + " " + decimalFormat.format(itemInfo.getAmount()) + " " + itemInfo.getMerchandise();
     }
 
     private int getStatusBackgroundColor(ContractStatus status) {

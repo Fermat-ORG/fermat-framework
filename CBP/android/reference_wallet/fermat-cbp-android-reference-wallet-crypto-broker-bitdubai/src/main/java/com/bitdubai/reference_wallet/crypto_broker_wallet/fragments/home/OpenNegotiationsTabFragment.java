@@ -5,14 +5,15 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForBrokerException;
@@ -24,7 +25,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationInformationTestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
@@ -42,13 +42,15 @@ import java.util.List;
 public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
+    // Constants
+    private static final String WALLET_PUBLIC_KEY = "crypto_broker_wallet";
+
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
     // Data
     private List<GrouperItem> openNegotiationList;
-    private CryptoBrokerWallet cryptoBrokerWallet;
 
 
     public static OpenNegotiationsTabFragment newInstance() {
@@ -135,7 +137,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet("crypto_broker_wallet");
+                CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
                 List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
@@ -145,7 +147,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
                 grouperText = getActivity().getString(R.string.waiting_for_the_customer);
                 List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
-                waitingForBroker.addAll(cryptoBrokerWallet.getNegotiationsWaitingForCustomer(0, 10));
+                waitingForCustomer.addAll(cryptoBrokerWallet.getNegotiationsWaitingForCustomer(0, 10));
                 GrouperItem<CustomerBrokerNegotiationInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
                 data.add(waitingForCustomerGrouper);
 
@@ -158,27 +160,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             }
 
         } else {
-            NegotiationInformationTestData child;
-
-            grouperText = getActivity().getString(R.string.waiting_for_you);
-            List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
-            child = new NegotiationInformationTestData("nelsonalfo", "USD", "Crypto Transfer", "BTC", NegotiationStatus.WAITING_FOR_BROKER);
-            waitingForBroker.add(child);
-            child = new NegotiationInformationTestData("jorgeegonzalez", "BTC", "Cash in Hand", "USD", NegotiationStatus.WAITING_FOR_BROKER);
-            waitingForBroker.add(child);
-            child = new NegotiationInformationTestData("neoperol", "USD", "Cash in Hand", "BsF", NegotiationStatus.WAITING_FOR_BROKER);
-            waitingForBroker.add(child);
-            GrouperItem<CustomerBrokerNegotiationInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-            data.add(waitingForBrokerGrouper);
-
-            grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-            List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
-            child = new NegotiationInformationTestData("Nelson Orlando", "USD", "Bank Transfer", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
-            waitingForCustomer.add(child);
-            child = new NegotiationInformationTestData("Customer 5", "BsF", "Cash Delivery", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
-            waitingForCustomer.add(child);
-            GrouperItem<CustomerBrokerNegotiationInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-            data.add(waitingForCustomerGrouper);
+            Toast.makeText(getActivity(), "Sorry, an error happened (Module == null)", Toast.LENGTH_SHORT).show();
         }
 
         return data;
@@ -191,7 +173,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     @Override
     public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
-        //TODO abrir actividad de detalle de contrato abierto
+        //TODO abrir actividad de detalle de negociacion abierta
     }
 
     @Override

@@ -69,7 +69,7 @@
         android:layout_below="@id/cbw_receiving_or_sending"
         android:layout_marginEnd="@dimen/margin_text"
         android:layout_marginRight="@dimen/margin_text"
-        android:layout_toEndOf="@+id/cbw_contract_status"
+        android:layout_toEndOf="@+id/cbw_customer_image"
         android:layout_toLeftOf="@+id/cbw_contract_status"
         android:layout_toRightOf="@+id/cbw_customer_image"
         android:layout_toStartOf="@+id/cbw_contract_status"

@@ -52,6 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/cbw_customer_image"
         android:layout_toRightOf="@+id/cbw_customer_image"
         android:orientation="horizontal">
 
@@ -123,7 +124,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/linearLayout"
-        android:layout_toEndOf="@+id/cbw_negotiation_status"
+        android:layout_toEndOf="@+id/cbw_customer_image"
         android:layout_toLeftOf="@+id/cbw_negotiation_status"
         android:layout_toRightOf="@+id/cbw_customer_image"
         android:layout_toStartOf="@+id/cbw_negotiation_status"
