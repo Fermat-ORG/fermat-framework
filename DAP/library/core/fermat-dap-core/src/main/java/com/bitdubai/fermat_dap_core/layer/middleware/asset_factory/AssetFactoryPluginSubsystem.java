@@ -15,7 +15,7 @@ import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bi
 public class AssetFactoryPluginSubsystem extends AbstractPluginSubsystem {
 
     public AssetFactoryPluginSubsystem() {
-        super(new PluginReference(Plugins.ASSET_ISSUER));
+        super(new PluginReference(Plugins.ASSET_FACTORY));
     }
 
     @Override
