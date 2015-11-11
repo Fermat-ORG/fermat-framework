@@ -34,6 +34,7 @@ public enum Layers implements FermatEnum {
     SYSTEM                ("SYS"),
     TRANSACTION           ("TRA"),
     USER                  ("USR"),
+    WALLET                ("WAL"),
     WALLET_MODULE         ("WAM"),
     WORLD                 ("WRL"),
 
@@ -70,6 +71,7 @@ public enum Layers implements FermatEnum {
             case "SYS":  return SYSTEM;
             case "TRA":  return TRANSACTION;
             case "USR":  return USER;
+            case "WAL":  return WALLET;
             case "WAM":  return WALLET_MODULE;
             case "WRL":  return WORLD;
 
