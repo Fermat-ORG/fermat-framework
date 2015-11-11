@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by angel on 16/9/15.
  */
-public interface CustomerBrokerSaleManager {
+public interface CustomerBrokerSaleContractManager {
 
     List<CustomerBrokerSale> getAllCustomerBrokerSaleFromCurrentDeviceUser() throws CantGetListCustomerBrokerSaleException;
 
