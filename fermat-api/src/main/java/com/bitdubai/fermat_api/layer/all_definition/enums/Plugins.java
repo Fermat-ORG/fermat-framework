@@ -156,6 +156,7 @@ public enum Plugins implements FermatEnum {
 
     ASSET_ISSUER        ("AI"),
     ASSET_USER          ("AU"),
+    ASSET_TRANSMISSION  ("AT"),
     BITCOIN_ASSET_VAULT("BAV"),
     BITCOIN_NETWORK("BN"),
     BITCOIN_VAULT("BV"),
@@ -454,6 +455,7 @@ public enum Plugins implements FermatEnum {
 
             case "AI":    return ASSET_ISSUER;
             case "AU":    return ASSET_USER;
+            case "AT":    return ASSET_TRANSMISSION;
             case "BAV":   return BITCOIN_ASSET_VAULT;
             case "BN":    return BITCOIN_NETWORK;
             case "BV":    return BITCOIN_VAULT;
