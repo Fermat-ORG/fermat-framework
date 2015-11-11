@@ -17,5 +17,9 @@ dependencies {
     compile project(':fermat-dap-plugin-identity-asset-user-bitdubai')
     compile project(':fermat-dap-plugin-identity-redeem-point-bitdubai')
 
+    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
+    compile project(':fermat-dap-plugin-wallet-module-asset-user-bitdubai')
+    compile project(':fermat-dap-plugin-wallet-module-redeem-point-bitdubai')
+
     testCompile 'junit:junit:4.12'
 }

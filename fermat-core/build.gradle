@@ -52,9 +52,6 @@ dependencies {
     compile project(':fermat-dap-plugin-wallet-assets-user-wallet-bitdubai')
     compile project(':fermat-dap-plugin-wallet-redeem-point-wallet-bitdubai')
     compile project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai')
-    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
-    compile project(':fermat-dap-plugin-wallet-module-asset-user-bitdubai')
-    compile project(':fermat-dap-plugin-wallet-module-redeem-point-bitdubai')
 
     //WPD Projects (Plugins)
     compile project(':fermat-wpd-plugin-actor-publisher-bitdubai')
