@@ -68,8 +68,14 @@ class BitcoinCryptoNetworkMonitor implements Agent {
          * Then I will start the agent that connects to the bitcoin network to get new transactions
          */
         bitcoinCryptoNetworkMonitorAgent = new BitcoinCryptoNetworkMonitorAgent();
-        Thread agentThread = new Thread(bitcoinCryptoNetworkMonitorAgent);
-        agentThread.start();
+        try {
+            bitcoinCryptoNetworkMonitorAgent.doTheMainTask();
+        } catch (BlockchainException e) {
+            e.printStackTrace();
+        }
+        // I have temporarelly removed the crypto network from the new thread.
+        //Thread agentThread = new Thread(bitcoinCryptoNetworkMonitorAgent);
+        //agentThread.start();
     }
 
     @Override
@@ -108,13 +114,12 @@ class BitcoinCryptoNetworkMonitor implements Agent {
 
         @Override
         public void run(){
-            while (isSupposedToBeRunning){
-                try {
-                    doTheMainTask();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try {
+                doTheMainTask();
+            } catch (BlockchainException e) {
+                e.printStackTrace();
             }
+
         }
 
         /**
@@ -172,15 +177,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
              * starts the monitoring
              */
             peerGroup.start();
-            peerGroup.downloadBlockChain();
-
-            /**
-             * will start a loop to let the network sync and download until is requested to stop.
-             */
-            while (isSupposedToBeRunning){
-
-            }
-            peerGroup.stop();
+            peerGroup.startBlockChainDownload(null);
         }
 
         /**

@@ -191,9 +191,11 @@ public class CreateContactFragmentDialog extends Dialog implements
 
             CryptoWallet cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
 
-            CryptoAddress validAddress = validateAddress(txt_address.getText().toString(),cryptoWallet );
+            CryptoAddress validAddress = validateAddress(txt_address.getText().toString(), cryptoWallet);
 
-            if (validAddress != null) {
+            String name =contact_name.getText().toString();
+
+            if (validAddress != null && !name.equals("")) {
 
                 // first i add the contact
                 //check photo is not null
@@ -202,7 +204,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 
                     cryptoWallet.createWalletContactWithPhoto(
                             validAddress,
-                            contact_name.getText().toString(),
+                            name,
                             null,
                             null,
                             Actors.EXTRA_USER,
@@ -256,7 +258,7 @@ public class CreateContactFragmentDialog extends Dialog implements
             if (clipboard.hasPrimaryClip() && clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
                 mPasteItem.setEnabled(true);
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
-                EditText editText = (EditText) findViewById(R.id.contact_address);
+                EditText editText = (EditText) findViewById(R.id.txt_address);
                 CryptoAddress validAddress = validateAddress(item.getText().toString(), referenceWalletSession.getCryptoWalletManager().getCryptoWallet());
                 if (validAddress != null) {
                     editText.setText(validAddress.getAddress());

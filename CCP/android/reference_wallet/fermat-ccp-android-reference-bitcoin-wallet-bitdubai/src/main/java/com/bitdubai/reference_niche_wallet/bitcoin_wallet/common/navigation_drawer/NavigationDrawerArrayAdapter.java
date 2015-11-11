@@ -48,7 +48,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
+        Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
         View rowView = convertView;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         try {
@@ -72,7 +72,9 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 }
 
                 if(activeIntraUser.getProfileImage()!=null){
+                    if(activeIntraUser.getProfileImage().length>0)
                     icon.setImageBitmap(BitmapFactory.decodeByteArray(activeIntraUser.getProfileImage(),0,activeIntraUser.getProfileImage().length));
+                    else icon.setImageResource(R.drawable.profile_image);
                 }else{
                     icon.setImageResource(R.drawable.profile_image);
                 }

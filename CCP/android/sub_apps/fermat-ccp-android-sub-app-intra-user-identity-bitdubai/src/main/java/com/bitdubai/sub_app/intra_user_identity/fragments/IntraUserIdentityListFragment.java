@@ -23,6 +23,7 @@ import com.bitdubai.sub_app.intra_user_identity.common.adapters.IntraUserIdentit
 import com.bitdubai.sub_app.intra_user_identity.common.views.DividerItemDecoration;
 
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
+import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -40,6 +41,8 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
     private ErrorManager errorManager;
     private ArrayList<IntraWalletUserIdentity> identityInformationList;
 
+    IntraUserIdentitySubAppSession intraUserIdentitySubAppSession ;
+
 
     public static IntraUserIdentityListFragment newInstance() {
         return new IntraUserIdentityListFragment();
@@ -51,7 +54,8 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
 
         try {
             // setting up  module
-            moduleManager = ((IntraUserIdentitySubAppSession) subAppsSession).getModuleManager();
+            intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) subAppsSession;
+            moduleManager = intraUserIdentitySubAppSession.getModuleManager();
             errorManager = subAppsSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -189,7 +193,8 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
 
     @Override
     public void onItemClickListener(IntraWalletUserIdentity data, int position) {
-
+        //intraUserIdentitySubAppSession.setData(SessionConstants.IDENTITY_SELECTED,data);
+        //changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
     }
 
     @Override

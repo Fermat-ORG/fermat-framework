@@ -483,7 +483,8 @@ public class AssetUserActorDao implements Serializable {
     }
 
 
-    public List<ActorAssetUser> getAllAssetUsers(String assetUserLoggedInPublicKey, int max, int offset) throws CantGetAssetUsersListException {
+//    public List<ActorAssetUser> getAssetUserRegistered(String actorAssetPublicKey, int max, int offset) throws CantGetAssetUsersListException {
+    public List<ActorAssetUser> getAssetUserRegistered(String actorAssetPublicKey) throws CantGetAssetUsersListException {
 
         // Setup method.
         List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
@@ -495,7 +496,7 @@ public class AssetUserActorDao implements Serializable {
             /**
              * 1) Get the table.
              */
-            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME);
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME);
 
             if (table == null) {
                 /**
@@ -505,10 +506,9 @@ public class AssetUserActorDao implements Serializable {
             }
 
             // 2) Find all Asset Users.
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_CONNECTION_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
-            table.setFilterOffSet(String.valueOf(offset));
-            table.setFilterTop(String.valueOf(max));
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetPublicKey, DatabaseFilterType.EQUAL);
+//            table.setFilterOffSet(String.valueOf(offset));
+//            table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
 
             // 3) Get Asset Users Record.
