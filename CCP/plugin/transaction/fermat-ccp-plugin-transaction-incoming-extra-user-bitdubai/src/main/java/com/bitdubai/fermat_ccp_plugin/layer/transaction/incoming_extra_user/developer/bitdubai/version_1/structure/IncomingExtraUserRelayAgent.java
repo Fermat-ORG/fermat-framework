@@ -4,17 +4,11 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
+import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
-
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -41,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 
 
-public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, DealsWithErrors,DealsWithEvents, DealsWithRegistry , DealsWithCryptoAddressBook, com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent {
+public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent {
 
 
     /*
@@ -88,38 +82,12 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
         this.eventManager = eventManager;
     }
 
-
-    /**
-     * DealsWithBitcoinWallet Interface implementation.
-     */
-    @Override
-    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager){
-        this.bitcoinWalletManager = bitcoinWalletManager;
-    }
-
-    /**
-     *DealsWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-
     /**
      * DealWithRegistry Interface implementation.
      */
     @Override
     public void setRegistry(IncomingExtraUserRegistry registry) {
         this.registry = registry;
-    }
-
-    /**
-     * DealsWithCryptoAddressBook Interface implementation.
-     */
-    @Override
-    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
-        this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
 
     /**
@@ -149,12 +117,6 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
         if(isRunning())
             this.relayAgent.stop();
     }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
 
     private static class RelayAgent implements Runnable  {
 
@@ -190,10 +152,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
          * MonitorAgent interface implementation.
          */
         private void initialize () {
-            transactionHandler = new IncomingExtraUserTransactionHandler();
-            transactionHandler.setBitcoinWalletManager(this.bitcoinWalletManager);
-            transactionHandler.setCryptoAddressBookManager(this.cryptoAddressBookManager);
-            transactionHandler.setEventManager(eventManager);
+            transactionHandler = new IncomingExtraUserTransactionHandler(bitcoinWalletManager, cryptoAddressBookManager, eventManager);
         }
 
         /**
