@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
@@ -18,33 +19,34 @@ public class ReceivedNewDigitalAssetMetadataNotificationEventHandler implements 
     AssetReceptionRecorderService assetReceptionRecorderService;
 
     public void setAssetReceptionRecorderService(AssetReceptionRecorderService assetReceptionRecorderService) throws CantSetObjectException {
-        if(assetReceptionRecorderService==null){
+        if (assetReceptionRecorderService == null) {
             throw new CantSetObjectException("assetReceptionRecorderService is null");
         }
-        this.assetReceptionRecorderService=assetReceptionRecorderService;
+        this.assetReceptionRecorderService = assetReceptionRecorderService;
     }
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if(this.assetReceptionRecorderService.getStatus()== ServiceStatus.STARTED) {
-            Logger LOG = Logger.getGlobal();
-            try {
-                LOG.info("ASSET RECEPTION event detected - type: "+fermatEvent.getEventType());
-                LOG.info("ASSET RECEPTION event detected - source: "+fermatEvent.getSource());
-                this.assetReceptionRecorderService.receivedNewDigitalAssetMetadataNotificationEvent((ReceivedNewDigitalAssetMetadataNotificationEvent) fermatEvent);
-            } catch(CantSaveEventException exception){
-                throw new CantSaveEventException(exception,"Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Check the cause");
-            } catch(ClassCastException exception){
+        String context = "Event Type: " + fermatEvent.getEventType() +
+                "Event Source: " + fermatEvent.getSource();
 
-                LOG.info("ASSET RECEPTION EXCEPTION DETECTOR----------------------------------");
-                exception.printStackTrace();
-                throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Cannot cast this event");
-            } catch(Exception exception){
-                throw new CantSaveEventException(exception,"Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Unexpected exception");
-            }
-
-        }else {
+        if (assetReceptionRecorderService.getStatus() != ServiceStatus.STARTED) {
             throw new TransactionServiceNotStartedException();
+        }
+
+        if (!(fermatEvent instanceof ReceivedNewDigitalAssetMetadataNotificationEvent)) {
+            //You're using the wrong handler..
+            throw new CantSaveEventException(null, context, "The event received event is not an instance of ReceivedNewDigitalAssetMetadataNotificationEvent, use the right handler.");
+        }
+
+        ReceivedNewDigitalAssetMetadataNotificationEvent metadataNotificationEvent = (ReceivedNewDigitalAssetMetadataNotificationEvent) fermatEvent;
+
+        try {
+            System.out.println("ASSET RECEPTION event detected - type: " + fermatEvent.getEventType());
+            System.out.println("ASSET RECEPTION event detected - source: " + fermatEvent.getSource());
+            assetReceptionRecorderService.receivedNewDigitalAssetMetadataNotificationEvent(metadataNotificationEvent);
+        } catch (Exception exception) {
+            throw new CantSaveEventException(exception, "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Unexpected exception");
         }
     }
 }
