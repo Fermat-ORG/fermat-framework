@@ -191,9 +191,11 @@ public class CreateContactFragmentDialog extends Dialog implements
 
             CryptoWallet cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
 
-            CryptoAddress validAddress = validateAddress(txt_address.getText().toString(),cryptoWallet );
+            CryptoAddress validAddress = validateAddress(txt_address.getText().toString(), cryptoWallet);
 
-            if (validAddress != null) {
+            String name =contact_name.getText().toString();
+
+            if (validAddress != null && !name.equals("")) {
 
                 // first i add the contact
                 //check photo is not null
@@ -202,7 +204,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 
                     cryptoWallet.createWalletContactWithPhoto(
                             validAddress,
-                            contact_name.getText().toString(),
+                            name,
                             null,
                             null,
                             Actors.EXTRA_USER,
