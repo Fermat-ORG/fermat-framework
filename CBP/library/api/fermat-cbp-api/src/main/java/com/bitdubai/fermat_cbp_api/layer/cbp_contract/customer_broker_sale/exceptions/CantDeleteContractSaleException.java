@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Angel on 2015.09.16..
  */
-public class CantDeleteCustomerBrokerSaleException extends FermatException {
+public class CantDeleteContractSaleException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T DELETED THE CONTRACT CUSTOMER BROKER SALE";
 
@@ -17,7 +17,7 @@ public class CantDeleteCustomerBrokerSaleException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantDeleteCustomerBrokerSaleException(String message, Exception cause, String context, String possibleReason) {
+    public CantDeleteContractSaleException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
