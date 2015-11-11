@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorPluginRoot;
 
 /**
- * Created by PatricioGesualdi on 10/11/2015.
+ * Created by Nerio on 10/11/2015.
  */
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
@@ -26,7 +26,9 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
             registerVersion(new AssetIssuerActorPluginRoot());
         }
         catch (CantRegisterVersionException e) {
-            throw new CantStartPluginDeveloperException(e, "Plugin Developer BitDubai", "Can't register Plugins version DAP Asset Issuer");
+            throw new CantStartPluginDeveloperException(e,
+                    "Plugin Developer BitDubai",
+                    "Can't register Plugins version DAP Asset Issuer");
         }
     }
 
