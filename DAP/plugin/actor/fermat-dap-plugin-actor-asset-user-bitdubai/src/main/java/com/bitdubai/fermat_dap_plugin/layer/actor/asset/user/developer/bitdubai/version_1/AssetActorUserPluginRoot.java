@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
@@ -77,6 +78,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
 /**
  * Created by Nerio on 09/09/15.
@@ -227,7 +230,7 @@ public class AssetActorUserPluginRoot extends AbstractPlugin implements
 
     @Override
     public ActorAssetUser getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException,
-                                                                            CantAssetUserActorNotFoundException {
+            CantAssetUserActorNotFoundException {
 
         try {
             return this.assetUserActorDao.getActorByPublicKey(actorPublicKey);
@@ -244,7 +247,7 @@ public class AssetActorUserPluginRoot extends AbstractPlugin implements
 
     @Override
     public ActorAssetUser getActorAssetUser() throws CantGetAssetUserActorsException,
-                                                        CantAssetUserActorNotFoundException {
+            CantAssetUserActorNotFoundException {
 
         ActorAssetUser actorAssetUser;
         try {
@@ -307,7 +310,7 @@ public class AssetActorUserPluginRoot extends AbstractPlugin implements
     @Override
     public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException {
         try {
-            for (ActorAssetUser actorAssetUser : actorAssetUsers){
+            for (ActorAssetUser actorAssetUser : actorAssetUsers) {
                 try {
                     cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(null,
                             CryptoCurrency.BITCOIN,
@@ -432,15 +435,15 @@ public class AssetActorUserPluginRoot extends AbstractPlugin implements
                 Double locationLatitude = new Random().nextDouble();
                 Double locationLongitude = new Random().nextDouble();
                 AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey,
-                                                                       "Thunder User_" + new Random().nextInt(90),
-                                                                       age,
-                                                                       genders,
-                                                                       connectionState,
-                                                                       locationLatitude,
-                                                                       locationLongitude,
-                                                                       System.currentTimeMillis(),
-                                                                       System.currentTimeMillis(),
-                                                                       new byte[0]);
+                        "Thunder User_" + new Random().nextInt(90),
+                        age,
+                        genders,
+                        connectionState,
+                        locationLatitude,
+                        locationLongitude,
+                        System.currentTimeMillis(),
+                        System.currentTimeMillis(),
+                        new byte[0]);
 
                 this.assetUserActorDao.createNewAssetUser(record);
                 actorAssetUser = this.assetUserActorDao.getActorAssetUser();
@@ -449,7 +452,7 @@ public class AssetActorUserPluginRoot extends AbstractPlugin implements
                 System.out.println("Actor Asset Name: " + actorAssetUser.getName());
 //                System.out.println("Actor Asset GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
                 System.out.println("**********************************************************");
-                this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record, ConnectionState.CONNECTED,record.getCryptoAddress());
+//                this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record, ConnectionState.CONNECTED, record.getCryptoAddress());
             }
 
         } catch (CantAddPendingAssetUserException e) {
@@ -535,7 +538,7 @@ public class AssetActorUserPluginRoot extends AbstractPlugin implements
 //                    this.handleCryptoAddressDeniedEvent(request);
                 }
             }
-        } catch(CantListPendingCryptoAddressRequestsException |
+        } catch (CantListPendingCryptoAddressRequestsException |
 //                CantHandleCryptoAddressDeniedActionException |
                 CantHandleCryptoAddressReceivedActionException e) {
 
@@ -546,23 +549,28 @@ public class AssetActorUserPluginRoot extends AbstractPlugin implements
     public void handleCryptoAddressReceivedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressReceivedActionException {
 
         try {
-            if(request.getCryptoAddress() != null) {
+            if (request.getCryptoAddress() != null) {
                 System.out.println("*****Actor Asset User Recibiendo Crypto Localmente*****");
 
                 this.assetUserActorDao.updateAssetUserConnectionStateActorNetworService(request.getIdentityPublicKeyResponding(), ConnectionState.CONNECTED, request.getCryptoAddress());
 
-                List<ActorAssetUser> actorAssetUser = this.assetUserActorDao.getAllAssetUserActorRegistered();
+                List<ActorAssetUser> actorAssetUser = this.assetUserActorDao.getAssetUserRegistered(request.getIdentityPublicKeyResponding());
 
-                int i = 0;
-                for (ActorAssetUser actorAssetUser1:actorAssetUser) {
-                    i++;
-                    System.out.println("Actor Asset User: N° " + i);
-                    System.out.println("Actor Asset User: " + actorAssetUser1.getPublicKey());
-                    System.out.println("Actor Asset User: " + actorAssetUser1.getName());
-                    System.out.println("Actor Asset User: " + actorAssetUser1.getCryptoAddress().getAddress());
-                    System.out.println("Actor Asset User: " + actorAssetUser1.getCryptoAddress().getCryptoCurrency());
-                    System.out.println("Actor Asset User: " + actorAssetUser1.getConnectionState());
-
+                if(!actorAssetUser.isEmpty()) {
+                    for (ActorAssetUser actorAssetUser1 : actorAssetUser) {
+                        System.out.println("Actor Asset User: " + actorAssetUser1.getPublicKey());
+                        System.out.println("Actor Asset User: " + actorAssetUser1.getName());
+                        if (actorAssetUser1.getCryptoAddress() != null) {
+                            System.out.println("Actor Asset User: " + actorAssetUser1.getCryptoAddress().getAddress());
+                            System.out.println("Actor Asset User: " + actorAssetUser1.getCryptoAddress().getCryptoCurrency());
+                            System.out.println("Actor Asset User: " + actorAssetUser1.getConnectionState());
+                        } else {
+                            System.out.println("Actor Asset User FALLO Recepcion CryptoAddress para User: " + actorAssetUser1.getName());
+                        }
+                    }
+                }else {
+                    System.out.println("Actor Asset User NO se Encontro PublicKey: "+ request.getIdentityPublicKeyResponding());
+                    System.out.println("Actor Asset User NO se Encontro: "+ request.getIdentityTypeResponding());
                 }
 
                 cryptoAddressesNetworkServiceManager.confirmAddressExchangeRequest(request.getRequestId());
