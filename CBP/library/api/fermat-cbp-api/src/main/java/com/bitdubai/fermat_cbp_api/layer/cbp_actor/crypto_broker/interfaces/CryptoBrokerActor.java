@@ -8,9 +8,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.CantCreateSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.CantGetSaleNegotiationException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.exceptions.CantCreateContractSaleException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.exceptions.CantGetListContractSaleException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.interfaces.CustomerBrokerSaleContract;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.exceptions.CantCreateCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -33,9 +33,9 @@ public interface CryptoBrokerActor extends Actor {
 
     /* Contracts  */
 
-        CustomerBrokerNegotiation               createContractSale(ActorIdentity cryptoCustomer, Collection<Clause> clauses) throws CantCreateContractSaleException;
+        CustomerBrokerContractSale               createContractSale(ActorIdentity cryptoCustomer, Collection<Clause> clauses) throws CantCreateCustomerBrokerContractSaleException;
 
-        CustomerBrokerSaleContract getContractSale(UUID ContractId) throws CantGetListContractSaleException;
-        Collection<CustomerBrokerSaleContract>   getContractSales() throws CantGetListContractSaleException;
-        Collection<CustomerBrokerSaleContract>   getContractSales(ContractStatus status) throws CantGetListContractSaleException;
+        CustomerBrokerContractSale getContractSale(UUID ContractId) throws CantGetListCustomerBrokerContractSaleException;
+        Collection<CustomerBrokerContractSale>   getContractSales() throws CantGetListCustomerBrokerContractSaleException;
+        Collection<CustomerBrokerContractSale>   getContractSales(ContractStatus status) throws CantGetListCustomerBrokerContractSaleException;
 }
