@@ -81,8 +81,7 @@ import java.util.UUID;
 public class AssetUserActorPluginRoot extends AbstractPlugin implements
         ActorAssetUserManager,
         ActorNetworkServiceAssetUser,
-        DatabaseManagerForDevelopers,
-        DealsWithAssetUserActorNetworkServiceManager {
+        DatabaseManagerForDevelopers {
 
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -103,10 +102,11 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
     private CryptoAddressBookManager cryptoAddressBookManager;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM   , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER         )
+    private AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
+
 
     BlockchainNetworkType blockchainNetworkType;
-
-    AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
 
     private AssetUserActorDao assetUserActorDao;
     private AssetUserActorMonitorAgent assetUserActorMonitorAgent;
@@ -117,14 +117,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         super(new PluginVersionReference(new Version()));
 
         listenersAdded = new ArrayList<>();
-    }
-
-    /**
-     * DealsWithIntraWalletUsersNetworkService Interface implementation.
-     */
-    @Override
-    public void setAssetUserActorNetworkServiceManager(AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager) {
-        this.assetUserActorNetworkServiceManager = assetUserActorNetworkServiceManager;
     }
 
     @Override
