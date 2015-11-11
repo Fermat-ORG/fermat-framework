@@ -80,7 +80,7 @@ import java.util.UUID;
  * Created by Nerio on 09/09/15.
  */
 
-public class AssetActorUserPluginRoot extends AbstractPlugin implements
+public class AssetUserActorPluginRoot extends AbstractPlugin implements
         ActorAssetUserManager,
         ActorNetworkServiceAssetUser,
         DatabaseManagerForDevelopers,
@@ -115,7 +115,7 @@ public class AssetActorUserPluginRoot extends AbstractPlugin implements
 
     private final List<FermatEventListener> listenersAdded;
 
-    public AssetActorUserPluginRoot() {
+    public AssetUserActorPluginRoot() {
         super(new PluginVersionReference(new Version()));
 
         listenersAdded = new ArrayList<>();

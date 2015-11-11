@@ -58,7 +58,7 @@ import java.util.UUID;
  * Created by Nerio on 09/09/15.
  */
 
-public class AssetActorIssuerPluginRoot extends AbstractPlugin implements
+public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         ActorAssetIssuerManager,
         DatabaseManagerForDevelopers,
         DealsWithAssetIssuerActorNetworkServiceManager {
@@ -77,7 +77,7 @@ public class AssetActorIssuerPluginRoot extends AbstractPlugin implements
 
     AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
 
-    public AssetActorIssuerPluginRoot() {
+    public AssetIssuerActorPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 

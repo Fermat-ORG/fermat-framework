@@ -57,12 +57,12 @@ import java.util.UUID;
  * Created by Nerio on 09/09/15.
  */
 
-public class RedeemPointPluginRoot extends AbstractPlugin implements
+public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         ActorAssetRedeemPointManager,
         DealsWithAssetRedeemPointActorNetworkServiceManager,
         DatabaseManagerForDevelopers {
 
-    public RedeemPointPluginRoot() {
+    public RedeemPointActorPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 

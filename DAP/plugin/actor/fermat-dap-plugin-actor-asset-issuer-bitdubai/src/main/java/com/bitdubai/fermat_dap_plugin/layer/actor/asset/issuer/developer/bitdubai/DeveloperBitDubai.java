@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.AssetActorIssuerPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorPluginRoot;
 
 /**
  * Created by PatricioGesualdi on 10/11/2015.
@@ -23,7 +23,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
 
         try {
-            registerVersion(new AssetActorIssuerPluginRoot());
+            registerVersion(new AssetIssuerActorPluginRoot());
         }
         catch (CantRegisterVersionException e) {
             throw new CantStartPluginDeveloperException(e, "Plugin Developer BitDubai", "Can't register Plugins version DAP Asset Issuer");
