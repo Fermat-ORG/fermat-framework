@@ -62,7 +62,6 @@ import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interf
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
 import com.bitdubai.fermat_core.layer.all_definition.DefinitionLayer;
-import com.bitdubai.fermat_core.layer.dap_middleware.DAPMiddlewareLayer;
 import com.bitdubai.fermat_core.layer.dap_module.DAPModuleLayer;
 import com.bitdubai.fermat_core.layer.dap_sub_app_module.DAPSubAppModuleLayer;
 import com.bitdubai.fermat_core.layer.dap_transaction.DAPTransactionLayer;
@@ -345,7 +344,6 @@ public class Platform implements Serializable {
 
 
             // Init DAP Layers
-            corePlatformContext.registerPlatformLayer(new DAPMiddlewareLayer(), PlatformLayers.BITDUBAI_DAP_MIDDLEWARE_LAYER);
             corePlatformContext.registerPlatformLayer(new DAPModuleLayer(), PlatformLayers.BITDUBAI_DAP_MODULE_LAYER);
             corePlatformContext.registerPlatformLayer(new DAPSubAppModuleLayer(), PlatformLayers.BITDUBAI_DAP_SUB_APP_MODULE_LAYER);
             corePlatformContext.registerPlatformLayer(new DAPTransactionLayer(), PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER);
@@ -783,13 +781,7 @@ public class Platform implements Serializable {
                 pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.IDENTITY, Plugins.ASSET_USER  ), Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY  );
                 pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.IDENTITY, Plugins.REDEEM_POINT), Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY);
 
-
-           /*
-            * Plugin Asset Factory Middleware
-            * -----------------------------
-            */
-                Plugin assetFactortMiddleware = ((DAPMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MIDDLEWARE_LAYER)).getPluginAssetFactory();
-                injectPluginReferencesAndStart(assetFactortMiddleware, Plugins.BITDUBAI_ASSET_FACTORY);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.MIDDLEWARE, Plugins.ASSET_FACTORY), Plugins.BITDUBAI_ASSET_FACTORY);
 
            /*
             * Plugin Asset Factory Module
@@ -1112,7 +1104,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithAssetFactory) {
-                ((DealsWithAssetFactory) plugin).setAssetFactoryManager((AssetFactoryManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY));
+                ((DealsWithAssetFactory) plugin).setAssetFactoryManager((AssetFactoryManager)  fermatSystem.startAndGetPluginVersion(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.MIDDLEWARE, Plugins.ASSET_FACTORY)));
             }
             if (plugin instanceof DealsWithModuleAseetFactory) {
                 ((DealsWithModuleAseetFactory) plugin).setAssetFactoryModuleManager((AssetFactoryModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY_MODULE));

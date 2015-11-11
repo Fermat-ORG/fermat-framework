@@ -154,6 +154,7 @@ public enum Plugins implements FermatEnum {
 
     // Init new Plugins
 
+    ASSET_FACTORY       ("AF"),
     ASSET_ISSUER        ("AI"),
     ASSET_USER          ("AU"),
     ASSET_TRANSMISSION  ("AT"),
@@ -453,6 +454,7 @@ public enum Plugins implements FermatEnum {
 
             // Init new Plugins
 
+            case "AF":    return ASSET_FACTORY;
             case "AI":    return ASSET_ISSUER;
             case "AU":    return ASSET_USER;
             case "AT":    return ASSET_TRANSMISSION;
