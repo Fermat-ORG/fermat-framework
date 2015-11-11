@@ -14,7 +14,7 @@ import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.C
 public interface WalletContactsManager {
 
     /**
-     * Throw the method <code>getWalletContactsRegistry</code> you can get an instance of Wallet Contacts Registry.
+     * Through the method <code>getWalletContactsRegistry</code> you can get an instance of Wallet Contacts Registry.
      *
      * @return an instance of WalletContactsRegistry.
      *

@@ -15,6 +15,7 @@ dependencies {
     compile project(':fermat-bch-core')
     compile project(':fermat-cbp-core')
     compile project(':fermat-ccp-core')
+    compile project(':fermat-dap-core')
     compile project(':fermat-p2p-core')
     compile project(':fermat-pip-core')
 
@@ -35,9 +36,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai')
     // DMP Projects (Addons)
     //DAP Projects (Plugins)
-    compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
-    compile project(':fermat-dap-plugin-actor-asset-user-bitdubai')
-    compile project(':fermat-dap-plugin-actor-redeem-point-bitdubai')
     compile project(':fermat-dap-plugin-identity-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-identity-asset-user-bitdubai')
     compile project(':fermat-dap-plugin-identity-redeem-point-bitdubai')
