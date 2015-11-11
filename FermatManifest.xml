@@ -1658,7 +1658,7 @@
 
 		<platform code="CCP" name="Crypto Currency Platform" logo="CCP_logo.png" dependsOn="WPD, P2P">
 
-			<layer name="Reference Wallet">
+			<layer name="Basic Wallet">
 				<androids>
 					<android
 						name="Bitcoin Wallet"
