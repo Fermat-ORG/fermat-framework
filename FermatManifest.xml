@@ -2193,8 +2193,8 @@
 			<layer name="Actor Network Service" language="java">
 				<plugins>
 					<plugin
-						name="Intra User"
-						description="Enables searching for Intra Users and conecting one to the other"
+						name="Intra Wallet User"
+						description="Enables searching for Intra Wallet Users and conecting one to the other"
 						difficulty="6"
 						code-level="development"
 						>
