@@ -912,7 +912,6 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             subAppIntraUser.setStartActivity(Activities.CWP_INTRA_USER_ACTIVITY);
 
 
-
             //Activity 3
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY);
@@ -1080,7 +1079,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             listSubApp.put(SubApps.DAP_ASSETS_FACTORY, dapFactory);
 
-           /**
+            /**
              * Dap Asset Issuer Community
              */
             RuntimeSubApp dapAssetIssuerCommunity = new RuntimeSubApp();
@@ -1131,8 +1130,8 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_USER, dapAssetUserCommunity);
 
             /**
-              * Dap Asset Redeem Point Community
-              */
+             * Dap Asset Redeem Point Community
+             */
             RuntimeSubApp dapAssetRedeemPointCommunity = new RuntimeSubApp();
             dapAssetRedeemPointCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT);
             dapAssetRedeemPointCommunity.setStartActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
@@ -1367,6 +1366,63 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
             listSubApp.put(SubApps.CWP_INTRA_USER_IDENTITY, runtimeSubApp);
+
+            /**
+             * DAP IDENTITIES
+             */
+
+            /**
+             * DAP ISSUER IDENTITY
+             */
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.DAP_ASSETS_IDENTITY_ISSUER);
+
+            // Activity: List of identities
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
+            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY.getCode());
+            runtimeActivity.setBackActivity(null);
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.setStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Issuer Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+            // Activity: Create New Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY);
+            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
+            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY);
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Create New Issuer Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
 
         } catch (Exception e) {
