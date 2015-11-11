@@ -1,23 +1,24 @@
 package com.bitdubai.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
@@ -29,66 +30,41 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActorAssetUser, DealsWithAssetIssuerWallet, DealsWithAssetDistribution, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, AssetIssuerWalletSupAppModuleManager, DealsWithPluginFileSystem {
-    /**
-     * DealsWithAssetIssuerWallet interface member variable
-     */
-    AssetIssuerWalletManager assetIssuerWalletManager;
+public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
+        DealsWithAssetIssuerWallet,
+        DealsWithAssetDistribution,
+        AssetIssuerWalletSupAppModuleManager {
 
-    AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
-    /**
-     * DealsWithActorAssetUser interface member variable
-     */
-    ActorAssetUserManager actorAssetUserManager;
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR  , plugin = Plugins.ASSET_USER)
+    private ActorAssetUserManager actorAssetUserManager;
 
-    UUID pluginId;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem;
 
 
-    /**
-     * DealsWithErros interface member variable
-     */
-    ErrorManager errorManager;
+    // TODO INIT MISSING REFERENCES (ongoing migration)
+    private AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
+    private AssetDistributionManager assetDistributionManager;
+    // TODO END  MISSING REFERENCES (ongoing migration)
 
-    /**
-     * DealsWithLogger interface member variable
-     */
-    LogManager logManager;
 
-    /**
-     * DealsWithAssetDistribution interface member variable
-     */
-    AssetDistributionManager assetDistributionManager;
 
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    private AssetIssuerWalletManager assetIssuerWalletManager;
 
-    /**
-     * DealsWithPluginFileSystem interface member variable
-     */
-    PluginFileSystem pluginFileSystem;
-
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
+    public AssetIssuerWalletModulePluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
-
 
     /**
      * (non-Javadoc)
@@ -109,31 +85,6 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActor
     }
 
     @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-    @Override
-    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
-        this.actorAssetUserManager = actorAssetUserManager;
-    }
-
-    @Override
     public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
         this.assetIssuerWalletManager = assetIssuerWalletManager;
     }
@@ -141,51 +92,6 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActor
     @Override
     public void setAssetDistributionManager(AssetDistributionManager assetIssuingManager) throws CantSetObjectException {
         this.assetDistributionManager = assetIssuingManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-
-        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1.AssetWalletIssuerModulePluginRoot");
-        /**
-         * I return the values.
-         */
-        return returnedClasses;
-    }
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        /**
-         * I will check the current values and update the LogLevel in those which is different
-         */
-
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            /**
-             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-             */
-            if (AssetWalletIssuerModulePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                AssetWalletIssuerModulePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                AssetWalletIssuerModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                AssetWalletIssuerModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            }
-        }
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 
     @Override
@@ -212,6 +118,4 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActor
     public List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String walletPublicKey,String assetPublicKey) throws CantGetTransactionsException {
         return assetIssuerWalletModuleManager.getTransactionsAssetAll(walletPublicKey, assetPublicKey);
     }
-
-
 }
