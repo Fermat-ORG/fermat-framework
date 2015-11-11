@@ -47,7 +47,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.bignerdranch.android:expandablerecyclerview:2.0.2'
     //compile 'com.google.guava:guava:r05'
-
+    compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     compile 'com.google.android:android:4.1.1.4'
 
 
