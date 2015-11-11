@@ -20,7 +20,7 @@ import java.util.List;
  * is responsible to manage the event arrival from the different components that inform metadata reception
  * and crypto transaction receptions
  */
-public class IncomingIntraUserEventRecorderService
+public class IncomingIntraUserEventRecorderService{
     private IncomingIntraUserRegistry incomingIntraUserRegistry;
 
     private EventManager        eventManager;
