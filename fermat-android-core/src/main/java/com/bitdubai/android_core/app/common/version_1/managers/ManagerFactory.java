@@ -65,6 +65,9 @@ public class ManagerFactory {
             case CBP_CRYPTO_CUSTOMER_IDENTITY:
                 moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE);
                 break;
+            case DAP_ASSETS_IDENTITY_ISSUER:
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
+                break;
 //            case BITDUBAI_CRYPTO_WALLET_WALLET_MODULE:
 //                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
 //                break;
