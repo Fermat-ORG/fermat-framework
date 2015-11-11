@@ -8,6 +8,10 @@ dependencies {
     compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-actor-asset-user-bitdubai')
     compile project(':fermat-dap-plugin-actor-redeem-point-bitdubai')
+
+    compile project(':fermat-dap-plugin-identity-asset-issuer-bitdubai')
+    compile project(':fermat-dap-plugin-identity-asset-user-bitdubai')
+    compile project(':fermat-dap-plugin-identity-redeem-point-bitdubai')
     
     testCompile 'junit:junit:4.12'
 }

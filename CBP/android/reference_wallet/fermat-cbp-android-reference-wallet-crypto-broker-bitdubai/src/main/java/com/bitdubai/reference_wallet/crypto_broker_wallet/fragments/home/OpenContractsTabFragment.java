@@ -5,11 +5,8 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -17,6 +14,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
@@ -38,13 +36,15 @@ import java.util.List;
 public class OpenContractsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
         implements FermatListItemListeners<ContractBasicInformation> {
 
+    // Constants
+    private static final String WALLET_PUBLIC_KEY = "crypto_broker_wallet";
+
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
     // Data
     private ArrayList<GrouperItem<ContractBasicInformation>> openContractList;
-    private CryptoBrokerWallet cryptoBrokerWallet;
 
 
     public static OpenContractsTabFragment newInstance() {
@@ -126,7 +126,17 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         String grouperText;
 
         if (moduleManager != null) {
-            // TODO hay que pensar esto
+            try {
+                CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
+                // TODO definir e implementar metodos para traer lista de contratos esperando por broker y lista de contratos esperando por customer
+
+            } catch (CantGetCryptoBrokerWalletException ex) {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+                if (errorManager != null) {
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                }
+            }
         } else {
             ContractBasicInformation child;
 
