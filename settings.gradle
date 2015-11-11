@@ -1,4 +1,3 @@
-
 include ':fermat-android-api'
 include ':fermat-android-core'
 
@@ -172,8 +171,6 @@ project(':fermat-osa-addon-multi-os-file-system-bitdubai').projectDir = new File
 include ':fermat-osa-addon-android-device-location-bitdubai'
 project(':fermat-osa-addon-android-device-location-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai')
 
-
-
 // PIP Projects (Addons)
 
 // Milestone 1 project:
@@ -229,7 +226,6 @@ project(':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai').projectDir
 include ':fermat-p2p-plugin-communication-wifi-bitdubai'
 project(':fermat-p2p-plugin-communication-wifi-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-wifi-bitdubai')
 
-
 //CCM Projects
 
 include ':fermat-ccm-api'
@@ -284,7 +280,6 @@ project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai').projectDir = new F
 
 // end engine
 
-
 /*
 
 Sub APPs on the pipeline:
@@ -307,7 +302,6 @@ project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai').projectDir = ne
 include ':fermat-dmp-android-sub-app-shop-manager-bitdubai'
 project(':fermat-dmp-android-sub-app-shop-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai')
 // Intra user
-
 
 // Milestone 2 project middlware:
 
@@ -414,9 +408,6 @@ project(':fermat-dap-plugin-actor-asset-user-bitdubai').projectDir = new File('D
 include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
 project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
 
-
-
-
 // identity
 include ':fermat-dap-plugin-identity-asset-issuer-bitdubai'
 project(':fermat-dap-plugin-identity-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-asset-issuer-bitdubai')
@@ -434,9 +425,7 @@ project(':fermat-dap-android-desktop-wallet-manager-bitdubai').projectDir = new 
 include ':fermat-dap-android-desktop-sub-app-manager-bitdubai'
 project(':fermat-dap-android-desktop-sub-app-manager-bitdubai').projectDir = new File('DAP/android/desktop/fermat-dap-android-desktop-sub-app-manager-bitdubai')
 
-
 //module
-
 
 // actor network service
 include ':fermat-dap-plugin-actor-network-service-asset-user-bitdubai'
@@ -450,8 +439,6 @@ project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai').projec
 
 include ':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai'
 project(':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai')
-
-
 
 // actor
 include ':fermat-dap-plugin-actor-asset-issuer-bitdubai'
@@ -506,7 +493,6 @@ project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectD
 
 include ':fermat-bch-plugin-middleware-crypto-addresses-bitdubai'
 project(':fermat-bch-plugin-middleware-crypto-addresses-bitdubai').projectDir = new File('BCH/plugin/middleware/fermat-bch-plugin-middleware-crypto-addresses-bitdubai')
-
 
 // WPD Projects
 
@@ -585,7 +571,6 @@ project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new Fil
 // identity
 include ':fermat-shp-plugin-identity-brand-bitdubai'
 project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
-
 
 //BNK projects
 
