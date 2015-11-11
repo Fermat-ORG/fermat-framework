@@ -1,12 +1,12 @@
-package com.bitdubai.fermat_dap_core.layer.actor_network_service;
+package com.bitdubai.fermat_dap_core.layer.wallet_module;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_dap_core.layer.actor_network_service.asset_issuer.AssetIssuerPluginSubsystem;
-import com.bitdubai.fermat_dap_core.layer.actor_network_service.asset_user.AssetUserPluginSubsystem;
-import com.bitdubai.fermat_dap_core.layer.actor_network_service.redeem_point.RedeemPointPluginSubsystem;
+import com.bitdubai.fermat_dap_core.layer.wallet_module.asset_issuer.AssetIssuerPluginSubsystem;
+import com.bitdubai.fermat_dap_core.layer.wallet_module.asset_user.AssetUserPluginSubsystem;
+import com.bitdubai.fermat_dap_core.layer.wallet_module.redeem_point.RedeemPointPluginSubsystem;
 
 /**
  * Created by lnacosta - (laion.cj91@gmail.com) on 11/11/2015.
@@ -14,10 +14,10 @@ import com.bitdubai.fermat_dap_core.layer.actor_network_service.redeem_point.Red
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ActorNetworkServiceLayer extends AbstractLayer {
+public class WalletModuleLayer extends AbstractLayer {
 
-    public ActorNetworkServiceLayer() {
-        super(Layers.ACTOR_NETWORK_SERVICE);
+    public WalletModuleLayer() {
+        super(Layers.WALLET_MODULE);
     }
 
     public void start() throws CantStartLayerException {
@@ -32,7 +32,7 @@ public class ActorNetworkServiceLayer extends AbstractLayer {
 
             throw new CantStartLayerException(
                     e,
-                    "Actor Network Service Layer of DAP Platform",
+                    "Wallet Module Layer of DAP Platform",
                     "Problem trying to register a plugin."
             );
         }
