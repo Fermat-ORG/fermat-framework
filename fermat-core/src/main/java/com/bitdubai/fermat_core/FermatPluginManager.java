@@ -56,10 +56,10 @@ public final class FermatPluginManager {
             try {
 
                 final AddonVersionReference platformFileSystemReference = new AddonVersionReference(
-                        Platforms.OPERATIVE_SYSTEM_API,
-                        Layers.SYSTEM,
-                        Addons.PLATFORM_FILE_SYSTEM,
-                        Developers.BITDUBAI,
+                        Platforms .OPERATIVE_SYSTEM_API,
+                        Layers    .SYSTEM              ,
+                        Addons    .PLATFORM_FILE_SYSTEM,
+                        Developers.BITDUBAI            ,
                         new Version()
                 );
 
@@ -75,15 +75,6 @@ public final class FermatPluginManager {
                 throw new CantStartPluginIdsManagerException(e, "Problem trying to get a platform file system addon.", "Platform not initialized?");
             }
         }
-    }
-
-    public final void startPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
-                                                                                              VersionNotFoundException {
-
-        AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
-
-        startPlugin(abstractPlugin);
-
     }
 
     public final AbstractPlugin startPluginAndReferences(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
@@ -145,6 +136,15 @@ public final class FermatPluginManager {
         }
     }
 
+    public final void startPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
+                                                                                              VersionNotFoundException {
+
+        final AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
+
+        startPlugin(abstractPlugin);
+
+    }
+
     public final void startPlugin(final AbstractPlugin abstractPlugin) throws CantStartPluginException {
 
         if (abstractPlugin.isStarted())
@@ -160,9 +160,6 @@ public final class FermatPluginManager {
                     "There was a captured problem during the plugin start."
             );
         } catch (Exception e) {
-            System.out.println("***********************AQUI ESTOY");
-            System.out.println(e);
-            System.out.println("***********************AQUI ESTOY FIN");
 
             throw new CantStartPluginException(
                     e,
