@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -18,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -67,16 +70,24 @@ import java.util.UUID;
  * Created by Nerio on 09/09/15.
  */
 
-public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, DealsWithErrors, DealsWithAssetRedeemPointActorNetworkServiceManager, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DatabaseManagerForDevelopers, LogManagerForDevelopers, Plugin, Service, Serializable {
+public class RedeemPointPluginRoot extends AbstractPlugin implements
+        ActorAssetRedeemPointManager,
+        DealsWithErrors,
+        DealsWithAssetRedeemPointActorNetworkServiceManager,
+        DealsWithEvents,
+        DealsWithPluginDatabaseSystem,
+        DealsWithPluginFileSystem,
+        DatabaseManagerForDevelopers,
+        LogManagerForDevelopers, Serializable {
+
+    public RedeemPointPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     RedeemPointActorDao redeemPointActorDao;
     private ActorAssetRedeemPointMonitorAgent actorAssetRedeemPointMonitorAgent;
     DeviceUserManager deviceUserManager;
 
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
     /**
      * DealsWithPlatformDatabaseSystem Interface member variables.
      */
@@ -85,10 +96,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
      * FileSystem Interface member variables.
      */
     PluginFileSystem pluginFileSystem;
-    /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
+
     /**
      * DealsWithErrors Interface member variables.
      */
@@ -209,24 +217,9 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
     }
 
     @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
     public void stop() {
         actorAssetRedeemPointMonitorAgent.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
     }
 
     @Override
