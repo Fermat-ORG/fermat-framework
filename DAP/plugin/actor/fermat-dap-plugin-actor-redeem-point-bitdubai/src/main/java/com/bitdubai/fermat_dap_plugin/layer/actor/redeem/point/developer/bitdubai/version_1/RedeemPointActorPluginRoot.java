@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -33,7 +34,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.DealsWithAssetRedeemPointActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.agent.ActorAssetRedeemPointMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.developerUtils.RedeemPointActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.ActorAssetRedeemPointCompleteRegistrationNotificationEventHandler;
@@ -59,7 +59,6 @@ import java.util.UUID;
 
 public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         ActorAssetRedeemPointManager,
-        DealsWithAssetRedeemPointActorNetworkServiceManager,
         DatabaseManagerForDevelopers {
 
     public RedeemPointActorPluginRoot() {
@@ -81,18 +80,11 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM   , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER         )
+    private AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
+
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-    /**
-     * DealsWithAssetRedeemPointActorNetworkServiceManager interface member variable
-     */
-    AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
-
-
-    @Override
-    public void setAssetRedeemPointActorNetworkServiceManager(AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager) {
-        this.assetRedeemPointActorNetworkServiceManager = assetRedeemPointActorNetworkServiceManager;
-    }
 
     @Override
     public void start() throws CantStartPluginException {

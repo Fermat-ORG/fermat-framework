@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -34,7 +35,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.DealsWithAssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.agent.ActorAssetIssuerMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.developerUtils.AssetIssuerActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.event_handlers.ActorAssetIssuerCompleteRegistrationNotificationEventHandler;
@@ -60,8 +60,7 @@ import java.util.UUID;
 
 public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         ActorAssetIssuerManager,
-        DatabaseManagerForDevelopers,
-        DealsWithAssetIssuerActorNetworkServiceManager {
+        DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -75,7 +74,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
-    AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM   , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_ISSUER         )
+    private AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
 
     public AssetIssuerActorPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -87,11 +87,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     BlockchainNetworkType blockchainNetworkType;
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
-
-    @Override
-    public void setAssetIssuerActorNetworkServiceManager(AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager) {
-        this.assetIssuerActorNetworkServiceManager = assetIssuerActorNetworkServiceManager;
-    }
 
     @Override
     public void start() throws CantStartPluginException {
