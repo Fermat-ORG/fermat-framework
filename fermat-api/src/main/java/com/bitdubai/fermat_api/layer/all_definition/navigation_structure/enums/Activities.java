@@ -132,10 +132,13 @@ public enum Activities {
     // CCP Identity
     CCP_SUB_APP_INTRA_USER_IDENTITY("CCPSAISI"),
     CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY("CCPSAIICI"),
+    // DAP ISSUER IDENTITY
+    DAP_SUB_APP_ASSET_ISSUER_IDENTITY("DAPSAAII"),
+    DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY("DAPSAAIICI"),
     DEVELOP_MODE("develop_mode"),
 
 
-    WPD_DESKTOP("WPD"), ;
+    WPD_DESKTOP("WPD"),;
 
     private String code;
 
@@ -150,7 +153,10 @@ public enum Activities {
         //    }
         //}
         switch (code) {
-
+            case "DAPSAAII":
+                return Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY;
+            case "DAPSAAIICI":
+                return Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY;
             case "CSL":
                 return Activities.CWP_SHELL_LOGIN;
             case "CSMM":
