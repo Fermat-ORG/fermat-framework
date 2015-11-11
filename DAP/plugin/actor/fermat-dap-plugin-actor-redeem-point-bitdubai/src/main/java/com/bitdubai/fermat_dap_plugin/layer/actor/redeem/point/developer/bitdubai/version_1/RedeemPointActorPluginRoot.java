@@ -80,7 +80,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM   , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER         )
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM   , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.REDEEM_POINT         )
     private AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
