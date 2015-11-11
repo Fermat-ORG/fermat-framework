@@ -14,7 +14,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Ass
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ResumeTest {
-    private AssetDistributionPluginRoot assetDistributionPluginRoot;
+    private AssetDistributionDigitalAssetTransactionPluginRoot assetDistributionDigitalAssetTransactionPluginRoot;
     private UUID pluginId;
 
     @Mock
@@ -101,19 +101,19 @@ public class ResumeTest {
 
         pluginId = UUID.randomUUID();
 
-        assetDistributionPluginRoot = new AssetDistributionPluginRoot();
-        assetDistributionPluginRoot.setId(pluginId);
-        assetDistributionPluginRoot.setErrorManager(errorManager);
-        assetDistributionPluginRoot.setLogManager(logManager);
-        assetDistributionPluginRoot.setEventManager(eventManager);
-        assetDistributionPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
-        assetDistributionPluginRoot.setPluginFileSystem(pluginFileSystem);
-        assetDistributionPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
-        assetDistributionPluginRoot.setAssetVaultManager(assetVaultManager);
-        assetDistributionPluginRoot.setDeviceUserManager(deviceUserManager);
-        assetDistributionPluginRoot.setBitcoinNetworkManager(bitcoinNetworkManager);
-        assetDistributionPluginRoot.setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
-        assetDistributionPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
+        assetDistributionDigitalAssetTransactionPluginRoot = new AssetDistributionDigitalAssetTransactionPluginRoot();
+        assetDistributionDigitalAssetTransactionPluginRoot.setId(pluginId);
+        assetDistributionDigitalAssetTransactionPluginRoot.setErrorManager(errorManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setLogManager(logManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setEventManager(eventManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
+        assetDistributionDigitalAssetTransactionPluginRoot.setPluginFileSystem(pluginFileSystem);
+        assetDistributionDigitalAssetTransactionPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setAssetVaultManager(assetVaultManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setDeviceUserManager(deviceUserManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setBitcoinNetworkManager(bitcoinNetworkManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
 
         setUpMockitoRules();
     }
@@ -134,10 +134,10 @@ public class ResumeTest {
 
     @Test
     public void pauseTest() throws Exception {
-        assetDistributionPluginRoot.start();
-        assetDistributionPluginRoot.pause();
-        assetDistributionPluginRoot.resume();
-        ServiceStatus serviceStatus = assetDistributionPluginRoot.getStatus();
+        assetDistributionDigitalAssetTransactionPluginRoot.start();
+        assetDistributionDigitalAssetTransactionPluginRoot.pause();
+        assetDistributionDigitalAssetTransactionPluginRoot.resume();
+        ServiceStatus serviceStatus = assetDistributionDigitalAssetTransactionPluginRoot.getStatus();
         Assert.assertEquals(ServiceStatus.STARTED, serviceStatus);
     }
 }

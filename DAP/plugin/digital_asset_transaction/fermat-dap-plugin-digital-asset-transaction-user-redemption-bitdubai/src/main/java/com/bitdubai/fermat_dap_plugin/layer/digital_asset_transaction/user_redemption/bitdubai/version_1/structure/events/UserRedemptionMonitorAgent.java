@@ -40,7 +40,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantG
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.UserRedemptionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.UserRedemptionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.exceptions.CantCheckAssetUserRedemptionProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.DigitalAssetUserRedemptionVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
@@ -189,7 +189,7 @@ public class UserRedemptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
         @Override
         public void run() {
 
-            logManager.log(UserRedemptionPluginRoot.getLogLevelByClass(this.getClass().getName()), "ASSET USER REDEMPTION Protocol Notification Agent: running...", null, null);
+            logManager.log(UserRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "ASSET USER REDEMPTION Protocol Notification Agent: running...", null, null);
             while(true){
                 /**
                  * Increase the iteration counter
@@ -206,7 +206,7 @@ public class UserRedemptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                  */
                 try {
 
-                    logManager.log(UserRedemptionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(UserRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CantCheckAssetUserRedemptionProgressException | CantExecuteQueryException exception) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);

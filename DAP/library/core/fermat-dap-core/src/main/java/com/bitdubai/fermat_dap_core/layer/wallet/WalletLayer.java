@@ -32,7 +32,7 @@ public class WalletLayer extends AbstractLayer {
 
             throw new CantStartLayerException(
                     e,
-                    "Wallet Module Layer of DAP Platform",
+                    "Wallet Layer of DAP Platform",
                     "Problem trying to register a plugin."
             );
         }

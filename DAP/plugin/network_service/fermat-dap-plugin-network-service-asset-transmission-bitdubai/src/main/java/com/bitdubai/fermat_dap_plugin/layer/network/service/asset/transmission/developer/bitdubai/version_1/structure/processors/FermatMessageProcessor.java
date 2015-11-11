@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors;
 
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -25,9 +25,9 @@ import com.google.gson.JsonObject;
 public abstract class FermatMessageProcessor {
 
     /**
-     * Represent the assetTransmissionPluginRoot
+     * Represent the assetTransmissionNetworkServicePluginRoot
      */
-    private AssetTransmissionPluginRoot assetTransmissionPluginRoot;
+    private AssetTransmissionNetworkServicePluginRoot assetTransmissionNetworkServicePluginRoot;
 
     /**
      * Represent the gson
@@ -36,11 +36,11 @@ public abstract class FermatMessageProcessor {
 
     /**
      * Constructor with parameters
-     * @param assetTransmissionPluginRoot
+     * @param assetTransmissionNetworkServicePluginRoot
      */
-    public FermatMessageProcessor(AssetTransmissionPluginRoot assetTransmissionPluginRoot){
+    public FermatMessageProcessor(AssetTransmissionNetworkServicePluginRoot assetTransmissionNetworkServicePluginRoot){
         super();
-        this.assetTransmissionPluginRoot = assetTransmissionPluginRoot;
+        this.assetTransmissionNetworkServicePluginRoot = assetTransmissionNetworkServicePluginRoot;
         this.gson = new Gson();
     }
 
@@ -57,11 +57,11 @@ public abstract class FermatMessageProcessor {
 
 
     /**
-     * Get the AssetTransmissionPluginRoot
-     * @return assetTransmissionPluginRoot
+     * Get the AssetTransmissionNetworkServicePluginRoot
+     * @return assetTransmissionNetworkServicePluginRoot
      */
-    public AssetTransmissionPluginRoot getAssetTransmissionPluginRoot() {
-        return assetTransmissionPluginRoot;
+    public AssetTransmissionNetworkServicePluginRoot getAssetTransmissionNetworkServicePluginRoot() {
+        return assetTransmissionNetworkServicePluginRoot;
     }
 
 
