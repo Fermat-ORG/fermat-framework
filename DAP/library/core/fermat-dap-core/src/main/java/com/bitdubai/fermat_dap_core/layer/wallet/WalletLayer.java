@@ -17,7 +17,7 @@ import com.bitdubai.fermat_dap_core.layer.wallet.redeem_point.RedeemPointPluginS
 public class WalletLayer extends AbstractLayer {
 
     public WalletLayer() {
-        super(Layers.WALLET_MODULE);
+        super(Layers.WALLET);
     }
 
     public void start() throws CantStartLayerException {
