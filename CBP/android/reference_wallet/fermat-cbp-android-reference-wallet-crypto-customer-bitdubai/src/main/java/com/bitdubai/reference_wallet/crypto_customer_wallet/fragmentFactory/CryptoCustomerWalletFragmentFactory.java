@@ -2,6 +2,8 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory;
 
 import android.app.Fragment;
 
+import com.bitdubai.fermat_android_api.engine.FermatWalletFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
@@ -19,19 +21,19 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home.Marke
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home.OpenContractsTabFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home.OpenNegotiationsTabFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings.SettingsActivityFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import static com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentsEnumType.*;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class CryptoCustomerWalletFragmentFactory implements WalletFragmentFactory {
+public class CryptoCustomerWalletFragmentFactory extends FermatWalletFragmentFactory<CryptoCustomerWalletSession,WalletSettings,CryptoCustomerWalletFragmentsEnumType> {
+
+
 
     @Override
-    public Fragment getFragment(String code, WalletSession walletSession, WalletSettings WalletSettings, WalletResourcesProviderManager walletResourcesProviderManager) throws FragmentNotFoundException {
-        CryptoCustomerWalletFragmentsEnumType fragment = CryptoCustomerWalletFragmentsEnumType.getValue(code);
-
-
+    public FermatWalletFragment getFermatFragment(CryptoCustomerWalletFragmentsEnumType fragment) throws FragmentNotFoundException {
         if (fragment == CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS)
             return MarketRateStatisticsFragment.newInstance();
         if (fragment == CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATIONS_TAB)
@@ -59,6 +61,10 @@ public class CryptoCustomerWalletFragmentFactory implements WalletFragmentFactor
         throw createFragmentNotFoundException(fragment);
     }
 
+    @Override
+    public CryptoCustomerWalletFragmentsEnumType getFermatFragmentEnumType(String key) {
+        return CryptoCustomerWalletFragmentsEnumType.getValue(key);
+    }
 
     private FragmentNotFoundException createFragmentNotFoundException(FermatFragmentsEnumType fragments) {
         String possibleReason, context;
@@ -73,4 +79,5 @@ public class CryptoCustomerWalletFragmentFactory implements WalletFragmentFactor
 
         return new FragmentNotFoundException("Fragment not found", new Exception(), context, possibleReason);
     }
+
 }

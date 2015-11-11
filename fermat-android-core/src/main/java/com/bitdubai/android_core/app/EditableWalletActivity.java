@@ -268,7 +268,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         String walletCategory = walletRuntime.getWalletCategory();
         String walletType = walletRuntime.getWalletType();
 
-        WalletFragmentFactory walletFragmentFactory = com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory, walletType, walletPublicKey);
+        WalletFragmentFactory walletFragmentFactory = com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory, walletType, walletPublicKey);
 
         try {
             if (walletFragmentFactory != null) {
@@ -411,7 +411,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     public void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
         try {
             getWalletRuntimeManager().getLastWallet().getLastActivity().getFragment(fragmentType);
-            WalletFragmentFactory walletFragmentFactory = com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory, walletType, walletPublicKey);
+            WalletFragmentFactory walletFragmentFactory = com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory, walletType, walletPublicKey);
             Fragment fragment = walletFragmentFactory.getFragment(fragmentType, getWalletSessionManager().getWalletSession(getWalletRuntimeManager().getLastWallet().getPublicKey()), getWalletSettingsManager().getSettings(walletPublicKey), getWalletResourcesProviderManager());
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);

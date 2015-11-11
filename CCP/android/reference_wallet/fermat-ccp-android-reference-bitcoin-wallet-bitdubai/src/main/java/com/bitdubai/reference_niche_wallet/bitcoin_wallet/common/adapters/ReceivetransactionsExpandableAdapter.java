@@ -32,7 +32,7 @@ public class ReceivetransactionsExpandableAdapter
     public ReceivetransactionsExpandableAdapter(Context context, List<GrouperItem> parentItemList,Resources res) {
         super(parentItemList);
         mInflater = LayoutInflater.from(context);
-        res = res;
+        this.res = res;
     }
 
     /**

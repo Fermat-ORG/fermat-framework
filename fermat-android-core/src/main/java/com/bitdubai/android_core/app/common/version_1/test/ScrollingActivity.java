@@ -39,7 +39,6 @@ public class ScrollingActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
 
-
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
 

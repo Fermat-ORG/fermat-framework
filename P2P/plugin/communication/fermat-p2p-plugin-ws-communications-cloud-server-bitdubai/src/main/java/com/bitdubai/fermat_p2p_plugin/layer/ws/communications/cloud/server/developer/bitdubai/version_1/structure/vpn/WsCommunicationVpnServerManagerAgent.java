@@ -102,6 +102,12 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
                 for (WsCommunicationVPNServer wsCommunicationVPNServer : vpnServersActivesCache) {
 
                     try {
+
+                        //Validate if pending pong message
+                        if (!wsCommunicationVPNServer.getPendingPongMessageByConnection().isEmpty()){
+                            throw new RuntimeException("Some Connection maybe not active");
+                        }
+
                         /*
                          * Send the ping message to this participant
                          */
@@ -109,6 +115,7 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
 
                     }catch (Exception ex){
 
+                        System.out.println(" WsCommunicationVpnServerManagerAgent - Some Connection of the participant maybe not active");
                         //Close all connection and stop the vpn server
                         wsCommunicationVPNServer.closeAllConnections();
                         wsCommunicationVPNServer.stop();
