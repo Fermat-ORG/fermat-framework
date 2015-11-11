@@ -34,9 +34,9 @@ public class NewCryptoAddressRequestAssetUserActorNotificationEventHandler imple
 
             ActorAssetUser actorAssetUserDestination = (ActorAssetUser) newCryptoAddressRequestAssetUserActorNotificationEvent.getActorAssetUserDestination();
 
-            System.out.println("Actor Asset User: llamando a handleRequestCrypto en Actor AssetActorUserPluginRoot");
+            System.out.println("Actor Asset User: llamando a handleRequestCrypto en Actor AssetUserActorPluginRoot");
 
-//            this.actorNetworkServiceAssetUser.handleRequestCryptoAddresFromRemoteAssetUserEvent(actorAssetIssuerSender, actorAssetUserDestination);
+            //this.actorNetworkServiceAssetUser.handleRequestCryptoAddresFromRemoteAssetUserEvent(actorAssetIssuerSender, actorAssetUserDestination);
         }
     }
 }

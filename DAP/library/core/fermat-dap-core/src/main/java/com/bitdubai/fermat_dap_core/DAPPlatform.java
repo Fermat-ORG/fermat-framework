@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_dap_core.layer.actor.ActorLayer;
+import com.bitdubai.fermat_dap_core.layer.identity.IdentityLayer;
 
 /**
  * The class <code>com.bitdubai.fermat_dap_core.DAPPlatform</code>
@@ -25,6 +26,7 @@ public final class DAPPlatform extends AbstractPlatform {
         try {
 
             registerLayer(new ActorLayer()         );
+            registerLayer(new IdentityLayer()         );
 
         } catch (CantRegisterLayerException e) {
 
