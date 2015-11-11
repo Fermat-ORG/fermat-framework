@@ -52,15 +52,14 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET  , plugin = Plugins.ASSET_ISSUER)
+    private AssetIssuerWalletManager assetIssuerWalletManager;
 
     // TODO INIT MISSING REFERENCES (ongoing migration)
-    private AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
     private AssetDistributionManager assetDistributionManager;
     // TODO END  MISSING REFERENCES (ongoing migration)
 
-
-
-    private AssetIssuerWalletManager assetIssuerWalletManager;
+    private AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
 
     public AssetIssuerWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
