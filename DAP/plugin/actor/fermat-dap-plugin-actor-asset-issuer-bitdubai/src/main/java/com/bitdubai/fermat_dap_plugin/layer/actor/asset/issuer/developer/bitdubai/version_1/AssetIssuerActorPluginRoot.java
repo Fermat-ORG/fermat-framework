@@ -285,18 +285,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         }
     }
 
-//    public CryptoAddress getGenesisAddress() throws CantGetGenesisAddressException {
-//        try {
-////            System.out.println("La BlockChain es: " + blockchainNetworkType);
-//            CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
-////            System.out.println("========================================================================");
-////            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
-//            return genesisAddress;
-//        } catch (GetNewCryptoAddressException exception) {
-//            throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
-//        }
-//    }
-
     /**
      * Private methods
      */
