@@ -90,6 +90,8 @@ public class SubAppDesktopFragment extends Fragment {
         mlist.add(installedSubApp);
         installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Asset Community Redeem Point", "sub-app-asset-community-redeem-point", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
         mlist.add(installedSubApp);
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_ISSUER, null, null, "sub-app-asset-identity-issuer", "Identity Issuer", "sub-app-asset-identity-issuer", "sub-app-asset-identity-issuer", new Version(1, 0, 0));
+        mlist.add(installedSubApp);
 
         GridView gridView = new GridView(getActivity());
 
@@ -178,6 +180,20 @@ public class SubAppDesktopFragment extends Fragment {
 
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.sub_apps);
             switch (installedSubApp.getSubAppIcon()) {
+                case "sub-app-asset-identity-issuer":
+                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setTag("DevelopersActivity|1");
+                    linearLayout.setTag("DevelopersActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+
+                        }
+                    });
+                    break;
                 case "sub-app-asset-factory":
                     holder.imageView.setImageResource(R.drawable.factory_nuevo);
                     holder.imageView.setTag("DevelopersActivity|1");
