@@ -7,62 +7,77 @@ import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_red
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.events.IssuerRedemptionRecorderService;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_redemption.interfaces.IssuerRedemptionManager;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 16/09/15.
  */
-public class IssuerRedemptionPluginRoot implements IssuerRedemptionManager, DatabaseManagerForDevelopers,DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service {
+public class IssuerRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
+        IssuerRedemptionManager,
+        DatabaseManagerForDevelopers,
+        LogManagerForDevelopers {
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
+    DeviceUserManager deviceUserManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem        ;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    private EventManager eventManager;
+
+    public IssuerRedemptionDigitalAssetTransactionPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     Database issuerRedemptionDatabase;
-    DeviceUserManager deviceUserManager;
-    ErrorManager errorManager;
-    EventManager eventManager;
     IssuerRedemptionRecorderService issuerRedemptionRecorderService;
-    LogManager logManager;
-    PluginDatabaseSystem pluginDatabaseSystem;
-    PluginFileSystem pluginFileSystem;
-    UUID pluginId;
-    ServiceStatus serviceStatus= ServiceStatus.CREATED;
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -106,7 +121,7 @@ public class IssuerRedemptionPluginRoot implements IssuerRedemptionManager, Data
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return IssuerRedemptionPluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return IssuerRedemptionDigitalAssetTransactionPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
@@ -116,39 +131,9 @@ public class IssuerRedemptionPluginRoot implements IssuerRedemptionManager, Data
     }
 
     @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager=deviceUserManager;
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager=errorManager;
-    }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager=eventManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager=logManager;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem=pluginFileSystem;
-    }
-
-    @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
-        returnedClasses.add("com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.IssuerRedemptionPluginRoot");
+        returnedClasses.add("com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.IssuerRedemptionDigitalAssetTransactionPluginRoot");
        /**
          * I return the values.
          */
@@ -164,18 +149,13 @@ public class IssuerRedemptionPluginRoot implements IssuerRedemptionManager, Data
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (IssuerRedemptionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                IssuerRedemptionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                IssuerRedemptionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (IssuerRedemptionDigitalAssetTransactionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                IssuerRedemptionDigitalAssetTransactionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                IssuerRedemptionDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                IssuerRedemptionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                IssuerRedemptionDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
-    }
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId=pluginId;
     }
 
     @Override
@@ -219,26 +199,6 @@ public class IssuerRedemptionPluginRoot implements IssuerRedemptionManager, Data
     private void createAssetIssuingTransactionDatabase() throws CantCreateDatabaseException {
         IssuerRedemptionDatabaseFactory databaseFactory = new IssuerRedemptionDatabaseFactory(this.pluginDatabaseSystem);
         issuerRedemptionDatabase = databaseFactory.createDatabase(pluginId, IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_DATABASE);
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
     }
 
     //TODO: DELETE THIS USELESS METHOD

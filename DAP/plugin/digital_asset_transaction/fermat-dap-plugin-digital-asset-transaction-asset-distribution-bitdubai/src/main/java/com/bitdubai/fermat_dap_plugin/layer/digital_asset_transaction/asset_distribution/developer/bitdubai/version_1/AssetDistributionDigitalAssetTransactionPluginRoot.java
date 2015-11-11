@@ -4,16 +4,24 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -79,34 +87,58 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/09/15.
  */
-public class AssetDistributionPluginRoot implements AssetDistributionManager, DealsWithActorAssetIssuer, DealsWithActorAssetUser, DealsWithAssetIssuerWallet, DealsWithAssetTransmissionNetworkServiceManager, DealsWithBitcoinNetwork, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithDeviceUser,DealsWithErrors, DealsWithEvents, DealsWithLogger,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
+public class AssetDistributionDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
+        AssetDistributionManager,
+        DatabaseManagerForDevelopers,
+        LogManagerForDevelopers {
+
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
+    ActorAssetIssuerManager actorAssetIssuerManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_ISSUER)
+    AssetIssuerWalletManager assetIssuerWalletManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.ASSET_TRANSMISSION)
+    AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
+    BitcoinNetworkManager bitcoinNetworkManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
+    DeviceUserManager deviceUserManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_ASSET_VAULT)
+    AssetVaultManager assetVaultManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem        ;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    private EventManager eventManager;
+
+    public AssetDistributionDigitalAssetTransactionPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-    ActorAssetIssuerManager actorAssetIssuerManager;
-    ActorAssetUserManager actorAssetUserManager;
+
+    DigitalAssetDistributionVault digitalAssetDistributionVault;
     AssetDistributionTransactionManager assetDistributionTransactionManager;
     AssetDistributionMonitorAgent assetDistributionMonitorAgent;
-    AssetIssuerWalletManager assetIssuerWalletManager;
-    AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
     Database assetDistributionDatabase;
-    DeviceUserManager deviceUserManager;
-    DigitalAssetDistributionVault digitalAssetDistributionVault;
-    AssetVaultManager assetVaultManager;
-    ErrorManager errorManager;
-    LogManager logManager;
-    PluginDatabaseSystem pluginDatabaseSystem;
-    UUID pluginId;
-    ServiceStatus serviceStatus= ServiceStatus.CREATED;
-    PluginFileSystem pluginFileSystem;
-    BitcoinNetworkManager bitcoinNetworkManager;
-    EventManager eventManager;
+
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId=pluginId;
-    }
 
     private void createAssetDistributionTransactionDatabase() throws CantCreateDatabaseException {
         AssetDistributionDatabaseFactory databaseFactory = new AssetDistributionDatabaseFactory(this.pluginDatabaseSystem);
@@ -120,7 +152,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return AssetDistributionPluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return AssetDistributionDigitalAssetTransactionPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
@@ -186,26 +218,6 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
         this.serviceStatus=ServiceStatus.STARTED;
         //testRaiseEvent();
 
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
     }
 
     //TODO: DELETE THIS USELESS METHOD
@@ -307,26 +319,6 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
     }
 
     @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager=errorManager;
-    }
-
-    @Override
-    public void setAssetVaultManager(AssetVaultManager assetVaultManager) {
-        this.assetVaultManager=assetVaultManager;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem=pluginFileSystem;
-    }
-
-    @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils.AssetDistributionDeveloperDatabaseFactory");
@@ -339,7 +331,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.AssetDistributionMonitorAgent");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.AssetDistributionTransactionManager");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.DigitalAssetDistributor");
-        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionDigitalAssetTransactionPluginRoot");
         /**
          * I return the values.
          */
@@ -355,55 +347,13 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (AssetDistributionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                AssetDistributionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                AssetDistributionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (AssetDistributionDigitalAssetTransactionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                AssetDistributionDigitalAssetTransactionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                AssetDistributionDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                AssetDistributionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                AssetDistributionDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
-    }
-
-    @Override
-    public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
-        this.assetIssuerWalletManager=assetIssuerWalletManager;
-    }
-
-    @Override
-    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) {
-        this.assetTransmissionNetworkServiceManager=assetTransmissionNetworkServiceManager;
-    }
-
-
-    @Override
-    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
-        this.bitcoinNetworkManager=bitcoinNetworkManager;
-    }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager=eventManager;
-    }
-
-    @Override
-    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
-        this.actorAssetIssuerManager=actorAssetIssuerManager;
-    }
-
-
-    @Override
-    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
-        this.actorAssetUserManager=actorAssetUserManager;
-    }
-
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager=deviceUserManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager=logManager;
     }
 
     private HashMap<DigitalAssetMetadata, ActorAssetUser> getDistributionHashMapForTesting(){
@@ -447,7 +397,5 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
         ActorAssetUser mockedActorAssetUser=new MockActorAssetUserForTesting();
         return mockedActorAssetUser;
     }
-
-
 
 }

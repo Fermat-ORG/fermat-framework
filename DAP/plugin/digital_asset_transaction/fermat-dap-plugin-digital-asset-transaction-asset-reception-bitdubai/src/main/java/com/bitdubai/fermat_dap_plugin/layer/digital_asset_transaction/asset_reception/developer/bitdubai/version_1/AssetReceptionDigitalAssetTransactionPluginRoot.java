@@ -4,16 +4,24 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -77,27 +85,54 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/09/15.
  */
-public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWithActorAssetIssuer, DealsWithActorAssetUser, DealsWithAssetUserWallet, DealsWithAssetTransmissionNetworkServiceManager,  DealsWithBitcoinNetwork, DealsWithDeviceUser, DatabaseManagerForDevelopers, DealsWithLogger, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, LogManagerForDevelopers, Plugin, Service {
+public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
+        AssetReceptionManager,
+        DatabaseManagerForDevelopers,
+        LogManagerForDevelopers {
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_USER)
+    AssetUserWalletManager assetUserWalletManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
+    AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.ASSET_TRANSMISSION)
+    ActorAssetUserManager actorAssetUserManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
+    ActorAssetIssuerManager actorAssetIssuerManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
+    BitcoinNetworkManager bitcoinNetworkManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
+    DeviceUserManager deviceUserManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem        ;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    private EventManager eventManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-    AssetUserWalletManager assetUserWalletManager;
-    AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
-    Database assetReceptionDatabase;
-    ErrorManager errorManager;
-    EventManager eventManager;
-    PluginDatabaseSystem pluginDatabaseSystem;
-    UUID pluginId;
-    PluginFileSystem pluginFileSystem;
-    ServiceStatus serviceStatus= ServiceStatus.CREATED;
-    AssetReceptionRecorderService assetReceptionRecorderService;
-    ActorAssetUserManager actorAssetUserManager;
-    ActorAssetIssuerManager actorAssetIssuerManager;
     AssetReceptionMonitorAgent assetReceptionMonitorAgent;
-    DeviceUserManager deviceUserManager;
-    LogManager logManager;
     DigitalAssetReceptionVault digitalAssetReceptionVault;
-    BitcoinNetworkManager bitcoinNetworkManager;
     DigitalAssetReceptor digitalAssetReceptor;
+    Database assetReceptionDatabase;
+    AssetReceptionRecorderService assetReceptionRecorderService;
+
+    public AssetReceptionDigitalAssetTransactionPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
@@ -138,25 +173,10 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
     }
 
     @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager=errorManager;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem=pluginFileSystem;
-    }
-
-    @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rception.developer.bitdubai.version_1.structure.events.AssetReceptionMonitorAgent");
-        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionDigitalAssetTransactionPluginRoot");
         /**
          * I return the values.
          */
@@ -172,18 +192,13 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (AssetReceptionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                AssetReceptionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                AssetReceptionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (AssetReceptionDigitalAssetTransactionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                AssetReceptionDigitalAssetTransactionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                AssetReceptionDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                AssetReceptionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                AssetReceptionDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
-    }
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId=pluginId;
     }
 
     private void createAssetReceptionTransactionDatabase() throws CantCreateDatabaseException {
@@ -217,7 +232,7 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
             this.assetReceptionRecorderService =new AssetReceptionRecorderService(assetReceptionDao, eventManager);
             try{
                 //I need to check if this works
-                this.assetReceptionRecorderService.setAssetReceptionPluginRoot(this);
+                this.assetReceptionRecorderService.setAssetReceptionDigitalAssetTransactionPluginRoot(this);
                 this.assetReceptionRecorderService.start();
             } catch(CantStartServiceException exception){
                 //This plugin must be stopped if this happens.
@@ -243,31 +258,6 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
 
         this.serviceStatus=ServiceStatus.STARTED;
         //testRaiseEvent();
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
     }
 
     /**
@@ -302,16 +292,6 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
         LOG.info("ASSET RECEPTION: " + information);
     }
 
-    @Override
-    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) {
-        this.assetTransmissionNetworkServiceManager=assetTransmissionNetworkServiceManager;
-    }
-
-    @Override
-    public void setAssetUserManager(AssetUserWalletManager assetUserWalletManager) {
-        this.assetUserWalletManager=assetUserWalletManager;
-    }
-
     public static LogLevel getLogLevelByClass(String className){
         try{
             /**
@@ -319,38 +299,13 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return AssetReceptionPluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return AssetReceptionDigitalAssetTransactionPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
             return DEFAULT_LOG_LEVEL;
         }
-    }
-
-    @Override
-    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
-        this.actorAssetUserManager=actorAssetUserManager;
-    }
-
-    @Override
-    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
-        this.actorAssetIssuerManager=actorAssetIssuerManager;
-    }
-
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager=deviceUserManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager=logManager;
-    }
-
-    @Override
-    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
-        this.bitcoinNetworkManager=bitcoinNetworkManager;
     }
 
     private void testRaiseEvent(){

@@ -64,7 +64,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_core.layer.all_definition.DefinitionLayer;
 import com.bitdubai.fermat_core.layer.dap_module.DAPModuleLayer;
 import com.bitdubai.fermat_core.layer.dap_sub_app_module.DAPSubAppModuleLayer;
-import com.bitdubai.fermat_core.layer.dap_transaction.DAPTransactionLayer;
 import com.bitdubai.fermat_core.layer.dmp_agent.AgentLayer;
 import com.bitdubai.fermat_core.layer.dmp_identity.IdentityLayer;
 import com.bitdubai.fermat_core.layer.dmp_middleware.MiddlewareLayer;
@@ -346,7 +345,6 @@ public class Platform implements Serializable {
             // Init DAP Layers
             corePlatformContext.registerPlatformLayer(new DAPModuleLayer(), PlatformLayers.BITDUBAI_DAP_MODULE_LAYER);
             corePlatformContext.registerPlatformLayer(new DAPSubAppModuleLayer(), PlatformLayers.BITDUBAI_DAP_SUB_APP_MODULE_LAYER);
-            corePlatformContext.registerPlatformLayer(new DAPTransactionLayer(), PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER);
             // End  DAP Layers
 
             // Init WPD Layers
@@ -741,41 +739,13 @@ public class Platform implements Serializable {
                 pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.ACTOR                , Plugins.ASSET_USER  ), Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR  );
                 pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.ACTOR                , Plugins.REDEEM_POINT), Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR);
 
-
-           /*
-            * Plugin Asset Issuing TransactionassetWalletRedeemPoint
-            * -----------------------------
-            */
-                Plugin assetIssuingTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetIssuingPlugin();
-                injectPluginReferencesAndStart(assetIssuingTransaction, Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION);
-
-           /*
-            * Plugin Asset Distribution Transaction
-            * -----------------------------
-            */
-                Plugin assetDistributionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetDistributionPlugin();
-                injectPluginReferencesAndStart(assetDistributionTransaction, Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION);
-
-           /*
-            * Plugin Asset Appropriation Transaction
-            * -----------------------------
-            */
-                Plugin assetAppropriationTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetAppropriationPlugin();
-                injectPluginReferencesAndStart(assetAppropriationTransaction, Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION);
-
-           /*
-            * Plugin Asset Reception Transaction
-            * -----------------------------
-            */
-                Plugin assetReceptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetReceptionPlugin();
-                injectPluginReferencesAndStart(assetReceptionTransaction, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
-
-           /*
-            * Plugin Redeem Point Redemption Transaction.
-            * -----------------------------
-            */
-                Plugin redeemPointRedemptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetRedeemPointRedemptionPlugin();
-                injectPluginReferencesAndStart(redeemPointRedemptionTransaction, Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_APPROPRIATION    ), Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_DISTRIBUTION     ), Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_ISSUING          ), Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_RECEPTION        ), Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_RECEPTION        ), Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.REDEEM_POINT_REDEMPTION), Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.USER_REDEMPTION        ), Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION);
 
                 pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.IDENTITY, Plugins.ASSET_ISSUER), Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
                 pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.IDENTITY, Plugins.ASSET_USER  ), Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY  );
@@ -1048,19 +1018,19 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithAssetIssuing) {
-                ((DealsWithAssetIssuing) plugin).setAssetIssuingManager((AssetIssuingManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION));
+                ((DealsWithAssetIssuing) plugin).setAssetIssuingManager((AssetIssuingManager) ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_ISSUING));
             }
 
             if (plugin instanceof DealsWithAssetDistribution) {
-                ((DealsWithAssetDistribution) plugin).setAssetDistributionManager((AssetDistributionManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION));
+                ((DealsWithAssetDistribution) plugin).setAssetDistributionManager((AssetDistributionManager) ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_DISTRIBUTION));
             }
 
             if (plugin instanceof DealsWithAssetReception) {
-                ((DealsWithAssetReception) plugin).setAssetReceptionManager((AssetReceptionManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION));
+                ((DealsWithAssetReception) plugin).setAssetReceptionManager((AssetReceptionManager) ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_RECEPTION));
             }
 
             if (plugin instanceof DealsWithAssetAppropriation){
-                ((DealsWithAssetAppropriation) plugin).setAssetAppropriationManager((AssetAppropriationManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION));
+                ((DealsWithAssetAppropriation) plugin).setAssetAppropriationManager((AssetAppropriationManager) ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_APPROPRIATION));
             }
 
             if (plugin instanceof DealsWithActorAssetIssuer) {

@@ -5,16 +5,24 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -62,8 +70,40 @@ import java.util.regex.Pattern;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 18/10/15.
  */
-public class RedeemPointRedemptionPluginRoot implements RedeemPointRedemptionManager, Plugin, Service, DealsWithErrors, LogManagerForDevelopers, DealsWithPluginIdentity, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DealsWithLogger, DealsWithActorAssetRedeemPoint, DealsWithAssetTransmissionNetworkServiceManager, DealsWithAssetRedeemPointWallet, DealsWithEvents, DealsWithActorAssetUser, DatabaseManagerForDevelopers {
+public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlugin implements 
+        RedeemPointRedemptionManager,
+        LogManagerForDevelopers,
+        DatabaseManagerForDevelopers {
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem        ;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    private EventManager eventManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
+    private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.REDEEM_POINT)
+    private AssetRedeemPointWalletManager assetRedeemPointWalletManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.ASSET_TRANSMISSION)
+    private AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
+    private ActorAssetUserManager actorAssetUserManager;
+
+    RedeemPointRedemptionMonitorAgent monitorAgent;
+    RedeemPointRedemptionRecorderService recorderService;
     //VARIABLE DECLARATION
     private static Map<String, LogLevel> newLoggingLevel;
 
@@ -71,32 +111,10 @@ public class RedeemPointRedemptionPluginRoot implements RedeemPointRedemptionMan
         newLoggingLevel = new HashMap<>();
     }
 
-    private UUID pluginId;
-    private ServiceStatus status;
-
-    {
-        status = ServiceStatus.CREATED;
-    }
-
-    private ErrorManager errorManager;
-
-
-    private PluginDatabaseSystem pluginDatabaseSystem;
-    private PluginFileSystem pluginFileSystem;
-    private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
-    private AssetRedeemPointWalletManager assetRedeemPointWalletManager;
-    private AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
-    private LogManager logManager;
-    private EventManager eventManager;
-    private ActorAssetUserManager actorAssetUserManager;
-
-    RedeemPointRedemptionMonitorAgent monitorAgent;
-    RedeemPointRedemptionRecorderService recorderService;
-
-
     //CONSTRUCTORS
 
-    public RedeemPointRedemptionPluginRoot() {
+    public RedeemPointRedemptionDigitalAssetTransactionPluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
 
 
@@ -137,26 +155,16 @@ public class RedeemPointRedemptionPluginRoot implements RedeemPointRedemptionMan
         } catch (Exception e) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), context, "");
         } finally {
-            this.status = ServiceStatus.STOPPED;
+            this.serviceStatus= ServiceStatus.STOPPED;
         }
-        this.status = ServiceStatus.STARTED;
+        this.serviceStatus= ServiceStatus.STARTED;
     }
-
-    @Override
-    public void pause() {
-        this.status = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.status = ServiceStatus.STARTED;
-    }
-
+    
     @Override
     public void stop() {
         monitorAgent.stop();
         recorderService.stop();
-        this.status = ServiceStatus.STOPPED;
+        this.serviceStatus= ServiceStatus.STOPPED;
     }
 
     //PRIVATE METHODS
@@ -186,28 +194,6 @@ public class RedeemPointRedemptionPluginRoot implements RedeemPointRedemptionMan
         eventManager.raiseEvent(eventToRaise);
     }
 
-    //GETTER AND SETTERS
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return status;
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
@@ -222,7 +208,7 @@ public class RedeemPointRedemptionPluginRoot implements RedeemPointRedemptionMan
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events.RedeemPointRedemptionEventHandler");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events.RedeemPointRedemptionMonitorAgent");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events.RedeemPointRedemptionRecorderService");
-        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.RedeemPointRedemptionPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.RedeemPointRedemptionDigitalAssetTransactionPluginRoot");
         return returnedClasses;
     }
 
@@ -235,11 +221,11 @@ public class RedeemPointRedemptionPluginRoot implements RedeemPointRedemptionMan
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (RedeemPointRedemptionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                RedeemPointRedemptionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                RedeemPointRedemptionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (RedeemPointRedemptionDigitalAssetTransactionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                RedeemPointRedemptionDigitalAssetTransactionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                RedeemPointRedemptionDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                RedeemPointRedemptionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                RedeemPointRedemptionDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
     }
@@ -258,46 +244,6 @@ public class RedeemPointRedemptionPluginRoot implements RedeemPointRedemptionMan
              */
             return DEFAULT_LOG_LEVEL;
         }
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    @Override
-    public void setActorAssetRedeemPointManager(ActorAssetRedeemPointManager actorAssetRedeemPointManager) throws CantSetObjectException {
-        this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
-    }
-
-    @Override
-    public void setAssetReddemPointManager(AssetRedeemPointWalletManager assetRedeemPointWalletManager) {
-        this.assetRedeemPointWalletManager = assetRedeemPointWalletManager;
-    }
-
-    @Override
-    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) {
-        this.assetTransmissionNetworkServiceManager = assetTransmissionNetworkServiceManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    @Override
-    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
-        this.actorAssetUserManager = actorAssetUserManager;
     }
 
     @Override

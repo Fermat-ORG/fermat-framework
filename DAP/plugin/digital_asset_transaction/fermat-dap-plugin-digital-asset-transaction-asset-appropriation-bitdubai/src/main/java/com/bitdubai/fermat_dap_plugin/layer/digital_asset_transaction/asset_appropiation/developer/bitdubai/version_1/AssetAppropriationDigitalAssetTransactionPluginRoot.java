@@ -4,14 +4,21 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -52,33 +59,37 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 16/09/15.
  */
-public class AssetAppropriationPluginRoot implements AssetAppropriationManager, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem,
-        LogManagerForDevelopers, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithEvents,
-        DealsWithAssetUserWallet, DealsWithPluginFileSystem, Plugin, Service {
+public class AssetAppropriationDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
+        AssetAppropriationManager,
+        LogManagerForDevelopers,
+        DatabaseManagerForDevelopers {
 
     //VARIABLE DECLARATION
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
-    private AssetVaultManager assetVaultManager;
-    private ErrorManager errorManager;
-    private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem        ;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
-    private UUID pluginId;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
-    private AssetUserWalletManager assetUserWalletManager;
 
-    private ServiceStatus serviceStatus;
-
-    {
-        serviceStatus = ServiceStatus.CREATED;
-    }
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     AssetAppropriationRecorderService recorderService;
     AssetAppropriationMonitorAgent monitorAgent;
 
     //CONSTRUCTORS
 
-    public AssetAppropriationPluginRoot() {
+    public AssetAppropriationDigitalAssetTransactionPluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
 
     //PUBLIC METHODS
@@ -86,15 +97,6 @@ public class AssetAppropriationPluginRoot implements AssetAppropriationManager, 
     @Override
     public void appropriateAssets(Map<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToAppropriate, String walletPublicKey) throws CantExecuteAppropriationTransactionException {
         //TODO IMPLEMENT. I PROBABLY WONT NEED THAT MAP BUT A LIST.
-    }
-
-    //PRIVATE METHODS
-
-    //GETTER AND SETTERS
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
     @Override
@@ -128,30 +130,10 @@ public class AssetAppropriationPluginRoot implements AssetAppropriationManager, 
     }
 
     @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
     public void stop() {
         monitorAgent.stop();
         recorderService.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
     @Override
@@ -168,11 +150,11 @@ public class AssetAppropriationPluginRoot implements AssetAppropriationManager, 
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (AssetAppropriationPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                AssetAppropriationPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                AssetAppropriationPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (AssetAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                AssetAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                AssetAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                AssetAppropriationPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                AssetAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
     }
@@ -184,18 +166,13 @@ public class AssetAppropriationPluginRoot implements AssetAppropriationManager, 
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return AssetAppropriationPluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return AssetAppropriationDigitalAssetTransactionPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
             return DEFAULT_LOG_LEVEL;
         }
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 
     @Override
@@ -230,31 +207,4 @@ public class AssetAppropriationPluginRoot implements AssetAppropriationManager, 
         // If we are here the database could not be opened, so we return an empty list
         return Collections.EMPTY_LIST;
     }
-
-    @Override
-    public void setAssetVaultManager(AssetVaultManager assetVaultManager) {
-        this.assetVaultManager = assetVaultManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    @Override
-    public void setAssetUserManager(AssetUserWalletManager assetUserWalletManager) {
-        this.assetUserWalletManager = assetUserWalletManager;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    //INNER CLASSES
 }

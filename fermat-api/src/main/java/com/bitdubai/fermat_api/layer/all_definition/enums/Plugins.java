@@ -153,11 +153,14 @@ public enum Plugins implements FermatEnum {
     //End CBP Plugins
 
     // Init new Plugins
-
-    ASSET_FACTORY       ("AF"),
-    ASSET_ISSUER        ("AI"),
-    ASSET_USER          ("AU"),
-    ASSET_TRANSMISSION  ("AT"),
+    ASSET_APPROPRIATION ("ASAP"),
+    ASSET_DISTRIBUTION  ("ASD"),
+    ASSET_FACTORY       ("ASF"),
+    ASSET_ISSUER        ("ASI"),
+    ASSET_ISSUING       ("ASIS"),
+    ASSET_RECEPTION     ("ASR"),
+    ASSET_USER          ("ASU"),
+    ASSET_TRANSMISSION  ("AST"),
     BITCOIN_ASSET_VAULT("BAV"),
     BITCOIN_NETWORK("BN"),
     BITCOIN_VAULT("BV"),
@@ -178,9 +181,12 @@ public enum Plugins implements FermatEnum {
     INCOMING_EXTRA_USER("IEU"),
     INCOMING_INTRA_USER("IIU"),
     INTRA_WALLET_USER("IWU"),
+    ISSUER_REDEMPTION("IR"),
     OUTGOING_EXTRA_USER("OEU"),
     OUTGOING_INTRA_ACTOR("OIA"),
     REDEEM_POINT        ("RP"),
+    REDEEM_POINT_REDEMPTION("RPR"),
+    USER_REDEMPTION("UR"),
     WALLET_CONTACTS("WC"),
     WALLET_MANAGER("WM"),
     WS_CLOUD_CLIENT("WCL"),
@@ -453,11 +459,14 @@ public enum Plugins implements FermatEnum {
             //End CBP Plugins
 
             // Init new Plugins
-
-            case "AF":    return ASSET_FACTORY;
-            case "AI":    return ASSET_ISSUER;
-            case "AU":    return ASSET_USER;
-            case "AT":    return ASSET_TRANSMISSION;
+            case "ASAP":  return ASSET_APPROPRIATION;
+            case "ASD":   return ASSET_DISTRIBUTION;
+            case "ASF":   return ASSET_FACTORY;
+            case "ASI":   return ASSET_ISSUER;
+            case "ASIS":  return ASSET_ISSUING;
+            case "AR":    return ASSET_RECEPTION;
+            case "ASU":   return ASSET_USER;
+            case "AST":   return ASSET_TRANSMISSION;
             case "BAV":   return BITCOIN_ASSET_VAULT;
             case "BN":    return BITCOIN_NETWORK;
             case "BV":    return BITCOIN_VAULT;
@@ -477,9 +486,12 @@ public enum Plugins implements FermatEnum {
             case "IEU":   return INCOMING_EXTRA_USER;
             case "IIU":   return INCOMING_INTRA_USER;
             case "IWU":   return INTRA_WALLET_USER;
+            case "IR":    return ISSUER_REDEMPTION;
             case "OEU":   return OUTGOING_EXTRA_USER;
             case "OIA":   return OUTGOING_INTRA_ACTOR;
             case "RP":    return REDEEM_POINT;
+            case "RPR":   return REDEEM_POINT_REDEMPTION;
+            case "UR":    return USER_REDEMPTION;
             case "WC":    return WALLET_CONTACTS;
             case "WM":    return WALLET_MANAGER;
             case "WCL":   return WS_CLOUD_CLIENT;
