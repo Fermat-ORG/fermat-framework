@@ -21,6 +21,8 @@ project(':fermat-csh-api').projectDir = new File('CSH/library/api/fermat-csh-api
 include ':fermat-dap-api'
 project(':fermat-dap-api').projectDir = new File('DAP/library/api/fermat-dap-api')
 
+include ':fermat-dap-core'
+project(':fermat-dap-core').projectDir = new File('DAP/library/core/fermat-dap-core')
 
 include ':fermat-pip-api'
 project(':fermat-pip-api').projectDir = new File('PIP/library/api/fermat-pip-api')
