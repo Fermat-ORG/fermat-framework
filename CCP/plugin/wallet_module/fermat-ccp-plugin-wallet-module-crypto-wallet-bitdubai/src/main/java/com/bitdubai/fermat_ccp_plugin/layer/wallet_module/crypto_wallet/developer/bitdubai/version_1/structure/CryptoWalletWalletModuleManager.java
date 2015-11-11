@@ -18,18 +18,12 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionSummary;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.DealsWithCCPIdentityIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGenerateCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRegistryException;
@@ -48,7 +42,6 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoad
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.DealsWithCCPActorIntraWalletUsers;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
@@ -76,13 +69,11 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.ActorTransactionSummary;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.DealsWithOutgoingExtraUser;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.OutgoingExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.exceptions.CantGetTransactionManagerException;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.exceptions.CantSendFundsException;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -90,24 +81,18 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentRegistry;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.DealsWithOutgoingIntraActor;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichIntraUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantGetActorException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.DealsWithExtraUsers;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantCreateOrRegisterActorException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletManagerException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantRequestOrRegisterCryptoAddressException;
@@ -122,123 +107,80 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The Class <code>CryptoWalletWalletModuleManager</code>
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager</code>
  * haves all methods for the contacts activity of a bitcoin wallet
  * <p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 11/06/15.
+ * Modified and reviewed by nattyco & furszy.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoWalletWalletModuleManager implements
-        CryptoWallet,
-        DealsWithCryptoTransmissionNetworkService,
-        DealsWithCryptoAddressesNetworkService,
-        DealsWithCCPActorIntraWalletUsers,
-        DealsWithCCPIdentityIntraWalletUser,
-        DealsWithBitcoinWallet,
-        DealsWithCryptoVault,
-        DealsWithErrors,
-        DealsWithExtraUsers,
-        DealsWithOutgoingExtraUser,
-        DealsWithOutgoingIntraActor,
-        DealsWithWalletContacts,
-        DealsWithCryptoAddressBook,
-        DealsWithCryptoPayment{
+public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
+    private final BitcoinWalletManager           bitcoinWalletManager          ;
+    private final CryptoAddressBookManager       cryptoAddressBookManager      ;
+    private final CryptoAddressesManager         cryptoAddressesNSManager      ;
+    private final CryptoPaymentManager           cryptoPaymentManager          ;
+    private final CryptoVaultManager             cryptoVaultManager            ;
+    private final ErrorManager                   errorManager                  ;
+    private final ExtraUserManager               extraUserManager              ;
+    private final IntraWalletUserActorManager    intraUserManager              ;
+    private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+    private final OutgoingExtraUserManager       outgoingExtraUserManager      ;
+    private final OutgoingIntraActorManager      outgoingIntraActorManager     ;
+    private final WalletContactsManager          walletContactsManager         ;
 
-    /**
-     * DealsWithBitcoinWallet Interface member variables.
-     */
-    private BitcoinWalletManager bitcoinWalletManager;
+    public CryptoWalletWalletModuleManager(final BitcoinWalletManager           bitcoinWalletManager          ,
+                                           final CryptoAddressBookManager       cryptoAddressBookManager      ,
+                                           final CryptoAddressesManager         cryptoAddressesNSManager      ,
+                                           final CryptoPaymentManager           cryptoPaymentManager          ,
+                                           final CryptoVaultManager             cryptoVaultManager            ,
+                                           final ErrorManager                   errorManager                  ,
+                                           final ExtraUserManager               extraUserManager              ,
+                                           final IntraWalletUserActorManager    intraUserManager              ,
+                                           final IntraWalletUserIdentityManager intraWalletUserIdentityManager,
+                                           final OutgoingExtraUserManager       outgoingExtraUserManager      ,
+                                           final OutgoingIntraActorManager      outgoingIntraActorManager     ,
+                                           final WalletContactsManager          walletContactsManager         ) {
 
-    /**
-     * DealsWithCryptoVault Interface member variables.
-     */
-    private CryptoVaultManager cryptoVaultManager;
+        this.bitcoinWalletManager           = bitcoinWalletManager          ;
+        this.cryptoAddressBookManager       = cryptoAddressBookManager      ;
+        this.cryptoAddressesNSManager       = cryptoAddressesNSManager      ;
+        this.cryptoPaymentManager           = cryptoPaymentManager          ;
+        this.cryptoVaultManager             = cryptoVaultManager            ;
+        this.errorManager                   = errorManager                  ;
+        this.extraUserManager               = extraUserManager              ;
+        this.intraUserManager               = intraUserManager              ;
+        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
+        this.outgoingExtraUserManager       = outgoingExtraUserManager      ;
+        this.outgoingIntraActorManager      = outgoingIntraActorManager     ;
+        this.walletContactsManager          = walletContactsManager         ;
+    }
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * DealsWithExtraUsers Interface member variables.
-     */
-    private ExtraUserManager extraUserManager;
-
-    /**
-     * DealsWithCCPIntraWalletUsers Interface member variables.
-     */
-    private IntraWalletUserActorManager intraUserManager;
-
-    /**
-     * DealsWithCCPIdentityIntraWalletUser Interface member variables.
-     */
-
-    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
-
-    /**
-     * DealsWithOutgoingExtraUser Interface member variables.
-     */
-    private OutgoingExtraUserManager outgoingExtraUserManager;
-
-    /**
-     * DealsWithWalletContacts Interface member variable
-     */
-    private WalletContactsManager walletContactsManager;
+    private CryptoPaymentRegistry  cryptoPaymentRegistry ;
     private WalletContactsRegistry walletContactsRegistry;
 
-    /**
-     * DealsWithCryptoAddressBook Interface member variable
-     */
-    private CryptoAddressBookManager cryptoAddressBookManager;
 
+    public final void initialize() throws CantInitializeCryptoWalletManagerException {
 
-    /**
-     * DealsWithMoneyRequestNetworkService Interface member variable
-     */
-
-    private CryptoPaymentManager cryptoPaymentManager;
-
-    /**
-     * DealsWithCryptoPayment Interface member variable
-     */
-    private CryptoPaymentRegistry cryptoPaymentRegistry;
-
-    /**
-     * DealsWithOutgoingIntraActor Interface member variable
-     */
-
-    private OutgoingIntraActorManager outgoingIntraActorManager;
-
-    /**
-     * DealsWithCryptoAddressesNetworkService Interface member variables.
-     */
-    private CryptoAddressesManager cryptoAddressesNSManager;
-
-    //testing purpose
-    private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
-
-
-    public void initialize() throws CantInitializeCryptoWalletManagerException {
         try {
+
+            cryptoPaymentRegistry  = cryptoPaymentManager .getCryptoPaymentRegistry();
+
             walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
 
-            cryptoPaymentRegistry =  cryptoPaymentManager.getCryptoPaymentRegistry();
-
-        } catch (CantGetWalletContactRegistryException e) {
+        } catch (final CantGetWalletContactRegistryException e) {
 
             throw new CantInitializeCryptoWalletManagerException(e, "", "Error trying to get wallet manager registry.");
-        } catch(CantGetCryptoPaymentRegistryException e) {
+        } catch(final CantGetCryptoPaymentRegistryException e) {
 
             throw new CantInitializeCryptoWalletManagerException(e, "", "Error get crypto Payment Registry object");
-        }  catch (Exception e){
+        }  catch (final Exception e){
 
             throw new CantInitializeCryptoWalletManagerException(e, "", "Unhandled error.");
         }
-
     }
 
     @Override
@@ -1500,17 +1442,6 @@ public class CryptoWalletWalletModuleManager implements
     }
 
     @Override
-    public void sendMetadataLikeChampion(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType) {
-        try {
-
-            cryptoTransmissionNetworkServiceManager.sendCrypto(UUID.randomUUID(), CryptoCurrency.BITCOIN, 10000, deliveredByActorPublicKey, "actor_prueba_robert_public_key", "hash", "Estoy haciendo un pago por molesto");
-
-        } catch (CouldNotTransmitCryptoException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public List<IntraWalletUserIdentity> getActiveIdentities() {
 
         try{
@@ -1660,93 +1591,5 @@ public class CryptoWalletWalletModuleManager implements
             throw new CantSendCryptoPaymentRequestException(e, "", "Unhandled error.");
         }
 
-    }
-
-    /**
-     * DealsWithBitcoinWallet Interface implementation.
-     */
-    @Override
-    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
-        this.bitcoinWalletManager = bitcoinWalletManager;
-    }
-
-    /**
-     * DealsWithCryptoVault Interface implementation.
-     */
-    @Override
-    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-        this.cryptoVaultManager = cryptoVaultManager;
-    }
-
-    /**
-     * DealsWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithExtraUsers Interface implementation.
-     */
-    @Override
-    public void setExtraUserManager(ExtraUserManager extraUserManager) {
-        this.extraUserManager = extraUserManager;
-    }
-
-    @Override
-    public void setIntraWalletUserIdentityManager(IntraWalletUserActorManager intraWalletUserIdentityManager) {
-        this.intraUserManager = intraWalletUserIdentityManager;
-    }
-
-    /**
-     * DealsWithOutgoingExtraUser Interface implementation.
-     */
-    @Override
-    public void setOutgoingExtraUserManager(OutgoingExtraUserManager outgoingExtraUserManager) {
-        this.outgoingExtraUserManager = outgoingExtraUserManager;
-    }
-
-    /**
-     * DealsWithWalletContacts Interface implementation.
-     */
-    @Override
-    public void setWalletContactsManager(WalletContactsManager walletContactsManager) {
-        this.walletContactsManager = walletContactsManager;
-    }
-
-    /**
-     * DealsWithCryptoAddressBook Interface implementation.
-     */
-    @Override
-    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
-        this.cryptoAddressBookManager = cryptoAddressBookManager;
-    }
-
-    @Override
-    public void setIdentityIntraUserManager(IntraWalletUserIdentityManager intraWalletUserIdentityManager) {
-        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
-    }
-
-
-    @Override
-    public void setCryptoTransmissionNetworkService(CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager) {
-        this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
-    }
-
-
-    @Override
-    public void setCryptoPaymentManager(CryptoPaymentManager cryptoPaymentManager) {
-        this.cryptoPaymentManager = cryptoPaymentManager;
-    }
-
-    @Override
-    public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) {
-        this.outgoingIntraActorManager = outgoingIntraActorManager;
-    }
-
-    @Override
-    public void setCryptoAddressesManager(CryptoAddressesManager cryptoAddressesNetworkServiceManager) {
-        this.cryptoAddressesNSManager = cryptoAddressesNetworkServiceManager;
     }
 }

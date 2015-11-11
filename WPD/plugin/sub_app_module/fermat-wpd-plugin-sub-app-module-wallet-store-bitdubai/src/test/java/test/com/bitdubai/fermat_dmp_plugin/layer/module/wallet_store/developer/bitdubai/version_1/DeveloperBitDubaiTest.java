@@ -1,7 +1,7 @@
 package test.com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.DeveloperBitDubai;
 
+import com.bitdubai.fermat_wpd_plugin.layer.sub_app_module.wallet_store.developer.bitdubai.DeveloperBitDubai;
 import org.junit.Assert;
 import org.junit.Test;
 

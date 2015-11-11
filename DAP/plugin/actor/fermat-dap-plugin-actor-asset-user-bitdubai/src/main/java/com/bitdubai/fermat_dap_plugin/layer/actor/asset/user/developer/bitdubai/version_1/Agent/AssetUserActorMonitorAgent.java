@@ -12,7 +12,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCre
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetActorUserPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetUserActorPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -39,12 +39,12 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
     UUID pluginId;
     String userPublicKey;
     AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
-    AssetActorUserPluginRoot assetActorUserPluginRoot;
+    AssetUserActorPluginRoot assetActorUserPluginRoot;
 
     public AssetUserActorMonitorAgent(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem,
                                       ErrorManager errorManager, UUID pluginId,
                                       AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager,
-                                      AssetUserActorDao assetUserActorDao, AssetActorUserPluginRoot assetActorUserPluginRoot) {
+                                      AssetUserActorDao assetUserActorDao, AssetUserActorPluginRoot assetActorUserPluginRoot) {
         this.pluginId = pluginId;
         this.eventManager = eventManager;
         this.errorManager = errorManager;

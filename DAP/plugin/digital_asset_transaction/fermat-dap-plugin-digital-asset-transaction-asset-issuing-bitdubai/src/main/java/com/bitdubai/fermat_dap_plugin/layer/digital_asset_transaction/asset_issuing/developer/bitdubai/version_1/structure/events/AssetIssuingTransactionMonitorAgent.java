@@ -524,6 +524,10 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     System.out.println("ASSET ISSUING is empty - continue asking");
                     continue;
                 }
+                if(genesisTransaction.equals("UNKNOWN YET")){
+                    System.out.println("ASSET ISSUING is unknown yet - continue asking");
+                    continue;
+                }
                 System.out.println("ASSET ISSUING Persisting in database Outgoing Id: "+outgoingId);
                 System.out.println("ASSET ISSUING Persisting in database genesis transaction: "+genesisTransaction);
                 assetIssuingTransactionDao.persistGenesisTransaction(outgoingId, genesisTransaction);

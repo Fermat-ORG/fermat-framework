@@ -55,7 +55,7 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
                             //lstWalletSession.put(installedWallet.getWalletPublicKey(),walletSession);
                             return walletSession;
                         case "crypto_broker_wallet":
-                            walletSession = new CryptoBrokerWalletSession(installedWallet, errorManager, cryptoBrokerWalletModuleManager);
+                            walletSession = new CryptoBrokerWalletSession(installedWallet, errorManager, walletResourcesProviderManager, cryptoBrokerWalletModuleManager);
                             lstWalletSession.put(installedWallet.getWalletPublicKey(), walletSession);
                             return walletSession;
                         case "asset_issuer":

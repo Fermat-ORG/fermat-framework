@@ -75,33 +75,37 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
-        System.out.print("NOTIFICACION EVENTO MENSAJE RECIVIDO!!!!");
+        if (platformEvent.getSource() == AssetTransmissionPluginRoot.EVENT_SOURCE) {
 
-        /*
-         * Get the message receive
-         */
-        NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageReceivedNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
-        FermatMessage fermatMessageReceive = (FermatMessage) newNetworkServiceMessageReceivedNotificationEvent.getData();
+            System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
+            System.out.print("NOTIFICACION EVENTO MENSAJE RECIVIDO!!!!");
 
-        /*
-         * Get the content of the message like a JsonObject
-         */
-        JsonObject jsonMsjContent = parser.parse(fermatMessageReceive.getContent()).getAsJsonObject();
+            /*
+             * Get the message receive
+             */
+            NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageReceivedNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
+            FermatMessage fermatMessageReceive = (FermatMessage) newNetworkServiceMessageReceivedNotificationEvent.getData();
 
-        /*
-         * Extract the type of content of the message
-         */
-        DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = gson.fromJson(jsonMsjContent.get(AssetTransmissionJsonAttNames.MSJ_CONTENT_TYPE), DigitalAssetMetadataTransactionType.class);
+            /*
+             * Get the content of the message like a JsonObject
+             */
+            JsonObject jsonMsjContent = parser.parse(fermatMessageReceive.getContent()).getAsJsonObject();
 
-        /*
-         * Process the messages for his type
-         */
-         if (messagesProcessorsRegistered.containsKey(digitalAssetMetadataTransactionType)){
+            /*
+             * Extract the type of content of the message
+             */
+            DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = gson.fromJson(jsonMsjContent.get(AssetTransmissionJsonAttNames.MSJ_CONTENT_TYPE), DigitalAssetMetadataTransactionType.class);
 
-             messagesProcessorsRegistered.get(digitalAssetMetadataTransactionType).processingMessage(fermatMessageReceive, jsonMsjContent);
+            /*
+             * Process the messages for his type
+             */
+            if (messagesProcessorsRegistered.containsKey(digitalAssetMetadataTransactionType)) {
+                messagesProcessorsRegistered.get(digitalAssetMetadataTransactionType).processingMessage(fermatMessageReceive, jsonMsjContent);
+            }else{
+                System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - message type no supported = "+digitalAssetMetadataTransactionType);
+            }
 
-         }
+        }
 
     }
 
