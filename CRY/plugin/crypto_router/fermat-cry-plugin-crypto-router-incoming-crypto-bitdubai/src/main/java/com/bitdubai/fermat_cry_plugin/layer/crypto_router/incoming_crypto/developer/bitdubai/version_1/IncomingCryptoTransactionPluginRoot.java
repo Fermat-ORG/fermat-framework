@@ -306,11 +306,12 @@ public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implemen
         /**
          * I will start the Monitor Agent.
          */
-        this.monitor = new IncomingCryptoMonitorAgent();
+        this.monitor = new IncomingCryptoMonitorAgent(
+                this.bitcoinNetworkManager,
+                this.cryptoVaultManager,
+                this.errorManager
+        );
         try {
-            ((DealsWithCryptoVault) this.monitor).setCryptoVaultManager(this.cryptoVaultManager);
-            ((DealsWithBitcoinNetwork) this.monitor).setBitcoinNetworkManager(this.bitcoinNetworkManager);
-            ((DealsWithErrors) this.monitor).setErrorManager(this.errorManager);
             ((DealsWithRegistry) this.monitor).setRegistry(this.registry);
             this.monitor.start();
         } catch (CantStartAgentException cantStartAgentException) {

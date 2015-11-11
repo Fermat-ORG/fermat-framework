@@ -258,15 +258,14 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
          * I will start the loading creation of the wallet from the user Id
          */
         try {
-            vault = new BitcoinCryptoVault(userPublicKey);
-            vault.setLogManager(logManager);
-            vault.setErrorManager(errorManager);
-            vault.setPluginDatabaseSystem(pluginDatabaseSystem);
-            vault.setDatabase(this.database);
-            vault.setPluginFileSystem(this.pluginFileSystem);
-            vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
-            vault.setPluginId(pluginId);
-            vault.setEventManager(eventManager);
+            vault = new BitcoinCryptoVault(
+                    userPublicKey,
+                    eventManager,
+                    errorManager,
+                    logManager,
+                    pluginId,
+                    pluginFileSystem
+            );
 
             vault.loadOrCreateVault();
 
