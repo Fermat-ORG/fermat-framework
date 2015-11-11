@@ -86,9 +86,8 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM   , layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     WalletManagerManager walletManagerManager;
 
-    //TODO MISSING REFERENCE (
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM   , layer = Layers.DIGITAL_ASSET_TRANSACTION, plugin = Plugins.ASSET_ISSUING)
     AssetIssuingManager assetIssuingManager;
-    //TODO MISSING REFERENCE
 
     AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
 
