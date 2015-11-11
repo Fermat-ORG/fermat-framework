@@ -102,6 +102,7 @@ dependencies {
     // CBP Projects
     compile project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
     compile project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
+    // DAP Projects
     compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')
     compile project(':fermat-dap-android-reference-wallet-asset-user-bitdubai')
     compile project(':fermat-dap-android-reference-wallet-redeem-point-bitdubai')
