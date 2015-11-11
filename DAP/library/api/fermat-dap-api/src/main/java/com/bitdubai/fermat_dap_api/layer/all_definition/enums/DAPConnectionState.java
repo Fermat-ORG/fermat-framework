@@ -15,18 +15,12 @@ public enum DAPConnectionState implements FermatEnum {
     /**
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    CRYPTO_REQUEST                  ("CYRQT"),
-    CRYPTO_REQUEST_FAILURE          ("CYRQF"),
-    CRYPTO_RECEIVE                  ("CYRVE"),
-    CRYPTO_RECEIVE_PENDING          ("CYRVP"),
-    CRYPTO_RECEIVE_FAILURE          ("CYRVF"),
-    CONNECTED_REMOTELY              ("CTDRY"),
-    DISCONNECTED_REMOTELY           ("DTDRY"),
-    REGISTERED_LOCALLY              ("RGDLY"),
-    REGISTERED_REMOTELY             ("RGDRY"),
-    REGISTERING_LOCALLY_FAILURE     ("RGLYF"),
-    REGISTERING_REMOTELY_FAILURE    ("RGRYF"),
-    REGISTERING_REMOTELY            ("RGNRY"),
+    CONNECTED_ONLINE              ("CTDON"),
+    CONNECTED_OFFLINE             ("DTDOF"),
+    CONNECTING                    ("CTING"),
+    REGISTERED_LOCALLY            ("RGDLY"),
+    REGISTERED_ONLINE             ("RGDON"),
+    REGISTERED_OFFLINE            ("RGDOF"),
     ;
 
     private final String code;
@@ -44,18 +38,12 @@ public enum DAPConnectionState implements FermatEnum {
 
         switch (code) {
 
-            case "CYRQT": return CRYPTO_REQUEST                 ;
-            case "CYRQF": return CRYPTO_REQUEST_FAILURE         ;
-            case "CYRVE": return CRYPTO_RECEIVE                 ;
-            case "CYRVP": return CRYPTO_RECEIVE_PENDING         ;
-            case "CYRVF": return CRYPTO_RECEIVE_FAILURE         ;
-            case "CTDRY": return CONNECTED_REMOTELY             ;
-            case "DTDRY": return DISCONNECTED_REMOTELY          ;
+            case "CTDON": return CONNECTED_ONLINE               ;
+            case "DTDOF": return CONNECTED_OFFLINE              ;
+            case "CTING": return CONNECTING                     ;
             case "RGDLY": return REGISTERED_LOCALLY             ;
-            case "RGDRY": return REGISTERED_REMOTELY            ;
-            case "RGLYF": return REGISTERING_LOCALLY_FAILURE    ;
-            case "RGRYF": return REGISTERING_REMOTELY_FAILURE   ;
-            case "RGNRY": return REGISTERING_REMOTELY           ;
+            case "RGDON": return REGISTERED_ONLINE              ;
+            case "RGDOF": return REGISTERED_OFFLINE             ;
 
             default: throw new InvalidParameterException(
                     "Code Received: " + code,
