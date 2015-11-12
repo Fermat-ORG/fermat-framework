@@ -2219,7 +2219,7 @@
 			<layer name="Network Service" language="java">
 				<plugins>
 					<plugin
-						name="Crypto Address"
+						name="Crypto Addresses"
 						description="Enables the underground exchange of crypto addresses"
 						difficulty="5"
 						code-level="development"
