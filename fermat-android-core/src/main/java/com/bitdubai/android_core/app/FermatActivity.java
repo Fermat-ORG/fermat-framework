@@ -56,7 +56,7 @@ import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterW
 import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
-import com.bitdubai.android_core.app.common.version_1.test.MyAdapter;
+
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
@@ -600,7 +600,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
                             navigation_recycler_view.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
 
-                            
+
 
 //                            //TODO: CAMBIAR TODO ESTE TESTEO ASQUEROSO
 //                            mAdapter = new MyAdapter(this, getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu().getMenuItems(), new IntraUserLoginIdentity() {
@@ -1288,7 +1288,7 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     public void addNavigationViewHeader(View view){
         try {
-            navigationView.removeHeaderView(view);
+            navigationView.removeAllViewsInLayout();
             navigationView.addHeaderView(view);
             navigationView.invalidate();
             navigationView.postInvalidate();
