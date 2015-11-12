@@ -101,10 +101,12 @@ public final class FermatPluginManager {
             final List<PluginVersionReference> neededPlugins = abstractPlugin.getNeededPlugins();
 
             for (final PluginVersionReference pvr : neededPlugins) {
-                AbstractPlugin reference = startPluginAndReferences(pvr);
-                List<PluginVersionReference> subPluginReferences = reference.getNeededPlugins();
 
-                compareReferences(pluginVersionReference, pvr, subPluginReferences);
+                AbstractPlugin reference = systemContext.getPluginVersion(pvr);
+
+                compareReferences(pluginVersionReference, pvr, reference.getNeededPlugins());
+
+                startPluginAndReferences(pvr);
 
                 abstractPlugin.assignPluginReference(reference);
             }
