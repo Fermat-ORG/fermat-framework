@@ -1299,10 +1299,6 @@ public abstract class FermatActivityBase extends AppCompatActivity implements Wi
 
     }
 
-    @Override
-    public RelativeLayout getActivityHeader() {
-        return (RelativeLayout) findViewById(R.id.container_header_balance);
-    }
 
     @Override
     public void changeNavigationDrawerAdapter(FermatAdapter fermatAdapter) {

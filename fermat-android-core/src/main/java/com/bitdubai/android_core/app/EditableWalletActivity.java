@@ -245,6 +245,11 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         return getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu().getMenuItems();
     }
 
+    @Override
+    protected void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
+
+    }
+
 
     /**
      * Method that loads the UI
