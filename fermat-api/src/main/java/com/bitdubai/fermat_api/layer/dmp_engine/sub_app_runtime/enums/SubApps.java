@@ -25,7 +25,8 @@ public enum SubApps {
     DAP_ASSETS_COMMUNITY_USER("DAPCU"),
     DAP_ASSETS_COMMUNITY_ISSUER("DAPCI"),
     DAP_ASSETS_COMMUNITY_REDEEM_POINT("DAPCRP"),
-    DAP_ASSETS_IDENTITY_ISSUER("DAPAII");
+    DAP_ASSETS_IDENTITY_ISSUER("DAPAII"),
+    DAP_ASSETS_IDENTITY_USER("DAPAIU");
 
 
     private final String code;
@@ -37,6 +38,8 @@ public enum SubApps {
     public static SubApps getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
+            case "DAPAIU":
+                return SubApps.DAP_ASSETS_IDENTITY_USER;
             case "DAPAII":
                 return SubApps.DAP_ASSETS_IDENTITY_ISSUER;
             case "CWM":

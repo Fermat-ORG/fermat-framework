@@ -7,6 +7,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.factory.As
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.factory.AssetIssuerCommunityFragmentFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.fragmentFactory.IssuerIdentityFragmentFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.factory.CommunityUserFragmentFactory;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.fragmentFactory.UserIdentityFragmentFactory;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.factory.AssetRedeemPointCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentFactory;
 import com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.CryptoCustomerIdentityFragmentFactory;
@@ -47,6 +48,8 @@ public class SubAppFragmentFactory {
                 return new AssetRedeemPointCommunityFragmentFactory();
             case DAP_ASSETS_IDENTITY_ISSUER:
                 return new IssuerIdentityFragmentFactory();
+            case DAP_ASSETS_IDENTITY_USER:
+                return new UserIdentityFragmentFactory();
             case CBP_CRYPTO_BROKER_IDENTITY:
                 return new CryptoBrokerIdentityFragmentFactory();
             case CBP_CRYPTO_CUSTOMER_IDENTITY:

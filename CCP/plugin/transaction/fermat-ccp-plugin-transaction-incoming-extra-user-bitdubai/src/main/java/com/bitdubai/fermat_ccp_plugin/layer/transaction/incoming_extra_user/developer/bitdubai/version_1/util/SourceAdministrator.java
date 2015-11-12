@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 
-import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 
 /**
@@ -17,9 +16,14 @@ import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingC
  * returning the MonitorAgent the TransactionSender that corresponds to the event source
  * that notifies new transactions
  */
-public class SourceAdministrator implements DealsWithIncomingCrypto {
+public class SourceAdministrator  {
 
-    private IncomingCryptoManager incomingCryptoManager;
+    private final IncomingCryptoManager incomingCryptoManager;
+
+    public SourceAdministrator(final IncomingCryptoManager incomingCryptoManager) {
+
+        this.incomingCryptoManager = incomingCryptoManager;
+    }
 
     public TransactionProtocolManager<CryptoTransaction> getSourceAdministrator(final EventSource eventSource) throws com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.SourceNotRecognizedException {
         try {
@@ -38,10 +42,5 @@ public class SourceAdministrator implements DealsWithIncomingCrypto {
         } catch (Exception e) {
             throw new com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.SourceNotRecognizedException("Unexpected Exception", FermatException.wrapException(e),"","");
         }
-    }
-
-    @Override
-    public void setIncomingCryptoManager(final IncomingCryptoManager incomingCryptoManager) {
-        this.incomingCryptoManager = incomingCryptoManager;
     }
 }

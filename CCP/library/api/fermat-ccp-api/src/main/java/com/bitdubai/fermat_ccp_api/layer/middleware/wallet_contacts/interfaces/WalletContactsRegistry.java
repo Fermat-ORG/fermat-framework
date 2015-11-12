@@ -23,7 +23,7 @@ import java.util.UUID;
 public interface WalletContactsRegistry {
 
     /**
-     * Throw the method <code>createWalletContact</code> you can create a new wallet contact
+     * Through the method <code>createWalletContact</code> you can create a new wallet contact
      *
      * @param actorPublicKey    actor's public key
      * @param actorAlias        actor's alias
@@ -54,7 +54,7 @@ public interface WalletContactsRegistry {
                                             String walletPublicKey) throws CantCreateWalletContactException;
 
     /**
-     * Throw the method <code>addCryptoAddressToWalletContact</code> you can add a crypto address to an existent contact.
+     * Through the method <code>addCryptoAddressToWalletContact</code> you can add a crypto address to an existent contact.
      *
      * @param contactId      contact id of the actor to whom you want to add a crypto address.
      * @param cryptoAddress  that we want to add.
@@ -66,7 +66,7 @@ public interface WalletContactsRegistry {
                                          CryptoAddress cryptoAddress) throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantAddCryptoAddressException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
 
     /**
-     * Throw the method <code>deleteCryptoAddressToWalletContact</code> you can delete a crypto address for an existent contact.
+     * Through the method <code>deleteCryptoAddressToWalletContact</code> you can delete a crypto address for an existent contact.
      *
      * @param contactId      contact id of the actor to whom you want to delete the crypto address.
      * @param cryptoAddress  that we want to delete.
@@ -78,7 +78,7 @@ public interface WalletContactsRegistry {
                                             CryptoAddress cryptoAddress) throws CantDeleteCryptoAddressException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
 
     /**
-     * Throw the method <code>addCryptoAddressToWalletContact</code> you can add a crypto address to an existent contact.
+     * Through the method <code>addCryptoAddressToWalletContact</code> you can add a crypto address to an existent contact.
      *
      * @param actorPublicKey   public key of the actor to whom we need to add the crypto address.
      * @param walletPublicKey  public key of the wallet where we need to add the crypto address.
@@ -92,7 +92,7 @@ public interface WalletContactsRegistry {
                                          CryptoAddress cryptoAddress) throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantAddCryptoAddressException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
 
     /**
-     * Throw the method <code>updateWalletContact</code> you can update the modifiable fields of a wallet contact
+     * Through the method <code>updateWalletContact</code> you can update the modifiable fields of a wallet contact
      *
      * @param contactId         contact id of the actor that you want to update
      * @param actorAlias        alias for the actor
@@ -109,7 +109,7 @@ public interface WalletContactsRegistry {
                              List<CryptoAddress> cryptoAddresses) throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantUpdateWalletContactException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
 
     /**
-     * Throw the method <code>deleteWalletContact</code> you can delete a wallet contact
+     * Through the method <code>deleteWalletContact</code> you can delete a wallet contact
      *
      * @param contactId contact id of the actor that you want to delete
      *
@@ -129,7 +129,7 @@ public interface WalletContactsRegistry {
      WalletContactsSearch searchWalletContact(String walletPublicKey);
 
     /**
-     * Throw the method <code>getWalletContactByActorPublicKeyAndWalletPublicKey</code> you can find a wallet contact throw actor and wallet public key
+     * Through the method <code>getWalletContactByActorPublicKeyAndWalletPublicKey</code> you can find a wallet contact throw actor and wallet public key
      *
      * @param actorPublicKey    public key of the actor you want to find
      * @param walletPublicKey   public key of the wallet you want to find
@@ -143,7 +143,7 @@ public interface WalletContactsRegistry {
                                                                   String walletPublicKey) throws CantGetWalletContactException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
 
     /**
-     * Throw the method <code>getWalletContactByContactId</code> you can find a wallet contact throw his primary key
+     * Through the method <code>getWalletContactByContactId</code> you can find a wallet contact throw his primary key
      *
      * @param contactId wallet contact's primary key
      *

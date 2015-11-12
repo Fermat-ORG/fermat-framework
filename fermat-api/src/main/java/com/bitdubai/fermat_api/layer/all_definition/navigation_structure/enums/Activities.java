@@ -135,6 +135,9 @@ public enum Activities {
     // DAP ISSUER IDENTITY
     DAP_SUB_APP_ASSET_ISSUER_IDENTITY("DAPSAAII"),
     DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY("DAPSAAIICI"),
+    // DAP USER IDENTITY
+    DAP_SUB_APP_ASSET_USER_IDENTITY("DAPSAAUI"),
+    DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY("DAPSAAUICI"),
     DEVELOP_MODE("develop_mode"),
 
 
@@ -153,6 +156,10 @@ public enum Activities {
         //    }
         //}
         switch (code) {
+            case "DAPSAAUI":
+                return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY;
+            case "DAPSAAUICI":
+                return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY;
             case "DAPSAAII":
                 return Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY;
             case "DAPSAAIICI":
