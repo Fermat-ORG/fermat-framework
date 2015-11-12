@@ -65,14 +65,14 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     private UUID pluginId;
 
-    private AssetDistributionManager assetDistributionManager;
+    //private AssetDistributionManager assetDistributionManager;
 
-    public AssetIssuerWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, AssetDistributionManager assetDistributionManager) {
+    public AssetIssuerWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId/*, AssetDistributionManager assetDistributionManager*/) {
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
-        this.assetDistributionManager = assetDistributionManager;
+        //this.assetDistributionManager = assetDistributionManager;
     }
 
     public void initialize(UUID walletId) throws CantInitializeAssetIssuerWalletException {
