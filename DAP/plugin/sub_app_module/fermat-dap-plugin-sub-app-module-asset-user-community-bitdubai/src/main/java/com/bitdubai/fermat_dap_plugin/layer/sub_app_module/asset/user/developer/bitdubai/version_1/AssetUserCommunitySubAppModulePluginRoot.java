@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -36,12 +35,15 @@ import java.util.UUID;
  */
 public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommunitySubAppModuleManager, DealsWithActorAssetIssuer, DealsWithActorAssetUser, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
 
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     UUID pluginId;
+
     /**
      * DealsWithLogger interface member variable
      */
     LogManager logManager;
+
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
     /**
      * Service Interface member variables.
      */
@@ -53,7 +55,6 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
     ActorAssetUserManager actorAssetUserManager;
 
     ActorAssetIssuerManager actorAssetIssuerManager;
-    List<ActorAssetUser> actorAssetList;
 
     @Override
     public void setId(UUID pluginId) {
@@ -134,17 +135,10 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
     @Override
     public List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
 
-        actorAssetList = new ArrayList<>();
-        List<AssetUserActorRecord> assetUserActorRecords = null;
+        List<AssetUserActorRecord> assetUserActorRecords = new ArrayList<>();
 
         try {
             actorAssetUserManager.registerActorInActorNetowrkSerice();
-            actorAssetList = actorAssetUserManager.getAllAssetUserActorInTableRegistered();
-
-            ActorAssetIssuer actorAssetIssuer;
-            actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
-
-            assetUserActorRecords = new ArrayList<>();
 
             for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered()) {
                 AssetUserActorRecord assetUserActorRecord = new AssetUserActorRecord();
@@ -152,17 +146,9 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
                 assetUserActorRecords.add(assetUserActorRecord);
             }
 
-            List<ActorAssetUser> actorAssetUser = actorAssetUserManager.getAllAssetUserActorInTableRegistered();
-
-            actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUser);
-
-        } catch (CantCreateAssetUserActorException e) {
-            e.printStackTrace();
-        } catch (CantGetAssetIssuerActorsException e) {
-            e.printStackTrace();
         } catch (CantGetAssetUserActorsException e) {
             e.printStackTrace();
-        } catch (CantConnectToAssetUserException e) {
+        } catch (CantCreateAssetUserActorException e) {
             e.printStackTrace();
         }
         return assetUserActorRecords;
@@ -170,14 +156,11 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
     @Override
     public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException {
-        //todo SE DEBE CONOCER QUIEN ES EL REQUESTER SOLICITANTE Y QUIEN EL SOLICITADO
 
         ActorAssetIssuer actorAssetIssuer;
-        //TODO Para Realizacion de TEST se tomara el ISSUER de la BD LOCAL
-        //TODO Se necesita PASAR el Actor seleccionado en la Community
+        //TODO Actor Asset Issuer de BD Local
         try {
             actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
-//            actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers);
 
             actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers);
         } catch (CantGetAssetIssuerActorsException e) {

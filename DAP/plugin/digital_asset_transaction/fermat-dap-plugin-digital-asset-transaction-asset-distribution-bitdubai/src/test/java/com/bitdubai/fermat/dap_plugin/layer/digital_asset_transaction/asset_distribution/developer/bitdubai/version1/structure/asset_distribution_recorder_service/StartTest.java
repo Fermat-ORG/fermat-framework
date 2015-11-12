@@ -1,6 +1,7 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.asset_distribution_recorder_service;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -30,6 +31,8 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class StartTest {
+    @Mock
+    private FermatEventHandler fermatEventHandler;
     @Mock
     private EventManager eventManager;
     @Mock
@@ -75,14 +78,4 @@ public class StartTest {
         Assert.assertEquals(ServiceStatus.STARTED, serviceStatus);
     }
 
-    /*@Test
-    public void startRecordServiceFail () throws CantStartServiceException {
-        when(eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION)).thenReturn(null);
-
-        catchException(assetDistributionRecorderService).start();
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantStartServiceException.class);
-    }*/
 }

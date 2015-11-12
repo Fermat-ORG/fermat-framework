@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantCreateCashMoneyException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantTransactionCashMoneyException;
@@ -99,7 +98,6 @@ public class CashMoneyWalletDao {
     public void addCashMoney(
                              CashMoneyBalanceRecord cashMoneyBalanceRecord,
                              BalanceType balanceType,
-                             TransactionType transactionType,
                              long runingBookBalance,
                              long runingAvalibleBalance
     ) throws CantAddCashMoney{
@@ -111,7 +109,7 @@ public class CashMoneyWalletDao {
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, cashMoneyBalanceRecord.getPublicKeyActorFrom());
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME, cashMoneyBalanceRecord.getPublicKeyActorTo());
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
-        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode());
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TRANSACTION_TYPE_COLUMN_NAME, cashMoneyBalanceRecord.getTransactionType().getCode());
         record.setDoubleValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_AMOUNT_COLUMN_NAME, cashMoneyBalanceRecord.getAmount());
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_CURRENCY_TYPE_COLUMN_NAME, cashMoneyBalanceRecord.getCashCurrencyType().getCode());
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_REFERENCE_COLUMN_NAME, cashMoneyBalanceRecord.getCashReference());
@@ -212,13 +210,13 @@ public class CashMoneyWalletDao {
         if (balanceType == BalanceType.AVAILABLE){
             availableAmount  = cashMoneyBalanceRecord.getAmount();
             runningAvailableBalance = (long) (getCurrentBalance(BalanceType.AVAILABLE) + (-availableAmount));
-            addCashMoney(cashMoneyBalanceRecord, balanceType, TransactionType.DEBIT, runningBookBalance,runningAvailableBalance);
+            addCashMoney(cashMoneyBalanceRecord, balanceType, runningBookBalance,runningAvailableBalance);
 
         }
         if (balanceType == BalanceType.BOOK){
             bookAmount  = cashMoneyBalanceRecord.getAmount();
             runningBookBalance = (long) (getCurrentBalance(BalanceType.BOOK) + (-bookAmount));
-            addCashMoney(cashMoneyBalanceRecord, balanceType, TransactionType.DEBIT, runningBookBalance, runningAvailableBalance);
+            addCashMoney(cashMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
         }
 
         } catch (CantGetBalancesRecord cantGetBalancesRecord) {
@@ -244,13 +242,13 @@ public class CashMoneyWalletDao {
             if (balanceType == BalanceType.AVAILABLE){
                 availableAmount  = cashMoneyBalanceRecord.getAmount();
                 runningAvailableBalance = (long) (getCurrentBalance(BalanceType.AVAILABLE) + (-availableAmount));
-                addCashMoney(cashMoneyBalanceRecord, balanceType, TransactionType.DEBIT, runningBookBalance, runningAvailableBalance);
+                addCashMoney(cashMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
 
             }
             if (balanceType == BalanceType.BOOK){
                 bookAmount  = cashMoneyBalanceRecord.getAmount();
                 runningBookBalance = (long) (getCurrentBalance(BalanceType.BOOK) + (-bookAmount));
-                addCashMoney(cashMoneyBalanceRecord, balanceType, TransactionType.DEBIT, runningBookBalance, runningAvailableBalance);
+                addCashMoney(cashMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
             }
 
         }catch (CantGetBalancesRecord cantGetBalancesRecord) {

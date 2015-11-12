@@ -4,38 +4,57 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * Enums the platforms on Fermat.
- * Created by Leon Acosta (laion.cj91@gmail.com) on 02/09/2015.
+ * The enum class <code>com.bitdubai.fermat_api.layer.all_definition.enums.Platforms</code>
+ * Enums all the platforms to be found on Fermat.
+ * Created by lnacosta (laion.cj91@gmail.com) on 02/09/2015.
+ * Updated by PatricioGesualdi (pmgesualdi@hotmail.com) on 10/11/2015.
  */
 public enum Platforms implements FermatEnum {
+    /**
+     * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
+     */
+    BLOCKCHAINS                         ("BCH"),
+    COMMUNICATION_PLATFORM              ("CP"),
+    CRYPTO_BROKER_PLATFORM              ("CBP"),
+    CRYPTO_COMMODITY_MONEY              ("CCM"),
+    CRYPTO_CURRENCY_PLATFORM            ("CCP"),
+    DIGITAL_ASSET_PLATFORM              ("DAP"),
+    OPERATIVE_SYSTEM_API                ("OSA"),
+    PLUG_INS_PLATFORM                   ("PIP"),
+    WALLET_PRODUCTION_AND_DISTRIBUTION  ("WPD"),
+    ;
 
-    CRYPTO_BROKER_PLATFORM("CBP"),
-    CRYPTO_COMMODITY_MONEY("CCM"),
-    CRYPTO_CURRENCY_PLATFORM("CCP"),
-    DIGITAL_ASSET_PLATFORM("DAP"),
-    BLOCKCHAINS("BCH"),
-    COMMUNICATION_PLATFORM("CP"),
-    OPERATIVE_SYSTEM_API("OSA"),
-    PLUG_INS_PLATFORM("PIP"),
+    private final String code;
 
-    WALLET_PRODUCTION_AND_DISTRIBUTION("WPD");
-
-    private String code;
-
-    Platforms(String code) {
+    Platforms(final String code) {
         this.code = code;
-    }
-
-    public String getCode() {
-        return this.code;
     }
 
     public static Platforms getByCode(String code) throws InvalidParameterException {
 
-        for (Platforms platform : Platforms.values()) {
-            if (platform.getCode().equals(code))
-                return platform;
+        switch (code) {
+
+            case "BCH":  return BLOCKCHAINS;
+            case "CP":   return COMMUNICATION_PLATFORM;
+            case "CBP":  return CRYPTO_BROKER_PLATFORM;
+            case "CCM":  return CRYPTO_COMMODITY_MONEY;
+            case "CCP":  return CRYPTO_CURRENCY_PLATFORM;
+            case "DAP":  return DIGITAL_ASSET_PLATFORM;
+            case "OSA":  return OPERATIVE_SYSTEM_API;
+            case "PIP":  return PLUG_INS_PLATFORM;
+            case "WPD":  return WALLET_PRODUCTION_AND_DISTRIBUTION;
+
+            default:
+            throw new InvalidParameterException(
+                    "Code Received: " + code,
+                    "The received code is not valid for the Layers enum"
+            );
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code is not valid for the Platforms enum.");
     }
+
+    @Override
+    public String getCode() {
+        return this.code;
+    }
+
 }

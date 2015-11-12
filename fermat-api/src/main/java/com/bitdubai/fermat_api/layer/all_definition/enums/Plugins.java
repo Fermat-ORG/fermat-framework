@@ -154,6 +154,8 @@ public enum Plugins implements FermatEnum {
 
     // Init new Plugins
 
+    ASSET_ISSUER        ("AI"),
+    ASSET_USER          ("AU"),
     BITCOIN_ASSET_VAULT("BAV"),
     BITCOIN_NETWORK("BN"),
     BITCOIN_VAULT("BV"),
@@ -176,6 +178,7 @@ public enum Plugins implements FermatEnum {
     INTRA_WALLET_USER("IWU"),
     OUTGOING_EXTRA_USER("OEU"),
     OUTGOING_INTRA_ACTOR("OIA"),
+    REDEEM_POINT        ("RP"),
     WALLET_CONTACTS("WC"),
     WALLET_MANAGER("WM"),
     WS_CLOUD_CLIENT("WCL"),
@@ -449,6 +452,8 @@ public enum Plugins implements FermatEnum {
 
             // Init new Plugins
 
+            case "AI":    return ASSET_ISSUER;
+            case "AU":    return ASSET_USER;
             case "BAV":   return BITCOIN_ASSET_VAULT;
             case "BN":    return BITCOIN_NETWORK;
             case "BV":    return BITCOIN_VAULT;
@@ -470,6 +475,7 @@ public enum Plugins implements FermatEnum {
             case "IWU":   return INTRA_WALLET_USER;
             case "OEU":   return OUTGOING_EXTRA_USER;
             case "OIA":   return OUTGOING_INTRA_ACTOR;
+            case "RP":    return REDEEM_POINT;
             case "WC":    return WALLET_CONTACTS;
             case "WM":    return WALLET_MANAGER;
             case "WCL":   return WS_CLOUD_CLIENT;

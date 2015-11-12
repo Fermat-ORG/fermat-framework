@@ -385,25 +385,6 @@ public interface CryptoWallet extends Serializable {
 
     List<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
 
-    /**
-     *
-     * @param cryptoAmount
-     * @param destinationAddress
-     * @param notes
-     * @param walletPublicKey
-     * @param deliveredByActorPublicKey
-     * @param deliveredByActorType
-     * @param deliveredToActorPublicKey
-     * @param deliveredToActorType
-     */
-    void sendMetadataLikeChampion(long cryptoAmount,
-                                  CryptoAddress destinationAddress,
-                                  String notes, String walletPublicKey,
-                                  String deliveredByActorPublicKey,
-                                  Actors deliveredByActorType,
-                                  String deliveredToActorPublicKey,
-                                  Actors deliveredToActorType);
-
     List<IntraWalletUserIdentity> getActiveIdentities();
 
     /**

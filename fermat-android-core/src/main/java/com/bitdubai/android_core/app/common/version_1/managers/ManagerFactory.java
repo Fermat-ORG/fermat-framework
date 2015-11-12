@@ -149,30 +149,20 @@ public class ManagerFactory {
                 break;
 
             case CRYPTO_BROKER_PLATFORM:
-
                 switch (walletCategory) {
-
                     case REFERENCE_WALLET:
-
                         switch (walletType) {
-
                             case REFERENCE:
-                                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
+                                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE);
                                 break;
                             default:
                                 System.out.println("NO se encuentra el modulo seleccionado, ingresarlo en el managerFactory. En el tipo REFERENCE");
                                 break;
-
-
                         }
-
                     default:
                         System.out.println("NO se encuentra el modulo seleccionado, ingresarlo en el managerFactory. En el tipo REFERENCE_WALLET");
                         break;
-
-
                 }
-
                 break;
 
             default:
