@@ -5,11 +5,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.TransactionMetadataSta
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantAcceptCryptoRequestException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantConfirmMetaDataNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantGetMetadataNotificationsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantGetTransactionStateException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantSetToCreditedInWalletException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantSetToSeenByCryptoVaultException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -91,4 +95,20 @@ public interface CryptoTransmissionNetworkServiceManager extends TransactionSend
                            String associatedCryptoTransactionHash,
                            String paymentDescription
     ) throws CouldNotTransmitCryptoException;
+
+    /**
+     *The method <code>getPendingNotifications</code> returns a list of meta information associated to a crypto transaction pending to process with plugin
+     * @return List of CryptoTransmissionMetadata
+     * @throws CantGetMetadataNotificationsException
+     */
+
+     List<CryptoTransmissionMetadata> getPendingNotifications() throws CantGetMetadataNotificationsException;
+
+    /**
+     *The method <code>sendCrypto</code> sends the meta information associated to a crypto transaction
+     * @param notificationID
+     * @throws CantConfirmMetaDataNotificationException
+     */
+
+     void confirmNotification(final UUID notificationID) throws CantConfirmMetaDataNotificationException;
 }
