@@ -886,6 +886,11 @@ public abstract class FermatActivity extends AppCompatActivity
             this.adapter = null;
             paintStatusBar(null);
 
+            if(navigationView!=null){
+                navigationView.removeAllViewsInLayout();
+
+            }
+
             List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
 
             this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
@@ -1288,7 +1293,6 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     public void addNavigationViewHeader(View view){
         try {
-            navigationView.removeAllViewsInLayout();
             navigationView.addHeaderView(view);
             navigationView.invalidate();
             navigationView.postInvalidate();
