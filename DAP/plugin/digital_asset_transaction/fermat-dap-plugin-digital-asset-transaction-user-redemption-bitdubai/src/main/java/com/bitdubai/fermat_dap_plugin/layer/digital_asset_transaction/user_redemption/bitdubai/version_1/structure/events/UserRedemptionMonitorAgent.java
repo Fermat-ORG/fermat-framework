@@ -281,7 +281,9 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                         CryptoAddress cryptoAddressTo = new CryptoAddress(actorUserCryptoAddress, CryptoCurrency.BITCOIN);
                         System.out.println("ASSET USER REDEMPTION cryptoAddressTo: " + cryptoAddressTo);
                         updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
-                        sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo);
+
+                        //todo I need to get the Genesisamount to send it.
+                        sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, 1000);
                         userRedemptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
                     }
                     List<String> assetRejectedByContractGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByContractStatus();
@@ -424,9 +426,9 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
             return userRedemptionDao.isPendingIncomingCryptoEvents();
         }
 
-        private void sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo) throws CantSendAssetBitcoinsToUserException {
+        private void sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo, long amount) throws CantSendAssetBitcoinsToUserException {
             System.out.println("ASSET USER REDEMPTION sending genesis amount from asset vault");
-            assetVaultManager.sendBitcoinAssetToUser(genesisTransaction, cryptoAddressTo);
+            assetVaultManager.sendAssetBitcoins(genesisTransaction, cryptoAddressTo, amount);
         }
 
         /**

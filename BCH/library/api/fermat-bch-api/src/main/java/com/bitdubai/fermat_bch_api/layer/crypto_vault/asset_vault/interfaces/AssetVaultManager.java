@@ -30,6 +30,6 @@ public interface AssetVaultManager {
      * @param addressTo
      * @throws CantSendAssetBitcoinsToUserException
      */
-    void sendBitcoinAssetToUser(String genesisTransactionId, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException;
+    void sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException;
 
 }
