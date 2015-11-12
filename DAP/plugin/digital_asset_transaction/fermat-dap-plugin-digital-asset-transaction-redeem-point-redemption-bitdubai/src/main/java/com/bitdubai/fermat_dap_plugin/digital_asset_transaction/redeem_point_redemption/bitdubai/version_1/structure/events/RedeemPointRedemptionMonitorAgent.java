@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -44,6 +45,7 @@ import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_red
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDAO;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionEventListException;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -238,58 +240,60 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
 
                             List<Transaction<DigitalAssetMetadataTransaction>> newAssetTransaction = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
                             if (newAssetTransaction.isEmpty()) break;
+
                             for (Transaction<DigitalAssetMetadataTransaction> transaction : newAssetTransaction) {
-                                //GET THE BASIC INFORMATION.
-                                String userPublicKey = transaction.getInformation().getSenderId();
-                                DigitalAssetMetadataTransaction assetMetadataTransaction = transaction.getInformation();
-                                DigitalAssetMetadata metadata = assetMetadataTransaction.getDigitalAssetMetadata();
-                                DigitalAsset digitalAsset = metadata.getDigitalAsset();
-                                String transactionId = assetMetadataTransaction.getGenesisTransaction();
+                                if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT) {
+                                    //GET THE BASIC INFORMATION.
+                                    String userPublicKey = transaction.getInformation().getSenderId();
+                                    DigitalAssetMetadataTransaction assetMetadataTransaction = transaction.getInformation();
+                                    DigitalAssetMetadata metadata = assetMetadataTransaction.getDigitalAssetMetadata();
+                                    DigitalAsset digitalAsset = metadata.getDigitalAsset();
+                                    String transactionId = assetMetadataTransaction.getGenesisTransaction();
 
-                                //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
-                                //BUT THAT'S NOT YET IMPLEMENTED.
-                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
+                                    //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
+                                    //BUT THAT'S NOT YET IMPLEMENTED.
+                                    AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
 
-                                dao.updateTransactionStatusById(DistributionStatus.CHECKING_HASH, transactionId);
-                                boolean hashValid = AssetVerification.isDigitalAssetHashValid(bitcoinNetworkManager, metadata);
-                                if (!hashValid) {
-                                    dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_HASH, transactionId);
-                                    //TODO: SEND MESSAGE.
+                                    dao.updateTransactionStatusById(DistributionStatus.CHECKING_HASH, transactionId);
+                                    boolean hashValid = AssetVerification.isDigitalAssetHashValid(bitcoinNetworkManager, metadata);
+                                    if (!hashValid) {
+                                        dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_HASH, transactionId);
+                                        //TODO: SEND MESSAGE.
+                                    }
+                                    dao.updateTransactionStatusById(DistributionStatus.HASH_CHECKED, transactionId);
+
+                                    dao.updateTransactionStatusById(DistributionStatus.CHECKING_CONTRACT, transactionId);
+                                    boolean contractValid = AssetVerification.isValidContract(digitalAsset.getContract());
+                                    if (!contractValid) {
+                                        dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_CONTRACT, transactionId);
+                                        //TODO: SEND MESSAGE.
+                                    }
+
+                                    dao.updateTransactionStatusById(DistributionStatus.CONTRACT_CHECKED, transactionId);
+
+
+                                    AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
+                                    assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
+                                            assetMetadataTransaction,
+                                            actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
+                                            actorAssetRedeemPointManager.getActorAssetRedeemPoint().getCryptoAddress());
+
+                                    AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.BOOK);
+
+                                    //CREDIT ON BOOK BALANCE
+                                    walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.BOOK);
+
+                                    //PERSIST METADATA
+                                    dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
+                                    persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
+
+                                    //EVERYTHING WENT OK.
+                                    dao.updateTransactionStatusById(DistributionStatus.ASSET_ACCEPTED, transactionId);
+                                    dao.updateTransactionCryptoStatusById(CryptoStatus.PENDING_SUBMIT, transactionId);
+                                    //UPDATE EVENT STATUS
                                 }
-                                dao.updateTransactionStatusById(DistributionStatus.HASH_CHECKED, transactionId);
-
-                                dao.updateTransactionStatusById(DistributionStatus.CHECKING_CONTRACT, transactionId);
-                                boolean contractValid = AssetVerification.isValidContract(digitalAsset.getContract());
-                                if (!contractValid) {
-                                    dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_CONTRACT, transactionId);
-                                    //TODO: SEND MESSAGE.
-                                }
-
-                                dao.updateTransactionStatusById(DistributionStatus.CONTRACT_CHECKED, transactionId);
-
-
-                                AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
-                                assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
-                                        assetMetadataTransaction,
-                                        actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
-                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getCryptoAddress());
-
-                                AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.BOOK);
-
-                                //CREDIT ON BOOK BALANCE
-                                walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.BOOK);
-
-                                //PERSIST METADATA
-                                dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
-                                persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
-
-                                //UPDATE EVENT STATUS
-                                dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
-
-                                //EVERYTHING WENT OK.
-                                dao.updateTransactionStatusById(DistributionStatus.ASSET_ACCEPTED, transactionId);
-                                dao.updateTransactionCryptoStatusById(CryptoStatus.PENDING_SUBMIT, transactionId);
                             }
+                            dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
                             break;
 
                         case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER:
@@ -303,7 +307,6 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
 
                         case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER:
                             for (String transactionId : dao.getOnCryptoNetworkGenesisTransactions()) {
-
                                 String userPublicKey = dao.getSenderPublicKeyById(transactionId);
 
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
@@ -328,9 +331,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
                                 dao.updateTransactionStatusById(DistributionStatus.ASSET_ACCEPTED, transactionId);
                                 dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);
                             }
-
-                            //UPDATE EVENT STATUS
-                            dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
+                            dao.updateEventStatus(EventStatus.NOTIFIED, eventId); //I can't do anything with this event!
                             break;
 
                         default:
@@ -340,6 +341,8 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
                             break;
                     }
                 }
+            } catch (RecordsNotFoundException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
             } catch (CantGetAssetUserActorsException | CantLoadAssetRedemptionEventListException | CantLoadAssetRedemptionMetadataListException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (Exception e) {
