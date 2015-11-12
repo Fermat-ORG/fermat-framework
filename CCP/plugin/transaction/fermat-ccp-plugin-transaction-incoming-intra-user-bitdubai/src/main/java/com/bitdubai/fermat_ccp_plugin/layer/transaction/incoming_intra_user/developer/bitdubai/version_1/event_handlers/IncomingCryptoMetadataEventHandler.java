@@ -17,58 +17,17 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
  * Created by loui on 23/02/15.
  */
 public class IncomingCryptoMetadataEventHandler implements FermatEventHandler {
-    /**
-     * listener ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS event
-     * Get Pendings Notifications from Network Services
-     */
-    private IncomingIntraUserTransactionPluginRoot incomingIntraUserPluginRoot = null;
-    EventManager eventManager;
-    FermatEventMonitor fermatEventMonitor;
+    com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserEventRecorderService incomingIntraUserEventRecorderService;
 
-    IntraUserManager intraUserNetworkServiceManager;
-
-    public void setIntraWalletUserManager(IncomingIntraUserTransactionPluginRoot incomingIntraUserPluginRoot){
-        this.incomingIntraUserPluginRoot = incomingIntraUserPluginRoot;
-
+    public IncomingCryptoMetadataEventHandler(com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserEventRecorderService incomingIntraUserEventRecorderService){
+        this.incomingIntraUserEventRecorderService = incomingIntraUserEventRecorderService;
     }
 
-    public void setEventManager(EventManager eventManager){
-        this.eventManager = eventManager;
-
+    @Override
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+        if (this.incomingIntraUserEventRecorderService.getServiceStatus().equals(ServiceStatus.STARTED))
+            this.incomingIntraUserEventRecorderService.saveEvent(fermatEvent);
+        else
+            throw new TransactionServiceNotStartedException();
     }
-
-    public void setEventManager(FermatEventMonitor fermatEventMonitor){
-        this.fermatEventMonitor = fermatEventMonitor;
-
-    }
-
-
-
-        @Override
-        public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-
-            System.out.println("LLEGADA DE METADATA PENDIENTES DE INCOMING!!!");
-            if (((Service) this.incomingIntraUserPluginRoot).getStatus() == ServiceStatus.STARTED){
-
-                try {
-
-
-                    incomingIntraUserPluginRoot.processNotifications();
-                }
-                catch(CantProcessMetaDataNotificationsExceptions e)
-                {
-                    this.fermatEventMonitor.handleEventException(e, fermatEvent);
-                }
-
-                catch(Exception e)
-                {
-                    this.fermatEventMonitor.handleEventException(e, fermatEvent);
-                }
-
-            }
-            else {
-                throw new TransactionServiceNotStartedException();
-            }
-
-        }
 }

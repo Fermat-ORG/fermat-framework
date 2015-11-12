@@ -165,26 +165,13 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
             this.registry.initialize(this.pluginId);
 
 
-            /**
-             * Listener NetWorkService New Notifications event
-             */
 
-            FermatEventListener fermatEventListener;
-            FermatEventHandler fermatEventHandler;
-
-            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
-            fermatEventHandler = new IncomingCryptoMetadataEventHandler();
-            ((IncomingCryptoMetadataEventHandler) fermatEventHandler).setIntraWalletUserManager(this);
-             fermatEventListener.setEventHandler(fermatEventHandler);
-
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
 
             /**
              * I ask the list of pending requests to the Network Service to execute
              */
 
-            this.processNotifications();
+
 
         } catch (CantInitializeIncomingIntraUserCryptoRegistryException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -250,6 +237,21 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
             throw new CantStartPluginException("An unexpected exception happened",FermatException.wrapException(e),"","");
         }
 
+        /**
+         * Listener NetWorkService New Notifications event
+         */
+
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
+
+        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
+        fermatEventHandler = new IncomingCryptoMetadataEventHandler(eventRecorderService);
+
+        fermatEventListener.setEventHandler(fermatEventHandler);
+
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -264,44 +266,6 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
 
 
 
-    public void processNotifications() throws CantProcessMetaDataNotificationsExceptions
-    {
-        try {
-
-            System.out.println("PROCESSING METADATA NOTIFICATIONS IN INCOMING INTRA USERS ");
-            List<CryptoTransmissionMetadata> metaDataNotifications = cryptoTransmissionNetworkServiceManager.getPendingNotifications();
-
-
-            for (CryptoTransmissionMetadata notification : metaDataNotifications) {
-
-                String intraUserSendingPublicKey = notification.getSenderPublicKey();
-
-                String intraUserToConnectPublicKey = notification.getDestinationPublicKey();
-
-                switch (notification.getCryptoTransmissionStates()) {
-
-
-                }
-
-                /**
-                 * I confirm the application in the Network Service
-                 */
-
-                cryptoTransmissionNetworkServiceManager.confirmNotification(notification.getTransactionId());
-            }
-
-        } catch (CantGetMetadataNotificationsException e) {
-            throw new CantProcessMetaDataNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error get notifications list");
-
-        } catch (CantConfirmMetaDataNotificationException e) {
-            throw new CantProcessMetaDataNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error confirm notification read");
-
-
-        } catch (Exception e) {
-            throw new CantProcessMetaDataNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", FermatException.wrapException(e), "", "");
-
-        }
-    }
 
 
 }
