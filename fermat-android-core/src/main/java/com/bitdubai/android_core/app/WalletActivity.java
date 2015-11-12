@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -549,5 +550,17 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     }
 
 
+    @Override
+    protected void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
+        try {
+            String activityCode = data.getLinkToActivity().getCode();
+            if(activityCode.equals("develop_mode")){
+                developMode = true;
+                onBackPressed();
+            }else
+                changeActivity(activityCode);
+        }catch (Exception e){
 
+        }
+    }
 }

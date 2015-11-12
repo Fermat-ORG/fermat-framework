@@ -518,4 +518,18 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     protected List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> getNavigationMenu() {
         return getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getSideMenu().getMenuItems();
     }
+
+    @Override
+    protected void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
+        try {
+            String activityCode = data.getLinkToActivity().getCode();
+            if(activityCode.equals("develop_mode")){
+                developMode = true;
+                onBackPressed();
+            }else
+                changeActivity(activityCode);
+        }catch (Exception e){
+
+        }
+    }
 }
