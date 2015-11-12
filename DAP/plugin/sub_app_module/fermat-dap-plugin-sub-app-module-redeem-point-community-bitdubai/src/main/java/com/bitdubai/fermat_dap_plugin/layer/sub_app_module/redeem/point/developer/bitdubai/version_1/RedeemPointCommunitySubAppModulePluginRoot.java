@@ -1,159 +1,67 @@
 package com.bitdubai.fermat_dap_plugin.layer.sub_app_module.redeem.point.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.DealsWithActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
-import com.bitdubai.fermat_dap_plugin.layer.sub_app_module.redeem.point.developer.bitdubai.version_1.structure.RedeemPointCommunitySupAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
+ * TODO explain here the main functionality of the plug-in.
+ *
  * Created by Nerio on 13/10/15.
  */
-public class RedeemPointCommunitySubAppModulePluginRoot implements RedeemPointCommunitySubAppModuleManager, DealsWithActorAssetUser, DealsWithActorAssetRedeemPoint, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
+public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin implements
+        RedeemPointCommunitySubAppModuleManager {
 
-    UUID pluginId;
-
-    /**
-     * DealsWithLogger interface member variable
-     */
-    LogManager logManager;
-
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<FermatEventListener> listenersAdded = new ArrayList<>();
-
-    RedeemPointCommunitySupAppModuleManager redeemPointCommunitySupAppModuleManager;
-
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     ActorAssetUserManager actorAssetUserManager;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
     ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
+
+    // TODO ADDED ERROR MANAGER REFERENCE, PLEASE MAKE USE OF THE ERROR MANAGER.
+
+
+    public RedeemPointCommunitySubAppModulePluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
-
-    @Override
-    public void start() throws CantStartPluginException {
-        redeemPointCommunitySupAppModuleManager = new RedeemPointCommunitySupAppModuleManager(actorAssetRedeemPointManager);
-
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-
-    @Override
-    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
-        this.actorAssetUserManager = actorAssetUserManager;
-    }
-
-    @Override
-    public void setActorAssetRedeemPointManager(ActorAssetRedeemPointManager actorAssetRedeemPointManager) throws CantSetObjectException {
-        this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.sub_app_module.redeem.point.developer.bitdubai.version_1.RedeemPointCommunitySubAppModulePluginRoot");
-        /**
-         * I return the values.
-         */
-        return returnedClasses;
-    }
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        /**
-         * I will check the current values and update the LogLevel in those which is different
-         */
-
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            /**
-             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-             */
-            if (RedeemPointCommunitySubAppModulePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                RedeemPointCommunitySubAppModulePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                RedeemPointCommunitySubAppModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                RedeemPointCommunitySubAppModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            }
-        }
-    }
-
-    List<ActorAssetRedeemPoint> actorAssetList;
 
     @Override
     public List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException {
-        actorAssetList = new ArrayList<>();
 
         try {
             actorAssetRedeemPointManager.registerActorInActorNetowrkSerice();
 
-            actorAssetList = actorAssetRedeemPointManager.getAllAssetRedeemPointActorInTableRegistered();
+            return actorAssetRedeemPointManager.getAllAssetRedeemPointActorInTableRegistered();
         } catch (CantGetAssetRedeemPointActorsException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
         } catch (CantCreateActorRedeemPointException e) {
-            e.printStackTrace();
+            e.printStackTrace();// TODO PLEASE MAKE USE OF THE ERROR MANAGER.
         }
 
-        return actorAssetList;
+        return new ArrayList<>();
     }
 
     @Override
@@ -167,9 +75,10 @@ public class RedeemPointCommunitySubAppModulePluginRoot implements RedeemPointCo
             actorAssetUser = actorAssetUserManager.getActorAssetUser();
             actorAssetRedeemPointManager.connectToActorAssetRedeemPoint(actorAssetUser, actorAssetRedeemPoints);
         } catch (CantGetAssetUserActorsException e) {
+            // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
             throw new CantConnectToActorAssetRedeemPointException(CantConnectToActorAssetRedeemPointException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
         } catch (CantAssetUserActorNotFoundException e) {
-            e.printStackTrace();
+            e.printStackTrace();// TODO PLEASE MAKE USE OF THE ERROR MANAGER.
         }
     }
 }

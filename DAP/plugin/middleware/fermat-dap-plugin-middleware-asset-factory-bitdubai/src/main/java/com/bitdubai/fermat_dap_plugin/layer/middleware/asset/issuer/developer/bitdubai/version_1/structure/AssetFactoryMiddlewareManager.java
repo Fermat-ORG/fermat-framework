@@ -1,31 +1,19 @@
 package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
-//import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
-//import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
-//import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.WalletManagerModule;
-
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
@@ -35,6 +23,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Id
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
@@ -45,7 +34,8 @@ import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bi
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -53,64 +43,46 @@ import java.util.List;
 import java.util.UUID;
 
 /**
+ * The Class <code>AssetFactoryMiddlewareManager</code>
+ * contains all the business logic of todo what?
+ *
  * Created by franklin on 07/09/15.
  */
-public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public final class AssetFactoryMiddlewareManager {
+
     public static final String PATH_DIRECTORY = "assetFactory/resources";
-    /**
-     * AssetFactoryMiddlewareManager member variables
-     */
-    UUID pluginId;
+
+    private final AssetIssuingManager  assetIssuingManager ;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final PluginFileSystem     pluginFileSystem    ;
+    private final UUID                 pluginId            ;
+    private final WalletManagerManager walletManagerManager;
 
     /**
-     * DealsWithErrors interface member variables
-     */
-    ErrorManager errorManager;
-
-    /**
-     * DealsWithLogger interface mmeber variables
-     */
-    LogManager logManager;
-
-    /**
-     * DealsWithPluginDatabaseSystem interface member variables
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * DealsWithPluginFileSystem interface member variables
-     */
-    PluginFileSystem pluginFileSystem;
-
-    /**
-     * DealsWithAssetIssuing interface member variables
-     */
-    AssetIssuingManager assetIssuingManager;
-
-    WalletManagerManager walletManagerManager;
-
-    /**
-     * Constructor
+     * Constructor with params.
      *
-     * @param errorManager
-     * @param logManager
-     * @param pluginDatabaseSystem
-     * @param pluginFileSystem
+     * @param pluginDatabaseSystem  database system reference.
+     * @param pluginFileSystem      file system reference,
+     * @param pluginId              of this module.
+     * @param assetIssuingManager   transaction manager instance.
+     * @param walletManagerManager  wallet manager instance.
      */
-    public AssetFactoryMiddlewareManager(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, AssetIssuingManager assetIssuingManager, WalletManagerManager walletManagerManager) {
-        this.errorManager = errorManager;
-        this.logManager = logManager;
+    public AssetFactoryMiddlewareManager(final AssetIssuingManager  assetIssuingManager ,
+                                         final PluginDatabaseSystem pluginDatabaseSystem,
+                                         final PluginFileSystem     pluginFileSystem    ,
+                                         final UUID                 pluginId            ,
+                                         final WalletManagerManager walletManagerManager) {
+
+        this.assetIssuingManager  = assetIssuingManager ;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
-        this.assetIssuingManager = assetIssuingManager;
+        this.pluginFileSystem     = pluginFileSystem    ;
+        this.pluginId             = pluginId            ;
         this.walletManagerManager = walletManagerManager;
     }
 
-    private AssetFactoryMiddlewareDao getAssetFactoryMiddlewareDao()
-    {
-        AssetFactoryMiddlewareDao dao = new AssetFactoryMiddlewareDao(pluginDatabaseSystem, pluginId);
-        return dao;
+    private AssetFactoryMiddlewareDao getAssetFactoryMiddlewareDao() {
+
+        return new AssetFactoryMiddlewareDao(pluginDatabaseSystem, pluginId);
     }
 
     private boolean areObjectsSettled(AssetFactory assetFactory)
@@ -193,27 +165,6 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         {
             throw new CantSaveAssetFactoryException(e, assetFactory.getName(), "Save Asset Factory");
         }
-    }
-
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 
     public List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets()  throws CantListWalletsException {
@@ -680,6 +631,4 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
 
             return assetFactory;
     }
-
-
 }

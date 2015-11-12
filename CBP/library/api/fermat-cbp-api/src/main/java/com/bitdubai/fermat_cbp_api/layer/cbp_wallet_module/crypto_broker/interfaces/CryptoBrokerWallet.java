@@ -60,6 +60,26 @@ public interface CryptoBrokerWallet {
     Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomer(int max, int offset) throws CantGetNegotiationsWaitingForCustomerException;
 
     /**
+     * Return as much as "max" results from the list of Contract Basic Info in this wallet waiting for my response,
+     * starting from the "offset" result
+     *
+     * @param max    the max quantity of results
+     * @param offset the start point for the results
+     * @return the list of Contract Basic Info
+     */
+    Collection<ContractBasicInformation> getContractsWaitingForBroker(int max, int offset) throws CantGetContractsWaitingForBrokerException;
+
+    /**
+     * Return as much as "max" results from the list of Contract Basic Info in this wallet waiting for the Customer's response,
+     * starting from the "offset" result
+     *
+     * @param max    the max quantity of results
+     * @param offset the start point for the results
+     * @return the list of Contract Basic Info
+     */
+    Collection<ContractBasicInformation> getContractsWaitingForCustomer(int max, int offset) throws CantGetContractsWaitingForCustomerException;
+
+    /**
      * Confirm the given negotiation to create a contract based on this negotiation
      *
      * @param negotiation the negotiation ID
