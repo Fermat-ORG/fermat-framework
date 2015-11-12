@@ -39,7 +39,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
     ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
+    ErrorManager errorManager;
 
     // TODO ADDED ERROR MANAGER REFERENCE, PLEASE MAKE USE OF THE ERROR MANAGER.
 
@@ -51,11 +51,8 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
     public List<ActorAssetIssuer> getAllActorAssetIssuerRegistered() throws CantGetAssetIssuerActorsException {
 
         try {
-            actorAssetIssuerManager.registerActorInActorNetowrkSerice();
             return actorAssetIssuerManager.getAllAssetIssuerActorInTableRegistered();
         } catch (CantGetAssetIssuerActorsException e) {
-            e.printStackTrace(); // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
-        } catch (CantCreateActorAssetIssuerException e) {
             e.printStackTrace(); // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
         }
         return new ArrayList<>();
