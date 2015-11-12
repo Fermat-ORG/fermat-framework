@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 
 import java.util.List;
 
@@ -43,5 +45,21 @@ public interface IntraWalletUserIdentityManager extends ModuleManager {
      */
 
     boolean  hasIntraUserIdentity() throws CantListIntraWalletUsersException;
+
+    /**
+     * The method <code>updateIntraUserIdentity</code> change a identity information data
+     * @param identityPublicKey
+     * @param identityAlias
+     * @param profileImage
+     * @throws CantUpdateIdentityException
+     */
+    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityException;
+
+    /**
+     *The method <code>deleteIntraUserIdentity</code> change identity status to inactive
+     * @param identityPublicKey
+     * @throws CantListIntraWalletUsersException
+     */
+    void  deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIdentityException;
 
 }
