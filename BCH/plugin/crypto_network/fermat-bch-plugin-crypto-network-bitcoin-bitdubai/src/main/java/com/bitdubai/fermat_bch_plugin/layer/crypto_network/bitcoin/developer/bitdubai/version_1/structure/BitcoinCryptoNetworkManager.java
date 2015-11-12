@@ -185,6 +185,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
              * If I couldn't load the wallet from file, I'm assuming is a new wallet and I will create it.
              */
             wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
+            //wallet = new Wallet(RegTestParams.get());
+            //wallet.importKeys(keyList);
 
             /**
              * Will set the autosave information and save it.
