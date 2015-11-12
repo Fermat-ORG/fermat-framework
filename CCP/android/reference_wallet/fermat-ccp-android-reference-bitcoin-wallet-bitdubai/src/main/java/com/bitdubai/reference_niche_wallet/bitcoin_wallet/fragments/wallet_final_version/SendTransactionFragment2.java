@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,11 +12,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
@@ -30,6 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
@@ -42,8 +46,10 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.Receiv
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.NegotiationInformationTestData;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.FragmentsCommons;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +87,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private List<CryptoWalletTransaction> lstCryptoWalletTransactionsBook;
     private int available_offset=0;
     private int book_offset=0;
-    //private CryptoBrokerWallet cryptoBrokerWallet;
 
     ReferenceWalletSession referenceWalletSession;
 
@@ -109,7 +114,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             errorManager = walletSession.getErrorManager();
         } catch (Exception ex) {
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
@@ -125,29 +130,29 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         return rootView;
     }
     private void setUp(LayoutInflater inflater){
-        //setUpHeader(inflater);
-        setUpDonut(inflater);
-        setUpScreen(inflater);
+        try {
+            //setUpHeader(inflater);
+            setUpDonut(inflater);
+            setUpScreen(inflater);
+        }catch (Exception e){
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
+                    UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+        }
     }
 
-    private void setUpScreen(LayoutInflater inflater) {
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
         /**
-         * Navigation view header
+         * add navigation header
          */
-        RelativeLayout relativeLayout = new RelativeLayout(getActivity());
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 248);
-        relativeLayout.setLayoutParams(layoutParams);
-        View view = inflater.inflate(R.layout.navigation_drawer_row_first, relativeLayout, true);
-        addNavigationHeader(view);
-
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater,getActivity(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
 
         /**
          * Navigation view items
          */
         NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null);
         setNavigationDrawer(navigationViewAdapter);
-
     }
+
 
     private void setUpDonut(LayoutInflater inflater){
         RelativeLayout container_header_balance = getToolbarHeader();
@@ -239,9 +244,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             int id = item.getItemId();
 
-            CharSequence itemTitle = item.getTitle();
-
-            if(item.getItemId() == BitcoinWalletConstants.IC_ACTION_SEND){ //R.id.actionbar_send){
+            if(id == BitcoinWalletConstants.IC_ACTION_SEND){
                 referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS,Boolean.TRUE);
                 changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
                 return true;
@@ -250,7 +253,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Oooops! recovering from system error",
-                    LENGTH_LONG).show();
+                    Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
