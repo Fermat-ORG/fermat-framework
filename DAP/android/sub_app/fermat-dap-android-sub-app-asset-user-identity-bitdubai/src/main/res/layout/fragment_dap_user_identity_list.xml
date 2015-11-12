@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/identity_list_fragment_background">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/crypto_broker_identity_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingTop="8dp" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/new_crypto_broker_identity_float_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_float_new_identity"
+        fab:fab_colorNormal="@color/add_button_normal"
+        fab:fab_colorPressed="@color/material_blue_grey_800"
+        fab:fab_colorRipple="@color/ripple_material_dark" />
+
+</FrameLayout>
+

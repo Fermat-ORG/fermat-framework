@@ -153,37 +153,47 @@ public enum Plugins implements FermatEnum {
     //End CBP Plugins
 
     // Init new Plugins
+    ASSET_APPROPRIATION         ("ASAP"),
+    ASSET_DISTRIBUTION          ("ASD"),
+    ASSET_FACTORY               ("ASF"),
+    ASSET_ISSUER                ("ASI"),
+    ASSET_ISSUER_COMMUNITY      ("ASIC"),
+    ASSET_ISSUING               ("ASIS"),
+    ASSET_RECEPTION             ("ASR"),
+    ASSET_USER                  ("ASU"),
+    ASSET_USER_COMMUNITY        ("ASUC"),
+    ASSET_TRANSMISSION          ("AST"),
+    BITCOIN_ASSET_VAULT         ("BAV"),
+    BITCOIN_NETWORK             ("BN"),
+    BITCOIN_VAULT               ("BV"),
+    BITCOIN_WALLET              ("BW"),
+    BITCOIN_WATCH_ONLY_VAULT    ("BWOV"),
+    CRYPTO_ADDRESSES            ("CA"),
+    CRYPTO_ADDRESS_BOOK         ("CAB"),
+    CRYPTO_BROKER               ("CB"),
+    CRYPTO_BROKER_IDENTITY      ("CBI"),
+    CRYPTO_CUSTOMER             ("CC"),
+    CRYPTO_CUSTOMER_IDENTITY    ("CCI"),
+    CRYPTO_PAYMENT_REQUEST      ("CPR"),
+    CRYPTO_TRANSMISSION         ("CT"),
+    CRYPTO_WALLET               ("CW"),
+    DEVICE_USER                 ("DU"),
+    EXTRA_WALLET_USER           ("EWU"),
+    INCOMING_CRYPTO             ("IC"),
+    INCOMING_EXTRA_USER         ("IEU"),
+    INCOMING_INTRA_USER         ("IIU"),
+    INTRA_WALLET_USER           ("IWU"),
+    ISSUER_REDEMPTION           ("IR"),
+    OUTGOING_EXTRA_USER         ("OEU"),
+    OUTGOING_INTRA_ACTOR        ("OIA"),
+    REDEEM_POINT                ("RP"),
+    REDEEM_POINT_COMMUNITY      ("RPC"),
+    REDEEM_POINT_REDEMPTION     ("RPR"),
+    USER_REDEMPTION             ("UR"),
+    WALLET_CONTACTS             ("WC"),
+    WALLET_MANAGER              ("WM"),
+    WS_CLOUD_CLIENT             ("WCL"),
 
-    BITCOIN_ASSET_VAULT("BAV"),
-    BITCOIN_NETWORK("BN"),
-    BITCOIN_VAULT("BV"),
-    BITCOIN_WALLET("BW"),
-    BITCOIN_WATCH_ONLY_VAULT("BWOV"),
-    CRYPTO_ADDRESSES("CA"),
-    CRYPTO_ADDRESS_BOOK("CAB"),
-    CRYPTO_BROKER("CB"),
-    CRYPTO_BROKER_IDENTITY("CBI"),
-    CRYPTO_CUSTOMER("CC"),
-    CRYPTO_CUSTOMER_IDENTITY("CCI"),
-    CRYPTO_PAYMENT_REQUEST("CPR"),
-    CRYPTO_TRANSMISSION("CT"),
-    CRYPTO_WALLET("CW"),
-    DEVICE_USER("DU"),
-    EXTRA_WALLET_USER("EWU"),
-    INCOMING_CRYPTO("IC"),
-    INCOMING_EXTRA_USER("IEU"),
-    INCOMING_INTRA_USER("IIU"),
-    INTRA_WALLET_USER("IWU"),
-    OUTGOING_EXTRA_USER("OEU"),
-    OUTGOING_INTRA_ACTOR("OIA"),
-    WALLET_CONTACTS("WC"),
-    WALLET_MANAGER("WM"),
-    WS_CLOUD_CLIENT("WCL"),
-
-
-    // todo temporal
-
-    CRYPTO_ADDRESSES__MIDDLEWARE_TEMP("cryptoaddmidtemp"),
     // End  new Plugins
 
     ;
@@ -448,7 +458,16 @@ public enum Plugins implements FermatEnum {
             //End CBP Plugins
 
             // Init new Plugins
-
+            case "ASAP":  return ASSET_APPROPRIATION;
+            case "ASD":   return ASSET_DISTRIBUTION;
+            case "ASF":   return ASSET_FACTORY;
+            case "ASI":   return ASSET_ISSUER;
+            case "ASIC":  return ASSET_ISSUER_COMMUNITY;
+            case "ASIS":  return ASSET_ISSUING;
+            case "AR":    return ASSET_RECEPTION;
+            case "ASU":   return ASSET_USER;
+            case "ASUC":  return ASSET_USER_COMMUNITY;
+            case "AST":   return ASSET_TRANSMISSION;
             case "BAV":   return BITCOIN_ASSET_VAULT;
             case "BN":    return BITCOIN_NETWORK;
             case "BV":    return BITCOIN_VAULT;
@@ -468,14 +487,17 @@ public enum Plugins implements FermatEnum {
             case "IEU":   return INCOMING_EXTRA_USER;
             case "IIU":   return INCOMING_INTRA_USER;
             case "IWU":   return INTRA_WALLET_USER;
+            case "IR":    return ISSUER_REDEMPTION;
             case "OEU":   return OUTGOING_EXTRA_USER;
             case "OIA":   return OUTGOING_INTRA_ACTOR;
+            case "RP":    return REDEEM_POINT;
+            case "RPC":   return REDEEM_POINT_COMMUNITY;
+            case "RPR":   return REDEEM_POINT_REDEMPTION;
+            case "UR":    return USER_REDEMPTION;
             case "WC":    return WALLET_CONTACTS;
             case "WM":    return WALLET_MANAGER;
             case "WCL":   return WS_CLOUD_CLIENT;
 
-
-            case "cryptoaddmidtemp":   return CRYPTO_ADDRESSES__MIDDLEWARE_TEMP;
 //TEMPORAL
 
 

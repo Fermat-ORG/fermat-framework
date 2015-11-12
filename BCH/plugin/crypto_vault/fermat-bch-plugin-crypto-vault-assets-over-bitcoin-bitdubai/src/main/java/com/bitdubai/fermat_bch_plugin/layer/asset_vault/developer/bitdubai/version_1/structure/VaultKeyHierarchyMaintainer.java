@@ -109,7 +109,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         /**
          * Sleep time of the agent between iterations
          */
-        final long AGENT_SLEEP_TIME = 300000; //default time is 5 minutes
+        final long AGENT_SLEEP_TIME = 600000; //default time is 10 minutes
 
 
         @Override
@@ -150,7 +150,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                  */
                 currentThreshold = (int) Math.round(100 - ((currentUsedKeys * 100) / currentGeneratedKeys));
 
-                List<ECKey> publicKeys;
+                List<ECKey> keys;
                 if (currentThreshold <= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD) {
                     /**
                      * The current threshold is lower than the limit imposed, we need to generate new keys
@@ -162,13 +162,13 @@ class VaultKeyHierarchyMaintainer implements Agent {
                     /**
                      * I will generate the list of keys from zero to the new value
                      */
-                    publicKeys = deriveChildPubKeys(hierarchyAccount, newGeneratedKeys);
+                    keys = deriveChildKeys(hierarchyAccount, newGeneratedKeys);
                 } else {
                     /**
                      * There is no need to generate new keys, so I will re generate the ones I previously generated
                      * to control them.
                      */
-                    publicKeys = deriveChildPubKeys(hierarchyAccount, currentGeneratedKeys);
+                    keys = deriveChildKeys(hierarchyAccount, currentGeneratedKeys);
                 }
 
                 /**
@@ -184,7 +184,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                  * At this point I have the list of keys for each account, so I will put them all together at allAccountsKeyList
                  * so I can pass it later to the bitcoin network.
                  */
-                allAccountsKeyList.addAll(publicKeys);
+                allAccountsKeyList.addAll(keys);
             }
 
             /**
@@ -228,17 +228,17 @@ class VaultKeyHierarchyMaintainer implements Agent {
          * @param amount
          * @return
          */
-        private List<ECKey> deriveChildPubKeys(HierarchyAccount hierarchyAccount, int amount) {
-            DeterministicHierarchy pubKeyHierarchy = vaultKeyHierarchy.getAddressPublicHierarchyFromAccount(hierarchyAccount);
-            List<ECKey> publicKeys = new ArrayList<>();
+        private List<ECKey> deriveChildKeys(HierarchyAccount hierarchyAccount, int amount) {
+            DeterministicHierarchy keyHierarchy = vaultKeyHierarchy.getKeyHierarchyFromAccount(hierarchyAccount);
+            List<ECKey> childKeys = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
                 // I derive the key at position i
-                DeterministicKey derivedPubKey = pubKeyHierarchy.deriveChild(pubKeyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
+                DeterministicKey derivedPubKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
                 // I add this key to the ECKey list
-                publicKeys.add(ECKey.fromPublicOnly(derivedPubKey.getPubKeyPoint()));
+                childKeys.add(ECKey.fromPublicOnly(derivedPubKey.getPubKeyPoint()));
             }
 
-            return publicKeys;
+            return childKeys;
         }
 
 

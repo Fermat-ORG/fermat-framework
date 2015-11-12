@@ -44,4 +44,5 @@ public interface FermatActivity extends Serializable{
     public Activities getBackActivity();
 
     public FermatHeader getHeader();
+
 }

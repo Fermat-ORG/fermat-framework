@@ -67,9 +67,15 @@ class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * Then I will start the agent that connects to the bitcoin network to get new transactions
          */
-        bitcoinCryptoNetworkMonitorAgent = new BitcoinCryptoNetworkMonitorAgent();
-        Thread agentThread = new Thread(bitcoinCryptoNetworkMonitorAgent);
-        agentThread.start();
+        bitcoinCryptoNetworkMonitorAgent = new BitcoinCryptoNetworkMonitorAgent(this.wallet);
+        try {
+            bitcoinCryptoNetworkMonitorAgent.doTheMainTask();
+        } catch (BlockchainException e) {
+            e.printStackTrace();
+        }
+        // I have temporarelly removed the crypto network from the new thread.
+        //Thread agentThread = new Thread(bitcoinCryptoNetworkMonitorAgent);
+        //agentThread.start();
     }
 
     @Override
@@ -97,24 +103,35 @@ class BitcoinCryptoNetworkMonitor implements Agent {
      */
     private class BitcoinCryptoNetworkMonitorAgent implements Runnable{
         /**
-         * sets this agent network type
-         */
-        final NetworkParameters NETWORK_PARAMETERS = wallet.getNetworkParameters();
-
-        /**
          * class variables.
          */
         PeerGroup peerGroup;
+        Wallet wallet;
+
+        /**
+         * sets this agent network type
+         */
+        final NetworkParameters NETWORK_PARAMETERS;
+
+        /**
+         * Constructor
+         * @param wallet
+         */
+        public BitcoinCryptoNetworkMonitorAgent(Wallet wallet) {
+            this.wallet = wallet;
+            NETWORK_PARAMETERS = wallet.getNetworkParameters();
+        }
+
+
 
         @Override
         public void run(){
-            while (isSupposedToBeRunning){
-                try {
-                    doTheMainTask();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try {
+                doTheMainTask();
+            } catch (BlockchainException e) {
+                e.printStackTrace();
             }
+
         }
 
         /**
@@ -128,20 +145,20 @@ class BitcoinCryptoNetworkMonitor implements Agent {
              */
             BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS);
             BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
-            blockChain.addWallet(wallet);
+            blockChain.addWallet(this.wallet);
 
             /**
              * creates the peerGroup object
              */
             peerGroup = new PeerGroup(NETWORK_PARAMETERS, blockChain);
-            peerGroup.addWallet(wallet);
+            peerGroup.addWallet(this.wallet);
 
             /**
              * add the events
              */
             BitcoinNetworkEvents events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId);
             peerGroup.addEventListener(events);
-            wallet.addEventListener(events);
+            this.wallet.addEventListener(events);
 
             /**
              * I will connect to the regTest server or search for peers if we are in a different network.
@@ -172,15 +189,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
              * starts the monitoring
              */
             peerGroup.start();
-            peerGroup.downloadBlockChain();
-
-            /**
-             * will start a loop to let the network sync and download until is requested to stop.
-             */
-            while (isSupposedToBeRunning){
-
-            }
-            peerGroup.stop();
+            peerGroup.startBlockChainDownload(null);
         }
 
         /**
