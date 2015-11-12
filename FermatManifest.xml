@@ -1867,7 +1867,7 @@
 			<layer name="Request" language="java">
 				<plugins>
 					<plugin
-						name="Crypto Request"
+						name="Crypto Payment Request"
 						description=""
 						difficulty="8"
 						code-level="development"
