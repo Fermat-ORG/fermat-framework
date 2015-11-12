@@ -111,7 +111,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * sets this agent network type
          */
-        final NetworkParameters NETWORK_PARAMETERS = wallet.getNetworkParameters();
+        final NetworkParameters NETWORK_PARAMETERS;
 
         /**
          * Constructor
@@ -119,6 +119,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
          */
         public BitcoinCryptoNetworkMonitorAgent(Wallet wallet) {
             this.wallet = wallet;
+            NETWORK_PARAMETERS = wallet.getNetworkParameters();
         }
 
 
