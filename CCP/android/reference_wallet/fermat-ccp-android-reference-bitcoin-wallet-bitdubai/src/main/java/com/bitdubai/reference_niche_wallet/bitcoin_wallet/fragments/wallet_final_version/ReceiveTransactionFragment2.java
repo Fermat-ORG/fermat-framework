@@ -137,7 +137,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     private void setUp(LayoutInflater inflater) throws CantGetActiveLoginIdentityException {
         //setUpHeader(inflater);
         //setUpDonut(inflater);
-        WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+        //WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
     }
 
     private void setUpDonut(LayoutInflater inflater){

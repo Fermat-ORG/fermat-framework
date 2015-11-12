@@ -37,9 +37,11 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.NegotiationInformationTestData;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
@@ -59,6 +61,7 @@ import static android.widget.Toast.makeText;
  */
 public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem>
         implements FermatListItemListeners<CryptoWalletTransaction> {
+
 
     private int MAX_TRANSACTIONS = 20;
 
@@ -124,10 +127,30 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private void setUp(LayoutInflater inflater){
         //setUpHeader(inflater);
         setUpDonut(inflater);
+        setUpScreen(inflater);
+    }
+
+    private void setUpScreen(LayoutInflater inflater) {
+        /**
+         * Navigation view header
+         */
+        RelativeLayout relativeLayout = new RelativeLayout(getActivity());
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 248);
+        relativeLayout.setLayoutParams(layoutParams);
+        View view = inflater.inflate(R.layout.navigation_drawer_row_first, relativeLayout, true);
+        addNavigationHeader(view);
+
+
+        /**
+         * Navigation view items
+         */
+        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null);
+        setNavigationDrawer(navigationViewAdapter);
+
     }
 
     private void setUpDonut(LayoutInflater inflater){
-        RelativeLayout container_header_balance = getActivityHeader();
+        RelativeLayout container_header_balance = getToolbarHeader();
         try {
             container_header_balance.removeAllViews();
         }catch (Exception e){
@@ -136,6 +159,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
         container_header_balance.setVisibility(View.VISIBLE);
+
 
         View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
 
@@ -204,7 +228,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         menu.clear();
 
-        inflater.inflate(R.menu.home_menu, menu);
+        menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        //inflater.inflate(R.menu.home_menu, menu);
     }
 
     @Override
@@ -215,7 +241,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             CharSequence itemTitle = item.getTitle();
 
-            if(item.getItemId() ==  R.id.actionbar_send){
+            if(item.getItemId() == BitcoinWalletConstants.IC_ACTION_SEND){ //R.id.actionbar_send){
                 referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS,Boolean.TRUE);
                 changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
                 return true;
@@ -349,7 +375,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,ex);
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
         }
     }
 
@@ -405,6 +431,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //                        referenceWalletSession.getTypeAmount())
 //        );
     }
+
 
 }
 

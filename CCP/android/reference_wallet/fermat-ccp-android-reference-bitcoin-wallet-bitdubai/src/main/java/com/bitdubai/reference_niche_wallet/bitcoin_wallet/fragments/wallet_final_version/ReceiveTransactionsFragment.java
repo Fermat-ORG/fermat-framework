@@ -229,22 +229,22 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
             linear_layout_receive_form = (LinearLayout) rootView.findViewById(R.id.receive_form);
 
-            ((com.melnykov.fab.FloatingActionButton) rootView.findViewById(R.id.fab_action)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    boolean isShow = linear_layout_receive_form.isShown();
-                    //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
-                    if (isShow) {
-                        Fx.slide_up(getActivity(), linear_layout_receive_form);
-                        linear_layout_receive_form.setVisibility(View.GONE);
-                    } else {
-                        linear_layout_receive_form.setVisibility(View.VISIBLE);
-                        Fx.slide_down(getActivity(), linear_layout_receive_form);
-                    }
-                    emptyState();
-
-                }
-            });
+//            ((com.melnykov.fab.FloatingActionButton) rootView.findViewById(R.id.fab_action)).setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    boolean isShow = linear_layout_receive_form.isShown();
+//                    //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
+//                    if (isShow) {
+//                        Fx.slide_up(getActivity(), linear_layout_receive_form);
+//                        linear_layout_receive_form.setVisibility(View.GONE);
+//                    } else {
+//                        linear_layout_receive_form.setVisibility(View.VISIBLE);
+//                        Fx.slide_down(getActivity(), linear_layout_receive_form);
+//                    }
+//                    emptyState();
+//
+//                }
+//            });
 
             autocompleteContacts = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
 

@@ -108,7 +108,7 @@ public class SettingsFragment2 extends FermatWalletFragment implements View.OnCl
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setUpUI() throws CantGetActiveLoginIdentityException {
-        WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+        //WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
 
         mSwitchNotifications = (Switch) rootView.findViewById(R.id.switch_notifications);
         mSwitchNotifications.setBackgroundTintList(getSwitchTrackColorStateList());
