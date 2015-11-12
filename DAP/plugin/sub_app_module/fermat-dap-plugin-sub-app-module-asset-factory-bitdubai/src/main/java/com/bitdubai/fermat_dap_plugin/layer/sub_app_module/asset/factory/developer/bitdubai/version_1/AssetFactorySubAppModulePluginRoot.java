@@ -24,7 +24,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
-import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.DealsWithAssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.factory.developer.bitdubai.version_1.structure.AssetFactorySupAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -38,7 +37,6 @@ import java.util.List;
  * Created by Franklin on 07/09/15.
  */
 public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin implements
-        DealsWithAssetFactory,
         AssetFactoryModuleManager {
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.ASSET_FACTORY)
@@ -129,10 +127,5 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
             e.printStackTrace();
         }
         return assetFactory;
-    }
-
-    @Override
-    public void setAssetFactoryManager(AssetFactoryManager assetFactoryManager) {
-        this.assetFactoryManager = assetFactoryManager;
     }
 }
