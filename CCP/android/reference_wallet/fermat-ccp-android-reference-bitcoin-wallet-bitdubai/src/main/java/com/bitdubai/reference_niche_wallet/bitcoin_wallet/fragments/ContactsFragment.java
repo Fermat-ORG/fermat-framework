@@ -249,7 +249,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     }
 
     private void setUpScreen() throws CantGetActiveLoginIdentityException {
-        WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+       // WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
     }
 
     @Override

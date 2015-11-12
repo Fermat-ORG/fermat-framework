@@ -1147,7 +1147,7 @@ public class CryptoWalletWalletModuleManager implements
                         return "Spicy Gyros with coke";
                     }
                 });
-                cryptoWalletTransactionList.add(new CryptoWalletTransaction() {
+                CryptoWalletTransaction cryptoWalletTransaction = new CryptoWalletTransaction() {
                     @Override
                     public Actor getInvolvedActor() {
                         return new Actor() {
@@ -1257,7 +1257,20 @@ public class CryptoWalletWalletModuleManager implements
                     public String getMemo() {
                         return "Interface design";
                     }
-                });
+                };
+                cryptoWalletTransactionList.add(cryptoWalletTransaction);
+                cryptoWalletTransactionList.add(cryptoWalletTransaction);
+                cryptoWalletTransactionList.add(cryptoWalletTransaction);
+                cryptoWalletTransactionList.add(cryptoWalletTransaction);
+                cryptoWalletTransactionList.add(cryptoWalletTransaction);
+                cryptoWalletTransactionList.add(cryptoWalletTransaction);
+                cryptoWalletTransactionList.add(cryptoWalletTransaction);
+                cryptoWalletTransactionList.add(cryptoWalletTransaction);
+                cryptoWalletTransactionList.add(cryptoWalletTransaction);
+                cryptoWalletTransactionList.add(cryptoWalletTransaction);
+                cryptoWalletTransactionList.add(cryptoWalletTransaction);
+
+
             }
 
             return cryptoWalletTransactionList;
