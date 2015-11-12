@@ -70,11 +70,11 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
     }
 
     /**
-     * Returns a public Key only from the specified account used to generate bitcoin addresses     *
+     * Returns the master private key for the specified account
      * @param hierarchyAccount
      * @return the fist key of the path m/HierarchyAccount/0. Example: m/0/0
      */
-    private DeterministicKey getAddressPublicKeyFromAccount(HierarchyAccount hierarchyAccount){
+    private DeterministicKey getAddressKeyFromAccount(HierarchyAccount hierarchyAccount){
         /**
          * gets the masterKey for this account
          */
@@ -83,19 +83,19 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         /**
          * Serialize the pubkey of the master key
          */
-        byte[] pubKeyBytes = masterKey.getPubKey();
+        byte[] privateKeyBytes = masterKey.getPrivKeyBytes();
         byte[] chainCode = masterKey.getChainCode();
 
-        return HDKeyDerivation.createMasterPubKeyFromBytes(pubKeyBytes, chainCode);
+        return HDKeyDerivation.createMasterPrivKeyFromBytes(privateKeyBytes, chainCode);
     }
 
     /**
-     * Generates a new hierarchy on the path m/account/0 with only public keys
+     * Generates a new hierarchy on the path m/account/0 with keys
      * @param hierarchyAccount
      * @return a new hierarchy used to generate bitcoin addresses
      */
-    public DeterministicHierarchy getAddressPublicHierarchyFromAccount(HierarchyAccount hierarchyAccount){
-        DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(getAddressPublicKeyFromAccount(hierarchyAccount));
+    public DeterministicHierarchy getKeyHierarchyFromAccount(HierarchyAccount hierarchyAccount){
+        DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(getAddressKeyFromAccount(hierarchyAccount));
         return deterministicHierarchy;
     }
 
@@ -119,7 +119,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         /**
          * I will derive a new public Key from this account
          */
-        DeterministicHierarchy pubKeyHierarchy = getAddressPublicHierarchyFromAccount(hierarchyAccount);
+        DeterministicHierarchy pubKeyHierarchy = getKeyHierarchyFromAccount(hierarchyAccount);
         DeterministicKey pubKey = pubKeyHierarchy.deriveChild(pubKeyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(pubKeyDepth, false));
 
         /**

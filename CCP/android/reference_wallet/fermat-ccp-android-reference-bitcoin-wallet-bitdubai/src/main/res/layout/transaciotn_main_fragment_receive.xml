@@ -167,18 +167,5 @@
 
     </LinearLayout>
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/fab_action"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginRight="35dp"
-        android:src="@drawable/ic_drawer_receive_normal_traslucent"
-        fab:fab_colorNormal="#6563a4"
-        fab:fab_colorPressed="@color/material_blue_grey_800"
-        fab:fab_colorRipple="@color/ripple_material_dark"/>
-
 
 </FrameLayout>
