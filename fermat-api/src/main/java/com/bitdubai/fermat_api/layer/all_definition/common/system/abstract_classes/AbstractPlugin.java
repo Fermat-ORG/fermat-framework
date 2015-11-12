@@ -232,6 +232,8 @@ public abstract class AbstractPlugin implements Plugin, Service {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(abstractAddon));
 
+                this.addonNeededReferences.remove(avr);
+
                 System.out.println("---------->>> Assigned reference: "+avr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
@@ -271,6 +273,8 @@ public abstract class AbstractPlugin implements Plugin, Service {
             if(refManager.isAssignableFrom(abstractPlugin.getClass())) {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(abstractPlugin));
+
+                this.pluginNeededReferences.remove(pvr);
 
                 System.out.println("---------->>> Assigned reference: "+pvr.toString3());
             } else {

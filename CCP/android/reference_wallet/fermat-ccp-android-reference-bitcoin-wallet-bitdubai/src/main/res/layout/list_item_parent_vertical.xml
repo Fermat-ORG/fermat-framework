@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_item_parent_vertical_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="@dimen/margin_medium"
     android:layout_marginRight="@dimen/margin_medium"
     android:layout_marginTop="@dimen/margin_medium"
     android:background="@drawable/background_list_item_parent"
     android:orientation="horizontal">
 
-    <TextView
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/list_item_parent_vertical_number_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,9 +17,11 @@
         android:layout_marginLeft="@dimen/list_item_parent_vertical_number_textView_marginLeft"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_gravity="center_vertical"
-        android:textSize="@dimen/text_size_header"/>
+        android:textSize="@dimen/text_size_header"
+        app:typeface="ROBOTO_REGULAR"/>
 
-    <TextView
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        app:typeface="ROBOTO_REGULAR"
         android:id="@+id/list_item_parent_vertical_parent_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

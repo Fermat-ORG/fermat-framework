@@ -32,6 +32,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -164,24 +164,22 @@ public class GetDatabaseTableContentTest {
         System.out.println("Test AssetDistributionPluginRoot.getDatabaseTableContent()");
         assetDistributionPluginRoot.start();
         List<DeveloperDatabaseTableRecord> list = assetDistributionPluginRoot.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
-        assertThat(list).isNotNull();
+        Assert.assertNotNull(list);
     }
 
     @Test
     public void getDatabaseTableContentThrowsCantOpenDatabaseException() throws Exception {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new CantOpenDatabaseException("error"));
-
         List<DeveloperDatabaseTableRecord> list = assetDistributionPluginRoot.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
-        assertThat(list).isNotNull();
-        assertThat(list.size()).isEqualTo(0);
+        Assert.assertNotNull(list);
+        Assert.assertEquals(0, list.size());
     }
 
     @Test
     public void getDatabaseTableContentThrowsDatabaseNotFoundException() throws Exception {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new DatabaseNotFoundException("error"));
-
         List<DeveloperDatabaseTableRecord> list = assetDistributionPluginRoot.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
-        assertThat(list).isNotNull();
-        assertThat(list.size()).isEqualTo(0);
+        Assert.assertNotNull(list);
+        Assert.assertEquals(0, list.size());
     }
 }
