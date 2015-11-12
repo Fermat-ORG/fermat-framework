@@ -106,7 +106,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    public void setId(final UUID pluginId) {
+    public final void setId(final UUID pluginId) {
         this.pluginId = pluginId;
     }
 
