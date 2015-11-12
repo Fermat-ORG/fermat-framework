@@ -63,7 +63,7 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, AssetIssuerWalletManager, Plugin, Service, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers {
+public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Plugin, Service, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers {
     private static final String WALLET_ISSUER_FILE_NAME = "walletsIds";
     private Map<String, UUID> walletIssuer = new HashMap<>();
     AssetDistributionManager assetDistributionManager;
@@ -471,10 +471,5 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void setAssetDistributionManager(AssetDistributionManager assetIssuingManager) throws CantSetObjectException {
-        this.assetDistributionManager = assetIssuingManager;
     }
 }
