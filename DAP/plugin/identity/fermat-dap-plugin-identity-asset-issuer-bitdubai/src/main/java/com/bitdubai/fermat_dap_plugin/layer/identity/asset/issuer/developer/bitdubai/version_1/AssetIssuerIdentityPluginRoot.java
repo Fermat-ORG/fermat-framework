@@ -132,12 +132,15 @@ public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
                     this.pluginId,
                     this.deviceUserManager,
                     this.actorAssetIssuerManager);
-
-            registerIdentities();
-
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
+        }
+
+        try {
+            registerIdentities();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
