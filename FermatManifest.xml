@@ -1658,7 +1658,29 @@
 
 		<platform code="CCP" name="Crypto Currency Platform" logo="CCP_logo.png" dependsOn="WPD, P2P">
 
-			<layer name="Reference Wallet">
+			<layer name="World" language="java">
+				<plugins>
+					<plugin
+						name="Crypto Index"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="laderuner" scope="implementation" percentage="60"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="laderuner" ></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Basic Wallet">
 				<androids>
 					<android
 						name="Bitcoin Wallet"
@@ -2088,23 +2110,6 @@
 			<layer name="World" language="java">
 				<plugins>
 					<plugin
-						name="Crypto Index"
-						description=""
-						difficulty="8"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="laderuner" scope="implementation" percentage="60"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="laderuner" ></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
 						name="Blockchain Info"
 						description=""
 						difficulty="0"
@@ -2193,8 +2198,8 @@
 			<layer name="Actor Network Service" language="java">
 				<plugins>
 					<plugin
-						name="Intra User"
-						description="Enables searching for Intra Users and conecting one to the other"
+						name="Intra Wallet User"
+						description="Enables searching for Intra Wallet Users and conecting one to the other"
 						difficulty="6"
 						code-level="development"
 						>
@@ -2235,7 +2240,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Payment Request"
+						name="Crypto Payment"
 						description=""
 						difficulty="8"
 						code-level="development"

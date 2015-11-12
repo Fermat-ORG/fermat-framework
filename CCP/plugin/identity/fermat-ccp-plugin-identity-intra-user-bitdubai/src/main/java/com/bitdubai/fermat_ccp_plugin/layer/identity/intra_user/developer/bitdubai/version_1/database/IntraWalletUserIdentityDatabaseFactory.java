@@ -71,12 +71,13 @@ public class IntraWalletUserIdentityDatabaseFactory implements DealsWithPluginDa
             table.addColumn(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
 
             table.addIndex(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_FIRST_KEY_COLUMN);
 
 
                 //Create the table
-                databaseFactory.createTable(ownerId, table);
+            databaseFactory.createTable(ownerId, table);
 
             return database;
 
