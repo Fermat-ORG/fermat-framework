@@ -70,7 +70,7 @@ public class IdentityAssetIssuerImpl implements DealsWithPluginFileSystem, Deals
 
     @Override
     public String getPublicKey() {
-        return this.getPublicKey();
+        return this.publicKey;
     }
 
     @Override
