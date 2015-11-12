@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.IdentityIssuerPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.AssetIssuerIdentityPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantGetAssetIssuerIdentityPrivateKeyException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantGetAssetIssuerIdentityProfileImageException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException;
@@ -209,7 +209,6 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
             for (DatabaseTableRecord record : table.getRecords ()) {
 
                 // Add records to list.
-                list.add(null);
                 list.add(new IdentityAssetIssuerImpl(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue (AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetIssuerIdentityPrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
@@ -236,7 +235,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    IdentityIssuerPluginRoot.ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    AssetIssuerIdentityPluginRoot.ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -270,7 +269,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    IdentityIssuerPluginRoot.ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME  + "_" + publicKey,
+                    AssetIssuerIdentityPluginRoot.ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME  + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -293,7 +292,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    IdentityIssuerPluginRoot.ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    AssetIssuerIdentityPluginRoot.ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -353,7 +352,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    IdentityIssuerPluginRoot.ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME  + "_" + publicKey,
+                    AssetIssuerIdentityPluginRoot.ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME  + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );

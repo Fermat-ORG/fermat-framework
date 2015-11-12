@@ -260,6 +260,7 @@ public class DigitalAssetMetadataTransactionImpl implements DigitalAssetMetadata
      * Get the ReceiverType
      * @return PlatformComponentType
      */
+    @Override
     public PlatformComponentType getReceiverType() {
         return receiverType;
     }
@@ -276,6 +277,7 @@ public class DigitalAssetMetadataTransactionImpl implements DigitalAssetMetadata
      * Get the SenderType
      * @return PlatformComponentType
      */
+   @Override
     public PlatformComponentType getSenderType() {
         return senderType;
     }

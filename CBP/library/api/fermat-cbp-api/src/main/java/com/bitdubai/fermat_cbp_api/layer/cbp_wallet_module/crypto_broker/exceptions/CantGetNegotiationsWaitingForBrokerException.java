@@ -17,4 +17,8 @@ public class CantGetNegotiationsWaitingForBrokerException extends FermatExceptio
     public CantGetNegotiationsWaitingForBrokerException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    public CantGetNegotiationsWaitingForBrokerException(String message, Exception cause) {
+        super(message, cause, "", "");
+    }
 }

@@ -16,18 +16,16 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-
-import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
-import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantAcknowledgeTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantAcquireResponsibilityException;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEventException;
+import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent;
-import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.SourceAdministrator;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -48,7 +46,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 
 
-public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, DealsWithErrors, DealsWithRegistry, TransactionAgent {
+public class IncomingExtraUserMonitorAgent implements DealsWithRegistry, TransactionAgent {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -80,22 +78,6 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
     }
 
     /**
-     *DealsWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     *DealsWithIncomingCrypto Interface implementation.
-     */
-    @Override
-    public void setIncomingCryptoManager(IncomingCryptoManager incomingCryptoManager) {
-        this.incomingCryptoManager = incomingCryptoManager;
-    }
-
-    /**
      *DealsWithRegistry Interface implementation.
      */
     @Override
@@ -112,11 +94,9 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
 
 
 
-        this.monitorAgent = new MonitorAgent ();
+        this.monitorAgent = new MonitorAgent (errorManager, incomingCryptoManager);
         try {
-            this.monitorAgent.setErrorManager(this.errorManager);
             this.monitorAgent.setRegistry(this.registry);
-            this.monitorAgent.setIncomingCryptoManager(this.incomingCryptoManager);
             this.monitorAgent.initialize();
 
             this.agentThread = new Thread(this.monitorAgent);
@@ -142,7 +122,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
 
 
 
-    private static class MonitorAgent implements DealsWithIncomingCrypto, DealsWithErrors, DealsWithRegistry, Runnable  {
+    private static class MonitorAgent implements DealsWithRegistry, Runnable  {
 
         private AtomicBoolean running = new AtomicBoolean(false);
 
@@ -163,6 +143,10 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
          */
         private ErrorManager errorManager;
 
+        public MonitorAgent(ErrorManager errorManager, IncomingCryptoManager incomingCryptoManager) {
+            this.errorManager = errorManager;
+            this.incomingCryptoManager = incomingCryptoManager;
+        }
 
         /**
          * DealsWithRegistry Interface member variables.
@@ -173,27 +157,11 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
         /*
          * MonitorAgent member variables
          */
-        private com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.SourceAdministrator sourceAdministrator;
+        private SourceAdministrator sourceAdministrator;
 
 
 
         private static final int SLEEP_TIME = 5000;
-
-        /**
-         *DealsWithCryptoVault Interface implementation.
-         */
-        @Override
-        public void setIncomingCryptoManager(IncomingCryptoManager incomungCryptoManager) {
-            this.incomingCryptoManager = incomungCryptoManager;
-        }
-
-        /**
-         *DealsWithErrors Interface implementation.
-         */
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
-        }
 
         /**
          *DealsWithRegistry Interface implementation.
@@ -207,8 +175,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
          * MonitorAgent methods.
          */
         private void initialize () {
-            this.sourceAdministrator = new com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.SourceAdministrator();
-            this.sourceAdministrator.setIncomingCryptoManager(this.incomingCryptoManager);
+            this.sourceAdministrator = new SourceAdministrator(incomingCryptoManager);
         }
 
         /**

@@ -139,7 +139,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     public void closeConnection(String remoteNetworkServicePublicKey) {
         //Remove the instance and stop his threads
         if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey))
-        communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
+            communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
 
     }
 

@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
@@ -314,7 +314,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                              * Put the message on a event and fire new event
                              */
                         FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-                        fermatEvent.setSource(AssetTransmissionPluginRoot.EVENT_SOURCE);
+                        fermatEvent.setSource(AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE);
                         ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
                         eventManager.raiseEvent(fermatEvent);
                     }
