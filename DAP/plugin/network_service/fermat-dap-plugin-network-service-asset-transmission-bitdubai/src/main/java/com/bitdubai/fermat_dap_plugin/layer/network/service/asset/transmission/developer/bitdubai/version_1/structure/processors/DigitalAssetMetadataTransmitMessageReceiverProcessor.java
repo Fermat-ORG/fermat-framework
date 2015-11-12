@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionJsonAttNames;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.DigitalAssetMetadataTransactionImpl;
@@ -40,10 +40,10 @@ public class DigitalAssetMetadataTransmitMessageReceiverProcessor extends Fermat
 
     /**
      * Constructor with parameters
-     * @param assetTransmissionPluginRoot
+     * @param assetTransmissionNetworkServicePluginRoot
      */
-    public DigitalAssetMetadataTransmitMessageReceiverProcessor(AssetTransmissionPluginRoot assetTransmissionPluginRoot) {
-        super(assetTransmissionPluginRoot);
+    public DigitalAssetMetadataTransmitMessageReceiverProcessor(AssetTransmissionNetworkServicePluginRoot assetTransmissionNetworkServicePluginRoot) {
+        super(assetTransmissionNetworkServicePluginRoot);
     }
 
     /**
@@ -87,23 +87,23 @@ public class DigitalAssetMetadataTransmitMessageReceiverProcessor extends Fermat
             /*
              * Save into data base for audit control
              */
-            getAssetTransmissionPluginRoot().getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransaction);
+            getAssetTransmissionNetworkServicePluginRoot().getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransaction);
 
             /*
              * Mark the message as read
              */
             ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-            ((CommunicationNetworkServiceConnectionManager)getAssetTransmissionPluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
+            ((CommunicationNetworkServiceConnectionManager) getAssetTransmissionNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
 
             /*
              * Notify to the interested
              */
-            FermatEvent event =  getAssetTransmissionPluginRoot().getEventManager().getNewEvent(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
-            event.setSource(AssetTransmissionPluginRoot.EVENT_SOURCE);
-            getAssetTransmissionPluginRoot().getEventManager().raiseEvent(event);
+            FermatEvent event =  getAssetTransmissionNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
+            event.setSource(AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE);
+            getAssetTransmissionNetworkServicePluginRoot().getEventManager().raiseEvent(event);
 
         } catch (Exception e) {
-            getAssetTransmissionPluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            getAssetTransmissionNetworkServicePluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
     }

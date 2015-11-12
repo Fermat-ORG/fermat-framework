@@ -15,12 +15,12 @@ public enum DAPConnectionState implements FermatEnum {
     /**
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    CONNECTED_ONLINE              ("CTDRY"),
-    CONNECTED_OFFLINE             ("DTDRY"),
-    CONNECTING                    ("CONNE"),
+    CONNECTED_ONLINE              ("CTDON"),
+    CONNECTED_OFFLINE             ("CTDOF"),
+    CONNECTING                    ("CTING"),
     REGISTERED_LOCALLY            ("RGDLY"),
-    REGISTERED_ONLINE             ("RGDRY"),
-    REGISTERED_OFFLINE            ("RGLYF"),
+    REGISTERED_ONLINE             ("RGDON"),
+    REGISTERED_OFFLINE            ("RGDOF"),
     ;
 
     private final String code;
@@ -38,12 +38,12 @@ public enum DAPConnectionState implements FermatEnum {
 
         switch (code) {
 
-            case "CTDRY": return CONNECTED_ONLINE               ;
-            case "DTDRY": return CONNECTED_OFFLINE              ;
-            case "CONNE": return CONNECTING                     ;
+            case "CTDON": return CONNECTED_ONLINE               ;
+            case "CTDOF": return CONNECTED_OFFLINE              ;
+            case "CTING": return CONNECTING                     ;
             case "RGDLY": return REGISTERED_LOCALLY             ;
-            case "RGDRY": return REGISTERED_ONLINE              ;
-            case "RGLYF": return REGISTERED_OFFLINE             ;
+            case "RGDON": return REGISTERED_ONLINE              ;
+            case "RGDOF": return REGISTERED_OFFLINE             ;
 
             default: throw new InvalidParameterException(
                     "Code Received: " + code,

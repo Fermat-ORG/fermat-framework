@@ -13,29 +13,31 @@ public enum Layers implements FermatEnum {
     /**
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    ACTOR                 ("ACT"),
-    ACTOR_NETWORK_SERVICE ("ANS"),
-    BASIC_WALLET          ("BSW"),
-    COMMUNICATION         ("COM"),
-    CRYPTO_MODULE         ("CRM"),
-    CRYPTO_NETWORK        ("CRN"),
-    CRYPTO_ROUTER         ("CRR"),
-    CRYPTO_VAULT          ("CRV"),
-    DEFINITION            ("DEF"),
-    DESKTOP_MODULE        ("DKM"),
-    ENGINE                ("ENG"),
-    HARDWARE              ("HAR"),
-    IDENTITY              ("IDT"),
-    MIDDLEWARE            ("MID"),
-    NETWORK_SERVICE       ("NTS"),
-    PLATFORM_SERVICE      ("PMS"),
-    REQUEST               ("REQ"),
-    SUB_APP_MODULE        ("SAM"),
-    SYSTEM                ("SYS"),
-    TRANSACTION           ("TRA"),
-    USER                  ("USR"),
-    WALLET_MODULE         ("WAM"),
-    WORLD                 ("WRL"),
+    ACTOR                      ("ACT"),
+    ACTOR_NETWORK_SERVICE      ("ANS"),
+    BASIC_WALLET               ("BSW"),
+    COMMUNICATION              ("COM"),
+    CRYPTO_MODULE              ("CRM"),
+    CRYPTO_NETWORK             ("CRN"),
+    CRYPTO_ROUTER              ("CRR"),
+    CRYPTO_VAULT               ("CRV"),
+    DEFINITION                 ("DEF"),
+    DESKTOP_MODULE             ("DKM"),
+    DIGITAL_ASSET_TRANSACTION  ("DAT"),
+    ENGINE                     ("ENG"),
+    HARDWARE                   ("HAR"),
+    IDENTITY                   ("IDT"),
+    MIDDLEWARE                 ("MID"),
+    NETWORK_SERVICE            ("NTS"),
+    PLATFORM_SERVICE           ("PMS"),
+    REQUEST                    ("REQ"),
+    SUB_APP_MODULE             ("SAM"),
+    SYSTEM                     ("SYS"),
+    TRANSACTION                ("TRA"),
+    USER                       ("USR"),
+    WALLET                     ("WAL"),
+    WALLET_MODULE              ("WAM"),
+    WORLD                      ("WRL"),
 
     ;
 
@@ -57,6 +59,7 @@ public enum Layers implements FermatEnum {
             case "CRN":  return CRYPTO_NETWORK;
             case "CRR":  return CRYPTO_ROUTER;
             case "CRV":  return CRYPTO_VAULT;
+            case "DAT":  return DIGITAL_ASSET_TRANSACTION;
             case "DEF":  return DEFINITION;
             case "DKM":  return DESKTOP_MODULE;
             case "ENG":  return ENGINE;
@@ -70,6 +73,7 @@ public enum Layers implements FermatEnum {
             case "SYS":  return SYSTEM;
             case "TRA":  return TRANSACTION;
             case "USR":  return USER;
+            case "WAL":  return WALLET;
             case "WAM":  return WALLET_MODULE;
             case "WRL":  return WORLD;
 

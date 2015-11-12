@@ -32,7 +32,7 @@ public class ActorNetworkServiceLayer extends AbstractLayer {
 
             throw new CantStartLayerException(
                     e,
-                    "Actor Layer of DAP Platform",
+                    "Actor Network Service Layer of DAP Platform",
                     "Problem trying to register a plugin."
             );
         }

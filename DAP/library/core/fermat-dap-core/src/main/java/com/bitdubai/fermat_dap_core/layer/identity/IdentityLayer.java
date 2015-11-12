@@ -32,7 +32,7 @@ public class IdentityLayer extends AbstractLayer {
 
             throw new CantStartLayerException(
                     e,
-                    "Actor Layer of DAP Platform",
+                    "Identity Layer of DAP Platform",
                     "Problem trying to register a plugin."
             );
         }
