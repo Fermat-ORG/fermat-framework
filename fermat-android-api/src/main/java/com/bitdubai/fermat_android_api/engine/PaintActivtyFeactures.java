@@ -20,8 +20,6 @@ public interface PaintActivtyFeactures {
 
     public void paintComboBoxInActionBar(ArrayAdapter adapter,ActionBar.OnNavigationListener listener);
 
-    public RelativeLayout getActivityHeader();
-
     public void changeNavigationDrawerAdapter(FermatAdapter adapter);
 
     public void addNavigationViewHeader(View view);

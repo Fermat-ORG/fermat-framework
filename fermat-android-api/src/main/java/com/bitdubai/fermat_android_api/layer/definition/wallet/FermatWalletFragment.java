@@ -99,12 +99,6 @@ public class FermatWalletFragment extends Fragment implements FermatFragments {
      *
      */
 
-    /**
-     *  Get Activity header
-     */
-    protected final RelativeLayout getActivityHeader(){
-        return getPaintActivtyFeactures().getActivityHeader();
-    }
 
     protected final RelativeLayout getToolbarHeader() {
         return getPaintActivtyFeactures().getToolbarHeader();

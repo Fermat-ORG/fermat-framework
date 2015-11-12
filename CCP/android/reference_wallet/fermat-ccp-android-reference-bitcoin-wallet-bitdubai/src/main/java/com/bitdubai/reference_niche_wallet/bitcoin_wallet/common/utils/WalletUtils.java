@@ -18,7 +18,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationDrawerArrayAdapter;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

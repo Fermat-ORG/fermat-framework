@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.intra_user_community.common.Utils;
+package com.bitdubai.sub_app.intra_user_community.common.utils;
 
 import android.view.View;
 import android.view.animation.AnimationUtils;

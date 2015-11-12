@@ -60,7 +60,9 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_con
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.FragmentsCommons;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceFragmentsEnumType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -182,7 +184,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
             rootView = inflater.inflate(R.layout.main_act, container, false);
             setupViews(rootView);
             setUpFAB();
-            setUpScreen();
+            setUpScreen(inflater);
             walletContactRecords = new ArrayList<>();
             mItems = new ArrayList<>();
             mListSectionPos = new ArrayList<Integer>();
@@ -248,9 +250,19 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
     }
 
-    private void setUpScreen() throws CantGetActiveLoginIdentityException {
-       // WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
+        /**
+         * add navigation header
+         */
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+
+        /**
+         * Navigation view items
+         */
+        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null);
+        setNavigationDrawer(navigationViewAdapter);
     }
+
 
     @Override
     public void onStart() {
