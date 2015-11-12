@@ -35,11 +35,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-middleware-wallet-skin-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai')
     // DMP Projects (Addons)
-    //DAP Projects (Plugins)
-    compile project(':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai')
-    compile project(':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai')
-    compile project(':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai')
-    compile project(':fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai')
 
     //WPD Projects (Plugins)
     compile project(':fermat-wpd-plugin-actor-publisher-bitdubai')
