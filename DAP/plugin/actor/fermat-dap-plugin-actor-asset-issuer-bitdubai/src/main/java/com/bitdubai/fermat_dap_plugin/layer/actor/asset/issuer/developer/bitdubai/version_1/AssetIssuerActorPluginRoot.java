@@ -12,8 +12,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -24,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
@@ -68,13 +67,13 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM   , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_ISSUER         )
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_ISSUER)
     private AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
 
     public AssetIssuerActorPluginRoot() {
@@ -84,8 +83,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     AssetIssuerActorDao assetIssuerActorDao;
     private ActorAssetIssuerMonitorAgent actorAssetIssuerMonitorAgent;
 
-    BlockchainNetworkType blockchainNetworkType;
-
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     @Override
@@ -93,9 +90,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             assetIssuerActorDao = new AssetIssuerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
 
-            blockchainNetworkType = BlockchainNetworkType.REG_TEST;
-
-            createAndRegisterActorAssetIssuerTest();
+//            createAndRegisterActorAssetIssuerTest();
 
             initializeListener();
 
@@ -146,7 +141,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
     @Override
     public ActorAssetIssuer getActorByPublicKey(String actorPublicKey) throws CantGetAssetIssuerActorsException,
-                                                                                CantAssetIssuerActorNotFoundException {
+            CantAssetIssuerActorNotFoundException {
 
         try {
             return this.assetIssuerActorDao.getActorByPublicKey(actorPublicKey);
@@ -157,8 +152,46 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void createActorAssetIssuerFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage) throws CantCreateActorAssetIssuerException {
+    public void createActorAssetIssuerFactory(String assetIssuerActorPublicKey, String assetIssuerActorName, byte[] assetIssuerActorProfileImage) throws CantCreateActorAssetIssuerException {
+        try {
+            ActorAssetIssuer actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
 
+            Double locationLatitude = new Random().nextDouble();
+            Double locationLongitude = new Random().nextDouble();
+            String description = "Asset Issuer Skynet Test";
+
+            if (actorAssetIssuer == null) {
+                AssetIssuerActorRecord record = new AssetIssuerActorRecord(
+                        assetIssuerActorPublicKey,
+                        assetIssuerActorName,
+                        DAPConnectionState.REGISTERED_LOCALLY,
+                        locationLatitude,
+                        locationLongitude,
+                        System.currentTimeMillis(),
+                        assetIssuerActorProfileImage,
+                        description);
+
+                assetIssuerActorDao.createNewAssetIssuer(record);
+            }
+
+            registerActorInActorNetowrkSerice();
+
+            actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+
+            if (actorAssetIssuer != null) {
+                System.out.println("*********************Actor Asset Issuer************************");
+                System.out.println("Actor Asset PublicKey: " + actorAssetIssuer.getPublicKey());
+                System.out.println("Actor Asset Name: " + actorAssetIssuer.getName());
+                System.out.println("Actor Asset Description: " + actorAssetIssuer.getDescription());
+                System.out.println("***************************************************************");
+            }
+        } catch (CantAddPendingAssetIssuerException e) {
+            throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER", e, "", "");
+        } catch (CantGetAssetIssuerActorsException e) {
+            throw new CantCreateActorAssetIssuerException("CAN'T GET ACTOR ASSET ISSUER", e, "", "");
+        } catch (Exception e) {
+            throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER unknow Cause", FermatException.wrapException(e), "", "");
+        }
     }
 
     @Override
@@ -186,7 +219,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
     @Override
     public List<ActorAssetIssuer> getAllAssetIssuerActorConnected() throws CantGetAssetIssuerActorsException {
-        List<ActorAssetIssuer> list; // Asset User Actor list.
+        List<ActorAssetIssuer> list; // Asset Issuer Actor list.
         try {
             list = this.assetIssuerActorDao.getAllAssetIssuerActorConnected();
         } catch (CantGetAssetIssuersListException e) {
@@ -195,31 +228,30 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         return list;
     }
 
-    @Override
-    public void registerActorInActorNetowrkSerice() throws CantCreateActorAssetIssuerException {
+    public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetIssuerException {
         try {
             /*
              * Send the Actor Asset Issuer Local for Register in Actor Network Service
              */
             ActorAssetIssuer actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
-//            if (actorAssetIssuer.getConnectionState() != ConnectionState.CONNECTED) {
+
             assetIssuerActorNetworkServiceManager.registerActorAssetIssuer(actorAssetIssuer);
-//            } else {
-//                System.out.println("Actor Asset Issuer YA REGISTRADO - NO Puede volver a registrarse");
-//            }
-        } catch (CantRegisterActorAssetIssuerException | CantGetAssetIssuerActorsException e) {
-            e.printStackTrace();
+
+        } catch (CantRegisterActorAssetIssuerException e) {
+            throw new CantRegisterActorAssetIssuerException("CAN'T Register Actor Asset Issuer in Actor Network Service", e, "", "");
+        } catch (CantGetAssetIssuerActorsException e) {
+            throw new CantRegisterActorAssetIssuerException("CAN'T GET ACTOR ASSET ISSUER", e, "", "");
         }
     }
 
     @Override
     public void connectToActorAssetIssuer(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToAssetIssuerException {
         for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuers) {
-            //todo Actualizar Estado en base de datos para este Actor ConnectionState = PENDING_REMOTELY_ACCEPTANCE
-                System.out.println("Se necesita conocer como Implementar bien: "+actorAssetIssuer.getName());
-// cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(null, CryptoCurrency.BITCOIN, Actors.DAP_ASSET_ISSUER, Actors.DAP_ASSET_USER, requester.getPublicKey(), actorAssetUser.getPublicKey(), null, BlockchainNetworkType.DEFAULT);
+            //todo Actualizar Estado en base de datos para este Actor DAPConnectionState = PENDING_REMOTELY_ACCEPTANCE
+            System.out.println("Se necesita conocer como Implementar bien: " + actorAssetIssuer.getName());
+
             try {
-                this.assetIssuerActorDao.updateAssetIssuerConnectionStateRegistered(actorAssetIssuer.getPublicKey(), ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
+                this.assetIssuerActorDao.updateAssetIssuerDAPConnectionStateRegistered(actorAssetIssuer.getPublicKey(), DAPConnectionState.CONNECTING);
             } catch (CantUpdateAssetIssuerException e) {
                 e.printStackTrace();
             }
@@ -232,52 +264,13 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         System.out.println("Actor Asset Issuer se Registro: " + actorAssetIssuer.getName());
         try {
             //TODO Cambiar luego por la publicKey Linked proveniente de Identity
-            this.assetIssuerActorDao.updateAssetIssuerConnectionState(actorAssetIssuer.getPublicKey(),
+            this.assetIssuerActorDao.updateAssetIssuerDAPConnectionState(actorAssetIssuer.getPublicKey(),
                     actorAssetIssuer.getPublicKey(),
-                    ConnectionState.CONNECTED);
+                    DAPConnectionState.REGISTERED_ONLINE);
         } catch (CantUpdateAssetIssuerException e) {
             e.printStackTrace();
         }
         System.out.println("***************************************************************");
-    }
-
-    public void createAndRegisterActorAssetIssuerTest() throws CantCreateActorAssetIssuerException {
-
-        try {
-            ActorAssetIssuer actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
-            if (actorAssetIssuer == null) {
-//                String assetIssuerActorIdentityToLinkPublicKey = i + UUID.randomUUID().toString();
-                String assetIssuerActorPublicKey = UUID.randomUUID().toString();
-//                CryptoAddress genesisAddress = getGenesisAddress();
-
-                Double locationLatitude = new Random().nextDouble();
-                Double locationLongitude = new Random().nextDouble();
-                String description = "Asset Issuer de Prueba";
-                ConnectionState connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
-
-                AssetIssuerActorRecord record = new AssetIssuerActorRecord(assetIssuerActorPublicKey,
-                        "Thunder Issuer_" + new Random().nextInt(90),
-                        connectionState,
-                        locationLatitude,
-                        locationLongitude,
-                        System.currentTimeMillis(),
-                        new byte[0],
-                        description);
-                assetIssuerActorDao.createNewAssetIssuer(record);
-                actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
-
-                System.out.println("*********************Actor Asset Issuer************************");
-                System.out.println("Actor Asset PublicKey: " + actorAssetIssuer.getPublicKey());
-                System.out.println("Actor Asset Name: " + actorAssetIssuer.getName());
-                System.out.println("Actor Asset Description: " + actorAssetIssuer.getDescription());
-                System.out.println("***************************************************************");
-//                assetIssuerActorDao.createNewAssetIssuerRegistered(record);
-            }
-        } catch (CantAddPendingAssetIssuerException e) {
-            throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER", e, "", "");
-        } catch (Exception e) {
-            throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER", FermatException.wrapException(e), "", "");
-        }
     }
 
     /**
