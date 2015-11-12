@@ -209,7 +209,6 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
             for (DatabaseTableRecord record : table.getRecords ()) {
 
                 // Add records to list.
-                list.add(null);
                 list.add(new IdentityAssetIssuerImpl(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue (AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetIssuerIdentityPrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
