@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by nelson on 22/10/15.
  */
 public class CantGetCryptoCustomerWalletException extends FermatException {
+    public static final String DEFAULT_MESSAGE = "Can't get a reference of CryptoCustomerWallet";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -26,5 +28,14 @@ public class CantGetCryptoCustomerWalletException extends FermatException {
      */
     public CantGetCryptoCustomerWalletException(String message, Exception cause) {
         this(message, cause, "", "");
+    }
+
+    /**
+     * Call CantGetCryptoCustomerWalletException(DEFAULT_MESSAGE, cause, "", "")
+     *
+     * @param cause   the exception that triggered the throwing of the current exception, if there are no other exceptions to be declared here, the cause should be null
+     */
+    public CantGetCryptoCustomerWalletException(Exception cause) {
+        this(DEFAULT_MESSAGE, cause, "", "");
     }
 }
