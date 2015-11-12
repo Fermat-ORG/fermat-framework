@@ -29,7 +29,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
@@ -43,7 +42,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interf
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetFactoryMiddlewareManager;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerIdentity;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
@@ -53,7 +51,6 @@ import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bi
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
@@ -64,30 +61,23 @@ import java.util.List;
  * Created by rodrigo on 9/7/15.
  */
 public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
-        DealsWithAssetIssuing,
         AssetFactoryManager,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    protected PluginFileSystem pluginFileSystem        ;
+    private PluginFileSystem pluginFileSystem        ;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
-    private EventManager eventManager;
-
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM   , layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
-    WalletManagerManager walletManagerManager;
+    private WalletManagerManager walletManagerManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM   , layer = Layers.DIGITAL_ASSET_TRANSACTION, plugin = Plugins.ASSET_ISSUING)
-    AssetIssuingManager assetIssuingManager;
+    private AssetIssuingManager assetIssuingManager;
 
     AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
 
@@ -104,15 +94,12 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
-        if(assetFactoryMiddlewareMonitorAgent == null)
-        {
-        assetFactoryMiddlewareMonitorAgent = new AssetFactoryMiddlewareMonitorAgent(
-                eventManager,
-                pluginDatabaseSystem,
-                errorManager,
-                assetFactoryMiddlewareManager,
-                assetIssuingManager, pluginId,
-                pluginFileSystem);
+        if(assetFactoryMiddlewareMonitorAgent == null) {
+            assetFactoryMiddlewareMonitorAgent = new AssetFactoryMiddlewareMonitorAgent(
+                    assetFactoryMiddlewareManager,
+                    assetIssuingManager,
+                    errorManager
+            );
 
             assetFactoryMiddlewareMonitorAgent.start();
         }else assetFactoryMiddlewareMonitorAgent.start();
@@ -144,13 +131,8 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void setAssetIssuingManager(AssetIssuingManager assetIssuingManager) throws CantSetObjectException {
-        this.assetIssuingManager = assetIssuingManager;
-    }
-
-    @Override
     public void start() throws CantStartPluginException {
-        assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetIssuingManager, walletManagerManager) ;
+        assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(assetIssuingManager, pluginDatabaseSystem, pluginFileSystem, pluginId, walletManagerManager) ;
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
             //TODO: Borrar luego solo es para Test
