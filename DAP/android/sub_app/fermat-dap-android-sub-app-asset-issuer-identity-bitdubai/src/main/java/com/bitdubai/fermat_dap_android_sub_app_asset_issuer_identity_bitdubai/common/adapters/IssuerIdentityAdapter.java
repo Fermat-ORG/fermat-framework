@@ -38,7 +38,7 @@ public class IssuerIdentityAdapter extends FermatAdapter<IdentityAssetIssuer, Is
 
     @Override
     protected void bindHolder(final IssuerIdentityViewHolder holder, final IdentityAssetIssuer data, final int position) {
-        holder.getIdentityName().setText(data.getAlias());
+        holder.getIdentityName().setText(data.getAlias() != null ? data.getAlias() : null);
 
         byte[] profileImage = data.getProfileImage();
         Bitmap imageBitmap = profileImage == null ?
