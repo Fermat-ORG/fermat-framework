@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/settings_container">
 
 
@@ -26,6 +26,7 @@
             android:paddingTop="7dp"
             android:paddingBottom="7dp"
             android:paddingLeft="20dp"
+            app:typeface="ROBOTO_REGULAR"
             android:layout_marginTop="30dp"/>
 
         <RelativeLayout
@@ -42,6 +43,7 @@
                 android:id="@+id/txt_view_notification_item"
                 android:text="Phone notifications"
                 android:textColor="#4f4f4f"
+                app:typeface="ROBOTO_REGULAR"
                 android:layout_marginLeft="20dp"/>
 
 

@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:background="#FFFFFF"
    >
 
-
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#12aca1">
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text=" Create contact"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            app:typeface="ROBOTO_REGULAR"
+            />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="3dip"
@@ -21,8 +44,8 @@
 
         <ImageView
             android:id="@+id/take_picture_btn"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_margin="7dip"
             android:background="@drawable/btn_new_contact_picture"
             android:src="@drawable/ic_camera_green"
@@ -35,26 +58,27 @@
             android:orientation="vertical"
             android:paddingTop="16dp">
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name"
+                android:text="Set name"
                 android:textColor="#12aca1"
                 android:paddingLeft="20dp"
                 android:layout_alignParentTop="true"
-                android:visibility="gone"/>
+                android:visibility="visible"
+                app:typeface="ROBOTO_REGULAR"/>
 
 
             <EditText
                 android:id="@+id/contact_name"
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginBottom="3dip"
-                android:background="@drawable/shape_section"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:hint="Name"
+                android:textColorHint="#666666"
                 android:inputType="textCapWords"
                 android:paddingBottom="7dip"
                 android:paddingLeft="15dip"
@@ -62,17 +86,12 @@
                 android:paddingTop="7dip"
                 android:singleLine="true"
                 android:textColor="#666666"
-
                 android:textSize="12sp"
+                android:layout_weight="1"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:textStyle="normal"
-                android:fontFamily="roboto"/>
+                android:textStyle="normal" />
 
         </LinearLayout>
-
-
-
 
 
 
@@ -81,23 +100,35 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#e1e1e1"
-        android:layout_alignParentBottom="true"></View>
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:layout_marginTop="7dp"
+        ></View>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set address"
+        android:textColor="#12aca1"
+        android:paddingLeft="24dp"
+        android:layout_alignParentTop="true"
+        android:paddingTop="7dp"
+        app:typeface="ROBOTO_REGULAR"
+        />
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:textColor="#12aca1"
-            android:paddingLeft="20dp"
-            android:layout_alignParentTop="true"
-            />
+
+
+
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#FFFFFF"
@@ -106,18 +137,16 @@
         android:id="@+id/container">
 
 
-
         <EditText
             android:id="@+id/txt_address"
-            android:layout_width="200dp"
+            android:layout_width="210dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="3dip"
-            android:background="@drawable/shape_section"
-
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:hint="Address"
+            android:textColorHint="#666666"
             android:inputType="textCapWords"
             android:paddingBottom="7dip"
             android:paddingLeft="15dip"
@@ -126,25 +155,22 @@
             android:singleLine="true"
             android:textColor="#666666"
             android:textSize="12sp"
-            android:layout_weight="1"
             android:layout_marginLeft="15dp"
             android:textStyle="normal" />
 
         <ImageView
             android:id="@+id/paste_from_clipboard_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:layout_weight="1.5"
-            android:src="@drawable/ic_action_send_now_grey" />
+            android:layout_width="28dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_copy"
+            android:layout_marginLeft="20dp"/>
 
         <ImageView
             android:id="@+id/scan_qr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:layout_weight="1.5"
-            android:src="@drawable/ic_action_camera_grey" />
+            android:layout_width="28dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_qr"
+            android:layout_marginLeft="12dp"/>
 
 
     </LinearLayout>
@@ -157,12 +183,14 @@
         android:layout_alignParentBottom="true"></View>
     <LinearLayout
         android:id="@+id/linear_create_contact"
-        android:layout_width="match_parent"
+        android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="3dip"
         android:layout_marginTop="20dp"
-        android:background="#FFFFFF">
+        android:background="#FFFFFF"
+        android:paddingRight="60dp"
+        android:paddingLeft="12dp">
 
         <Button
             android:id="@+id/cancel_btn"
@@ -184,7 +212,8 @@
             android:background="#1173aa"
             android:text="Save"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            />
     </LinearLayout>
 
 

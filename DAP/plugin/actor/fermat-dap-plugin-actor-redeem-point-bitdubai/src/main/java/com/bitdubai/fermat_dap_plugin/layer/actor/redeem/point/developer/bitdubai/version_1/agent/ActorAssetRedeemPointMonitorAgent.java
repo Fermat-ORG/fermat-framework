@@ -12,7 +12,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantC
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRequestListActorAssetRedeemPointRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.RedeemPointPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.RedeemPointActorPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantAddPendingRedeemPointException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure.RedeemPointActorDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -40,7 +40,7 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
     UUID pluginId;
     String userPublicKey;
     AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
-    RedeemPointPluginRoot redeemPointPluginRoot;
+    RedeemPointActorPluginRoot redeemPointPluginRoot;
 
     public ActorAssetRedeemPointMonitorAgent(EventManager eventManager,
                                              PluginDatabaseSystem pluginDatabaseSystem,
@@ -48,7 +48,7 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
                                              UUID pluginId,
                                              AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager,
                                              RedeemPointActorDao redeemPointActorDao,
-                                             RedeemPointPluginRoot redeemPointPluginRoot) {
+                                             RedeemPointActorPluginRoot redeemPointPluginRoot) {
 
         this.pluginId = pluginId;
         this.eventManager = eventManager;

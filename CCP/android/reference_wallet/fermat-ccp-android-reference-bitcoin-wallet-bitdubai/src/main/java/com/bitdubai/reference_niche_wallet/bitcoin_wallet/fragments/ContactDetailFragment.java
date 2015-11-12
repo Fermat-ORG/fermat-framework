@@ -44,6 +44,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ReceiveFr
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceFragmentsEnumType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -217,13 +218,16 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
      * Setting up wallet contact value
      */
     private void setUpContact() {
+        image_view_profile = (ImageView) mFragmentView.findViewById(R.id.image_view_profile);
         if (cryptoWalletWalletContact != null) {
             if(image_view_profile!=null){
                 if(cryptoWalletWalletContact.getProfilePicture().length>0) {
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inScaled = true;
-                    Bitmap bitmapDrawable = BitmapFactory.decodeByteArray(cryptoWalletWalletContact.getProfilePicture(), 0, cryptoWalletWalletContact.getProfilePicture().length, options);// MemoryUtils.decodeSampledBitmapFromByteArray(cryptoWalletWalletContact.getProfilePicture(),image_view_profile.getMaxWidth(),image_view_profile.getMaxHeight());
-                    image_view_profile.setImageBitmap(bitmapDrawable);
+                    if(image_view_profile.getWidth() >0 && image_view_profile.getHeight()>0) {
+                        Bitmap bitmapDrawable = BitmapFactory.decodeByteArray(cryptoWalletWalletContact.getProfilePicture(), 0, cryptoWalletWalletContact.getProfilePicture().length);// MemoryUtils.decodeSampledBitmapFromByteArray(cryptoWalletWalletContact.getProfilePicture(),image_view_profile.getMaxWidth(),image_view_profile.getMaxHeight());
+                        bitmapDrawable = Bitmap.createScaledBitmap(bitmapDrawable, image_view_profile.getWidth(), image_view_profile.getHeight(), true);
+//                    brokerImageByteArray = toByteArray(bitmapDrawable);
+                        image_view_profile.setImageBitmap(bitmapDrawable);
+                    }
                 }else
                     Picasso.with(getActivity()).load(R.drawable.celine_profile_picture).into(image_view_profile);
             }
@@ -245,5 +249,16 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
      */
     public void setWalletSession(ReferenceWalletSession walletSession) {
         this.walletSession = walletSession;
+    }
+    /**
+     * Bitmap to byte[]
+     *
+     * @param bitmap Bitmap
+     * @return byte array
+     */
+    private byte[] toByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 }

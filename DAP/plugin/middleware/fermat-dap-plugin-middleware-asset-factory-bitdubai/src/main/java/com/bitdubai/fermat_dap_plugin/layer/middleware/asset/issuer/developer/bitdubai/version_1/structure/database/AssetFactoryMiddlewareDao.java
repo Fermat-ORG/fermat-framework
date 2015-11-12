@@ -41,8 +41,8 @@ import java.util.UUID;
 /**
  * Created by franklin on 15/09/15.
  */
-public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
-    public static final String PATH_DIRECTORY = "assetFactory/resources";
+public class AssetFactoryMiddlewareDao {
+
     Database database;
     UUID pluginId;
     /**
@@ -63,19 +63,9 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         this.pluginId = pluginId;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
     private DatabaseTable getDatabaseTable(String tableName) {
-        DatabaseTable databaseTable = database.getTable(tableName);
-        return databaseTable;
+
+        return database.getTable(tableName);
     }
 
     private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {

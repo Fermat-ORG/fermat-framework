@@ -1,12 +1,15 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.incoming_asset_on_crypto_network_waiting_transference_asset_user_event_handler;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
@@ -14,8 +17,10 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dist
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +30,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 /**
@@ -45,9 +50,7 @@ public class OnCryptoNetworHandleEventTest {
     private  FermatEventListener fermatEventListener4;
     @Mock
     private  FermatEventListener fermatEventListener5;
-
-    @Mock
-    private  FermatEvent fermatEvent;
+    private IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent fermatEvent;
     @Mock
     private ErrorManager errorManager;
     private UUID pluginId;
@@ -57,19 +60,30 @@ public class OnCryptoNetworHandleEventTest {
     @Mock
     private DatabaseFactory mockDatabaseFactory;
     private Database database = Mockito.mock(Database.class);
-    private AssetDistributionDao assetDistributionDao = Mockito.mock(AssetDistributionDao.class);
-    private IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler = Mockito.mock(IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.class);
+    @Mock
+    private DatabaseTable databaseTable;
+    @Mock
+    private DatabaseTableRecord eventRecord;
+    private AssetDistributionDao assetDistributionDao;
+    private IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler;
 
     @Before
     public void init() throws Exception {
+        incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler = new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler();
+        fermatEvent = new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent();
+        EventSource eventSource = EventSource.getByCode(EventSource.ASSETS_OVER_BITCOIN_VAULT.getCode());
+        fermatEvent.setSource(eventSource);
         pluginId = UUID.randomUUID();
+        when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
+        assetDistributionDao = new AssetDistributionDao(pluginDatabaseSystem, pluginId);
         assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
         incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.setAssetDistributionRecorderService(assetDistributionRecorderService);
         setUpMockitoRules();
     }
     private void setUpMockitoRules() throws Exception {
-        when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
-       when(eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener1);
+        when(databaseTable.getEmptyRecord()).thenReturn(eventRecord);
+        when(this.database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME)).thenReturn(databaseTable);
+        when(eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener1);
         when(eventManager.getNewListener( EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener2);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener3);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener4);
@@ -87,8 +101,21 @@ public class OnCryptoNetworHandleEventTest {
         assetDistributionRecorderService.start();
         try {
             incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.handleEvent(null);
+            fail("The method didn't throw when I expected it to");
         }catch (Exception ex) {
-            assertThat(ex).isInstanceOf(CantSaveEventException.class);
+            Assert.assertTrue(ex instanceof CantSaveEventException);
+        }
+    }
+
+    @Test
+    public void handleEventCantSaveEventException () throws FermatException {
+        when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new CantOpenDatabaseException());
+        assetDistributionRecorderService.start();
+        try {
+            incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.handleEvent(fermatEvent);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantSaveEventException);
         }
     }
 
@@ -96,10 +123,12 @@ public class OnCryptoNetworHandleEventTest {
     public void handleEventThrowTransactionServiceNotStartedException () throws FermatException {
         assetDistributionRecorderService.start();
         assetDistributionRecorderService.stop();
+
         try {
             incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.handleEvent(null);
+            fail("The method didn't throw when I expected it to");
         }catch (Exception ex) {
-            assertThat(ex).isInstanceOf(TransactionServiceNotStartedException.class);
+            Assert.assertTrue(ex instanceof TransactionServiceNotStartedException);
         }
     }
 }

@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
@@ -45,7 +45,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantG
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantCheckAssetReceptionProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantReceiveDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptionVault;
@@ -206,7 +206,7 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
         @Override
         public void run() {
 
-            logManager.log(AssetReceptionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Reception Protocol Notification Agent: running...", null, null);
+            logManager.log(AssetReceptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Reception Protocol Notification Agent: running...", null, null);
             while(true){
                 /**
                  * Increase the iteration counter
@@ -223,7 +223,7 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                  */
                 try {
 
-                    logManager.log(AssetReceptionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(AssetReceptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CantCheckAssetReceptionProgressException | CantExecuteQueryException exception) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
@@ -327,7 +327,7 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                 throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Cannot confirm network layer transaction");
             } catch (CantDeliverDigitalAssetToAssetWalletException exception) {
                 throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Cannot deliver the digital asset metadata to asset user wallet");
-            } catch (CantGetGenesisTransactionException exception) {
+            } catch (CantGetCryptoTransactionException exception) {
                 throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Cannot get the genesis transaction from Crypto Network");
             }
         }
@@ -336,14 +336,14 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
          * This method check the pending transactions registered in database and take actions according to CryptoStatus
          * @throws CantExecuteQueryException
          * @throws CantCheckAssetReceptionProgressException
-         * @throws CantGetGenesisTransactionException
+         * @throws CantGetCryptoTransactionException
          * @throws UnexpectedResultReturnedFromDatabaseException
          * @throws CantGetDigitalAssetFromLocalStorageException
          * @throws CantDeliverDigitalAssetToAssetWalletException
          */
         private void checkPendingTransactions() throws CantExecuteQueryException,
                 CantCheckAssetReceptionProgressException,
-                CantGetGenesisTransactionException,
+                CantGetCryptoTransactionException,
                 UnexpectedResultReturnedFromDatabaseException,
                 //CantGetDigitalAssetFromLocalStorageException,
                 CantDeliverDigitalAssetToAssetWalletException {
@@ -460,9 +460,9 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
          * @param cryptoStatus
          * @param genesisTransaction
          * @return null if the transaction cannot be found in crypto network
-         * @throws CantGetGenesisTransactionException
+         * @throws CantGetCryptoTransactionException
          */
-        private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetGenesisTransactionException {
+        private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetCryptoTransactionException {
             /**
              * Mock for testing
              */
@@ -475,16 +475,16 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
              * End of mocking
              */
             //TODO: change this line when is implemented in crypto network
-            List<CryptoTransaction> transactionListFromCryptoNetwork=bitcoinNetworkManager.getGenesisTransaction(genesisTransaction);
+            List<CryptoTransaction> transactionListFromCryptoNetwork=bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
             if(transactionListFromCryptoNetwork==null){
                 System.out.println("ASSET RECEPTION transaction List From Crypto Network for "+genesisTransaction+" is null");
-                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE,null,
+                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,
                         "Getting the cryptoStatus from CryptoNetwork",
                         "The crypto status from genesis transaction "+genesisTransaction+" return null");
             }
             if(transactionListFromCryptoNetwork.isEmpty()){
                 System.out.println("ASSET RECEPTION transaction List From Crypto Network for "+genesisTransaction+" is empty");
-                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE,null,
+                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,
                         "Getting the cryptoStatus from CryptoNetwork",
                         "The genesis transaction "+genesisTransaction+" cannot be found in crypto network");
             }
