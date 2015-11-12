@@ -230,6 +230,9 @@ include ':fermat-p2p-plugin-communication-wifi-bitdubai'
 project(':fermat-p2p-plugin-communication-wifi-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-wifi-bitdubai')
 
 
+include ':fermat-p2p-plugin-ws-communications-network-client-bitdubai'
+project(':fermat-p2p-plugin-ws-communications-network-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-ws-communications-network-client-bitdubai')
+
 //CCM Projects
 
 include ':fermat-ccm-api'
