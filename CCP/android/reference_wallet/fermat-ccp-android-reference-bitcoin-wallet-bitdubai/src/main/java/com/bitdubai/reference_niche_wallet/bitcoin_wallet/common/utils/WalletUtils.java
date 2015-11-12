@@ -121,6 +121,6 @@ public class WalletUtils {
         list.add("Payment request");
         list.add("Settings");
         list.add("Logout");
-        paintActivtyFeactures.changeNavigationDrawerAdapter(new NavigationDrawerArrayAdapter(context, list,intraUserInformation));
+       // paintActivtyFeactures.changeNavigationDrawerAdapter(new NavigationDrawerArrayAdapter(context, list,intraUserInformation));
     }
 }
