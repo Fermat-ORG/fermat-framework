@@ -44,7 +44,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
+import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
+import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 import com.bitdubai.sub_app.intra_user_community.R;
@@ -102,6 +104,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
     // flags
     private boolean isRefreshing = false;
     private View rootView;
+    private IntraUserSubAppSession intraUserSubAppSession;
 
 
     /**
@@ -120,7 +123,8 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
 
             setHasOptionsMenu(true);
             // setting up  module
-            moduleManager = ((IntraUserSubAppSession) subAppsSession).getIntraUserModuleManager();
+            intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
+            moduleManager = intraUserSubAppSession.getIntraUserModuleManager();
             errorManager = subAppsSession.getErrorManager();
 
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
@@ -145,6 +149,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
         try {
 
             rootView = inflater.inflate(R.layout.world_main, container, false);
+            setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
@@ -157,7 +162,8 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            //rootView.setBackgroundColor(Color.parseColor("#000b12"));
+            rootView.setBackgroundColor(Color.parseColor("#000b12"));
+
 
             onRefresh();
 
@@ -173,7 +179,18 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
 
         return rootView;
     }
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
+        /**
+         * add navigation header
+         */
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
 
+        /**
+         * Navigation view items
+         */
+        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null);
+        setNavigationDrawer(navigationViewAdapter);
+    }
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
