@@ -277,8 +277,6 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             break;
                     }
                 }
-            } catch (RecordsNotFoundException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
             } catch (CantGetAssetUserActorsException | CantLoadAssetRedemptionEventListException | CantLoadAssetRedemptionMetadataListException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (Exception e) {
