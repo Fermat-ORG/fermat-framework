@@ -1658,28 +1658,6 @@
 
 		<platform code="CCP" name="Crypto Currency Platform" logo="CCP_logo.png" dependsOn="WPD, P2P">
 
-			<layer name="World" language="java">
-				<plugins>
-					<plugin
-						name="Crypto Index"
-						description=""
-						difficulty="8"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="laderuner" scope="implementation" percentage="60"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="laderuner" ></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
-
 			<layer name="Basic Wallet">
 				<androids>
 					<android
@@ -2109,6 +2087,23 @@
 
 			<layer name="World" language="java">
 				<plugins>
+					<plugin
+						name="Crypto Index"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="laderuner" scope="implementation" percentage="60"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="laderuner" ></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
 					<plugin
 						name="Blockchain Info"
 						description=""
