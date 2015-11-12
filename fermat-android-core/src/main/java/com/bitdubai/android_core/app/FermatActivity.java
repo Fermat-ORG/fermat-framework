@@ -9,6 +9,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -17,13 +18,23 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
@@ -32,11 +43,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,12 +63,14 @@ import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterW
 import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
+import com.bitdubai.android_core.app.common.version_1.test.MyAdapter;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -81,6 +96,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
@@ -115,28 +131,19 @@ import static java.lang.System.gc;
  * Created by Matias Furszyfer
  */
 
-public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActivtyFeactures, Observer,FermatNotificationListener {
+public abstract class FermatActivity extends AppCompatActivity implements WizardConfiguration, FermatNotifications, PaintActivtyFeactures, Observer,FermatNotificationListener, NavigationView.OnNavigationItemSelectedListener, NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private static final String TAG = "fermat-core";
     public static final String DEVELOP_MODE = "develop_mode";
     private MainMenu mainMenu;
 
     /**
-     * Navigation menu
-     */
-    protected NavigationDrawerFragment navigationDrawerFragment;
-
-    /**
      * Screen adapters
      */
-    private TabsPagerAdapter adapter;
+    protected TabsPagerAdapter adapter;
     private TabsPagerAdapterWithIcons adapterWithIcons;
     private ScreenPagerAdapter screenPagerAdapter;
 
-    /**
-     * Current view
-     */
-    private int currentViewId = -1;
     /**
      * WizardTypes
      */
@@ -152,6 +159,20 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected boolean developMode;
 
     private GestureDetectorCompat mDetector;
+
+    private DrawerLayout mDrawerLayout;
+    private static final long DRAWER_CLOSE_DELAY_MS = 250;
+    private static final String NAV_ITEM_ID = "navItemId";
+
+    private final Handler mDrawerActionHandler = new Handler();
+
+    private ActionBarDrawerToggle mDrawerToggle;
+    private int mNavItemId;
+    private Toolbar toolbar;
+    private RecyclerView navigation_recycler_view;
+    private NavigationView navigationView;
+    private AppBarLayout appBarLayout;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
 
 
     /**
@@ -354,30 +375,30 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     protected void paintTitleBar(TitleBar titleBar, Activity activity) {
         try {
-            ActionBar actionBar = getActionBar();
-            TextView abTitle = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
             if (titleBar != null) {
 
                 String title = titleBar.getLabel();
 
-                if (abTitle != null) {
-                    abTitle.setTextColor(Color.WHITE);
-                    abTitle.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/roboto.ttf"));
-                    if (titleBar.getLabelSize() != -1) {
-                        abTitle.setTextSize(titleBar.getLabelSize());
 
-                    }
+
+                if (collapsingToolbarLayout != null) {
+                    collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
+                    collapsingToolbarLayout.setCollapsedTitleTypeface((Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf")));
+                    //if (titleBar.getLabelSize() != -1) {
+                        //collapsingToolbarLayout.setCollapsedTitleTex(titleBar.getLabelSize());
+
+                    //}
 
                 }
 
-                actionBar.setTitle(title);
+                collapsingToolbarLayout.setTitle(title);
 
 
-                actionBar.show();
+
                 setActionBarProperties(title, activity);
                 paintToolbarIcon(titleBar);
             } else {
-                actionBar.hide();
+                collapsingToolbarLayout.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -387,7 +408,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     private void paintToolbarIcon(TitleBar titleBar) {
         if (titleBar.getIconName() != null) {
 
-            getActionBar().setIcon(R.drawable.world);
+            toolbar.setLogo(R.drawable.world);
         }
 
     }
@@ -399,16 +420,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         SpannableString s = new SpannableString(title);
 
 
-        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "roboto.ttf"), 0, s.length(),
+        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "Roboto-Regular.ttf"), 0, s.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the action bar title with the TypefaceSpan instance
-        getActionBar().setTitle(s);
+        collapsingToolbarLayout.setTitle(s);
 
-        // actionBar
-        Drawable bg = getResources().getDrawable(R.drawable.transparent);
-        bg.setVisible(false, false);
-        Drawable wallpaper = getResources().getDrawable(R.drawable.transparent);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
@@ -420,7 +437,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 //ld.setCallback(drawableCallback);
                 Log.d(getClass().getSimpleName(), "Version incompatible con status bar");
             } else {
-                getActionBar().setBackgroundDrawable(ld);
+                collapsingToolbarLayout.setBackgroundDrawable(ld);
             }
         }
     }
@@ -430,8 +447,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, WalletSession walletSession) {
 
-        PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
-        pagerSlidingTabStrip.setShouldExpand(true);
+        //PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
+        //pagerSlidingTabStrip.setShouldExpand(true);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setVisibility(View.VISIBLE);
 
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
@@ -466,9 +486,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         /**
          * Put tabs in pagerSlidingTabsStrp
          */
-        pagerSlidingTabStrip.setViewPager(pagertabs);
-        pagerSlidingTabStrip.setShouldExpand(true);
-        pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
+        //pagerSlidingTabStrip.setViewPager(pagertabs);
+        //pagerSlidingTabStrip.setShouldExpand(true);
+        tabLayout.setupWithViewPager(pagertabs);
+       // pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
 
     }
 
@@ -511,13 +532,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     }
 
-    private List<android.support.v4.app.Fragment> getWalletFragments(String walletType) {
-        List<android.support.v4.app.Fragment> lstWalletFragment = new ArrayList<android.support.v4.app.Fragment>();
-        //tengo que traer el WalletFragmentFactory dependiendo del tipo de wallet que es un enum ejemplo basic_wallet
-        //ReferenceWalletFragmentFactory.getFragmentFactoryByWalletType(getWalletRuntimeManager().getActivity(.))
-        return null;
-    }
-
     /**
      * Select the xml based on the activity type
      *
@@ -526,56 +540,105 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     protected void setMainLayout(SideMenu sidemenu, FermatHeader header) {
         try {
-            if (sidemenu != null) {
-                if (ActivityType.ACTIVITY_TYPE_SUB_APP == activityType) {
-                    setCurrentViewById(R.layout.runtime_app_activity_runtime_navigator);
-                } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
-                    setCurrentViewById(R.layout.runtime_app_wallet_runtime_navigator);
-
-                }
 
 
-                //TODO: tengo que agregar el header en los 4 xml base para que esto no se caiga cuando no lo tiene
-                try {
-                    ((RelativeLayout) findViewById(R.id.container_header_balance)).setVisibility((header != null) ? View.VISIBLE : View.GONE);
-                } catch (Exception e) {
-
-                }
+                setContentView(R.layout.new_wallet_runtime);
 
 
+                    toolbar = (Toolbar) findViewById(R.id.toolbar);
+                    setSupportActionBar(toolbar);
 
-                navigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                    collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
-                /**
-                 * Set up the navigationDrawer
-                 */
+                    collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
-                if(navigationDrawerFragment != null) {
-                    navigationDrawerFragment.setUp(
-                            R.id.navigation_drawer,
-                            (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
+                    appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+                    appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                        boolean isShow = false;
+                        int scrollRange = -1;
 
-                    navigationDrawerFragment.setMenuVisibility(true);
-                }
+                        @Override
+                        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                            if (scrollRange == -1) {
+                                scrollRange = appBarLayout.getTotalScrollRange();
+                            }
+                            if (scrollRange + verticalOffset == 0) {
+                                collapsingToolbarLayout.setTitle("Title");
+                                isShow = true;
+                            } else if (isShow) {
+                                collapsingToolbarLayout.setTitle("");
+                                isShow = false;
+                            }
+                        }
+                    });
 
-                //if (navigationDrawerFragment == null)
-                    //navigationDrawerFragment = (navigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+            if(header==null){
+                appBarLayout.setExpanded(false);
+            }
 
-//                navigationDrawerFragment = NavigationDrawerFragment.newInstance(this);
-//
-//                /**
-//                 * Set up the navigationDrawer
-//                 */
-//                navigationDrawerFragment.setUp(
-//                        R.id.navigation_drawer,
-//                        (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
-//
-//                navigationDrawerFragment.setMenuVisibility(true);
-//
-//                FragmentManager     fm = getFragmentManager();
-//                FragmentTransaction ft = fm.beginTransaction();
-//                ft.replace(R.id.navigation_drawer, navigationDrawerFragment);
-//                ft.commit();
+                    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
+                    // listen for navigation events
+                    navigationView = (NavigationView) findViewById(R.id.navigation);
+
+                    if (sidemenu != null) {
+
+                        if (navigationView != null) {
+                            navigationView.setNavigationItemSelectedListener(this);
+
+
+                            String TITLES[] = {"Home", "Events", "Mail", "Shop", "Travel"};
+                            navigation_recycler_view = (RecyclerView) findViewById(R.id.navigation_recycler_view);
+                            RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
+                            RecyclerView.LayoutManager mLayoutManager;
+
+                            navigation_recycler_view.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
+
+
+                            //TODO: CAMBIAR TODO ESTE TESTEO ASQUEROSO
+                            mAdapter = new MyAdapter(this, getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu().getMenuItems(), new IntraUserLoginIdentity() {
+                                @Override
+                                public String getAlias() {
+                                    return "mati";
+                                }
+
+                                @Override
+                                public String getPublicKey() {
+                                    return "absaaa";
+                                }
+
+                                @Override
+                                public byte[] getProfileImage() {
+                                    return new byte[0];
+                                }
+                            }, this);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
+                            // And passing the titles,icons,header view name, header view email,
+                            // and header view profile picture
+
+                            navigation_recycler_view.setAdapter(mAdapter);                              // Setting the adapter to RecyclerView
+
+
+                            mLayoutManager = new LinearLayoutManager(this);                 // Creating a layout Manager
+
+                            navigation_recycler_view.setLayoutManager(mLayoutManager);                 // Setting the layout Manager
+
+
+                            // select the correct nav menu item
+                            //navigationView.getMenu().findItem(mNavItemId).setChecked(true);
+
+                            // set up the hamburger icon to open and close the drawer
+                            mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open,
+                                    R.string.close);
+                            mDrawerLayout.setDrawerListener(mDrawerToggle);
+                            mDrawerToggle.syncState();
+
+                            navigate(mNavItemId);
+                        }
+                    }else {
+                        navigationView.setVisibility(View.GONE);
+                    }
+
 
 //                drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 //
@@ -649,33 +712,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 //                    }
 //                });
 
-
-                /**
-                 * Paint layout without navigationDrawer
-                 */
-            }else {
-                if (ActivityType.ACTIVITY_TYPE_SUB_APP == activityType) {
-                    setCurrentViewById(R.layout.runtime_app_activity_runtime);
-                } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
-                    setCurrentViewById(R.layout.runtime_app_wallet_runtime);
-                }
-
-            }
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.CRASH,e);
         }
     }
 
-    public void setCurrentViewById(int id){
-        if(getCurrentViewById() != id) {
-            setContentView(id);
-            currentViewId = id;
-        }
-    }
-
-    public int getCurrentViewById(){
-        return currentViewId;
-    }
 
     /**
      * Dispatch onResume() to fragments.  Note that for better inter-operation
@@ -721,43 +762,48 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         /**
          * Get Pager from xml
          */
-        PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
+        //PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
         if (tabs == null)
-            pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
+            //pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
+            tabLayout.setVisibility(View.GONE);
         else {
-            pagerSlidingTabStrip.setVisibility(View.VISIBLE);
+            //pagerSlidingTabStrip.setVisibility(View.VISIBLE);
             Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf");
-            pagerSlidingTabStrip.setTypeface(tf, 1);
-            pagerSlidingTabStrip.setDividerColor(Color.TRANSPARENT);
+            //pagerSlidingTabStrip.setTypeface(tf, 1);
+            //pagerSlidingTabStrip.setDividerColor(Color.TRANSPARENT);
+            tabLayout.setVisibility(View.VISIBLE);
 
             // paint tabs color
             if (tabs.getTabsColor() != null) {
-                pagerSlidingTabStrip.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
+                //pagerSlidingTabStrip.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
                 //tabStrip.setDividerColor(Color.TRANSPARENT);
+                tabLayout.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
             }
 
             // paint tabs text color
             if (tabs.getTabsTextColor() != null) {
-                pagerSlidingTabStrip.setTextColor(Color.parseColor(activity.getTabStrip().getTabsTextColor()));
+                //pagerSlidingTabStrip.setTextColor(Color.parseColor(activity.getTabStrip().getTabsTextColor()));
+                tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()),Color.YELLOW);
             }
 
             //paint tabs indicate color
             if (tabs.getTabsIndicateColor() != null) {
-                pagerSlidingTabStrip.setIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
+                //pagerSlidingTabStrip.setIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
             }
         }
 
         // put tabs font
-        if (pagerSlidingTabStrip != null) {
-            pagerSlidingTabStrip.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf"), 1);
-        }
+        //if (pagerSlidingTabStrip != null) {
+            //pagerSlidingTabStrip.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf"), 1);
+        //}
     }
 
     /**
      * Method to set status bar color in different version of android
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+
     protected void paintStatusBar(StatusBar statusBar) {
 
 
@@ -794,6 +840,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
                     // finally change the color
+                    if(Build.VERSION.SDK_INT>20)
                     window.setStatusBarColor(Color.TRANSPARENT);
 
                     gc();
@@ -832,15 +879,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
-    /**
-     * Get the activity type
-     *
-     * @return ActivityType enum value
-     */
-
-    public ActivityType getActivityType() {
-        return activityType;
-    }
 
     /**
      * Set the activity type
@@ -860,62 +898,27 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         try {
 
-            RelativeLayout header_cotainer = (RelativeLayout) findViewById(R.id.container_header_balance);
-            if (header_cotainer != null) {
-                header_cotainer.removeAllViews();
-                header_cotainer.setVisibility(View.GONE);
-            }
-
             //clean page adapter
-            ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
-            if (adapter != null) pagertabs.removeAllViews();
 
-            ViewPager viewpager = (ViewPager) super.findViewById(R.id.viewpager);
-            viewpager.removeAllViews();
-            viewpager.removeAllViewsInLayout();
-            viewpager.clearOnPageChangeListeners();
-            viewpager.setVisibility(View.GONE);
-
-            viewpager = null;
-            ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
-            pager.removeAllViews();
-            pager.removeAllViewsInLayout();
-            pager.clearOnPageChangeListeners();
-            pager.setVisibility(View.GONE);
-            pager = null;
-
-            com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip pagerTabStrip = (com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip) findViewById(R.id.tabs);
-
-            pagerTabStrip.destroyDrawingCache();
-            pagerTabStrip.clearAnimation();
-            pagerTabStrip.removeAllViews();
-            pagerTabStrip.removeAllViewsInLayout();
-            pagerTabStrip.setOnPageChangeListener(null);
-            // todo: DEBERIA VER SI LO DESTRUÍ TODO O QUEDÓ ALGO FLOTANDO EN EL PAGERTABSTRIP
-            pagerTabStrip.setVisibility(View.GONE);
-            pagerTabStrip = null;
-
-            // hide actionBar
-            getActionBar().hide();
-            getActionBar().setListNavigationCallbacks(null, null);
-
-            if (navigationDrawerFragment != null) {
-
-//                getSupportFragmentManager().beginTransaction().
-//                        remove(getSupportFragmentManager().findFragmentById(R.id.only_fragment_container)).commit();
-//                navigationDrawerFragment.setMenuVisibility(false);
-//                navigationDrawerFragment.onDetach();
-                //if()
-                //getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.only_fragment_container)).commit();
-                navigationDrawerFragment.onDetach();
-                navigationDrawerFragment = null;
-               FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                Fragment fragment = getFragmentManager().findFragmentById(R.id.navigation_drawer);
-                if(fragment!=null)
-                fragmentTransaction.remove(fragment).commit();
-                fragmentManager.executePendingTransactions();
+            ViewPager pager = (ViewPager) findViewById(R.id.pager);
+            if(pager!=null) {
+                pager.removeAllViews();
+                pager.removeAllViewsInLayout();
+                pager.clearOnPageChangeListeners();
+                pager.setVisibility(View.GONE);
+                ((ViewGroup) pager.getParent()).removeView(pager);
+                pager = null;
             }
+            System.gc();
+
+
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+            if(tabLayout!=null){
+                tabLayout.removeAllTabs();
+                tabLayout.removeAllViews();
+                tabLayout.removeAllViewsInLayout();
+            }
+
 
             this.getNotificationManager().deleteObserver(this);
 
@@ -924,12 +927,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
 
-
             this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
-
-            currentViewId = -1;
-
-
 
             System.gc();
             closeContextMenu();
@@ -946,58 +944,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
-    public void resetPager() {
-        //clean page adapter
-        ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
-        if (adapter != null) pagertabs.removeAllViews();
 
-        ViewPager viewpager = (ViewPager) super.findViewById(R.id.viewpager);
-        viewpager.setVisibility(View.INVISIBLE);
-        ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
-        pager.setVisibility(View.INVISIBLE);
-        this.adapter = null;
-        List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
-        this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
-    }
-
-    public void cleanTabs() {
-        try {
-
-
-            PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-
-
-//            //clean page adapter
-//            ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
-//            if (adapter != null) pagertabs.removeAllViews();
-//
-//            ViewPager viewpager = (ViewPager) super.findViewById(R.id.viewpager);
-//            viewpager.setVisibility(View.INVISIBLE);
-//            ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
-//            pager.setVisibility(View.INVISIBLE);
-//
-//            if (navigationDrawerFragment != null) {
-//                this.navigationDrawerFragment.setMenuVisibility(false);
-//                navigationDrawerFragment = null;
-//            }
-//
-//
-//            this.adapter = null;
-//            paintStatusBar(null);
-//
-//            List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
-//
-//
-//            this.screenPagerAdapter = new ScreenPagerAdapter(getSupportFragmentManager(), fragments);
-
-        } catch (Exception e) {
-
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-
-            makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    LENGTH_LONG).show();
-        }
-    }
 
     /**
      * Initialise the fragments to be paged
@@ -1011,7 +958,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
             }
 
-            if(developMode){
+            if(true){
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
                 activePlatforms.add(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
                 activePlatforms.add(Platforms.DIGITAL_ASSET_PLATFORM);
@@ -1064,7 +1011,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
              */
             screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
-            ViewPager pager = (ViewPager) super.findViewById(R.id.viewpager);
+            ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
             pager.setVisibility(View.VISIBLE);
 
             //set default page to show
@@ -1375,120 +1322,22 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
     @Override
-    public void changeNavigationDrawerAdapter(ListAdapter listAdapter) {
-        navigationDrawerFragment.changeNavigationDrawerAdapter(listAdapter);
-    }
-
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event){
-
-        int action = MotionEventCompat.getActionMasked(event);
-
-        this.mDetector.onTouchEvent(event);
-
-        switch(action) {
-            case (MotionEvent.ACTION_DOWN) :
-
-                return true;
-            case (MotionEvent.ACTION_MOVE) :
-
-                return true;
-            case (MotionEvent.ACTION_UP) :
-
-                return true;
-            case (MotionEvent.ACTION_CANCEL) :
-
-                return true;
-            case (MotionEvent.ACTION_OUTSIDE) :
-                return true;
-            default :
-                return super.onTouchEvent(event);
-        }
+    public void changeNavigationDrawerAdapter(FermatAdapter adapter) {
+        adapter.changeDataSet(getNavigationMenu());
+        navigation_recycler_view.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        int eventaction=event.getAction();
+    public void addNavigationViewHeader(View view){
+        navigationView.addHeaderView(view);
 
-        final RelativeLayout header = getActivityHeader();
-
-        if(header!=null) {
-            final float y = event.getY();
-            // Remember where we started
-            switch (eventaction) {
-                case MotionEvent.ACTION_DOWN:
-
-
-//                    TranslateAnimation anim = new TranslateAnimation(0, 0, header.getX() - header.getHeight(), 0);
-//                    anim.setDuration(1000);
-//
-//                    anim.setAnimationListener(new TranslateAnimation.AnimationListener() {
-//
-//                        @Override
-//                        public void onAnimationStart(Animation animation) {
-//                        }
-//
-//                        @Override
-//                        public void onAnimationRepeat(Animation animation) {
-//                        }
-//
-//                        @Override
-//                        public void onAnimationEnd(Animation animation) {
-////                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)header.getLayoutParams();
-////                        params.topMargin += amountToMoveDown;
-////                        params.leftMargin += amountToMoveRight;
-////                        view.setLayoutParams(params);
-//                            header.setVisibility(View.GONE);
-//                        }
-//                    });
-//
-//                    header.startAnimation(anim);
-
-
-
-                    break;
-                case MotionEvent.ACTION_MOVE:
-
-                    break;
-
-                case MotionEvent.ACTION_UP:
-
-
-//                    TranslateAnimation anim1 = new TranslateAnimation(0, 0, 0, y);
-//                    anim1.setDuration(1000);
-//
-//                    anim1.setAnimationListener(new TranslateAnimation.AnimationListener() {
-//
-//                        @Override
-//                        public void onAnimationStart(Animation animation) {
-//                            header.setVisibility(View.VISIBLE);
-//                        }
-//
-//                        @Override
-//                        public void onAnimationRepeat(Animation animation) {
-//                        }
-//
-//                        @Override
-//                        public void onAnimationEnd(Animation animation) {
-////                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)header.getLayoutParams();
-////                        params.topMargin += amountToMoveDown;
-////                        params.leftMargin += amountToMoveRight;
-////                        view.setLayoutParams(params);
-//                        }
-//                    });
-//                    header.startAnimation(anim1);
-
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return super.dispatchTouchEvent(event);
     }
 
 
+    public RelativeLayout getToolbarHeader(){
+        return (RelativeLayout) findViewById(R.id.toolbar_header_container);
+    }
     @Override
     public void invalidate() {
         //( (RelativeLayout) findViewById(R.id.activity_header)).invalidate();
@@ -1529,15 +1378,52 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     }
 
+    @Override
+    public boolean onNavigationItemSelected(final MenuItem item) {
+        // update highlighted item in the navigation menu
+        item.setChecked(true);
+        mNavItemId = item.getItemId();
 
-    /**
-     * Called when an item in the navigation drawer is selected.
-     *
-     * @param position
-     */
-    // @Override
-    // public void onNavigationDrawerItemSelected(int position,String activityCode) {
-    //      Toast.makeText(this,"holas",LENGTH_SHORT).show();
-    //  }
+        // allow some time after closing the drawer before performing real navigation
+        // so the user can see what is happening
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        mDrawerActionHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                navigate(item.getItemId());
+            }
+        }, DRAWER_CLOSE_DELAY_MS);
+
+        return true;
+    }
+    @Override
+    public void onConfigurationChanged(final Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+    private void navigate(final int itemId) {
+        // perform the actual navigation logic, updating the main content fragment etc
+    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(final MenuItem item) {
+//        if (item.getItemId() == android.support.v7.appcompat.R.id.home) {
+//            return mDrawerToggle.onOptionsItemSelected(item);
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public abstract void onNavigationDrawerItemSelected(int position, String activityCode);
+
+    protected abstract List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> getNavigationMenu();
 
 }

@@ -162,7 +162,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
             onRefresh();
 
         } catch(Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -225,12 +225,12 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
 
         //MenuItem menuItem = new SearchView(getActivity());
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setSubmitButtonEnabled(true);
-        mSearchView.setOnCloseListener(this);
+//        MenuItem searchItem = menu.findItem(R.id.action_search);
+//        MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+//        mSearchView.setOnQueryTextListener(this);
+//        mSearchView.setSubmitButtonEnabled(true);
+//        mSearchView.setOnCloseListener(this);
 
 
 

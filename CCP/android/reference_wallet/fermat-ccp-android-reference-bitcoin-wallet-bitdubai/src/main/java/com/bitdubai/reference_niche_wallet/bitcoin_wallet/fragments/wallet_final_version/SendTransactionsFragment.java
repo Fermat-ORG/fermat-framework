@@ -214,12 +214,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
         list.add("Settings");
         list.add("Logout");
         list.add("Logout");
-        try {
-            getPaintActivtyFeactures().changeNavigationDrawerAdapter(new NavigationDrawerArrayAdapter(getActivity(),list,intraUserModuleManager.getActiveIntraUserIdentity()));
-        } catch (CantGetActiveLoginIdentityException e) {
-            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(), "CantGetActiveLoginIdentityException- " + e.getMessage());
-        }
+        // getPaintActivtyFeactures().changeNavigationDrawerAdapter(new NavigationDrawerArrayAdapter(getActivity(),list,intraUserModuleManager.getActiveIntraUserIdentity()));
     }
 
 
@@ -234,23 +229,23 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
             linear_layout_send_form = (LinearLayout) rootView.findViewById(R.id.send_form);
 
-            ((com.melnykov.fab.FloatingActionButton) rootView.findViewById(R.id.fab_action)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    boolean isShow = linear_layout_send_form.isShown();
-                    //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
-                    if (isShow) {
-                        Fx.slide_up(getActivity(), linear_layout_send_form);
-                        linear_layout_send_form.setVisibility(View.GONE);
-                        empty.setVisibility(View.VISIBLE);
-                    } else {
-                        linear_layout_send_form.setVisibility(View.VISIBLE);
-                        Fx.slide_down(getActivity(), linear_layout_send_form);
-                        empty.setVisibility(View.GONE);
-                    }
-
-                }
-            });
+//            ((com.melnykov.fab.FloatingActionButton) rootView.findViewById(R.id.fab_action)).setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    boolean isShow = linear_layout_send_form.isShown();
+//                    //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
+//                    if (isShow) {
+//                        Fx.slide_up(getActivity(), linear_layout_send_form);
+//                        linear_layout_send_form.setVisibility(View.GONE);
+//                        empty.setVisibility(View.VISIBLE);
+//                    } else {
+//                        linear_layout_send_form.setVisibility(View.VISIBLE);
+//                        Fx.slide_down(getActivity(), linear_layout_send_form);
+//                        empty.setVisibility(View.GONE);
+//                    }
+//
+//                }
+//            });
 
            empty.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
                @Override
