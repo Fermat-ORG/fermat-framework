@@ -138,7 +138,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
                  * I do not need to reset the wallet because I will
                  * always be importing fresh (unused) keys.
                  */
-                //wallet.reset();
                 isWalletReset = true;
             }
 

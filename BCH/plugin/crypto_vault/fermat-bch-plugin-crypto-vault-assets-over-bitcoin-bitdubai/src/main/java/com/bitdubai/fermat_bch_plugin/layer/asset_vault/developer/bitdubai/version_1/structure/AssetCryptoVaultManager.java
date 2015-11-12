@@ -139,7 +139,7 @@ public class AssetCryptoVaultManager  {
      * @param addressTo
      * @throws CantSendAssetBitcoinsToUserException
      */
-    public void sendBitcoinAssetToUser(String genesisTransactionId, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
+    public void sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException{
         /**
          * I get the network for this address.
          */
@@ -148,9 +148,6 @@ public class AssetCryptoVaultManager  {
         /**
          * I will create a new wallet from my own set of keys
          */
-
-
-
     }
 
     /**

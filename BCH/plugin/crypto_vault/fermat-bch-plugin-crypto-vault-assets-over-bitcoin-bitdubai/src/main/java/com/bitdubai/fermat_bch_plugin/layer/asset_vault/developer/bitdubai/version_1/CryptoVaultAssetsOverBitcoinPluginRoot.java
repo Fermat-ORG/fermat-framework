@@ -174,7 +174,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
                 public void run() {
                     try {
                         Thread.sleep(5000);
-                        assetCryptoVaultManager.sendBitcoinAssetToUser("af91c3ef08a279bfc3205d7ec5e801f7843e54de482a51c8fe396dbd05cc7374", new CryptoAddress("mwUNWLnvPP38zDKsj8VkRjviPUxWBLV9U9", CryptoCurrency.BITCOIN));
+                        assetCryptoVaultManager.sendAssetBitcoins("af91c3ef08a279bfc3205d7ec5e801f7843e54de482a51c8fe396dbd05cc7374", new CryptoAddress("mwUNWLnvPP38zDKsj8VkRjviPUxWBLV9U9", CryptoCurrency.BITCOIN), 1000);
                     } catch (CantSendAssetBitcoinsToUserException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -199,8 +199,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     }
 
     @Override
-    public void sendBitcoinAssetToUser(String genesisTransactionId, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
-        assetCryptoVaultManager.sendBitcoinAssetToUser(genesisTransactionId, addressTo);
+    public void sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException {
+        assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, addressTo, amount);
     }
-
 }

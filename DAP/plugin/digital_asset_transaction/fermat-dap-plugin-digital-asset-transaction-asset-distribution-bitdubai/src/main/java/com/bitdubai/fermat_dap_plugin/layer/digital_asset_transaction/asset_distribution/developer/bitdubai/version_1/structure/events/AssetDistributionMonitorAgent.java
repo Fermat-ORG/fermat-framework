@@ -284,12 +284,16 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                     List<String> assetAcceptedGenesisTransactionList = assetDistributionDao.getGenesisTransactionByAssetAcceptedStatus();
                     for (String assetAcceptedGenesisTransaction : assetAcceptedGenesisTransactionList) {
                         String actorUserCryptoAddress = assetDistributionDao.getActorUserCryptoAddressByGenesisTransaction(assetAcceptedGenesisTransaction);
+
                         System.out.println("ASSET DISTRIBUTION actorUserCryptoAddress: " + actorUserCryptoAddress);
                         //For now, I set the cryptoAddress for Bitcoins
                         CryptoAddress cryptoAddressTo = new CryptoAddress(actorUserCryptoAddress, CryptoCurrency.BITCOIN);
                         System.out.println("ASSET DISTRIBUTION cryptoAddressTo: " + cryptoAddressTo);
                         updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
-                        sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo);
+
+                        //todo I need to get the GenesisAmount to send it
+                        sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, 1000);
+
                         assetDistributionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
                     }
                     List<String> assetRejectedByContractGenesisTransactionList = assetDistributionDao.getGenesisTransactionByAssetRejectedByContractStatus();
@@ -456,9 +460,9 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
             return assetDistributionDao.isPendingIncomingCryptoEvents();
         }
 
-        private void sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo) throws CantSendAssetBitcoinsToUserException {
+        private void sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo, long amount) throws CantSendAssetBitcoinsToUserException {
             System.out.println("ASSET DISTRIBUTION sending genesis amount from asset vault");
-            assetVaultManager.sendBitcoinAssetToUser(genesisTransaction, cryptoAddressTo);
+            assetVaultManager.sendAssetBitcoins(genesisTransaction, cryptoAddressTo, amount);
         }
 
         /*private List<String> getPendingAssetVaultEvents() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
