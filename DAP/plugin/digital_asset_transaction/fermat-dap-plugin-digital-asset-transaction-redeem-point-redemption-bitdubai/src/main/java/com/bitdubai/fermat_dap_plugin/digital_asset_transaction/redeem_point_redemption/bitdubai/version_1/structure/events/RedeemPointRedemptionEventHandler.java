@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStarte
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.AbstractFermatEvent;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 23/10/15.
@@ -26,15 +27,21 @@ public class RedeemPointRedemptionEventHandler implements FermatEventHandler {
     //PUBLIC METHODS
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if (fermatEvent == null)
-            throw new CantSaveEventException(null, "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Illegal Argument, this method takes an ReceivedNewDigitalAssetMetadataNotificationEvent and was passed an null");
-
-        System.out.println("VAMM: RECEIVED A NEW EVENT!");
-        System.out.println("VAMM: Type: " + fermatEvent.getEventType() + " - Source: " + fermatEvent.getSource());
-
         if (recorderService.getStatus() != ServiceStatus.STARTED) {
             throw new TransactionServiceNotStartedException();
         }
+        if (fermatEvent == null) {
+            throw new CantSaveEventException(null, "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Illegal Argument, this method takes an ReceivedNewDigitalAssetMetadataNotificationEvent and was passed an null");
+        }
+        String context = "Event Type: " + fermatEvent.getEventType() +
+                "Event Source: " + fermatEvent.getSource();
+        if (!(fermatEvent instanceof AbstractFermatEvent)) {
+            throw new CantSaveEventException(null, "Handling a RPR Event...", "Uuum? This is not a DAP Event...: " + context);
+        }
+
+        System.out.println("VAMM: RECEIVED A NEW EVENT!");
+        System.out.println("VAMM: " + context);
+
         recorderService.receiveNewEvent(fermatEvent);
     }
 

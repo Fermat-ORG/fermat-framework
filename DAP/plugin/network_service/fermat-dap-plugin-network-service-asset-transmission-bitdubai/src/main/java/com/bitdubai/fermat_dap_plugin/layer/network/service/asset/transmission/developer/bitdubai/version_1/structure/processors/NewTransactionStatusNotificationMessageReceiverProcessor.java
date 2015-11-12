@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionJsonAttNames;
@@ -37,10 +37,10 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
 
     /**
      * Constructor with parameters
-     * @param assetTransmissionPluginRoot
+     * @param assetTransmissionNetworkServicePluginRoot
      */
-    public NewTransactionStatusNotificationMessageReceiverProcessor(AssetTransmissionPluginRoot assetTransmissionPluginRoot) {
-        super(assetTransmissionPluginRoot);
+    public NewTransactionStatusNotificationMessageReceiverProcessor(AssetTransmissionNetworkServicePluginRoot assetTransmissionNetworkServicePluginRoot) {
+        super(assetTransmissionNetworkServicePluginRoot);
     }
 
     /**
@@ -64,7 +64,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
             /*
              * Get the digitalAssetMetadataTransaction
              */
-            List<DigitalAssetMetadataTransactionImpl> list =  getAssetTransmissionPluginRoot().getDigitalAssetMetaDataTransactionDao().findAll(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
+            List<DigitalAssetMetadataTransactionImpl> list =  getAssetTransmissionNetworkServicePluginRoot().getDigitalAssetMetaDataTransactionDao().findAll(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
 
             DigitalAssetMetadataTransactionImpl digitalAssetMetadataTransactionImpl = null;
 
@@ -81,23 +81,23 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
             /*
              * Save into data base like a new transaction
              */
-            getAssetTransmissionPluginRoot().getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransactionImpl);
+            getAssetTransmissionNetworkServicePluginRoot().getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransactionImpl);
 
             /*
              * Mark the message as read
              */
             ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-            ((CommunicationNetworkServiceConnectionManager)getAssetTransmissionPluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
+            ((CommunicationNetworkServiceConnectionManager) getAssetTransmissionNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
 
             /*
              * Notify to the interested
              */
-            FermatEvent event =  getAssetTransmissionPluginRoot().getEventManager().getNewEvent(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
-            event.setSource(AssetTransmissionPluginRoot.EVENT_SOURCE);
-            getAssetTransmissionPluginRoot().getEventManager().raiseEvent(event);
+            FermatEvent event =  getAssetTransmissionNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
+            event.setSource(AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE);
+            getAssetTransmissionNetworkServicePluginRoot().getEventManager().raiseEvent(event);
 
         } catch (Exception e) {
-            getAssetTransmissionPluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            getAssetTransmissionNetworkServicePluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
     }

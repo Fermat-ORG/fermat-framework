@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,11 +23,8 @@ import java.text.NumberFormat;
 public class ContractViewHolder extends ChildViewHolder {
     public ImageView customerImage;
     public FermatTextView customerName;
-    public FermatTextView merchandiseAmount;
-    public FermatTextView merchandise;
+    public FermatTextView contractAction;
     public FermatTextView typeOfPayment;
-    public FermatTextView exchangeRateAmount;
-    public FermatTextView paymentCurrency;
     public FermatTextView lastUpdateDate;
     public FermatTextView status;
     private Resources res;
@@ -46,11 +44,8 @@ public class ContractViewHolder extends ChildViewHolder {
 
         customerImage = (ImageView) itemView.findViewById(R.id.cbw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.cbw_customer_name);
-        merchandiseAmount = (FermatTextView) itemView.findViewById(R.id.cbw_merchandise_amount);
-        merchandise = (FermatTextView) itemView.findViewById(R.id.cbw_merchandise);
+        contractAction = (FermatTextView) itemView.findViewById(R.id.cbw_receiving_or_sending);
         typeOfPayment = (FermatTextView) itemView.findViewById(R.id.cbw_type_of_payment);
-        exchangeRateAmount = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_amount);
-        paymentCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_payment_currency);
         lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.cbw_update_date);
         status = (FermatTextView) itemView.findViewById(R.id.cbw_contract_status);
     }
@@ -60,19 +55,19 @@ public class ContractViewHolder extends ChildViewHolder {
         ContractStatus contractStatus = itemInfo.getStatus();
         itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
         status.setText(getStatusStringRes(contractStatus));
-
-        DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-        merchandiseAmount.setText(decimalFormat.format(itemInfo.getAmount()));
-        exchangeRateAmount.setText(decimalFormat.format(itemInfo.getExchangeRateAmount()));
+        contractAction.setText(getContractActionDescription(itemInfo, contractStatus));
+        customerName.setText(itemInfo.getCryptoCustomerAlias());
+        typeOfPayment.setText(itemInfo.getTypeOfPayment());
+        customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
 
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
         lastUpdateDate.setText(date);
+    }
 
-        customerName.setText(itemInfo.getCryptoCustomerAlias());
-        merchandise.setText(itemInfo.getMerchandise());
-        typeOfPayment.setText(itemInfo.getTypeOfPayment());
-        paymentCurrency.setText(itemInfo.getPaymentCurrency());
-        customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
+    @NonNull
+    private String getContractActionDescription(ContractBasicInformation itemInfo, ContractStatus contractStatus) {
+        DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
+        return getReceivingOrSendingText(contractStatus) + " " + decimalFormat.format(itemInfo.getAmount()) + " " + itemInfo.getMerchandise();
     }
 
     private int getStatusBackgroundColor(ContractStatus status) {
@@ -86,6 +81,12 @@ public class ContractViewHolder extends ChildViewHolder {
             return res.getColor(R.color.contract_closed_list_item_background);
 
         return res.getColor(R.color.contract_cancelled_list_item_background);
+    }
+
+    private String getReceivingOrSendingText(ContractStatus status) {
+        if (status == ContractStatus.PENDING_PAYMENT)
+            return res.getString(R.string.receiving);
+        return res.getString(R.string.sending);
     }
 
     private int getStatusStringRes(ContractStatus status) {
