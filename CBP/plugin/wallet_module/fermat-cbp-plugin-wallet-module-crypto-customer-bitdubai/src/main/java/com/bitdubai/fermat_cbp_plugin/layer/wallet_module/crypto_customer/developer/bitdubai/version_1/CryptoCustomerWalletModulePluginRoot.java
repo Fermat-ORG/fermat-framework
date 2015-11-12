@@ -17,15 +17,19 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.inter
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletModuleCryptoCustomerWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * Created by Angel on 16.09.15.
+ * Module for the Crypto Customer Wallet
+ *
+ * @author Nelson Ramirez
+ * @version 1.0
+ * @since 11/11/2015
  */
-
 public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin implements
         LogManagerForDevelopers,
         CryptoCustomerWalletModuleManager {
@@ -57,7 +61,11 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("CryptoCustomerWalletModulePluginRoot");
+        returnedClasses.add("CryptoCustomerWalletModuleCryptoCustomerWalletManager");
+
+        return returnedClasses;
     }
 
     @Override
@@ -84,11 +92,11 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
      */
     public static LogLevel getLogLevelByClass(String className) {
         try {
-            /* sometimes the classname may be passed dynamically with an $moreText I need to ignore whats after this. */
+            // sometimes the classname may be passed dynamically with an $moreText I need to ignore whats after this.
             String[] correctedClass = className.split(Pattern.quote("$"));
             return CryptoCustomerWalletModulePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
-            // If I couldn't get the correct loggin level, then I will set it to minimal.
+            // If I couldn't get the correct logging level, then I will set it to minimal.
             return DEFAULT_LOG_LEVEL;
         }
     }
