@@ -733,7 +733,7 @@ public class Platform implements Serializable {
         List<Map.Entry<Plugins, Long>> list = new LinkedList<>(pluginsStartUpTime.entrySet());
         Collections.sort(list, new Comparator<Map.Entry<Plugins, Long>>() {
             public int compare(Map.Entry<Plugins, Long> o1, Map.Entry<Plugins, Long> o2) {
-                return (o1.getValue()).compareTo(o2.getValue());
+                return (o2.getValue()).compareTo(o1.getValue());
             }
         });
 
@@ -741,15 +741,7 @@ public class Platform implements Serializable {
         System.out.println("---- Lista de Tiempos de Start-Up de Plugins order by Start-Up time ----");
         System.out.println("************************************************************************");
         for (Map.Entry<Plugins, Long> entry : list) {
-            System.out.println(entry.getKey().toString() + " - Start-Up time: " + entry.getValue() / 1000 + " seconds.");
-        }
-        System.out.println("************************************************************************");
-        System.out.println("************************************************************************");
-
-        System.out.println("--------------- Lista de Tamaños en Start-Up de Plugins ---------------");
-        System.out.println("************************************************************************");
-        for (Map.Entry<Plugins, String> entry : pluginsSizeReport.entrySet()) {
-            System.out.println(entry.getKey().toString() + " - Start-Up Size: " + entry.getValue() +".");
+            System.out.println(entry.getKey().toString() + " - Start-Up time: " + entry.getValue() / 1000 + " seconds / "+ entry.getValue() + " millis.");
         }
         System.out.println("************************************************************************");
 
