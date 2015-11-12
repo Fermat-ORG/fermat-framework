@@ -6,9 +6,7 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -18,7 +16,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -32,23 +29,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 /**
  * Created by Nerio on 13/10/15.
  */
-public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommunitySubAppModuleManager, DealsWithActorAssetIssuer, DealsWithActorAssetUser, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
+public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommunitySubAppModuleManager, DealsWithActorAssetIssuer, DealsWithActorAssetUser, DealsWithLogger, LogManagerForDevelopers, Plugin, Service, ModuleManager {
 
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     UUID pluginId;
-
     /**
      * DealsWithLogger interface member variable
      */
     LogManager logManager;
-
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
     /**
      * Service Interface member variables.
      */
@@ -60,6 +53,7 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
     ActorAssetUserManager actorAssetUserManager;
 
     ActorAssetIssuerManager actorAssetIssuerManager;
+    List<ActorAssetUser> actorAssetList;
 
     @Override
     public void setId(UUID pluginId) {
@@ -77,8 +71,9 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
     public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
         this.actorAssetIssuerManager = actorAssetIssuerManager;
     }
+
     @Override
-    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager)  throws CantSetObjectException {
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
         this.actorAssetUserManager = actorAssetUserManager;
     }
 
@@ -136,8 +131,6 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         }
     }
 
-    List<ActorAssetUser> actorAssetList;
-
     @Override
     public List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
 
@@ -151,9 +144,9 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
             ActorAssetIssuer actorAssetIssuer;
             actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
 
-             assetUserActorRecords =  new ArrayList<>();
+            assetUserActorRecords = new ArrayList<>();
 
-            for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered()){
+            for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered()) {
                 AssetUserActorRecord assetUserActorRecord = new AssetUserActorRecord();
                 assetUserActorRecord = (AssetUserActorRecord) actorAssetUser;
                 assetUserActorRecords.add(assetUserActorRecord);
@@ -176,7 +169,7 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
     }
 
     @Override
-    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException{
+    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException {
         //todo SE DEBE CONOCER QUIEN ES EL REQUESTER SOLICITANTE Y QUIEN EL SOLICITADO
 
         ActorAssetIssuer actorAssetIssuer;
