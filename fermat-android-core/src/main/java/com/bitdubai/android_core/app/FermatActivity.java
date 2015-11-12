@@ -600,6 +600,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
                             navigation_recycler_view.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
 
+                            
 
 //                            //TODO: CAMBIAR TODO ESTE TESTEO ASQUEROSO
 //                            mAdapter = new MyAdapter(this, getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu().getMenuItems(), new IntraUserLoginIdentity() {
