@@ -11,23 +11,23 @@ import com.bitdubai.fermat_api.FermatException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantInitializeCustomerBrokerSaleContractDatabaseException extends FermatException {
+public class CantInitializeCustomerBrokerContractSaleDatabaseException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE CUSTOMER BROKER SALE CONTRACT DATABASE EXCEPTION";
 
-    public CantInitializeCustomerBrokerSaleContractDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantInitializeCustomerBrokerContractSaleDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
-    public CantInitializeCustomerBrokerSaleContractDatabaseException(final String message, final Exception cause) {
+    public CantInitializeCustomerBrokerContractSaleDatabaseException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
-    public CantInitializeCustomerBrokerSaleContractDatabaseException(final String message) {
+    public CantInitializeCustomerBrokerContractSaleDatabaseException(final String message) {
         this(message, null);
     }
 
-    public CantInitializeCustomerBrokerSaleContractDatabaseException() {
+    public CantInitializeCustomerBrokerContractSaleDatabaseException() {
         this(DEFAULT_MESSAGE);
     }
 }

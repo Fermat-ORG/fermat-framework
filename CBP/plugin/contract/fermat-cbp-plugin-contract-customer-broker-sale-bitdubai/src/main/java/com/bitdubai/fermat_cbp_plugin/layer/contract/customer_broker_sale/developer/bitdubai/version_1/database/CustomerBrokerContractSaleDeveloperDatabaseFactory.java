@@ -15,14 +15,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleContractDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerContractSaleDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleContractDeveloperDatabaseFactory</code> have
+ * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerContractSaleDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
@@ -32,7 +32,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class CustomerBrokerSaleContractDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class CustomerBrokerContractSaleDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -53,7 +53,7 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory implements Deals
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public CustomerBrokerSaleContractDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public CustomerBrokerContractSaleDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
@@ -61,9 +61,9 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory implements Deals
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeCustomerBrokerSaleContractDatabaseException
+     * @throws CantInitializeCustomerBrokerContractSaleDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeCustomerBrokerSaleContractDatabaseException {
+    public void initializeDatabase() throws CantInitializeCustomerBrokerContractSaleDatabaseException {
         try {
 
              /*
@@ -76,7 +76,7 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory implements Deals
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeCustomerBrokerSaleContractDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeCustomerBrokerContractSaleDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -84,18 +84,18 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory implements Deals
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            CustomerBrokerSaleContractDatabaseFactory customerBrokerSaleContractDatabaseFactory = new CustomerBrokerSaleContractDatabaseFactory(pluginDatabaseSystem);
+            CustomerBrokerContractSaleDatabaseFactory CustomerBrokerContractSaleDatabaseFactory = new CustomerBrokerContractSaleDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = customerBrokerSaleContractDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = CustomerBrokerContractSaleDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeCustomerBrokerSaleContractDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeCustomerBrokerContractSaleDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
@@ -119,22 +119,22 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory implements Deals
          */
         List<String> contractSaleColumns = new ArrayList<String>();
 
-        contractSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME);
-        contractSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-        contractSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_BROKER_PUBLIC_KEY_COLUMN_NAME);
-        contractSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_PAYMENT_CURRENCY_COLUMN_NAME);
-        contractSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_MERCHANDISE_CURRENCY_COLUMN_NAME);
-        contractSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_REFERENCE_PRICE_COLUMN_NAME);
-        contractSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_REFERENCE_CURRENCY_COLUMN_NAME);
-        contractSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_PAYMENT_AMOUNT_COLUMN_NAME);
-        contractSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_MERCHANDISE_AMOUNT_COLUMN_NAME);
-        contractSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_PAYMENT_EXPIRATION_DATE_COLUMN_NAME);
-        contractSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME);
-        contractSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_STATUS_COLUMN_NAME);
+        contractSaleColumns.add(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME);
+        contractSaleColumns.add(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+        contractSaleColumns.add(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        contractSaleColumns.add(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_PAYMENT_CURRENCY_COLUMN_NAME);
+        contractSaleColumns.add(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_MERCHANDISE_CURRENCY_COLUMN_NAME);
+        contractSaleColumns.add(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_REFERENCE_PRICE_COLUMN_NAME);
+        contractSaleColumns.add(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_REFERENCE_CURRENCY_COLUMN_NAME);
+        contractSaleColumns.add(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_PAYMENT_AMOUNT_COLUMN_NAME);
+        contractSaleColumns.add(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_MERCHANDISE_AMOUNT_COLUMN_NAME);
+        contractSaleColumns.add(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_PAYMENT_EXPIRATION_DATE_COLUMN_NAME);
+        contractSaleColumns.add(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME);
+        contractSaleColumns.add(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_STATUS_COLUMN_NAME);
         /**
          * Table Contract Sale addition.
          */
-        DeveloperDatabaseTable contractSaleTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_TABLE_NAME, contractSaleColumns);
+        DeveloperDatabaseTable contractSaleTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_TABLE_NAME, contractSaleColumns);
         tables.add(contractSaleTable);
 
 

@@ -22,7 +22,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CustomerBrokerSaleContractDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class CustomerBrokerContractSaleDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -35,7 +35,7 @@ public class CustomerBrokerSaleContractDatabaseFactory implements DealsWithPlugi
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public CustomerBrokerSaleContractDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public CustomerBrokerContractSaleDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -72,22 +72,22 @@ public class CustomerBrokerSaleContractDatabaseFactory implements DealsWithPlugi
             /**
              * Create Contract Sale table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_PAYMENT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_MERCHANDISE_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_REFERENCE_PRICE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_REFERENCE_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_PAYMENT_AMOUNT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_MERCHANDISE_AMOUNT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_PAYMENT_EXPIRATION_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_PAYMENT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_MERCHANDISE_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_REFERENCE_PRICE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_REFERENCE_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_PAYMENT_AMOUNT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_MERCHANDISE_AMOUNT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_PAYMENT_EXPIRATION_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
-            table.addIndex(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_FIRST_KEY_COLUMN);
+            table.addIndex(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
