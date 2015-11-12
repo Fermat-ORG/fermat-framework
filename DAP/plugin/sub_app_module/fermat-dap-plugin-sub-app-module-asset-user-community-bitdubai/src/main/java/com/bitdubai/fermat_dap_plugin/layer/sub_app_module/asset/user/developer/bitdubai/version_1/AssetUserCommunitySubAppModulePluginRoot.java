@@ -34,7 +34,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 13/10/15.
  */
-public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommunitySubAppModuleManager, DealsWithActorAssetIssuer, DealsWithActorAssetUser, DealsWithLogger, LogManagerForDevelopers, Plugin, Service, ModuleManager {
+public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommunitySubAppModuleManager, DealsWithActorAssetIssuer, DealsWithActorAssetUser, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     UUID pluginId;
