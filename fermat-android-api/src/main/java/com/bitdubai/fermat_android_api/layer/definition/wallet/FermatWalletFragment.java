@@ -3,12 +3,14 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 
 import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -104,13 +106,25 @@ public class FermatWalletFragment extends Fragment implements FermatFragments {
         return getPaintActivtyFeactures().getActivityHeader();
     }
 
+    protected final RelativeLayout getToolbarHeader() {
+        return getPaintActivtyFeactures().getToolbarHeader();
+    }
 
     protected PaintActivtyFeactures getPaintActivtyFeactures(){
         return ((PaintActivtyFeactures)getActivity());
     }
 
+    protected void setNavigationDrawer(FermatAdapter adapter){
+        getPaintActivtyFeactures().changeNavigationDrawerAdapter(adapter);
+    }
+
+    protected void addNavigationHeader(View view){
+        getPaintActivtyFeactures().addNavigationViewHeader(view);
+    }
+
     private FermatScreenSwapper getFermatScreenSwapper(){
         return (FermatScreenSwapper) getActivity();
     }
+
 }
 
