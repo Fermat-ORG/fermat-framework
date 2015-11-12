@@ -10,7 +10,6 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.Ca
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantGetPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantCreatePurchaseContractException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantGetPurchaseContractException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -23,14 +22,22 @@ public interface CryptoCustomerActor extends Actor {
 
     Collection<ActorIdentity> getConnectedBrokers();
 
+    void createAsotiationCryptoCustomerIdentityWallet();
+
     CustomerBrokerNegotiation createNegotiationPurchase(ActorIdentity cryptoBroker,Collection<Clause> clauses) throws CantCreatePurchaseNegotiationException;
     CustomerBrokerNegotiation getNegotiationPurchase(UUID negotiationId) throws CantGetPurchaseNegotiationException;
+    CustomerBrokerNegotiation updateNegotiationPurchase(UUID negotiationId) throws CantGetPurchaseNegotiationException;
+    CustomerBrokerNegotiation closeNegotiationPurchase(UUID negotiationId) throws CantGetPurchaseNegotiationException;
     Collection<CustomerBrokerNegotiation> getNegotiationPurchases() throws CantGetPurchaseNegotiationException;
     Collection<CustomerBrokerNegotiation> getNegotiationPurchases(NegotiationStatus status) throws CantGetPurchaseNegotiationException;
+    void sendActorNetworkServiceNegotiationPurchases(CustomerBrokerNegotiation negotiation);
+    void receiveActorNetworkServicePurchases(CustomerBrokerNegotiation negotiation);
 
     CustomerBrokerPurchase createContractPurchase(ActorIdentity cryptoBroker,Collection<Clause> clauses) throws CantCreatePurchaseContractException;
     CustomerBrokerPurchase getContractPurchase(UUID negotiationId) throws CantGetPurchaseContractException;
     Collection<CustomerBrokerPurchase> getContractPurchases() throws CantGetPurchaseContractException;
     Collection<CustomerBrokerPurchase> getContractPurchases(NegotiationStatus status) throws CantGetPurchaseContractException;
+    void sendActorNetworkServiceContractPurchases(CustomerBrokerNegotiation negotiation);
+    void receiveActorNetworkServiceContractPurchases(CustomerBrokerNegotiation negotiation);
 
 }
