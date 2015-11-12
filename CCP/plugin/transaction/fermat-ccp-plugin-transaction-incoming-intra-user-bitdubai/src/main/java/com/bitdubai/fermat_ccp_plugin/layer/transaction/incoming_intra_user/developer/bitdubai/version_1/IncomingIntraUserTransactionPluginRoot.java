@@ -144,21 +144,6 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
             this.registry.initialize(this.pluginId);
 
 
-<<<<<<< HEAD
-=======
-            /**
-             * Listener NetWorkService New Notifications event
-             */
-
-            FermatEventListener fermatEventListener;
-            FermatEventHandler fermatEventHandler;
-
-            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
-            fermatEventHandler = new IncomingCryptoMetadataEventHandler();
-            ((IncomingCryptoMetadataEventHandler) fermatEventHandler).setIntraWalletUserManager(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
->>>>>>> af819921ae18c917d6c547de601c6d7a5a694105
-
 
             /**
              * I ask the list of pending requests to the Network Service to execute
@@ -258,47 +243,6 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
     }
 
 
-<<<<<<< HEAD
-
-=======
-    public void processNotifications() throws CantProcessMetaDataNotificationsExceptions {
-        try {
-
-            System.out.println("PROCESSING METADATA NOTIFICATIONS IN INCOMING INTRA USERS ");
-            List<CryptoTransmissionMetadata> metaDataNotifications = cryptoTransmissionNetworkServiceManager.getPendingNotifications();
-
-
-            for (CryptoTransmissionMetadata notification : metaDataNotifications) {
-
-                String intraUserSendingPublicKey = notification.getSenderPublicKey();
-
-                String intraUserToConnectPublicKey = notification.getDestinationPublicKey();
-
-                switch (notification.getCryptoTransmissionStates()) {
-
-
-                }
-
-                /**
-                 * I confirm the application in the Network Service
-                 */
-
-                cryptoTransmissionNetworkServiceManager.confirmNotification(notification.getTransactionId());
-            }
-
-        } catch (CantGetMetadataNotificationsException e) {
-            throw new CantProcessMetaDataNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error get notifications list");
-
-        } catch (CantConfirmMetaDataNotificationException e) {
-            throw new CantProcessMetaDataNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error confirm notification read");
-
-
-        } catch (Exception e) {
-            throw new CantProcessMetaDataNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", FermatException.wrapException(e), "", "");
-
-        }
-    }
->>>>>>> af819921ae18c917d6c547de601c6d7a5a694105
 
 
 }
