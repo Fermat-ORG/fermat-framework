@@ -74,6 +74,8 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
 
         String packetContentJsonStringRepresentation = null;
+        NetworkServiceType networkServiceTypeApplicant = null;
+        DiscoveryQueryParameters discoveryQueryParameters = null;
 
         try{
 
@@ -88,8 +90,8 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
              * Construct the json object
              */
             JsonObject contentJsonObject = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
-            NetworkServiceType networkServiceTypeApplicant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString(), NetworkServiceType.class);
-            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(contentJsonObject.get(JsonAttNamesConstants.DISCOVERY_PARAM).getAsString());
+            networkServiceTypeApplicant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString(), NetworkServiceType.class);
+            discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(contentJsonObject.get(JsonAttNamesConstants.DISCOVERY_PARAM).getAsString());
 
             /*
              * hold the result list
@@ -149,6 +151,8 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
              * Construct the json object
              */
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, networkServiceTypeApplicant.toString());
+            packetContent.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
             packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in obtain the list requested: "+e.getMessage());
 
             /*

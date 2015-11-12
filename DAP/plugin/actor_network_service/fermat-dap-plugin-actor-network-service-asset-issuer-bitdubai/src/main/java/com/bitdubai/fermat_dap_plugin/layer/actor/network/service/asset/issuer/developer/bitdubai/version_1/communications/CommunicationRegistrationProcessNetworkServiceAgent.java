@@ -72,7 +72,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Configure my new profile
                      */
-                    assetIssuerActorNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    assetIssuerActorNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager

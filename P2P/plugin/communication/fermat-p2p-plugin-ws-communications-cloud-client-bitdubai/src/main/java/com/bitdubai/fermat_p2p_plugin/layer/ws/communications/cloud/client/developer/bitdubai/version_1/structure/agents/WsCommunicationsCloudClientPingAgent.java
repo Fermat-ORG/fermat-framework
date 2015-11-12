@@ -8,9 +8,6 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientChannel;
 
-import org.java_websocket.framing.Framedata;
-import org.java_websocket.framing.FramedataImpl1;
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent</code>
  * is responsible to verify the connection status with the remote node, its validate if is this connection are alive using a ping message<p/>
@@ -76,9 +73,8 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
                         System.out.println(" WsCommunicationsCloudClientPingAgent - Error occurred sending ping to the node, closing the connection to remote node");
                         wsCommunicationsCloudClientChannel.getConnection().close();
                         wsCommunicationsCloudClientChannel.setIsRegister(Boolean.FALSE);
+                        wsCommunicationsCloudClientChannel.raiseClientConnectionCloseNotificationEvent();
                         this.interrupt();
-
-                        //TODO: START CONNECTION AGENT AND RISE EVENT NOTIFY THE CONNECTION
                         break;
                     }
 
