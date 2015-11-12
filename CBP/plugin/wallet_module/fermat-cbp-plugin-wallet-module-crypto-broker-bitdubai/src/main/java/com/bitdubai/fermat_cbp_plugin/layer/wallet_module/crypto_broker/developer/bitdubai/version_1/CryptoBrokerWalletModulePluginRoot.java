@@ -59,14 +59,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
     @Override
     public CryptoBrokerWallet getCryptoBrokerWallet(String walletPublicKey) throws CantGetCryptoBrokerWalletException {
         try {
-            LogLevel logLevel = CryptoBrokerWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName());
-
-            logManager.log(logLevel, "CryptoBrokerWallet instantiation started...", null, null);
-            CryptoBrokerWallet walletModuleManager = new CryptoBrokerWalletModuleCryptoBrokerWalletManager();
-            logManager.log(logLevel, "CryptoBrokerWallet instantiation finished successfully.", null, null);
-
-            return walletModuleManager;
-
+            return new CryptoBrokerWalletModuleCryptoBrokerWalletManager();
         } catch (Exception e) {
             throw new CantGetCryptoBrokerWalletException(CantGetCryptoBrokerWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }

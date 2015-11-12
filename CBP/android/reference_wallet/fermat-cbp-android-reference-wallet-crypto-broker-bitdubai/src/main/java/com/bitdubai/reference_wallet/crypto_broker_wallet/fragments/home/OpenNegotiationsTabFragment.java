@@ -160,7 +160,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             }
 
         } else {
-            Toast.makeText(getActivity(), "Sorry, an error happened (Module == null)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Sorry, an error happened OpenNegotiationsTabFragment (Module == null)", Toast.LENGTH_SHORT).show();
         }
 
         return data;

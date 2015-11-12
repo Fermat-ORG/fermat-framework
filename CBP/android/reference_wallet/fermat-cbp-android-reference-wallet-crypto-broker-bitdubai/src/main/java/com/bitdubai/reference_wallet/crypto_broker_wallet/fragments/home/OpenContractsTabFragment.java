@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
@@ -14,6 +15,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
@@ -28,6 +31,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -128,33 +132,31 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         if (moduleManager != null) {
             try {
                 CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
-                // TODO definir e implementar metodos para traer lista de contratos esperando por broker y lista de contratos esperando por customer
+                GrouperItem<ContractBasicInformation> grouper;
 
-            } catch (CantGetCryptoBrokerWalletException ex) {
+                grouperText = getActivity().getString(R.string.waiting_for_you);
+                List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
+                waitingForBroker.addAll(cryptoBrokerWallet.getContractsWaitingForBroker(10, 0));
+                grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
+                data.add(grouper);
+
+                grouperText = getActivity().getString(R.string.waiting_for_the_customer);
+                List<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
+                waitingForCustomer.addAll(cryptoBrokerWallet.getContractsWaitingForCustomer(10, 0));
+                grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+                data.add(grouper);
+
+            } catch (CantGetContractsWaitingForCustomerException | CantGetContractsWaitingForBrokerException | CantGetCryptoBrokerWalletException ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null) {
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                    errorManager.reportUnexpectedWalletException(
+                            Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            ex);
                 }
             }
         } else {
-            ContractBasicInformation child;
-
-            grouperText = getActivity().getString(R.string.waiting_for_you);
-            List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
-            child = new ContractBasicInformationImpl("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PAUSED);
-            waitingForBroker.add(child);
-            GrouperItem<ContractBasicInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-            data.add(waitingForBrokerGrouper);
-
-            grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-            List<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
-            child = new ContractBasicInformationImpl("yalayn", "BTC", "Bank Transfer", "USD", ContractStatus.PENDING_PAYMENT);
-            waitingForCustomer.add(child);
-            child = new ContractBasicInformationImpl("vzlangel", "BsF", "Cash Delivery", "BsF", ContractStatus.PENDING_PAYMENT);
-            waitingForCustomer.add(child);
-            GrouperItem<ContractBasicInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-            data.add(waitingForCustomerGrouper);
+            Toast.makeText(getActivity(), "Sorry, an error happened in OpenContractsTabFragment (Module == null)", Toast.LENGTH_SHORT).show();
         }
 
         return data;

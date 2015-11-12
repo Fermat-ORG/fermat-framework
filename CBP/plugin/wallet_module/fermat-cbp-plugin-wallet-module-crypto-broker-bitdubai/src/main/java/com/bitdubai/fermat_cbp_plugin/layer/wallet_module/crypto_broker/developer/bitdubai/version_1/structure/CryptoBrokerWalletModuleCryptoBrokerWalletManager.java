@@ -43,7 +43,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset) throws CantGetNegotiationsWaitingForBrokerException {
         try {
             CustomerBrokerNegotiationInformation negotiation;
-            List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
+            Collection<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
 
             negotiation = new CryptoBrokerWalletModuleCustomerBrokerNegotationInformation("nelsonalfo", "USD", "Crypto Transfer", "BTC", NegotiationStatus.WAITING_FOR_BROKER);
             waitingForCustomer.add(negotiation);
@@ -65,7 +65,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomer(int max, int offset) throws CantGetNegotiationsWaitingForCustomerException {
         try {
             CustomerBrokerNegotiationInformation negotiation;
-            List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
+            Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
 
             negotiation = new CryptoBrokerWalletModuleCustomerBrokerNegotationInformation("Nelson Orlando", "USD", "Bank Transfer", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
             waitingForBroker.add(negotiation);
@@ -83,7 +83,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     public Collection<ContractBasicInformation> getContractsWaitingForBroker(int max, int offset) throws CantGetContractsWaitingForBrokerException {
         try {
             ContractBasicInformation contract;
-            List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
+            Collection<ContractBasicInformation> waitingForBroker = new ArrayList<>();
 
             contract = new CryproBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PAUSED);
             waitingForBroker.add(contract);
@@ -99,7 +99,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     public Collection<ContractBasicInformation> getContractsWaitingForCustomer(int max, int offset) throws CantGetContractsWaitingForCustomerException {
         try {
             ContractBasicInformation contract;
-            List<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
+            Collection<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
 
             contract = new CryproBrokerWalletModuleContractBasicInformation("yalayn", "BTC", "Bank Transfer", "USD", ContractStatus.PENDING_PAYMENT);
             waitingForCustomer.add(contract);
