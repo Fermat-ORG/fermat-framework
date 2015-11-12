@@ -2235,7 +2235,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Payment Request"
+						name="Crypto Payment"
 						description=""
 						difficulty="8"
 						code-level="development"
