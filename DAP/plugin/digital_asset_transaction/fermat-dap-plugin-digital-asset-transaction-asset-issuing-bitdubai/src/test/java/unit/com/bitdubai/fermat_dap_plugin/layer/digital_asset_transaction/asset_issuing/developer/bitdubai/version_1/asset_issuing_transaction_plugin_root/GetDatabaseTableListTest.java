@@ -2,7 +2,7 @@ package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asse
 
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingDigitalAssetTransactionPluginRoot;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GetDatabaseTableListTest {
-    AssetIssuingTransactionPluginRoot assetIssuingPluginRoot;
+    AssetIssuingDigitalAssetTransactionPluginRoot assetIssuingPluginRoot;
     UUID pluginId;
 
     @Mock
@@ -28,7 +28,7 @@ public class GetDatabaseTableListTest {
 
     @Before
     public void setUp() throws Exception {
-        assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
+        assetIssuingPluginRoot = new AssetIssuingDigitalAssetTransactionPluginRoot();
 
         pluginId = UUID.randomUUID();
         assetIssuingPluginRoot.setId(pluginId);

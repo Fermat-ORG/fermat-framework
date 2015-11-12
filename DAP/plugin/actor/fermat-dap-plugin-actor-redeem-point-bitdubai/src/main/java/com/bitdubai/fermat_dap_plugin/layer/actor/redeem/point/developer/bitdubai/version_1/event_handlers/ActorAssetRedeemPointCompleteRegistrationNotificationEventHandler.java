@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetRedeemPointCompleteRegistrationNotificationEvent;
-import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.RedeemPointPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.RedeemPointActorPluginRoot;
 
 /**
  * Created by Nerio on 02/11/15.
@@ -13,9 +13,9 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitduba
 public class ActorAssetRedeemPointCompleteRegistrationNotificationEventHandler implements FermatEventHandler {
 
     //    private ActorNetworkServiceAssetUser actorNetworkServiceAssetUser;
-    private RedeemPointPluginRoot redeemPointPluginRoot;
+    private RedeemPointActorPluginRoot redeemPointPluginRoot;
 
-    public ActorAssetRedeemPointCompleteRegistrationNotificationEventHandler(RedeemPointPluginRoot redeemPointPluginRoot) {
+    public ActorAssetRedeemPointCompleteRegistrationNotificationEventHandler(RedeemPointActorPluginRoot redeemPointPluginRoot) {
         this.redeemPointPluginRoot = redeemPointPluginRoot;
     }
 

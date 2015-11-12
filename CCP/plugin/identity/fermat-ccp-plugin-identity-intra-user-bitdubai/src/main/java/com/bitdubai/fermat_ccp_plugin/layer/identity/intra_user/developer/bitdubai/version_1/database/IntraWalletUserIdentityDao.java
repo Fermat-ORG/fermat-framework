@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdu
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -32,6 +33,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdub
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateIntraUserIdentityException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
@@ -142,6 +144,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, publicKey);
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME, alias);
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
+            record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME, "true");
 
             table.insertRecord(record);
 
@@ -159,6 +162,101 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
         } catch (Exception e) {
             // Failure unknown.
             throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Intra User Identity", "Cant create new Intra User, unknown failure.");
+        }
+    }
+
+
+    public void updateIdentity (String publicKey,String alias, byte[] profileImage) throws CantUpdateIntraUserIdentityException {
+
+        try {
+
+            /**
+             * 1) Get the table.
+             */
+            DatabaseTable  table = this.database.getTable(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException ("Cant get intra user identity list, table not found.", "Intra User Identity", "Cant get Intra User identity list, table not found.");
+            }
+
+
+            // 2) Find the Intra users.
+            table.setStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+
+            // 3) Get Intra users.
+            for (DatabaseTableRecord record : table.getRecords ()) {
+
+                //set new values
+                record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME, alias);
+
+                table.updateRecord(record);
+            }
+
+            if(profileImage!=null)
+                persistNewUserProfileImage(publicKey, profileImage);
+
+        } catch (CantUpdateRecordException e){
+            // Cant insert record.
+            throw new CantUpdateIntraUserIdentityException(e.getMessage(), e, "Intra User Identity", "Cant update Intra User, database problems.");
+
+        } catch (CantPersistProfileImageException e){
+            // Cant insert record.
+            throw new CantUpdateIntraUserIdentityException (e.getMessage(), e, "Intra User Identity", "Cant update Intra User,persist image error.");
+
+        } catch (Exception e) {
+            // Failure unknown.
+            throw new CantUpdateIntraUserIdentityException (e.getMessage(), FermatException.wrapException(e), "Intra User Identity", "Cant update Intra User, unknown failure.");
+        }
+    }
+
+
+    public void deleteIdentity (String publicKey) throws CantUpdateIntraUserIdentityException {
+
+        try {
+
+            /**
+             * 1) Get the table.
+             */
+            DatabaseTable  table = this.database.getTable (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException ("Cant get intra user identity list, table not found.", "Intra User Identity", "Cant get Intra User identity list, table not found.");
+            }
+
+
+            // 2) Find the Intra users.
+            table.setStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+
+            // 3) Get Intra users.
+            for (DatabaseTableRecord record : table.getRecords ()) {
+
+                //set new values
+                record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME, "false");
+
+
+                table.updateRecord(record);
+            }
+
+
+
+        } catch (CantUpdateRecordException e){
+            // Cant insert record.
+            throw new CantUpdateIntraUserIdentityException(e.getMessage(), e, "Intra User Identity", "Cant update Intra User, database problems.");
+
+
+        } catch (Exception e) {
+            // Failure unknown.
+            throw new CantUpdateIntraUserIdentityException (e.getMessage(), FermatException.wrapException(e), "Intra User Identity", "Cant update Intra User, unknown failure.");
         }
     }
 
@@ -188,6 +286,8 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
             // 2) Find the Intra users.
             table.setStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME, "true", DatabaseFilterType.EQUAL);
+
             table.loadToMemory();
 
 

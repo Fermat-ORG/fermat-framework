@@ -3,7 +3,7 @@ package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asse
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingDigitalAssetTransactionPluginRoot;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GetDatabaseListTest {
-    AssetIssuingTransactionPluginRoot assetIssuingPluginRoot;
+    AssetIssuingDigitalAssetTransactionPluginRoot assetIssuingPluginRoot;
     UUID pluginId;
 
     @Mock
@@ -32,11 +32,11 @@ public class GetDatabaseListTest {
 
     @Before
     public void setUp() throws Exception {
-        assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
+        assetIssuingPluginRoot = new AssetIssuingDigitalAssetTransactionPluginRoot();
 
         pluginId = UUID.randomUUID();
 
-        assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
+        assetIssuingPluginRoot = new AssetIssuingDigitalAssetTransactionPluginRoot();
         assetIssuingPluginRoot.setId(pluginId);
         assetIssuingPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
 

@@ -58,7 +58,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     /**
      * BitcoinJ wallet where I'm storing the public keys and transactions
      */
-    Wallet wallet=null;
     private final String WALLET_FILENAME = "/data/data/com.bitdubai.fermat/files/wallet_";
 
     /**
@@ -121,7 +120,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             /**
              * load (if any) existing wallet.
              */
-            wallet = getWallet(blockchainNetworkType, keyList);
+            Wallet wallet = getWallet(blockchainNetworkType, keyList);
 
 
             /**
@@ -139,7 +138,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
                  * I do not need to reset the wallet because I will
                  * always be importing fresh (unused) keys.
                  */
-                //wallet.reset();
                 isWalletReset = true;
             }
 
@@ -187,17 +185,19 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
              * If I couldn't load the wallet from file, I'm assuming is a new wallet and I will create it.
              */
             wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
+
+            /**
+             * Will set the autosave information and save it.
+             */
+            wallet.autosaveToFile(walletFile, 1, TimeUnit.SECONDS, null);
+            try {
+                wallet.saveToFile(walletFile);
+            } catch (IOException e1) {
+                e1.printStackTrace(); // I will continue because the key addition will trigger an autosave anyway.
+            }
         }
 
-        /**
-         * Will set the autosave information and save it.
-         */
-        wallet.autosaveToFile(walletFile, 1, TimeUnit.SECONDS, null);
-        try {
-            wallet.saveToFile(walletFile);
-        } catch (IOException e) {
-            e.printStackTrace(); // I will continue because the key addition will trigger an autosave anyway.
-        }
+
 
         return wallet;
     }
