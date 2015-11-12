@@ -10,9 +10,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
-import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.IdentityRedeemPointPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.ReedemPointIdentityPluginRoot;
 
 import java.util.UUID;
 
@@ -84,7 +83,7 @@ public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, 
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    IdentityRedeemPointPluginRoot.ASSET_REDEEM_POINT_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    ReedemPointIdentityPluginRoot.ASSET_REDEEM_POINT_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );

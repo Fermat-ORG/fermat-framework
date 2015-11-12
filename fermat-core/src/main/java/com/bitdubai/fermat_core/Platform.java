@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
@@ -48,56 +47,22 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.DealsWithAssetVault;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.DealsWithCryptoBrokerIdentities;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.DealsWithCryptoCustomerIdentities;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.DealsWithExtraUsers;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.DealsWithCCPActorIntraWalletUsers;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
-
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.DealsWithCCPIdentityIntraWalletUser;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.DealsWithIntraUsersModule;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.DealsWithCryptoPaymentRequestNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.DealsWithOutgoingExtraUser;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.OutgoingExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.DealsWithOutgoingIntraActor;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
 import com.bitdubai.fermat_core.layer.all_definition.DefinitionLayer;
-import com.bitdubai.fermat_core.layer.dap_actor.DAPActorLayer;
-import com.bitdubai.fermat_core.layer.dap_actor_network_service.DAPActorNetworkServiceLayer;
-import com.bitdubai.fermat_core.layer.dap_identity.DAPIdentityLayer;
-import com.bitdubai.fermat_core.layer.dap_middleware.DAPMiddlewareLayer;
-import com.bitdubai.fermat_core.layer.dap_module.DAPModuleLayer;
-import com.bitdubai.fermat_core.layer.dap_network_service.DAPNetworkServiceLayer;
-import com.bitdubai.fermat_core.layer.dap_sub_app_module.DAPSubAppModuleLayer;
-import com.bitdubai.fermat_core.layer.dap_transaction.DAPTransactionLayer;
-import com.bitdubai.fermat_core.layer.dap_wallet.DAPWalletLayer;
-import com.bitdubai.fermat_core.layer.dmp_agent.AgentLayer;
 import com.bitdubai.fermat_core.layer.dmp_identity.IdentityLayer;
 import com.bitdubai.fermat_core.layer.dmp_middleware.MiddlewareLayer;
 import com.bitdubai.fermat_core.layer.dmp_module.ModuleLayer;
-import com.bitdubai.fermat_core.layer.dmp_world.WorldLayer;
 import com.bitdubai.fermat_core.layer.p2p_communication.CommunicationLayer;
 import com.bitdubai.fermat_core.layer.pip_actor.ActorLayer;
 import com.bitdubai.fermat_core.layer.pip_engine.EngineLayer;
@@ -107,64 +72,8 @@ import com.bitdubai.fermat_core.layer.wpd.identity.WPDIdentityLayer;
 import com.bitdubai.fermat_core.layer.wpd.middleware.WPDMiddlewareLayer;
 import com.bitdubai.fermat_core.layer.wpd.network_service.WPDNetworkServiceLayer;
 import com.bitdubai.fermat_core.layer.wpd.sub_app_module.WPDSubAppModuleLayer;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
-import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
-import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.DealsWithActorAssetRedeemPoint;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.DealsWithAssetIssuerActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUserActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.DealsWithAssetRedeemPointActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.DealsWithIdentityAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.DealsWithIdentityAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.DealsWithIdentityAssetRedeemPoint;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
-import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
-import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.DealsWithAssetFactory;
-import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.DealsWithModuleAseetFactory;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.DealsWithAssetIssuerWalletSubAppModule;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.DealsWithAssetRedeemPointWalleSubAppModule;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.DealsWithAssetUserWalletSubAppModule;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DealsWithAssetTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.DealsWithAssetIssuerCommunitySubAppModule;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.DealsWithAssetUserCommunitySubAppModule;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.DealsWithRedeemPointCommunitySubAppModule;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationManager;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.DealsWithAssetAppropriation;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.DealsWithAssetDistribution;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_reception.interfaces.AssetReceptionManager;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_reception.interfaces.DealsWithAssetReception;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.DealsWithAssetRedeemPointWallet;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.DealsWithAssetUserWallet;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
@@ -188,8 +97,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_publisher.interfaces.DealsWithWalletPublisherMiddlewarePlugin;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewarePlugin;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.DealsWithWalletSettings;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.DealsWithWalletResources;
@@ -199,8 +106,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_statistics.i
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.DealsWithWalletPublisherModule;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.DealsWithWalletStoreModule;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -213,8 +118,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-;
 
 /**
  * The Class <code>com.bitdubai.fermat_core.Platform</code> start all
@@ -378,32 +281,15 @@ public class Platform implements Serializable {
              * Created and register into the platform context
              */
 
-            corePlatformContext.registerPlatformLayer(new WorldLayer(), PlatformLayers.BITDUBAI_WORLD_LAYER);
             corePlatformContext.registerPlatformLayer(new CommunicationLayer(), PlatformLayers.BITDUBAI_COMMUNICATION_LAYER);
             corePlatformContext.registerPlatformLayer(new MiddlewareLayer(), PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER);
             corePlatformContext.registerPlatformLayer(new ModuleLayer(), PlatformLayers.BITDUBAI_MODULE_LAYER);
-            corePlatformContext.registerPlatformLayer(new AgentLayer(), PlatformLayers.BITDUBAI_AGENT_LAYER);
             corePlatformContext.registerPlatformLayer(new ActorLayer(), PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER);
             corePlatformContext.registerPlatformLayer(new com.bitdubai.fermat_core.layer.pip_module.ModuleLayer(), PlatformLayers.BITDUBAI_PIP_MODULE_LAYER);
             corePlatformContext.registerPlatformLayer(new com.bitdubai.fermat_core.layer.pip_network_service.NetworkServiceLayer(), PlatformLayers.BITDUBAI_PIP_NETWORK_SERVICE_LAYER);
             corePlatformContext.registerPlatformLayer(new com.bitdubai.fermat_core.layer.pip_Identity.IdentityLayer(), PlatformLayers.BITDUBAI_PIP_IDENTITY_LAYER);
             corePlatformContext.registerPlatformLayer(new IdentityLayer(), PlatformLayers.BITDUBAI_IDENTITY_LAYER);
             corePlatformContext.registerPlatformLayer(new EngineLayer(), PlatformLayers.BITDUBAI_ENGINE_LAYER);
-
-            // Init CCM Layers
-
-
-            // Init DAP Layers
-            corePlatformContext.registerPlatformLayer(new DAPActorLayer(), PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER);
-            corePlatformContext.registerPlatformLayer(new DAPActorNetworkServiceLayer(), PlatformLayers.BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER);
-            corePlatformContext.registerPlatformLayer(new DAPIdentityLayer(), PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER);
-            corePlatformContext.registerPlatformLayer(new DAPMiddlewareLayer(), PlatformLayers.BITDUBAI_DAP_MIDDLEWARE_LAYER);
-            corePlatformContext.registerPlatformLayer(new DAPModuleLayer(), PlatformLayers.BITDUBAI_DAP_MODULE_LAYER);
-            corePlatformContext.registerPlatformLayer(new DAPSubAppModuleLayer(), PlatformLayers.BITDUBAI_DAP_SUB_APP_MODULE_LAYER);
-            corePlatformContext.registerPlatformLayer(new DAPNetworkServiceLayer(), PlatformLayers.BITDUBAI_DAP_NETWORK_SERVICE_LAYER);
-            corePlatformContext.registerPlatformLayer(new DAPTransactionLayer(), PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER);
-            corePlatformContext.registerPlatformLayer(new DAPWalletLayer(), PlatformLayers.BITDUBAI_DAP_WALLET_LAYER);
-            // End  DAP Layers
 
             // Init WPD Layers
             corePlatformContext.registerPlatformLayer(new WPDActorLayer(), PlatformLayers.BITDUBAI_WPD_ACTOR_LAYER);
@@ -609,7 +495,7 @@ public class Platform implements Serializable {
 
                 pluginsToInstantiate.put(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_ADDRESSES      ), Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
 
-                pluginsToInstantiate.put(ref(Platforms.BLOCKCHAINS             , Layers.MIDDLEWARE     , Plugins.CRYPTO_ADDRESSES      ), Plugins.CRYPTO_ADDRESSES__MIDDLEWARE_TEMP);
+                pluginsToInstantiate.put(ref(Platforms.BLOCKCHAINS             , Layers.MIDDLEWARE     , Plugins.CRYPTO_ADDRESSES      ), null);
 
                 pluginsToInstantiate.put(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.MIDDLEWARE     , Plugins.WALLET_CONTACTS       ), Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE);
 
@@ -782,222 +668,52 @@ public class Platform implements Serializable {
 
 
             if (DAP) {
-            /*
-            * Plugin Asset User Actor Network Service
-            * ----------------------------------------
-            */
-                Plugin assetUserActorNetworkService = ((DAPActorNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER)).getAssetUserActorNetworService();
-                injectLayerReferences(assetUserActorNetworkService);
-                injectPluginReferencesAndStart(assetUserActorNetworkService, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE);
 
-            /*
-            * Plugin Asset Issuer Actor Network Service
-            * ----------------------------------------
-            */
-                Plugin assetIssuerActorNetworkService = ((DAPActorNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER)).getAssetIssuerActorNetwokService();
-                injectLayerReferences(assetIssuerActorNetworkService);
-                injectPluginReferencesAndStart(assetIssuerActorNetworkService, Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.ACTOR_NETWORK_SERVICE    , Plugins.ASSET_ISSUER), Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE      );
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.ACTOR_NETWORK_SERVICE    , Plugins.ASSET_USER), Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.ACTOR_NETWORK_SERVICE    , Plugins.REDEEM_POINT), Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE);
 
-           /*
-            * Plugin Asset Redeem Point Actor Network Service
-            * ----------------------------------------
-            */
-                Plugin assetRedeemPointActorNetworkService = ((DAPActorNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER)).getAssetRedeemPointActorNetwokService();
-                injectLayerReferences(assetRedeemPointActorNetworkService);
-                injectPluginReferencesAndStart(assetRedeemPointActorNetworkService, Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.NETWORK_SERVICE          , Plugins.ASSET_TRANSMISSION), Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE);
 
-           /*
-            * Plugin Asset Transmission Network Service
-            * ----------------------------------------assetIssuerActorNetworkService
-            */
-                Plugin assetTransmissionNetworkService = ((DAPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_NETWORK_SERVICE_LAYER)).getAssetTransmissionNetworService();
-                injectLayerReferences(assetTransmissionNetworkService);
-                injectPluginReferencesAndStart(assetTransmissionNetworkService, Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.WALLET                   , Plugins.ASSET_ISSUER), Plugins.BITDUBAI_ASSET_WALLET_ISSUER);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.WALLET                   , Plugins.ASSET_USER  ), Plugins.BITDUBAI_DAP_ASSET_USER_WALLET  );
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.WALLET                   , Plugins.REDEEM_POINT), Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET);
 
-           /*
-            * Plugin Asset Wallet Asset Issuer
-            * -----------------------------
-            */
-                Plugin assetWalletIssuer = ((DAPWalletLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_WALLET_LAYER)).getPluginAssetWalletIssuer();
-                injectPluginReferencesAndStart(assetWalletIssuer, Plugins.BITDUBAI_ASSET_WALLET_ISSUER);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.ACTOR                    , Plugins.ASSET_ISSUER), Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.ACTOR                    , Plugins.ASSET_USER  ), Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR  );
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.ACTOR                    , Plugins.REDEEM_POINT), Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR);
 
-           /*
-            * Plugin Asset Wallet Asset User
-            * -----------------------------
-            */
-                Plugin assetWalletUser = ((DAPWalletLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_WALLET_LAYER)).getPluginAssetWalletUser();
-                injectPluginReferencesAndStart(assetWalletUser, Plugins.BITDUBAI_DAP_ASSET_USER_WALLET);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_APPROPRIATION    ), Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_DISTRIBUTION     ), Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_ISSUING          ), Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_RECEPTION        ), Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_RECEPTION        ), Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.REDEEM_POINT_REDEMPTION), Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.USER_REDEMPTION        ), Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION);
 
-           /*
-            * Plugin Asset Wallet Asset Redeem Point
-            * -----------------------------
-            */
-                Plugin assetWalletRedeemPoint = ((DAPWalletLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_WALLET_LAYER)).getPluginAssetRedeemPoint();
-                injectPluginReferencesAndStart(assetWalletRedeemPoint, Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.IDENTITY                 , Plugins.ASSET_ISSUER), Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.IDENTITY                 , Plugins.ASSET_USER  ), Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY  );
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.IDENTITY                 , Plugins.REDEEM_POINT), Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY);
 
-            /*
-            * Plugin Asset Issuer Actor Layer
-            * -------------------------
-            */
-                Plugin assetIssuerActorLayer = ((DAPActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER)).getAssetIssuerActor();
-                injectPluginReferencesAndStart(assetIssuerActorLayer, Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.MIDDLEWARE               , Plugins.ASSET_FACTORY), Plugins.BITDUBAI_ASSET_FACTORY);
 
-           /*
-            * Plugin Asset User Actor Layer
-            * -------------------------
-            */
-                Plugin assetUserActorLayer = ((DAPActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER)).getAssetUserActor();
-                injectPluginReferencesAndStart(assetUserActorLayer, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.WALLET_MODULE            , Plugins.ASSET_ISSUER), Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.WALLET_MODULE            , Plugins.ASSET_USER), Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.WALLET_MODULE            , Plugins.REDEEM_POINT), Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE);
 
-           /*
-            * Plugin Redeem Point Actor Layer
-            * -------------------------
-            */
-                Plugin redeemPointActorLayer = ((DAPActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER)).getRedeemPointActor();
-                injectPluginReferencesAndStart(redeemPointActorLayer, Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR);
-
-           /*
-            * Plugin Asset Issuing TransactionassetWalletRedeemPoint
-            * -----------------------------
-            */
-                Plugin assetIssuingTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetIssuingPlugin();
-                injectPluginReferencesAndStart(assetIssuingTransaction, Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION);
-
-           /*
-            * Plugin Asset Distribution Transaction
-            * -----------------------------
-            */
-                Plugin assetDistributionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetDistributionPlugin();
-                injectPluginReferencesAndStart(assetDistributionTransaction, Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION);
-
-           /*
-            * Plugin Asset Appropriation Transaction
-            * -----------------------------
-            */
-                Plugin assetAppropriationTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetAppropriationPlugin();
-                injectPluginReferencesAndStart(assetAppropriationTransaction, Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION);
-
-           /*
-            * Plugin Asset Reception Transaction
-            * -----------------------------
-            */
-                Plugin assetReceptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetReceptionPlugin();
-                injectPluginReferencesAndStart(assetReceptionTransaction, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
-
-           /*
-            * Plugin Redeem Point Redemption Transaction.
-            * -----------------------------
-            */
-                Plugin redeemPointRedemptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetRedeemPointRedemptionPlugin();
-                injectPluginReferencesAndStart(redeemPointRedemptionTransaction, Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION);
-
-           /*
-            * Plugin Asset Issuer Identity Layer
-            * -------------------------
-            */
-                Plugin assetIssuerIdentityLayer = ((DAPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER)).getAssetIssuerIdentity();
-                injectPluginReferencesAndStart(assetIssuerIdentityLayer, Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
-
-           /*
-            * Plugin Asset User Identity Layer
-            * -------------------------
-            */
-                Plugin assetUserIdentityLayer = ((DAPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER)).getAssetUserIdentity();
-                injectPluginReferencesAndStart(assetUserIdentityLayer, Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY);
-
-           /*
-            * Plugin Redeem Point Identity Layer
-            * -------------------------
-            */
-                Plugin redeemPointIdentityLayer = ((DAPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER)).getRedeemPointIdentity();
-                injectPluginReferencesAndStart(redeemPointIdentityLayer, Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY);
-
-
-           /*
-            * Plugin Asset Factory Middleware
-            * -----------------------------
-            */
-                Plugin assetFactortMiddleware = ((DAPMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MIDDLEWARE_LAYER)).getPluginAssetFactory();
-                injectPluginReferencesAndStart(assetFactortMiddleware, Plugins.BITDUBAI_ASSET_FACTORY);
-
-           /*
-            * Plugin Asset Factory Module
-            * -----------------------------
-            */
-                Plugin assetFactoryModlue = ((DAPModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MODULE_LAYER)).getPluginAssetFactoryModule();
-                injectPluginReferencesAndStart(assetFactoryModlue, Plugins.BITDUBAI_ASSET_FACTORY_MODULE);
-
-           /*
-            * Plugin Asset Issuer Wallet Module
-            * -----------------------------
-            */
-                Plugin assetIssuerWalletModule = ((DAPModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MODULE_LAYER)).getPluginModuleAssetIssuerWallet();
-                injectPluginReferencesAndStart(assetIssuerWalletModule, Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
-
-           /*
-            * Plugin Asset User Wallet Module
-            * -----------------------------
-            */
-                Plugin assetUserWalletModule = ((DAPModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MODULE_LAYER)).getPluginModuleAssetUserWallet();
-                injectPluginReferencesAndStart(assetUserWalletModule, Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE);
-
-           /*
-            * Plugin Asset Redeem Point Wallet Module
-            * -----------------------------
-            */
-                Plugin assetRedeemPointWalletModule = ((DAPModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MODULE_LAYER)).getPluginModuleAssetRedeemPointrWallet();
-                injectPluginReferencesAndStart(assetRedeemPointWalletModule, Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE);
-
-           /*
-            * Plugin Asset Issuer Community Sub App Module
-            * -----------------------------
-            */
-                Plugin assetIssuerSubAppModuleCommunity = ((DAPSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_SUB_APP_MODULE_LAYER)).getAssetIssuerCommunity();
-                injectPluginReferencesAndStart(assetIssuerSubAppModuleCommunity, Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE);
-
-           /*
-            * Plugin Asset User Community Sub App Module
-            * -----------------------------
-            */
-                Plugin assetUserSubAppModuleCommunity = ((DAPSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_SUB_APP_MODULE_LAYER)).getAssetUserCommunity();
-                injectPluginReferencesAndStart(assetUserSubAppModuleCommunity, Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE);
-
-           /*
-            * Plugin Redeem Point Community Sub App Module
-            * -----------------------------
-            */
-                Plugin redeemPointSubAppModuleCommunity = ((DAPSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_SUB_APP_MODULE_LAYER)).getRedeemPointCommunity();
-                injectPluginReferencesAndStart(redeemPointSubAppModuleCommunity, Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.SUB_APP_MODULE           , Plugins.ASSET_FACTORY), Plugins.BITDUBAI_ASSET_FACTORY_MODULE);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.SUB_APP_MODULE           , Plugins.ASSET_ISSUER_COMMUNITY), Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.SUB_APP_MODULE           , Plugins.ASSET_USER_COMMUNITY), Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.SUB_APP_MODULE           , Plugins.REDEEM_POINT_COMMUNITY), Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE);
 
             }
-
-//           /*
-//            * Plugin Asset User Actor Network Service
-//            * ----------------------------------------
-//            */
-//
-//            Plugin assetUserActorNetworkService = ((DAPActorNetworServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER)).getAssetUserActorNetworService();
-//            injectLayerReferences(assetUserActorNetworkService);
-//            injectPluginReferencesAndStart(assetUserActorNetworkService, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE);
-//
-//
-//            /*
-//            * Plugin Asset Transmission Network Service
-//            * ----------------------------------------
-//            */
-//
-//            Plugin assetTransmissionNetworkService = ((DAPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_NETWORK_SERVICE_LAYER)).getAssetTransmissionNetworService();
-//            injectLayerReferences(assetTransmissionNetworkService);
-//            injectPluginReferencesAndStart(assetTransmissionNetworkService, Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE);
 
             if(CBP){
 
                 pluginsToInstantiate.put(ref(Platforms.CRYPTO_BROKER_PLATFORM, Layers.IDENTITY      , Plugins.CRYPTO_BROKER           ), Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY);
-
                 pluginsToInstantiate.put(ref(Platforms.CRYPTO_BROKER_PLATFORM, Layers.IDENTITY      , Plugins.CRYPTO_CUSTOMER         ), Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY);
 
                 pluginsToInstantiate.put(ref(Platforms.CRYPTO_BROKER_PLATFORM, Layers.SUB_APP_MODULE, Plugins.CRYPTO_BROKER_IDENTITY  ), Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE);
-
                 pluginsToInstantiate.put(ref(Platforms.CRYPTO_BROKER_PLATFORM, Layers.SUB_APP_MODULE, Plugins.CRYPTO_CUSTOMER_IDENTITY), Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE);
 
                 pluginsToInstantiate.put(ref(Platforms.CRYPTO_BROKER_PLATFORM, Layers.WALLET_MODULE , Plugins.CRYPTO_BROKER           ), Plugins.BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE);
@@ -1110,16 +826,10 @@ public class Platform implements Serializable {
          * Get the error manager instance
          */
 
-
-
         try {
 
             if (plugin instanceof DealsWithBitcoinWallet) {
                 ((DealsWithBitcoinWallet) plugin).setBitcoinWalletManager((BitcoinWalletManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.BASIC_WALLET, Plugins.BITCOIN_WALLET)));
-            }
-
-            if (plugin instanceof DealsWithBitcoinCryptoNetwork) {
-                ((DealsWithBitcoinCryptoNetwork) plugin).setBitcoinCryptoNetworkManager((BitcoinCryptoNetworkManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK));
             }
 
             if (plugin instanceof DealsWithBitcoinNetwork) {
@@ -1128,10 +838,6 @@ public class Platform implements Serializable {
 
             if (plugin instanceof DealsWithCryptoVault) {
                 ((DealsWithCryptoVault) plugin).setCryptoVaultManager((CryptoVaultManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_VAULT, Plugins.BITCOIN_VAULT)));
-            }
-
-            if (plugin instanceof DealsWithAssetVault) {
-                ((DealsWithAssetVault) plugin).setAssetVaultManager((AssetVaultManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_VAULT, Plugins.BITCOIN_ASSET_VAULT)));
             }
 
             if (plugin instanceof DealsWithDeveloperModule) {
@@ -1162,24 +868,12 @@ public class Platform implements Serializable {
                 ((DealsWithWalletModuleCryptoWallet) plugin).setWalletModuleCryptoWalletManager((CryptoWalletManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET)));
             }
 
-            if (plugin instanceof DealsWithOutgoingExtraUser) {
-                ((DealsWithOutgoingExtraUser) plugin).setOutgoingExtraUserManager((OutgoingExtraUserManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION, Plugins.OUTGOING_EXTRA_USER)));
-            }
-
             if (plugin instanceof DealsWithPluginFileSystem) {
                 ((DealsWithPluginFileSystem) plugin).setPluginFileSystem((PluginFileSystem) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLUGIN_FILE_SYSTEM)));
             }
 
             if (plugin instanceof DealsWithPluginDatabaseSystem) {
                 ((DealsWithPluginDatabaseSystem) plugin).setPluginDatabaseSystem((PluginDatabaseSystem) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLUGIN_DATABASE_SYSTEM)));
-            }
-
-            if (plugin instanceof DealsWithCryptoAddressBook) {
-                ((DealsWithCryptoAddressBook) plugin).setCryptoAddressBookManager((CryptoAddressBookManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_MODULE, Plugins.CRYPTO_ADDRESS_BOOK)));
-            }
-
-            if (plugin instanceof DealsWithWalletContacts) {
-                ((DealsWithWalletContacts) plugin).setWalletContactsManager((WalletContactsManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.MIDDLEWARE, Plugins.WALLET_CONTACTS)));
             }
 
             if (plugin instanceof DealsWithWalletFactory) {
@@ -1210,14 +904,8 @@ public class Platform implements Serializable {
                 ((DealsWithWalletStoreNetworkService) plugin).setWalletStoreManager((com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.WalletStoreManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE));
             }
 
-            if (plugin instanceof DealsWithIncomingCrypto) {
-                ((DealsWithIncomingCrypto) plugin).setIncomingCryptoManager((IncomingCryptoManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.CRYPTO_ROUTER, Plugins.INCOMING_CRYPTO)));
-            }
             if (plugin instanceof DealsWithDeviceUser) {
                 ((DealsWithDeviceUser) plugin).setDeviceUserManager((DeviceUserManager) fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.USER, Addons.DEVICE_USER)));
-            }
-            if (plugin instanceof DealsWithWalletStoreModule) {
-                ((DealsWithWalletStoreModule) plugin).setWalletStoreModuleManager((WalletStoreModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE));
             }
 
             if (plugin instanceof DealsWithPlatformInfo) {
@@ -1228,20 +916,9 @@ public class Platform implements Serializable {
                 ((DealsWithWalletPublisherMiddlewarePlugin) plugin).setWalletPublisherMiddlewarePlugin((WalletPublisherMiddlewarePlugin) corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_PUBLISHER_MIDDLEWARE));
             }
 
-            if (plugin instanceof DealsWithCCPActorIntraWalletUsers) {
-                ((DealsWithCCPActorIntraWalletUsers) plugin).setIntraWalletUserIdentityManager((IntraWalletUserActorManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.ACTOR, Plugins.INTRA_WALLET_USER)));
-            }
-
-            if (plugin instanceof DealsWithIntraUsersModule) {
-                ((DealsWithIntraUsersModule) plugin).setIntraUserModuleManager((IntraUserModuleManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.SUB_APP_MODULE, Plugins.INTRA_WALLET_USER)));
-            }
-
             if (plugin instanceof DealsWithIdentityDesigner) {
                 ((DealsWithIdentityDesigner) plugin).setDesignerIdentityManager((DesignerIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DESIGNER_IDENTITY));
             }
-
-            if (plugin instanceof DealsWithCCPIdentityIntraWalletUser)
-                ((DealsWithCCPIdentityIntraWalletUser) plugin).setIdentityIntraUserManager((IntraWalletUserIdentityManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY, Plugins.INTRA_WALLET_USER)));
 
             if (plugin instanceof DealsWithPublisherIdentity) {
                 ((DealsWithPublisherIdentity) plugin).setPublisherIdentityManager((PublisherIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_PUBLISHER_IDENTITY));
@@ -1251,129 +928,11 @@ public class Platform implements Serializable {
                 ((DealsWithIdentityTranslator) plugin).setTranslatorIdentityManager((TranslatorIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_TRANSLATOR_IDENTITY));
             }
 
-            if (plugin instanceof DealsWithIntraUsersNetworkService) {
-                ((DealsWithIntraUsersNetworkService) plugin).setIntraUserNetworkServiceManager((IntraUserManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.INTRA_WALLET_USER)));
-            }
-
-            if (plugin instanceof DealsWithWalletSettings) {
-                ((DealsWithWalletSettings) plugin).setWalletSettingsManager((WalletSettingsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_SETTINGS_MIDDLEWARE));
-            }
-
-            if (plugin instanceof DealsWithAssetIssuing) {
-                ((DealsWithAssetIssuing) plugin).setAssetIssuingManager((AssetIssuingManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION));
-            }
-
-            if (plugin instanceof DealsWithAssetDistribution) {
-                ((DealsWithAssetDistribution) plugin).setAssetDistributionManager((AssetDistributionManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION));
-            }
-
-            if (plugin instanceof DealsWithAssetReception) {
-                ((DealsWithAssetReception) plugin).setAssetReceptionManager((AssetReceptionManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION));
-            }
-
-            if (plugin instanceof DealsWithAssetAppropriation){
-                ((DealsWithAssetAppropriation) plugin).setAssetAppropriationManager((AssetAppropriationManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION));
-            }
-
-            if (plugin instanceof DealsWithActorAssetIssuer) {
-                ((DealsWithActorAssetIssuer) plugin).setActorAssetIssuerManager((ActorAssetIssuerManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR));
-            }
-
-            if (plugin instanceof DealsWithActorAssetUser) {
-                ((DealsWithActorAssetUser) plugin).setActorAssetUserManager((ActorAssetUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR));
-            }
-
-            if (plugin instanceof DealsWithActorAssetRedeemPoint) {
-                ((DealsWithActorAssetRedeemPoint) plugin).setActorAssetRedeemPointManager((ActorAssetRedeemPointManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR));
-            }
-
-            if (plugin instanceof DealsWithIdentityAssetIssuer) {
-                ((DealsWithIdentityAssetIssuer) plugin).setIdentityAssetIssuerManager((IdentityAssetIssuerManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY));
-            }
-
-            if (plugin instanceof DealsWithIdentityAssetUser) {
-                ((DealsWithIdentityAssetUser) plugin).setIdentityAssetUserManager((IdentityAssetUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY));
-            }
-
-            if (plugin instanceof DealsWithAssetIssuerActorNetworkServiceManager) {
-                ((DealsWithAssetIssuerActorNetworkServiceManager) plugin).setAssetIssuerActorNetworkServiceManager((AssetIssuerActorNetworkServiceManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE));
-            }
-
-            if (plugin instanceof DealsWithAssetUserActorNetworkServiceManager) {
-                ((DealsWithAssetUserActorNetworkServiceManager) plugin).setAssetUserActorNetworkServiceManager((AssetUserActorNetworkServiceManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE));
-            }
-
-            if (plugin instanceof DealsWithAssetRedeemPointActorNetworkServiceManager) {
-                ((DealsWithAssetRedeemPointActorNetworkServiceManager) plugin).setAssetRedeemPointActorNetworkServiceManager((AssetRedeemPointActorNetworkServiceManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE));
-            }
-
-            if (plugin instanceof DealsWithAssetTransmissionNetworkServiceManager) {
-                ((DealsWithAssetTransmissionNetworkServiceManager) plugin).setAssetTransmissionNetworkServiceManager((AssetTransmissionNetworkServiceManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE));
-            }
-
-            if (plugin instanceof DealsWithIdentityAssetRedeemPoint) {
-                ((DealsWithIdentityAssetRedeemPoint) plugin).setRedeemPointIdentityManager((RedeemPointIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY));
-            }
-
-            if (plugin instanceof DealsWithAssetFactory) {
-                ((DealsWithAssetFactory) plugin).setAssetFactoryManager((AssetFactoryManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY));
-            }
-            if (plugin instanceof DealsWithModuleAseetFactory) {
-                ((DealsWithModuleAseetFactory) plugin).setAssetFactoryModuleManager((AssetFactoryModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY_MODULE));
-            }
-
-            if (plugin instanceof DealsWithAssetIssuerCommunitySubAppModule) {
-                ((DealsWithAssetIssuerCommunitySubAppModule) plugin).setAssetIssuerCommunitySubAppModuleManager((AssetIssuerCommunitySubAppModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE));
-            }
-
-            if (plugin instanceof DealsWithAssetUserCommunitySubAppModule) {
-                ((DealsWithAssetUserCommunitySubAppModule) plugin).setAssetIssuerCommunitySubAppModuleManager((AssetUserCommunitySubAppModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE));
-            }
-
-            if (plugin instanceof DealsWithRedeemPointCommunitySubAppModule) {
-                ((DealsWithRedeemPointCommunitySubAppModule) plugin).setAssetIssuerCommunitySubAppModuleManager((RedeemPointCommunitySubAppModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE));
-            }
-
-            if (plugin instanceof DealsWithAssetIssuerWallet) {
-                ((DealsWithAssetIssuerWallet) plugin).setAssetIssuerManager((AssetIssuerWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_WALLET_ISSUER));
-            }
-            if (plugin instanceof DealsWithAssetUserWallet) {
-                ((DealsWithAssetUserWallet) plugin).setAssetUserManager((AssetUserWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET));
-            }
-            if (plugin instanceof DealsWithAssetRedeemPointWallet) {
-                ((DealsWithAssetRedeemPointWallet) plugin).setAssetReddemPointManager((AssetRedeemPointWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET));
-            }
-            if (plugin instanceof DealsWithAssetIssuerWalletSubAppModule) {
-                ((DealsWithAssetIssuerWalletSubAppModule) plugin).setWalletAssetIssuerManager((AssetIssuerWalletSupAppModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE));
-            }
-            if (plugin instanceof DealsWithAssetUserWalletSubAppModule) {
-                ((DealsWithAssetUserWalletSubAppModule) plugin).setWalletAssetUserManager((AssetUserWalletSubAppModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE));
-            }
-            if (plugin instanceof DealsWithAssetRedeemPointWalleSubAppModule) {
-                ((DealsWithAssetRedeemPointWalleSubAppModule) plugin).setWalletAssetRedeemPointManager((AssetRedeemPointWalletSubAppModule) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE));
-            }
-
             if (plugin instanceof DealsWithWsCommunicationsCloudClientManager) //////////////////////////////////////////////////////////////////////////////////////////////////////
                 ((DealsWithWsCommunicationsCloudClientManager) plugin).setWsCommunicationsCloudClientConnectionManager((WsCommunicationsCloudClientManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.WS_CLOUD_CLIENT)));
 
             if (plugin instanceof DealsWithOutgoingIntraActor) {
                 ((DealsWithOutgoingIntraActor) plugin).setOutgoingIntraActorManager((OutgoingIntraActorManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION, Plugins.OUTGOING_INTRA_ACTOR)));
-            }
-
-            if (plugin instanceof DealsWithCryptoAddressesNetworkService) {
-                ((DealsWithCryptoAddressesNetworkService) plugin).setCryptoAddressesManager((CryptoAddressesManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_ADDRESSES)));
-            }
-
-            if (plugin instanceof DealsWithCryptoPayment) {
-                ((DealsWithCryptoPayment) plugin).setCryptoPaymentManager((CryptoPaymentManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.REQUEST, Plugins.CRYPTO_PAYMENT_REQUEST)));
-            }
-
-            if (plugin instanceof DealsWithCryptoPaymentRequestNetworkService) {
-                ((DealsWithCryptoPaymentRequestNetworkService) plugin).setCryptoPaymentRequestManager((CryptoPaymentRequestManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_PAYMENT_REQUEST)));
-            }
-
-            if (plugin instanceof DealsWithCryptoTransmissionNetworkService) {
-                ((DealsWithCryptoTransmissionNetworkService) plugin).setCryptoTransmissionNetworkService((CryptoTransmissionNetworkServiceManager) fermatSystem.startAndGetPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_TRANSMISSION)));
             }
 
             if (plugin instanceof DealsWithCryptoBrokerIdentities){
@@ -1545,10 +1104,6 @@ public class Platform implements Serializable {
              */
             dealsWithLogManagersPlugins.put(descriptor, plugin);
         }
-
-    }
-
-    private void getPlugin() {
 
     }
 

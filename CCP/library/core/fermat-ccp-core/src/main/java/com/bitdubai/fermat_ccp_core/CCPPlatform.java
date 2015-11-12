@@ -18,7 +18,7 @@ import com.bitdubai.fermat_ccp_core.layer.wallet_module.WalletModuleLayer;
 
 /**
  * The class <code>com.bitdubai.fermat_ccp_core.CCPPlatform</code>
- * haves all the necessary business logic to start the CCP platform.
+ * contains all the necessary business logic to start the CCP platform.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */

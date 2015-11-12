@@ -4,11 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -29,28 +24,20 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetCryptoTransactionFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetIssuingVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events.AssetIssuingTransactionMonitorAgent;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.powermock.api.support.membermodification.MemberModifier;
 
@@ -62,14 +49,13 @@ import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Created by frank on 23/10/15.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class IssueAssetsTest {
-    AssetIssuingTransactionPluginRoot assetIssuingPluginRoot;
+    AssetIssuingDigitalAssetTransactionPluginRoot assetIssuingPluginRoot;
     AssetIssuingTransactionManager assetIssuingTransactionManager;
     DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
 
@@ -178,7 +164,7 @@ public class IssueAssetsTest {
     public void setUp() throws Exception {
         pluginId = UUID.randomUUID();
 
-        assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
+        assetIssuingPluginRoot = new AssetIssuingDigitalAssetTransactionPluginRoot();
         assetIssuingPluginRoot.setId(pluginId);
         assetIssuingPluginRoot.setErrorManager(errorManager);
         assetIssuingPluginRoot.setLogManager(logManager);
@@ -236,8 +222,8 @@ public class IssueAssetsTest {
 
         blockchainNetworkType = BlockchainNetworkType.REG_TEST;
 
-        MemberModifier.field(AssetIssuingTransactionPluginRoot.class, "assetIssuingTransactionManager").set(assetIssuingPluginRoot, assetIssuingTransactionManager);
-        MemberModifier.field(AssetIssuingTransactionPluginRoot.class, "digitalAssetIssuingVault").set(assetIssuingPluginRoot, digitalAssetIssuingVault);
+        MemberModifier.field(AssetIssuingDigitalAssetTransactionPluginRoot.class, "assetIssuingTransactionManager").set(assetIssuingPluginRoot, assetIssuingTransactionManager);
+        MemberModifier.field(AssetIssuingDigitalAssetTransactionPluginRoot.class, "digitalAssetIssuingVault").set(assetIssuingPluginRoot, digitalAssetIssuingVault);
         MemberModifier.field(AssetIssuingTransactionManager.class, "digitalAssetCryptoTransactionFactory").set(assetIssuingTransactionManager, digitalAssetCryptoTransactionFactory);
         MemberModifier.field(DigitalAssetCryptoTransactionFactory.class, "digitalAsset").set(digitalAssetCryptoTransactionFactory, digitalAsset);
         MemberModifier.field(DigitalAssetCryptoTransactionFactory.class, "bitcoinWalletBalance").set(digitalAssetCryptoTransactionFactory, bitcoinWalletBalance);

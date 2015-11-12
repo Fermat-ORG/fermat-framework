@@ -4,11 +4,14 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.events.IncomingCryptoMetadataReceive;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
@@ -24,6 +27,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -133,6 +138,7 @@ public class CryptoTransmissionAgent {
     private boolean flag=true;
 
 
+    private  EventManager eventManager;
     /**
      *  Constructor
      *  @param
@@ -153,7 +159,8 @@ public class CryptoTransmissionAgent {
             PlatformComponentProfile platformComponentProfile,
             ErrorManager errorManager,
             List<PlatformComponentProfile> remoteNetworkServicesRegisteredList,
-            ECCKeyPair identity) {
+            ECCKeyPair identity,
+            EventManager eventManager) {
 
         //this.communicationNetworkServiceLocal = communicationNetworkServiceLocal;
         this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionNetworkServicePluginRoot;
@@ -165,6 +172,7 @@ public class CryptoTransmissionAgent {
         this.remoteNetworkServicesRegisteredList = remoteNetworkServicesRegisteredList;
         this.identity = identity;
         this.platformComponentProfile = platformComponentProfile;
+        this.eventManager = eventManager;
 
 
         cacheResponseMetadataFromRemotes = new HashMap<String, CryptoTransmissionStates>();
@@ -555,6 +563,7 @@ public class CryptoTransmissionAgent {
                                     System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
 
                                     //registerEvent(EventType.INCOMING_CRYPTO_METADATA, new IncomingCryptoMetadataEventHandler(this));
+                                    lauchNotification();
                                     break;
 
                                 case CREDITED_IN_DESTINATION_WALLET:
@@ -710,6 +719,12 @@ public class CryptoTransmissionAgent {
 
     public boolean isRunning(){
         return running;
+    }
+
+    private void lauchNotification(){
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_METADATA);
+        IncomingCryptoMetadataReceive incomingCryptoMetadataReceive = (IncomingCryptoMetadataReceive) fermatEvent;
+        eventManager.raiseEvent(incomingCryptoMetadataReceive);
     }
 
 }

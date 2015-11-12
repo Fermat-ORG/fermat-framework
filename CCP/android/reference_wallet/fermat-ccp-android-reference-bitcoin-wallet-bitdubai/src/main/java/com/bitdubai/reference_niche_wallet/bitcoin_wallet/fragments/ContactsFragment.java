@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,10 +24,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -199,30 +202,44 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
     private void setUpFAB() {
         // in Activity Context
+        FrameLayout frameLayout = new FrameLayout(getActivity());
+
+        FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+
+        frameLayout.setLayoutParams(lbs);
+
         ImageView icon = new ImageView(getActivity()); // Create an icon
         icon.setImageResource(R.drawable.ic_action_add_grey);
 
+        frameLayout.addView(icon);
+
+
         FloatingActionButton actionButton = new FloatingActionButton.Builder(getActivity())
-                .setContentView(icon)//.setBackgroundDrawable(R.drawable.selector_contact)
+                .setContentView(frameLayout)
+                .setBackgroundDrawable(R.drawable.btn_contact_selector)
                 .build();
+
+
+
 
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
 // repeat many times:
         ImageView itemIcon = new ImageView(getActivity());
-        itemIcon.setImageResource(R.drawable.ic_action_add_person_grey);
-        SubActionButton button1 = itemBuilder.setContentView(itemIcon).build();
+        itemIcon.setImageResource(R.drawable.ic_contact_float_new_contact_blue);
+        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setLayoutParams(new FrameLayout.LayoutParams(160,160)).build();
         button1.setId(ID_BTN_EXTRA_USER);
+//        button1.setLayoutParams();
 
 
         ImageView itemIcon2 = new ImageView(getActivity());
-        itemIcon2.setImageResource(R.drawable.ic_action_add_person_grey);
+        itemIcon2.setImageResource(R.drawable.ic_contact_float_new_contact);
         SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
         button2.setId(ID_BTN_INTRA_USER);
+
 
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .addSubActionView(button1)
                 .addSubActionView(button2)
-                        // ...
                 .attachTo(actionButton)
                 .build();
 
