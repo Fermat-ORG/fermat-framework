@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GetDatabaseTableContentTest {
-    AssetIssuingTransactionPluginRoot assetIssuingPluginRoot;
+    AssetIssuingDigitalAssetTransactionPluginRoot assetIssuingPluginRoot;
     UUID pluginId;
 
     @Mock
@@ -47,7 +47,7 @@ public class GetDatabaseTableContentTest {
 
     @Before
     public void setUp() throws Exception {
-        assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
+        assetIssuingPluginRoot = new AssetIssuingDigitalAssetTransactionPluginRoot();
         assetIssuingPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
 
         pluginId = UUID.randomUUID();

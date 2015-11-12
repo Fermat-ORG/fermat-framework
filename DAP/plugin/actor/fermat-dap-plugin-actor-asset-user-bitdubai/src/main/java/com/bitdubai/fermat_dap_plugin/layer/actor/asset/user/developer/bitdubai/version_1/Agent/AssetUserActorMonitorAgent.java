@@ -12,7 +12,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCre
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetActorUserPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetUserActorPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -39,12 +39,12 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
     UUID pluginId;
     String userPublicKey;
     AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
-    AssetActorUserPluginRoot assetActorUserPluginRoot;
+    AssetUserActorPluginRoot assetActorUserPluginRoot;
 
     public AssetUserActorMonitorAgent(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem,
                                       ErrorManager errorManager, UUID pluginId,
                                       AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager,
-                                      AssetUserActorDao assetUserActorDao, AssetActorUserPluginRoot assetActorUserPluginRoot) {
+                                      AssetUserActorDao assetUserActorDao, AssetUserActorPluginRoot assetActorUserPluginRoot) {
         this.pluginId = pluginId;
         this.eventManager = eventManager;
         this.errorManager = errorManager;
@@ -146,12 +146,12 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
                     List<ActorAssetUser> list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
                     if (list.isEmpty()) {
                         System.out.println("Actor Asset User - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
-                        //TODO List Empty State = DISCONNECTED_REMOTELY
+                        //TODO List Empty State = REGISTERED_OFFLINE
                         System.out.println("Actor Asset User - Se procede actualizar Lista en TABLA (si) Existiera algun Registro");
                         assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
                     } else {
                         System.out.println("Actor Asset User - Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
-                        //TODO new Actors State = PENDING_LOCALLY_ACCEPTANCE
+                        //TODO new Actors State = REGISTERED_ONLINE
                         int recordInsert = assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
                         System.out.println("Actor Asset User - Se Registro en tabla REGISTER Lista de: " + recordInsert + " Actors desde Actor Network Service");
                     }

@@ -1,11 +1,9 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 import java.util.Arrays;
@@ -15,19 +13,19 @@ import java.util.Arrays;
  */
 public class AssetUserActorRecord implements ActorAssetUser {
 
-    private String          publicLinkedIdentity    ;
-    private String          publicKey               ;
-    private String          name                    ;
-    private String          age                     ;
-    private Genders         genders                 ;
-    private ConnectionState connectionState         ;
-    private Location        location                ;
-    private Double          locationLatitude        ;
-    private Double          locationLongitude       ;
-    private long            registrationDate        ;
-    private long            lastConnectionDate      ;
-    private CryptoAddress   cryptoAddress           ;
-    private byte[]          profileImage            ;
+    private String              publicLinkedIdentity    ;
+    private String              publicKey               ;
+    private String              name                    ;
+    private String              age                     ;
+    private Genders             genders                 ;
+    private DAPConnectionState  dapConnectionState      ;
+    private Location            location                ;
+    private Double              locationLatitude        ;
+    private Double              locationLongitude       ;
+    private long                registrationDate        ;
+    private long                lastConnectionDate      ;
+    private CryptoAddress       cryptoAddress           ;
+    private byte[]              profileImage            ;
 
     /**
      * Constructor
@@ -59,38 +57,15 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.genders                = Genders.INDEFINITE        ;
 //        if(!age.isEmpty())
 //            this.age = age;
-        this.connectionState        = ConnectionState.CONNECTED ;
+        this.dapConnectionState        = DAPConnectionState.REGISTERED_ONLINE ;
 
     }
-
-
-//    public AssetUserActorRecord(String publicKey,
-//                                String name,
-//                                byte[] profileImage,
-//                                Double locationA,
-//                                Double locationL) {
-//
-//        this.name                   = name                          ;
-//        this.publicKey              = publicKey                     ;
-//        this.profileImage           = profileImage.clone()          ;
-//
-//        if (locationA != null)
-//            this.locationLatitude   = locationA                     ;
-//        if(locationL != null)
-//            this.locationLongitude  = locationL                     ;
-//
-//        this.genders                = Genders.INDEFINITE            ;
-////        this.age = age;
-////        this.cryptoAddress = cryptoAddress;
-//        this.connectionState        = ConnectionState.CONNECTED     ;
-//
-//    }
 
     public AssetUserActorRecord(String publicKey,
                                 String name,
                                 String age,
                                 Genders genders,
-                                ConnectionState connectionState,
+                                DAPConnectionState dapConnectionState,
                                 Double locationLatitude,
                                 Double locationLongitude,
                                 CryptoAddress cryptoAddress,
@@ -98,23 +73,23 @@ public class AssetUserActorRecord implements ActorAssetUser {
                                 Long lastConnectionDate,
                                 byte[] profileImage){
 
-        this.publicKey              = publicKey             ;
-        this.name                   = name                  ;
-        this.age                    = age                   ;
-        this.genders                = genders               ;
-        this.connectionState        = connectionState       ;
+        this.publicKey                  = publicKey             ;
+        this.name                       = name                  ;
+        this.age                        = age                   ;
+        this.genders                    = genders               ;
+        this.dapConnectionState         = dapConnectionState    ;
 
         if(cryptoAddress != null)
-            this.cryptoAddress      = cryptoAddress         ;
+            this.cryptoAddress          = cryptoAddress         ;
 
         if (locationLatitude != null)
-            this.locationLatitude       = locationLatitude  ;
+            this.locationLatitude       = locationLatitude      ;
         if(locationLongitude != null)
-            this.locationLongitude      = locationLongitude ;
+            this.locationLongitude      = locationLongitude     ;
 
-        this.registrationDate       = registrationDate      ;
-        this.lastConnectionDate     = lastConnectionDate    ;
-        this.profileImage           = profileImage.clone()  ;
+        this.registrationDate           = registrationDate      ;
+        this.lastConnectionDate         = lastConnectionDate    ;
+        this.profileImage               = profileImage.clone()  ;
 
     }
 
@@ -122,23 +97,23 @@ public class AssetUserActorRecord implements ActorAssetUser {
                                 final String name,
                                 final String age,
                                 final Genders genders,
-                                final ConnectionState connectionState,
+                                final DAPConnectionState dapConnectionState,
                                 final Double locationLatitude,
                                 final Double locationLongitude,
                                 final Long registrationDate,
                                 final Long lastConnectionDate,
                                 final byte[] profileImage) {
 
-        this.publicKey          =       publicKey               ;
-        this.name               =       name                    ;
-        this.age                =       age                     ;
-        this.genders            =       genders                 ;
-        this.connectionState    =       connectionState         ;
-        this.locationLatitude   =       locationLatitude        ;
-        this.locationLongitude  =       locationLongitude       ;
-        this.registrationDate   =       registrationDate        ;
-        this.lastConnectionDate =       lastConnectionDate      ;
-        this.profileImage       =       profileImage.clone()    ;
+        this.publicKey              =       publicKey               ;
+        this.name                   =       name                    ;
+        this.age                    =       age                     ;
+        this.genders                =       genders                 ;
+        this.dapConnectionState     =       dapConnectionState      ;
+        this.locationLatitude       =       locationLatitude        ;
+        this.locationLongitude      =       locationLongitude       ;
+        this.registrationDate       =       registrationDate        ;
+        this.lastConnectionDate     =       lastConnectionDate      ;
+        this.profileImage           =       profileImage.clone()    ;
 
     }
 
@@ -249,15 +224,15 @@ public class AssetUserActorRecord implements ActorAssetUser {
      * @return the Connection state
      */
     @Override
-    public ConnectionState getConnectionState() {
-        return this.connectionState;
+    public DAPConnectionState getDapConnectionState() {
+        return this.dapConnectionState;
     }
 
-    public void setConnectionState(ConnectionState connectionState) {
-        if(connectionState != null)
-           this.connectionState = connectionState;
+    public void setConnectionState(DAPConnectionState dapConnectionState) {
+        if(dapConnectionState != null)
+           this.dapConnectionState = dapConnectionState;
         else
-            this.connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+            this.dapConnectionState = DAPConnectionState.REGISTERED_LOCALLY;
     }
 
     /**
@@ -346,7 +321,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
                 ", name='" + name + '\'' +
                 ", age='" + age + '\'' +
                 ", genders=" + genders +
-                ", connectionState=" + connectionState +
+                ", dapConnectionState=" + dapConnectionState +
                 ", location=" + location +
                 ", locationLatitude=" + locationLatitude +
                 ", locationLongitude=" + locationLongitude +

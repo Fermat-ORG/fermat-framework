@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressesNewsEvent;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetActorUserPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetUserActorPluginRoot;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/09/2015.
@@ -17,9 +17,9 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.
  */
 public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
 
-    AssetActorUserPluginRoot assetActorUserPluginRoot;
+    AssetUserActorPluginRoot assetActorUserPluginRoot;
 
-    public CryptoAddressRequestedEventHandler(AssetActorUserPluginRoot assetActorUserPluginRoot){
+    public CryptoAddressRequestedEventHandler(AssetUserActorPluginRoot assetActorUserPluginRoot){
              this.assetActorUserPluginRoot = assetActorUserPluginRoot;
     }
 
