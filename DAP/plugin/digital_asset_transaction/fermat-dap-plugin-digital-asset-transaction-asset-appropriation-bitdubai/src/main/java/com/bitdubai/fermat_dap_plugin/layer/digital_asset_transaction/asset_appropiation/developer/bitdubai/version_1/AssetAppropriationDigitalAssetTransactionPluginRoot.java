@@ -128,7 +128,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
                 databaseFactory.createDatabase(pluginId);
             }
             assetVault = new AssetAppropriationVault(pluginId, pluginFileSystem);
-            recorderService = new AssetAppropriationRecorderService(pluginId, eventManager, pluginDatabaseSystem);
+            recorderService = new AssetAppropriationRecorderService(pluginId, eventManager, pluginDatabaseSystem, assetVault);
             recorderService.start();
             monitorAgent = new AssetAppropriationMonitorAgent(assetVault, pluginDatabaseSystem, logManager, errorManager, pluginId, assetVaultManager);
             monitorAgent.start();
