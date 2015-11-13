@@ -600,7 +600,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
 
             switch (position){
                 case 0:
-                    imageView_profile.setImageResource(R.drawable.mati_profile);
+                    imageView_profile.setImageResource(R.drawable.profile_image);
                     break;
                 case 1:
                     imageView_profile.setImageResource(R.drawable.caroline_profile_picture);

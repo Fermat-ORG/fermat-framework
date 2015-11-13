@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -27,20 +28,25 @@ public class FragmentsCommons {
         RelativeLayout relativeLayout = new RelativeLayout(activity);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 180);
         relativeLayout.setLayoutParams(layoutParams);
-        View view = inflater.inflate(R.layout.navigation_view_row_first, relativeLayout, true);
-        ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
-        if(intraUserLoginIdentity!=null) {
-            if (intraUserLoginIdentity.getProfileImage() != null) {
-                if (intraUserLoginIdentity.getProfileImage().length > 0) {
-                    imageView.setImageBitmap((BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length)));
-                } else
-                    Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
+        try {
+
+            View view = inflater.inflate(R.layout.navigation_view_row_first, relativeLayout, true);
+            ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
+            if (intraUserLoginIdentity != null) {
+                if (intraUserLoginIdentity.getProfileImage() != null) {
+                    if (intraUserLoginIdentity.getProfileImage().length > 0) {
+                        imageView.setImageBitmap((BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length)));
+                    } else
+                        Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
+                }
+                FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
+                fermatTextView.setText(intraUserLoginIdentity.getAlias());
             }
-            FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
-            fermatTextView.setText(intraUserLoginIdentity.getAlias());
+
+            return view;
+        }catch (OutOfMemoryError outOfMemoryError){
+            Toast.makeText(activity,"Error: out of memory ",Toast.LENGTH_SHORT).show();
         }
-
-        return view;
-
-    }
+        return relativeLayout;
+        }
 }

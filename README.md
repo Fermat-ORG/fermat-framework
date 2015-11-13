@@ -257,7 +257,7 @@ then learn how to pull the repo and hack on Fermat. Then say hi at our [IRC DEV 
 
 #### Others
 
-You don't need to be a developer to participate on the project. There are many ways to do it and we explain each one of them at the [How to Prticipate Guide](https://github.com/bitDubai/participate-now).
+You don't need to be a developer to participate on the project. There are many ways to do it and we explain each one of them at the [How to Participate Guide](https://github.com/bitDubai/participate-now).
 
 ![alt text](https://github.com/bitDubai/fermat-graphic-design/blob/master/3D%20Design/FermatBitcoinCoinModel/FinalRenders/Bitcoin.jpg "Fermat Coin")
 

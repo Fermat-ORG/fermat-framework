@@ -13,6 +13,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantS
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDAO;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -33,30 +34,33 @@ public class AssetAppropriationRecorderService implements AssetTransactionServic
         serviceStatus = ServiceStatus.CREATED;
     }
 
-    private EventManager eventManager;
+    private final EventManager eventManager;
     private ErrorManager errorManager;
-    private PluginDatabaseSystem pluginDatabaseSystem;
-    private UUID pluginId;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final UUID pluginId;
     private List<FermatEventListener> listenersAdded;
 
     {
         listenersAdded = new ArrayList<>();
     }
 
+    private final AssetAppropriationVault assetVault;
     //CONSTRUCTORS
 
-    public AssetAppropriationRecorderService(UUID pluginId, EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem) throws CantSetObjectException {
+    public AssetAppropriationRecorderService(UUID pluginId, EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, AssetAppropriationVault assetVault) throws CantSetObjectException {
         this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
         this.eventManager = Validate.verifySetter(eventManager, "eventManager is null");
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
+        this.assetVault = Validate.verifySetter(assetVault, "assetVault is null");
     }
+
 
     //PUBLIC METHODS
 
     void receiveNewEvent(FermatEvent event) throws CantSaveEventException {
         String context = "pluginDatabaseSystem: " + pluginDatabaseSystem + " - pluginId: " + pluginId + " - event: " + event;
 
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId)) {
+        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             dao.saveNewEvent(event);
         } catch (DatabaseNotFoundException | CantOpenDatabaseException e) {
             throw new CantSaveEventException(e, context, CantSaveEventException.DEFAULT_MESSAGE);

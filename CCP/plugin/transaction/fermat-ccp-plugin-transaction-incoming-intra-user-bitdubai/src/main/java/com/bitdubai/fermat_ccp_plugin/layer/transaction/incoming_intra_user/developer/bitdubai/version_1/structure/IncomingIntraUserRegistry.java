@@ -37,13 +37,13 @@ public class IncomingIntraUserRegistry {
     }
 
     /**
-     * IncomingExtraUserRegistry member variables.
+     * IncomingIntraUserRegistry member variables.
      */
     private IncomingIntraUserDao incomingIntraUserDao;
 
 
     /**
-     * IncomingExtraUserRegistry member methods.
+     * IncomingIntraUserRegistry member methods.
      */
     public void initialize(UUID pluginId) throws com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIncomingIntraUserCryptoRegistryException {
         this.incomingIntraUserDao = new IncomingIntraUserDao(this.pluginDatabaseSystem);
