@@ -234,7 +234,6 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
                 this.addonNeededReferences.remove(avr);
 
-                System.out.println("---------->>> Assigned reference: "+avr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
                         "Working plugin: "+this.getPluginVersionReference().toString3()+
@@ -276,7 +275,6 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
                 this.pluginNeededReferences.remove(pvr);
 
-                System.out.println("---------->>> Assigned reference: "+pvr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
                         "Working plugin: "+this.getPluginVersionReference().toString3()+
