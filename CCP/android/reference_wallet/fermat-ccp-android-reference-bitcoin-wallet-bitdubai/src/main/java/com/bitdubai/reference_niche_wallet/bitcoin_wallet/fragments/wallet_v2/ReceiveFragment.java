@@ -479,7 +479,7 @@ public  class ReceiveFragment extends FermatWalletFragment {
 
                     switch (groupPosition) {
                         case 1:
-                            profile_picture.setImageResource(R.drawable.mati_profile);
+                            profile_picture.setImageResource(R.drawable.profile_image);
                             break;
                         case 2:
                             profile_picture.setImageResource(R.drawable.juan_profile_picture);

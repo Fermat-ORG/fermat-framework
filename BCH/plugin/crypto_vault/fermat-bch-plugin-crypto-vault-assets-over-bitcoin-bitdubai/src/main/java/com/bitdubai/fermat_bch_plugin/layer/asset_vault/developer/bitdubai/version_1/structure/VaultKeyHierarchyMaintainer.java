@@ -233,9 +233,9 @@ class VaultKeyHierarchyMaintainer implements Agent {
             List<ECKey> childKeys = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
                 // I derive the key at position i
-                DeterministicKey derivedPubKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
+                DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
                 // I add this key to the ECKey list
-                childKeys.add(ECKey.fromPublicOnly(derivedPubKey.getPubKeyPoint()));
+                childKeys.add(ECKey.fromPrivate(derivedKey.getPrivKey()));
             }
 
             return childKeys;

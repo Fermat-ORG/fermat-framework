@@ -53,8 +53,6 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
         List<AssetUserActorRecord> assetUserActorRecords = new ArrayList<>();
 
         try {
-            actorAssetUserManager.registerActorInActorNetowrkSerice();
-
             for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered()) {
                 AssetUserActorRecord assetUserActorRecord = (AssetUserActorRecord) actorAssetUser;
                 assetUserActorRecords.add(assetUserActorRecord);
@@ -62,8 +60,6 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
         } catch (CantGetAssetUserActorsException e) {
             e.printStackTrace(); // TODO MAKE USER OF ERROR MANAGER
-        } catch (CantCreateAssetUserActorException e) {
-            e.printStackTrace();// TODO MAKE USER OF ERROR MANAGER
         }
         return assetUserActorRecords;
     }

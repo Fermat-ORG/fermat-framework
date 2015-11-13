@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
 import java.util.Arrays;
@@ -12,17 +12,17 @@ import java.util.Arrays;
  */
 public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
-    private String          publicLinkedIdentity    ;
-    private String          name                    ;
-    private String          description             ;
-    private String          publicKey               ;
-    private long            registrationDate        ;
-    private ConnectionState connectionState         ;
-    private Location        location                ;
-    private Double          locationLatitude        ;
-    private Double          locationLongitude       ;
-    private CryptoAddress   cryptoAddress           ;
-    private byte[]          profileImage            ;
+    private String              publicLinkedIdentity    ;
+    private String              name                    ;
+    private String              description             ;
+    private String              publicKey               ;
+    private long                registrationDate        ;
+    private DAPConnectionState  dapConnectionState      ;
+    private Location            location                ;
+    private Double              locationLatitude        ;
+    private Double              locationLongitude       ;
+    private CryptoAddress       cryptoAddress           ;
+    private byte[]              profileImage            ;
 
     /**
      * Constructor
@@ -58,35 +58,36 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         }
     }
 
-    public AssetIssuerActorRecord(String name,
-                                  String publicKey,
+    public AssetIssuerActorRecord(String publicKey,
+                                  String name,
                                   byte[] profileImage,
                                   long registrationDate) {
 
-        this.name               = name                          ;
-        this.publicKey          = publicKey                     ;
-        this.profileImage       = profileImage.clone()          ;
-        this.registrationDate   = registrationDate              ;
-        this.connectionState    = ConnectionState.CONNECTED     ;
+        this.name               = name                                   ;
+        this.publicKey          = publicKey                              ;
+        this.profileImage       = profileImage.clone()                   ;
+        this.registrationDate   = registrationDate                       ;
+        this.dapConnectionState = dapConnectionState.REGISTERED_ONLINE   ;
     }
 
     public AssetIssuerActorRecord(String publicKey,
                                   String name,
-                                  ConnectionState connectionState,
+                                  DAPConnectionState dapConnectionState,
                                   double locationLatitude,
                                   double locationLongitude,
                                   long registrationDate,
                                   byte[] profileImage,
                                   String description) {
 
-        this.publicKey          = publicKey             ;
-        this.name               = name                  ;
-        this.connectionState    = connectionState       ;
-        this.locationLatitude   = locationLatitude      ;
-        this.locationLongitude  = locationLongitude     ;
-        this.registrationDate   = registrationDate      ;
-        this.profileImage       = profileImage.clone()  ;
-        this.description        = description           ;
+        this.publicKey              = publicKey             ;
+        this.name                   = name                  ;
+        this.dapConnectionState     = dapConnectionState    ;
+        this.locationLatitude       = locationLatitude      ;
+        this.locationLongitude      = locationLongitude     ;
+        this.registrationDate       = registrationDate      ;
+        this.profileImage           = profileImage.clone()  ;
+        if(!description.isEmpty())
+            this.description        = description           ;
     }
 
 
@@ -153,12 +154,12 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
      * @return the Coonection state
      */
     @Override
-    public ConnectionState getConnectionState() {
-        return this.connectionState;
+    public DAPConnectionState getDapConnectionState() {
+        return this.dapConnectionState;
     }
 
-    public void setContactState(ConnectionState connectionState) {
-        this.connectionState = connectionState;
+    public void setDapConnectionState(DAPConnectionState dapConnectionState) {
+        this.dapConnectionState = dapConnectionState;
     }
 
     /**
@@ -212,7 +213,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                 ", description='" + description + '\'' +
                 ", publicKey='" + publicKey + '\'' +
                 ", registrationDate=" + registrationDate +
-                ", connectionState=" + connectionState +
+                ", DAPConnectionState=" + dapConnectionState +
                 ", location=" + location +
                 ", locationLatitude=" + locationLatitude +
                 ", locationLongitude=" + locationLongitude +

@@ -55,17 +55,6 @@ public interface ActorAssetUserManager {
      */
     List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException;
 
-//  void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException;
-
-    /**
-     * The method <code>registerActorInActorNetowrkSerice</code> Register or Add Actor a Lst in
-     * Actor Network Service
-     *
-     * @throws CantCreateAssetUserActorException
-     */
-    //TODO Metodo sera removido luego que existan las Sub App Identity
-    void registerActorInActorNetowrkSerice() throws CantCreateAssetUserActorException;
-
     /**
      * The method <code>connectToActorAssetUser</code> Stablish Connection
      * with Issuer (Requester) and Lists Users for get a CryptoAdress (Delivered)
