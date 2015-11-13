@@ -152,7 +152,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
             monitorAgent.start();
 
             //TODO REMOVE TEST METHOD.
-            test();
+            //test();
         } catch (Exception e) {
             throw new CantStartPluginException(FermatException.wrapException(e), context, e.getMessage());
         }
