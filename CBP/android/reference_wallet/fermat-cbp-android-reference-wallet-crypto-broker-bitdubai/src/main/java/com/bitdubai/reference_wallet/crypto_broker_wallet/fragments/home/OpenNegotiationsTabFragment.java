@@ -105,9 +105,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                     actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
                 else
                     actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
-
-                actionBar.setHomeButtonEnabled(true);
-                actionBar.setIcon(R.drawable.ic_action_menu);
             }
         } else {
             ActionBar actionBar = activity.getActionBar();
