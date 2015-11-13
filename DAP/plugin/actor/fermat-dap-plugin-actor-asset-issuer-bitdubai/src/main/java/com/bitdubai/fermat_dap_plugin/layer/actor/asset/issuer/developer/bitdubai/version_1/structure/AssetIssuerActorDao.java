@@ -2,7 +2,6 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdub
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -26,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -126,7 +126,7 @@ public class AssetIssuerActorDao implements Serializable {
              * change status
              */
 //            if (assetIssuerExists(assetIssuerActorRecord.getPublicKey())) {
-//                this.updateAssetIssuerConnectionState(assetIssuerLoggedInPublicKey, assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getConnectionState());
+//                this.updateAssetIssuerDAPConnectionState(assetIssuerLoggedInPublicKey, assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getDAPConnectionState());
 //            } else {
                 /**
                  * Get actual date
@@ -144,7 +144,7 @@ public class AssetIssuerActorDao implements Serializable {
                     record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getPublicKey());
                     record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME, assetIssuerActorRecord.getName());
 
-                    record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, assetIssuerActorRecord.getConnectionState().getCode());
+                    record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, assetIssuerActorRecord.getDapConnectionState().getCode());
 
                     record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LATITUDE_COLUMN_NAME, assetIssuerActorRecord.getLocationLatitude());
                     record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME, assetIssuerActorRecord.getLocationLongitude());
@@ -181,7 +181,7 @@ public class AssetIssuerActorDao implements Serializable {
              * change status
              */
             if (assetIssuerExists(assetIssuerActorRecord.getPublicKey())) {
-                this.updateAssetIssuerConnectionState(assetIssuerLoggedInPublicKey, assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getConnectionState());
+                this.updateAssetIssuerDAPConnectionState(assetIssuerLoggedInPublicKey, assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getDapConnectionState());
             } else {
                 /**
                  * Get actual date
@@ -192,7 +192,7 @@ public class AssetIssuerActorDao implements Serializable {
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getPublicKey());
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetIssuerLoggedInPublicKey);
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME, assetIssuerActorRecord.getName());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, assetIssuerActorRecord.getConnectionState().getCode());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, assetIssuerActorRecord.getDapConnectionState().getCode());
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_EXTENDED_COLUMN_NAME, "-");
@@ -226,7 +226,7 @@ public class AssetIssuerActorDao implements Serializable {
              * change status
              */
             if (assetIssuerRegisteredExists(assetIssuerActorRecord.getPublicKey())) {
-                updateAssetIssuerConnectionStateRegistered(assetIssuerActorRecord.getPublicKey(), ConnectionState.CONNECTED);
+                updateAssetIssuerDAPConnectionStateRegistered(assetIssuerActorRecord.getPublicKey(), DAPConnectionState.REGISTERED_ONLINE);
             } else {
                 /**
                  * Get actual date
@@ -236,7 +236,7 @@ public class AssetIssuerActorDao implements Serializable {
 
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getPublicKey());
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME, assetIssuerActorRecord.getName());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, assetIssuerActorRecord.getConnectionState().getCode());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, assetIssuerActorRecord.getDapConnectionState().getCode());
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
@@ -288,7 +288,7 @@ public class AssetIssuerActorDao implements Serializable {
             for (DatabaseTableRecord record : table.getRecords()) {
                 //UPDATE PROPERTIES
 
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, actorAssetIssuer.getConnectionState().getCode());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, actorAssetIssuer.getDapConnectionState().getCode());
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME, actorAssetIssuer.getName());
                 record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LATITUDE_COLUMN_NAME, actorAssetIssuer.getLocation().getLatitude());
                 record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME, actorAssetIssuer.getLocation().getLongitude());
@@ -313,7 +313,7 @@ public class AssetIssuerActorDao implements Serializable {
     }
 
 
-    public void updateAssetIssuerConnectionState(String assetIssuerLoggedInPublicKey, String assetIssuerToAddPublicKey, ConnectionState connectionState) throws CantUpdateAssetIssuerException {
+    public void updateAssetIssuerDAPConnectionState(String assetIssuerLoggedInPublicKey, String assetIssuerToAddPublicKey, DAPConnectionState dapConnectionState) throws CantUpdateAssetIssuerException {
 
         DatabaseTable table;
 
@@ -332,13 +332,13 @@ public class AssetIssuerActorDao implements Serializable {
 
             // 2) Find the Asset Issuer , filter by keys.
             table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerToAddPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetIssuerLoggedInPublicKey, DatabaseFilterType.EQUAL);
+//            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetIssuerLoggedInPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
             // 3) Get Asset Issuer record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 table.updateRecord(record);
             }
@@ -353,7 +353,7 @@ public class AssetIssuerActorDao implements Serializable {
     }
 
 
-    public void updateAssetIssuerConnectionStateRegistered(String assetIssuerToAddPublicKey, ConnectionState connectionState) throws CantUpdateAssetIssuerException {
+    public void updateAssetIssuerDAPConnectionStateRegistered(String assetIssuerToAddPublicKey, DAPConnectionState dapDAPConnectionState) throws CantUpdateAssetIssuerException {
 
         DatabaseTable table;
 
@@ -377,7 +377,7 @@ public class AssetIssuerActorDao implements Serializable {
 
             // 3) Get Asset Issuer record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapDAPConnectionState.getCode());
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 table.updateRecord(record);
             }
@@ -401,7 +401,7 @@ public class AssetIssuerActorDao implements Serializable {
 
             for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuerRecord) {
                     if (assetIssuerRegisteredExists(actorAssetIssuer.getPublicKey())) {
-                        this.updateAssetIssuerConnectionStateActorNetworService(actorAssetIssuer.getPublicKey(), actorAssetIssuer.getConnectionState());
+                        this.updateAssetIssuerDAPConnectionStateActorNetworService(actorAssetIssuer.getPublicKey(), actorAssetIssuer.getDapConnectionState());
                     } else {
                         /**
                          * Get actual date
@@ -424,11 +424,7 @@ public class AssetIssuerActorDao implements Serializable {
                         record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetIssuer.getPublicKey());
                         record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME, actorAssetIssuer.getName());
 
-                        System.out.println("Actor Asset User AÑADIDO a tabla REGISTER: " + actorAssetIssuer.getName());
-                        System.out.println("Actor Asset User AÑADIDO a tabla REGISTER: " + ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
-
-                        //TODO se le coloca estado PENDING_LOCALLY_ACCEPTANCE indicando registro local  "Visible en Community".
-                       record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, ConnectionState.PENDING_LOCALLY_ACCEPTANCE.getCode());//actorAssetUser.getConnectionState().getCode());
+                       record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
 
                        if (actorAssetIssuer.getLocationLatitude() != null) {
                            record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME, actorAssetIssuer.getLocationLatitude());
@@ -457,7 +453,7 @@ public class AssetIssuerActorDao implements Serializable {
                     }
                 }
             if(actorAssetIssuerRecord.isEmpty()){
-                this.updateAssetIssuerConnectionStateActorNetworService(ConnectionState.DISCONNECTED_REMOTELY);
+                this.updateAssetIssuerDAPConnectionStateActorNetworService(DAPConnectionState.REGISTERED_OFFLINE);
             }
 
             database.closeDatabase();
@@ -473,7 +469,7 @@ public class AssetIssuerActorDao implements Serializable {
         return recordInsert;
     }
 
-    public void updateAssetIssuerConnectionStateActorNetworService(ConnectionState connectionState) throws CantUpdateAssetIssuerException {
+    public void updateAssetIssuerDAPConnectionStateActorNetworService(DAPConnectionState dapDAPConnectionState) throws CantUpdateAssetIssuerException {
         DatabaseTable table;
 
         try {
@@ -491,10 +487,8 @@ public class AssetIssuerActorDao implements Serializable {
             if(table.getRecords().size() > 0) {
                 // 3) Get Asset User record and update state.
                 for (DatabaseTableRecord record : table.getRecords()) {
-                    System.out.println("Actor Asset User Actualizando tabla REGISTER - Desde lista VACIA: "+record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME));
-                    System.out.println("Actor Asset User Actualizando tabla REGISTER - Desde lista VACIA: "+ ConnectionState.DISCONNECTED_REMOTELY);
 
-                    record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
+                    record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapDAPConnectionState.getCode());
 
 //                if(cryptoAddress != null) {
 //                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
@@ -517,7 +511,7 @@ public class AssetIssuerActorDao implements Serializable {
         }
     }
 
-    public void updateAssetIssuerConnectionStateActorNetworService(String assetIssuerToAddPublicKey, ConnectionState connectionState) throws CantUpdateAssetIssuerException {
+    public void updateAssetIssuerDAPConnectionStateActorNetworService(String assetIssuerToAddPublicKey, DAPConnectionState dapConnectionState) throws CantUpdateAssetIssuerException {
 
         DatabaseTable table;
 
@@ -541,7 +535,7 @@ public class AssetIssuerActorDao implements Serializable {
 
             // 3) Get Asset Issuer record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 table.updateRecord(record);
             }
@@ -578,7 +572,7 @@ public class AssetIssuerActorDao implements Serializable {
 
             // 2) Find all Asset Users.
             table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetIssuerLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
@@ -601,7 +595,7 @@ public class AssetIssuerActorDao implements Serializable {
         return list;
     }
 
-    public List<ActorAssetIssuer> getAssetIssuers(String aasetUserLoggedInPublicKey, ConnectionState connectionState, int max, int offset) throws CantGetAssetIssuersListException {
+    public List<ActorAssetIssuer> getAssetIssuers(String aasetUserLoggedInPublicKey, DAPConnectionState dapDAPConnectionState, int max, int offset) throws CantGetAssetIssuersListException {
 
         // Setup method.
         List<ActorAssetIssuer> list = new ArrayList<>(); // Asset Issuer Actor list.
@@ -623,7 +617,7 @@ public class AssetIssuerActorDao implements Serializable {
             }
             // 2) Find  Asset Users by state.
             table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, aasetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, dapDAPConnectionState.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
@@ -740,8 +734,8 @@ public class AssetIssuerActorDao implements Serializable {
             // 3) Get Asset Issuer Recorod.
             for (DatabaseTableRecord record : table.getRecords()) {
                 // Add records to list.
-                list.add(new AssetIssuerActorRecord(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME),
-                        record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
+                list.add(new AssetIssuerActorRecord(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
+                        record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME),
                         getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME)));
             }
@@ -776,7 +770,7 @@ public class AssetIssuerActorDao implements Serializable {
             }
             // 2) Find  Asset Users by Connection State.
 
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -849,7 +843,7 @@ public class AssetIssuerActorDao implements Serializable {
             //Inicializar el AssetIssuerActorRecord, nombre y public key son obligatorios.
             AssetIssuerActorRecord assetIssuerActorRecord = new AssetIssuerActorRecord(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME), record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME));
 
-            assetIssuerActorRecord.setContactState(ConnectionState.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME)));
+            assetIssuerActorRecord.setDapConnectionState(DAPConnectionState.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME)));
             assetIssuerActorRecord.setProfileImage(getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME)));
             assetIssuerActorRecord.setDescription(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DESCRIPTION_COLUMN_NAME));
             assetIssuerActorRecord.setRegistrationDate(record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTRATION_DATE_COLUMN_NAME));
@@ -960,17 +954,11 @@ public class AssetIssuerActorDao implements Serializable {
         AssetIssuerActorRecord actorAssetIssuer = null;
         for (DatabaseTableRecord record : records) {
 
-//            CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME),
-//                    CryptoCurrency.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME)));
-
             actorAssetIssuer = new AssetIssuerActorRecord(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME),
                     record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME),
-//                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_AGE_COLUMN_NAME),
-//                    Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GENDER_COLUMN_NAME)),
-                    ConnectionState.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME)),
+                    DAPConnectionState.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME)),
                     record.getDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LATITUDE_COLUMN_NAME),
                     record.getDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME),
-//                    cryptoAddress,
                     record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTRATION_DATE_COLUMN_NAME),
 //                    record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LAST_CONNECTION_DATE_COLUMN_NAME),
                     getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME)),
@@ -983,17 +971,11 @@ public class AssetIssuerActorDao implements Serializable {
 
         for (DatabaseTableRecord record : records) {
 
-//            CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
-//                    CryptoCurrency.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
-
             list.add(new AssetIssuerActorRecord(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
                     record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME),
-//                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_AGE_COLUMN_NAME),
-//                    Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME)),
-                    ConnectionState.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME)),
+                    DAPConnectionState.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME)),
                     record.getDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME),
                     record.getDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
-//                    cryptoAddress,
                     record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME),
 //                    record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME),
                     getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),

@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -17,10 +19,20 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantExecuteAppropriationTransactionException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.TransactionAlreadyStartedException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationTransactionRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.exceptions.CantLoadAssetAppropriationEventListException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationTransactionRecordImpl;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
 import java.io.Closeable;
@@ -35,13 +47,20 @@ public class AssetAppropriationDAO implements AutoCloseable {
 
     //VARIABLE DECLARATION
     private Database database;
+    private AssetAppropriationVault vault;
 
     //CONSTRUCTORS
-    public AssetAppropriationDAO(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) throws CantOpenDatabaseException, DatabaseNotFoundException {
+    public AssetAppropriationDAO(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, AssetAppropriationVault vault) throws CantOpenDatabaseException, DatabaseNotFoundException {
         database = pluginDatabaseSystem.openDatabase(pluginId, AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_DATABASE);
+        this.vault = vault;
     }
 
     //PUBLIC METHODS
+
+    /*
+    * Event Recorded Table's Actions.
+    *
+    */
     public void saveNewEvent(FermatEvent event) throws CantSaveEventException {
         String eventType = event.getEventType().getCode();
         String eventSource = event.getSource().getCode();
@@ -60,7 +79,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
 
             databaseTable.insertRecord(eventRecord);
         } catch (CantInsertRecordException exception) {
-            throw new CantSaveEventException(exception, context, "Cannot insert a record in Asset Reception database");
+            throw new CantSaveEventException(exception, context, "Cannot insert a record in Asset Appropriation Event Table");
         } catch (Exception exception) {
             throw new CantSaveEventException(FermatException.wrapException(exception), context, "Unexpected exception");
         }
@@ -88,6 +107,116 @@ public class AssetAppropriationDAO implements AutoCloseable {
 
     public boolean isPendingActorAssetUserEvents() throws CantLoadAssetAppropriationEventListException {
         return isPendingEventsBySource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
+    }
+
+    /*
+    * Transaction Metadata Table's Actions.
+    *
+    */
+
+    public AssetAppropriationTransactionRecord startAppropriation(DigitalAsset asset, String userWalletPublicKey, CryptoAddress addressTo) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+        String context = "Asset : " + asset.getPublicKey() + " - Address: " + addressTo
+                + " - User Wallet: " + userWalletPublicKey;
+        try {
+            if (transactionExists(asset.getPublicKey(), userWalletPublicKey, addressTo)) {
+                throw new TransactionAlreadyStartedException(null, context, "You already started the transaction for this asset.");
+            }
+
+            vault.persistDigitalAssetInLocalStorage(asset);
+
+            DatabaseTable databaseTable = this.database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            DatabaseTableRecord transactionRecord = databaseTable.getEmptyRecord();
+
+            String transactionId = UUID.randomUUID().toString(); //The id of the record to be created.
+
+            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId);
+            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, AppropriationStatus.APPROPRIATION_STARTED.getCode());
+            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, asset.getPublicKey());
+            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, userWalletPublicKey);
+            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME, addressTo.getAddress());
+            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME, addressTo.getCryptoCurrency().getCode());
+            transactionRecord.setLongValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, System.currentTimeMillis());
+            transactionRecord.setLongValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, Validate.MAX_DATE); //Since I can't store null on a primitive I'll set it as the max possible then update it.
+            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, "-"); //I will update this when I send the bitcoins...
+
+            databaseTable.insertRecord(transactionRecord);
+
+            return constructRecordFromId(transactionId); //The new record.
+
+        } catch (CantInsertRecordException exception) {
+            throw new CantExecuteAppropriationTransactionException(exception, context, "Cannot insert a record in Asset Appropriation Transaction Metadata table.");
+        } catch (CantCreateDigitalAssetFileException exception) {
+            throw new CantExecuteAppropriationTransactionException(exception, context, "Cannot save digital asset on file system..");
+        } catch (Exception exception) {
+            throw new CantExecuteAppropriationTransactionException(FermatException.wrapException(exception), context, "Unexpected exception");
+        }
+    }
+
+    public void updateGenesisTransaction(String genesisTransaction, String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        updateStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, genesisTransaction, transactionId);
+    }
+
+    public void updateTransactionStatusAssetDebited(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        updateStatus(AppropriationStatus.ASSET_DEBITED, transactionId);
+    }
+
+    public void updateTransactionStatusBitcoinsSent(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        updateStatus(AppropriationStatus.BITCOINS_SENT, transactionId);
+    }
+
+    public void completeAppropriationReversedOnBlockChain(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        completeTransaction(AppropriationStatus.REVERTED_ON_BLOCKCHAIN, transactionId);
+    }
+
+    public void completeAppropriationReversedOnCryptoNetwork(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        completeTransaction(AppropriationStatus.REVERTED_ON_CRYPTO_NETWORK, transactionId);
+    }
+
+    public void completeAppropriationSuccessful(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        completeTransaction(AppropriationStatus.APPROPRIATION_SUCCESSFUL, transactionId);
+    }
+
+
+    public AssetAppropriationTransactionRecord getTransaction(DigitalAsset digitalAsset, String assetUserWalletPublicKey, CryptoAddress addressTo) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        return constructRecordFromId(getTransactionId(digitalAsset.getPublicKey(), assetUserWalletPublicKey, addressTo));
+    }
+
+    public AssetAppropriationTransactionRecord getTransaction(String genesisTransaction) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        return constructRecordFromId(getTransactionIdByGenesisTransaction(genesisTransaction));
+    }
+
+    public List<AssetAppropriationTransactionRecord> getTransactionsForUserWallet(String assetUserWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
+        try {
+            List<String> transactionIds = getTransactionIdsForUserWallet(assetUserWalletPublicKey);
+            List<AssetAppropriationTransactionRecord> assetAppropriationTransactionRecords = new ArrayList<>(transactionIds.size());
+            for (String id : transactionIds) {
+                assetAppropriationTransactionRecords.add(constructRecordFromId(id));
+            }
+            return assetAppropriationTransactionRecords;
+        } catch (RecordsNotFoundException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<AssetAppropriationTransactionRecord> getUncompletedTransactions() throws CantLoadAssetAppropriationTransactionListException {
+        List<AssetAppropriationTransactionRecord> uncompleted = new ArrayList<>();
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.APPROPRIATION_STARTED));
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED));
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.BITCOINS_SENT));
+        return uncompleted;
+    }
+
+    public List<AssetAppropriationTransactionRecord> getTransactionsForStatus(AppropriationStatus status) throws CantLoadAssetAppropriationTransactionListException {
+        try {
+            List<String> transactionIds = getTransactionIdsForStatus(status);
+            List<AssetAppropriationTransactionRecord> assetAppropriationTransactionRecords = new ArrayList<>(transactionIds.size());
+            for (String id : transactionIds) {
+                assetAppropriationTransactionRecords.add(constructRecordFromId(id));
+            }
+            return assetAppropriationTransactionRecords;
+        } catch (RecordsNotFoundException e) {
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -212,6 +341,243 @@ public class AssetAppropriationDAO implements AutoCloseable {
             throw new CantLoadAssetAppropriationEventListException(exception, "Getting pending events.", "Cannot load table to memory.");
         } catch (Exception exception) {
             throw new CantLoadAssetAppropriationEventListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
+    }
+
+    private boolean transactionExists(String assetPublicKey, String userWalletPublicKey, CryptoAddress addressTo) throws CantLoadAssetAppropriationTransactionListException {
+        try {
+            getTransactionId(assetPublicKey, userWalletPublicKey, addressTo);
+            return true;
+        } catch (RecordsNotFoundException e) {
+            return false;
+        }
+
+    }
+
+    private String getTransactionId(String assetPublicKey, String userWalletPublicKey, CryptoAddress addressTo) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
+        String context = "Asset Public Key: " + assetPublicKey + " - User Wallet: " + userWalletPublicKey
+                + " - Address To: " + addressTo.getAddress();
+        try {
+            DatabaseTable eventsRecordedTable;
+            eventsRecordedTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+
+            DatabaseTableFilter addressFilter = eventsRecordedTable.getEmptyTableFilter();
+            addressFilter.setColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME);
+            addressFilter.setValue(addressTo.getAddress());
+            addressFilter.setType(DatabaseFilterType.EQUAL);
+
+            DatabaseTableFilter assetPublicKeyFilter = eventsRecordedTable.getEmptyTableFilter();
+            assetPublicKeyFilter.setColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME);
+            assetPublicKeyFilter.setValue(assetPublicKey);
+            assetPublicKeyFilter.setType(DatabaseFilterType.EQUAL);
+
+            DatabaseTableFilter userWallerFilter = eventsRecordedTable.getEmptyTableFilter();
+            userWallerFilter.setColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME);
+            userWallerFilter.setValue(userWalletPublicKey);
+            userWallerFilter.setType(DatabaseFilterType.EQUAL);
+
+            List<DatabaseTableFilter> filters = new ArrayList<>();
+            filters.add(addressFilter);
+            filters.add(assetPublicKeyFilter);
+            filters.add(userWallerFilter);
+
+            eventsRecordedTable.setFilterGroup(
+                    eventsRecordedTable.getNewFilterGroup(filters,
+                            new ArrayList<DatabaseTableFilterGroup>(),
+                            DatabaseFilterOperator.AND));
+
+            eventsRecordedTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+
+            eventsRecordedTable.loadToMemory();
+
+            if (eventsRecordedTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, context, "");
+            }
+
+            return eventsRecordedTable.getRecords().get(0).getStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME);
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(exception, context, "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(FermatException.wrapException(exception), context, "Unexpected exception");
+        }
+    }
+
+    private String getTransactionIdByGenesisTransaction(String genesisTransaction) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        try {
+            String context = "Genesis Transaction: " + genesisTransaction;
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+
+            if (databaseTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, context, "");
+            }
+
+            return databaseTable.getRecords().get(0).getStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME);
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(exception, "Getting pending events.", "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
+    }
+
+    private List<String> getTransactionIdsForUserWallet(String userWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
+        try {
+            String context = "User Wallet: " + userWalletPublicKey;
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, userWalletPublicKey, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+
+            if (databaseTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, context, "");
+            }
+
+            List<String> idList = new ArrayList<>(databaseTable.getRecords().size());
+
+            for (DatabaseTableRecord record : databaseTable.getRecords()) {
+                idList.add(record.getStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME));
+            }
+            return idList;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(exception, "Getting pending events.", "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
+    }
+
+    private List<String> getTransactionIdsForStatus(AppropriationStatus status) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
+        try {
+            String context = "Status: " + status;
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+
+            if (databaseTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, context, "");
+            }
+
+            List<String> idList = new ArrayList<>(databaseTable.getRecords().size());
+
+            for (DatabaseTableRecord record : databaseTable.getRecords()) {
+                idList.add(record.getStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME));
+            }
+            return idList;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(exception, "Getting pending events.", "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
+    }
+
+    private String getStringFieldByTransactionId(String columnName, String id) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
+        try {
+            String context = "Column Name: " + columnName + " - Id: " + id;
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+
+            if (databaseTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, context, "");
+            }
+
+            return databaseTable.getRecords().get(0).getStringValue(columnName);
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(exception, "Getting pending events.", "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
+    }
+
+
+    private long getLongFieldByTransactionId(String columnName, String id) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
+        try {
+            String context = "Column Name: " + columnName + " - Id: " + id;
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+
+            if (databaseTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, context, "");
+            }
+
+            return databaseTable.getRecords().get(0).getLongValue(columnName);
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(exception, "Getting pending events.", "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
+    }
+
+    private void updateStringFieldByTransactionId(String columnName, String value, String id) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
+        String context = "Column Name: " + columnName + " - Id: " + id;
+        try {
+            DatabaseTable transactionTable;
+            transactionTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
+            transactionTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            transactionTable.loadToMemory();
+
+            if (transactionTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, context, "");
+            }
+
+            for (DatabaseTableRecord record : transactionTable.getRecords()) {
+                record.setStringValue(columnName, value);
+            }
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(exception, context, "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(FermatException.wrapException(exception), context, "Unexpected exception");
+        }
+    }
+
+    private void completeTransaction(AppropriationStatus status, String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        String context = "Status: " + status.getCode()
+                + " ID: " + transactionId;
+        try {
+            DatabaseTable transactionTable;
+            transactionTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            transactionTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            transactionTable.loadToMemory();
+
+            if (transactionTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, context, "");
+            }
+
+            for (DatabaseTableRecord record : transactionTable.getRecords()) {
+                record.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode());
+                record.setLongValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, System.currentTimeMillis());
+            }
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(exception, context, "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(FermatException.wrapException(exception), context, "Unexpected exception");
+        }
+    }
+
+    private void updateStatus(AppropriationStatus status, String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        updateStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode(), transactionId);
+    }
+
+    private AssetAppropriationTransactionRecordImpl constructRecordFromId(String transactionId) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
+        String context = "TransactionId : " + transactionId;
+        try {
+            String address = getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME, transactionId);
+            CryptoCurrency currency = CryptoCurrency.getByCode(getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME, transactionId));
+            CryptoAddress cryptoAddress = new CryptoAddress(address, currency);
+            AppropriationStatus status = AppropriationStatus.getByCode(getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, transactionId));
+            DigitalAsset asset = vault.getDigitalAssetFromLocalStorage(getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, transactionId));
+            long startTime = getLongFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, transactionId);
+            long endTime = getLongFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, transactionId);
+            String genesisTransaction = getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, transactionId);
+
+            return new AssetAppropriationTransactionRecordImpl(transactionId, status, asset, cryptoAddress, address, startTime, endTime, genesisTransaction);
+        } catch (Exception e) {
+            throw new CantLoadAssetAppropriationTransactionListException(context, e);
         }
     }
 

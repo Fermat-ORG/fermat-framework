@@ -4,8 +4,8 @@ package com.bitdubai.fermat_api.layer.all_definition.github;
  * Created by Matias Furszyfer on 2015.08.17..
  */
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException;
+import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException;
 
 
 import com.google.gson.JsonParseException;

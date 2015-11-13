@@ -75,6 +75,28 @@ public class AssetAppropriationDatabaseFactory implements DealsWithPluginDatabas
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
+            DatabaseTableFactory transactionMetadataTable = databaseFactory.newTableFactory(ownerId, AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+
+            transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
+            transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+
+
+            transactionMetadataTable.addIndex(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, transactionMetadataTable);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
         } catch (InvalidOwnerIdException e) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "UUID : " + ownerId, "Invalid Owner. Cannot create the table...");
         }

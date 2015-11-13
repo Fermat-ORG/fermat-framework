@@ -18,6 +18,7 @@ dependencies {
     compile project(':fermat-dap-core')
     compile project(':fermat-p2p-core')
     compile project(':fermat-pip-core')
+    compile project(':fermat-wpd-core')
 
     // PIP Projects
     compile project(':fermat-pip-plugin-actor-developer-bitdubai')
@@ -28,31 +29,8 @@ dependencies {
     compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
 
     // DMP Projects (Plugins)
-    compile project(':fermat-dmp-plugin-identity-designer-bitdubai')
-    compile project(':fermat-dmp-plugin-identity-translator-bitdubai')
     compile project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
-    compile project(':fermat-dmp-plugin-middleware-wallet-language-bitdubai')
-    compile project(':fermat-dmp-plugin-middleware-wallet-skin-bitdubai')
-    compile project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai')
     // DMP Projects (Addons)
-
-    //WPD Projects (Plugins)
-    compile project(':fermat-wpd-plugin-actor-publisher-bitdubai')
-    compile project(':fermat-wpd-plugin-engine-wallet-runtime-bitdubai')
-    compile project(':fermat-wpd-plugin-identity-publisher-bitdubai')
-    compile project(':fermat-wpd-plugin-middleware-wallet-factory-bitdubai')
-    compile project(':fermat-wpd-plugin-middleware-wallet-publisher-bitdubai')
-    compile project(':fermat-wpd-plugin-middleware-wallet-settings-bitdubai')
-    compile project(':fermat-wpd-plugin-middleware-wallet-store-bitdubai')
-    compile project(':fermat-wpd-plugin-network-service-wallet-community-bitdubai')
-    compile project(':fermat-wpd-plugin-network-service-wallet-resources-bitdubai')
-    compile project(':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai')
-    compile project(':fermat-wpd-plugin-network-service-wallet-store-bitdubai')
-    compile project(':fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai')
-    compile project(':fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai')
-    compile project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
-
-    //CBP Projects
 
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
