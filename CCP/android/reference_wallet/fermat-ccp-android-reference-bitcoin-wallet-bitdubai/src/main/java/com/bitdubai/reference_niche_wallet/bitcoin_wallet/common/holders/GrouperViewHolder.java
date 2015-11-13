@@ -150,6 +150,6 @@ public class GrouperViewHolder extends ParentViewHolder {
         if (customerImg != null && customerImg.length > 0)
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
-        return ImagesUtils.getRoundedBitmap(res, R.drawable.mati_profile);
+        return ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image);
     }
 }

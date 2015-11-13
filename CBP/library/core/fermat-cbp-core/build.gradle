@@ -12,14 +12,23 @@ repositories {
 }
 
 dependencies {
+
+    /**
+     * For doing the code more readable, please keep the elements in the file sorted alphabetically:
+     * - layer name
+     * - plugin name
+     */
+
     compile project(':fermat-api')
-    compile project(':fermat-cbp-api')
 
     compile project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai')
     compile project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai')
+
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
+
     compile project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai')
+    compile project(':fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

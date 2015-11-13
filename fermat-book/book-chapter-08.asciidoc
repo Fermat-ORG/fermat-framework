@@ -1,4 +1,6 @@
 :numbered!:
+
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/PIP.jpg[PlugIns Platform]
 == Chapter 8: Fermat Plug-ins Platform
 
 This platform encapsulates all the components that provide the basic services that build the back end infrastructure of Fermat framework. +
@@ -135,6 +137,7 @@ Fermat foundations had been layed out by the five platforms and superlayers desc
 Would you like to see the first tangible use of the supporting infrastructure of Fermat ? We invite you in next chapter to meet the _Wallet Production & Distribution Line_.
 
 :numbered!:
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 ==== Continue Reading
 link:book-chapter-09.asciidoc[Next Chapter]
 
