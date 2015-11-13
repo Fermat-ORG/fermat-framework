@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.CantInitializePluginsManagerException;
 import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
 import com.bitdubai.fermat_api.CantStartPlatformException;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
@@ -48,7 +47,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_core.layer.all_definition.DefinitionLayer;
 import com.bitdubai.fermat_core.layer.dmp_middleware.MiddlewareLayer;
 import com.bitdubai.fermat_core.layer.dmp_module.ModuleLayer;
-import com.bitdubai.fermat_core.layer.p2p_communication.CommunicationLayer;
 import com.bitdubai.fermat_core.layer.pip_actor.ActorLayer;
 import com.bitdubai.fermat_core.layer.pip_engine.EngineLayer;
 import com.bitdubai.fermat_core.layer.wpd.actor.WPDActorLayer;
@@ -57,8 +55,6 @@ import com.bitdubai.fermat_core.layer.wpd.identity.WPDIdentityLayer;
 import com.bitdubai.fermat_core.layer.wpd.middleware.WPDMiddlewareLayer;
 import com.bitdubai.fermat_core.layer.wpd.network_service.WPDNetworkServiceLayer;
 import com.bitdubai.fermat_core.layer.wpd.sub_app_module.WPDSubAppModuleLayer;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
@@ -262,7 +258,6 @@ public class Platform implements Serializable {
              * Created and register into the platform context
              */
 
-            corePlatformContext.registerPlatformLayer(new CommunicationLayer(), PlatformLayers.BITDUBAI_COMMUNICATION_LAYER);
             corePlatformContext.registerPlatformLayer(new MiddlewareLayer(), PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER);
             corePlatformContext.registerPlatformLayer(new ModuleLayer(), PlatformLayers.BITDUBAI_MODULE_LAYER);
             corePlatformContext.registerPlatformLayer(new ActorLayer(), PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER);
@@ -583,7 +578,6 @@ public class Platform implements Serializable {
             * -----------------------------
             */
                     Plugin walletStoreNetworkService = ((WPDNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_NETWORK_SERVICE_LAYER)).getWalletStore();
-                    injectLayerReferences(walletStoreNetworkService);
                     injectPluginReferencesAndStart(walletStoreNetworkService, Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE);
 
            /*
@@ -901,38 +895,6 @@ public class Platform implements Serializable {
         } catch (Exception z) {
             System.out.println("unhandled exception");
             System.out.println(z.toString());
-        }
-    }
-
-    /**
-     * This method is responsible to inject PlatformLayer referent object, since in special cases some plugin interact
-     * directly with a layer instance. For example in the case of Network Services
-     * <p/>
-     * NOTE: This method should always call before @see Platform#injectPluginReferencesAndStart(Plugin, Plugins)
-     * always and when it is required by the plugin
-     *
-     * @param plugin
-     */
-    private void injectLayerReferences(Plugin plugin) throws CantStartPlatformException {
-
-        try {
-
-            /*
-             * Validate if this plugin required the Communication Layer instance
-             */
-            if (plugin instanceof DealsWithCommunicationLayerManager) {
-
-                /*
-                 * Inject the instance
-                 */
-                ((DealsWithCommunicationLayerManager) plugin).setCommunicationLayerManager((CommunicationLayerManager) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER));
-
-            }
-
-
-        } catch (Exception exception) {
-            LOG.log(Level.SEVERE, exception.getLocalizedMessage());
-            throw new CantStartPlatformException(CantStartPlatformException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "", "");
         }
     }
 
