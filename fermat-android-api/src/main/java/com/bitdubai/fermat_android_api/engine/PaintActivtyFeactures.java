@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
+import android.widget.Toolbar;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 
@@ -24,6 +25,8 @@ public interface PaintActivtyFeactures {
     public void changeNavigationDrawerAdapter(FermatAdapter adapter);
 
     public void addNavigationViewHeader(View view);
+
+    public android.support.v7.widget.Toolbar getToolbar();
 
     public RelativeLayout getToolbarHeader();
 

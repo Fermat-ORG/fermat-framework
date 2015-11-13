@@ -10,9 +10,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -92,7 +90,6 @@ import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
@@ -403,16 +400,18 @@ public abstract class FermatActivity extends AppCompatActivity
                 }
 
                 if(titleBar.getColor() != null){
-                    mToolbar.setBackgroundColor(Color.parseColor(titleBar.getColor()));
-                    appBarLayout.setBackgroundColor(Color.parseColor(titleBar.getColor()));
-
-
                     if(collapsingToolbarLayout!=null) {
                         collapsingToolbarLayout.setBackgroundColor(Color.parseColor(titleBar.getColor()));
                         //  mutedColor = palette.getMutedColor(R.attr.colorPrimary);
                         //collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(R.color.gps_friends_green_main));
                         collapsingToolbarLayout.setContentScrimColor(Color.parseColor(titleBar.getColor()));
-                    }
+                    }else {
+                            mToolbar.setBackgroundColor(Color.parseColor(titleBar.getColor()));
+                            appBarLayout.setBackgroundColor(Color.parseColor(titleBar.getColor()));
+                        }
+
+
+
 
                 }
 
@@ -427,21 +426,6 @@ public abstract class FermatActivity extends AppCompatActivity
                 appBarLayout.setVisibility(View.GONE);
                 if(collapsingToolbarLayout!=null)
                 collapsingToolbarLayout.setVisibility(View.GONE);
-                try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        collapsingToolbarLayout.setNestedScrollingEnabled(false);
-                        appBarLayout.setNestedScrollingEnabled(false);
-                        mToolbar.setNestedScrollingEnabled(false);
-                        pagertabs.setNestedScrollingEnabled(false);
-                        coordinatorLayout.setNestedScrollingEnabled(false);
-
-                    }
-                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) collapsingToolbarLayout.getLayoutParams();
-                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP); // list other flags here by |
-                    collapsingToolbarLayout.setLayoutParams(params);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
 
             }
         } catch (Exception e) {
@@ -1434,6 +1418,10 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     public void onLongItemClickListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
 
+    }
+
+    public Toolbar getToolbar(){
+        return mToolbar;
     }
 
     /**
