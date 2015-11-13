@@ -2,6 +2,10 @@ package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 
 import java.util.List;
 
@@ -20,7 +24,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @return the login identity generated for the said intra user.
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException
      */
-    public IntraUserLoginIdentity createIntraUser(String intraUserName, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
+     IntraUserLoginIdentity createIntraUser(String intraUserName, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 
     /**
      * The method <code>setProfileImage</code> let the current logged in intra user set its profile
@@ -28,7 +32,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @param image the profile picture to set
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantSaveProfileImageException
      */
-    public void setNewProfileImage(byte[] image, String intraUserPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantSaveProfileImageException;
+     void setNewProfileImage(byte[] image, String intraUserPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantSaveProfileImageException;
 
     /**
      * The method <code>showAvailableLoginIdentities</code> lists the login identities that can be used
@@ -37,14 +41,14 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @return the list of identities the current Device User can use to log in
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantShowLoginIdentitiesException
      */
-    public List<IntraUserLoginIdentity> showAvailableLoginIdentities() throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantShowLoginIdentitiesException;
+     List<IntraUserLoginIdentity> showAvailableLoginIdentities() throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantShowLoginIdentitiesException;
 
     /**
      * The method <code>login</code> let an intra user log in
      *
      * @param intraUserPublicKey the public key of the intra user to log in
      */
-    public void login(String intraUserPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantLoginIntraUserException;
+     void login(String intraUserPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantLoginIntraUserException;
 
     /**
      * The method <code>getSuggestionsToContact</code> searches for intra users that the logged in
@@ -53,7 +57,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @return a list with information of intra users
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
-    public List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+     List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
     /**
      * The method <code>searchIntraUser</code> gives us an interface to manage a search for a particular
@@ -61,7 +65,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      *
      * @return a searching interface
      */
-    public IntraUserSearch searchIntraUser();
+     IntraUserSearch searchIntraUser();
 
     /**
      * The method <code>askIntraUserForAcceptance</code> initialize the request of contact between
@@ -72,7 +76,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @param profileImage            The profile image that the intra user has
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException
      */
-    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey,String identityAlias) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
+     void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey,String identityAlias) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
 
     /**
      * The method <code>acceptIntraUser</code> takes the information of a connection request, accepts
@@ -83,7 +87,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @param profileImage            The profile image that the intra user has
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException
      */
-    public void acceptIntraUser(String identityPublicKey,String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
+     void acceptIntraUser(String identityPublicKey,String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 
 
     /**
@@ -92,7 +96,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @param intraUserToRejectPublicKey the public key of the user to deny its connection request
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException
      */
-    public void denyConnection(String intraUserToRejectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
+     void denyConnection(String intraUserToRejectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
 
     /**
      * The method <code>disconnectIntraUSer</code> disconnect an intra user from the list managed by this
@@ -101,7 +105,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @param intraUserToDisconnectPublicKey the public key of the intra user to disconnect
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException
      */
-    public void disconnectIntraUSer(String intraUserToDisconnectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
+     void disconnectIntraUSer(String intraUserToDisconnectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
 
     /**
      * The method <code>cancelIntraUser</code> cancels an intra user from the list managed by this
@@ -117,7 +121,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @return the list of intra users connected to the logged in intra user
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
-    public List<IntraUserInformation> getAllIntraUsers(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+     List<IntraUserInformation> getAllIntraUsers(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
     /**
      * The method <code>getIntraUsersWaitingYourAcceptance</code> returns the list of intra users waiting to be accepted
@@ -126,7 +130,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @return the list of intra users waiting to be accepted or rejected by the  logged in intra user
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
-    public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+     List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
     /**
      * The method <code>getIntraUsersWaitingTheirAcceptance</code> list the intra users that haven't
@@ -136,14 +140,36 @@ public interface IntraUserModuleManager extends ModuleManager {
      * logged in intra user.
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
-    public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+     List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
     /**
      *
      * @return active IntraUserLoginIdentity
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantShowLoginIdentitiesException
      */
-    public IntraUserLoginIdentity getActiveIntraUserIdentity() throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+     IntraUserLoginIdentity getActiveIntraUserIdentity() throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 
-    public int getIntraUsersWaitingYourAcceptanceCount();
+    /**
+     * Count intra user waiting
+     * @return
+     */
+     int getIntraUsersWaitingYourAcceptanceCount();
+
+
+    /**
+     * The method <code>updateIntraUserIdentity</code> change a identity information data
+     * @param identityPublicKey
+     * @param identityAlias
+     * @param profileImage
+     * @throws CantUpdateIdentityException
+     */
+    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityException;
+
+
+    /**
+     *The method <code>deleteIntraUserIdentity</code> change identity status to inactive
+     * @param identityPublicKey
+     * @throws CantListIntraWalletUsersException
+     */
+    void  deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIdentityException;
 }

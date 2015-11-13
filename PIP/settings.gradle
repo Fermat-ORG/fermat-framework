@@ -1,0 +1,57 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+
+include ':fermat-pip-api'
+project(':fermat-pip-api').projectDir = new File('PIP/library/api/fermat-pip-api')
+
+include ':fermat-pip-core'
+project(':fermat-pip-core').projectDir = new File('PIP/library/core/fermat-pip-core')
+
+// Addons
+include ':fermat-pip-addon-platform-service-event-manager-bitdubai'
+project(':fermat-pip-addon-platform-service-event-manager-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai')
+
+include ':fermat-pip-addon-platform-service-platform-info-bitdubai'
+project(':fermat-pip-addon-platform-service-platform-info-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-platform-info-bitdubai')
+
+include ':fermat-pip-addon-platform-service-error-manager-bitdubai'
+project(':fermat-pip-addon-platform-service-error-manager-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')
+
+include ':fermat-pip-addon-platform-service-location-manager-bitdubai'
+project(':fermat-pip-addon-platform-service-location-manager-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-location-manager-bitdubai')
+
+include ':fermat-pip-addon-user-device-user-bitdubai'
+project(':fermat-pip-addon-user-device-user-bitdubai').projectDir = new File('PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai')
+
+// plugins
+include ':fermat-pip-plugin-engine-desktop-runtime-bitdubai'
+project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai').projectDir = new File('PIP/plugin/engine/fermat-pip-plugin-engine-desktop-runtime-bitdubai')
+
+include ':fermat-pip-plugin-identity-developer-bitdubai'
+project(':fermat-pip-plugin-identity-developer-bitdubai').projectDir = new File('PIP/plugin/identity/fermat-pip-plugin-identity-developer-bitdubai')
+
+
+include ':fermat-pip-plugin-module-developer-bitdubai'
+project(':fermat-pip-plugin-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai')
+
+include ':fermat-pip-plugin-module-notification-bitdubai'
+project(':fermat-pip-plugin-module-notification-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-notification-bitdubai')
+
+include ':fermat-pip-plugin-network-service-subapp-resources-bitdubai'
+project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai').projectDir = new File('PIP/plugin/network_service/fermat-pip-plugin-network-service-subapp-resources-bitdubai')
+
+include ':fermat-pip-plugin-actor-developer-bitdubai'
+project(':fermat-pip-plugin-actor-developer-bitdubai').projectDir = new File('PIP/plugin/actor/fermat-pip-plugin-actor-developer-bitdubai')
+
+// Android
+
+include ':fermat-pip-android-sub-app-developer-bitdubai'
+project(':fermat-pip-android-sub-app-developer-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-developer-bitdubai')
+
+
+include ':fermat-pip-android-sub-app-sub-app-manager-bitdubai'
+project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-sub-app-manager-bitdubai')

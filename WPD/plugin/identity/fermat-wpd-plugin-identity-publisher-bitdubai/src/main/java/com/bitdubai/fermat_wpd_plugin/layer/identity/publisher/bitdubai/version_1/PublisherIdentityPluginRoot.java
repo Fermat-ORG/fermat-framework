@@ -1,63 +1,52 @@
-/*
- * @(#DeveloperIdentityPluginRoot.java 07/16/2015
- * Copyright 2015 bitDubai, Inc. All rights reserved.
- * BITDUBAI/CONFIDENTIAL
- * */
-
 package com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1;
 
-
-// Packages and classes to import of jdk 1.7
-
-import java.util.*;
-import java.util.regex.Pattern;
-
-// Packages and classes to import of fermat api.
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.PublisherIdentity;
-import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.PublisherIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-
-import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantGetUserPublisherIdentitiesException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantCreateNewPublisherException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantGetUserPublisherIdentitiesException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.PublisherIdentity;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.PublisherIdentityManager;
+import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants;
+import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory;
 import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.developerUtils.PublisherIdentityDeveloperDataBaseFactory;
 import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.exceptions.CantInitializePublisherIdentityDatabaseException;
 import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.structure.PublisherIdentityDao;
-import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants;
-import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
- * Manage Developer identities.
+ * Manage Publisher identities.
  * Keeps the registry of the different identities and its relation with the Device User.
  * <p/>
  * Allows to create new Developers and automatically link them with the Current logged Device User.
@@ -65,47 +54,38 @@ import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_
  * <p/>
  * In a near future this plugins will sign messages (belongs private and public keys).
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
- * Updated by Raul Pena   - (raul.pena@gmail.com)  on 16/07/15.
+ * Created by someone.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class PublisherIdentityPluginRoot implements DealsWithDeviceUser, DealsWithErrors, DatabaseManagerForDevelopers, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Service, PublisherIdentityManager, Plugin {
+public class PublisherIdentityPluginRoot extends AbstractPlugin implements
+        DatabaseManagerForDevelopers,
+        LogManagerForDevelopers,
+        PublisherIdentityManager {
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM    )
+    private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER    )
+    private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM       , layer = Layers.USER           , addon = Addons.DEVICE_USER        )
+    private DeviceUserManager deviceUserManager;
 
 
-    // Private instance field declarations.
-    // DealsWithDeviceUser Interface member variables.
-    private DeviceUserManager deviceUserManager = null;
-
-    // DealsWithErrors Interface member variables.
-    private ErrorManager errorManager = null;
-
-    /**
-     * DealsWithPluginFileSystem Interface member variables.
-     */
-    PluginFileSystem pluginFileSystem;
-
-    // DealsWithlogManager interface member variable.
-    private LogManager logManager = null;
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    // DealsWithPluginDatabaseSystem Interface member variables.
-    private PluginDatabaseSystem pluginDatabaseSystem = null;
 
-    // Plugin Interface member variables.
-    private UUID pluginId = null;
 
-    // ServiceStatus Interface member variables
-    private ServiceStatus serviceStatus = null;
-
-    // Dao object.
     private PublisherIdentityDao dao = null;
 
-
-    // Private class fields declarations.
-
-    // Default string value.
     private static final String _DEFAUL_STRING = "";
 
 
@@ -115,94 +95,8 @@ public class PublisherIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
      * <p>Constructor without parameters.
      */
     public PublisherIdentityPluginRoot() {
-
-        // Call to super class.
-        super();
+        super(new PluginVersionReference(new Version()));
     }
-
-    /**
-     * <p>Constructor with parameters.
-     *
-     * @param deviceUserManager    DealsWithDeviceUser Interface member variables.
-     * @param errorManager         DealsWithErrors Interface member variables.
-     * @param logManager           DealsWithlogManager interface member variable.
-     * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem Interface member variables.
-     * @param pluginId             Plugin Interface member variables.
-     * @param serviceStatus        ServiceStatus Interface member variables
-     * @param dao
-     */
-    public PublisherIdentityPluginRoot(DeviceUserManager deviceUserManager, ErrorManager errorManager, LogManager logManager,
-                                       PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ServiceStatus serviceStatus,
-                                       PublisherIdentityDao dao) {
-
-        // Call to super class.
-        super();
-
-
-        // Set internal values.
-        this.deviceUserManager = deviceUserManager;
-        this.errorManager = errorManager;
-        this.logManager = logManager;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
-        this.serviceStatus = serviceStatus;
-        this.dao = dao;
-    }
-
-
-    // Public instance methods declarations. (Get/Set)
-    public void setPluginId(UUID pluginId) {
-
-        // Set the value.
-        this.pluginId = pluginId;
-    }
-
-    public void setServiceStatus(ServiceStatus serviceStatus) {
-
-        // Set the value.
-        this.serviceStatus = serviceStatus;
-    }
-
-    public void setDao(PublisherIdentityDao dao) {
-
-        // Set the value.
-        this.dao = dao;
-    }
-
-
-    /**
-     * DealsWithDeviceUser Interface implementation.
-     */
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager = deviceUserManager;
-    }
-
-    /**
-     * DealsWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithlogManager Interface implementation.
-     */
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
 
     /**
      * Service Interface implementation.
@@ -244,26 +138,6 @@ public class PublisherIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
             logManager.log(PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Plugin started...", _DEFAUL_STRING, _DEFAUL_STRING);
 
         }
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
     }
 
 
@@ -394,24 +268,6 @@ public class PublisherIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
             }
         }
     }
-
-    /**
-     * Plugin Interface implementation.
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
-    /**
-     * DealsWithPlatformFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
 
     /**
      * DatabaseManagerForDevelopers Interface implementation.

@@ -146,12 +146,12 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
                     List<ActorAssetUser> list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
                     if (list.isEmpty()) {
                         System.out.println("Actor Asset User - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
-                        //TODO List Empty State = DISCONNECTED_REMOTELY
+                        //TODO List Empty State = REGISTERED_OFFLINE
                         System.out.println("Actor Asset User - Se procede actualizar Lista en TABLA (si) Existiera algun Registro");
                         assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
                     } else {
                         System.out.println("Actor Asset User - Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
-                        //TODO new Actors State = PENDING_LOCALLY_ACCEPTANCE
+                        //TODO new Actors State = REGISTERED_ONLINE
                         int recordInsert = assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
                         System.out.println("Actor Asset User - Se Registro en tabla REGISTER Lista de: " + recordInsert + " Actors desde Actor Network Service");
                     }
@@ -177,7 +177,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 //                    ;
 //                    Genders genders = Genders.INDEFINITE;
 //                    String age = "25";
-//                    ConnectionState connectionState = ConnectionState.CONNECTED;
+//                    DAPConnectionState connectionState = DAPConnectionState.CONNECTED;
 //                    Double locationLatitude = new Random().nextDouble();
 //                    Double locationLongitude = new Random().nextDouble();
 //                    AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey, "ANS User_" + new Random().nextInt(10), age, genders,

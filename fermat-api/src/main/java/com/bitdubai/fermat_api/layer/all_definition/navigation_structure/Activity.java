@@ -213,5 +213,9 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     public void setActivityType(String activityType) {
         this.activityType = activityType;
     }
+
+    public void setHeader(Header header) {
+        this.header = header;
+    }
 }
 

@@ -54,7 +54,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.adapters.CheckBoxListItem;
 import com.bitdubai.sub_app.intra_user_community.adapters.ListAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.Utils.FernatAnimationUtils;
+import com.bitdubai.sub_app.intra_user_community.common.utils.FernatAnimationUtils;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.adapters.IntraUserConnectionsAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.models.IntraUserConnectionListItem;
@@ -600,7 +600,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
 
             switch (position){
                 case 0:
-                    imageView_profile.setImageResource(R.drawable.mati_profile);
+                    imageView_profile.setImageResource(R.drawable.profile_image);
                     break;
                 case 1:
                     imageView_profile.setImageResource(R.drawable.caroline_profile_picture);

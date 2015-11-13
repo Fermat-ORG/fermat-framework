@@ -245,7 +245,7 @@
 			<layer name="empty layer 5"></layer>
 			<layer super_layer="OSA"></layer>
 
-			
+
 
 			<layer name="Api" language="java">
 				<libraries>
@@ -2218,7 +2218,7 @@
 			<layer name="Network Service" language="java">
 				<plugins>
 					<plugin
-						name="Crypto Addresses"
+						name="Crypto Address"
 						description="Enables the underground exchange of crypto addresses"
 						difficulty="5"
 						code-level="development"
@@ -2235,7 +2235,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Payment Request"
+						name="Crypto Request"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -2840,7 +2840,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						
+
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -2876,7 +2876,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						
+
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -3027,7 +3027,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						
+
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -3858,7 +3858,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						
+
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -3874,7 +3874,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						
+
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -3895,7 +3895,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						
+
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4001,7 +4001,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						
+
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4052,7 +4052,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						
+
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4068,7 +4068,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						
+
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4149,7 +4149,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						
+
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4200,7 +4200,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						
+
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4233,7 +4233,7 @@
 					</android>
 				</androids>
 			</layer>
-			
+
 			<layer name="Desktop" language="java-android">
 				<androids>
 					<android name="Wallet Manager"
@@ -4253,7 +4253,7 @@
 					</android>
 				</androids>
 			</layer>
-			
+
 			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin	name="Cash Money"
@@ -4273,7 +4273,7 @@
 					</plugin>
 				</plugins>
 			</layer>
-			
+
 			<layer name="Desktop Module" language="java">
 				<plugins>
 					<plugin	name="Wallet Manager"
@@ -4293,7 +4293,7 @@
 					</plugin>
 				</plugins>
 			</layer>
-			
+
 			<layer name="Cash Money Transaction" language="java">
 				<plugins>
 					<plugin name="Give Cash On Hand"
@@ -4406,7 +4406,7 @@
 					</android>
 				</androids>
 			</layer>
-			
+
 			<layer name="Desktop" language="java-android">
 				<androids>
 					<android name="Wallet Manager"
@@ -4426,7 +4426,7 @@
 					</android>
 				</androids>
 			</layer>
-			
+
 			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin	name="Bank Money"
@@ -4446,7 +4446,7 @@
 					</plugin>
 				</plugins>
 			</layer>
-			
+
 			<layer name="Desktop Module" language="java">
 				<plugins>
 					<plugin	name="Wallet Manager"
@@ -4466,7 +4466,7 @@
 					</plugin>
 				</plugins>
 			</layer>
-			
+
 			<layer name="Bank Money Transaction" language="java">
 				<plugins>
 					<plugin	name="Make Offline Bank Transfer"
@@ -7048,7 +7048,7 @@
 		<!-- separator or empty layer -->
 		<layer name="Multi OS" language="java" super_layer="OSA"></layer>
 		<layer name="Android" language="java" super_layer="OSA"></layer>
-		<!-- separator or empty layer -->		
+		<!-- separator or empty layer -->
 		<layer name="Api" language="java"></layer>
 	</layers>
 
@@ -7074,13 +7074,13 @@
 
 		</step>
 		<step id="1"
-			  type="activity"
-			  title="Asset Factory"
-			  description="Represents UI Android for creation the Asset"
-			  platform="DAP"
-			  superlayer=""
-			  layer="Sub App"
-			  name="Asset Factory"
+			type="activity"
+			title="Asset Factory"
+			description="Represents UI Android for creation the Asset"
+			platform="DAP"
+			superlayer=""
+			layer="Sub App"
+			name="Asset Factory"
 			>
 			<next>
 				<step id="2" type="direct call"></step>
@@ -7200,115 +7200,115 @@
 				<step id="9" type="direct call"></step>
 			</next>
 		</step>
-	    <process platform="CBP" 
-	    	     name="Connection request from customer to broker"
-	             description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."
-	             previous="List crypto brokers"
-	             >
-	        <steps>
-	            <step id="0"
-	                  type="start"
-	                  title="Select broker and submit request"
-	                  description="The customer selects a broker from the list and submits the request to connect to him."
-	                  platform="CBP"
-	                  superlayer=""
-	                  layer="Sub App"
-	                  name="Crypto Broker Community"
-	                  >
-	                <next>
-	                    <step id="1" type="direct call"></step>
-	                </next>
-	            </step>
-	            <step id="1"
-	                  type="activity"
-	                  title="Route request to network service"
-	                  description="The module routes this request to the network service to reach the selected broker."
-	                  platform="CBP"
-	                  superlayer=""
-	                  component="Plugin"
-	                  layer="Sub App Module"
-	                  name="Crypto Broker Community"
-	                  >
-	                <next>
-	                    <step id="2" type="direct call"></step>
-	                </next>
-	            </step>
-	            <step id="2"
-	                  type="activity"
-	                  title="Call the broker to deliver the request"
-	                  description="The network service places a call to the broker and then it delivers the request via the Fermat network."
-	                  platform="CBP"
-	                  superlayer=""
-	                  layer="Actor Network Service"
-	                  name="Crypto Broker"
-	                  >
-	                <next>
-	                    <step id="3" type="direct call"></step>
-	                </next>
-	            </step>
-	            <step id="3"
-	                  type="communication"
-	                  title="Transport request"
-	                  description="The request is transported through the communication layer and one of the available channels."
-	                  platform=""
-	                  superlayer="P2P"
-	                  layer="communication"
-	                  name="Communication Layer"
-	                  >
-	                <next>
-	                    <step id="4" type="fermat message"></step>
-	                </next>
-	            </step>
-	            <step id="4"
-	                  type="activity"
-	                  title="Receive the request"
-	                  description="The network service receives the request and informs the Crypto Broker Actor."
-	                  platform="CBP"
-	                  superlayer=""
-	                  layer="Actor Network Service"
-	                  name="Crypto Broker"
-	                  >
-	                <next>
-	                    <step id="5" type="event"></step>
-	                </next>
-	            </step>
-	            <step id="5"
-	                  type="activity"
-	                  title="Records the request"
-	                  description="The request is saved and a notification for the end user is created."
-	                  platform="CBP"
-	                  superlayer=""
-	                  layer="Actor"
-	                  name="Crypto Broker"
-	                  >
-	                <next>
-	                    <step id="6" type="direct call"></step>
-	                </next>
-	            </step>
-	            <step id="6"
-	                  type="activity"
-	                  title="Records the notification"
-	                  description="The the notification is saved and the OS core library is notified."
-	                  platform="PIP"
-	                  superlayer=""
-	                  layer="Middleware"
-	                  name="Notification"
-	                  >
-	                <next>
-	                    <step id="7" type="event"></step>
-	                </next>
-	            </step>
-	            <step id="7"
-	                  type="end"
-	                  title="Send notification to the OS"
-	                  description="Sends the notification to the OS and this in turn shows it to the end user."
-	                  platform="COR"
-	                  superlayer=""
-	                  layer="core"
-	                  name="Notification Manager"
-	                  >
-	            </step>
-	        </steps>
-	    </process>
+		<process platform="CBP"
+			name="Connection request from customer to broker"
+			description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."
+			previous="List crypto brokers"
+			>
+			<steps>
+				<step id="0"
+					type="start"
+					title="Select broker and submit request"
+					description="The customer selects a broker from the list and submits the request to connect to him."
+					platform="CBP"
+					superlayer=""
+					layer="Sub App"
+					name="Crypto Broker Community"
+					>
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"
+					type="activity"
+					title="Route request to network service"
+					description="The module routes this request to the network service to reach the selected broker."
+					platform="CBP"
+					superlayer=""
+					component="Plugin"
+					layer="Sub App Module"
+					name="Crypto Broker Community"
+					>
+					<next>
+						<step id="2" type="direct call"></step>
+					</next>
+				</step>
+				<step id="2"
+					type="activity"
+					title="Call the broker to deliver the request"
+					description="The network service places a call to the broker and then it delivers the request via the Fermat network."
+					platform="CBP"
+					superlayer=""
+					layer="Actor Network Service"
+					name="Crypto Broker"
+					>
+					<next>
+						<step id="3" type="direct call"></step>
+					</next>
+				</step>
+				<step id="3"
+					type="communication"
+					title="Transport request"
+					description="The request is transported through the communication layer and one of the available channels."
+					platform=""
+					superlayer="P2P"
+					layer="communication"
+					name="Communication Layer"
+					>
+					<next>
+						<step id="4" type="fermat message"></step>
+					</next>
+				</step>
+				<step id="4"
+					type="activity"
+					title="Receive the request"
+					description="The network service receives the request and informs the Crypto Broker Actor."
+					platform="CBP"
+					superlayer=""
+					layer="Actor Network Service"
+					name="Crypto Broker"
+					>
+					<next>
+						<step id="5" type="event"></step>
+					</next>
+				</step>
+				<step id="5"
+					type="activity"
+					title="Records the request"
+					description="The request is saved and a notification for the end user is created."
+					platform="CBP"
+					superlayer=""
+					layer="Actor"
+					name="Crypto Broker"
+					>
+					<next>
+						<step id="6" type="direct call"></step>
+					</next>
+				</step>
+				<step id="6"
+					type="activity"
+					title="Records the notification"
+					description="The the notification is saved and the OS core library is notified."
+					platform="PIP"
+					superlayer=""
+					layer="Middleware"
+					name="Notification"
+					>
+					<next>
+						<step id="7" type="event"></step>
+					</next>
+				</step>
+				<step id="7"
+					type="end"
+					title="Send notification to the OS"
+					description="Sends the notification to the OS and this in turn shows it to the end user."
+					platform="COR"
+					superlayer=""
+					layer="core"
+					name="Notification Manager"
+					>
+				</step>
+			</steps>
+		</process>
 	</processes>
 </fermat>

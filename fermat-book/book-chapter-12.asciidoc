@@ -1,3 +1,4 @@
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/CCP.jpg[FermatCCP]
 == Chapter 12: Fermat Crypto Currency Platform
 This platform introduces the first *niche wallets* to manage existing crypto currencies - Bitcoin Wallet, Litecoin Wallet, Ripple Wallet, etc - and also the resources to develop wallets of new cryptocurrencies invented in the future. + 
 
@@ -52,7 +53,7 @@ The new functionalities added are:
 * to store the *exchange rate* when a BTC amount is received in the wallet
 * to check the *exchange rate* when the user attemps to spend an amount of BTC and to freeze the funds if they are below the *purchase price* 
 
-
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 ==== Continue Reading
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]

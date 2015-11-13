@@ -1061,6 +1061,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             for (PlatformComponentProfile platformComponentProfile : list) {
 
                 JsonObject jsonObject = new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+                //Se desencripta la imagen para luego ser agregada a la lista.
                 String encoded = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString();
                 byte[] image = null;
                 try {
@@ -1283,6 +1284,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             //build jsonObject Photo
             JsonObject jsonObject = new JsonObject();
+            //Se encripta la imagen para luego ser agregada al json.
             String encodedImage = null;
             try {
                 encodedImage = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);

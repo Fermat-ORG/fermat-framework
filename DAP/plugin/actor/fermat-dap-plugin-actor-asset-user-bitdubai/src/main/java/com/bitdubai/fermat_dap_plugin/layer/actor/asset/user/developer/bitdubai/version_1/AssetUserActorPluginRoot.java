@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -36,9 +35,8 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
-
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
@@ -51,7 +49,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.Agent.AssetUserActorMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.AssetUserActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorCompleteRegistrationNotificationEventHandler;
@@ -90,10 +87,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_ADDRESSES)
@@ -102,11 +99,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
     private CryptoAddressBookManager cryptoAddressBookManager;
 
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM   , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER         )
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
     private AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
-
-
-    BlockchainNetworkType blockchainNetworkType;
 
     private AssetUserActorDao assetUserActorDao;
     private AssetUserActorMonitorAgent assetUserActorMonitorAgent;
@@ -127,10 +121,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
              * and initialize Database
              */
             this.assetUserActorDao = new AssetUserActorDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
-
-            blockchainNetworkType = BlockchainNetworkType.REG_TEST;
-
-            createAndRegisterActorAssetUserTest();
 
             /**
              * Agent for Search Actor Asset User REGISTERED in Actor Network Service User
@@ -198,7 +188,47 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
     @Override
     public void createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage) throws CantCreateAssetUserActorException {
+        try {
+            ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
 
+            Double locationLatitude = new Random().nextDouble();
+            Double locationLongitude = new Random().nextDouble();
+
+            if (actorAssetUser == null) {
+                Genders genders = Genders.INDEFINITE;
+                String age = "-";
+                AssetUserActorRecord record = new AssetUserActorRecord(
+                        assetUserActorPublicKey,
+                        assetUserActorName,
+                        age,
+                        genders,
+                        DAPConnectionState.REGISTERED_LOCALLY,
+                        locationLatitude,
+                        locationLongitude,
+                        System.currentTimeMillis(),
+                        System.currentTimeMillis(),
+                        assetUserActorprofileImage);
+
+                this.assetUserActorDao.createNewAssetUser(record);
+            }
+
+            registerActorInActorNetowrkSerice();
+
+            actorAssetUser = this.assetUserActorDao.getActorAssetUser();
+
+            if (actorAssetUser != null) {
+                System.out.println("*****************Actor Asset User************************");
+                System.out.println("Actor Asset PublicKey: " + actorAssetUser.getPublicKey());
+                System.out.println("Actor Asset Name: " + actorAssetUser.getName());
+                System.out.println("**********************************************************");
+            }
+        } catch (CantAddPendingAssetUserException e) {
+            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
+        } catch (CantGetAssetUserActorsException e) {
+            throw new CantCreateAssetUserActorException("CAN'T GET ACTOR ASSET USER", e, "", "");
+        } catch (Exception e) {
+            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", FermatException.wrapException(e), "", "");
+        }
     }
 
     @Override
@@ -245,21 +275,19 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         return list;
     }
 
-    @Override
-    public void registerActorInActorNetowrkSerice() {
-
+    public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetUserException {
         try {
             /*
              * Send the Actor Asset User Local for Register in Actor Network Service
              */
             ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
-//            if (actorAssetUser.getConnectionState() != ConnectionState.CONNECTED) {
-            assetUserActorNetworkServiceManager.registerActorAssetUser(this.assetUserActorDao.getActorAssetUser());
-//            } else {
-//                System.out.println("Actor Asset User YA REGISTRADO - NO Puede volver a registrarse");
-//            }
-        } catch (CantRegisterActorAssetUserException | CantGetAssetUsersListException e) {
-            e.printStackTrace();
+
+            assetUserActorNetworkServiceManager.registerActorAssetUser(actorAssetUser);
+
+        } catch (CantRegisterActorAssetUserException e) {
+            throw new CantRegisterActorAssetUserException("CAN'T Register Actor Asset User in Actor Network Service", e, "", "");
+        } catch (CantGetAssetUserActorsException e) {
+            throw new CantRegisterActorAssetUserException("CAN'T GET ACTOR ASSET USER", e, "", "");
         }
     }
 
@@ -274,10 +302,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                             Actors.DAP_ASSET_USER,
                             requester.getPublicKey(),
                             actorAssetUser.getPublicKey(),
-                            CryptoAddressDealers.DAP_ASSET,//TODO Para testing "DAP_ASSET" - VALIDAR QUE USAR para DESPUES ???
+                            CryptoAddressDealers.DAP_ASSET,
                             BlockchainNetworkType.DEFAULT);
 
-                    this.assetUserActorDao.updateAssetUserConnectionStateActorNetworService(actorAssetUser.getPublicKey(), ConnectionState.PENDING_REMOTELY_ACCEPTANCE, actorAssetUser.getCryptoAddress());
+                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
                 } catch (CantUpdateAssetUserConnectionException e) {
                     e.printStackTrace();
                 }
@@ -296,7 +324,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             System.out.println("=============Actor Asset Inicia Recepcion Crypto=========");
             //todo actualizar tabla de usuarios registrados con nueva crypto address.
-            this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(actorAssetUser, ConnectionState.CONNECTED, cryptoAddress);
+            this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(actorAssetUser, DAPConnectionState.CONNECTED_ONLINE, cryptoAddress);
             System.out.println("=============Actor Asset User Recibida Crypto================");
             System.out.println("Actor Asset User: " + actorAssetUser.getName());
             System.out.println("Actor Asset Crypto Address: " + actorAssetUser.getCryptoAddress().getAddress());
@@ -313,52 +341,13 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         System.out.println("Actor Asset User se Registro " + actorAssetUser.getName());
         try {
             //TODO Cambiar luego por la publicKey Linked proveniente de Identity
-            this.assetUserActorDao.updateAssetUserConnectionStateOrCrpytoAddress(actorAssetUser.getPublicKey(),
-                    ConnectionState.CONNECTED,
+            this.assetUserActorDao.updateAssetUserDAPConnectionStateOrCrpytoAddress(actorAssetUser.getPublicKey(),
+                    DAPConnectionState.REGISTERED_ONLINE,
                     actorAssetUser.getCryptoAddress());
         } catch (CantUpdateAssetUserConnectionException e) {
             e.printStackTrace();
         }
         System.out.println("***************************************************************");
-    }
-
-    public void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException {
-
-        try {
-            ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
-            if (actorAssetUser == null) {
-                String assetUserActorPublicKey = UUID.randomUUID().toString();
-                Genders genders = Genders.MALE;
-                String age = "25";
-                ConnectionState connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
-                Double locationLatitude = new Random().nextDouble();
-                Double locationLongitude = new Random().nextDouble();
-                AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey,
-                        "Thunder User_" + new Random().nextInt(90),
-                        age,
-                        genders,
-                        connectionState,
-                        locationLatitude,
-                        locationLongitude,
-                        System.currentTimeMillis(),
-                        System.currentTimeMillis(),
-                        new byte[0]);
-
-                this.assetUserActorDao.createNewAssetUser(record);
-                actorAssetUser = this.assetUserActorDao.getActorAssetUser();
-                System.out.println("*****************Actor Asset User************************");
-                System.out.println("Actor Asset PublicKey: " + actorAssetUser.getPublicKey());
-                System.out.println("Actor Asset Name: " + actorAssetUser.getName());
-//                System.out.println("Actor Asset GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
-                System.out.println("**********************************************************");
-//                this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record, ConnectionState.CONNECTED, record.getCryptoAddress());
-            }
-
-        } catch (CantAddPendingAssetUserException e) {
-            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
-        } catch (Exception e) {
-            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", FermatException.wrapException(e), "", "");
-        }
     }
 
     /**
@@ -367,7 +356,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantStartAgentException {
         if (this.assetUserActorMonitorAgent == null) {
 //            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
-            this.assetUserActorMonitorAgent = new AssetUserActorMonitorAgent(this.eventManager,
+            this.assetUserActorMonitorAgent = new AssetUserActorMonitorAgent(
+                    this.eventManager,
                     this.pluginDatabaseSystem,
                     this.errorManager,
                     this.pluginId,
@@ -436,25 +426,25 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             if (request.getCryptoAddress() != null) {
                 System.out.println("*****Actor Asset User Recibiendo Crypto Localmente*****");
 
-                this.assetUserActorDao.updateAssetUserConnectionStateActorNetworService(request.getIdentityPublicKeyResponding(), ConnectionState.CONNECTED, request.getCryptoAddress());
+                this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress());
 
                 List<ActorAssetUser> actorAssetUser = this.assetUserActorDao.getAssetUserRegistered(request.getIdentityPublicKeyResponding());
 
-                if(!actorAssetUser.isEmpty()) {
+                if (!actorAssetUser.isEmpty()) {
                     for (ActorAssetUser actorAssetUser1 : actorAssetUser) {
                         System.out.println("Actor Asset User: " + actorAssetUser1.getPublicKey());
                         System.out.println("Actor Asset User: " + actorAssetUser1.getName());
                         if (actorAssetUser1.getCryptoAddress() != null) {
                             System.out.println("Actor Asset User: " + actorAssetUser1.getCryptoAddress().getAddress());
                             System.out.println("Actor Asset User: " + actorAssetUser1.getCryptoAddress().getCryptoCurrency());
-                            System.out.println("Actor Asset User: " + actorAssetUser1.getConnectionState());
+                            System.out.println("Actor Asset User: " + actorAssetUser1.getDapConnectionState());
                         } else {
                             System.out.println("Actor Asset User FALLO Recepcion CryptoAddress para User: " + actorAssetUser1.getName());
                         }
                     }
-                }else {
-                    System.out.println("Actor Asset User NO se Encontro PublicKey: "+ request.getIdentityPublicKeyResponding());
-                    System.out.println("Actor Asset User NO se Encontro: "+ request.getIdentityTypeResponding());
+                } else {
+                    System.out.println("Actor Asset User NO se Encontro PublicKey: " + request.getIdentityPublicKeyResponding());
+                    System.out.println("Actor Asset User NO se Encontro: " + request.getIdentityTypeResponding());
                 }
 
                 cryptoAddressesNetworkServiceManager.confirmAddressExchangeRequest(request.getRequestId());

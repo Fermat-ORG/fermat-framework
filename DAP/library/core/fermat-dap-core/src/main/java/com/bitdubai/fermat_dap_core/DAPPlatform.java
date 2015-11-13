@@ -8,6 +8,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_dap_core.layer.actor.ActorLayer;
 import com.bitdubai.fermat_dap_core.layer.actor_network_service.ActorNetworkServiceLayer;
 import com.bitdubai.fermat_dap_core.layer.identity.IdentityLayer;
+import com.bitdubai.fermat_dap_core.layer.middleware.MiddlewareLayer;
+import com.bitdubai.fermat_dap_core.layer.network_service.NetworkServiceLayer;
+import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.DigitalAssetTransactionLayer;
+import com.bitdubai.fermat_dap_core.layer.sub_app_module.SubAppModuleLayer;
 import com.bitdubai.fermat_dap_core.layer.wallet.WalletLayer;
 import com.bitdubai.fermat_dap_core.layer.wallet_module.WalletModuleLayer;
 
@@ -28,11 +32,15 @@ public final class DAPPlatform extends AbstractPlatform {
 
         try {
 
-            registerLayer(new ActorLayer()              );
-            registerLayer(new ActorNetworkServiceLayer());
-            registerLayer(new IdentityLayer()           );
-            registerLayer(new WalletLayer()             );
-            registerLayer(new WalletModuleLayer()       );
+            registerLayer(new ActorLayer()                  );
+            registerLayer(new ActorNetworkServiceLayer()    );
+            registerLayer(new DigitalAssetTransactionLayer());
+            registerLayer(new IdentityLayer()               );
+            registerLayer(new MiddlewareLayer()             );
+            registerLayer(new NetworkServiceLayer()         );
+            registerLayer(new SubAppModuleLayer()           );
+            registerLayer(new WalletLayer()                 );
+            registerLayer(new WalletModuleLayer()           );
 
         } catch (CantRegisterLayerException e) {
 
