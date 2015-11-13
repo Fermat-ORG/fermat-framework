@@ -81,6 +81,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     int assetsAmount;
     private AssetIssuingTransactionDao assetIssuingTransactionDao;
+    ActorAssetIssuerManager actorAssetIssuerManager;
     AssetVaultManager assetVaultManager;
     BitcoinWalletBalance bitcoinWalletBalance;
     BlockchainNetworkType blockchainNetworkType;
@@ -170,16 +171,28 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     }
 
     public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
-        try {
-            this.actorToPublicKey=actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
-            if(this.actorToPublicKey==null){
-                this.actorToPublicKey="actorPublicKeyNotFound";
-            }
-            System.out.println("ASSET ISSUING Actor Asset Issuer public key "+actorToPublicKey);
-        } catch (CantGetAssetIssuerActorsException exception) {
-            throw new CantSetObjectException(exception, "Setting the actor asset issuer manager","Cannot get the actor asset issuer manager");
-        }
 
+        if (actorAssetIssuerManager == null) {
+            throw new CantSetObjectException("actorAssetIssuerManager is null");
+        }
+        this.actorAssetIssuerManager=actorAssetIssuerManager;
+
+
+    }
+
+    private void getActorAssetIssuerPublicKey() throws ObjectNotSetException, CantGetAssetIssuerActorsException {
+        if (actorAssetIssuerManager.getActorAssetIssuer() == null) {
+            throw new ObjectNotSetException("ActorAssetIssuer is null");
+        }
+        try {
+            this.actorToPublicKey = actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
+            if (this.actorToPublicKey == null) {
+                this.actorToPublicKey = "actorPublicKeyNotFound";
+            }
+            System.out.println("ASSET ISSUING Actor Asset Issuer public key " + actorToPublicKey);
+        } catch (CantGetAssetIssuerActorsException exception) {
+            throw new ObjectNotSetException(exception, "Setting the actor asset issuer manager", "Cannot get the actor asset issuer manager");
+        }
     }
 
     /**
@@ -377,6 +390,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         int counter=0;
         //Check if digital asset is complete
         try {
+
+            getActorAssetIssuerPublicKey();
             setBlockchainNetworkType(blockchainNetworkType);
             setWalletPublicKey(walletPublicKey);
             this.digitalAssetIssuingVault.setWalletPublicKey(walletPublicKey);
@@ -448,6 +463,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         } catch (CantCheckAssetIssuingProgressException exception) {
             //ALREADY UPDATED STATUS IN THE ROOT OF THIS EXCEPTION.
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets - Asset number "+counter,"Cannot check the asset issuing progress");
+        } catch (CantGetAssetIssuerActorsException exception) {
+            this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.ACTOR_ISSUER_NULL);
+            throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets","The Actor Issuer is null");
         }
     }
 
