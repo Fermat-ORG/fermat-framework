@@ -30,7 +30,7 @@
                 android:textSize="13sp"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
-                android:src="@drawable/ic_launcher"
+
                 android:layout_alignParentTop="true"
                 android:layout_column="2"/>
             <TextView android:text="App Name"

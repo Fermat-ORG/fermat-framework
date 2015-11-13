@@ -9,7 +9,7 @@
             android:id="@+id/imageView_profile"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/mati_profile"/>
+            android:src="@drawable/profile_image"/>
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="24dp"

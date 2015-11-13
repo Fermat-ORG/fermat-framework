@@ -3,10 +3,14 @@ package com.bitdubai.android_core.app;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.managers.ManagerFactory;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
@@ -33,6 +37,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bitdubai.fermat.R;
 
+import java.util.List;
+
 
 /**
  * Created by Matias Furszyfer
@@ -45,10 +51,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     /**
      * Members used by back button
      */
-    private String actionKey;
-    private Object[] screenObjects;
-
-
 
 
 
@@ -425,36 +427,46 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     private void setOneFragmentInScreen() throws InvalidParameterException {
-        RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.only_fragment_container));
+
         SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
         SubApps subAppType = subAppRuntimeManager.getLastSubApp().getType();
 
         com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subAppType);
-
+        String fragment = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment().getType();
+        SubAppsSession subAppsSession = getSubAppSessionManager().getSubAppsSession(subAppType);
 
         try {
             if(subAppFragmentFactory !=null){
-                //TODO está linea está tirando error
-                String fragment = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment().getType();
-                SubAppsSession subAppsSession = getSubAppSessionManager().getSubAppsSession(subAppType);
 
-                android.app.Fragment fragmet= subAppFragmentFactory.getFragment(fragment, subAppsSession, null,getSubAppResourcesProviderManager());
-                FragmentTransaction FT = getFragmentManager().beginTransaction();
-                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                FT.replace(R.id.only_fragment_container, fragmet);
-//                FT.addToBackStack(null);
-//                FT.attach(fragmet);
-//                FT.show(fragmet);
-                FT.commit();
 
+                    TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+                    tabLayout.setVisibility(View.GONE);
+
+                    ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
+                    pagertabs.setVisibility(View.VISIBLE);
+
+
+                    adapter = new TabsPagerAdapter(getFragmentManager(),
+                            getApplicationContext(),
+                            subAppFragmentFactory,
+                            fragment,
+                            subAppsSession,
+                            getSubAppResourcesProviderManager(),
+                            getResources());
+                    pagertabs.setAdapter(adapter);
+
+                    final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                            .getDisplayMetrics());
+                    pagertabs.setPageMargin(pageMargin);
+
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
             }
-        } catch (FragmentNotFoundException e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
-        }
 
-    }
+
+        }
     private SubAppsSession createOrCallSubAppSession(){
         SubAppsSession subAppSession = null;
         try {
@@ -497,6 +509,25 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     public void onNavigationDrawerItemSelected(int position, String activityCode) {
         try {
             changeActivity(activityCode);
+        }catch (Exception e){
+
+        }
+    }
+
+    @Override
+    protected List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> getNavigationMenu() {
+        return getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getSideMenu().getMenuItems();
+    }
+
+    @Override
+    protected void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
+        try {
+            String activityCode = data.getLinkToActivity().getCode();
+            if(activityCode.equals("develop_mode")){
+                developMode = true;
+                onBackPressed();
+            }else
+                changeActivity(activityCode);
         }catch (Exception e){
 
         }

@@ -132,14 +132,16 @@ public class AssetCryptoVaultManager  {
     }
 
     /**
-     * Sends bitcoins to the specified address. It will create a new wallet object from the Keys generated from the
+     * * Sends bitcoins to the specified address. It will create a new wallet object from the Keys generated from the
      * VaultKeyHierarchyGenerator and set an UTXO provider from the CryptoNetwork. Using my UTXO, I will create a new
      * transaction and broadcast it on the corresponding network.
      * @param genesisTransactionId
      * @param addressTo
+     * @param amount
+     * @return the Transaction hash
      * @throws CantSendAssetBitcoinsToUserException
      */
-    public void sendBitcoinAssetToUser(String genesisTransactionId, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
+    public String sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException{
         /**
          * I get the network for this address.
          */
@@ -149,8 +151,7 @@ public class AssetCryptoVaultManager  {
          * I will create a new wallet from my own set of keys
          */
 
-
-
+        return "";
     }
 
     /**
