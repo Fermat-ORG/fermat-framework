@@ -1,13 +1,13 @@
 package com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_cbp_api.all_definition.world.Index;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 
 /**
  * Created by jorge on 30-10-2015.
  * Modified by Alex on 11/8/2015.
  */
-public class FiatIndex implements Index {
+public class FiatIndexImpl implements FiatIndex {
 
     private FiatCurrency currency;
     private FiatCurrency referenceCurrency;
@@ -15,7 +15,7 @@ public class FiatIndex implements Index {
     double purchasePrice;
     long timestamp;
 
-    public FiatIndex(FiatCurrency currencyType, FiatCurrency referenceCurrency, double salePrice, double purchasePrice, long timestamp) {
+    public FiatIndexImpl(FiatCurrency currencyType, FiatCurrency referenceCurrency, double salePrice, double purchasePrice, long timestamp) {
         this.currency = currencyType;
         this.referenceCurrency = referenceCurrency;
         this.salePrice = salePrice;
