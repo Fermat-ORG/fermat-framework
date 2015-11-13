@@ -18,8 +18,6 @@ Fermat is a master plan to avoid getting into that future by waiting for indepen
 
 #### The Framework
 
-Crypto networks are peer-to-Peer electronic cash systems that allow online payments to be sent directly from one party to another without going through a financial institution. Stand-alone crypto wallets are truth to that principle. But the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallet files or keys, manage identities, interface crypto networks or the legacy financial system.
-
 Fermat is a trust-less financial application framework that enables any kind of trust-less applications, including digital wallets. 
 
 The framework evolves from the stand-alone crypto wallet and enables an ecosystem of peer-to-peer financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down from an OS API level, to a Blockchain, Communication, Platform, and User Interface Level. 
@@ -28,7 +26,9 @@ The framework evolves from the stand-alone crypto wallet and enables an ecosyste
 
 #### The Network
 
-Fermat features a Peer-to-Peer network for transporting meta-data and inter-connect network clients between each other. On top of that network a synchronization scheme transforms a standalone app into a distributed application across several devices still owned by the same user. 
+Crypto networks are peer-to-Peer electronic cash systems that allow online payments to be sent directly from one party to another without going through a financial institution. Stand-alone crypto wallets are truth to that principle. But the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallet files or keys, manage identities, interface crypto networks or the legacy financial system.
+
+Fermat features a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. On top of that network a synchronization scheme transforms a standalone app into a distributed application across several devices still owned by the same user. 
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/P2P.jpg "Peer to Peer Network")
 
