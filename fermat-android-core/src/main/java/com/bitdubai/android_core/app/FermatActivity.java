@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NotificationCompat;
@@ -90,8 +91,10 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -178,6 +181,8 @@ public abstract class FermatActivity extends AppCompatActivity
     private NavigationView navigationView;
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbarLayout;
+    private ViewPager pagertabs;
+    private CoordinatorLayout coordinatorLayout;
 
 
     /**
@@ -396,6 +401,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
                 }
 
+                if(titleBar.getColor() != null){
+                    mToolbar.setBackgroundColor(Color.parseColor(titleBar.getColor()));
+                    collapsingToolbarLayout.setContentScrimColor(Color.parseColor(titleBar.getColor()));
+                }
+
+
                 collapsingToolbarLayout.setTitle(title);
 
 
@@ -404,11 +415,28 @@ public abstract class FermatActivity extends AppCompatActivity
                 paintToolbarIcon(titleBar);
             } else {
                 collapsingToolbarLayout.setVisibility(View.GONE);
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        collapsingToolbarLayout.setNestedScrollingEnabled(false);
+                        appBarLayout.setNestedScrollingEnabled(false);
+                        mToolbar.setNestedScrollingEnabled(false);
+                        pagertabs.setNestedScrollingEnabled(false);
+                        coordinatorLayout.setNestedScrollingEnabled(false);
+
+                    }
+                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) collapsingToolbarLayout.getLayoutParams();
+                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP); // list other flags here by |
+                    collapsingToolbarLayout.setLayoutParams(params);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     private void paintToolbarIcon(TitleBar titleBar) {
         if (titleBar.getIconName() != null) {
@@ -432,19 +460,19 @@ public abstract class FermatActivity extends AppCompatActivity
         collapsingToolbarLayout.setTitle(s);
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-
-            Drawable colorDrawable = new ColorDrawable(Color.parseColor(activity.getColor()));
-            Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
-            LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                //ld.setCallback(drawableCallback);
-                Log.d(getClass().getSimpleName(), "Version incompatible con status bar");
-            } else {
-                collapsingToolbarLayout.setBackgroundDrawable(ld);
-            }
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//
+//            Drawable colorDrawable = new ColorDrawable(Color.parseColor(activity.getColor()));
+//            Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
+//            LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
+//
+//            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//                //ld.setCallback(drawableCallback);
+//                Log.d(getClass().getSimpleName(), "Version incompatible con status bar");
+//            } else {
+//                collapsingToolbarLayout.setBackgroundDrawable(ld);
+//            }
+//        }
     }
 
     /**
@@ -458,7 +486,7 @@ public abstract class FermatActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setVisibility(View.VISIBLE);
 
-        ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
+        pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
 
         if (tabStrip.isHasIcon()) {
@@ -549,6 +577,8 @@ public abstract class FermatActivity extends AppCompatActivity
 
                 setContentView(R.layout.new_wallet_runtime);
 
+            coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
+
 
                     mToolbar = (Toolbar) findViewById(R.id.toolbar);
                     setSupportActionBar(mToolbar);
@@ -579,6 +609,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             if(header==null){
                 appBarLayout.setExpanded(false);
+                appBarLayout.setEnabled(false);
             }
 
                     mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -593,38 +624,13 @@ public abstract class FermatActivity extends AppCompatActivity
                             navigationView.setNavigationItemSelectedListener(this);
 
 
-//                            String TITLES[] = {"Home", "Events", "Mail", "Shop", "Travel"};
                             navigation_recycler_view = (RecyclerView) findViewById(R.id.navigation_recycler_view);
-//                            RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
                             RecyclerView.LayoutManager mLayoutManager;
 
                             navigation_recycler_view.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
 
 
-
-//                            //TODO: CAMBIAR TODO ESTE TESTEO ASQUEROSO
-//                            mAdapter = new MyAdapter(this, getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu().getMenuItems(), new IntraUserLoginIdentity() {
-//                                @Override
-//                                public String getAlias() {
-//                                    return "mati";
-//                                }
-//
-//                                @Override
-//                                public String getPublicKey() {
-//                                    return "absaaa";
-//                                }
-//
-//                                @Override
-//                                public byte[] getProfileImage() {
-//                                    return new byte[0];
-//                                }
-//                            }, this);
-//
-//                            navigation_recycler_view.setAdapter(mAdapter);                              // Setting the adapter to RecyclerView
-
-
                             mLayoutManager = new LinearLayoutManager(this);                 // Creating a layout Manager
-
                             navigation_recycler_view.setLayoutManager(mLayoutManager);                 // Setting the layout Manager
 
 
@@ -783,7 +789,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
                         // finally change the color
                         Color color_status = new Color();
-                        window.setStatusBarColor(color_status.parseColor(statusBar.getColor()));
+                        window.setStatusBarColor(Color.TRANSPARENT);//color_status.parseColor(statusBar.getColor()));
                     } catch (Exception e) {
                         getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                         Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -956,7 +962,8 @@ public abstract class FermatActivity extends AppCompatActivity
                         if(activePlatforms.contains(Platforms.DIGITAL_ASSET_PLATFORM)) {
                             com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment went1 = com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
                             fragments.add(went1);
-                            com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
+                            IdentityAssetIssuerManager identityAssetIssuerManager = getIdentityAssetIssuerManager();
+                            com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0, identityAssetIssuerManager);
                             fragments.add(dapDesktopFragment);
                         }
                         break;
@@ -1111,7 +1118,9 @@ public abstract class FermatActivity extends AppCompatActivity
         return (DesktopRuntimeManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DESKTOP_RUNTIME);
     }
 
-
+    public IdentityAssetIssuerManager getIdentityAssetIssuerManager(){
+        return (IdentityAssetIssuerManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
+    }
 
     /**
      * Assest Issuer Wallet Module
@@ -1138,6 +1147,10 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     public CryptoBrokerWalletModuleManager getCryptoBrokerWalletModuleManager() {
         return (CryptoBrokerWalletModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE);
+    }
+
+    public CryptoCustomerWalletModuleManager getCryptoCustomerWalletModuleManager() {
+        return (CryptoCustomerWalletModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_WALLET_MODULE);
     }
 
     /**
