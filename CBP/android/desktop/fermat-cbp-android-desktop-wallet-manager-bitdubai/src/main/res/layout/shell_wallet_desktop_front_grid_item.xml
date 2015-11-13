@@ -24,15 +24,15 @@
             >
             <ImageView
                 android:id="@+id/image_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:scaleType="centerCrop"
                 android:textColor="@color/black_overlay"
                 android:textStyle="bold"
                 android:textSize="13sp"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
-                android:src="@drawable/wallet_1"
+                android:src="@drawable/crypto_broker_wallet_icon"
                 android:layout_alignParentTop="true"
                 android:layout_column="2"
                 android:clickable="true"
