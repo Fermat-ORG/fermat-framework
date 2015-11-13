@@ -717,7 +717,7 @@ public class Platform implements Serializable {
                 pluginsToInstantiate.put(ref(Platforms.CRYPTO_BROKER_PLATFORM, Layers.SUB_APP_MODULE, Plugins.CRYPTO_CUSTOMER_IDENTITY), Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE);
 
                 pluginsToInstantiate.put(ref(Platforms.CRYPTO_BROKER_PLATFORM, Layers.WALLET_MODULE , Plugins.CRYPTO_BROKER           ), Plugins.BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE);
-
+                pluginsToInstantiate.put(ref(Platforms.CRYPTO_BROKER_PLATFORM, Layers.WALLET_MODULE , Plugins.CRYPTO_CUSTOMER         ), Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_WALLET_MODULE);
             }
 
             for (AddonVersionReference avr :addonsToInstantiate)

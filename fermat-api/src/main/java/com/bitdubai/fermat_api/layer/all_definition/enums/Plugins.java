@@ -150,6 +150,7 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE("BCBPCBISAM"),
     BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE("BCBPCCISAM"),
     BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE("BCBPCBWM"),
+    BITDUBAI_CBP_CRYPTO_CUSTOMER_WALLET_MODULE("BCBPCCWM"),
     //End CBP Plugins
 
     // Init new Plugins
@@ -455,6 +456,8 @@ public enum Plugins implements FermatEnum {
                 return BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE;
             case "BCBPCBWM":
                 return BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE;
+            case "BCBPCCWM":
+                return BITDUBAI_CBP_CRYPTO_CUSTOMER_WALLET_MODULE;
             //End CBP Plugins
 
             // Init new Plugins
