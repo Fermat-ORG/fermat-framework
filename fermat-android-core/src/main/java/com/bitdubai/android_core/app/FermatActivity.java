@@ -411,6 +411,12 @@ public abstract class FermatActivity extends AppCompatActivity
                 paintToolbarIcon(titleBar);
             } else {
                 collapsingToolbarLayout.setVisibility(View.GONE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    collapsingToolbarLayout.setNestedScrollingEnabled(false);
+                    appBarLayout.setNestedScrollingEnabled(false);
+                    mToolbar.setNestedScrollingEnabled(false);
+                }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
