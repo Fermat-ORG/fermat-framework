@@ -1,6 +1,6 @@
-# Fermat BCH CORE
+# Fermat CBP CORE
 
-Este es el CORE para la [BLockchains Platform](../CBCH); aca definimos la forma en la que nuestra plataforma se inicializa.
+Este es el CORE para la [Crypto Brokers Platform](../CBP); aca definimos la forma en la que nuestra plataforma se inicializa.
 
 ## Developer
 
