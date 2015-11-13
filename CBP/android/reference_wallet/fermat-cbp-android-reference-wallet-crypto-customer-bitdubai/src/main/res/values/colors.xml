@@ -3,20 +3,23 @@
 
     <color name="app_background">#ffffff</color>
     <color name="background_tab_pressed">#6633B5E5</color>
-    <color name="black">#000000</color>
+    <color name="ccw_grouper_text">#343434</color>
     <color name="ccw_activity_color">#1189a5</color>
     <color name="ccw_status_bar_color">#0e738b</color>
-    <color name="ccw_waiting_for_broker_grouper_background">#43c4e7</color>
+    <color name="ccw_waiting_for_broker_grouper_background">#0191ba</color>
+    <color name="ccw_waiting_for_broker_grouper_text">#ffffff</color>
     <color name="ccw_list_divider">#999999</color>
+    <color name="ccw_first_line_item">#343434</color>
+    <color name="ccw_second_line_item">#0191ba</color>
     <color name="contract_closed_list_item_background">#c6c6c6</color>
     <color name="contract_cancelled_list_item_background">#ff8b8b</color>
-    <color name="customer_name_text">#7b7b7b</color>
+    <color name="broker_name_text">#6b7378</color>
     <color name="dark_grey">#7b7b7b</color>
-    <color name="negotiation_date_text">#7b7b7b</color>
+    <color name="negotiation_date_text">#6b7378</color>
     <color name="negotiation_closed_list_item_background">#c6c6c6</color>
     <color name="negotiation_cancelled_list_item_background">#ff8b8b</color>
-    <color name="waiting_for_text">#1d5127</color>
-    <color name="waiting_for_broker_list_item_background">#c6c6c6</color>
+    <color name="waiting_for_text">#6b7378</color>
+    <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
     <color name="waiting_for_customer_list_item_background">#ffffff</color>
     <color name="withe">#FFFFFF</color>
 

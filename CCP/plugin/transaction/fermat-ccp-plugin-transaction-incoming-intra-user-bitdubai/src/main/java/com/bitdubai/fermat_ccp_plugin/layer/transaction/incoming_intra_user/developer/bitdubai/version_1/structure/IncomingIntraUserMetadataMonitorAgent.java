@@ -139,10 +139,10 @@ public class IncomingIntraUserMetadataMonitorAgent {
         private void doTheMainTask() {
             EventWrapper eventWrapper = null;
             try {
-                eventWrapper     = this.registry.getNextCryptoPendingEvent();
+                eventWrapper     = this.registry.getNextMetadataPendingEvent();
                 while(thisIsAPendingEvent(eventWrapper)) {
                     processEvent(eventWrapper);
-                    eventWrapper = this.registry.getNextCryptoPendingEvent();
+                    eventWrapper = this.registry.getNextMetadataPendingEvent();
                 }
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -156,13 +156,13 @@ public class IncomingIntraUserMetadataMonitorAgent {
         private void processEvent(EventWrapper eventWrapper) {
             try {
                 TransactionProtocolManager<FermatCryptoTransaction> source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.getEventSource()));
-                List<Transaction<FermatCryptoTransaction>> transactionList = source.getPendingTransactions(Specialist.EXTRA_USER_SPECIALIST);
+                List<Transaction<FermatCryptoTransaction>> transactionList = source.getPendingTransactions(Specialist.INTRA_USER_SPECIALIST);
 
-                System.out.println("TTF - INTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) DETECTED");
+                System.out.println("TTF - INTRA USER METADATA MONITOR: " + transactionList.size() + " TRANSACTION(s) DETECTED");
 
                 this.registry.acknowledgeFermatCryptoTransactions(transactionList);
 
-                System.out.println("TTF - INTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) ACKNOWLEDGED");
+                System.out.println("TTF - INTRA USER METADATA MONITOR: " + transactionList.size() + " TRANSACTION(s) ACKNOWLEDGED");
 
                 // Now we take all the transactions in state (ACKNOWLEDGE,TO_BE_NOTIFIED)
                 // Remember that this list can be more extensive than the one we saved, this is
@@ -173,7 +173,7 @@ public class IncomingIntraUserMetadataMonitorAgent {
                 for(Transaction<FermatCryptoTransaction> transaction : acknowledgedTransactions){
                     try {
                         source.confirmReception(transaction.getTransactionID());
-                        System.out.println("TTF - INTRA USER MONITOR: TRANSACTION RESPONSIBILITY ACQUIRED");
+                        System.out.println("TTF - INTRA USER MONITOR METADATA: TRANSACTION RESPONSIBILITY ACQUIRED");
                         registry.acquireFermatCryptoTransactionResponsibility(transaction);
                     } catch (CantConfirmTransactionException | com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantAcquireResponsibilityException exception) {
                         // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
@@ -184,7 +184,7 @@ public class IncomingIntraUserMetadataMonitorAgent {
                 }
 
                 registry.disableEvent(eventWrapper.getEventId());
-                System.out.println("TTF - INTRA USER MONITOR: EVENT DISABLED");
+                System.out.println("TTF - INTRA USER METADATA MONITOR: EVENT DISABLED");
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }

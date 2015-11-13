@@ -89,8 +89,6 @@ public final class FermatPluginManager {
             if (abstractPlugin.isStarted())
                 return abstractPlugin;
 
-            System.out.println("Init Plugin Start-Up: " + pluginVersionReference.toString3());
-
             final List<AddonVersionReference> neededAddons = abstractPlugin.getNeededAddons();
 
             for (final AddonVersionReference avr : neededAddons) {
@@ -101,10 +99,12 @@ public final class FermatPluginManager {
             final List<PluginVersionReference> neededPlugins = abstractPlugin.getNeededPlugins();
 
             for (final PluginVersionReference pvr : neededPlugins) {
-                AbstractPlugin reference = startPluginAndReferences(pvr);
-                List<PluginVersionReference> subPluginReferences = reference.getNeededPlugins();
 
-                compareReferences(pluginVersionReference, pvr, subPluginReferences);
+                AbstractPlugin reference = systemContext.getPluginVersion(pvr);
+
+                compareReferences(pluginVersionReference, pvr, reference.getNeededPlugins());
+
+                startPluginAndReferences(pvr);
 
                 abstractPlugin.assignPluginReference(reference);
             }
@@ -113,26 +113,24 @@ public final class FermatPluginManager {
 
             startPlugin(abstractPlugin);
 
-            System.out.println("End  Plugin Start-Up: " + pluginVersionReference.toString3());
-
             return abstractPlugin;
         } catch (CantListNeededReferencesException e) {
 
-            throw new CantStartPluginException(e, pluginVersionReference.toString(), "Error listing references for the plugin.");
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error listing references for the plugin.");
         } catch(CantAssignReferenceException   |
                 IncompatibleReferenceException |
                 CantStartAddonException        e) {
 
-            throw new CantStartPluginException(e, pluginVersionReference.toString(), "Error assigning references for the plugin.");
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error assigning references for the plugin.");
         } catch(final CantStartPluginIdsManagerException e) {
 
-            throw new CantStartPluginException(e, pluginVersionReference.toString(), "Error trying to get the pluginIdsManager.");
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to get the pluginIdsManager.");
         } catch(final CantGetPluginIdException e) {
 
-            throw new CantStartPluginException(e, pluginVersionReference.toString(), "Error trying to set the plugin id.");
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to set the plugin id.");
         } catch (final CyclicalRelationshipFoundException e) {
 
-            throw new CantStartPluginException(e, pluginVersionReference.toString(), "Cyclical References found for the plugin.");
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Cyclical References found for the plugin.");
         }
     }
 
@@ -156,7 +154,7 @@ public final class FermatPluginManager {
 
             throw new CantStartPluginException(
                     e,
-                    abstractPlugin.getPluginVersionReference().toString(),
+                    abstractPlugin.getPluginVersionReference().toString3(),
                     "There was a captured problem during the plugin start."
             );
         } catch (Exception e) {
@@ -276,7 +274,7 @@ public final class FermatPluginManager {
         for (final PluginVersionReference ref2 : subReferenceReferences) {
             if (referenceAnalyzing.equals(ref2))
                 throw new CyclicalRelationshipFoundException(
-                        "Comparing: " + referenceAnalyzing + "\n with: " + subReferenceAnalyzed,
+                        "Comparing: " + referenceAnalyzing.toString3() + "\n with: " + subReferenceAnalyzed.toString3(),
                         "Cyclical relationship found."
                 );
         }

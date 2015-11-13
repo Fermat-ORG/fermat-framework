@@ -10,10 +10,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+
 import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_cbp_api.all_definition.world.Index;
-import com.bitdubai.fermat_cbp_api.all_definition.world.IndexManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_world.cbp_fiat_index.exceptions.CantGetIndexException;
+import com.bitdubai.fermat_api.layer.world.interfaces.Index;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
+import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
+import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure.FiatIndexImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure.IndexHelper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -34,7 +38,7 @@ import java.util.regex.Pattern;
 
  */
 
-public class FiatIndexPluginRoot implements IndexManager<FiatCurrency>, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class FiatIndexPluginRoot implements FiatIndexManager, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
     IndexHelper indexHelper = new IndexHelper();
 
@@ -190,17 +194,20 @@ public class FiatIndexPluginRoot implements IndexManager<FiatCurrency>, DealsWit
     }
 
     @Override
-    public Index getCurrentIndex(FiatCurrency currency) throws CantGetIndexException {
+    public FiatIndex getCurrentIndex(FiatCurrency currency) throws CantGetIndexException {
         return indexHelper.getCurrentIndex(currency);
     }
 
     @Override
-    public Index getIndexInDate(FiatCurrency currency, long timestamp) throws CantGetIndexException {
+    public FiatIndex getIndexInDate(FiatCurrency currency, long timestamp) throws CantGetIndexException {
         return null;
     }
 
     @Override
-    public Collection<Index> getQueriedIndexHistory(FiatCurrency currency) {
+    public Collection<FiatIndex> getQueriedIndexHistory(FiatCurrency currency) {
         return null;
     }
+
+
+
 }

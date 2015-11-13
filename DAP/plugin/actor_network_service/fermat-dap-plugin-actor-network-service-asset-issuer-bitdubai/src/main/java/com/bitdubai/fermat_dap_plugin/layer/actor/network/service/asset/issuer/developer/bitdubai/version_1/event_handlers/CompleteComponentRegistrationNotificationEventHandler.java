@@ -11,10 +11,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 /**
  * Created by franklin on 18/10/15.
  */
-public class CompleteComponentRegistrationNotificationEventHandler implements FermatEventHandler  {
-    /*
-* Represent the networkService
-*/
+public class CompleteComponentRegistrationNotificationEventHandler implements FermatEventHandler {
+   /*
+    * Represent the networkService
+    */
     private NetworkService networkService;
 
     /**
@@ -29,15 +29,14 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
     /**
      * (non-Javadoc)
      *
-     * @see FermatEventHandler#handleEvent(FermatEvent)
-     *
      * @param platformEvent
      * @throws Exception
+     * @see FermatEventHandler#handleEvent(FermatEvent)
      */
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
+        System.out.println("CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent =" + platformEvent);
 
         if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 

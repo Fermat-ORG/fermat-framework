@@ -3,6 +3,13 @@ apply plugin: 'java'
 sourceCompatibility = 1.7
 
 dependencies {
+
+    /**
+     * For doing the code more readable, please keep the elements in the file sorted alphabetically:
+     * - layer name
+     * - plugin name
+     */
+
     compile project(':fermat-api')
 
     compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
@@ -28,6 +35,11 @@ dependencies {
     compile project(':fermat-dap-plugin-middleware-asset-factory-bitdubai')
 
     compile project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai')
+
+    compile project(':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai')
+    compile project(':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai')
+    compile project(':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai')
+    compile project(':fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai')
 
     compile project(':fermat-dap-plugin-wallet-assets-issuer-wallet-bitdubai')
     compile project(':fermat-dap-plugin-wallet-assets-user-wallet-bitdubai')

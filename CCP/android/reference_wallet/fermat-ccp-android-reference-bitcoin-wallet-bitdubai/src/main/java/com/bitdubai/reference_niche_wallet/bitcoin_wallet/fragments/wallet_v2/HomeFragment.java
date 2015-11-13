@@ -380,7 +380,7 @@ public class HomeFragment extends FermatWalletFragment {
                         switch (groupPosition) {
 
                             case 3:
-                                account_picture.setImageResource(R.drawable.mati_profile);
+                                account_picture.setImageResource(R.drawable.profile_image);
                                 break;
                             case 4:
                                 account_picture.setImageResource(R.drawable.kimberly_profile_picture);

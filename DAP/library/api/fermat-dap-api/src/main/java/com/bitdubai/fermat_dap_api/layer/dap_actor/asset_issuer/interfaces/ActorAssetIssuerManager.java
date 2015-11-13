@@ -5,6 +5,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantC
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 
 import java.util.List;
 
@@ -54,15 +55,6 @@ public interface ActorAssetIssuerManager {
      * @throws CantGetAssetIssuerActorsException
      */
     List<ActorAssetIssuer> getAllAssetIssuerActorConnected() throws CantGetAssetIssuerActorsException;
-
-    /**
-     * The method <code>registerActorInActorNetowrkSerice</code> Register or Add Actor a Lst in
-     * Actor Network Service
-     *
-     * @throws CantCreateActorAssetIssuerException
-     */
-    //TODO Metodo sera removido luego que existan las Sub App Identity
-    void registerActorInActorNetowrkSerice() throws CantCreateActorAssetIssuerException;
 
     /**
      * The method <code>connectToActorAssetRedeemPoint</code> Stablish Connection

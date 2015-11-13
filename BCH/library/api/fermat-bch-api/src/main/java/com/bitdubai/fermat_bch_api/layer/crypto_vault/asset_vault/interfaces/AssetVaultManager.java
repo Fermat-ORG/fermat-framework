@@ -28,8 +28,10 @@ public interface AssetVaultManager {
      * Sends the bitcoins generated from the genesisTransactionId to the specified User Actor addres.
      * @param genesisTransactionId
      * @param addressTo
+     * @param amount
+     * @return the generated Transaction Hash
      * @throws CantSendAssetBitcoinsToUserException
      */
-    void sendBitcoinAssetToUser(String genesisTransactionId, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException;
+    String sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException;
 
 }

@@ -264,7 +264,8 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
                     errorManager,
                     logManager,
                     pluginId,
-                    pluginFileSystem
+                    pluginFileSystem,
+                    database
             );
 
             vault.loadOrCreateVault();
