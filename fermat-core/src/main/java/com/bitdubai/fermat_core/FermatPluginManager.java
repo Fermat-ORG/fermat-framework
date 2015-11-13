@@ -89,8 +89,6 @@ public final class FermatPluginManager {
             if (abstractPlugin.isStarted())
                 return abstractPlugin;
 
-            System.out.println("Init Plugin Start-Up: " + pluginVersionReference.toString3());
-
             final List<AddonVersionReference> neededAddons = abstractPlugin.getNeededAddons();
 
             for (final AddonVersionReference avr : neededAddons) {
@@ -114,8 +112,6 @@ public final class FermatPluginManager {
             abstractPlugin.setId(pluginIdsManager.getPluginId(pluginVersionReference));
 
             startPlugin(abstractPlugin);
-
-            System.out.println("End  Plugin Start-Up: " + pluginVersionReference.toString3());
 
             return abstractPlugin;
         } catch (CantListNeededReferencesException e) {

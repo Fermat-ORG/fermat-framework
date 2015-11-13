@@ -1,0 +1,34 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+
+// Milestone 1 project:
+
+include ':fermat-osa-android-core'
+project(':fermat-osa-android-core').projectDir = new File('OSA/library/core/fermat-osa-android-core')
+
+
+include ':fermat-osa-addon-android-database-system-bitdubai'
+project(':fermat-osa-addon-android-database-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai')
+
+// Milestone 1 project:
+include ':fermat-osa-addon-android-file-system-bitdubai'
+project(':fermat-osa-addon-android-file-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai')
+
+include ':fermat-osa-addon-android-device-connectivity-bitdubai'
+project(':fermat-osa-addon-android-device-connectivity-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai')
+
+include ':fermat-osa-addon-android-device-power-bitdubai'
+project(':fermat-osa-addon-android-device-power-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai')
+
+// Milestone 1 project:
+include ':fermat-osa-addon-android-logger-bitdubai'
+project(':fermat-osa-addon-android-logger-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-logger-bitdubai')
+
+// OSA Projects (Multi OS)
+
+include ':fermat-osa-addon-android-device-location-bitdubai'
+project(':fermat-osa-addon-android-device-location-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai')

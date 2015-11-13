@@ -122,7 +122,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
             throw new CantListNeededReferencesException(
                     e,
-                    this.getPluginVersionReference().toString(),
+                    this.getPluginVersionReference().toString3(),
                     "There was problems trying to detect the references."
             );
         }
@@ -146,7 +146,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
             throw new CantListNeededReferencesException(
                     e,
-                    this.getPluginVersionReference().toString(),
+                    this.getPluginVersionReference().toString3(),
                     "There was problems trying to detect the references."
             );
         }
@@ -204,7 +204,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
             throw new CantCollectReferencesException(
                     e,
-                    this.getPluginVersionReference().toString(),
+                    this.getPluginVersionReference().toString3(),
                     "Error listing needed references for the plugin."
             );
         }
@@ -221,7 +221,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
             if (field == null) {
                 throw new CantAssignReferenceException(
-                        "Plugin receiving: " + this.pluginVersionReference + " ---- Given addon: " + avr.toString(),
+                        "Plugin receiving: " + this.pluginVersionReference + " ---- Given addon: " + avr.toString3(),
                         "The plugin doesn't need the given reference."
                 );
             }
@@ -234,7 +234,6 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
                 this.addonNeededReferences.remove(avr);
 
-                System.out.println("---------->>> Assigned reference: "+avr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
                         "Working plugin: "+this.getPluginVersionReference().toString3()+
@@ -247,7 +246,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
             throw new CantAssignReferenceException(
                     e,
-                    "Working plugin: "+this.getPluginVersionReference().toString()+ " +++++ Reference to assign: "+ avr.toString(),
+                    "Working plugin: "+this.getPluginVersionReference().toString3()+ " +++++ Reference to assign: "+ avr.toString3(),
                     "Error assigning references for the plugin."
             );
         }
@@ -264,7 +263,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
             if (field == null) {
                 throw new CantAssignReferenceException(
-                        "Plugin receiving: " + this.pluginVersionReference + " ---- Given plugin: " + pvr.toString(),
+                        "Plugin receiving: " + this.pluginVersionReference + " ---- Given plugin: " + pvr.toString3(),
                         "The plugin doesn't need the given reference."
                 );
             }
@@ -276,7 +275,6 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
                 this.pluginNeededReferences.remove(pvr);
 
-                System.out.println("---------->>> Assigned reference: "+pvr.toString3());
             } else {
                 throw new IncompatibleReferenceException(
                         "Working plugin: "+this.getPluginVersionReference().toString3()+
@@ -289,7 +287,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
             throw new CantAssignReferenceException(
                     e,
-                    "Working plugin: "+this.getPluginVersionReference().toString()+ " +++++ Reference to assign: "+ pvr.toString(),
+                    "Working plugin: "+this.getPluginVersionReference().toString3()+ " +++++ Reference to assign: "+ pvr.toString3(),
                     "Error assigning references for the plugin."
             );
         }
