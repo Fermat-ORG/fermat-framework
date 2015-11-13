@@ -70,7 +70,7 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
     public CustomerBrokerNegotiation updateNegotiationPurchase(UUID negotiationId) throws CantGetPurchaseNegotiationException{
         return null;
     }
-    
+
     public CustomerBrokerNegotiation closeNegotiationPurchase(UUID negotiationId) throws CantGetPurchaseNegotiationException{
         return null;
     }

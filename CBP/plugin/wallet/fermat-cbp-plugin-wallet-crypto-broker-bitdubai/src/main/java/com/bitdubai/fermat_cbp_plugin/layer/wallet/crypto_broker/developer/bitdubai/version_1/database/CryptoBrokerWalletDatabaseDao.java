@@ -132,7 +132,7 @@ public class CryptoBrokerWalletDatabaseDao {
             //esto tiene que cambiar
 //            String privateKey = AsymmetricCryptography.createPrivateKey();
             //esto tiene que cambiar
-            String publicKey = getCryptoBrokerWalletPublicKey(ownerPublicKey);
+            String publicKey    = getCryptoBrokerWalletPublicKey(ownerPublicKey);
             String privateKey   = getCryptoBrokerWalletPrivateKey(publicKey);
             KeyPair walletKeys  = AsymmetricCryptography.createKeyPair(privateKey);
             return new CryptoBrokerWalletImpl(walletKeys, ownerPublicKey, this);
