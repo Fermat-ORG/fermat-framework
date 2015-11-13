@@ -122,7 +122,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         /**
          * Navigation view items
          */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null);
+        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
         setNavigationDrawer(navigationViewAdapter);
     }
 

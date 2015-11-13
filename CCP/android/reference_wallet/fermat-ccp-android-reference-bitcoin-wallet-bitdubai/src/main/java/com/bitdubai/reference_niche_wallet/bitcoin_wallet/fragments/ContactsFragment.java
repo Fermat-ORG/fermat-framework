@@ -259,7 +259,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         /**
          * Navigation view items
          */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null);
+        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
         setNavigationDrawer(navigationViewAdapter);
     }
 

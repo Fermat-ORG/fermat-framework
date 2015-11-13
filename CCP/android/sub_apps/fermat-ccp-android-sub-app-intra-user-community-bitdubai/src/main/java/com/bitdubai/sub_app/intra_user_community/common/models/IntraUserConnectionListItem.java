@@ -75,7 +75,7 @@ public class IntraUserConnectionListItem implements Item{
 
     public static ArrayList<IntraUserConnectionListItem> getTestData(Resources resources) {
         ArrayList<IntraUserConnectionListItem> lst = new ArrayList<IntraUserConnectionListItem>();
-        Drawable d=resources.getDrawable(R.drawable.mati_profile); // the drawable (Captain Obvious, to the rescue!!!)
+        Drawable d=resources.getDrawable(R.drawable.profile_image); // the drawable (Captain Obvious, to the rescue!!!)
         Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
@@ -128,7 +128,7 @@ public class IntraUserConnectionListItem implements Item{
     }
     public static ArrayList<IntraUserConnectionListItem> getTestDataExample(Resources resources) {
         ArrayList<IntraUserConnectionListItem> lst = new ArrayList<IntraUserConnectionListItem>();
-        Drawable d=resources.getDrawable(R.drawable.mati_profile); // the drawable (Captain Obvious, to the rescue!!!)
+        Drawable d=resources.getDrawable(R.drawable.profile_image); // the drawable (Captain Obvious, to the rescue!!!)
         Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
