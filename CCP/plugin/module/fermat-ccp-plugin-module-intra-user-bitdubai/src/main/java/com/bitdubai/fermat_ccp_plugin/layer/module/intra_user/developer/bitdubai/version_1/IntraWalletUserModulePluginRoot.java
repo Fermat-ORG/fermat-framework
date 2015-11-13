@@ -34,7 +34,9 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntr
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
@@ -539,6 +541,32 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         }
         return 0;
+    }
+
+    @Override
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityException {
+        try {
+             this.intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey,identityAlias,profileImage);
+        }
+        catch (CantUpdateIdentityException e) {
+            throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY",e,"","Error on IntraUserIdentity Manager");
+        }
+        catch (Exception e) {
+            throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY",FermatException.wrapException(e),"","Error on IntraUserIdentity Manager");
+        }
+    }
+
+    @Override
+    public void deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIdentityException {
+        try {
+            this.intraWalletUserIdentityManager.deleteIntraUserIdentity(identityPublicKey);
+        }
+        catch (CantDeleteIdentityException e) {
+            throw new CantDeleteIdentityException("CAN'T UPDATE INTRA USER IDENTITY",e,"","Error on IntraUserIdentity Manager");
+        }
+        catch (Exception e) {
+            throw new CantDeleteIdentityException("CAN'T UPDATE INTRA USER IDENTITY",FermatException.wrapException(e),"","Error on IntraUserIdentity Manager");
+        }
     }
 
 

@@ -4,7 +4,7 @@
     android:layout_gravity="center_horizontal"
     android:gravity="center"
     android:paddingTop="12dp"
-    android:layout_marginTop="10dp"
+    android:layout_marginTop="20dp"
     android:layout_marginLeft="12dp"
     >
 

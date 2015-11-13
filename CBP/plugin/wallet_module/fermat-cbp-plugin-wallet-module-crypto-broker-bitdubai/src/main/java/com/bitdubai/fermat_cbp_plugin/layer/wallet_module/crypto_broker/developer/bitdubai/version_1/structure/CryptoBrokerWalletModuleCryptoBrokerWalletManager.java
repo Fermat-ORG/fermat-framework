@@ -1,11 +1,15 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.StockInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.StockStatistics;
@@ -37,35 +41,78 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset) throws CantGetNegotiationsWaitingForBrokerException {
-        CustomerBrokerNegotiationInformation child;
-        List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
+        try {
+            CustomerBrokerNegotiationInformation negotiation;
+            Collection<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
 
-        child = new CryptoBrokerWalletModuleCustomerBrokerNegotationInformation("nelsonalfo", "USD", "Crypto Transfer", "BTC", NegotiationStatus.WAITING_FOR_BROKER);
-        waitingForCustomer.add(child);
-        child = new CryptoBrokerWalletModuleCustomerBrokerNegotationInformation("jorgeegonzalez", "BTC", "Cash in Hand", "USD", NegotiationStatus.WAITING_FOR_BROKER);
-        waitingForCustomer.add(child);
-        child = new CryptoBrokerWalletModuleCustomerBrokerNegotationInformation("neoperol", "USD", "Cash in Hand", "BsF", NegotiationStatus.WAITING_FOR_BROKER);
-        waitingForCustomer.add(child);
+            negotiation = new CryptoBrokerWalletModuleCustomerBrokerNegotationInformation("nelsonalfo", "USD", "Crypto Transfer", "BTC", NegotiationStatus.WAITING_FOR_BROKER);
+            waitingForCustomer.add(negotiation);
+            negotiation = new CryptoBrokerWalletModuleCustomerBrokerNegotationInformation("jorgeegonzalez", "BTC", "Cash in Hand", "USD", NegotiationStatus.WAITING_FOR_BROKER);
+            waitingForCustomer.add(negotiation);
+            negotiation = new CryptoBrokerWalletModuleCustomerBrokerNegotationInformation("neoperol", "USD", "Cash in Hand", "BsF", NegotiationStatus.WAITING_FOR_BROKER);
+            waitingForCustomer.add(negotiation);
 
-        return waitingForCustomer;
+            return waitingForCustomer;
+
+        } catch (Exception ex) {
+            throw new CantGetNegotiationsWaitingForBrokerException("Cant get negotiations waiting for the broker", ex, "", "");
+        }
+
+
     }
 
     @Override
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomer(int max, int offset) throws CantGetNegotiationsWaitingForCustomerException {
         try {
-            CustomerBrokerNegotiationInformation child;
+            CustomerBrokerNegotiationInformation negotiation;
+            Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
 
-            List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
-            child = new CryptoBrokerWalletModuleCustomerBrokerNegotationInformation("Nelson Orlando", "USD", "Bank Transfer", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
-            waitingForBroker.add(child);
-            child = new CryptoBrokerWalletModuleCustomerBrokerNegotationInformation("Customer 5", "BsF", "Cash Delivery", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
-            waitingForBroker.add(child);
+            negotiation = new CryptoBrokerWalletModuleCustomerBrokerNegotationInformation("Nelson Orlando", "USD", "Bank Transfer", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
+            waitingForBroker.add(negotiation);
+            negotiation = new CryptoBrokerWalletModuleCustomerBrokerNegotationInformation("Customer 5", "BsF", "Cash Delivery", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
+            waitingForBroker.add(negotiation);
 
             return waitingForBroker;
 
         } catch (Exception ex) {
             throw new CantGetNegotiationsWaitingForCustomerException("Cant get negotiations waiting for the customers", ex, "", "");
         }
+    }
+
+    @Override
+    public Collection<ContractBasicInformation> getContractsWaitingForBroker(int max, int offset) throws CantGetContractsWaitingForBrokerException {
+        try {
+            ContractBasicInformation contract;
+            Collection<ContractBasicInformation> waitingForBroker = new ArrayList<>();
+
+            contract = new CryproBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PAUSED);
+            waitingForBroker.add(contract);
+
+            return waitingForBroker;
+
+        } catch (Exception ex) {
+            throw new CantGetContractsWaitingForBrokerException("Cant get contracts waiting for the broker", ex);
+        }
+    }
+
+    @Override
+    public Collection<ContractBasicInformation> getContractsWaitingForCustomer(int max, int offset) throws CantGetContractsWaitingForCustomerException {
+        try {
+            ContractBasicInformation contract;
+            Collection<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
+
+            contract = new CryproBrokerWalletModuleContractBasicInformation("yalayn", "BTC", "Bank Transfer", "USD", ContractStatus.PENDING_PAYMENT);
+            waitingForCustomer.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("vzlangel", "BsF", "Cash Delivery", "BsF", ContractStatus.PENDING_PAYMENT);
+            waitingForCustomer.add(contract);
+
+            return waitingForCustomer;
+
+        } catch (Exception ex) {
+            throw new CantGetContractsWaitingForCustomerException("Cant get contracts waiting for the customers", ex);
+        }
+
+
     }
 
     @Override

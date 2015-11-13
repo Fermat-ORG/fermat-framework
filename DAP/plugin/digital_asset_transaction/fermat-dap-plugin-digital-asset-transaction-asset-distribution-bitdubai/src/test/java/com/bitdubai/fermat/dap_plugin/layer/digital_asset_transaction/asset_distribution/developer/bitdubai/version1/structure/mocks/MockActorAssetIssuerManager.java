@@ -40,11 +40,6 @@ public class MockActorAssetIssuerManager implements ActorAssetIssuerManager {
     }
 
     @Override
-    public void registerActorInActorNetowrkSerice() throws CantCreateActorAssetIssuerException {
-
-    }
-
-    @Override
     public void connectToActorAssetIssuer(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToAssetIssuerException {
 
     }

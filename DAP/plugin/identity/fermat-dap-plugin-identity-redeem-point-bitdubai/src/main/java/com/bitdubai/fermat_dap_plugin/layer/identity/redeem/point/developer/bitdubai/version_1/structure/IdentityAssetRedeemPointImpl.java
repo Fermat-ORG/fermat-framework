@@ -70,7 +70,7 @@ public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, 
 
     @Override
     public String getPublicKey() {
-        return this.getPublicKey();
+        return this.publicKey;
     }
 
     @Override

@@ -177,7 +177,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 //                    ;
 //                    Genders genders = Genders.INDEFINITE;
 //                    String age = "25";
-//                    ConnectionState connectionState = ConnectionState.CONNECTED;
+//                    DAPConnectionState connectionState = DAPConnectionState.CONNECTED;
 //                    Double locationLatitude = new Random().nextDouble();
 //                    Double locationLongitude = new Random().nextDouble();
 //                    AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey, "ANS User_" + new Random().nextInt(10), age, genders,

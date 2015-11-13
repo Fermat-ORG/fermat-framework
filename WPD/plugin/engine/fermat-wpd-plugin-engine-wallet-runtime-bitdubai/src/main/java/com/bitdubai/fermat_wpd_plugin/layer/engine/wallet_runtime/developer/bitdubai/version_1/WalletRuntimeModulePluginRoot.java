@@ -1984,7 +1984,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Balance");
-
+        runtimeActivity.setHeader(runtimeHeader);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Bitcoin wallet");
@@ -1999,6 +1999,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeStatusBar.setColor("#12aca1");
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
+
+
+
+
 
 
         runtimeTabStrip = new TabStrip();
