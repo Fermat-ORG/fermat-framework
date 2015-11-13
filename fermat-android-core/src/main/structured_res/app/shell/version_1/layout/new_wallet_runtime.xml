@@ -87,7 +87,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/navigation_view_header"
                 android:visibility="visible"
                 android:background="#c2a">
