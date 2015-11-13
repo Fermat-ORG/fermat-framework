@@ -397,7 +397,9 @@ public abstract class FermatActivity extends AppCompatActivity
                         //collapsingToolbarLayout.setCollapsedTitleTex(titleBar.getLabelSize());
 
                     //}
-
+                    collapsingToolbarLayout.setTitle(title);
+                }else{
+                    mToolbar.setTitle(title);
                 }
 
                 if(titleBar.getColor() != null){
@@ -406,13 +408,14 @@ public abstract class FermatActivity extends AppCompatActivity
                 }
 
 
-                collapsingToolbarLayout.setTitle(title);
+
 
 
 
                 setActionBarProperties(title, activity);
                 paintToolbarIcon(titleBar);
             } else {
+                appBarLayout.setVisibility(View.GONE);
                 collapsingToolbarLayout.setVisibility(View.GONE);
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -456,7 +459,9 @@ public abstract class FermatActivity extends AppCompatActivity
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the action bar title with the TypefaceSpan instance
+        if(collapsingToolbarLayout!=null)
         collapsingToolbarLayout.setTitle(s);
+        mToolbar.setTitle(s);
 
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -573,20 +578,28 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void setMainLayout(SideMenu sidemenu, FermatHeader header) {
         try {
 
-
+            if(header!=null){
                 setContentView(R.layout.new_wallet_runtime);
+            }else{
+                setContentView(R.layout.base_layout_without_collapse);
+            }
+
 
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
 
                     mToolbar = (Toolbar) findViewById(R.id.toolbar);
+                    if(mToolbar!=null)
                     setSupportActionBar(mToolbar);
 
                     collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
+                    if(collapsingToolbarLayout!=null)
                     collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
                     appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+
+                    if(appBarLayout!=null)
                     appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                         boolean isShow = false;
                         int scrollRange = -1;
@@ -600,7 +613,7 @@ public abstract class FermatActivity extends AppCompatActivity
                                 //collapsingToolbarLayout.setTitle("Title");
                                 isShow = true;
                             } else if (isShow) {
-                                collapsingToolbarLayout.setTitle("");
+                                //ollapsingToolbarLayout.setTitle("");
                                 isShow = false;
                             }
                         }
@@ -788,7 +801,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
                         // finally change the color
                         Color color_status = new Color();
-                        window.setStatusBarColor(Color.TRANSPARENT);//color_status.parseColor(statusBar.getColor()));
+                        window.setStatusBarColor(Color.parseColor(statusBar.getColor()));
                     } catch (Exception e) {
                         getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                         Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -833,7 +846,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
                     // finally change the color
                     window.setStatusBarColor(Color.TRANSPARENT);
-                    //window.setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/fondo.jpg"), null));
+
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -991,8 +1004,9 @@ public abstract class FermatActivity extends AppCompatActivity
             pager.setAdapter(this.screenPagerAdapter);
 
             if (pager.getBackground() == null) {
-                Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
-                pager.setBackground(d);
+                //Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
+                getWindow().setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
+                //pager.setBackground(d);
             }
 
 

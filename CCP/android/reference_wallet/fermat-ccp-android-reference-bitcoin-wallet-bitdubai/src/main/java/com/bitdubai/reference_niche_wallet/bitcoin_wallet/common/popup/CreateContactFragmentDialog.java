@@ -201,7 +201,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                                     walletContact.profileImage,
                                     Actors.INTRA_USER,
                                     referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),
-                                    "reference_wallet"/*referenceWalletSession.getWalletSessionType().getWalletPublicKey()*/ ,
+                                    referenceWalletSession.getWalletSessionType().getWalletPublicKey() ,
                                     CryptoCurrency.BITCOIN,
                                     BlockchainNetworkType.TEST);
 
