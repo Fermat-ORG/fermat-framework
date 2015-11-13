@@ -1,4 +1,4 @@
-![alt text](https://github.com/bitDubai/fermat-graphic-design/blob/master/3D%20Design/3DLogotypes/FermatLogotype3D/Fermat_Logo_3D_Readme_header.jpg "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 # Welcome to Fermat!
 
@@ -261,6 +261,5 @@ then learn how to pull the repo and hack on Fermat. Then say hi at our [IRC DEV 
 
 You don't need to be a developer to participate on the project. There are many ways to do it and we explain each one of them at the [How to Participate Guide](https://github.com/bitDubai/participate-now).
 
-![alt text](https://github.com/bitDubai/fermat-graphic-design/blob/master/3D%20Design/FermatBitcoinCoinModel/FinalRenders/Bitcoin.jpg "Fermat Coin")
-
+![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg "Fermat Coin")
 
