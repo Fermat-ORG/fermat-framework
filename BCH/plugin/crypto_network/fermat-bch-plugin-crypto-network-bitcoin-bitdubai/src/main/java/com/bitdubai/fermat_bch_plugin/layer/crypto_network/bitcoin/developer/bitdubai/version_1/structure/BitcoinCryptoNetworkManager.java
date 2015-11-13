@@ -183,6 +183,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         } catch (UnreadableWalletException e) {
             /**
              * If I couldn't load the wallet from file, I'm assuming is a new wallet and I will create it.
+             * I'm creating it by importing the keys sent by the vault.
              */
             wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
 
