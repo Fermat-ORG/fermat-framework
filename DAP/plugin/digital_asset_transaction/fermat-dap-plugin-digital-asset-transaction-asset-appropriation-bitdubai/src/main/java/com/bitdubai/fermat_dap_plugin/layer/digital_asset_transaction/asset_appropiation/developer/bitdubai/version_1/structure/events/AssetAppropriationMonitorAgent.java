@@ -169,7 +169,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                                 record.addressTo().getAddress(),
                                                 Actors.EXTRA_USER);
                                         balance.debit(walletRecord, BalanceType.AVAILABLE);
-                                        dao.updateTransactionStatusDebitingAsset(record.transactionRecordId());
+                                        dao.updateTransactionStatusAssetDebited(record.transactionRecordId());
                                     }
                                 }
                             }
