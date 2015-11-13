@@ -69,7 +69,7 @@
             android:paddingTop="4dp"
             android:singleLine="true"
             android:text="@string/selling"
-            android:textColor="@color/black"
+            android:textColor="@color/ccw_first_line_item"
             android:textSize="@dimen/ccw_title_text_size"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -81,7 +81,7 @@
             android:inputType="numberDecimal"
             android:paddingTop="4dp"
             android:singleLine="true"
-            android:textColor="@color/black"
+            android:textColor="@color/ccw_first_line_item"
             android:textSize="@dimen/ccw_title_text_size"
             tools:text="400.21"/>
 
@@ -93,7 +93,7 @@
             android:layout_marginRight="@dimen/margin_text"
             android:paddingTop="4dp"
             android:singleLine="true"
-            android:textColor="@color/black"
+            android:textColor="@color/ccw_first_line_item"
             android:textSize="@dimen/ccw_title_text_size"
             tools:text="USD"/>
 
@@ -106,7 +106,7 @@
             android:paddingTop="4dp"
             android:singleLine="true"
             android:text="@string/at"
-            android:textColor="@color/black"
+            android:textColor="@color/ccw_first_line_item"
             android:textSize="14sp"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -117,7 +117,7 @@
             android:layout_marginRight="@dimen/margin_text"
             android:paddingTop="4dp"
             android:singleLine="true"
-            android:textColor="@color/black"
+            android:textColor="@color/ccw_first_line_item"
             android:textSize="@dimen/ccw_title_text_size"
             tools:text="0.232"/>
 
@@ -129,7 +129,7 @@
             android:layout_marginRight="@dimen/margin_text"
             android:paddingTop="4dp"
             android:singleLine="true"
-            android:textColor="@color/black"
+            android:textColor="@color/ccw_first_line_item"
             android:textSize="@dimen/ccw_title_text_size"
             tools:text="BTC"/>
 
