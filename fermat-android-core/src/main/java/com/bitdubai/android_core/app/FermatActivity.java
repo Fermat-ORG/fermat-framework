@@ -404,7 +404,16 @@ public abstract class FermatActivity extends AppCompatActivity
 
                 if(titleBar.getColor() != null){
                     mToolbar.setBackgroundColor(Color.parseColor(titleBar.getColor()));
-                    collapsingToolbarLayout.setContentScrimColor(Color.parseColor(titleBar.getColor()));
+                    appBarLayout.setBackgroundColor(Color.parseColor(titleBar.getColor()));
+
+
+                    if(collapsingToolbarLayout!=null) {
+                        collapsingToolbarLayout.setBackgroundColor(Color.parseColor(titleBar.getColor()));
+                        //  mutedColor = palette.getMutedColor(R.attr.colorPrimary);
+                        //collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(R.color.gps_friends_green_main));
+                        collapsingToolbarLayout.setContentScrimColor(Color.parseColor(titleBar.getColor()));
+                    }
+
                 }
 
 
@@ -416,6 +425,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 paintToolbarIcon(titleBar);
             } else {
                 appBarLayout.setVisibility(View.GONE);
+                if(collapsingToolbarLayout!=null)
                 collapsingToolbarLayout.setVisibility(View.GONE);
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -442,7 +452,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
     private void paintToolbarIcon(TitleBar titleBar) {
         if (titleBar.getIconName() != null) {
-
             mToolbar.setLogo(R.drawable.world);
         }
 
