@@ -114,7 +114,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
     *
     */
 
-    public void startAppropriation(DigitalAsset asset, String userWalletPublicKey, CryptoAddress addressTo) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+    public AssetAppropriationTransactionRecord startAppropriation(DigitalAsset asset, String userWalletPublicKey, CryptoAddress addressTo) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
         String context = "Asset : " + asset.getPublicKey() + " - Address: " + addressTo
                 + " - User Wallet: " + userWalletPublicKey;
         try {
@@ -127,7 +127,9 @@ public class AssetAppropriationDAO implements AutoCloseable {
             DatabaseTable databaseTable = this.database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
             DatabaseTableRecord transactionRecord = databaseTable.getEmptyRecord();
 
-            transactionRecord.setUUIDValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, UUID.randomUUID());
+            String transactionId = UUID.randomUUID().toString(); //The id of the record to be created.
+
+            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId);
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, AppropriationStatus.APPROPRIATION_STARTED.getCode());
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, asset.getPublicKey());
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, userWalletPublicKey);
@@ -138,6 +140,9 @@ public class AssetAppropriationDAO implements AutoCloseable {
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, "-"); //I will update this when I send the bitcoins...
 
             databaseTable.insertRecord(transactionRecord);
+
+            return constructRecordFromId(transactionId); //The new record.
+
         } catch (CantInsertRecordException exception) {
             throw new CantExecuteAppropriationTransactionException(exception, context, "Cannot insert a record in Asset Appropriation Transaction Metadata table.");
         } catch (CantCreateDigitalAssetFileException exception) {
@@ -152,11 +157,11 @@ public class AssetAppropriationDAO implements AutoCloseable {
     }
 
     public void updateTransactionStatusDebitingAsset(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
-        updateStatus(AppropriationStatus.DEBITING_ASSET, transactionId);
+        updateStatus(AppropriationStatus.ASSET_DEBITED, transactionId);
     }
 
     public void updateTransactionStatusSendingBitcoins(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
-        updateStatus(AppropriationStatus.SENDING_BITCOINS, transactionId);
+        updateStatus(AppropriationStatus.BITCOINS_SENT, transactionId);
     }
 
     public void completeAppropriationReversedOnBlockChain(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
@@ -198,12 +203,12 @@ public class AssetAppropriationDAO implements AutoCloseable {
         }
 
         try {
-            uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.DEBITING_ASSET));
+            uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED));
         } catch (RecordsNotFoundException e) {
             //I don't need to throw an exception here but return an empty list. I'll just ignore the exception on every query.
         }
         try {
-            uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.SENDING_BITCOINS));
+            uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.BITCOINS_SENT));
         } catch (RecordsNotFoundException e) {
             //I don't need to throw an exception here but return an empty list. I'll just ignore the exception on every query.
         }
