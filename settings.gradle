@@ -1,4 +1,3 @@
-include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-android-api'
 include ':fermat-core'
@@ -223,6 +222,9 @@ project(':fermat-p2p-plugin-ws-communications-cloud-server-bitdubai').projectDir
 
 include ':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai'
 project(':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-client-bitdubai')
+
+include ':fermat-p2p-plugin-communications-network-node-bitdubai'
+project(':fermat-p2p-plugin-communications-network-node-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communications-network-node-bitdubai')
 
 
 
