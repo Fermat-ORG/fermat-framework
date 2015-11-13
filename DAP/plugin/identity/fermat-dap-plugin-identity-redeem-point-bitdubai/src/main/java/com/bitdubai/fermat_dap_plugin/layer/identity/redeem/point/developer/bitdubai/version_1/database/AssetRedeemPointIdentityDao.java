@@ -209,7 +209,6 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
             for (DatabaseTableRecord record : table.getRecords ()) {
 
                 // Add records to list.
-                list.add(null);
                 list.add(new IdentityAssetRedeemPointImpl(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue (AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetIssuerIdentityPrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),

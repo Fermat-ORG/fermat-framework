@@ -130,12 +130,13 @@ public class BitcoinCryptoVault implements
      */
     PluginFileSystem pluginFileSystem;
 
-    public BitcoinCryptoVault(EventManager eventManager, ErrorManager errorManager, LogManager logManager, UUID pluginId, PluginFileSystem pluginFileSystem) {
+    public BitcoinCryptoVault(EventManager eventManager, ErrorManager errorManager, LogManager logManager, UUID pluginId, PluginFileSystem pluginFileSystem, Database database) {
         this.eventManager = eventManager;
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginId = pluginId;
         this.pluginFileSystem = pluginFileSystem;
+        this.database = database;
     }
 
     /**
@@ -174,13 +175,14 @@ public class BitcoinCryptoVault implements
      * Constructor
      * @param userPublicKey the Id of the user of the platform.
      */
-    public BitcoinCryptoVault (String userPublicKey, EventManager eventManager, ErrorManager errorManager, LogManager logManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantCreateCryptoWalletException {
+    public BitcoinCryptoVault (String userPublicKey, EventManager eventManager, ErrorManager errorManager, LogManager logManager, UUID pluginId, PluginFileSystem pluginFileSystem, Database database) throws CantCreateCryptoWalletException {
 
         this.eventManager = eventManager;
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginId = pluginId;
         this.pluginFileSystem = pluginFileSystem;
+        this.database = database;
 
         try{
             this.userPublicKey = userPublicKey;

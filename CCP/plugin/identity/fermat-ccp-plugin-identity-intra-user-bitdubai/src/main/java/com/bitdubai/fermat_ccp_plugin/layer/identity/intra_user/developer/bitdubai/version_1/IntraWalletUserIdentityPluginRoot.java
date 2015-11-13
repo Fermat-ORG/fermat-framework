@@ -25,6 +25,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
@@ -34,6 +37,12 @@ import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdub
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraWalletUserIdentityDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantListIntraWalletUserIdentitiesException;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateIntraUserIdentityException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -189,6 +198,39 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             throw new CantListIntraWalletUsersException("CAN'T GET IF INTRA WALLET USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
     }
+
+    @Override
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityException {
+            try
+            {
+                intraWalletUserIdentityDao.updateIdentity(identityPublicKey,identityAlias,profileImage);
+            }
+            catch(CantUpdateIntraUserIdentityException e)
+            {
+                throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", e, "", "Error persisting data");
+            }
+            catch(Exception e)
+            {
+                throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", FermatException.wrapException(e), "", "");
+            }
+    }
+
+    @Override
+    public void deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIdentityException {
+        try
+        {
+            intraWalletUserIdentityDao.deleteIdentity(identityPublicKey);
+        }
+        catch(CantUpdateIntraUserIdentityException e)
+        {
+            throw new CantDeleteIdentityException("CAN'T DELETE INTRA USER IDENTITY", e, "", "Error persisting data");
+        }
+        catch(Exception e)
+        {
+            throw new CantDeleteIdentityException("CAN'T DELETE INTRA USER IDENTITY", FermatException.wrapException(e), "", "");
+        }
+    }
+
     /**
      * Service Interface implementation.
      */
