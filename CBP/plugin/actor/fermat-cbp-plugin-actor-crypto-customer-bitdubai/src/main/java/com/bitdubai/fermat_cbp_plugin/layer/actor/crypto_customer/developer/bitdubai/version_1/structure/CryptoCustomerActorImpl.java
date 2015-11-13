@@ -2,10 +2,14 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bit
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantCreatePurchaseContractException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantCreatePurchaseNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantGetPurchaseContractException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantGetPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.interfaces.CryptoCustomerActor;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -36,7 +40,12 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
     }
 
     @Override
-    public CustomerBrokerNegotiation createPurchase(final ActorIdentity cryptoBroker) throws CantCreatePurchaseNegotiationException {
+    public void createAsotiationCryptoCustomerIdentityWallet(){
+
+    }
+
+    @Override
+    public CustomerBrokerNegotiation createNegotiationPurchase(final ActorIdentity cryptoBroker,final Collection<Clause> clauses) throws CantCreatePurchaseNegotiationException {
         try {
             return negotiationManager.createCustomerBrokerPurchaseNegotiation(identity.getPublicKey(), cryptoBroker.getPublicKey());
         } catch (CantCreateCustomerBrokerPurchaseNegotiationException e) {
@@ -45,7 +54,7 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
     }
 
     @Override
-    public CustomerBrokerNegotiation getPurchase(final UUID negotiationId) throws CantGetPurchaseNegotiationException {
+    public CustomerBrokerNegotiation getNegotiationPurchase(final UUID negotiationId) throws CantGetPurchaseNegotiationException {
         try {
             for(CustomerBrokerNegotiation purchase : negotiationManager.getNegotiationsByCustomer(identity)){
                 if(negotiationId.equals(purchase.getNegotiationId()))
@@ -57,8 +66,17 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
         }
     }
 
+
+    public CustomerBrokerNegotiation updateNegotiationPurchase(UUID negotiationId) throws CantGetPurchaseNegotiationException{
+        return null;
+    }
+    
+    public CustomerBrokerNegotiation closeNegotiationPurchase(UUID negotiationId) throws CantGetPurchaseNegotiationException{
+        return null;
+    }
+
     @Override
-    public Collection<CustomerBrokerNegotiation> getPurchases() throws CantGetPurchaseNegotiationException {
+    public Collection<CustomerBrokerNegotiation> getNegotiationPurchases() throws CantGetPurchaseNegotiationException {
         try {
             HashSet<CustomerBrokerNegotiation> purchases = new HashSet<>();
             purchases.addAll(negotiationManager.getNegotiationsByCustomer(identity));
@@ -69,7 +87,7 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
     }
 
     @Override
-    public Collection<CustomerBrokerNegotiation> getPurchases(final NegotiationStatus status) throws CantGetPurchaseNegotiationException {
+    public Collection<CustomerBrokerNegotiation> getNegotiationPurchases(final NegotiationStatus status) throws CantGetPurchaseNegotiationException {
         try {
             HashSet<CustomerBrokerNegotiation> purchases = new HashSet<>();
             for(CustomerBrokerNegotiation purchase : negotiationManager.getNegotiationsByCustomer(identity)){
@@ -80,6 +98,46 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
         } catch (CantGetListPurchaseNegotiationsException e) {
             throw new CantGetPurchaseNegotiationException(CantCreatePurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
         }
+    }
+
+    @Override
+    public void sendActorNetworkServiceNegotiationPurchases(CustomerBrokerNegotiation negotiation){
+
+    }
+
+    @Override
+    public void receiveActorNetworkServicePurchases(CustomerBrokerNegotiation negotiation){
+
+    }
+
+    @Override
+    public CustomerBrokerContractPurchase createContractPurchase(ActorIdentity cryptoBroker,Collection<Clause> clauses) throws CantCreatePurchaseContractException{
+        return null;
+    }
+
+    @Override
+    public CustomerBrokerContractPurchase getContractPurchase(UUID negotiationId) throws CantGetPurchaseContractException{
+        return null;
+    }
+
+    @Override
+    public Collection<CustomerBrokerContractPurchase> getContractPurchases() throws CantGetPurchaseContractException{
+        return null;
+    }
+
+    @Override
+    public Collection<CustomerBrokerContractPurchase> getContractPurchases(NegotiationStatus status) throws CantGetPurchaseContractException{
+        return null;
+    }
+
+    @Override
+    public void sendActorNetworkServiceContractPurchases(CustomerBrokerNegotiation negotiation){
+
+    }
+
+    @Override
+    public void receiveActorNetworkServiceContractPurchases(CustomerBrokerNegotiation negotiation){
+
     }
 
     @Override

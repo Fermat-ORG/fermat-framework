@@ -118,7 +118,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    //    public void createNewAssetUser(String assetUserLinkedInPublicKey, String assetUserToAddName, String assetUserPublicKey, byte[] profileImage, Genders genders, String age, CryptoAddress cryptoAddress, ConnectionState connectionState) throws CantAddPendingAssetUserException {
+    //    public void createNewAssetUser(String assetUserLinkedInPublicKey, String assetUserToAddName, String assetUserPublicKey, byte[] profileImage, Genders genders, String age, CryptoAddress cryptoAddress, DAPConnectionState connectionState) throws CantAddPendingAssetUserException {
     public void createNewAssetUser(ActorAssetUser actorAssetUserRecord) throws CantAddPendingAssetUserException {
 
         try {
@@ -127,7 +127,7 @@ public class AssetUserActorDao implements Serializable {
                 throw new CantGetUserDeveloperIdentitiesException("CANT GET ASSET USER ACTOR, TABLE NOT FOUND.", " ASSET USER ACTOR", "");
             } else {
                 if (assetUserExists(actorAssetUserRecord.getPublicKey())) {
-                    this.updateAssetUserConnectionStateOrCrpytoAddress(actorAssetUserRecord.getPublicKey(), actorAssetUserRecord.getDapConnectionState(), actorAssetUserRecord.getCryptoAddress());
+                    this.updateAssetUserDAPConnectionStateOrCrpytoAddress(actorAssetUserRecord.getPublicKey(), actorAssetUserRecord.getDapConnectionState(), actorAssetUserRecord.getCryptoAddress());
                 } else {
 
                     table.loadToMemory();
@@ -178,7 +178,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public void updateAssetUserConnectionStateOrCrpytoAddress(String assetUserPublicKey, DAPConnectionState dapConnectionState, CryptoAddress cryptoAddress) throws CantUpdateAssetUserConnectionException {
+    public void updateAssetUserDAPConnectionStateOrCrpytoAddress(String assetUserPublicKey, DAPConnectionState dapDAPConnectionState, CryptoAddress cryptoAddress) throws CantUpdateAssetUserConnectionException {
 
         DatabaseTable table;
         try {
@@ -208,7 +208,7 @@ public class AssetUserActorDao implements Serializable {
 
             // 3) Get Asset User record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CONNECTION_STATE_COLUMN_NAME, dapDAPConnectionState.getCode());
 
                 if(cryptoAddress != null) {
                     record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
@@ -239,7 +239,7 @@ public class AssetUserActorDao implements Serializable {
              * change status
              */
             if (assetUserRegisteredExists(actorAssetUserRecord.getPublicKey())) {
-                this.updateAssetUserConnectionStateActorNetworService(actorAssetUserRecord.getPublicKey(), dapConnectionState, cryptoAddress);
+                this.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUserRecord.getPublicKey(), dapConnectionState, cryptoAddress);
             } else {
                 /**
                  * Get actual date
@@ -314,7 +314,7 @@ public class AssetUserActorDao implements Serializable {
 
                 if (compareRegisterTables(actorAssetUser)) {
                     if (assetUserRegisteredExists(actorAssetUser.getPublicKey())) {
-                        this.updateAssetUserConnectionStateActorNetworService(actorAssetUser.getPublicKey(), actorAssetUser.getDapConnectionState(), actorAssetUser.getCryptoAddress());
+                        this.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getPublicKey(), actorAssetUser.getDapConnectionState(), actorAssetUser.getCryptoAddress());
                     } else {
                         /**
                          * Get actual date
@@ -343,9 +343,9 @@ public class AssetUserActorDao implements Serializable {
                         record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME, actorAssetUser.getGenders().getCode());
 
                         if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME).isEmpty()) {
-                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode());//actorAssetUser.getConnectionState().getCode());
+                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
                         }else {
-                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode());//actorAssetUser.getConnectionState().getCode());
+                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
                         }
 
                         if (actorAssetUser.getLocationLatitude() != null)
@@ -428,7 +428,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public void updateAssetUserConnectionStateActorNetworService(String assetUserPublicKey, DAPConnectionState dapConnectionState, CryptoAddress cryptoAddress) throws CantUpdateAssetUserConnectionException {
+    public void updateAssetUserDAPConnectionStateActorNetworService(String assetUserPublicKey, DAPConnectionState dapDAPConnectionState, CryptoAddress cryptoAddress) throws CantUpdateAssetUserConnectionException {
 
         DatabaseTable table;
         try {
@@ -458,12 +458,12 @@ public class AssetUserActorDao implements Serializable {
             // 3) Get Asset User record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
                 if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME).isEmpty()) {
-                    dapConnectionState = DAPConnectionState.CONNECTED_ONLINE;
+                    dapDAPConnectionState = DAPConnectionState.CONNECTED_ONLINE;
                 }else {
-                    dapConnectionState = DAPConnectionState.REGISTERED_ONLINE;
+                    dapDAPConnectionState = DAPConnectionState.REGISTERED_ONLINE;
                 }
 
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapDAPConnectionState.getCode());
 
                 if(cryptoAddress != null) {
                     record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
@@ -532,7 +532,7 @@ public class AssetUserActorDao implements Serializable {
         return list;
     }
 
-    public List<ActorAssetUser> getAllAssetUsers(String assetUserLoggedInPublicKey, DAPConnectionState dapConnectionState, int max, int offset) throws CantGetAssetUsersListException {
+    public List<ActorAssetUser> getAllAssetUsers(String assetUserLoggedInPublicKey, DAPConnectionState dapDAPConnectionState, int max, int offset) throws CantGetAssetUsersListException {
 
         List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
         DatabaseTable table;
@@ -552,7 +552,7 @@ public class AssetUserActorDao implements Serializable {
             }
             // 2) Find  Asset Users by state.
             table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_CONNECTION_STATE_COLUMN_NAME, dapDAPConnectionState.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
@@ -574,7 +574,7 @@ public class AssetUserActorDao implements Serializable {
         return list;
     }
 
-    public ActorAssetUser getActorAssetUser() throws CantGetAssetUsersListException {
+    public ActorAssetUser getActorAssetUser() throws CantGetAssetUserActorsException {
 
         ActorAssetUser assetUserActorRecord = null;
         DatabaseTable table;
@@ -597,11 +597,11 @@ public class AssetUserActorDao implements Serializable {
             assetUserActorRecord = this.addRecords(table.getRecords());
             database.closeDatabase();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME + " table in memory.");
+            throw new CantGetAssetUserActorsException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME + " table in memory.");
         } catch (CantGetAssetUserActorProfileImageException e) {
-            throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
+            throw new CantGetAssetUserActorsException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
         } catch (Exception e) {
-            throw new CantGetAssetUsersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
+            throw new CantGetAssetUserActorsException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
         } finally {
             database.closeDatabase();
         }
@@ -693,7 +693,7 @@ public class AssetUserActorDao implements Serializable {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
             }
             // 2) Find  Asset Users by Connection State.
-            //TODO Actor Asset User en Tabla REGISTERED con DAPConnectionState CONNECTED_ONLINE indicara que tiene CryptoAddress
+            //TODO Actor Asset User en Tabla REGISTERED con DAPDAPConnectionState CONNECTED_ONLINE indicara que tiene CryptoAddress
             table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
@@ -862,14 +862,6 @@ public class AssetUserActorDao implements Serializable {
                                                             record.getLongValue(    AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME     ),
                                                             record.getLongValue(    AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME  ),
                         getAssetUserProfileImagePrivateKey( record.getStringValue(  AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)))         );
-
-
-//                list.add(new AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
-//                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NAME_COLUMN_NAME),
-//                        getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),
-//                        record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
-//                        record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME)));
-
         }
     }
 

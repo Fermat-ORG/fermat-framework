@@ -6,9 +6,6 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.dmp_middleware.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.MiddlewareSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_middleware.app_runtime.AppRuntimeSubsystem;
-import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_language.WalletLanguageSubsystem;
-import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_navigation_structure.WalletNavigationStructureSubsystem;
-import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_skin.WalletSkinSubsystem;
 
 /**
  * Created by ciencias on 30.12.14.
@@ -18,12 +15,6 @@ public class MiddlewareLayer implements PlatformLayer {
 
     private Plugin mAppRuntimePlugin;
 
-    private Plugin mWalletLanguagePlugin;
-
-    private Plugin mWalletNavigationStructurePlugin;
-
-    private Plugin mWalletSkinPlugin;
-
     private Plugin mNotificationPlugin;
 
 
@@ -31,12 +22,6 @@ public class MiddlewareLayer implements PlatformLayer {
     public void start() throws CantStartLayerException {
 
         mAppRuntimePlugin = getPlugin(new AppRuntimeSubsystem());
-
-        mWalletLanguagePlugin = getPlugin(new WalletLanguageSubsystem());
-
-        mWalletNavigationStructurePlugin = getPlugin(new WalletNavigationStructureSubsystem());
-
-        mWalletSkinPlugin = getPlugin(new WalletSkinSubsystem());
 
     }
 
@@ -52,18 +37,5 @@ public class MiddlewareLayer implements PlatformLayer {
     public Plugin getAppRuntimePlugin() {
         return mAppRuntimePlugin;
     }
-
-    public Plugin getWalletLanguagePlugin() {
-        return mWalletLanguagePlugin;
-    }
-
-    public Plugin getWalletNavigationStructurePlugin() {
-        return mWalletNavigationStructurePlugin;
-    }
-
-    public Plugin getWalletSkinPlugin() {
-        return mWalletSkinPlugin;
-    }
-
 
 }

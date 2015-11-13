@@ -3,6 +3,13 @@ apply plugin: 'java'
 sourceCompatibility = 1.7
 
 dependencies {
+
+    /**
+     * For doing the code more readable, please keep the elements in the file sorted alphabetically:
+     * - layer name
+     * - plugin name
+     */
+
     compile project(':fermat-api')
 
     compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
