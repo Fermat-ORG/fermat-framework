@@ -92,6 +92,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeMa
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -956,7 +957,8 @@ public abstract class FermatActivity extends AppCompatActivity
                         if(activePlatforms.contains(Platforms.DIGITAL_ASSET_PLATFORM)) {
                             com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment went1 = com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
                             fragments.add(went1);
-                            com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
+                            IdentityAssetIssuerManager identityAssetIssuerManager = getIdentityAssetIssuerManager();
+                            com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0, identityAssetIssuerManager);
                             fragments.add(dapDesktopFragment);
                         }
                         break;
@@ -1111,7 +1113,9 @@ public abstract class FermatActivity extends AppCompatActivity
         return (DesktopRuntimeManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DESKTOP_RUNTIME);
     }
 
-
+    public IdentityAssetIssuerManager getIdentityAssetIssuerManager(){
+        return (IdentityAssetIssuerManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
+    }
 
     /**
      * Assest Issuer Wallet Module
