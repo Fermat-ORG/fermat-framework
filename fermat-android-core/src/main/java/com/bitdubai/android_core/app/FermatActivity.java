@@ -178,6 +178,7 @@ public abstract class FermatActivity extends AppCompatActivity
     private NavigationView navigationView;
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbarLayout;
+    private ViewPager pagertabs;
 
 
     /**
@@ -396,6 +397,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
                 }
 
+                if(titleBar.getColor() != null){
+                    mToolbar.setBackgroundColor(Color.parseColor(titleBar.getColor()));
+                    collapsingToolbarLayout.setContentScrimColor(Color.parseColor(titleBar.getColor()));
+                }
+
+
                 collapsingToolbarLayout.setTitle(title);
 
 
@@ -432,19 +439,19 @@ public abstract class FermatActivity extends AppCompatActivity
         collapsingToolbarLayout.setTitle(s);
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-
-            Drawable colorDrawable = new ColorDrawable(Color.parseColor(activity.getColor()));
-            Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
-            LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                //ld.setCallback(drawableCallback);
-                Log.d(getClass().getSimpleName(), "Version incompatible con status bar");
-            } else {
-                collapsingToolbarLayout.setBackgroundDrawable(ld);
-            }
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//
+//            Drawable colorDrawable = new ColorDrawable(Color.parseColor(activity.getColor()));
+//            Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
+//            LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
+//
+//            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//                //ld.setCallback(drawableCallback);
+//                Log.d(getClass().getSimpleName(), "Version incompatible con status bar");
+//            } else {
+//                collapsingToolbarLayout.setBackgroundDrawable(ld);
+//            }
+//        }
     }
 
     /**
@@ -458,7 +465,7 @@ public abstract class FermatActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setVisibility(View.VISIBLE);
 
-        ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
+        pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
 
         if (tabStrip.isHasIcon()) {
@@ -579,6 +586,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             if(header==null){
                 appBarLayout.setExpanded(false);
+                appBarLayout.setEnabled(false);
             }
 
                     mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -593,38 +601,13 @@ public abstract class FermatActivity extends AppCompatActivity
                             navigationView.setNavigationItemSelectedListener(this);
 
 
-//                            String TITLES[] = {"Home", "Events", "Mail", "Shop", "Travel"};
                             navigation_recycler_view = (RecyclerView) findViewById(R.id.navigation_recycler_view);
-//                            RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
                             RecyclerView.LayoutManager mLayoutManager;
 
                             navigation_recycler_view.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
 
 
-
-//                            //TODO: CAMBIAR TODO ESTE TESTEO ASQUEROSO
-//                            mAdapter = new MyAdapter(this, getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu().getMenuItems(), new IntraUserLoginIdentity() {
-//                                @Override
-//                                public String getAlias() {
-//                                    return "mati";
-//                                }
-//
-//                                @Override
-//                                public String getPublicKey() {
-//                                    return "absaaa";
-//                                }
-//
-//                                @Override
-//                                public byte[] getProfileImage() {
-//                                    return new byte[0];
-//                                }
-//                            }, this);
-//
-//                            navigation_recycler_view.setAdapter(mAdapter);                              // Setting the adapter to RecyclerView
-
-
                             mLayoutManager = new LinearLayoutManager(this);                 // Creating a layout Manager
-
                             navigation_recycler_view.setLayoutManager(mLayoutManager);                 // Setting the layout Manager
 
 
@@ -783,7 +766,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
                         // finally change the color
                         Color color_status = new Color();
-                        window.setStatusBarColor(color_status.parseColor(statusBar.getColor()));
+                        window.setStatusBarColor(Color.TRANSPARENT);//color_status.parseColor(statusBar.getColor()));
                     } catch (Exception e) {
                         getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                         Log.d("WalletActivity", "Sdk version not compatible with status bar color");

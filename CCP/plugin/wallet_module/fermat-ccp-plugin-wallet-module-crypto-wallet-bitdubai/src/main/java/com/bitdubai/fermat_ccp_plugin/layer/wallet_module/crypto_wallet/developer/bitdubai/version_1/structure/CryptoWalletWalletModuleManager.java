@@ -1204,13 +1204,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                 cryptoWalletTransactionList.add(cryptoWalletTransaction);
                 cryptoWalletTransactionList.add(cryptoWalletTransaction);
                 cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
 
 
             }
