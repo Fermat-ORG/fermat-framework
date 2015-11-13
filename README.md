@@ -106,9 +106,9 @@ You can learn more, see some cool imagess of Fermat's architecture and its P2P n
 <br>
 ### Fermat's Purpose
 
-* Empower people with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way.
+* To Empower people with the appropriate tools to save and move their money as a digital format in a more efficient, secure and private way.
 
-* Give back the sovereignty over each one's own resources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
+* To give back the sovereignty over each one's own resources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
 
 <br>
 ### Fermat's Mission
@@ -117,7 +117,7 @@ You can learn more, see some cool imagess of Fermat's architecture and its P2P n
 
 * To build the best possible system able to manage the finances of people.
 
-* To achieve “parity” with the state-of-the-art and to push towards new frontiers in computer science.
+* To achieve “parity” with the state-of-the-art technology and push towards new frontiers in computer science.
 
 <br>
 ### Fermat Principles
@@ -141,12 +141,12 @@ You can learn more, see some cool imagess of Fermat's architecture and its P2P n
 * Pocket Money concept and a Multi-Signature Vault owned by the DPN.
 * Reviews and Reputation concepts.
 
-##### 4. Fermat must never loose a End Users funds.
+##### 4. Fermat must never loose a user's funds.
 
 * Transaction responsability transmission protocols.
 * Remote technical support by wallet and plugins developers.
 
-##### 5. Fermat must be usefull to each segment of the world population.
+##### 5. Fermat must be useful to each segment of the world population.
 
 * Niche wallets concept.
 * Branded wallets concept.
@@ -165,7 +165,7 @@ You can learn more, see some cool imagess of Fermat's architecture and its P2P n
 * Any graphic / UX designer could provide skins to existing wallets.
 * Anyone could provide language packs to existing wallets.
 
-##### 8. Each developer must be compesated by their contribution to Fermat.
+##### 8. Each developer must be compesated for their contribution to Fermat.
 
 * Micro license concept.
 * Micro license structure concept.
@@ -173,7 +173,7 @@ You can learn more, see some cool imagess of Fermat's architecture and its P2P n
 * Plugin ownership concept.
 * Niche wallet ownership concept.
 * Branded wallet onwnership concept.
-* Master plan design comcept, wiht no overlaping functionality but shared ownership.
+* Master plan design concept, wiht no overlaping functionality but shared ownership.
 
 ##### 9. Fermat user base must be a shared asset.
 
@@ -186,15 +186,15 @@ You can learn more, see some cool imagess of Fermat's architecture and its P2P n
 
 ##### 11. Fermat must be inclusive with the current financial system.
 
-* Banks and financial institutions can write plugins to enable Fermat wallets hold funds in banks and other financial institutions.
-* Fermat allows it users to move money both through public value transport networks as crypto currency networks and also thwough private or legacy financial networks.
+* Banks and financial institutions could write plugins to enable Fermat wallets to hold funds in banks and other financial institutions.
+* Fermat allows its users to move money both from public value transport networks as well as crypto currency networks and also through private or legal financial networks.
 
 ##### 12. Fermat must be unbanked-people friendly.
 
 * Multiple logins per device (Device user concept)
 * Crypto banking concept.
 
-##### 13. Fermat must be portable to multiple OS.
+##### 13. Fermat must be OS agnostic.
 
 * OSA layer concept (Operative System API).
 * OS dependent UI on top of Fermat concept.
@@ -219,14 +219,14 @@ You can learn more, see some cool imagess of Fermat's architecture and its P2P n
 
 #### Download
 
-Installers for the latest stable build for Android can be [downloaded here](http://fermat.org/fermat.apk). Mac, Windows and Linux (Debian/Ubuntu) will be supported in the near future.
+Installers for the latest version of Android can be [downloaded here](http://fermat.org/fermat.apk). Mac, Windows and Linux (Debian/Ubuntu) will be supported in the near future.
 
 
 #### Installation
 
 In addition to the core features built into Fermat, there is a growing community of developers building _Plug-ins_ and _Niche Wallets_ that add all sorts of useful functionality.
 
-For installation instructions and running from the source code, see the [Installation Guide](https://github.com/bitDubai/fermat/blob/master/README-INSTALLATION.md).
+For instructions on how to install and run the source code, see the [Installation Guide](https://github.com/bitDubai/fermat/blob/master/README-INSTALLATION.md).
 
 #### Need Help?
 
@@ -237,18 +237,20 @@ log into the [IRC DEV Channel](http://irc.lc/freenode/fermat-dev/), and we will 
 
 Take a look at the [Fermat Book](https://github.com/bitDubai/fermat/tree/master/fermat-book) that it is being written in order to help developers learn more about Fermat technology.
 
-#### Status of the Project
+#### Project status
 
-As of November 2015 the state of the project is the following:
+As of November 2015 the project status is the following:
 
-**State of the code** : Under development for 6 months. No realeses yet. 30+ full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
+**Code state** : Under development for 6 months. No realeses yet. 30+ full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
-**Future path of development** : Active. First release with very limited features schedulled for December 2015.
+**Future path of development** : Active (First release with very limited features scheduled for December 2015).
 
 <br>
 ## I Want to Join the Team!
 
-Awesome! *__There are lots of ways you can help.__*
+Awesome!
+
+*__There are lots of ways you can help.__*
 
 #### Developers
 
