@@ -106,7 +106,6 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
         this.publicKey              =       publicKey               ;
         this.name                   =       name                    ;
-        if(!age.isEmpty())
             this.age                =       age                     ;
         this.genders                =       genders                 ;
         this.dapConnectionState     =       dapConnectionState      ;
