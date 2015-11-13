@@ -45,6 +45,12 @@ dependencies {
     compile 'io.undertow:undertow-servlet:1.1.8+'
     compile "io.undertow:undertow-websockets-jsr:1.1.8+"
 
+    compile "org.xerial:sqlite-jdbc:3.7.2"
+    //'net.kemitix:sqlite-dialect:0.1.0'
+
+
+    compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final"
+
     testCompile group: 'junit', name: 'junit', version: '4.11'
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
 	testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
