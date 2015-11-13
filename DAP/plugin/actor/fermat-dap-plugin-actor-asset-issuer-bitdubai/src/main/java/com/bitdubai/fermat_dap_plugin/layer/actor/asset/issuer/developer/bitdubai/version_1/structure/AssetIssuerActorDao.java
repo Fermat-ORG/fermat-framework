@@ -511,7 +511,7 @@ public class AssetIssuerActorDao implements Serializable {
         }
     }
 
-    public void updateAssetIssuerDAPConnectionStateActorNetworService(String assetIssuerToAddPublicKey, DAPConnectionState dapDAPConnectionState) throws CantUpdateAssetIssuerException {
+    public void updateAssetIssuerDAPConnectionStateActorNetworService(String assetIssuerToAddPublicKey, DAPConnectionState dapConnectionState) throws CantUpdateAssetIssuerException {
 
         DatabaseTable table;
 
@@ -535,7 +535,7 @@ public class AssetIssuerActorDao implements Serializable {
 
             // 3) Get Asset Issuer record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapDAPConnectionState.getCode());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 table.updateRecord(record);
             }
