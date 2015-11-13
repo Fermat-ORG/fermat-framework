@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 
+
 import java.util.List;
 
 /**
