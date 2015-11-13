@@ -154,13 +154,13 @@ public class IncomingIntraUserCryptoMonitorAgent {
         private void processEvent(com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.util.EventWrapper eventWrapper) {
             try {
                 TransactionProtocolManager<CryptoTransaction> source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.getEventSource()));
-                List<Transaction<CryptoTransaction>> transactionList = source.getPendingTransactions(Specialist.EXTRA_USER_SPECIALIST);
+                List<Transaction<CryptoTransaction>> transactionList = source.getPendingTransactions(Specialist.INTRA_USER_SPECIALIST);
 
-                System.out.println("TTF - INTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) DETECTED");
+                System.out.println("TTF - INTRA USER CRYPTO MONITOR: " + transactionList.size() + " TRAMSACTION(s) DETECTED");
 
                 this.registry.acknowledgeTransactions(transactionList);
 
-                System.out.println("TTF - INTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) ACKNOWLEDGED");
+                System.out.println("TTF - INTRA USER CRYPTO MONITOR: " + transactionList.size() + " TRAMSACTION(s) ACKNOWLEDGED");
 
                 // Now we take all the transactions in state (ACKNOWLEDGE,TO_BE_NOTIFIED)
                 // Remember that this list can be more extensive than the one we saved, this is
@@ -172,7 +172,7 @@ public class IncomingIntraUserCryptoMonitorAgent {
                 for(Transaction<CryptoTransaction> transaction : acknowledgedTransactions){
                     try {
                         source.confirmReception(transaction.getTransactionID());
-                        System.out.println("TTF - INTRA USER MONITOR: TRANSACTION RESPONSIBILITY ACQUIRED");
+                        System.out.println("TTF - INTRA USER CRYPTO MONITOR: TRANSACTION RESPONSIBILITY ACQUIRED");
                         registry.acquireResponsibility(transaction);
                     } catch (CantConfirmTransactionException | com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantAcquireResponsibilityException exception) {
                         // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
@@ -184,7 +184,7 @@ public class IncomingIntraUserCryptoMonitorAgent {
 
                 // After finishing all the steps we mark the event as seen.
                 registry.disableEvent(eventWrapper.getEventId());
-                System.out.println("TTF - INTRA USER MONITOR: EVENT DISABLED");
+                System.out.println("TTF - INTRA USER CRYPTO MONITOR: EVENT DISABLED");
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }

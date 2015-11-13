@@ -503,14 +503,6 @@ public  class SendFragment extends FermatWalletFragment {
                         case 1:
                             profile_picture.setImageResource(R.drawable.brant_profile_picture);
                             break;
-                        case 2:
-                            profile_picture.setImageResource(R.drawable.mati_profile);
-                            break;
-                        case 3:
-                            profile_picture.setImageResource(R.drawable.mati_profile);
-                            break;
-                        default:
-                            profile_picture.setImageResource(R.drawable.mati_profile);
                     }
 
 
