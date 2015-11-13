@@ -28,12 +28,7 @@ dependencies {
     compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
 
     // DMP Projects (Plugins)
-    compile project(':fermat-dmp-plugin-identity-designer-bitdubai')
-    compile project(':fermat-dmp-plugin-identity-translator-bitdubai')
     compile project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
-    compile project(':fermat-dmp-plugin-middleware-wallet-language-bitdubai')
-    compile project(':fermat-dmp-plugin-middleware-wallet-skin-bitdubai')
-    compile project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai')
     // DMP Projects (Addons)
 
     //WPD Projects (Plugins)

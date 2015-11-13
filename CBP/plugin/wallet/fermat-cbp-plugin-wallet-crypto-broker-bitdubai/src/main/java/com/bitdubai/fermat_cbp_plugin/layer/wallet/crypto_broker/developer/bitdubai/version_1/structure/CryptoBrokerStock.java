@@ -32,7 +32,6 @@ public class CryptoBrokerStock implements Stock {
 
     @Override
     public float getBookedBalance() throws CantGetBookedBalanceCryptoBrokerWalletException {
-        //esto se tiene que responder con una consulta al DAO para obtener el booked balance
         try {
             return databaseDao.getCalculateBookBalance(this.stockType,this.walletKeys.getPublicKey());
         } catch (CantCalculateBalanceException e) {
@@ -44,7 +43,6 @@ public class CryptoBrokerStock implements Stock {
 
     @Override
     public float getAvailableBalance() throws CantGetAvailableBalanceCryptoBrokerWalletException {
-        //esto se tiene que responder con una consulta al DAO para obtener el available balance
         try {
             return databaseDao.getCalculateAvailableBalance(this.stockType,this.walletKeys.getPublicKey());
         } catch (CantCalculateBalanceException e) {
@@ -56,7 +54,6 @@ public class CryptoBrokerStock implements Stock {
 
     @Override
     public void addDebit(StockTransaction transaction) throws CantAddDebitCryptoBrokerWalletException {
-        //aqui se crea un record a partir de la stock transaction y se le envia al DAO
         try {
             databaseDao.addDebit(transaction);
         } catch (CantAddDebitException e) {
@@ -68,7 +65,6 @@ public class CryptoBrokerStock implements Stock {
 
     @Override
     public void addCredit(StockTransaction transaction) throws CantAddCreditCryptoBrokerWalletException {
-        //aqui se crea un record a partir de la stock transaction y se le envia al DAO
         try {
             databaseDao.addCredit(transaction);
         } catch (CantAddCreditException e) {
@@ -77,65 +73,4 @@ public class CryptoBrokerStock implements Stock {
             throw new CantAddCreditCryptoBrokerWalletException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", FermatException.wrapException(e), "", "");
         }
     }
-
-    /*
-    public CryptoBrokerStockTransactionRecord debit(String publickeyWalle, String publickeyBroker, String publicKeyCustomer, BalanceType balanceType, CurrencyType currencyType, float amount, String memo) throws CantRegisterDebitException {
-        try {
-            UUID transactionId              = UUID.randomUUID();
-            KeyPair keyPairWallet           = AsymmetricCryptography.createKeyPair(publickeyWalle);
-            KeyPair keyPairBroker           = AsymmetricCryptography.createKeyPair(publickeyBroker);
-            KeyPair keyPairCustomer         = AsymmetricCryptography.createKeyPair(publicKeyCustomer);
-            TransactionType transactionType = TransactionType.DEBIT;
-            float availableAmount           = balanceType.equals(BalanceType.AVAILABLE) ? amount : 0L;
-            float bookAmount                = balanceType.equals(BalanceType.BOOK) ? amount : 0L;
-            float runningBookBalance        = cryptoBrokerWalletDatabaseDao.calculateBookRunningBalanceByAsset(-bookAmount, keyPairWallet.getPrivateKey());
-            float runningAvailableBalance   = cryptoBrokerWalletDatabaseDao.calculateAvailableRunningBalanceByAsset(-availableAmount, keyPairWallet.getPrivateKey());
-//            long timeStamp = Timestamp(long time);
-            long timeStamp = 0;
-
-            cryptoBrokerWalletDatabaseDao.addDebit(cryptoBrokerTransaction, balanceType, keyPairWallet.getPrivateKey());
-            return cryptoBrokerTransaction;
-        } catch (CantAddDebitException e) {
-            throw new CantRegisterDebitException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", e, "", "");
-        } catch (Exception e) {
-            throw new CantRegisterDebitException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    public CryptoBrokerStockTransactionRecord credit(String publickeyWalle, String publickeyBroker, String publicKeyCustomer, BalanceType balanceType, CurrencyType currencyType, float amount, String memo) throws CantRegisterCreditException {
-        try {
-            UUID transactionId              = UUID.randomUUID();
-            KeyPair keyPairWallet           = AsymmetricCryptography.createKeyPair(publickeyWalle);
-            KeyPair keyPairBroker           = AsymmetricCryptography.createKeyPair(publickeyBroker);
-            KeyPair keyPairCustomer         = AsymmetricCryptography.createKeyPair(publicKeyCustomer);
-            TransactionType transactionType = TransactionType.DEBIT;
-            float availableAmount           = balanceType.equals(BalanceType.AVAILABLE) ? amount : 0L;
-            float bookAmount                = balanceType.equals(BalanceType.BOOK) ? amount : 0L;
-            float runningBookBalance        = cryptoBrokerWalletDatabaseDao.calculateBookRunningBalanceByAsset(-bookAmount, keyPairWallet.getPrivateKey());
-            float runningAvailableBalance   = cryptoBrokerWalletDatabaseDao.calculateAvailableRunningBalanceByAsset(-availableAmount, keyPairWallet.getPrivateKey());
-//            long timeStamp = Timestamp(long time);
-            long timeStamp = 0;
-            CryptoBrokerStockTransactionRecord cryptoBrokerTransaction = new CryptoBrokerStockTransactionRecordImpl(
-                    transactionId,
-                    keyPairWallet,
-                    keyPairBroker,
-                    keyPairCustomer,
-                    balanceType,
-                    transactionType,
-                    currencyType,
-                    amount,
-                    runningBookBalance,
-                    runningAvailableBalance,
-                    timeStamp,
-                    memo
-            );
-            cryptoBrokerWalletDatabaseDao.addCredit(cryptoBrokerTransaction, balanceType, keyPairWallet.getPrivateKey());
-            return cryptoBrokerTransaction;
-        } catch (CantAddCreditException e) {
-            throw new CantRegisterCreditException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", e, "", "");
-        } catch (Exception e) {
-            throw new CantRegisterCreditException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", FermatException.wrapException(e), "", "");
-        }
-    }
-     */
 }

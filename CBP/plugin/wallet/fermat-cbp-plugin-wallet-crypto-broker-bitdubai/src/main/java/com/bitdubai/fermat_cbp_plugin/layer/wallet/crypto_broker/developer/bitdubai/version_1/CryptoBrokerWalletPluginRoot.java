@@ -88,7 +88,7 @@ public class CryptoBrokerWalletPluginRoot implements CryptoBrokerWalletManager,
 
     public static final String CRYPTO_BROKER_WALLET_PRIVATE_KEYS_FILE_NAME = "cryptoBrokerWalletPrivateKeyWallet";
 
-    /*CryptoBrokerMAnager Interface Implementation*/
+    /*CryptoBrokerMAnager Interface Implementation */
     @Override
     public CryptoBrokerWallet createNewCryptoBrokerWallet(String cryptoBroker) throws CantCreateCryptoBrokerWalletException {
         try {

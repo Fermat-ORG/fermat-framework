@@ -1,0 +1,72 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Layer name.
+ * -Plugin name.
+ */
+
+include ':fermat-wpd-api'
+project(':fermat-wpd-api').projectDir = new File('WPD/library/api/fermat-wpd-api')
+
+include ':fermat-wpd-core'
+project(':fermat-wpd-core').projectDir = new File('WPD/library/core/fermat-wpd-core')
+
+
+//actor
+include ':fermat-wpd-plugin-actor-publisher-bitdubai'
+project(':fermat-wpd-plugin-actor-publisher-bitdubai').projectDir = new File('WPD/plugin/actor/fermat-wpd-plugin-actor-publisher-bitdubai')
+
+//DESKTOP MODULE
+include ':fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai'
+project(':fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai').projectDir = new File('WPD/plugin/desktop_module/fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai')
+
+//engine
+include ':fermat-wpd-plugin-engine-wallet-runtime-bitdubai'
+project(':fermat-wpd-plugin-engine-wallet-runtime-bitdubai').projectDir = new File('WPD/plugin/engine/fermat-wpd-plugin-engine-wallet-runtime-bitdubai')
+
+// identity
+
+include ':fermat-wpd-plugin-identity-publisher-bitdubai'
+project(':fermat-wpd-plugin-identity-publisher-bitdubai').projectDir = new File('WPD/plugin/identity/fermat-wpd-plugin-identity-publisher-bitdubai')
+
+//middleware
+include ':fermat-wpd-plugin-middleware-wallet-factory-bitdubai'
+project(':fermat-wpd-plugin-middleware-wallet-factory-bitdubai').projectDir = new File('WPD/plugin/middleware/fermat-wpd-plugin-middleware-wallet-factory-bitdubai')
+
+include ':fermat-wpd-plugin-middleware-wallet-manager-bitdubai'
+project(':fermat-wpd-plugin-middleware-wallet-manager-bitdubai').projectDir = new File('WPD/plugin/middleware/fermat-wpd-plugin-middleware-wallet-manager-bitdubai')
+
+include ':fermat-wpd-plugin-middleware-wallet-publisher-bitdubai'
+project(':fermat-wpd-plugin-middleware-wallet-publisher-bitdubai').projectDir = new File('WPD/plugin/middleware/fermat-wpd-plugin-middleware-wallet-publisher-bitdubai')
+
+include ':fermat-wpd-plugin-middleware-wallet-settings-bitdubai'
+project(':fermat-wpd-plugin-middleware-wallet-settings-bitdubai').projectDir = new File('WPD/plugin/middleware/fermat-wpd-plugin-middleware-wallet-settings-bitdubai')
+
+include ':fermat-wpd-plugin-middleware-wallet-store-bitdubai'
+project(':fermat-wpd-plugin-middleware-wallet-store-bitdubai').projectDir = new File('WPD/plugin/middleware/fermat-wpd-plugin-middleware-wallet-store-bitdubai')
+
+//Netwok_service
+include ':fermat-wpd-plugin-network-service-wallet-community-bitdubai'
+project(':fermat-wpd-plugin-network-service-wallet-community-bitdubai').projectDir = new File('WPD/plugin/network_service/fermat-wpd-plugin-network-service-wallet-community-bitdubai')
+
+// Milestone 1 project:
+include ':fermat-wpd-plugin-network-service-wallet-resources-bitdubai'
+project(':fermat-wpd-plugin-network-service-wallet-resources-bitdubai').projectDir = new File('WPD/plugin/network_service/fermat-wpd-plugin-network-service-wallet-resources-bitdubai')
+
+include ':fermat-wpd-plugin-network-service-wallet-store-bitdubai'
+project(':fermat-wpd-plugin-network-service-wallet-store-bitdubai').projectDir = new File('WPD/plugin/network_service/fermat-wpd-plugin-network-service-wallet-store-bitdubai')
+
+// Milestone 2 project network service:
+
+include ':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai'
+project(':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai').projectDir = new File('WPD/plugin/network_service/fermat-wpd-plugin-network-service-wallet-statistics-bitdubai')
+
+//SUB APP MODULE
+
+include ':fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai'
+project(':fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai').projectDir = new File('WPD/plugin/sub_app_module/fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai')
+
+include ':fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai'
+project(':fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai').projectDir = new File('WPD/plugin/sub_app_module/fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai')
+
+include ':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai'
+project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai').projectDir = new File('WPD/plugin/sub_app_module/fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
