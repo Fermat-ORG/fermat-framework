@@ -740,4 +740,33 @@ public class BitcoinCryptoNetworkDatabaseDao {
     public void setTransactionProtocolStatus(UUID transactionId, ProtocolStatus protocolStatus) throws CantExecuteDatabaseOperationException{
 
     }
+
+    /**
+     * Verifies if the passed transaction already exists in the database
+     * @param txHash
+     * @param cryptoStatus
+     * @return
+     */
+    public boolean isNewTransaction(String txHash, CryptoStatus cryptoStatus) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
+        /**
+         * sets the table filters
+         */
+        databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+        databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        /**
+         * If there are no records, then return true.
+         */
+        if (databaseTable.getRecords().isEmpty())
+            return true;
+        else
+            return false;
+    }
 }
