@@ -7,18 +7,19 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 28/10/15.
  */
 public enum IssuingStatus implements FermatEnum {
-    ISSUING("ISSG"),
+    ACTOR_ISSUER_NULL ("AIN"),
     ASSET_ALREADY_ISSUED("AAIS"),
-    INSUFFICIENT_FONDS("ISFF"),
-    INVALID_ADDRESS_TO_SEND("IATS"),
-    WALLET_EXCEPTION("WAEX"),
     DATABASE_EXCEPTION("DAEX"),
-    FILESYSTEM_EXCEPTION("FIEX"),
     DIGITAL_ASSET_INCOMPLETE("DAIN"),
-    TRANSACTION_ALREADY_SENT("TRAS"),
+    FILESYSTEM_EXCEPTION("FIEX"),
+    INSUFFICIENT_FONDS("ISFF"),
+    ISSUED("ISED"),
+    ISSUING("ISSG"),
+    INVALID_ADDRESS_TO_SEND("IATS"),
     INVALID_NUMBER_TO_ISSUE("INTI"),
+    TRANSACTION_ALREADY_SENT("TRAS"),
     UNEXPECTED_INTERRUPTION("UINT"),
-    ISSUED("ISED");
+    WALLET_EXCEPTION("WAEX");
 
     private String code;
 
