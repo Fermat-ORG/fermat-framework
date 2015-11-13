@@ -40,7 +40,7 @@ public interface RedeemPointIdentityManager {
      * @return
      * @throws CantListAssetRedeemPointException
      */
-    boolean  hasAssetUserIdentity() throws CantListAssetRedeemPointException ;
+    boolean  hasRedeemPointIdentity() throws CantListAssetRedeemPointException ;
 
 
 }
