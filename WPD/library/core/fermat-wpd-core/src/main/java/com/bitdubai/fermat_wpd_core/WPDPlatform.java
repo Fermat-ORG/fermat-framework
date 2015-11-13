@@ -19,7 +19,7 @@ import com.bitdubai.fermat_wpd_core.layer.sub_app_module.SubAppModuleLayer;
 public class WPDPlatform extends AbstractPlatform {
 
     public WPDPlatform() {
-        super(new PlatformReference(Platforms.CRYPTO_BROKER_PLATFORM));
+        super(new PlatformReference(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION));
     }
 
     @Override
