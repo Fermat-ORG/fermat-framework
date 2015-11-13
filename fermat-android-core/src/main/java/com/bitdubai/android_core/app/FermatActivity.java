@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NotificationCompat;
@@ -179,6 +180,7 @@ public abstract class FermatActivity extends AppCompatActivity
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ViewPager pagertabs;
+    private CoordinatorLayout coordinatorLayout;
 
 
     /**
@@ -411,10 +413,20 @@ public abstract class FermatActivity extends AppCompatActivity
                 paintToolbarIcon(titleBar);
             } else {
                 collapsingToolbarLayout.setVisibility(View.GONE);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    collapsingToolbarLayout.setNestedScrollingEnabled(false);
-                    appBarLayout.setNestedScrollingEnabled(false);
-                    mToolbar.setNestedScrollingEnabled(false);
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        collapsingToolbarLayout.setNestedScrollingEnabled(false);
+                        appBarLayout.setNestedScrollingEnabled(false);
+                        mToolbar.setNestedScrollingEnabled(false);
+                        pagertabs.setNestedScrollingEnabled(false);
+                        coordinatorLayout.setNestedScrollingEnabled(false);
+
+                    }
+                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) collapsingToolbarLayout.getLayoutParams();
+                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP); // list other flags here by |
+                    collapsingToolbarLayout.setLayoutParams(params);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
 
             }
@@ -422,6 +434,7 @@ public abstract class FermatActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
+
 
     private void paintToolbarIcon(TitleBar titleBar) {
         if (titleBar.getIconName() != null) {
@@ -561,6 +574,8 @@ public abstract class FermatActivity extends AppCompatActivity
 
 
                 setContentView(R.layout.new_wallet_runtime);
+
+            coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
 
                     mToolbar = (Toolbar) findViewById(R.id.toolbar);
