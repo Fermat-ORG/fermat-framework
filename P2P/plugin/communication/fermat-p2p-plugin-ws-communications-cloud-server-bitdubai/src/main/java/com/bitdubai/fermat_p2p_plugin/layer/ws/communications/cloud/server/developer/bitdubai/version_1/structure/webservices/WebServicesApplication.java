@@ -56,8 +56,8 @@ public class WebServicesApplication extends Application {
          */
         getContext().getAttributes().put(WebServicesApplication.PLUGIN_ROOT_ATT_NAME, wsCommunicationCloudServer);
 
-        Filter encoder = new Encoder(getContext(), false, true, new EncoderService(true));
-        encoder.setNext(ComponentRegisteredListWebService.class);
+       // Filter encoder = new Encoder(getContext(), false, true, new EncoderService(true));
+       // encoder.setNext(ComponentRegisteredListWebService.class);
 
         Router router = new Router(getContext());
         router.attach("/components/registered/", ComponentRegisteredListWebService.class);
