@@ -2044,7 +2044,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Wallet" language="java">
+			<layer name="Basic Wallet" language="java">
 				<plugins>
 					<plugin
 						name="Bitcoin Wallet"
