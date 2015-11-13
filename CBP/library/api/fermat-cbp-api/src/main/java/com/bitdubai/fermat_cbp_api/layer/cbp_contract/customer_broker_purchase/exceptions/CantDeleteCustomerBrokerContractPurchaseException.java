@@ -5,9 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Angel on 2015.09.16..
  */
-public class CantCreateCustomerBrokerPurchaseException extends FermatException {
+public class CantDeleteCustomerBrokerContractPurchaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T CREATE THE CONTRACT CUSTOMER BROKER PURCHASE";
+    public static final String DEFAULT_MESSAGE = "CAN'T DELETED THE CONTRACT CUSTOMER BROKER PURCHASE";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,7 +17,7 @@ public class CantCreateCustomerBrokerPurchaseException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCreateCustomerBrokerPurchaseException(String message, Exception cause, String context, String possibleReason) {
+    public CantDeleteCustomerBrokerContractPurchaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

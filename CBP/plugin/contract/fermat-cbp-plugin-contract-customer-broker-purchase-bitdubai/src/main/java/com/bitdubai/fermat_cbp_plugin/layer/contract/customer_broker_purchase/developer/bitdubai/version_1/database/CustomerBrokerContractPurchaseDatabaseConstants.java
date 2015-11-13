@@ -10,7 +10,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.d
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CustomerBrokerPurchaseContractDatabaseConstants {
+public class CustomerBrokerContractPurchaseDatabaseConstants {
 
     /**
      * Contract Purchase database table definition.

@@ -4,14 +4,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 
 import java.util.UUID;
 
 /**
  * Created by angel on 02/11/15.
  */
-public class CustomerBrokerPurchaseInformation implements CustomerBrokerPurchase {
+public class CustomerBrokerContractPurchaseInformation implements CustomerBrokerContractPurchase {
 
     private UUID contractId;
     private String publicKeyCustomer;
@@ -26,7 +26,7 @@ public class CustomerBrokerPurchaseInformation implements CustomerBrokerPurchase
     private long merchandiseDeliveryExpirationDate;
     private ContractStatus status;
 
-    public CustomerBrokerPurchaseInformation(
+    public CustomerBrokerContractPurchaseInformation(
             UUID contractId,
             String publicKeyCustomer,
             String publicKeyBroker,
