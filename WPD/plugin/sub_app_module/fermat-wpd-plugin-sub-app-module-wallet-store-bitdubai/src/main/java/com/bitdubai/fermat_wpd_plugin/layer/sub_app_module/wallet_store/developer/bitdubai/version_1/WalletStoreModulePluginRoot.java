@@ -89,7 +89,7 @@ public class WalletStoreModulePluginRoot extends AbstractPlugin implements
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    public WalletStoreModulePluginRoot(PluginVersionReference pluginVersionReference) {
+    public WalletStoreModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
