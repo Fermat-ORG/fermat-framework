@@ -54,8 +54,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.DealsWithWalletResources;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesInstalationManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.DealsWithWalletPublisherModule;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -667,10 +665,6 @@ public class Platform implements Serializable {
 
             if (plugin instanceof DealsWithPluginDatabaseSystem) {
                 ((DealsWithPluginDatabaseSystem) plugin).setPluginDatabaseSystem((PluginDatabaseSystem) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLUGIN_DATABASE_SYSTEM)));
-            }
-
-            if (plugin instanceof DealsWithWalletPublisherModule) {
-                ((DealsWithWalletPublisherModule) plugin).setWalletPublisherManager((WalletPublisherModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE));
             }
 
             if (plugin instanceof DealsWithWalletResources) {
