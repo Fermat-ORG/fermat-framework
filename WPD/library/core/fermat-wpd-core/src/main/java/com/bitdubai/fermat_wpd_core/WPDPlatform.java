@@ -6,8 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_wpd_core.layer.identity.IdentityLayer;
+import com.bitdubai.fermat_wpd_core.layer.middleware.MiddlewareLayer;
+import com.bitdubai.fermat_wpd_core.layer.network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_wpd_core.layer.sub_app_module.SubAppModuleLayer;
-import com.bitdubai.fermat_wpd_core.layer.wallet_module.WalletModuleLayer;
 
 /**
  * The class <code>WPDPlatform</code>
@@ -18,7 +19,7 @@ import com.bitdubai.fermat_wpd_core.layer.wallet_module.WalletModuleLayer;
 public class WPDPlatform extends AbstractPlatform {
 
     public WPDPlatform() {
-        super(new PlatformReference(Platforms.CRYPTO_BROKER_PLATFORM));
+        super(new PlatformReference(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION));
     }
 
     @Override
@@ -26,14 +27,16 @@ public class WPDPlatform extends AbstractPlatform {
 
         try {
 
-            registerLayer(new IdentityLayer() );
-            registerLayer(new SubAppModuleLayer() );
+            registerLayer(new IdentityLayer()      );
+            registerLayer(new MiddlewareLayer()    );
+            registerLayer(new NetworkServiceLayer());
+            registerLayer(new SubAppModuleLayer()  );
 
         } catch (CantRegisterLayerException e) {
 
             throw new CantStartPlatformException(
                     e,
-                    "",
+                    "WPD Platform.",
                     "Problem trying to register a layer."
             );
         }

@@ -150,6 +150,7 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE("BCBPCBISAM"),
     BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE("BCBPCCISAM"),
     BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE("BCBPCBWM"),
+    BITDUBAI_CBP_CRYPTO_CUSTOMER_WALLET_MODULE("BCBPCCWM"),
     //End CBP Plugins
 
     // Init new Plugins
@@ -186,12 +187,20 @@ public enum Plugins implements FermatEnum {
     ISSUER_REDEMPTION           ("IR"),
     OUTGOING_EXTRA_USER         ("OEU"),
     OUTGOING_INTRA_ACTOR        ("OIA"),
+    PUBLISHER                   ("PBL"),
     REDEEM_POINT                ("RP"),
     REDEEM_POINT_COMMUNITY      ("RPC"),
     REDEEM_POINT_REDEMPTION     ("RPR"),
     USER_REDEMPTION             ("UR"),
+    WALLET_COMMUNITY            ("WCOM"),
     WALLET_CONTACTS             ("WC"),
+    WALLET_FACTORY              ("WF"),
     WALLET_MANAGER              ("WM"),
+    WALLET_PUBLISHER            ("WPU"),
+    WALLET_RESOURCES            ("WRE"),
+    WALLET_SETTINGS             ("WSE"),
+    WALLET_STATISTICS           ("WSTA"),
+    WALLET_STORE                ("WST"),
     WS_CLOUD_CLIENT             ("WCL"),
 
     // End  new Plugins
@@ -455,6 +464,8 @@ public enum Plugins implements FermatEnum {
                 return BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE;
             case "BCBPCBWM":
                 return BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE;
+            case "BCBPCCWM":
+                return BITDUBAI_CBP_CRYPTO_CUSTOMER_WALLET_MODULE;
             //End CBP Plugins
 
             // Init new Plugins
@@ -490,15 +501,21 @@ public enum Plugins implements FermatEnum {
             case "IR":    return ISSUER_REDEMPTION;
             case "OEU":   return OUTGOING_EXTRA_USER;
             case "OIA":   return OUTGOING_INTRA_ACTOR;
+            case "PBL":   return PUBLISHER;
             case "RP":    return REDEEM_POINT;
             case "RPC":   return REDEEM_POINT_COMMUNITY;
             case "RPR":   return REDEEM_POINT_REDEMPTION;
             case "UR":    return USER_REDEMPTION;
+            case "WCOM":  return WALLET_COMMUNITY;
             case "WC":    return WALLET_CONTACTS;
+            case "WF":    return WALLET_FACTORY;
             case "WM":    return WALLET_MANAGER;
+            case "WPU":   return WALLET_PUBLISHER;
+            case "WRE":   return WALLET_RESOURCES;
+            case "WSE":   return WALLET_SETTINGS;
+            case "WSTA":  return WALLET_STATISTICS;
+            case "WST":   return WALLET_STORE;
             case "WCL":   return WS_CLOUD_CLIENT;
-
-//TEMPORAL
 
 
             // End  new Plugins
