@@ -13,13 +13,13 @@
     <color name="ccw_second_line_item">#0191ba</color>
     <color name="contract_closed_list_item_background">#c6c6c6</color>
     <color name="contract_cancelled_list_item_background">#ff8b8b</color>
-    <color name="customer_name_text">#6b7378</color>
+    <color name="broker_name_text">#6b7378</color>
     <color name="dark_grey">#7b7b7b</color>
-    <color name="negotiation_date_text">#7b7b7b</color>
+    <color name="negotiation_date_text">#6b7378</color>
     <color name="negotiation_closed_list_item_background">#c6c6c6</color>
     <color name="negotiation_cancelled_list_item_background">#ff8b8b</color>
-    <color name="waiting_for_text">#1d5127</color>
-    <color name="waiting_for_broker_list_item_background">#c6c6c6</color>
+    <color name="waiting_for_text">#6b7378</color>
+    <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
     <color name="waiting_for_customer_list_item_background">#ffffff</color>
     <color name="withe">#FFFFFF</color>
 

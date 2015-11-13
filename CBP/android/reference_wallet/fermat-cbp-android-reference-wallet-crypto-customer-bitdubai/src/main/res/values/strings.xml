@@ -15,4 +15,5 @@
     <string name="unit_number" translatable="false">1</string>
     <string name="waiting_for_you">Waiting for you</string>
     <string name="waiting_for_broker">Waiting for the Broker</string>
+    <string name="ccw_unit_number">1</string>
 </resources>
