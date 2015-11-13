@@ -29,6 +29,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.NegotiationInformationTestData;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.NavigationViewAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
@@ -90,6 +91,9 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             View emptyListViewsContainer = layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
+
+        NavigationViewAdapter adapter = new NavigationViewAdapter(getActivity(), null);
+        setNavigationDrawer(adapter);
     }
 
     private void configureActionBar(Activity activity) {

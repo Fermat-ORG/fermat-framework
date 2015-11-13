@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer;
+package com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
     public static final int TYPE_HEADER = 0;
     public static final int TYPE_ITEM = 1;
 
-    CryptoBrokerWalletSession referenceWalletSession;
+    CryptoCustomerWalletSession walletSession;
 
     Typeface tf;
 

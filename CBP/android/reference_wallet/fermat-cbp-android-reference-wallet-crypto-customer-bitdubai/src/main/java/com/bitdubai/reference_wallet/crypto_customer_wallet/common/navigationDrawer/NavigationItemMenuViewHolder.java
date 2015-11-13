@@ -1,11 +1,11 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer;
+package com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer;
 
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 
 /**
