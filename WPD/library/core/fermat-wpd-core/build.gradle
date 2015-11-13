@@ -15,19 +15,32 @@ dependencies {
 
     /**
      * For doing the code more readable, please keep the elements in the file sorted alphabetically:
+     * - type (addon/plugin)
      * - layer name
-     * - plugin name
+     * - name
      */
 
     compile project(':fermat-api')
 
-    compile project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai')
-    compile project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai')
+    compile project(':fermat-wpd-plugin-actor-publisher-bitdubai')
 
-    compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
-    compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
+    compile project(':fermat-wpd-plugin-engine-wallet-runtime-bitdubai')
 
-    compile project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai')
+    compile project(':fermat-wpd-plugin-identity-publisher-bitdubai')
+
+    compile project(':fermat-wpd-plugin-middleware-wallet-factory-bitdubai')
+    compile project(':fermat-wpd-plugin-middleware-wallet-publisher-bitdubai')
+    compile project(':fermat-wpd-plugin-middleware-wallet-settings-bitdubai')
+    compile project(':fermat-wpd-plugin-middleware-wallet-store-bitdubai')
+
+    compile project(':fermat-wpd-plugin-network-service-wallet-community-bitdubai')
+    compile project(':fermat-wpd-plugin-network-service-wallet-resources-bitdubai')
+    compile project(':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai')
+    compile project(':fermat-wpd-plugin-network-service-wallet-store-bitdubai')
+
+    compile project(':fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai')
+    compile project(':fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai')
+    compile project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

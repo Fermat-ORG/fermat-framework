@@ -4,8 +4,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_wpd_core.layer.sub_app_module.crypto_broker_identity.CryptoBrokerIdentityPluginSubsystem;
-import com.bitdubai.fermat_wpd_core.layer.sub_app_module.crypto_customer_identity.CryptoCustomerIdentityPluginSubsystem;
+import com.bitdubai.fermat_wpd_core.layer.sub_app_module.wallet_factory.WalletFactoryPluginSubsystem;
+import com.bitdubai.fermat_wpd_core.layer.sub_app_module.wallet_publisher.WalletPublisherPluginSubsystem;
+import com.bitdubai.fermat_wpd_core.layer.sub_app_module.wallet_store.WalletStorePluginSubsystem;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 08/11/2015.
@@ -23,8 +24,9 @@ public class SubAppModuleLayer extends AbstractLayer {
 
         try {
 
-            registerPlugin(new CryptoBrokerIdentityPluginSubsystem());
-            registerPlugin(new CryptoCustomerIdentityPluginSubsystem());
+            registerPlugin(new WalletFactoryPluginSubsystem()  );
+            registerPlugin(new WalletPublisherPluginSubsystem());
+            registerPlugin(new WalletStorePluginSubsystem()    );
 
         } catch(CantRegisterPluginException e) {
 
