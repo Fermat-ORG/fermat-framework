@@ -25,6 +25,8 @@ import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.core.WalletEventListener;
 import org.bitcoinj.script.Script;
+import org.bitcoinj.script.ScriptChunk;
+import org.bitcoinj.script.ScriptOpCodes;
 
 import java.util.List;
 import java.util.Set;
@@ -172,8 +174,15 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 /**
                  * if this is an OP_RETURN output, I will get the hash
                  */
-                if (output.getScriptPubKey().isOpReturn())
-                    hash = output.getScriptPubKey().getPubKeyHash().toString();
+                if (output.getScriptPubKey().isOpReturn()){
+                    /**
+                     * I get the chunks of the Script to get the op_Return value
+                     */
+                    for (ScriptChunk chunk : output.getScriptPubKey().getChunks()){
+                        if (chunk.equalsOpCode(64))
+                            hash = new String(chunk.data);
+                    }
+                }
             }
         } catch (Exception e){
             return "";
@@ -413,66 +422,66 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @param wallet
      * @param tx
      */
-    private void saveIncomingTransaction(Wallet wallet, Transaction tx){
+    private void saveIncomingTransaction(Wallet wallet, Transaction tx) {
+        CryptoStatus cryptoStatus = getTransactionCryptoStatus(tx);
+
         /**
-         * Register the new incoming transaction into the database
+         * I will insert any missing previous state for this transaction
          */
-        try {
-            /**
-             * The Transaction might be in OnBlockChain status because it was confirmed while I was sleep.
-             * If this is the case, I will create a new transaction for onCryptoStatus to follow the procedure
-             */
-            String txHash = tx.getHashAsString();
-            CryptoStatus cryptoStatus = getTransactionCryptoStatus(tx);
-            if (cryptoStatus == CryptoStatus.ON_BLOCKCHAIN){
+        addMissingTransactions(wallet, tx, cryptoStatus);
+
+        /**
+         * saves into database the incoming transaction if it is new.
+         */
+        if (isNewTransaction(tx.getHashAsString(), cryptoStatus)) {
+            try {
+                getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                        cryptoStatus,
+                        tx.getConfidence().getDepthInBlocks(),
+                        getIncomingTransactionAddressTo(wallet, tx),
+                        getIncomingTransactionAddressFrom(tx),
+                        getIncomingTransactionValue(wallet, tx),
+                        getTransactionOpReturn(tx),
+                        ProtocolStatus.TO_BE_NOTIFIED);
+            } catch (Exception e) {
                 /**
-                 * I get a store crypto Status for this transaction (if one exsits)
+                 * if there is an error in getting information from the transaction object.
+                 * I will try saving the transaction with minimal information.
+                 * I will complete this info in the agent that triggers the events.
                  */
-                CryptoStatus storedCryptoStatus = getDao().getStoredTransactionCryptoStatus(TransactionTypes.INCOMING, txHash);
-                if (storedCryptoStatus == null){
-                    /**
-                     * If no other cryptoStatus exists, means that I need to create a new transaction for the
-                     * OnBlockChain CryptoStatus
-                     */
-                    try{
-                        saveMissingIncomingTransaction(wallet, tx, CryptoStatus.ON_CRYPTO_NETWORK);
-                    } catch (CantExecuteDatabaseOperationException e){
-                        e.printStackTrace(); //I will continue to at least save the incoming transaction.
-                    }
+                e.printStackTrace();
+                try {
+                    CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
+                    getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                            getTransactionCryptoStatus(tx),
+                            0,
+                            errorAddress,
+                            errorAddress,
+                            0,
+                            "",
+                            ProtocolStatus.TO_BE_NOTIFIED);
+                } catch (CantExecuteDatabaseOperationException e1) {
+                    e1.printStackTrace();
                 }
             }
 
+        }
+    }
+
+    /**
+     * Verifies if this transaction already exists in the database or not.
+     * @param txHash
+     * @param cryptoStatus
+     * @return
+     */
+    private boolean isNewTransaction(String txHash, CryptoStatus cryptoStatus){
+        try {
+            return getDao().isNewTransaction(txHash, cryptoStatus);
+        } catch (CantExecuteDatabaseOperationException e) {
             /**
-             * saves into database the incoming transaction
+             * if there is an error I can't risk loosing this transaction.
              */
-            getDao().saveNewIncomingTransaction(txHash,
-                    cryptoStatus,
-                    tx.getConfidence().getDepthInBlocks(),
-                    getIncomingTransactionAddressTo(wallet, tx),
-                    getIncomingTransactionAddressFrom(tx),
-                    getIncomingTransactionValue(wallet, tx),
-                    getTransactionOpReturn(tx),
-                    ProtocolStatus.TO_BE_NOTIFIED);
-        }  catch (Exception e){
-            /**
-             * if there is an error in getting information from the transaction object.
-             * I will try saving the transaction with minimal information.
-             * I will complete this info in the agent that triggers the events.
-             */
-            e.printStackTrace();
-            try{
-                CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
-                getDao().saveNewIncomingTransaction(tx.getHashAsString(),
-                        getTransactionCryptoStatus(tx),
-                        0,
-                        errorAddress,
-                        errorAddress,
-                        0,
-                        "",
-                        ProtocolStatus.TO_BE_NOTIFIED);
-            } catch (CantExecuteDatabaseOperationException e1) {
-                e1.printStackTrace();
-            }
+            return true;
         }
     }
 
@@ -520,6 +529,60 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         } catch (Exception e){
             return 0;
         }
+    }
+
+    /**
+     * Will add any missing transaction in case we detect the transaction only as inBlockChain or Irreversible
+     * @param wallet
+     * @param tx
+     * @param currentCryptoStatus
+     */
+    private void addMissingTransactions(Wallet wallet, Transaction tx, CryptoStatus currentCryptoStatus){
+        /**
+         * I get the last store CryptoStatus from the database, if any.
+         */
+        CryptoStatus storedCryptoStatus = null;
+        try {
+            storedCryptoStatus = getDao().getStoredTransactionCryptoStatus(TransactionTypes.INCOMING, tx.getHashAsString());
+        } catch (CantExecuteDatabaseOperationException e) {
+            storedCryptoStatus = null;
+        }
+
+        /**
+         * If I don't have any transaction and we receive ON_BLOCKCHAIN, I will insert a new one with ON_CRYPTO_NETWORK
+         */
+        if (currentCryptoStatus == CryptoStatus.ON_BLOCKCHAIN){
+            if (storedCryptoStatus == null){
+                try{
+                    saveMissingIncomingTransaction(wallet, tx, CryptoStatus.ON_CRYPTO_NETWORK);
+                } catch (CantExecuteDatabaseOperationException e){
+                    e.printStackTrace(); //I will continue to at least save the incoming transaction.
+                }
+            }
+        }
+
+        /**
+         * if the current status is IRREVERSIBLE, I will insert both ON_CRYPTO_NETWORK and ON_BLOCKCHAIN if they are missing.
+         */
+        if (currentCryptoStatus == CryptoStatus.IRREVERSIBLE){
+            if (storedCryptoStatus == null){
+                try{
+                    saveMissingIncomingTransaction(wallet, tx, CryptoStatus.ON_CRYPTO_NETWORK);
+                    saveMissingIncomingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
+                } catch (CantExecuteDatabaseOperationException e){
+                    e.printStackTrace(); //I will continue to at least save the incoming transaction.
+                }
+            }
+            if (storedCryptoStatus == CryptoStatus.ON_CRYPTO_NETWORK){
+                try{
+                    saveMissingIncomingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
+                } catch (CantExecuteDatabaseOperationException e){
+                    e.printStackTrace(); //I will continue to at least save the incoming transaction.
+                }
+            }
+        }
+
+
     }
 }
 

@@ -16,12 +16,15 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.provisory_classes.InstalledSubApp;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,8 +46,11 @@ public class SubAppDesktopFragment extends Fragment {
     private ArrayList<InstalledSubApp> mlist;
     private int position;
 
-    public static SubAppDesktopFragment newInstance(int position) {
+    private IdentityAssetIssuerManager identityAssetIssuerManager;
+
+    public static SubAppDesktopFragment newInstance(int position, IdentityAssetIssuerManager identityAssetIssuerManager) {
         SubAppDesktopFragment f = new SubAppDesktopFragment();
+        f.setIdentityAssetIssuerManager(identityAssetIssuerManager);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         //    f.setArguments(b);
@@ -93,6 +99,8 @@ public class SubAppDesktopFragment extends Fragment {
         installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_ISSUER, null, null, "sub-app-asset-identity-issuer", "Asset Identity Issuer", "sub-app-asset-identity-issuer", "sub-app-asset-identity-issuer", new Version(1, 0, 0));
         mlist.add(installedSubApp);
         installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_USER, null, null, "sub-app-asset-identity-user", "Asset Identity User", "sub-app-asset-identity-user", "sub-app-asset-identity-user", new Version(1, 0, 0));
+        mlist.add(installedSubApp);
+        installedSubApp = new InstalledSubApp(SubApps.DAP_REDEEM_POINT_IDENTITY, null, null, "sub-app-asset-identity-redeem-point", "Asset Redeem Point Identity", "sub-app-asset-identity-redeem-point", "sub-app-asset-identity-redeem-point", new Version(1, 0, 0));
         mlist.add(installedSubApp);
 
         GridView gridView = new GridView(getActivity());
@@ -152,6 +160,14 @@ public class SubAppDesktopFragment extends Fragment {
 
     }
 
+    /**
+     * Set IdentityAssetIssuerManager identityAssetIssuerManager plugin
+     *
+     * @param identityAssetIssuerManager
+     */
+    public void setIdentityAssetIssuerManager(IdentityAssetIssuerManager identityAssetIssuerManager) {
+        this.identityAssetIssuerManager = identityAssetIssuerManager;
+    }
 
     public class AppListAdapter extends ArrayAdapter<InstalledSubApp> {
 
@@ -182,6 +198,20 @@ public class SubAppDesktopFragment extends Fragment {
 
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.sub_apps);
             switch (installedSubApp.getSubAppIcon()) {
+                case "sub-app-asset-identity-redeem-point":
+                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setTag("DevelopersActivity|1");
+                    linearLayout.setTag("DevelopersActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+
+                        }
+                    });
+                    break;
                 case "sub-app-asset-identity-user":
                     holder.imageView.setImageResource(R.drawable.intra_user);
                     holder.imageView.setTag("DevelopersActivity|1");
@@ -219,8 +249,15 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            try {
+                                if(identityAssetIssuerManager.hasIntraIssuerIdentity())
+                                    ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                                else
+                                    Toast.makeText(getActivity(), "Need Issuer Identity", Toast.LENGTH_SHORT).show();
 
+                            } catch (CantListAssetIssuersException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                     break;
@@ -247,7 +284,15 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            try {
+                                if(identityAssetIssuerManager.hasIntraIssuerIdentity())
+                                    ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                                else
+                                    Toast.makeText(getActivity(), "Need Issuer Identity", Toast.LENGTH_SHORT).show();
+
+                            } catch (CantListAssetIssuersException e) {
+                                e.printStackTrace();
+                            }
 
                         }
                     });

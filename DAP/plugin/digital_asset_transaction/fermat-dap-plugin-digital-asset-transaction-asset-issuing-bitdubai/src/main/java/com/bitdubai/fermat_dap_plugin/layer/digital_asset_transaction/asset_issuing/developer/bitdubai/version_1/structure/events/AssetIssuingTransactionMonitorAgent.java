@@ -619,15 +619,11 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             List<CryptoTransaction> transactionListFromCryptoNetwork=bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
             if(transactionListFromCryptoNetwork==null){
                 System.out.println("ASSET ISSUING transaction List From Crypto Network for "+genesisTransaction+" is null");
-                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,
-                        "Getting the cryptoStatus from CryptoNetwork",
-                        "The crypto status from genesis transaction "+genesisTransaction+" return null");
+                return null;
             }
             if(transactionListFromCryptoNetwork.isEmpty()){
                 System.out.println("ASSET ISSUING transaction List From Crypto Network for "+genesisTransaction+" is empty");
-                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,
-                        "Getting the cryptoStatus from CryptoNetwork",
-                        "The genesis transaction "+genesisTransaction+" cannot be found in crypto network");
+                return null;
             }
             System.out.println("ASSET ISSUING I found "+transactionListFromCryptoNetwork.size()+" in Crypto network from genesis transaction:\n"+genesisTransaction);
 
