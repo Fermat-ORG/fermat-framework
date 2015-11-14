@@ -127,7 +127,7 @@ public class AssetIssuingDigitalAssetTransactionPluginRoot extends AbstractPlugi
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM,  layer = Layers.ACTOR,  plugin = Plugins.INTRA_WALLET_USER)
     IntraWalletUserActorManager intraWalletUserActorManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM,  layer = Layers.IDENTITY,  plugin = Plugins.BITDUBAI_IDENTITY_MANAGER)
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM,  layer = Layers.IDENTITY,  plugin = Plugins.INTRA_WALLET_USER)
     IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_ISSUER)
