@@ -227,7 +227,7 @@ public  class RequestsReceivedFragment extends FermatWalletFragment {
                 {
 
                     case 1:
-                        account_picture.setImageResource(R.drawable.mati_profile);
+                        account_picture.setImageResource(R.drawable.kimberly_profile_picture);
                         break;
                     case 2:
                         account_picture.setImageResource(R.drawable.kimberly_profile_picture);
@@ -251,25 +251,16 @@ public  class RequestsReceivedFragment extends FermatWalletFragment {
                         account_picture.setImageResource(R.drawable.karina_profile_picture);
                         break;
                     case 9:
-                        account_picture.setImageResource(R.drawable.mati_profile);
+                        account_picture.setImageResource(R.drawable.kimberly_profile_picture);
                         break;
                     case 10:
-                        account_picture.setImageResource(R.drawable.mati_profile);
+                        account_picture.setImageResource(R.drawable.kimberly_profile_picture);
                         break;
                     case 11:
                         account_picture.setImageResource(R.drawable.kate_profile_picture);
                         break;
                     case 12:
-                        account_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 13:
-                        account_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 14:
-                        account_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 15:
-                        account_picture.setImageResource(R.drawable.mati_profile);
+                        account_picture.setImageResource(R.drawable.kimberly_profile_picture);
                         break;
 
 

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
@@ -28,10 +29,12 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerWalletImplException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerWalletException;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Currency;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -54,13 +57,14 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         this.ownerPublicKey = ownerPublicKey;
         this.databaseDao = databaseDao;
         stockMap = new ConcurrentHashMap<>();
+
     }
 
     @Override
     public String getWalletPublicKey() { return this.walletKeyPair.getPublicKey(); }
 
     @Override
-    public String getOwnerPublicKey() {return this.ownerPublicKey;}
+    public String getOwnerPublicKey() { return this.ownerPublicKey; }
 
     @Override
     public void addStock(FermatEnum stockType) throws CantAddStockCryptoBrokerWalletException{
@@ -79,10 +83,11 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
 
     @Override
     public Stock getStock(FermatEnum stockType) throws CantGetStockCryptoBrokerWalletException {
-        CryptoBrokerStock stock = new CryptoBrokerStock(stockType, this.walletKeyPair,this.databaseDao);
         try{
+            CryptoBrokerStock stock = new CryptoBrokerStock(stockType, this.walletKeyPair,this.databaseDao);
             stock.getBookedBalance();
             stock.getAvailableBalance();
+            return stock;
         } catch (CantGetBookedBalanceCryptoBrokerWalletException e) {
             throw new CantGetStockCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T GET STOCK CRYPTO BROKER WALLET", "");
         } catch (CantGetAvailableBalanceCryptoBrokerWalletException e) {
@@ -90,21 +95,18 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         } catch (Exception e) {
             throw new CantGetStockCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T GET STOCK CRYPTO BROKER WALLET", "");
         }
-        return stock;
     }
 
     @Override
     public Collection<Stock> getStocks() throws CantGetStockCollectionCryptoBrokerWalletException {
-        Collection<Stock> stocks = new ArrayList<Stock>();
-//        try {
-//
-//            stocks = databaseDao.getCollectionStoks();
-//        } catch (CantLoadTableToMemoryException e) {
-//            throw new CantGetStockCollectionCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T GET COLLECTION STOCK CRYPTO BROKER WALLET", "");
-//        } catch (InvalidParameterException e) {
-//            throw new CantGetStockCollectionCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T GET COLLECTION STOCK CRYPTO BROKER WALLET", "");
-//        }
-        return stocks;
+        try {
+            HashSet<Stock> stocks = new HashSet<>();
+            for (final Map.Entry<FermatEnum, Stock> StockReference : stockMap.entrySet())
+                stocks.add(StockReference.getValue());
+            return stocks;
+        } catch (Exception e) {
+            throw new CantGetStockCollectionCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T GET STOCK CRYPTO BROKER WALLET", "");
+        }
     }
 
     @Override
@@ -147,21 +149,6 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         }
     }
 
-    public boolean equals(Object o){
-        if(!(o instanceof CryptoBrokerStockTransactionRecord))
-            return false;
-        CryptoBrokerStockTransactionRecord compare = (CryptoBrokerStockTransactionRecord) o;
-        return ownerPublicKey.equals(compare.getOwnerPublicKey()) && walletKeyPair.getPublicKey().equals(compare.getWalletPublicKey());
-    }
-
-    @Override
-    public int hashCode(){
-        int c = 0;
-        c += ownerPublicKey.hashCode();
-        c += walletKeyPair.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
-    }
-
     private StockTransaction stockTransactionRecord(WalletTransaction transaction){
         KeyPair walletKeyPair = AsymmetricCryptography.createKeyPair(transaction.getWalletPublicKey());
         StockTransaction record = new CryptoBrokerStockTransactionRecordImpl(
@@ -200,5 +187,20 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
                 memo
         );
         return record;
+    }
+
+    public boolean equals(Object o){
+        if(!(o instanceof CryptoBrokerStockTransactionRecord))
+            return false;
+        CryptoBrokerStockTransactionRecord compare = (CryptoBrokerStockTransactionRecord) o;
+        return ownerPublicKey.equals(compare.getOwnerPublicKey()) && walletKeyPair.getPublicKey().equals(compare.getWalletPublicKey());
+    }
+
+    @Override
+    public int hashCode(){
+        int c = 0;
+        c += ownerPublicKey.hashCode();
+        c += walletKeyPair.hashCode();
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }

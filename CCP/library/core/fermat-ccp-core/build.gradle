@@ -12,24 +12,38 @@ repositories {
 }
 
 dependencies {
+
+    /**
+     * For doing the code more readable, please keep the elements in the file sorted alphabetically:
+     * - layer name
+     * - plugin name
+     */
+
     compile project(':fermat-api')
-    compile project(':fermat-ccp-api')
 
     compile project(':fermat-ccp-plugin-actor-extra-user-bitdubai')
     compile project(':fermat-ccp-plugin-actor-intra-user-bitdubai')
+
     compile project(':fermat-ccp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
+
     compile project(':fermat-ccp-plugin-identity-intra-user-bitdubai')
+
     compile project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai')
+
     compile project(':fermat-ccp-plugin-module-intra-user-bitdubai')
+
     compile project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
     compile project(':fermat-ccp-plugin-network-service-crypto-payment-request-bitdubai')
     compile project(':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai')
     compile project(':fermat-ccp-plugin-network-service-intra-actor-bitdubai')
+
     compile project(':fermat-ccp-plugin-request-crypto-payment-bitdubai')
+
     compile project(':fermat-ccp-plugin-transaction-incoming-extra-user-bitdubai')
     compile project(':fermat-ccp-plugin-transaction-incoming-intra-user-bitdubai')
     compile project(':fermat-ccp-plugin-transaction-outgoing-extra-user-bitdubai')
     compile project(':fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai')
+
     compile project(':fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai')
 
     // todo create this plugin in ccp

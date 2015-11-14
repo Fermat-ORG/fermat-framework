@@ -85,6 +85,8 @@ import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeMa
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -972,9 +974,11 @@ public abstract class FermatActivityBase extends AppCompatActivity implements Wi
                         break;
                     case "DDAP":
                         if(activePlatforms.contains(Platforms.DIGITAL_ASSET_PLATFORM)) {
-                            com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment went1 = com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
-                            fragments.add(went1);
                             IdentityAssetIssuerManager identityAssetIssuerManager = getIdentityAssetIssuerManager();
+                            IdentityAssetUserManager identityAssetUserManager = getIdentityAssetUserManager();
+                            RedeemPointIdentityManager redeemPointIdentityManager = getIdentityRedeemPointManager();
+                            com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment went1 = com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0, identityAssetIssuerManager, identityAssetUserManager, redeemPointIdentityManager);
+                            fragments.add(went1);
                             com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0, identityAssetIssuerManager);
                             fragments.add(dapDesktopFragment);
                         }
@@ -1130,10 +1134,27 @@ public abstract class FermatActivityBase extends AppCompatActivity implements Wi
         return (DesktopRuntimeManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DESKTOP_RUNTIME);
     }
 
-
-    public IdentityAssetIssuerManager getIdentityAssetIssuerManager(){
+    /**
+     * Get IdentityAssetIssuerManager
+     */
+    public IdentityAssetIssuerManager getIdentityAssetIssuerManager() {
         return (IdentityAssetIssuerManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
     }
+
+    /**
+     * Get IdentityAssetUserManager
+     */
+    public IdentityAssetUserManager getIdentityAssetUserManager() {
+        return (IdentityAssetUserManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY);
+    }
+
+    /**
+     * Get RedeemPointIdentityManager
+     */
+    public RedeemPointIdentityManager getIdentityRedeemPointManager() {
+        return (RedeemPointIdentityManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY);
+    }
+
     /**
      * Assest Issuer Wallet Module
      */

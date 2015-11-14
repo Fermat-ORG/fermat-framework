@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.view.View;
 import android.widget.Toast;
 
@@ -12,11 +13,13 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.util.MemoryUtils;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.PaymentHomeItemViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -29,17 +32,17 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  */
 public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationItemMenuViewHolder> {
 
-    CryptoWallet cryptoWallet;
-    ReferenceWalletSession referenceWalletSession;
 
+    private IntraUserLoginIdentity intraUserLoginIdentity;
     Typeface tf;
     protected NavigationViewAdapter(Context context) {
         super(context);
     }
 
-    public NavigationViewAdapter(Context context, List<MenuItem> dataSet) {
+    public NavigationViewAdapter(Context context, List<MenuItem> dataSet,IntraUserLoginIdentity intraUserLoginIdentity) {
         super(context, dataSet);
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+        this.intraUserLoginIdentity = intraUserLoginIdentity;
     }
 
     public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
@@ -104,9 +107,15 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
                 case 5:
                     holder.getIcon().setImageResource(R.drawable.btn_drawer_logout_normal);
                     break;
+                case 0:
+                    if(intraUserLoginIdentity.getProfileImage()!=null) {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length);
+                        holder.getIcon().setImageBitmap(bitmap);
+                    }else{
+                        Picasso.with(context).load(R.drawable.profile_image2).into(holder.getIcon());
+                    }
 
-                default:
-                    holder.getIcon().setImageResource(R.drawable.mati_profile);
+                    break;
             }
         }catch (Exception e){
             e.printStackTrace();
