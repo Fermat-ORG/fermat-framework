@@ -233,8 +233,15 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            try {
+                                if(identityAssetIssuerManager.hasIntraIssuerIdentity())
+                                    ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                                else
+                                    Toast.makeText(getActivity(), "Need Issuer Identity", Toast.LENGTH_SHORT).show();
 
+                            } catch (CantListAssetIssuersException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                     break;
