@@ -87,7 +87,8 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     public AssetIssuerWalletPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
-
+    boolean existWallet = false;
+    String walletPublicKey = "walletPublicKeyTest";
     AssetIssuerWallet assetIssuerWallet;
 
     @Override
@@ -96,13 +97,18 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
             loadWalletIssuerMap();
 
             try {
-                assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
+                if(!existWallet) {
+                    createWalletAssetIssuer(walletPublicKey);
+                }
+
+                assetIssuerWallet = loadAssetIssuerWallet(walletPublicKey);
+
             } catch (CantLoadWalletException e) {
-                createWalletAssetIssuer("walletPublicKeyTest");
-                assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
+                e.printStackTrace();
             }
+
             testWallet();
-            System.out.println("Star Plugin AssetWalletIssuer");
+            System.out.println("Start Plugin AssetWalletIssuer");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(CantStartPluginException exception){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
@@ -114,7 +120,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
         }
     }
 
-    private void loadWalletIssuerMap() throws CantStartPluginException {
+    private boolean loadWalletIssuerMap() throws CantStartPluginException {
         PluginTextFile walletIssuerFile = getWalletIssuerFile();
         String[] stringWalletIssuer = walletIssuerFile.getContent().split(";", -1);
 
@@ -122,7 +128,9 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
             if (!stringWalletId.equals("")) {
                 String[] idPair = stringWalletId.split(",", -1);
                 walletIssuer.put(idPair[0], UUID.fromString(idPair[1]));
+                existWallet = true;
             }
+        return existWallet;
     }
 
     private PluginTextFile getWalletIssuerFile() throws CantStartPluginException {
