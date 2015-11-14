@@ -44,8 +44,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
@@ -121,6 +123,12 @@ public class AssetIssuingDigitalAssetTransactionPluginRoot extends AbstractPlugi
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
     ActorAssetIssuerManager actorAssetIssuerManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM,  layer = Layers.ACTOR,  plugin = Plugins.INTRA_WALLET_USER)
+    IntraWalletUserActorManager intraWalletUserActorManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM,  layer = Layers.IDENTITY,  plugin = Plugins.INTRA_WALLET_USER)
+    IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_ISSUER)
     AssetIssuerWalletManager assetIssuerWalletManager;
@@ -234,6 +242,8 @@ public class AssetIssuingDigitalAssetTransactionPluginRoot extends AbstractPlugi
             this.assetIssuingTransactionManager.setLogManager(this.logManager);
             this.assetIssuingTransactionManager.setBitcoinNetworkManager(this.bitcoinNetworkManager);
             this.assetIssuingTransactionManager.setActorAssetIssuerManager(this.actorAssetIssuerManager);
+            this.assetIssuingTransactionManager.setIntraWalletUserActorManager(this.intraWalletUserActorManager);
+            this.assetIssuingTransactionManager.setIntraWalletUserIdentityManager(this.intraWalletUserIdentityManager);
             try{
                 //printSomething("Event manager:"+this.eventManager);
                 this.assetIssuingEventRecorderService.start();

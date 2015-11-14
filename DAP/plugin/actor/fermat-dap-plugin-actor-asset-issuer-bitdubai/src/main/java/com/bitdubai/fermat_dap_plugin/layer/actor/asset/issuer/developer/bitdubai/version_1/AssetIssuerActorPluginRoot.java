@@ -56,10 +56,13 @@ import java.util.UUID;
 /**
  * Created by Nerio on 09/09/15.
  */
-
 public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         ActorAssetIssuerManager,
         DatabaseManagerForDevelopers {
+
+    public AssetIssuerActorPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -76,11 +79,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_ISSUER)
     private AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
 
-    public AssetIssuerActorPluginRoot() {
-        super(new PluginVersionReference(new Version()));
-    }
+    private AssetIssuerActorDao assetIssuerActorDao;
 
-    AssetIssuerActorDao assetIssuerActorDao;
     private ActorAssetIssuerMonitorAgent actorAssetIssuerMonitorAgent;
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
@@ -88,12 +88,16 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @Override
     public void start() throws CantStartPluginException {
         try {
-            assetIssuerActorDao = new AssetIssuerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
-
-//            createAndRegisterActorAssetIssuerTest();
+            /**
+             * Created instance of AssetUserActorDao and initialize Database
+             */
+            assetIssuerActorDao = new AssetIssuerActorDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
 
             initializeListener();
 
+            /**
+             * Agent for Search Actor Asset User REGISTERED in Actor Network Service User
+             */
             startMonitorAgent();
 
             this.serviceStatus = ServiceStatus.STARTED;
@@ -108,35 +112,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     public void stop() {
         this.actorAssetIssuerMonitorAgent.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        AssetIssuerActorDeveloperDatabaseFactory dbFactory = new AssetIssuerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-        return dbFactory.getDatabaseList(developerObjectFactory);
-    }
-
-    @Override
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        AssetIssuerActorDeveloperDatabaseFactory dbFactory = new AssetIssuerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-        return dbFactory.getDatabaseTableList(developerObjectFactory);
-    }
-
-    @Override
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        try {
-            AssetIssuerActorDeveloperDatabaseFactory dbFactory = new AssetIssuerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-            dbFactory.initializeDatabase();
-            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeAssetIssuerActorDatabaseException e) {
-            /**
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
-        return Collections.EMPTY_LIST;
     }
 
     @Override
@@ -203,17 +178,20 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         } catch (Exception e) {
             throw new CantGetAssetIssuerActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
         }
+
         return actorAssetIssuer;
     }
 
     @Override
     public List<ActorAssetIssuer> getAllAssetIssuerActorInTableRegistered() throws CantGetAssetIssuerActorsException {
         List<ActorAssetIssuer> list;
+
         try {
             list = this.assetIssuerActorDao.getAllAssetIssuerActorRegistered();
         } catch (CantGetAssetIssuersListException e) {
             throw new CantGetAssetIssuerActorsException("CAN'T GET ASSET ISSUER REGISTERED ACTOR", e, "", "");
         }
+
         return list;
     }
 
@@ -225,29 +203,13 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         } catch (CantGetAssetIssuersListException e) {
             throw new CantGetAssetIssuerActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
         }
+
         return list;
-    }
-
-    public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetIssuerException {
-        try {
-            /*
-             * Send the Actor Asset Issuer Local for Register in Actor Network Service
-             */
-            ActorAssetIssuer actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
-
-            assetIssuerActorNetworkServiceManager.registerActorAssetIssuer(actorAssetIssuer);
-
-        } catch (CantRegisterActorAssetIssuerException e) {
-            throw new CantRegisterActorAssetIssuerException("CAN'T Register Actor Asset Issuer in Actor Network Service", e, "", "");
-        } catch (CantGetAssetIssuerActorsException e) {
-            throw new CantRegisterActorAssetIssuerException("CAN'T GET ACTOR ASSET ISSUER", e, "", "");
-        }
     }
 
     @Override
     public void connectToActorAssetIssuer(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToAssetIssuerException {
         for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuers) {
-            //todo Actualizar Estado en base de datos para este Actor DAPConnectionState = PENDING_REMOTELY_ACCEPTANCE
             System.out.println("Se necesita conocer como Implementar bien: " + actorAssetIssuer.getName());
 
             try {
@@ -258,19 +220,66 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         }
     }
 
-    //TODO al confirmarse el registro del Actor cambia su estado local a CONNECTED
+    public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetIssuerException {
+        try {
+            /*
+             * Send the Actor Asset Issuer Local for Register in Actor Network Service
+             */
+            ActorAssetIssuer actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+
+            if(actorAssetIssuer != null)
+                assetIssuerActorNetworkServiceManager.registerActorAssetIssuer(actorAssetIssuer);
+
+        } catch (CantRegisterActorAssetIssuerException e) {
+            throw new CantRegisterActorAssetIssuerException("CAN'T Register Actor Asset Issuer in Actor Network Service", e, "", "");
+        } catch (CantGetAssetIssuerActorsException e) {
+            throw new CantRegisterActorAssetIssuerException("CAN'T GET ACTOR ASSET ISSUER", e, "", "");
+        }
+    }
+
     public void handleCompleteAssetIssuerActorRegistrationNotificationEvent(ActorAssetIssuer actorAssetIssuer) {
         System.out.println("***************************************************************");
         System.out.println("Actor Asset Issuer se Registro: " + actorAssetIssuer.getName());
         try {
             //TODO Cambiar luego por la publicKey Linked proveniente de Identity
-            this.assetIssuerActorDao.updateAssetIssuerDAPConnectionState(actorAssetIssuer.getPublicKey(),
+            this.assetIssuerActorDao.updateAssetIssuerDAPConnectionState(
+                    actorAssetIssuer.getPublicKey(),
                     actorAssetIssuer.getPublicKey(),
                     DAPConnectionState.REGISTERED_ONLINE);
         } catch (CantUpdateAssetIssuerException e) {
             e.printStackTrace();
         }
         System.out.println("***************************************************************");
+    }
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        AssetIssuerActorDeveloperDatabaseFactory dbFactory = new AssetIssuerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        AssetIssuerActorDeveloperDatabaseFactory dbFactory = new AssetIssuerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        try {
+            AssetIssuerActorDeveloperDatabaseFactory dbFactory = new AssetIssuerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            dbFactory.initializeDatabase();
+            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeAssetIssuerActorDatabaseException e) {
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        // If we are here the database could not be opened, so we return an empry list
+        return Collections.EMPTY_LIST;
     }
 
     /**
