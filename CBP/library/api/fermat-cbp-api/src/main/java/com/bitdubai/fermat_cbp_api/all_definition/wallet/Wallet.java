@@ -15,8 +15,8 @@ import java.util.Collection;
 public interface Wallet {
     String getWalletPublicKey();
     String getOwnerPublicKey();
-    void addStock(CurrencyType currencyType) throws CantAddStockCryptoBrokerWalletException;
+    void addStock(CurrencyType currencyType, FermatEnum merchandise) throws CantAddStockCryptoBrokerWalletException;
     Stock getStock(CurrencyType currencyType) throws CantGetStockCryptoBrokerWalletException;
     Collection<Stock> getStocks() throws CantGetStockCollectionCryptoBrokerWalletException;
-    void performTransaction(WalletTransaction transaction) throws CantPerformTransactionException;
+    void performTransaction(StockTransaction transaction) throws CantPerformTransactionException;
 }

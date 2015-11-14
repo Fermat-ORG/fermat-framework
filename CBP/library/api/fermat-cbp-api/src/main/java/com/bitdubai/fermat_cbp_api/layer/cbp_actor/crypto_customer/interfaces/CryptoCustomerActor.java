@@ -48,6 +48,7 @@ public interface CryptoCustomerActor extends Actor {
     void sendActorNetworkServiceNegotiationPurchases(CustomerBrokerNegotiation negotiation) throws CantSendActorNetworkServiceException;
     void receiveActorNetworkServiceNegotiationPurchases(CustomerBrokerNegotiation negotiation) throws CantReceiveActorNetworkServiceException;
 
+    //CONTRACT
     CustomerBrokerContractPurchase createContractPurchase(ActorIdentity cryptoBroker,Collection<Clause> clauses) throws CantCreatePurchaseContractException;
     CustomerBrokerContractPurchase getContractPurchase(UUID negotiationId) throws CantGetPurchaseContractException;
     Collection<CustomerBrokerContractPurchase> getContractPurchases() throws CantGetPurchaseContractException;

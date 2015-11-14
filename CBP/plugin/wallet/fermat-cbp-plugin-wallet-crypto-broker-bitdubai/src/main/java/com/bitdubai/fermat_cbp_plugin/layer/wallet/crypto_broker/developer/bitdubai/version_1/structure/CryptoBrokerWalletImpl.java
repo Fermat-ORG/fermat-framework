@@ -67,10 +67,10 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     public String getOwnerPublicKey() { return this.ownerPublicKey; }
 
     @Override
-    public void addStock(CurrencyType currencyType) throws CantAddStockCryptoBrokerWalletException{
+    public void addStock(CurrencyType currencyType, FermatEnum merchandise) throws CantAddStockCryptoBrokerWalletException{
         try {
-            StockTransaction stockRecordBook = stockRecord(currencyType, BalanceType.BOOK);
-            StockTransaction stockRecordAvailable = stockRecord(currencyType, BalanceType.AVAILABLE);
+            StockTransaction stockRecordBook = stockRecord(currencyType, merchandise, BalanceType.BOOK);
+            StockTransaction stockRecordAvailable = stockRecord(currencyType, merchandise, BalanceType.AVAILABLE);
             CryptoBrokerStock stock = new CryptoBrokerStock(currencyType, this.walletKeyPair,this.databaseDao);
             stock.addDebit(stockRecordBook);
             stock.addDebit(stockRecordAvailable);
@@ -110,7 +110,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     }
 
     @Override
-    public void performTransaction(WalletTransaction transaction) throws CantPerformTransactionException {
+    public void performTransaction(StockTransaction transaction) throws CantPerformTransactionException {
         try{
             TransactionType transactionType = transaction.getTransactionType();
             StockTransaction stockTransaction = stockTransactionRecord(transaction);
@@ -149,7 +149,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         }
     }
 
-    private StockTransaction stockTransactionRecord(WalletTransaction transaction){
+    private StockTransaction stockTransactionRecord(StockTransaction transaction){
         KeyPair walletKeyPair = AsymmetricCryptography.createKeyPair(transaction.getWalletPublicKey());
         StockTransaction record = new CryptoBrokerStockTransactionRecordImpl(
                 transaction.getTransactionId(),
@@ -158,6 +158,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
                 transaction.getBalanceType(),
                 transaction.getTransactionType(),
                 transaction.getCurrencyType(),
+                transaction.getMerchandise(),
                 transaction.getAmount(),
                 0,
                 0,
@@ -167,7 +168,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         return record;
     }
 
-    private StockTransaction stockRecord(CurrencyType currencyType, BalanceType balanceType){
+    private StockTransaction stockRecord(CurrencyType currencyType, FermatEnum merchandise, BalanceType balanceType){
         UUID transactionId = UUID.randomUUID();
         long timestamp = 0;
         String memo = "";
@@ -178,6 +179,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
                 balanceType,
                 TransactionType.DEBIT,
                 currencyType,
+                merchandise,
                 0,
                 0,
                 0,
