@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 /**
@@ -18,7 +19,6 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     private byte[] profileImage;
     private long registrationDate;
     private long lastConnectionDate;
-    private ConnectionState connectionState;
 
     @Override
     public String getPublicLinkedIdentity() {
@@ -52,6 +52,11 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
         return this.lastConnectionDate;
     }
 
+    @Override
+    public DAPConnectionState getDapConnectionState() {
+        return DAPConnectionState.CONNECTED_ONLINE;
+    }
+
     public void setRegistrationDate(long registrationDate){
         this.registrationDate = registrationDate;
     }
@@ -69,10 +74,7 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
         this.profileImage=profileImage;
     }
 
-    @Override
-    public ConnectionState getConnectionState() {
-        return this.connectionState;
-    }
+
 
     /**
      * The method <code>getLocation</code> gives us the Location of the represented Asset user
@@ -139,14 +141,11 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
         return null;
     }
 
-    public void setContactState(ConnectionState connectionState){
-        this.connectionState=connectionState;
-    }
+
 
     public void setActorAssetUser(ActorAssetUser actorAssetUser){
         setRegistrationDate(actorAssetUser.getRegistrationDate());
         setLastConnectionDate(actorAssetUser.getLastConnectionDate());
-        setContactState(actorAssetUser.getConnectionState());
         setName(actorAssetUser.getName());
         setProfileImage(actorAssetUser.getProfileImage());
         setPublicKey(actorAssetUser.getPublicKey());

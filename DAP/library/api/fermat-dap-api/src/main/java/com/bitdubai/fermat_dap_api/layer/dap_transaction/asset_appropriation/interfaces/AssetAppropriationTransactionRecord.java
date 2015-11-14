@@ -19,6 +19,8 @@ public interface AssetAppropriationTransactionRecord {
 
     DigitalAsset digitalAsset();
 
+    String btcWalletPublicKey();
+
     CryptoAddress addressTo();
 
     String userWalletPublicKey();

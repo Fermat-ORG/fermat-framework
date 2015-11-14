@@ -2,6 +2,7 @@ package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_dis
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
 /**
@@ -27,8 +28,8 @@ public class MockActorAssetIssuer implements ActorAssetIssuer {
 
 
     @Override
-    public ConnectionState getConnectionState() {
-        return ConnectionState.CONNECTED;
+    public DAPConnectionState getDapConnectionState() {
+        return DAPConnectionState.CONNECTED_ONLINE;
     }
 
     @Override

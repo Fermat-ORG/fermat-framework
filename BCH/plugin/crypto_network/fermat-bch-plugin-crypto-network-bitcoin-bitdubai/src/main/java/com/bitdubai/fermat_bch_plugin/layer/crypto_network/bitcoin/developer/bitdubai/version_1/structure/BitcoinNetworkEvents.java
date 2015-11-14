@@ -25,6 +25,8 @@ import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.core.WalletEventListener;
 import org.bitcoinj.script.Script;
+import org.bitcoinj.script.ScriptChunk;
+import org.bitcoinj.script.ScriptOpCodes;
 
 import java.util.List;
 import java.util.Set;
@@ -172,8 +174,15 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 /**
                  * if this is an OP_RETURN output, I will get the hash
                  */
-                if (output.getScriptPubKey().isOpReturn())
-                    hash = output.getScriptPubKey().getPubKeyHash().toString();
+                if (output.getScriptPubKey().isOpReturn()){
+                    /**
+                     * I get the chunks of the Script to get the op_Return value
+                     */
+                    for (ScriptChunk chunk : output.getScriptPubKey().getChunks()){
+                        if (chunk.equalsOpCode(64))
+                            hash = new String(chunk.data);
+                    }
+                }
             }
         } catch (Exception e){
             return "";

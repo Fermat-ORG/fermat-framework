@@ -94,8 +94,13 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     public void start() throws CantStartPluginException {
         try{
             loadWalletIssuerMap();
-            createWalletAssetIssuer("walletPublicKeyTest");
-            assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
+
+            try {
+                assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
+            } catch (CantLoadWalletException e) {
+                createWalletAssetIssuer("walletPublicKeyTest");
+                assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
+            }
             testWallet();
             System.out.println("Star Plugin AssetWalletIssuer");
             this.serviceStatus = ServiceStatus.STARTED;

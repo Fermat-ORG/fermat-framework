@@ -81,6 +81,7 @@ public class AssetAppropriationDatabaseFactory implements DealsWithPluginDatabas
             transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
             transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
             transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
             transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
             transactionMetadataTable.addColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
