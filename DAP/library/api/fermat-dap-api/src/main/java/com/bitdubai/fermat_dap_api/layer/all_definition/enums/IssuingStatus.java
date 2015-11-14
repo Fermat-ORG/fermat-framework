@@ -13,6 +13,7 @@ public enum IssuingStatus implements FermatEnum {
     DIGITAL_ASSET_INCOMPLETE("DAIN"),
     FILESYSTEM_EXCEPTION("FIEX"),
     INSUFFICIENT_FONDS("ISFF"),
+    INTRA_ACTOR_NULL("IAN"),
     ISSUED("ISED"),
     ISSUING("ISSG"),
     INVALID_ADDRESS_TO_SEND("IATS"),
