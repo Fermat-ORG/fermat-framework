@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionJsonAttNames;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors.DigitalAssetMetadataTransmitMessageReceiverProcessor;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors.FermatMessageProcessor;
@@ -56,10 +56,10 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
      *
      * @param
      */
-    public NewReceiveMessagesNotificationEventHandler(AssetTransmissionPluginRoot assetTransmissionPluginRoot) {
+    public NewReceiveMessagesNotificationEventHandler(AssetTransmissionNetworkServicePluginRoot assetTransmissionNetworkServicePluginRoot) {
         this.messagesProcessorsRegistered = new HashMap<>();
-        this.messagesProcessorsRegistered.put(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT, new DigitalAssetMetadataTransmitMessageReceiverProcessor(assetTransmissionPluginRoot));
-        this.messagesProcessorsRegistered.put(DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE, new NewTransactionStatusNotificationMessageReceiverProcessor(assetTransmissionPluginRoot));
+        this.messagesProcessorsRegistered.put(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT, new DigitalAssetMetadataTransmitMessageReceiverProcessor(assetTransmissionNetworkServicePluginRoot));
+        this.messagesProcessorsRegistered.put(DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE, new NewTransactionStatusNotificationMessageReceiverProcessor(assetTransmissionNetworkServicePluginRoot));
         gson = new Gson();
         parser = new JsonParser();
     }
@@ -75,7 +75,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        if (platformEvent.getSource() == AssetTransmissionPluginRoot.EVENT_SOURCE) {
+        if (platformEvent.getSource() == AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE) {
 
             System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
             System.out.print("NOTIFICACION EVENTO MENSAJE RECIVIDO!!!!");

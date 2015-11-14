@@ -1,17 +1,37 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.events;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.AssetAppropriationPluginRoot;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationTransactionRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetUserWalletTransactionRecordWrapper;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.AssetAppropriationDigitalAssetTransactionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.exceptions.CantLoadAssetAppropriationEventListException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDAO;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
@@ -30,28 +50,40 @@ public class AssetAppropriationMonitorAgent implements Agent {
         this.status = ServiceStatus.CREATED;
     }
 
-    private ErrorManager errorManager;
-    private LogManager logManager;
-    private PluginDatabaseSystem pluginDatabaseSystem;
-    private AppropriationAgent agent;
+    private final ErrorManager errorManager;
+    private final LogManager logManager;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final AssetAppropriationVault assetVault;
+    private final UUID pluginId;
+    private final AssetVaultManager assetVaultManager;
+    private final AssetUserWalletManager assetUserWalletManager;
+    private final BitcoinNetworkManager bitcoinNetworkManager;
 
+    private EventAgent eventAgent;
     //VARIABLES ACCESSED BY AGENT INNER CLASS.
     //NEEDS TO BE VOLATILE SINCE THEY'RE BEING USED ON ANOTHER THREAD.
     //I NEED THREAD TO NOTICE ASAP.
-    private volatile UUID pluginId;
-    private volatile PluginFileSystem pluginFileSystem;
-    private volatile BitcoinNetworkManager bitcoinNetworkManager;
     private volatile CountDownLatch latch;
 
     //CONSTRUCTORS
 
 
-    public AssetAppropriationMonitorAgent(PluginFileSystem pluginFileSystem, UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem, LogManager logManager, ErrorManager errorManager) throws CantSetObjectException {
-        this.pluginFileSystem = Validate.verifySetter(pluginFileSystem, "pluginFileSystem is null");
-        this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
+    public AssetAppropriationMonitorAgent(AssetAppropriationVault assetVault,
+                                          PluginDatabaseSystem pluginDatabaseSystem,
+                                          LogManager logManager,
+                                          ErrorManager errorManager,
+                                          UUID pluginId,
+                                          AssetVaultManager assetVaultManager,
+                                          AssetUserWalletManager assetUserWalletManager,
+                                          BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException {
+        this.assetVault = assetVault;
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
         this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
+        this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
+        this.assetVaultManager = Validate.verifySetter(assetVaultManager, "assetVaultManager is null");
+        this.assetUserWalletManager = Validate.verifySetter(assetUserWalletManager, "assetUserWalletManager is null");
+        this.bitcoinNetworkManager = Validate.verifySetter(bitcoinNetworkManager, "bitcoinNetworkManager is null");
     }
 
     //PUBLIC METHODS
@@ -59,29 +91,30 @@ public class AssetAppropriationMonitorAgent implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         try {
-            logManager.log(AssetAppropriationPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: starting...", null, null);
+            logManager.log(AssetAppropriationDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: starting...", null, null);
             latch = new CountDownLatch(1);
-            agent = new AppropriationAgent(pluginId, pluginFileSystem);
-            Thread agentThread = new Thread(agent);
-            agentThread.start();
+
+            eventAgent = new EventAgent();
+            Thread eventThread = new Thread(eventAgent);
+            eventThread.start();
         } catch (Exception e) {
             throw new CantStartAgentException();
         }
         this.status = ServiceStatus.STARTED;
-        logManager.log(AssetAppropriationPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: successfully started...", null, null);
+        logManager.log(AssetAppropriationDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: successfully started...", null, null);
     }
 
     @Override
     public void stop() {
-        logManager.log(AssetAppropriationPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: stopping...", null, null);
-        agent.stopAgent();
+        logManager.log(AssetAppropriationDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: stopping...", null, null);
+        eventAgent.stopAgent();
         try {
             latch.await(); //WAIT UNTIL THE LAST RUN FINISH
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
         }
-        agent = null; //RELEASE RESOURCES.
-        logManager.log(AssetAppropriationPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: successfully stopped...", null, null);
+        eventAgent = null; //RELEASE RESOURCES.
+        logManager.log(AssetAppropriationDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: successfully stopped...", null, null);
         this.status = ServiceStatus.STOPPED;
     }
 
@@ -93,14 +126,12 @@ public class AssetAppropriationMonitorAgent implements Agent {
     //GETTER AND SETTERS
 
     //INNER CLASSES
-    private class AppropriationAgent extends AbstractDigitalAssetVault implements Runnable {
+    private class EventAgent implements Runnable {
 
         private volatile boolean agentRunning;
         private static final int WAIT_TIME = 20; //SECONDS
 
-        public AppropriationAgent(UUID pluginId, PluginFileSystem pluginFileSystem) throws CantSetObjectException {
-            super.setPluginId(pluginId);
-            super.setPluginFileSystem(pluginFileSystem);
+        public EventAgent() {
             startAgent();
         }
 
@@ -121,8 +152,67 @@ public class AssetAppropriationMonitorAgent implements Agent {
         }
 
         private void doTheMainTask() {
-            //TODO.
+            try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+                for (String eventId : dao.getPendingActorAssetUserEvents()) {
+                    switch (dao.getEventTypeById(eventId)) {
+                        //TODO CHANGE THESE EVENTS TO THE NEW ONES.
+                        case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER:
+                            for (AssetAppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.BITCOINS_SENT)) {
+                                for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(record.genesisTransaction())) {
+                                    if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_CRYPTO_NETWORK) {
+                                        AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
+                                        AssetUserWalletBalance balance = userWallet.getBookBalance(BalanceType.AVAILABLE);
+                                        AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
+                                                cryptoTransaction,
+                                                record.digitalAsset().getPublicKey(),
+                                                Actors.DAP_ASSET_USER,
+                                                record.addressTo().getAddress(),
+                                                Actors.EXTRA_USER);
+                                        balance.debit(walletRecord, BalanceType.AVAILABLE);
+                                        dao.updateTransactionStatusAssetDebited(record.transactionRecordId());
+                                    }
+                                }
+                            }
+                            dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
+                            break;
+
+                        case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER:
+                            for (AssetAppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED)) {
+                                for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(record.genesisTransaction())) {
+                                    if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN) {
+                                        AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
+                                        AssetUserWalletBalance balance = userWallet.getBookBalance(BalanceType.BOOK);
+                                        AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
+                                                cryptoTransaction,
+                                                record.digitalAsset().getPublicKey(),
+                                                Actors.DAP_ASSET_USER,
+                                                record.addressTo().getAddress(),
+                                                Actors.EXTRA_USER);
+                                        balance.debit(walletRecord, BalanceType.BOOK);
+                                        dao.completeAppropriationSuccessful(record.transactionRecordId());
+                                    }
+                                }
+                            }
+                            dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
+                            break;
+
+                        default:
+                            //THIS CAN'T HAPPEN. But if it happen, this event is not for me and I don't care...
+                            dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
+                            break;
+                    }
+                }
+            } catch (InvalidParameterException | CantRegisterDebitException | CantLoadWalletException | CantGetCryptoTransactionException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            } catch (CantLoadAssetAppropriationEventListException | CantGetTransactionsException | CantLoadAssetAppropriationTransactionListException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            } catch (RecordsNotFoundException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+            } catch (Exception e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
         }
+
 
         public boolean isAgentRunning() {
             return agentRunning;

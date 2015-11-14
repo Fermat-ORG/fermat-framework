@@ -1,8 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 
 /**
  * Created by Nerio on 10/09/15.
@@ -44,7 +43,7 @@ public interface ActorAssetIssuer {
      *
      * @return the Connection state
      */
-    ConnectionState getConnectionState();
+    DAPConnectionState getDapConnectionState();
 
     /**
      * Método {@code getDescription}

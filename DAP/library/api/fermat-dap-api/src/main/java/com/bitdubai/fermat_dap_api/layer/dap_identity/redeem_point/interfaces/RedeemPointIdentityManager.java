@@ -41,7 +41,7 @@ public interface RedeemPointIdentityManager extends ModuleManager {
      * @return
      * @throws CantListAssetRedeemPointException
      */
-    boolean  hasAssetUserIdentity() throws CantListAssetRedeemPointException ;
+    boolean  hasRedeemPointIdentity() throws CantListAssetRedeemPointException ;
 
 
 }

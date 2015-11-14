@@ -1424,7 +1424,8 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            listSubApp.put(SubApps.DAP_ASSETS_IDENTITY_ISSUER, runtimeSubApp);
+            listSubApp.put(SubApps.DAP_ASSETS_IDENTITY_ISSUER,runtimeSubApp);
+
 
             /**
              * DAP USER IDENTITY
@@ -1535,6 +1536,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
             listSubApp.put(SubApps.DAP_REDEEM_POINT_IDENTITY, runtimeSubApp);
+
 
         } catch (Exception e) {
             String message = CantFactoryResetException.DEFAULT_MESSAGE;

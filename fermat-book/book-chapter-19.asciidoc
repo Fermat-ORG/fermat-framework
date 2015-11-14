@@ -1,3 +1,4 @@
+image::https://github.com/bitDubai/media-kit/blob/master/Coins/DAP.jpg[FermatDAP]
 [[DigitalAssets]]
 == Chapter 19: Fermat Digital Asset Platform
 === Blockchain beyond currency 
@@ -96,7 +97,7 @@ Asset User ::
 Redeem Point :: +
 
 ////
-
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 ==== Continue Reading
 link:book-chapter-11.asciidoc[Fermat Digital Assets Management]
 

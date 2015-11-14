@@ -138,7 +138,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
                  * I do not need to reset the wallet because I will
                  * always be importing fresh (unused) keys.
                  */
-                //wallet.reset();
                 isWalletReset = true;
             }
 
@@ -184,6 +183,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         } catch (UnreadableWalletException e) {
             /**
              * If I couldn't load the wallet from file, I'm assuming is a new wallet and I will create it.
+             * I'm creating it by importing the keys sent by the vault.
              */
             wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
 

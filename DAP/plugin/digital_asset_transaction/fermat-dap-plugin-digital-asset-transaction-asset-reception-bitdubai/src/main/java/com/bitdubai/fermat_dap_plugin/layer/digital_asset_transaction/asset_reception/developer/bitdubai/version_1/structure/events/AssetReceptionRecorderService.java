@@ -8,7 +8,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
@@ -35,7 +35,7 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     //Asset Issuing database registry
     AssetReceptionDao assetReceptionDao;
-    AssetReceptionPluginRoot assetReceptionPluginRoot;
+    AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot;
     /**
      * TransactionService Interface member variables.
      */
@@ -57,11 +57,11 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
         this.assetReceptionDao=assetReceptionDao;
     }
 
-    public void setAssetReceptionPluginRoot(AssetReceptionPluginRoot assetReceptionPluginRoot)throws CantSetObjectException{
-        if(assetReceptionPluginRoot==null){
-            throw new CantSetObjectException("The assetReceptionPluginRoot is null");
+    public void setAssetReceptionDigitalAssetTransactionPluginRoot(AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot)throws CantSetObjectException{
+        if(assetReceptionDigitalAssetTransactionPluginRoot ==null){
+            throw new CantSetObjectException("The assetReceptionDigitalAssetTransactionPluginRoot is null");
         }
-        this.assetReceptionPluginRoot=assetReceptionPluginRoot;
+        this.assetReceptionDigitalAssetTransactionPluginRoot = assetReceptionDigitalAssetTransactionPluginRoot;
 
     }
 
@@ -105,7 +105,7 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
 
     private void startMonitorAgent() throws CantSaveEventException {
         try {
-            this.assetReceptionPluginRoot.startMonitorAgent();
+            this.assetReceptionDigitalAssetTransactionPluginRoot.startMonitorAgent();
         } catch (CantGetLoggedInDeviceUserException exception) {
             throw new CantSaveEventException(exception, "Starting AssetReceptionMonitorAgent","Cannot get Logged in device user");
         } catch (CantSetObjectException exception) {

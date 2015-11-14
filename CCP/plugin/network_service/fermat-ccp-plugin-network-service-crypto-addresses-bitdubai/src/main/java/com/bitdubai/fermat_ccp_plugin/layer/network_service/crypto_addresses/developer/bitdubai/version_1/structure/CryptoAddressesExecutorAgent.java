@@ -79,6 +79,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
             public void run() {
                 while (isRunning()) {
                     sendCycle();
+
                     receiveCycle();
                 }
             }

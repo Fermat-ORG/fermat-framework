@@ -16,7 +16,7 @@ public enum DAPConnectionState implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     CONNECTED_ONLINE              ("CTDON"),
-    CONNECTED_OFFLINE             ("DTDOF"),
+    CONNECTED_OFFLINE             ("CTDOF"),
     CONNECTING                    ("CTING"),
     REGISTERED_LOCALLY            ("RGDLY"),
     REGISTERED_ONLINE             ("RGDON"),
@@ -39,7 +39,7 @@ public enum DAPConnectionState implements FermatEnum {
         switch (code) {
 
             case "CTDON": return CONNECTED_ONLINE               ;
-            case "DTDOF": return CONNECTED_OFFLINE              ;
+            case "CTDOF": return CONNECTED_OFFLINE              ;
             case "CTING": return CONNECTING                     ;
             case "RGDLY": return REGISTERED_LOCALLY             ;
             case "RGDON": return REGISTERED_ONLINE              ;
