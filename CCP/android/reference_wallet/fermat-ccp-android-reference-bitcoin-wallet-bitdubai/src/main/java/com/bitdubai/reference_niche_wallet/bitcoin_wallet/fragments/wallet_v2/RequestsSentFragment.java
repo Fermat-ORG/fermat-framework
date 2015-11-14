@@ -227,19 +227,19 @@ public  class RequestsSentFragment extends FermatWalletFragment {
                     {
 
                         case 1:
-                            account_picture.setImageResource(R.drawable.mati_profile);
+                            account_picture.setImageResource(R.drawable.kevin_profile_picture);
                             break;
                         case 2:
                             account_picture.setImageResource(R.drawable.kevin_profile_picture);
                             break;
                         case 3:
-                            account_picture.setImageResource(R.drawable.mati_profile);
+                            account_picture.setImageResource(R.drawable.kevin_profile_picture);
                             break;
                         case 4:
                             account_picture.setImageResource(R.drawable.kevin_profile_picture);
                             break;
                         case 5:
-                            account_picture.setImageResource(R.drawable.mati_profile);
+                            account_picture.setImageResource(R.drawable.kevin_profile_picture);
                             break;
                         case 6:
                             account_picture.setImageResource(R.drawable.helene_profile_picture);
@@ -253,16 +253,6 @@ public  class RequestsSentFragment extends FermatWalletFragment {
                         case 9:
                             account_picture.setImageResource(R.drawable.guillaume_profile_picture);
                             break;
-                        case 10:
-                            account_picture.setImageResource(R.drawable.mati_profile);
-                            break;
-                        case 11:
-                            account_picture.setImageResource(R.drawable.mati_profile);
-                            break;
-                        case 12:
-                            account_picture.setImageResource(R.drawable.mati_profile);
-                            break;
-
 
 
 

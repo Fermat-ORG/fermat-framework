@@ -5,7 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerNegotiation;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantCreatePurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantGetPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantCreatePurchaseContractException;
@@ -33,10 +33,10 @@ public interface CryptoCustomerActor extends Actor {
     void sendActorNetworkServiceNegotiationPurchases(CustomerBrokerNegotiation negotiation);
     void receiveActorNetworkServicePurchases(CustomerBrokerNegotiation negotiation);
 
-    CustomerBrokerPurchase createContractPurchase(ActorIdentity cryptoBroker,Collection<Clause> clauses) throws CantCreatePurchaseContractException;
-    CustomerBrokerPurchase getContractPurchase(UUID negotiationId) throws CantGetPurchaseContractException;
-    Collection<CustomerBrokerPurchase> getContractPurchases() throws CantGetPurchaseContractException;
-    Collection<CustomerBrokerPurchase> getContractPurchases(NegotiationStatus status) throws CantGetPurchaseContractException;
+    CustomerBrokerContractPurchase createContractPurchase(ActorIdentity cryptoBroker,Collection<Clause> clauses) throws CantCreatePurchaseContractException;
+    CustomerBrokerContractPurchase getContractPurchase(UUID negotiationId) throws CantGetPurchaseContractException;
+    Collection<CustomerBrokerContractPurchase> getContractPurchases() throws CantGetPurchaseContractException;
+    Collection<CustomerBrokerContractPurchase> getContractPurchases(NegotiationStatus status) throws CantGetPurchaseContractException;
     void sendActorNetworkServiceContractPurchases(CustomerBrokerNegotiation negotiation);
     void receiveActorNetworkServiceContractPurchases(CustomerBrokerNegotiation negotiation);
 

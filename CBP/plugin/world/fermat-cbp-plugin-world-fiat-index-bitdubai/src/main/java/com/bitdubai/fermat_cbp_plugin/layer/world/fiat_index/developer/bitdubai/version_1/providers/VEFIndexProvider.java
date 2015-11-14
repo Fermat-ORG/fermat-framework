@@ -1,15 +1,12 @@
 package com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.providers;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_cbp_api.all_definition.world.Index;
-import com.bitdubai.fermat_cbp_api.layer.cbp_world.cbp_fiat_index.exceptions.CantGetIndexException;
+import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure.FiatIndexImpl;
+import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.interfaces.IndexProvider;
-import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure.FiatIndex;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure.HttpJsonReader;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.Date;
 
 /**
@@ -19,7 +16,7 @@ public class VEFIndexProvider implements IndexProvider {
 
 
     @Override
-    public Index getCurrentIndex(FiatCurrency currency) throws CantGetIndexException {
+    public FiatIndexImpl getCurrentIndex(FiatCurrency currency) throws CantGetIndexException {
 
         //ALEX_TODO: Quiza sea mejor not to rely on bitcoinvenezuela, e implementar directamente lo que hace DolarToday.php.
 
@@ -35,7 +32,7 @@ public class VEFIndexProvider implements IndexProvider {
             new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE,e,"Fiat Index VEFIndexProvider","Cant Get VEF Index Exception");
         }
 
-        FiatIndex index = new FiatIndex(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, purchasePrice, salePrice, (new Date().getTime() / 1000));
+        FiatIndexImpl index = new FiatIndexImpl(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, purchasePrice, salePrice, (new Date().getTime() / 1000));
         return index;
     }
 }

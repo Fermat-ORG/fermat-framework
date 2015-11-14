@@ -36,6 +36,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantInitializeAssetIssuerWalletException;
@@ -74,7 +76,8 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.DIGITAL_ASSET_TRANSACTION, plugin = Plugins.ASSET_DISTRIBUTION)
+    //Commented by Manuel Perez to eliminate cyclic reference exception
+    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.DIGITAL_ASSET_TRANSACTION, plugin = Plugins.ASSET_DISTRIBUTION)
     AssetDistributionManager assetDistributionManager;
 
 
@@ -182,7 +185,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     public AssetIssuerWallet loadAssetIssuerWallet(String walletPublicKey) throws CantLoadWalletException {
 
         try {
-            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetDistributionManager);
+            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId/*, assetDistributionManager*/);
 
             UUID internalAssetIssuerWalletId = walletIssuer.get(walletPublicKey);
             assetIssuerWallet.initialize(internalAssetIssuerWalletId);
@@ -200,7 +203,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void createWalletAssetIssuer(String walletPublicKey) throws CantCreateWalletException {
         try {
-            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetDistributionManager);
+            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId/*, assetDistributionManager*/);
 
             UUID internalAssetIssuerWalletId = assetIssuerWallet.create(walletPublicKey);
 
@@ -381,8 +384,8 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 }
 
                 @Override
-                public ConnectionState getConnectionState() {
-                    return null;
+                public DAPConnectionState getDapConnectionState() {
+                    return DAPConnectionState.CONNECTED_ONLINE;
                 }
 
                 @Override

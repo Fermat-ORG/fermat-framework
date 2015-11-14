@@ -215,33 +215,6 @@ public  class ContactsFragment extends FermatWalletFragment {
                     case 4:
                         profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
                         break;
-                    case 5:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 6:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 7:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 8:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 9:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 10:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 11:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 12:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 13:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
                     case 14:
                         profile_picture.setImageResource(R.drawable.deniz_profile_picture);
                         break;
@@ -251,29 +224,14 @@ public  class ContactsFragment extends FermatWalletFragment {
                     case 16:
                         profile_picture.setImageResource(R.drawable.dea_profile_picture);
                         break;
-                    case 17:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 18:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
                     case 19:
                         profile_picture.setImageResource(R.drawable.kate_profile_picture);
-                        break;
-                    case 20:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
                         break;
                     case 21:
                         profile_picture.setImageResource(R.drawable.jennifer_profile_picture);
                         break;
-                    case 22:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
                     case 23:
                         profile_picture.setImageResource(R.drawable.kevin_profile_picture);
-                        break;
-                    case 24:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
                         break;
                     case 25:
                         profile_picture.setImageResource(R.drawable.helene_profile_picture);
@@ -287,16 +245,6 @@ public  class ContactsFragment extends FermatWalletFragment {
                     case 28:
                         profile_picture.setImageResource(R.drawable.guillaume_profile_picture);
                         break;
-                    case 29:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 30:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-                    case 31:
-                        profile_picture.setImageResource(R.drawable.mati_profile);
-                        break;
-
 
 
 
