@@ -4360,6 +4360,66 @@
 						<certifications>
 						</certifications>
 					</plugin>
+					<plugin name="Cash Deposit"
+						description=""
+						difficulty="6"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="abicelis" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin name="Cash Withdrawal"
+						description=""
+						difficulty="6"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="abicelis" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin name="Cash Hold"
+						description=""
+						difficulty="6"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="abicelis" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin name="Cash Unhold"
+						description=""
+						difficulty="6"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="abicelis" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
 				</plugins>
 			</layer>
 
@@ -4495,6 +4555,66 @@
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="10"></author>
 							<author name="guillermo20" scope="implementation" percentage="20"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Bank Deposit"
+						description=""
+						difficulty="6"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Bank Withdraw"
+						description=""
+						difficulty="6"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Bank Hold"
+						description=""
+						difficulty="6"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Bank Unhold"
+						description=""
+						difficulty="6"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5120,7 +5240,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Crypto Sale"
+					<plugin	name="Customer Broker Sale"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -5136,7 +5256,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Cash Sale"
+					<plugin	name="Customer Broker Purchase"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -5152,7 +5272,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Bank Sale"
+					<plugin	name="Customer Payment"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -5168,7 +5288,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Crypto Purchase"
+					<plugin	name="Ack Payment"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -5184,7 +5304,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Cash Purchase"
+					<plugin	name="Submit Merchandise"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -5200,7 +5320,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Bank Purchase"
+					<plugin	name="Ack Merchandise"
 						description=""
 						difficulty="8"
 						code-level="development"
