@@ -103,7 +103,7 @@ public class PauseTest {
 
         assetDistributionDigitalAssetTransactionPluginRoot = new AssetDistributionDigitalAssetTransactionPluginRoot();
         assetDistributionDigitalAssetTransactionPluginRoot.setId(pluginId);
-        assetDistributionDigitalAssetTransactionPluginRoot.setErrorManager(errorManager);
+        /*assetDistributionDigitalAssetTransactionPluginRoot.setErrorManager(errorManager);
         assetDistributionDigitalAssetTransactionPluginRoot.setLogManager(logManager);
         assetDistributionDigitalAssetTransactionPluginRoot.setEventManager(eventManager);
         assetDistributionDigitalAssetTransactionPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
@@ -113,7 +113,7 @@ public class PauseTest {
         assetDistributionDigitalAssetTransactionPluginRoot.setDeviceUserManager(deviceUserManager);
         assetDistributionDigitalAssetTransactionPluginRoot.setBitcoinNetworkManager(bitcoinNetworkManager);
         assetDistributionDigitalAssetTransactionPluginRoot.setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
-        assetDistributionDigitalAssetTransactionPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);*/
 
         setUpMockitoRules();
     }

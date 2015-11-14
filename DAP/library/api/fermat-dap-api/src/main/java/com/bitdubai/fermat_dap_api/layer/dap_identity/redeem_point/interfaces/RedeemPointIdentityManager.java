@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
 
@@ -8,7 +9,7 @@ import java.util.List;
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface RedeemPointIdentityManager {
+public interface RedeemPointIdentityManager extends ModuleManager {
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
@@ -40,7 +41,7 @@ public interface RedeemPointIdentityManager {
      * @return
      * @throws CantListAssetRedeemPointException
      */
-    boolean  hasAssetUserIdentity() throws CantListAssetRedeemPointException ;
+    boolean  hasRedeemPointIdentity() throws CantListAssetRedeemPointException ;
 
 
 }

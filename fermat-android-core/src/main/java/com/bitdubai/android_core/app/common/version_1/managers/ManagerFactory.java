@@ -71,6 +71,9 @@ public class ManagerFactory {
             case DAP_ASSETS_IDENTITY_USER:
                 moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY);
                 break;
+            case DAP_REDEEM_POINT_IDENTITY:
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY);
+                break;
 //            case BITDUBAI_CRYPTO_WALLET_WALLET_MODULE:
 //                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
 //                break;
