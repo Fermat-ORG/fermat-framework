@@ -49,7 +49,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
 
     private final KeyPair walletKeyPair;
     private final String ownerPublicKey;
-    private final ConcurrentHashMap<FermatEnum, Stock> stockMap;
+    private final ConcurrentHashMap<CurrencyType, Stock> stockMap;
     private final CryptoBrokerWalletDatabaseDao databaseDao;
 
     public CryptoBrokerWalletImpl(final KeyPair walletKeyPair, final String ownerPublicKey, final CryptoBrokerWalletDatabaseDao databaseDao){
@@ -67,11 +67,11 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     public String getOwnerPublicKey() { return this.ownerPublicKey; }
 
     @Override
-    public void addStock(FermatEnum stockType) throws CantAddStockCryptoBrokerWalletException{
+    public void addStock(CurrencyType currencyType) throws CantAddStockCryptoBrokerWalletException{
         try {
-            StockTransaction stockRecordBook = stockRecord(stockType, BalanceType.BOOK);
-            StockTransaction stockRecordAvailable = stockRecord(stockType, BalanceType.AVAILABLE);
-            CryptoBrokerStock stock = new CryptoBrokerStock(stockType, this.walletKeyPair,this.databaseDao);
+            StockTransaction stockRecordBook = stockRecord(currencyType, BalanceType.BOOK);
+            StockTransaction stockRecordAvailable = stockRecord(currencyType, BalanceType.AVAILABLE);
+            CryptoBrokerStock stock = new CryptoBrokerStock(currencyType, this.walletKeyPair,this.databaseDao);
             stock.addDebit(stockRecordBook);
             stock.addDebit(stockRecordAvailable);
         } catch (CantAddDebitCryptoBrokerWalletException e) {
@@ -82,9 +82,9 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     }
 
     @Override
-    public Stock getStock(FermatEnum stockType) throws CantGetStockCryptoBrokerWalletException {
+    public Stock getStock(CurrencyType currencyType) throws CantGetStockCryptoBrokerWalletException {
         try{
-            CryptoBrokerStock stock = new CryptoBrokerStock(stockType, this.walletKeyPair,this.databaseDao);
+            CryptoBrokerStock stock = new CryptoBrokerStock(currencyType, this.walletKeyPair,this.databaseDao);
             stock.getBookedBalance();
             stock.getAvailableBalance();
             return stock;
@@ -101,7 +101,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     public Collection<Stock> getStocks() throws CantGetStockCollectionCryptoBrokerWalletException {
         try {
             HashSet<Stock> stocks = new HashSet<>();
-            for (final Map.Entry<FermatEnum, Stock> StockReference : stockMap.entrySet())
+            for (final Map.Entry<CurrencyType, Stock> StockReference : stockMap.entrySet())
                 stocks.add(StockReference.getValue());
             return stocks;
         } catch (Exception e) {
@@ -114,7 +114,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         try{
             TransactionType transactionType = transaction.getTransactionType();
             StockTransaction stockTransaction = stockTransactionRecord(transaction);
-            CryptoBrokerStock stock = new CryptoBrokerStock(transaction.getStockType(), this.walletKeyPair,this.databaseDao);
+            CryptoBrokerStock stock = new CryptoBrokerStock(transaction.getCurrencyType(), this.walletKeyPair,this.databaseDao);
             if(transactionType == TransactionType.CREDIT){
                 stock.addCredit(stockTransaction);
             }else{
@@ -167,10 +167,8 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         return record;
     }
 
-    private StockTransaction stockRecord(FermatEnum stockType, BalanceType balanceType){
+    private StockTransaction stockRecord(CurrencyType currencyType, BalanceType balanceType){
         UUID transactionId = UUID.randomUUID();
-        //TODO VALOR DE FermatEnum stockType
-        CurrencyType currencyType = CurrencyType.CRYPTO_MONEY;
         long timestamp = 0;
         String memo = "";
         StockTransaction record = new CryptoBrokerStockTransactionRecordImpl(
