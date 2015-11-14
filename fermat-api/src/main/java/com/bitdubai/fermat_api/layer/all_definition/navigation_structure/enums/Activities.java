@@ -160,6 +160,10 @@ public enum Activities {
         //    }
         //}
         switch (code) {
+            case "DAPSARPI":
+                return Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY;
+            case "DAPSARPICI":
+                return Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY;
             case "DAPSAAUI":
                 return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY;
             case "DAPSAAUICI":
