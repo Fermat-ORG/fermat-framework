@@ -1,4 +1,4 @@
-image::https://github.com/bitDubai/fermat-graphic-design/blob/master/2D%20Design/Fermat/Fermat%20Logotype/logo_jpg/logo_github_readme.jpg[Fermat Logo, 800, 450]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/logo_fermat_3.png[FermatLogo]
 
 == Chapter 1: Fermat Master Plan
 
@@ -42,9 +42,9 @@ Follow next chapters to get a more detailed description of each one.
 
 :numbered!:
 
-image::https://github.com/bitDubai/fermat-graphic-design/blob/master/3D%20Design/FermatBitcoinCoinModel/FinalRenders/Bitcoin.jpg[Fermat Coin, 450, 253]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
   
-==== Continue Reading ...
+==== _Continue Reading ..._
 
 link:book-chapter-02.asciidoc[Next Chapter]
 

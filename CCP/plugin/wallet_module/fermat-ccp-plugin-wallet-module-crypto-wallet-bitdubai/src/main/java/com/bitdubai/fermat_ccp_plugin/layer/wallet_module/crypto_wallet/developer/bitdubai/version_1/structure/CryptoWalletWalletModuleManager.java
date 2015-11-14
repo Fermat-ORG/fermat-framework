@@ -675,12 +675,12 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
         try {
             if(intraUserLoggedInPublicKey!=null) {
-//                BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-//                List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType, transactionType, max, offset);
-//
-//                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-//                    cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
-//                }
+                BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType, transactionType, max, offset);
+
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+                    cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
+               }
             }
             if(cryptoWalletTransactionList.isEmpty()){
                 cryptoWalletTransactionList.add(new CryptoWalletTransaction() {
@@ -964,17 +964,17 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
         try {
             if(intraUserLoggedInPublicKey!=null){
-//                BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-//                List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listLastActorTransactionsByTransactionType(
-//                        balanceType,
-//                        transactionType,
-//                        max,
-//                        offset
-//                );
-//
-//                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-//                    cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
-//                }
+                BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listLastActorTransactionsByTransactionType(
+                        balanceType,
+                      transactionType,
+                       max,
+                        offset
+                );
+
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+                    cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
+                }
             }
 
             if(cryptoWalletTransactionList.isEmpty()){
@@ -1200,13 +1200,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         return "Interface design";
                     }
                 };
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
                 cryptoWalletTransactionList.add(cryptoWalletTransaction);
                 cryptoWalletTransactionList.add(cryptoWalletTransaction);
                 cryptoWalletTransactionList.add(cryptoWalletTransaction);

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="30dp"
-    android:background="#dfdfdf"
+    android:background="#dbdbdb"
     android:paddingBottom="@dimen/ccw_grouper_container_padding_vertical"
     android:paddingTop="@dimen/ccw_grouper_container_padding_vertical">
 
@@ -17,8 +17,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:textColor="@color/black"
-        android:textSize="@dimen/ccw_subtitle_text"
+        android:textColor="@color/ccw_grouper_text"
         tools:text="@string/waiting_for_you"/>
 
     <TextView
@@ -47,6 +46,6 @@
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:contentDescription="@string/arrow"
-        android:src="@drawable/selector_arrow_down"/>
+        android:src="@drawable/ic_home_tab_arrow_down"/>
 
 </RelativeLayout>

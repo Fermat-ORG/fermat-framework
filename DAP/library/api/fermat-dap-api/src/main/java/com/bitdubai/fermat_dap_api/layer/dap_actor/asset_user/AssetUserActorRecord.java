@@ -42,22 +42,22 @@ public class AssetUserActorRecord implements ActorAssetUser {
                                 byte[] profileImage,
                                 Location location) {
 
-        this.name                   = name                      ;
-        this.publicKey              = publicKey                 ;
-        this.profileImage           = profileImage.clone()      ;
+        this.name                   = name                                  ;
+        this.publicKey              = publicKey                             ;
+        this.profileImage           = profileImage.clone()                  ;
 
         if (location != null) {
-            this.locationLatitude   = location.getLatitude()    ;
-            this.locationLongitude  = location.getLongitude()   ;
+            this.locationLatitude   = location.getLatitude()                ;
+            this.locationLongitude  = location.getLongitude()               ;
         }else{
-            this.locationLatitude   = (double) 0                ;
-            this.locationLongitude  = (double) 0                ;
+            this.locationLatitude   = (double) 0                            ;
+            this.locationLongitude  = (double) 0                            ;
         }
 
-        this.genders                = Genders.INDEFINITE        ;
+        this.genders                = Genders.INDEFINITE                    ;
 //        if(!age.isEmpty())
 //            this.age = age;
-        this.dapConnectionState        = DAPConnectionState.REGISTERED_ONLINE ;
+        this.dapConnectionState     = DAPConnectionState.REGISTERED_ONLINE  ;
 
     }
 
@@ -106,7 +106,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
         this.publicKey              =       publicKey               ;
         this.name                   =       name                    ;
-        this.age                    =       age                     ;
+        if(!age.isEmpty())
+            this.age                =       age                     ;
         this.genders                =       genders                 ;
         this.dapConnectionState     =       dapConnectionState      ;
         this.locationLatitude       =       locationLatitude        ;

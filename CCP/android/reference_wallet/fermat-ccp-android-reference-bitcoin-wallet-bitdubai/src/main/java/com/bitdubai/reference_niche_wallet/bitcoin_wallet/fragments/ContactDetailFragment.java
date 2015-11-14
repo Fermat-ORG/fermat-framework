@@ -225,7 +225,6 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
                     if(image_view_profile.getWidth() >0 && image_view_profile.getHeight()>0) {
                         Bitmap bitmapDrawable = BitmapFactory.decodeByteArray(cryptoWalletWalletContact.getProfilePicture(), 0, cryptoWalletWalletContact.getProfilePicture().length);// MemoryUtils.decodeSampledBitmapFromByteArray(cryptoWalletWalletContact.getProfilePicture(),image_view_profile.getMaxWidth(),image_view_profile.getMaxHeight());
                         bitmapDrawable = Bitmap.createScaledBitmap(bitmapDrawable, image_view_profile.getWidth(), image_view_profile.getHeight(), true);
-//                    brokerImageByteArray = toByteArray(bitmapDrawable);
                         image_view_profile.setImageBitmap(bitmapDrawable);
                     }
                 }else
