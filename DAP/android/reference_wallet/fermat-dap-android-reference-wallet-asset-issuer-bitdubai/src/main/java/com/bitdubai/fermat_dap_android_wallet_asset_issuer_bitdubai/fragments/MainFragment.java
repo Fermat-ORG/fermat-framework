@@ -79,7 +79,7 @@ public class MainFragment extends FermatWalletFragment
                     for (AssetIssuerWalletList assetIssuerWallet : assetIssuerWalletList) {
                         DigitalAsset asset = new DigitalAsset(assetIssuerWallet.getName(),
                                 String.valueOf(String.format("BookBalance: %d - AvailableBalance: %d",
-                                        assetIssuerWallet.getBookBalance(), assetIssuerWallet.getAvailableBalance())));
+                                        assetIssuerWallet.getQuantityBookBalance(), assetIssuerWallet.getQuantityAvailableBalance())));
                         asset.setAssetPublicKey(assetIssuerWallet.getAssetPublicKey());
                         asset.setWalletPublicKey("public_key");
                         bookAssets.add(asset);
