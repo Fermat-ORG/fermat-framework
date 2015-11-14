@@ -17,6 +17,8 @@ public class SideMenu implements FermatSideMenu {
      * SideMenu class member variables
      */
     List<MenuItem> menuItems = new ArrayList<>();
+    private String backgroundColor;
+    private String backgroudColor;
 
     /**
      * SideMenu class constructors
@@ -45,5 +47,13 @@ public class SideMenu implements FermatSideMenu {
      */
     public void setMenuItems (List<MenuItem> menuItems) {
         this.menuItems = menuItems;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public String getBackgroudColor() {
+        return backgroudColor;
     }
 }

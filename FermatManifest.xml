@@ -1764,7 +1764,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Sub App Module" language="java">
+			<layer name="Module" language="java">
 				<plugins>
 					<plugin
 						name="Intra User"
@@ -2044,7 +2044,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Wallet" language="java">
+			<layer name="Basic Wallet" language="java">
 				<plugins>
 					<plugin
 						name="Bitcoin Wallet"

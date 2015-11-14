@@ -68,7 +68,7 @@ public interface CryptoWallet extends Serializable {
     /**
      * Throw the method <code>listAllIntraUserConnections</code> you can get all the connections of the intra user selected.
      *
-     * @param intraUserSelectedPublicKey the public key of the intra user that the user select.
+     * @param intraUserIdentityPublicKey the public key of the intra user that the user select.
      * @param walletPublicKey            public key of the wallet in which we are working.
      * @param max                        quantity of instance you want to return
      * @param offset                     the point of start in the list you're trying to bring.
@@ -77,7 +77,7 @@ public interface CryptoWallet extends Serializable {
      *
      * @throws CantGetAllIntraUserConnectionsException if something goes wrong.
      */
-    List<CryptoWalletIntraUserActor> listAllIntraUserConnections(String  intraUserSelectedPublicKey,
+    List<CryptoWalletIntraUserActor> listAllIntraUserConnections(String  intraUserIdentityPublicKey,
                                                                  String  walletPublicKey,
                                                                  Integer max,
                                                                  Integer offset) throws CantGetAllIntraUserConnectionsException;

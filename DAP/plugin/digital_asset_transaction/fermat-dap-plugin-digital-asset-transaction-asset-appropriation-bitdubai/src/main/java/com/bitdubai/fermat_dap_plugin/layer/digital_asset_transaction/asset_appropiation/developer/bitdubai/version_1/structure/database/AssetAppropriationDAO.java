@@ -114,7 +114,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
     *
     */
 
-    public void startAppropriation(DigitalAsset asset, String userWalletPublicKey, CryptoAddress addressTo) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+    public AssetAppropriationTransactionRecord startAppropriation(DigitalAsset asset, String userWalletPublicKey, CryptoAddress addressTo) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
         String context = "Asset : " + asset.getPublicKey() + " - Address: " + addressTo
                 + " - User Wallet: " + userWalletPublicKey;
         try {
@@ -127,7 +127,9 @@ public class AssetAppropriationDAO implements AutoCloseable {
             DatabaseTable databaseTable = this.database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
             DatabaseTableRecord transactionRecord = databaseTable.getEmptyRecord();
 
-            transactionRecord.setUUIDValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, UUID.randomUUID());
+            String transactionId = UUID.randomUUID().toString(); //The id of the record to be created.
+
+            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId);
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, AppropriationStatus.APPROPRIATION_STARTED.getCode());
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, asset.getPublicKey());
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, userWalletPublicKey);
@@ -138,6 +140,9 @@ public class AssetAppropriationDAO implements AutoCloseable {
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, "-"); //I will update this when I send the bitcoins...
 
             databaseTable.insertRecord(transactionRecord);
+
+            return constructRecordFromId(transactionId); //The new record.
+
         } catch (CantInsertRecordException exception) {
             throw new CantExecuteAppropriationTransactionException(exception, context, "Cannot insert a record in Asset Appropriation Transaction Metadata table.");
         } catch (CantCreateDigitalAssetFileException exception) {
@@ -151,12 +156,12 @@ public class AssetAppropriationDAO implements AutoCloseable {
         updateStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, genesisTransaction, transactionId);
     }
 
-    public void updateTransactionStatusDebitingAsset(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
-        updateStatus(AppropriationStatus.DEBITING_ASSET, transactionId);
+    public void updateTransactionStatusAssetDebited(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        updateStatus(AppropriationStatus.ASSET_DEBITED, transactionId);
     }
 
-    public void updateTransactionStatusSendingBitcoins(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
-        updateStatus(AppropriationStatus.SENDING_BITCOINS, transactionId);
+    public void updateTransactionStatusBitcoinsSent(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        updateStatus(AppropriationStatus.BITCOINS_SENT, transactionId);
     }
 
     public void completeAppropriationReversedOnBlockChain(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
@@ -180,44 +185,38 @@ public class AssetAppropriationDAO implements AutoCloseable {
         return constructRecordFromId(getTransactionIdByGenesisTransaction(genesisTransaction));
     }
 
-    public List<AssetAppropriationTransactionRecord> getTransactionsForUserWallet(String assetUserWalletPublicKey) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
-        List<String> transactionIds = getTransactionIdsForUserWallet(assetUserWalletPublicKey);
-        List<AssetAppropriationTransactionRecord> assetAppropriationTransactionRecords = new ArrayList<>(transactionIds.size());
-        for (String id : transactionIds) {
-            assetAppropriationTransactionRecords.add(constructRecordFromId(id));
+    public List<AssetAppropriationTransactionRecord> getTransactionsForUserWallet(String assetUserWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
+        try {
+            List<String> transactionIds = getTransactionIdsForUserWallet(assetUserWalletPublicKey);
+            List<AssetAppropriationTransactionRecord> assetAppropriationTransactionRecords = new ArrayList<>(transactionIds.size());
+            for (String id : transactionIds) {
+                assetAppropriationTransactionRecords.add(constructRecordFromId(id));
+            }
+            return assetAppropriationTransactionRecords;
+        } catch (RecordsNotFoundException e) {
+            return new ArrayList<>();
         }
-        return assetAppropriationTransactionRecords;
     }
 
     public List<AssetAppropriationTransactionRecord> getUncompletedTransactions() throws CantLoadAssetAppropriationTransactionListException {
         List<AssetAppropriationTransactionRecord> uncompleted = new ArrayList<>();
-        try {
-            uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.APPROPRIATION_STARTED));
-        } catch (RecordsNotFoundException e) {
-            //I don't need to throw an exception here but return an empty list. I'll just ignore the exception on every query.
-        }
-
-        try {
-            uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.DEBITING_ASSET));
-        } catch (RecordsNotFoundException e) {
-            //I don't need to throw an exception here but return an empty list. I'll just ignore the exception on every query.
-        }
-        try {
-            uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.SENDING_BITCOINS));
-        } catch (RecordsNotFoundException e) {
-            //I don't need to throw an exception here but return an empty list. I'll just ignore the exception on every query.
-        }
-
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.APPROPRIATION_STARTED));
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED));
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.BITCOINS_SENT));
         return uncompleted;
     }
 
-    public List<AssetAppropriationTransactionRecord> getTransactionsForStatus(AppropriationStatus status) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
-        List<String> transactionIds = getTransactionIdsForStatus(status);
-        List<AssetAppropriationTransactionRecord> assetAppropriationTransactionRecords = new ArrayList<>(transactionIds.size());
-        for (String id : transactionIds) {
-            assetAppropriationTransactionRecords.add(constructRecordFromId(id));
+    public List<AssetAppropriationTransactionRecord> getTransactionsForStatus(AppropriationStatus status) throws CantLoadAssetAppropriationTransactionListException {
+        try {
+            List<String> transactionIds = getTransactionIdsForStatus(status);
+            List<AssetAppropriationTransactionRecord> assetAppropriationTransactionRecords = new ArrayList<>(transactionIds.size());
+            for (String id : transactionIds) {
+                assetAppropriationTransactionRecords.add(constructRecordFromId(id));
+            }
+            return assetAppropriationTransactionRecords;
+        } catch (RecordsNotFoundException e) {
+            return new ArrayList<>();
         }
-        return assetAppropriationTransactionRecords;
     }
 
     /**

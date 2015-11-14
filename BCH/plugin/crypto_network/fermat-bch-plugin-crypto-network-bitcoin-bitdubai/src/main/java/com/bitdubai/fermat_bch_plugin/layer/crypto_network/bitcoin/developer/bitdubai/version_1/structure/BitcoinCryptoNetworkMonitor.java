@@ -190,6 +190,10 @@ class BitcoinCryptoNetworkMonitor implements Agent {
              */
             peerGroup.start();
             peerGroup.startBlockChainDownload(null);
+
+            while(true){
+
+            }
         }
 
         /**

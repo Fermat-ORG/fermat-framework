@@ -404,7 +404,7 @@ public class AssetUserActorDao implements Serializable {
             if(table.getRecords().size() > 0) {
                 // 3) Get Asset User record and update state.
                 for (DatabaseTableRecord record : table.getRecords()) {
-                    if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME).isEmpty()) {
+                    if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
                         dapConnectionState = DAPConnectionState.CONNECTED_OFFLINE;
                     }else {
                         dapConnectionState = DAPConnectionState.REGISTERED_OFFLINE;
@@ -428,7 +428,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public void updateAssetUserDAPConnectionStateActorNetworService(String assetUserPublicKey, DAPConnectionState dapDAPConnectionState, CryptoAddress cryptoAddress) throws CantUpdateAssetUserConnectionException {
+    public void updateAssetUserDAPConnectionStateActorNetworService(String assetUserPublicKey, DAPConnectionState dapConnectionState, CryptoAddress cryptoAddress) throws CantUpdateAssetUserConnectionException {
 
         DatabaseTable table;
         try {
@@ -457,13 +457,13 @@ public class AssetUserActorDao implements Serializable {
 
             // 3) Get Asset User record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME).isEmpty()) {
-                    dapDAPConnectionState = DAPConnectionState.CONNECTED_ONLINE;
+                if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
+                    dapConnectionState = DAPConnectionState.CONNECTED_ONLINE;
                 }else {
-                    dapDAPConnectionState = DAPConnectionState.REGISTERED_ONLINE;
+                    dapConnectionState = DAPConnectionState.REGISTERED_ONLINE;
                 }
 
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapDAPConnectionState.getCode());
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
 
                 if(cryptoAddress != null) {
                     record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());

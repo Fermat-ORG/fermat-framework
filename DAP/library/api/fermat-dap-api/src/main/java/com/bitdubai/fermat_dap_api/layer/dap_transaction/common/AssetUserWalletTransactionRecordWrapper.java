@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionRecord;
 
 import java.util.Date;
@@ -13,7 +12,7 @@ import java.util.Date;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 29/10/15.
  */
-public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletTransactionRecord{
+public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletTransactionRecord {
     private final DigitalAsset digitalAsset;
     private final String digitalAssetPublicKey;
     private final String name;
@@ -31,20 +30,20 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
     private final String transactionId;
 
     AssetUserWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
-                                              String digitalAssetPublicKey,
-                                              String name,
-                                              String description,
-                                              CryptoAddress addressFrom,
-                                              CryptoAddress addressTo,
-                                              String actorFromPublicKey,
-                                              String actorToPublicKey,
-                                              Actors actorFromType,
-                                              Actors actorToType,
-                                              long amount,
-                                              long timeStamp,
-                                              String memo,
-                                              String digitalAssetMetadataHash,
-                                              String transactionId){
+                                            String digitalAssetPublicKey,
+                                            String name,
+                                            String description,
+                                            CryptoAddress addressFrom,
+                                            CryptoAddress addressTo,
+                                            String actorFromPublicKey,
+                                            String actorToPublicKey,
+                                            Actors actorFromType,
+                                            Actors actorToType,
+                                            long amount,
+                                            long timeStamp,
+                                            String memo,
+                                            String digitalAssetMetadataHash,
+                                            String transactionId) {
         this.digitalAsset = digitalAsset;
         this.digitalAssetPublicKey = digitalAssetPublicKey;
         this.name = name;
@@ -52,7 +51,7 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.addressFrom = addressFrom;
         this.addressTo = addressTo;
         this.actorFromPublicKey = actorFromPublicKey;
-        this.actorToPublicKey =actorToPublicKey;
+        this.actorToPublicKey = actorToPublicKey;
         this.actorFromType = actorFromType;
         this.actorToType = actorToType;
         this.amount = amount;
@@ -63,9 +62,9 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
     }
 
     public AssetUserWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
-                                                     CryptoTransaction cryptoGenesisTransaction,
-                                                     String actorFromPublicKey,
-                                                     String actorToPublicKey){
+                                                   CryptoTransaction cryptoGenesisTransaction,
+                                                   String actorFromPublicKey,
+                                                   String actorToPublicKey) {
         this.digitalAsset = digitalAssetMetadata.getDigitalAsset();
         this.digitalAssetPublicKey = this.digitalAsset.getPublicKey();
         this.name = this.digitalAsset.getName();
@@ -73,15 +72,39 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.addressFrom = cryptoGenesisTransaction.getAddressFrom();
         this.addressTo = cryptoGenesisTransaction.getAddressTo();
         this.actorFromPublicKey = actorFromPublicKey;
-        this.actorToPublicKey =actorToPublicKey;
+        this.actorToPublicKey = actorToPublicKey;
         this.actorFromType = Actors.INTRA_USER;
         this.actorToType = Actors.DAP_ASSET_ISSUER;
         this.amount = cryptoGenesisTransaction.getCryptoAmount();
         this.digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
-        Date date= new Date();
+        Date date = new Date();
         this.timeStamp = date.getTime();
-        this.memo = "Digital Asset delivered at"+this.timeStamp;
+        this.memo = "Digital Asset delivered at" + this.timeStamp;
+    }
+
+    public AssetUserWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
+                                                   CryptoTransaction cryptoGenesisTransaction,
+                                                   String actorFromPublicKey,
+                                                   Actors actorFromType,
+                                                   String actorToPublicKey,
+                                                   Actors actorToType) {
+        this.digitalAsset = digitalAsset;
+        this.digitalAssetPublicKey = this.digitalAsset.getPublicKey();
+        this.name = this.digitalAsset.getName();
+        this.description = this.digitalAsset.getDescription();
+        this.addressFrom = cryptoGenesisTransaction.getAddressFrom();
+        this.addressTo = cryptoGenesisTransaction.getAddressTo();
+        this.actorFromPublicKey = actorFromPublicKey;
+        this.actorToPublicKey = actorToPublicKey;
+        this.actorFromType = actorFromType;
+        this.actorToType = actorToType;
+        this.amount = cryptoGenesisTransaction.getCryptoAmount();
+        this.digitalAssetMetadataHash = new DigitalAssetMetadata(digitalAsset).getDigitalAssetHash();
+        this.transactionId = cryptoGenesisTransaction.getTransactionHash();
+        Date date = new Date();
+        this.timeStamp = date.getTime();
+        this.memo = "Digital Asset delivered at" + this.timeStamp;
     }
 
     @Override
