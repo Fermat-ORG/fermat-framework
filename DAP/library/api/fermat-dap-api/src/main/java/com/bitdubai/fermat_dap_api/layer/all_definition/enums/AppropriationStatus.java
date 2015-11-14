@@ -11,6 +11,7 @@ public enum AppropriationStatus implements FermatEnum {
     //ENUM DECLARATION
 
     APPROPRIATION_STARTED("APST"),
+    CRYPTOADDRESS_OBTAINED("ADOB"),
     BITCOINS_SENT("BTCSENT"),
     ASSET_DEBITED("ASDB"),
     REVERTED_ON_BLOCKCHAIN("ROBC"),
