@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class CommunicationNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
 
-    /**
+    /    /**
      * Represent the communicationsClientConnection
      */
     private CommunicationsClientConnection communicationsClientConnection;
@@ -135,6 +135,9 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     }
 
+
+    //TODO: COPIAR ESTO A TODOS LOS OTROS NETWORK SERVICES;  XXOO. te quiero robert xD
+
     /**
      * (non-javadoc)
      * @see NetworkServiceConnectionManager#closeConnection(String)
@@ -142,8 +145,13 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     @Override
     public void closeConnection(String remoteNetworkServicePublicKey) {
         //Remove the instance and stop his threads
-        if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey))
+        if(communicationNetworkServiceRemoteAgentsCache.containsKey(remoteNetworkServicePublicKey)) {
             communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
+        }
+
+        if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey)){
+            communicationNetworkServiceLocalsCache.remove(remoteNetworkServicePublicKey);
+        }
 
     }
 
@@ -155,9 +163,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     public void closeAllConnection() {
 
         for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
-
-            //Remove the instance and stop his threads
-            communicationNetworkServiceRemoteAgentsCache.remove(key).stop();
+            closeConnection(key);
         }
 
     }
@@ -189,7 +195,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new  CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
