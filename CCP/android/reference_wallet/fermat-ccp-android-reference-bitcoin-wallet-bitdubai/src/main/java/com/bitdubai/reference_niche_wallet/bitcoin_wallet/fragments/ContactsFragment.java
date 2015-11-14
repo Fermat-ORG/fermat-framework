@@ -489,7 +489,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                 walletContact.setName("");
                 lauchCreateContactDialog(false);
         }else if (id == ID_BTN_INTRA_USER){
-            Toast.makeText(getActivity(),"abro el intra user",Toast.LENGTH_SHORT).show();
+            changeActivity(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY);
         }
     }
 
