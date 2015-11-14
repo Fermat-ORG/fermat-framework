@@ -51,7 +51,7 @@ public class FermatTextView extends TextView {
     public void parseAttributes(Context context, AttributeSet attrs) {
         TypedArray values = context.obtainStyledAttributes(attrs, R.styleable.FermatTextView);
         FontType typefaceType = FontType.values()
-                [values.getInt(R.styleable.FermatTextView_typeface, FontType.CAVIAR_DREAMS.ordinal())];
+                [values.getInt(R.styleable.FermatTextView_typeface, FontType.ROBOTO_REGULAR.ordinal())];
         setFont(typefaceType);
         values.recycle();
     }

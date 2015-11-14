@@ -2,6 +2,7 @@ package com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.develop
 
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CryptoAddressDealerNotSupportedException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.interfaces.CryptoAddressDealer;
+import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.structure.dealers.CryptoAssetCryptoAddressDealer;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.structure.dealers.CryptoWalletCryptoAddressDealer;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.utils.CryptoVaultSelector;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.utils.WalletManagerSelector;
@@ -44,7 +45,13 @@ public final class CryptoAddressesMiddlewareDealersFactory {
                         cryptoVaultSelector,
                         walletManagerSelector
                 );
-
+            case DAP_ASSET:
+                return new CryptoAssetCryptoAddressDealer(
+                        cryptoAddressesManager,
+                        cryptoAddressBookManager,
+                        cryptoVaultSelector,
+                        walletManagerSelector
+                );
             default: throw new CryptoAddressDealerNotSupportedException(
                     "Dealer requested: "+dealer,
                     "Dealer not supported. Please add the Crypto Address Dealer to the switch."

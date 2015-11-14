@@ -1,12 +1,11 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerCompleteRegistrationNotificationEvent;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.AssetActorIssuerPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorPluginRoot;
 
 /**
  * Created by Nerio on 02/11/15.
@@ -14,9 +13,9 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitduba
 public class ActorAssetIssuerCompleteRegistrationNotificationEventHandler implements FermatEventHandler {
 
 //    private ActorNetworkServiceAssetUser actorNetworkServiceAssetUser;
-    private AssetActorIssuerPluginRoot assetActorIssuerPluginRoot;
+    private AssetIssuerActorPluginRoot assetActorIssuerPluginRoot;
 
-    public ActorAssetIssuerCompleteRegistrationNotificationEventHandler(AssetActorIssuerPluginRoot assetActorIssuerPluginRoot) {
+    public ActorAssetIssuerCompleteRegistrationNotificationEventHandler(AssetIssuerActorPluginRoot assetActorIssuerPluginRoot) {
         this.assetActorIssuerPluginRoot = assetActorIssuerPluginRoot;
     }
 

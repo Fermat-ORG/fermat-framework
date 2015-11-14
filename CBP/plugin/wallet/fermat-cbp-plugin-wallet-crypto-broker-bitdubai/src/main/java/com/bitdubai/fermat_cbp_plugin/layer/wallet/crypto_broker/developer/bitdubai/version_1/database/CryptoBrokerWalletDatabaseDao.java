@@ -229,27 +229,6 @@ public class CryptoBrokerWalletDatabaseDao {
         }
     }
 
-    /*COLLECTION*/
-    public Collection <Stock> getCollectionStocks() throws CantGetCollectionStocksCryptoBrokerWalletException {
-        Collection<Stock> stockCollection = new ArrayList<Stock>();
-        /*try{
-            DatabaseTable stocksTaable = this.database.getTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME);
-            stocksTaable.loadToMemory();
-
-            List<DatabaseTableRecord> records = stocksTaable.getRecords();
-            stocksTaable.clearAllFilters();
-
-            for (DatabaseTableRecord record : records) {
-                stockCollection.add(getStockBalanceFromRecord(record));
-            }
-        } catch (CantLoadTableToMemoryException exception){
-            throw new CantGetCollectionStocksCryptoBrokerWalletException(CantGetCollectionStocksCryptoBrokerWalletException.DEFAULT_MESSAGE, exception, null, "Check the cause");
-        } catch (Exception exception){
-            throw new CantGetCollectionStocksCryptoBrokerWalletException(CantGetCollectionStocksCryptoBrokerWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
-        }*/
-        return stockCollection;
-    }
-
     private float calculateBookRunningBalance(final float transactionAmount, String publicKeyWallet) throws CantGetBalanceRecordException {
         return getCurrentBalance(BalanceType.BOOK, publicKeyWallet) + transactionAmount;
     }
@@ -414,24 +393,6 @@ public class CryptoBrokerWalletDatabaseDao {
                 memo
         );
     }
-
-    /*private CryptoBrokerStockBalance getStockBalanceFromRecord(final DatabaseTableRecord record) throws InvalidParameterException{
-        String walletPublicKey          = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_WALLET_PUBLIC_KEY_COLUMN_NAME);
-        String ownerPublicKey           = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME);
-        CurrencyType currencyType       = CurrencyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME));
-        String descripcion              = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_DESCRIPTION_COLUMN_NAME);
-        float   runningBookBalance      = record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BOOK_BALANCE_COLUMN_NAME);
-        float   runningAvailableBalance = record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME);
-        KeyPair walletKeyPair = AsymmetricCryptography.createKeyPair(walletPublicKey);
-        return new CryptoBrokerStockBalanceImpl(
-                walletKeyPair,
-                ownerPublicKey,
-                currencyType,
-                descripcion,
-                runningBookBalance,
-                runningAvailableBalance
-        );
-    }*/
 
     private void  persistNewCryptoBrokerWalletPrivateKeysFile(String publicKey,String privateKey) throws CantPersistPrivateKeyException {
         try {

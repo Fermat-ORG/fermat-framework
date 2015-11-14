@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -15,36 +14,28 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.AbstractPeerEventListener;
 import org.bitcoinj.core.Address;
@@ -88,13 +79,6 @@ import java.util.concurrent.TimeoutException;
 public class BitcoinCryptoVault implements
         BitcoinManager,
         CryptoVault,
-        DealsWithBitcoinCryptoNetwork,
-        DealsWithEvents,
-        DealsWithErrors,
-        DealsWithPluginIdentity,
-        DealsWithPluginDatabaseSystem,
-        DealsWithLogger,
-        DealsWithPluginFileSystem,
         TransactionProtocolManager {
 
     /**
@@ -139,10 +123,6 @@ public class BitcoinCryptoVault implements
     UUID pluginId;
 
 
-    /**
-     * DealsWithPluginDatabaseSystem interface member variable
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
     Database database;
 
     /**
@@ -150,6 +130,14 @@ public class BitcoinCryptoVault implements
      */
     PluginFileSystem pluginFileSystem;
 
+    public BitcoinCryptoVault(EventManager eventManager, ErrorManager errorManager, LogManager logManager, UUID pluginId, PluginFileSystem pluginFileSystem, Database database) {
+        this.eventManager = eventManager;
+        this.errorManager = errorManager;
+        this.logManager = logManager;
+        this.pluginId = pluginId;
+        this.pluginFileSystem = pluginFileSystem;
+        this.database = database;
+    }
 
     /**
      * CryptoVault interface implementations
@@ -178,68 +166,6 @@ public class BitcoinCryptoVault implements
         return vault;
     }
 
-    /**
-     * DealsWithBitcoinCryptoNetwork interface implementation
-     * @param bitcoinCryptoNetworkManager
-     */
-    @Override
-    public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
-        this.bitcoinCryptoNetworkManager = bitcoinCryptoNetworkManager;
-    }
-
-    /**
-     * DealsWithEvents interface implementation
-     * @param eventManager
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     * DealsWithLogger interface implementation
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * DealsWithPluginFileSystem interface implementation
-     * @param pluginFileSystem
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * DealsWithPluginIdentity interface implementation
-     * @param pluginId
-     */
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    /**
-     * DealsWithError interface implementation
-     * @param errorManager
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation
-     * @param pluginDatabaseSystem
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
     public void setDatabase(Database database){
         this.database = database;
     }
@@ -249,7 +175,15 @@ public class BitcoinCryptoVault implements
      * Constructor
      * @param userPublicKey the Id of the user of the platform.
      */
-    public BitcoinCryptoVault (String userPublicKey) throws CantCreateCryptoWalletException {
+    public BitcoinCryptoVault (String userPublicKey, EventManager eventManager, ErrorManager errorManager, LogManager logManager, UUID pluginId, PluginFileSystem pluginFileSystem, Database database) throws CantCreateCryptoWalletException {
+
+        this.eventManager = eventManager;
+        this.errorManager = errorManager;
+        this.logManager = logManager;
+        this.pluginId = pluginId;
+        this.pluginFileSystem = pluginFileSystem;
+        this.database = database;
+
         try{
             this.userPublicKey = userPublicKey;
             this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
@@ -470,12 +404,10 @@ public class BitcoinCryptoVault implements
             // after we persist the new Transaction, we'll persist it as a Fermat transaction.
             db.persistnewFermatTransaction(fermatTxId.toString());
 
-            // I'm experimenting addind a fixed high value for the fee. Since I'm getting Insufficient priority (66) messages.
 
-            //request.feePerKb = Coin.valueOf(1100);
-
-            request.fee = Coin.valueOf(15000);
+            // I'm adding a fixed fee for now.
             request.ensureMinRequiredFee = true;
+            request.fee = Coin.valueOf(15000);
             /**
              * If OP_return was specified then I will add an output to the transaction
              */
@@ -487,12 +419,14 @@ public class BitcoinCryptoVault implements
              * complete the transaction and commit it.
              */
             vault.completeTx(request);
-
-
             vault.commitTx(request.tx);
+            /**
+             * I get the transaction hash and persists this transaction in the database.
+             */
+            db.persistNewTransaction(fermatTxId.toString(), request.tx.getHashAsString());
             vault.saveToFile(vaultFile);
 
-            final TransactionBroadcast broadcast =peerGroup.broadcastTransaction(request.tx);
+            final TransactionBroadcast broadcast = peerGroup.broadcastTransaction(request.tx);
             broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
                 @Override
                 public void onBroadcastProgress(double progress) {
@@ -500,15 +434,12 @@ public class BitcoinCryptoVault implements
                 }
             });
 
-
-            broadcast.future().get(10, TimeUnit.SECONDS);
+            broadcast.broadcast().get(2, TimeUnit.MINUTES);
+            broadcast.future().get(2, TimeUnit.MINUTES);
 
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
 
-            /**
-             * I get the transaction hash and persists this transaction in the database.
-             */
-            db.persistNewTransaction(fermatTxId.toString(), request.tx.getHashAsString());
+
 
             //returns the created transaction id
             return request.tx.getHashAsString();

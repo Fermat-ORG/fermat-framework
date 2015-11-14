@@ -24,28 +24,21 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
@@ -74,13 +67,6 @@ import java.util.regex.Pattern;
 public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
         CryptoVaultManager,
         DatabaseManagerForDevelopers,
-        DealsWithBitcoinCryptoNetwork,
-        DealsWithEvents,
-        DealsWithErrors,
-        DealsWithPluginDatabaseSystem,
-        DealsWithDeviceUser,
-        DealsWithLogger,
-        DealsWithPluginFileSystem,
         LogManagerForDevelopers {
 
 
@@ -102,8 +88,8 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK)
-    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK)
+    private BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
 
 
     public BitcoinCryptoVaultPluginRoot() {
@@ -118,25 +104,12 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
     BitcoinCryptoVault vault;
     TransactionNotificationAgent transactionNotificationAgent;
 
-
-
     Database database;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-
-
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-
-    /**
-     * DealsWithBitcoinCryptoNetwork interface implementation
-     * @param bitcoinCryptoNetworkManager
-     */
-    @Override
-    public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
-        this.bitcoinCryptoNetworkManager = bitcoinCryptoNetworkManager;
-    }
 
     @Override
     public List<String> getClassesFullPath() {
@@ -220,53 +193,8 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
     public boolean isValidAddress(CryptoAddress addressTo) {
         return vault.isValidAddress(addressTo);
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     *DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPlugIndatabaseSystem interace implementation
-     * @param pluginDatabaseSystem
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager = deviceUserManager;
-    }
-
-    /**
-     * DealsWithPluginFileSystem interface implementation
-     * @param pluginFileSystem
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 
     //TODO Franklin, aqui falta la gestion de excepciones genericas
@@ -330,15 +258,15 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
          * I will start the loading creation of the wallet from the user Id
          */
         try {
-            vault = new BitcoinCryptoVault(userPublicKey);
-            vault.setLogManager(logManager);
-            vault.setErrorManager(errorManager);
-            vault.setPluginDatabaseSystem(pluginDatabaseSystem);
-            vault.setDatabase(this.database);
-            vault.setPluginFileSystem(this.pluginFileSystem);
-            vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
-            vault.setPluginId(pluginId);
-            vault.setEventManager(eventManager);
+            vault = new BitcoinCryptoVault(
+                    userPublicKey,
+                    eventManager,
+                    errorManager,
+                    logManager,
+                    pluginId,
+                    pluginFileSystem,
+                    database
+            );
 
             vault.loadOrCreateVault();
 

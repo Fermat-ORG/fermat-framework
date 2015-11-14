@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginIdsManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStopPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CyclicalRelationshipFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.UnexpectedServiceStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
@@ -55,10 +56,10 @@ public final class FermatPluginManager {
             try {
 
                 final AddonVersionReference platformFileSystemReference = new AddonVersionReference(
-                        Platforms.OPERATIVE_SYSTEM_API,
-                        Layers.SYSTEM,
-                        Addons.PLATFORM_FILE_SYSTEM,
-                        Developers.BITDUBAI,
+                        Platforms .OPERATIVE_SYSTEM_API,
+                        Layers    .SYSTEM              ,
+                        Addons    .PLATFORM_FILE_SYSTEM,
+                        Developers.BITDUBAI            ,
                         new Version()
                 );
 
@@ -74,15 +75,6 @@ public final class FermatPluginManager {
                 throw new CantStartPluginIdsManagerException(e, "Problem trying to get a platform file system addon.", "Platform not initialized?");
             }
         }
-    }
-
-    public final void startPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
-                                                                                              VersionNotFoundException {
-
-        AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
-
-        startPlugin(abstractPlugin);
-
     }
 
     public final AbstractPlugin startPluginAndReferences(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
@@ -109,7 +101,13 @@ public final class FermatPluginManager {
             final List<PluginVersionReference> neededPlugins = abstractPlugin.getNeededPlugins();
 
             for (final PluginVersionReference pvr : neededPlugins) {
-                AbstractPlugin reference = startPluginAndReferences(pvr);
+
+                AbstractPlugin reference = systemContext.getPluginVersion(pvr);
+
+                compareReferences(pluginVersionReference, pvr, reference.getNeededPlugins());
+
+                startPluginAndReferences(pvr);
+
                 abstractPlugin.assignPluginReference(reference);
             }
 
@@ -122,19 +120,31 @@ public final class FermatPluginManager {
             return abstractPlugin;
         } catch (CantListNeededReferencesException e) {
 
-            throw new CantStartPluginException(e, pluginVersionReference.toString(), "Error listing references for the plugin.");
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error listing references for the plugin.");
         } catch(CantAssignReferenceException   |
                 IncompatibleReferenceException |
                 CantStartAddonException        e) {
 
-            throw new CantStartPluginException(e, pluginVersionReference.toString(), "Error assigning references for the plugin.");
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error assigning references for the plugin.");
         } catch(final CantStartPluginIdsManagerException e) {
 
-            throw new CantStartPluginException(e, pluginVersionReference.toString(), "Error trying to get the pluginIdsManager.");
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to get the pluginIdsManager.");
         } catch(final CantGetPluginIdException e) {
 
-            throw new CantStartPluginException(e, pluginVersionReference.toString(), "Error trying to set the plugin id.");
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to set the plugin id.");
+        } catch (final CyclicalRelationshipFoundException e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Cyclical References found for the plugin.");
         }
+    }
+
+    public final void startPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
+                                                                                              VersionNotFoundException {
+
+        final AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
+
+        startPlugin(abstractPlugin);
+
     }
 
     public final void startPlugin(final AbstractPlugin abstractPlugin) throws CantStartPluginException {
@@ -148,7 +158,7 @@ public final class FermatPluginManager {
 
             throw new CantStartPluginException(
                     e,
-                    abstractPlugin.getPluginVersionReference().toString(),
+                    abstractPlugin.getPluginVersionReference().toString3(),
                     "There was a captured problem during the plugin start."
             );
         } catch (Exception e) {
@@ -247,5 +257,32 @@ public final class FermatPluginManager {
         } catch (Exception e) {
             throw new CantResumePluginException(e, abstractPlugin.toString(), "Unhandled exception trying to resume the plugin.");
         }
+    }
+
+    /**
+     * Throw the method <code>compareReferences</code> you can check if there is a cyclical relationship between a plugin version and its references.
+     *
+     * @param referenceAnalyzing       reference that we're watching.
+     * @param subReferenceAnalyzed     reference of the reference that we're watching.
+     * @param subReferenceReferences   sub-references of that reference.
+     *
+     * @return boolean indicating if its all ok, only false is shown. if there is a cyclical relationship found is thrown an exception.
+     *
+     * @throws CyclicalRelationshipFoundException if exists a cyclical redundancy.
+     */
+    private boolean compareReferences(final PluginVersionReference       referenceAnalyzing    ,
+                                      final PluginVersionReference       subReferenceAnalyzed  ,
+                                      final List<PluginVersionReference> subReferenceReferences) throws CyclicalRelationshipFoundException {
+
+
+        for (final PluginVersionReference ref2 : subReferenceReferences) {
+            if (referenceAnalyzing.equals(ref2))
+                throw new CyclicalRelationshipFoundException(
+                        "Comparing: " + referenceAnalyzing.toString3() + "\n with: " + subReferenceAnalyzed.toString3(),
+                        "Cyclical relationship found."
+                );
+        }
+
+        return false;
     }
 }

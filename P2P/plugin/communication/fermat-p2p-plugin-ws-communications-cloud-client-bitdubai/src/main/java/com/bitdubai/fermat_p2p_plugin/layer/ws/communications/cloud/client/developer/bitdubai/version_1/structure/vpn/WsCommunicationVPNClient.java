@@ -81,11 +81,17 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     private boolean isPongMessagePending;
 
     /**
+     * Represent the wsCommunicationVPNClientManagerAgent
+     */
+    private WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent;
+
+    /**
      * Constructor with parameters
      * @param serverURI
      */
-    public WsCommunicationVPNClient(ECCKeyPair vpnClientIdentity, URI serverURI, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService, String vpnServerIdentity, Map<String, String> headers) {
+    public WsCommunicationVPNClient(WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent, ECCKeyPair vpnClientIdentity, URI serverURI, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService, String vpnServerIdentity, Map<String, String> headers) {
         super(serverURI , new Draft_17(), headers , WsCommunicationVPNClient.DEFAULT_CONNECTION_TIMEOUT);
+        this.wsCommunicationVPNClientManagerAgent = wsCommunicationVPNClientManagerAgent;
         this.vpnClientIdentity = vpnClientIdentity;
         this.remoteParticipant = remoteParticipant;
         this.remoteParticipantNetworkService = remoteParticipantNetworkService;
@@ -199,6 +205,13 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
         System.out.println(" WsCommunicationVPNClient - Starting method onClose");
         System.out.println(" WsCommunicationVPNClient -  code   = " + code + " reason = " + reason + " remote = " + remote);
         isActive = Boolean.FALSE;
+
+        try {
+            wsCommunicationVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**

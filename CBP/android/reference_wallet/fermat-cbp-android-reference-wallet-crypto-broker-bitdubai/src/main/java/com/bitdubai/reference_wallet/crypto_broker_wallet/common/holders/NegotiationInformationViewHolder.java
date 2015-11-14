@@ -21,15 +21,16 @@ import java.util.Map;
  * Created by nelson on 28/10/15.
  */
 public class NegotiationInformationViewHolder extends ChildViewHolder {
-    public ImageView customerImage;
-    public FermatTextView customerName;
-    public FermatTextView merchandiseAmount;
-    public FermatTextView merchandise;
-    public FermatTextView paymentMethod;
-    public FermatTextView exchangeRateAmount;
-    public FermatTextView paymentCurrency;
-    public FermatTextView lastUpdateDate;
-    public FermatTextView status;
+    public final ImageView customerImage;
+    public final FermatTextView customerName;
+    public final FermatTextView merchandiseAmount;
+    public final FermatTextView merchandiseUnit;
+    public final FermatTextView merchandise;
+    public final FermatTextView paymentMethod;
+    public final FermatTextView exchangeRateAmount;
+    public final FermatTextView paymentCurrency;
+    public final FermatTextView lastUpdateDate;
+    public final FermatTextView status;
     private Resources res;
     private View itemView;
 
@@ -49,6 +50,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         customerName = (FermatTextView) itemView.findViewById(R.id.cbw_customer_name);
         merchandiseAmount = (FermatTextView) itemView.findViewById(R.id.cbw_merchandise_amount);
         merchandise = (FermatTextView) itemView.findViewById(R.id.cbw_merchandise);
+        merchandiseUnit = (FermatTextView) itemView.findViewById(R.id.cbw_merchandise_unit);
         paymentMethod = (FermatTextView) itemView.findViewById(R.id.cbw_type_of_payment);
         exchangeRateAmount = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_amount);
         paymentCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_payment_currency);
@@ -73,6 +75,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         merchandiseAmount.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
         exchangeRateAmount.setText(negotiationSummary.get(ClauseType.EXCHANGE_RATE));
         merchandise.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY));
+        merchandiseUnit.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY));
         paymentMethod.setText(negotiationSummary.get(ClauseType.BROKER_PAYMENT_METHOD));
         paymentCurrency.setText(negotiationSummary.get(ClauseType.BROKER_CURRENCY));
     }

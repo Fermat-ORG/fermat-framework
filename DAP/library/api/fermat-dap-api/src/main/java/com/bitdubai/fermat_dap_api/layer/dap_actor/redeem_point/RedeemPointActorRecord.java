@@ -1,9 +1,8 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point;
 
-
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
@@ -14,18 +13,18 @@ import java.util.Arrays;
  */
 public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
-    private String          publicKey;
-    private String          name;
-    private long            registrationDate;
-    private ConnectionState connectionState;
-    private CryptoAddress   cryptoAddress;
-    private Location        location;
-    private Double          locationLatitude;
-    private Double          locationLongitude;
-    private String          contactInformation;
-    private String          hoursOfOperation;
-    private Address         address;
-    private byte[]          profileImage ;
+    private String              publicKey           ;
+    private String              name                ;
+    private long                registrationDate    ;
+    private DAPConnectionState  dapConnectionState  ;
+    private CryptoAddress       cryptoAddress       ;
+    private Location            location            ;
+    private Double              locationLatitude    ;
+    private Double              locationLongitude   ;
+    private String              contactInformation  ;
+    private String              hoursOfOperation    ;
+    private Address             address             ;
+    private byte[]              profileImage        ;
 
     /**
      * Constructor
@@ -38,8 +37,8 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     /**
      *  Method for Set Actor in Actor Network Service Redeem Point
      */
-    public RedeemPointActorRecord(String name,
-                                  String publicKey,
+    public RedeemPointActorRecord(String publicKey,
+                                  String name,
                                   byte[] profileImage,
                                   Location location) {
 
@@ -68,17 +67,17 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
                                   byte[] profileImage,
                                   long registrationDate) {
 
-        this.name               = name                      ;
-        this.publicKey          = publicKey                 ;
-        this.profileImage       = profileImage.clone()      ;
-        this.registrationDate   = registrationDate          ;
-        this.connectionState    = ConnectionState.CONNECTED ;
+        this.name               = name                                  ;
+        this.publicKey          = publicKey                             ;
+        this.profileImage       = profileImage.clone()                  ;
+        this.registrationDate   = registrationDate                      ;
+        this.dapConnectionState = DAPConnectionState.REGISTERED_ONLINE  ;
 
     }
 
     public RedeemPointActorRecord(String publicKey,
                                   String name,
-                                  ConnectionState connectionState,
+                                  DAPConnectionState dapConnectionState,
                                   double locationLatitude,
                                   double locationLongitude,
                                   long registrationDate,
@@ -86,7 +85,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
         this.publicKey          = publicKey             ;
         this.name               = name                  ;
-        this.connectionState    = connectionState       ;
+        this.dapConnectionState = dapConnectionState    ;
         this.locationLatitude   = locationLatitude      ;
         this.locationLongitude  = locationLongitude     ;
         this.registrationDate   = registrationDate      ;
@@ -167,12 +166,12 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
      * {@inheritDoc}
      */
     @Override
-    public ConnectionState getConnectionState() {
-        return connectionState;
+    public DAPConnectionState getDapConnectionState() {
+        return dapConnectionState;
     }
 
-    public void setConnectionState(ConnectionState connectionState) {
-        this.connectionState = connectionState;
+    public void setDapConnectionState(DAPConnectionState dapConnectionState) {
+        this.dapConnectionState = dapConnectionState;
     }
 //    /**
 //     *
@@ -249,7 +248,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
                 "publicKey='" + publicKey + '\'' +
                 ", name='" + name + '\'' +
                 ", registrationDate=" + registrationDate +
-                ", connectionState=" + connectionState +
+                ", DAPConnectionState=" + dapConnectionState +
                 ", cryptoAddress=" + cryptoAddress +
                 ", location=" + location +
                 ", locationLatitude=" + locationLatitude +

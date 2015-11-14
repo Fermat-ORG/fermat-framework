@@ -383,27 +383,33 @@ public interface CryptoWallet extends Serializable {
      * @throws CantListCryptoWalletIntraUserIdentityException
      */
 
-    List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
-
-    /**
-     *
-     * @param cryptoAmount
-     * @param destinationAddress
-     * @param notes
-     * @param walletPublicKey
-     * @param deliveredByActorPublicKey
-     * @param deliveredByActorType
-     * @param deliveredToActorPublicKey
-     * @param deliveredToActorType
-     */
-    void sendMetadataLikeChampion(long cryptoAmount,
-                                  CryptoAddress destinationAddress,
-                                  String notes, String walletPublicKey,
-                                  String deliveredByActorPublicKey,
-                                  Actors deliveredByActorType,
-                                  String deliveredToActorPublicKey,
-                                  Actors deliveredToActorType);
+    List<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
 
     List<IntraWalletUserIdentity> getActiveIdentities();
+
+    /**
+     * Through the method <code>sendCryptoPaymentRequest</code> you can generate and send a crypto payment request.
+     *
+     * @param walletPublicKey
+     * @param identityPublicKey
+     * @param identityType
+     * @param actorPublicKey
+     * @param actorType
+     * @param cryptoAddress
+     * @param description
+     * @param amount
+     * @param networkType
+     *
+     * @throws CantSendCryptoPaymentRequestException  if something goes wrong.
+     */
+     void sendCryptoPaymentRequest(final String                walletPublicKey  ,
+                                   final String                identityPublicKey,
+                                   final Actors                identityType     ,
+                                   final String                actorPublicKey   ,
+                                   final Actors                actorType        ,
+                                   final CryptoAddress         cryptoAddress    ,
+                                   final String                description      ,
+                                   final long                  amount           ,
+                                   final BlockchainNetworkType networkType      ) throws CantSendCryptoPaymentRequestException;
 
 }

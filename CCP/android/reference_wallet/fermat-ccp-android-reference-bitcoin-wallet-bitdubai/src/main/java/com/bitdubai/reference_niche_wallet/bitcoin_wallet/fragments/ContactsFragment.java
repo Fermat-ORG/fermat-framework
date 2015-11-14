@@ -1,10 +1,12 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -22,8 +24,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,12 +60,17 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_con
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.FragmentsCommons;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceFragmentsEnumType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
-import com.melnykov.fab.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,9 +87,11 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  * Created by Matias Furszyfer on 19/07/15.
  */
 
-public class ContactsFragment extends FermatWalletFragment implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler,CreateContactDialogCallback {
+public class ContactsFragment extends FermatWalletFragment implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler,CreateContactDialogCallback, View.OnClickListener {
 
 
+    static final int ID_BTN_EXTRA_USER = 12;
+    static final int ID_BTN_INTRA_USER = 23;
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_LOAD_IMAGE = 2;
@@ -125,7 +138,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     // loading view
     ProgressBar mLoadingView;
     // empty view
-    TextView mEmptyView;
+    LinearLayout mEmptyView;
 
     Bundle mSavedInstanceState;
 
@@ -170,7 +183,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
             mSavedInstanceState = savedInstanceState;
             rootView = inflater.inflate(R.layout.main_act, container, false);
             setupViews(rootView);
-            setUpScreen();
+            setUpFAB();
+            setUpScreen(inflater);
             walletContactRecords = new ArrayList<>();
             mItems = new ArrayList<>();
             mListSectionPos = new ArrayList<Integer>();
@@ -188,9 +202,67 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         return container;
     }
 
-    private void setUpScreen() throws CantGetActiveLoginIdentityException {
-        WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+    private void setUpFAB() {
+        // in Activity Context
+        FrameLayout frameLayout = new FrameLayout(getActivity());
+
+        FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+
+        frameLayout.setLayoutParams(lbs);
+
+        ImageView icon = new ImageView(getActivity()); // Create an icon
+        icon.setImageResource(R.drawable.ic_action_add_grey);
+
+        frameLayout.addView(icon);
+
+
+        FloatingActionButton actionButton = new FloatingActionButton.Builder(getActivity())
+                .setContentView(frameLayout)
+                .setBackgroundDrawable(R.drawable.btn_contact_selector)
+                .build();
+
+
+
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
+// repeat many times:
+        ImageView itemIcon = new ImageView(getActivity());
+        itemIcon.setImageResource(R.drawable.ic_contact_float_new_contact_blue);
+        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setLayoutParams(new FrameLayout.LayoutParams(160,160)).build();
+        button1.setId(ID_BTN_EXTRA_USER);
+//        button1.setLayoutParams();
+
+
+        ImageView itemIcon2 = new ImageView(getActivity());
+        itemIcon2.setImageResource(R.drawable.ic_contact_float_new_contact);
+        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
+        button2.setId(ID_BTN_INTRA_USER);
+
+
+        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+                .addSubActionView(button1)
+                .addSubActionView(button2)
+                .attachTo(actionButton)
+                .build();
+
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+
     }
+
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
+        /**
+         * add navigation header
+         */
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+
+        /**
+         * Navigation view items
+         */
+        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+        setNavigationDrawer(navigationViewAdapter);
+    }
+
 
     @Override
     public void onStart() {
@@ -261,17 +333,17 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
-        mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
+        mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
-       final FloatingActionButton fabAddPerson = (FloatingActionButton) rootView.findViewById(R.id.fab_add_person);
-        fabAddPerson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                walletContact = new WalletContact();
-                walletContact.setName("");
-                lauchCreateContactDialog(false);
-            }
-        });
+//       final FloatingActionButton fabAddPerson = (FloatingActionButton) rootView.findViewById(R.id.fab_add_person);
+//        fabAddPerson.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                walletContact = new WalletContact();
+//                walletContact.setName("");
+//                lauchCreateContactDialog(false);
+//            }
+//        });
 
         mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -407,7 +479,19 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 
+    @Override
+    public void onClick(View v) {
 
+        int id = v.getId();
+
+        if(id == ID_BTN_EXTRA_USER){
+                walletContact = new WalletContact();
+                walletContact.setName("");
+                lauchCreateContactDialog(false);
+        }else if (id == ID_BTN_INTRA_USER){
+            Toast.makeText(getActivity(),"abro el intra user",Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     /**

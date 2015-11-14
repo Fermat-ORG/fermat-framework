@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,11 +41,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.NegotiationInformationTestData;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationDrawerArrayAdapter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
@@ -85,6 +84,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     ReferenceWalletSession referenceWalletSession;
 
+    private Typeface tf;
 
 
     public static ReceiveTransactionFragment2 newInstance() {
@@ -94,6 +94,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
 
         setHasOptionsMenu(true);
 
@@ -133,78 +135,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     private void setUp(LayoutInflater inflater) throws CantGetActiveLoginIdentityException {
         //setUpHeader(inflater);
         //setUpDonut(inflater);
-        WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
-    }
-
-    private void setUpDonut(LayoutInflater inflater){
-        RelativeLayout container_header_balance = getActivityHeader();
-        try {
-            container_header_balance.removeAllViews();
-        }catch (Exception e){
-
-        }
-
-        container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
-        container_header_balance.setVisibility(View.VISIBLE);
-
-        View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
-
-
-        CircularProgressBar circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
-
-        circularProgressBar.setProgressValue(20);
-        circularProgressBar.setProgressValue2(28);
-        circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
-        circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
-        circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
-
-
-        txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
-        //txt_type_balance.setTypeface(tf);
-
-        //((TextView) balance_header.findViewById(R.id.txt_touch_to_change)).setTypeface(tf);
-
-        TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_balance_amount_type);
-
-        txt_type_balance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
-                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
-                changeBalanceType(txt_type_balance, txt_balance_amount);
-            }
-        });
-
-
-        txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
-
-        txt_balance_amount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
-                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
-                changeAmountType(txt_balance_amount);
-            }
-        });
-        txt_amount_type.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
-                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
-                changeAmountType(txt_balance_amount);
-            }
-        });
-
-        txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
-        //txt_balance_amount.setTypeface(tf);
-
-//        try {
-//            //long balance = cryptoWallet.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-//            //txt_balance_amount.setText(formatBalanceString(balance, referenceWalletSession.getTypeAmount()));
-//        } catch (CantGetBalanceException e) {
-//            e.printStackTrace();
-//        }
-
+        //WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
     }
 
 
@@ -215,7 +146,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         menu.clear();
 
-        inflater.inflate(R.menu.home_menu, menu);
+        menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
@@ -224,20 +156,19 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
             int id = item.getItemId();
 
-            CharSequence itemTitle = item.getTitle();
+            if (id == BitcoinWalletConstants.IC_ACTION_SEND) {
+                    referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, Boolean.TRUE);
+                    changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
+                    return true;
+                }
 
-            if(item.getItemId() ==  R.id.actionbar_send){;
-                referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS,Boolean.TRUE);
-                changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
-                return true;
+            }catch(Exception e){
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                makeText(getActivity(), "Oooops! recovering from system error",
+                        Toast.LENGTH_SHORT).show();
             }
-
-        } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
-    }
 
 
     @Override

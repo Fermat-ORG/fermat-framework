@@ -1339,9 +1339,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS.getKey(), runtimeFragment);
 
         runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#1189a5");
+        runtimeTabStrip.setTabsColor("#1278a6");
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
-        runtimeTabStrip.setTabsIndicateColor("#03A9F4");
+        runtimeTabStrip.setTabsIndicateColor("#3ec8e8");
         runtimeTabStrip.setDividerColor(0x72af9c);
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
@@ -1984,10 +1984,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Balance");
-
+        runtimeActivity.setHeader(runtimeHeader);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("bitDubai bitcoin Wallet");
+        runtimeTitleBar.setLabel("Bitcoin wallet");
         runtimeTitleBar.setLabelSize(16);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -1999,6 +1999,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeStatusBar.setColor("#12aca1");
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
+
+
+
+
 
 
         runtimeTabStrip = new TabStrip();

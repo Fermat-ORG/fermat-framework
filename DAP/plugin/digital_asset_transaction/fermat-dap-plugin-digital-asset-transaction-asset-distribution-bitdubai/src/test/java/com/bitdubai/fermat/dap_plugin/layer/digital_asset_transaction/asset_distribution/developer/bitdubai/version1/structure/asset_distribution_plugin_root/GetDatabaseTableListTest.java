@@ -21,7 +21,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -29,6 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -48,7 +48,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GetDatabaseTableListTest {
-    private AssetDistributionPluginRoot assetDistributionPluginRoot;
+    private AssetDistributionDigitalAssetTransactionPluginRoot assetDistributionDigitalAssetTransactionPluginRoot;
     private UUID pluginId;
 
     @Mock
@@ -123,19 +123,19 @@ public class GetDatabaseTableListTest {
 
         pluginId = UUID.randomUUID();
 
-        assetDistributionPluginRoot = new AssetDistributionPluginRoot();
-        assetDistributionPluginRoot.setId(pluginId);
-        assetDistributionPluginRoot.setErrorManager(errorManager);
-        assetDistributionPluginRoot.setLogManager(logManager);
-        assetDistributionPluginRoot.setEventManager(eventManager);
-        assetDistributionPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
-        assetDistributionPluginRoot.setPluginFileSystem(pluginFileSystem);
-        assetDistributionPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
-        assetDistributionPluginRoot.setAssetVaultManager(assetVaultManager);
-        assetDistributionPluginRoot.setDeviceUserManager(deviceUserManager);
-        assetDistributionPluginRoot.setBitcoinNetworkManager(bitcoinNetworkManager);
-        assetDistributionPluginRoot.setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
-        assetDistributionPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
+        assetDistributionDigitalAssetTransactionPluginRoot = new AssetDistributionDigitalAssetTransactionPluginRoot();
+        assetDistributionDigitalAssetTransactionPluginRoot.setId(pluginId);
+        assetDistributionDigitalAssetTransactionPluginRoot.setErrorManager(errorManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setLogManager(logManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setEventManager(eventManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
+        assetDistributionDigitalAssetTransactionPluginRoot.setPluginFileSystem(pluginFileSystem);
+        assetDistributionDigitalAssetTransactionPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setAssetVaultManager(assetVaultManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setDeviceUserManager(deviceUserManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setBitcoinNetworkManager(bitcoinNetworkManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
         setUpMockitoRules();
     }
 
@@ -155,10 +155,10 @@ public class GetDatabaseTableListTest {
 
     @Test
     public void getDatabaseTableListSuccesTest () throws CantStartPluginException {
-        System.out.println("Test AssetDistributionPluginRoot.getDatabaseTableList()");
-        assetDistributionPluginRoot.start();
-        List<DeveloperDatabaseTable> list = assetDistributionPluginRoot.getDatabaseTableList(developerObjectFactory, developerDatabase);
-        assertThat(list).isNotNull();
-        assertThat(list).isNotEmpty();
+        System.out.println("Test AssetDistributionDigitalAssetTransactionPluginRoot.getDatabaseTableList()");
+        assetDistributionDigitalAssetTransactionPluginRoot.start();
+        List<DeveloperDatabaseTable> list = assetDistributionDigitalAssetTransactionPluginRoot.getDatabaseTableList(developerObjectFactory, developerDatabase);
+        Assert.assertNotNull(list);
+        Assert.assertTrue(!list.isEmpty());
     }
 }

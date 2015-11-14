@@ -1,7 +1,7 @@
 package com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.events;
 
 
-import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.IssuerRedemptionPluginRoot;
+import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.IssuerRedemptionDigitalAssetTransactionPluginRoot;
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.exceptions.CantCheckAssetIssuerRedemptionProgressException;
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDao;
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDatabaseConstants;
@@ -176,7 +176,7 @@ public class IssuerRedemptionMonitorAgent implements Agent,DealsWithLogger,Deals
         public void run() {
 
             threadWorking=true;
-            logManager.log(IssuerRedemptionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuing Transaction Protocol Notification Agent: running...", null, null);
+            logManager.log(IssuerRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuing Transaction Protocol Notification Agent: running...", null, null);
             while(threadWorking){
                 /**
                  * Increase the iteration counter
@@ -193,7 +193,7 @@ public class IssuerRedemptionMonitorAgent implements Agent,DealsWithLogger,Deals
                  */
                 try {
 
-                    logManager.log(IssuerRedemptionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(IssuerRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CantDeliverDigitalAssetToAssetWalletException | CantCheckAssetIssuerRedemptionProgressException | CantExecuteQueryException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -239,7 +239,7 @@ public class IssuerRedemptionMonitorAgent implements Agent,DealsWithLogger,Deals
                 throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Exception in OutgoingIntraActor plugin");
             } catch (UnexpectedResultReturnedFromDatabaseException exception) {
                 throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Unexpected result in database query");
-            } catch (CantGetGenesisTransactionException exception){
+            } catch (CantGetCryptoTransactionException exception){
                 throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Cannot get genesis transaction from asset vault");
             } catch (CantDeleteDigitalAssetFromLocalStorageException exception) {
                 this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);

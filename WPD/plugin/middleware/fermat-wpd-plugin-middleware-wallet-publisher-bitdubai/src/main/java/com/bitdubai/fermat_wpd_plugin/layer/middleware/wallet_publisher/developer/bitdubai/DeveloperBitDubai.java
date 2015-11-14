@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_publisher.developer.bitdubai;
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.WalletPublisherMiddlewarePluginRoot;
@@ -16,17 +19,22 @@ import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_publisher.develope
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
-    Plugin plugin;
-
-    @Override
-    public Plugin getPlugin() {
-        return plugin;
+    public DeveloperBitDubai () {
+        super(new PluginDeveloperReference(Developers.BITDUBAI));
     }
 
-    public DeveloperBitDubai() {
-        plugin = new WalletPublisherMiddlewarePluginRoot();
+    @Override
+    public void start() throws CantStartPluginDeveloperException {
+        try {
+
+            this.registerVersion(new WalletPublisherMiddlewarePluginRoot());
+
+        } catch (CantRegisterVersionException e) {
+
+            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+        }
     }
 
     @Override

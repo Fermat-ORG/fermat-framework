@@ -23,25 +23,23 @@
     <application
         android:name="com.bitdubai.android_core.app.ApplicationSession"
         android:allowBackup="true"
-        android:largeHeap="true">
-
-
-        <!-- Google Maps Fragment API Key Data -->
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDr98sVKnkeB-C26gU3Yu0HHpoVHETwdKo" />
+        android:largeHeap="true"
+        android:icon="@drawable/ic_launcher"
+        >
 
 
         <activity
             android:name="com.bitdubai.android_core.app.StartActivity"
-            android:icon="@drawable/fermat"
+            android:icon="@drawable/ic_launcher"
             android:label="Fermat"
-            android:theme="@style/CustomActionBarTheme">
+            android:theme="@style/AppTheme.NoActionBarStart">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <!--
@@ -61,6 +59,7 @@
 
         <activity
             android:name="com.bitdubai.android_core.app.SubAppActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="Fermat">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -75,11 +74,20 @@
         </activity>
         <activity
             android:name="com.bitdubai.android_core.app.WalletActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="Wallet">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.SubAppActivity" />
         </activity>
+
+        <activity
+            android:name="com.bitdubai.android_core.app.common.version_1.test.ScrollingActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
+
+        </activity>
+
 
         <activity
             android:name="com.bitdubai.android_core.app.WizardActivity"
