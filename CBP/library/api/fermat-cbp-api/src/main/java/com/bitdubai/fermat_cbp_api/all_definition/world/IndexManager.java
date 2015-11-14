@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.all_definition.world;
 
-import com.bitdubai.fermat_cbp_api.layer.cbp_world.cbp_fiat_index.exceptions.CantGetIndexException;
+import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 
 import java.util.Collection;
 
