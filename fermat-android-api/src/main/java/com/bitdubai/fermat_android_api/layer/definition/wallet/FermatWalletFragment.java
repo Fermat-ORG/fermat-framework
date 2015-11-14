@@ -3,6 +3,7 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -116,9 +117,14 @@ public class FermatWalletFragment extends Fragment implements FermatFragments {
         getPaintActivtyFeactures().addNavigationViewHeader(view);
     }
 
+    protected Toolbar getToolbar(){
+        return getPaintActivtyFeactures().getToolbar();
+    }
+
     private FermatScreenSwapper getFermatScreenSwapper(){
         return (FermatScreenSwapper) getActivity();
     }
+
 
 }
 
