@@ -1344,7 +1344,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         paymentRecord.getDescription(),
                         paymentRecord.getAmount(),
                         cryptoWalletWalletContact,
-                        PaymentRequest.SEND_PAYMENT,
+                        PaymentRequest.RECEIVE_PAYMENT,
                         paymentRecord.getState().name()
                 );
                 lst.add(cryptoWalletPaymentRequest);
