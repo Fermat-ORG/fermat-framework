@@ -73,6 +73,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
 
             actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers);
+
         } catch (CantGetAssetIssuerActorsException e) {
             // TODO MAKE USER OF ERROR MANAGER
             throw new CantConnectToAssetUserException(CantConnectToAssetUserException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
