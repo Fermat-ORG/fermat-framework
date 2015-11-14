@@ -208,7 +208,8 @@ public abstract class AbstractAddon implements Addon, Service {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(abstractAddon));
 
-                System.out.println("---------->>> Assigned reference: "+avr.toString3());
+                this.addonNeededReferences.remove(avr);
+
             } else {
                 throw new IncompatibleReferenceException(
                         "Working addon: "+this.getAddonVersionReference().toString3()+

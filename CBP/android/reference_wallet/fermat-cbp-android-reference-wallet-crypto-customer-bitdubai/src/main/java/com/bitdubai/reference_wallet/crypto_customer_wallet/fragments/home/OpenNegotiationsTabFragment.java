@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
@@ -131,20 +132,19 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         if (moduleManager != null) {
             try {
                 cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
-
-
+                GrouperItem<CustomerBrokerNegotiationInformation> grouper;
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
                 List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
                 waitingForCustomer.addAll(cryptoCustomerWallet.getNegotiationsWaitingForCustomer(0, 10));
-                GrouperItem<CustomerBrokerNegotiationInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-                data.add(waitingForCustomerGrouper);
+                grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+                data.add(grouper);
 
                 grouperText = getActivity().getString(R.string.waiting_for_broker);
                 List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
                 waitingForBroker.addAll(cryptoCustomerWallet.getNegotiationsWaitingForBroker(0, 10));
-                GrouperItem<CustomerBrokerNegotiationInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-                data.add(waitingForBrokerGrouper);
+                grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
+                data.add(grouper);
 
             } catch (CantGetCryptoCustomerWalletException | CantGetNegotiationsWaitingForBrokerException | CantGetNegotiationsWaitingForCustomerException ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -155,27 +155,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             }
 
         } else {
-            NegotiationInformationTestData child;
-
-            grouperText = getActivity().getString(R.string.waiting_for_you);
-            List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
-            child = new NegotiationInformationTestData("nelsonalfo", "USD", "Crypto Transfer", "BTC", NegotiationStatus.WAITING_FOR_BROKER);
-            waitingForCustomer.add(child);
-            child = new NegotiationInformationTestData("jorgeegonzalez", "BTC", "Cash in Hand", "USD", NegotiationStatus.WAITING_FOR_BROKER);
-            waitingForCustomer.add(child);
-            GrouperItem<CustomerBrokerNegotiationInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-            data.add(waitingForBrokerGrouper);
-
-            grouperText = getActivity().getString(R.string.waiting_for_broker);
-            List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
-            child = new NegotiationInformationTestData("neoperol", "USD", "Cash in Hand", "BsF", NegotiationStatus.WAITING_FOR_BROKER);
-            waitingForCustomer.add(child);
-            child = new NegotiationInformationTestData("Nelson Orlando", "USD", "Bank Transfer", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
-            waitingForBroker.add(child);
-            child = new NegotiationInformationTestData("Customer 5", "BsF", "Cash Delivery", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
-            waitingForBroker.add(child);
-            GrouperItem<CustomerBrokerNegotiationInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-            data.add(waitingForCustomerGrouper);
+            Toast.makeText(getActivity(), "Sorry, an error happened OpenNegotiationsTabFragment (Module == null)", Toast.LENGTH_SHORT).show();
         }
 
         return data;

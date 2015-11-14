@@ -13,12 +13,12 @@ import com.bitdubai.fermat_ccp_core.layer.middleware.MiddlewareLayer;
 import com.bitdubai.fermat_ccp_core.layer.module.ModuleLayer;
 import com.bitdubai.fermat_ccp_core.layer.network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_ccp_core.layer.request.RequestLayer;
-import com.bitdubai.fermat_ccp_core.layer.transaction.TransactionLayer;
+import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.TransactionLayer;
 import com.bitdubai.fermat_ccp_core.layer.wallet_module.WalletModuleLayer;
 
 /**
  * The class <code>com.bitdubai.fermat_ccp_core.CCPPlatform</code>
- * haves all the necessary business logic to start the CCP platform.
+ * contains all the necessary business logic to start the CCP platform.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */

@@ -6,10 +6,8 @@
  */
 package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 
@@ -32,7 +30,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     /**
      * Represent the templateNetworkServicePluginRoot
      */
-    private AssetTransmissionPluginRoot assetTransmissionPluginRoot;
+    private AssetTransmissionNetworkServicePluginRoot assetTransmissionNetworkServicePluginRoot;
 
     /**
      * Represent the communicationsClientConnection
@@ -46,11 +44,11 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * Constructor with parameters
-     * @param assetTransmissionPluginRoot
+     * @param assetTransmissionNetworkServicePluginRoot
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(AssetTransmissionPluginRoot assetTransmissionPluginRoot, CommunicationsClientConnection communicationsClientConnection) {
-        this.assetTransmissionPluginRoot = assetTransmissionPluginRoot;
+    public CommunicationRegistrationProcessNetworkServiceAgent(AssetTransmissionNetworkServicePluginRoot assetTransmissionNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
+        this.assetTransmissionNetworkServicePluginRoot = assetTransmissionNetworkServicePluginRoot;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
     }
@@ -65,39 +63,39 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
         while (active){
             try{
 
-                if (communicationsClientConnection.isRegister() && !assetTransmissionPluginRoot.isRegister()){
+                if (communicationsClientConnection.isRegister() && !assetTransmissionNetworkServicePluginRoot.isRegister()){
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetTransmissionPluginRoot.getIdentityPublicKey(),
-                            assetTransmissionPluginRoot.getAlias().toLowerCase(),
-                            assetTransmissionPluginRoot.getName(),
-                            assetTransmissionPluginRoot.getNetworkServiceType(),
-                            assetTransmissionPluginRoot.getPlatformComponentType(),
-                            assetTransmissionPluginRoot.getExtraData());
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetTransmissionNetworkServicePluginRoot.getIdentityPublicKey(),
+                            assetTransmissionNetworkServicePluginRoot.getAlias().toLowerCase(),
+                            assetTransmissionNetworkServicePluginRoot.getName(),
+                            assetTransmissionNetworkServicePluginRoot.getNetworkServiceType(),
+                            assetTransmissionNetworkServicePluginRoot.getPlatformComponentType(),
+                            assetTransmissionNetworkServicePluginRoot.getExtraData());
 
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.registerComponentForCommunication(assetTransmissionPluginRoot.getNetworkServiceType(), platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(assetTransmissionNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile
                      */
-                    assetTransmissionPluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+                    assetTransmissionNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager
                      */
-                    assetTransmissionPluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                    assetTransmissionNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
                     /*
                      * Stop the agent
                      */
                     active = Boolean.FALSE;
 
-                }else if (!assetTransmissionPluginRoot.isRegister()){
+                }else if (!assetTransmissionNetworkServicePluginRoot.isRegister()){
 
                     try {
                         sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
@@ -106,7 +104,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                         active = Boolean.FALSE;
                     }
 
-                }else if (!assetTransmissionPluginRoot.isRegister()){
+                }else if (!assetTransmissionNetworkServicePluginRoot.isRegister()){
                     active = Boolean.FALSE;
                 }
 

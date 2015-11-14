@@ -1,0 +1,23 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+
+include ':fermat-csh-api'
+project(':fermat-csh-api').projectDir = new File('CSH/library/api/fermat-csh-api')
+
+//Cash Money Transaction
+include ':fermat-csh-plugin-cash-money-transaction-give-cash-on-hand-bitdubai'
+project(':fermat-csh-plugin-cash-money-transaction-give-cash-on-hand-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-give-cash-on-hand-bitdubai')
+include ':fermat-csh-plugin-cash-money-transaction-receive-cash-delivery-bitdubai'
+project(':fermat-csh-plugin-cash-money-transaction-receive-cash-delivery-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-receive-cash-delivery-bitdubai')
+include ':fermat-csh-plugin-cash-money-transaction-receive-cash-on-hand-bitdubai'
+project(':fermat-csh-plugin-cash-money-transaction-receive-cash-on-hand-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-receive-cash-on-hand-bitdubai')
+include ':fermat-csh-plugin-cash-money-transaction-send-cash-delivery-bitdubai'
+project(':fermat-csh-plugin-cash-money-transaction-send-cash-delivery-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-send-cash-delivery-bitdubai')
+
+//Wallet
+include ':fermat-csh-plugin-wallet-cash-money-bitdubai'
+project(':fermat-csh-plugin-wallet-cash-money-bitdubai').projectDir = new File('CSH/plugin/wallet/fermat-csh-plugin-wallet-cash-money-bitdubai')

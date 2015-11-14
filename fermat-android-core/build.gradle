@@ -102,6 +102,7 @@ dependencies {
     // CBP Projects
     compile project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
     compile project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
+    // DAP Projects
     compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')
     compile project(':fermat-dap-android-reference-wallet-asset-user-bitdubai')
     compile project(':fermat-dap-android-reference-wallet-redeem-point-bitdubai')
@@ -109,6 +110,8 @@ dependencies {
     compile project(':fermat-dap-android-sub-app-asset-user-community-bitdubai')
     compile project(':fermat-dap-android-sub-app-asset-issuer-community-bitdubai')
     compile project(':fermat-dap-android-sub-app-redeem-point-community-bitdubai')
+    compile project(':fermat-dap-android-sub-app-asset-issuer-identity-bitdubai')
+    compile project(':fermat-dap-android-sub-app-asset-user-identity-bitdubai')
 //    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //compile 'com.android.support:appcompat-v7:21.0.3'

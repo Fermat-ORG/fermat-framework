@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by nelson on 22/10/15.
  */
 public class CantGetNegotiationsWaitingForBrokerException extends FermatException {
+    public static final String DEFAULT_MESSAGE = "Cant get negotiations waiting for the brokers";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -16,5 +18,14 @@ public class CantGetNegotiationsWaitingForBrokerException extends FermatExceptio
      */
     public CantGetNegotiationsWaitingForBrokerException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
+    }
+
+    /**
+     * Call the constructor CantGetNegotiationsWaitingForBrokerException(DEFAULT_MESSAGE, cause, "", "")
+     *
+     * @param cause the exception that triggered the throwing of the current exception, if there are no other exceptions to be declared here, the cause should be null
+     */
+    public CantGetNegotiationsWaitingForBrokerException(Exception cause) {
+        super(DEFAULT_MESSAGE, cause, "", "");
     }
 }

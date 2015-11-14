@@ -26,17 +26,17 @@ public class ImplementBankMoney implements BankMoney, BankMoneyBalance {
 
     PluginDatabaseSystem databaseSystem;
     BankMoneyWalletDao bankMoneyWalletDao= new BankMoneyWalletDao(databaseSystem);
-    BankMoneyBalance bankMoneyBalance;
-    BankMoney bankMoney;
+
+
 
     @Override
     public BankMoneyBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
-        return bankMoneyWalletDao.getBalanceType(balanceType);
+        return (BankMoneyBalance) bankMoneyWalletDao.getBalanceType(balanceType.BOOK);
     }
 
     @Override
     public BankMoneyBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
-        return bankMoneyWalletDao.getBalanceType(balanceType);
+        return (BankMoneyBalance) bankMoneyWalletDao.getBalanceType(balanceType.AVAILABLE);
     }
 
     @Override

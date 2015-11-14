@@ -72,7 +72,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Configure my new profile
                      */
-                    assetRedemPointActorNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    assetRedemPointActorNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager

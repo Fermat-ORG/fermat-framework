@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The class <code>AbstractPlatform</code>
+ * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform</code>
  * contains all the basic functionality of a Platform class.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
@@ -39,7 +39,7 @@ public abstract class AbstractPlatform {
     }
 
     /**
-     * Throw the method <code>registerLayer</code> you can add new layers to the platform.
+     * Through the method <code>registerLayer</code> you can add new layers to the platform.
      * Here we'll corroborate too that the layer is not added twice.
      *
      * @param abstractLayer  layer instance.
@@ -77,7 +77,7 @@ public abstract class AbstractPlatform {
     }
 
     /**
-     * Throw the method <code>getAddonVersion</code> you can get a addon version instance passing like parameter a version reference instance.
+     * Through the method <code>getAddonVersion</code> you can get a addon version instance passing like parameter a version reference instance.
      *
      * @param addonVersionReference addon version reference data.
      *
@@ -98,7 +98,7 @@ public abstract class AbstractPlatform {
     }
 
     /**
-     * Throw the method <code>getAddonDeveloper</code> you can get a addonDeveloper instance passing like parameter a developer reference instance.
+     * Through the method <code>getAddonDeveloper</code> you can get a addonDeveloper instance passing like parameter a developer reference instance.
      *
      * @param addonDeveloperReference addon developer reference data.
      *
@@ -131,7 +131,7 @@ public abstract class AbstractPlatform {
     }
 
     /**
-     * Throw the method <code>getPluginVersion</code> you can get a plugin version instance passing like parameter a version reference instance.
+     * Through the method <code>getPluginVersion</code> you can get a plugin version instance passing like parameter a version reference instance.
      *
      * @param pluginVersionReference plugin version reference data.
      *
@@ -152,7 +152,7 @@ public abstract class AbstractPlatform {
     }
 
     /**
-     * Throw the method <code>getPluginDeveloper</code> you can get a pluginDeveloper instance passing like parameter a developer reference instance.
+     * Through the method <code>getPluginDeveloper</code> you can get a pluginDeveloper instance passing like parameter a developer reference instance.
      *
      * @param pluginDeveloperReference plugin developer reference data.
      *

@@ -1,7 +1,6 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.asset_distribution_plugin_root;
 
 import com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.mocks.MockDigitalAssetMetadataForTesting;
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -9,16 +8,17 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils.mocks.MockActorAssetUserForTesting;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
@@ -35,11 +35,9 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -47,7 +45,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class DistributeAssetsTest {
-    private AssetDistributionPluginRoot assetDistributionPluginRoot;
+    private AssetDistributionDigitalAssetTransactionPluginRoot assetDistributionDigitalAssetTransactionPluginRoot;
     private UUID pluginId;
 
     @Mock
@@ -83,6 +81,9 @@ public class DistributeAssetsTest {
     private ActorAssetIssuerManager actorAssetIssuerManager;
 
     @Mock
+    private ActorAssetUserManager actorAssetUserManager;
+
+    @Mock
     private BitcoinNetworkManager bitcoinNetworkManager;
 
     @Mock
@@ -104,25 +105,27 @@ public class DistributeAssetsTest {
     private DatabaseTableRecord mockDatabaseTableRecord = Mockito.mock(DatabaseTableRecord.class);
     private Database mockDatabase = Mockito.mock(Database.class);
     private HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute;
-
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     @Before
     public void setUp() throws Exception {
 
         pluginId = UUID.randomUUID();
-
-        assetDistributionPluginRoot = new AssetDistributionPluginRoot();
-        assetDistributionPluginRoot.setId(pluginId);
-        assetDistributionPluginRoot.setErrorManager(errorManager);
-        assetDistributionPluginRoot.setLogManager(logManager);
-        assetDistributionPluginRoot.setEventManager(eventManager);
-        assetDistributionPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
-        assetDistributionPluginRoot.setPluginFileSystem(pluginFileSystem);
-        assetDistributionPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
-        assetDistributionPluginRoot.setAssetVaultManager(assetVaultManager);
-        assetDistributionPluginRoot.setDeviceUserManager(deviceUserManager);
-        assetDistributionPluginRoot.setBitcoinNetworkManager(bitcoinNetworkManager);
-        assetDistributionPluginRoot.setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
-        assetDistributionPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
+        assetDistributionDigitalAssetTransactionPluginRoot = Mockito.mock(AssetDistributionDigitalAssetTransactionPluginRoot.class);
+        assetDistributionDigitalAssetTransactionPluginRoot = new AssetDistributionDigitalAssetTransactionPluginRoot();
+        assetDistributionDigitalAssetTransactionPluginRoot.setId(pluginId);
+        assetDistributionDigitalAssetTransactionPluginRoot.setErrorManager(errorManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setLogManager(logManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setEventManager(eventManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
+        assetDistributionDigitalAssetTransactionPluginRoot.setPluginFileSystem(pluginFileSystem);
+        assetDistributionDigitalAssetTransactionPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setAssetVaultManager(assetVaultManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setDeviceUserManager(deviceUserManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setBitcoinNetworkManager(bitcoinNetworkManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setActorAssetUserManager(actorAssetUserManager);
+        assetDistributionDigitalAssetTransactionPluginRoot.setLoggingLevelPerClass(newLoggingLevel);
 
         MockDigitalAssetMetadataForTesting mockDigitalAssetMetadata = new MockDigitalAssetMetadataForTesting();
         ActorAssetUser actorAssetUser = new MockActorAssetUserForTesting();
@@ -148,22 +151,21 @@ public class DistributeAssetsTest {
     @Test
     public void distributeAssetsTest() throws Exception {
         System.out.println("Test method distributeAssetsTest()");
-        assetDistributionPluginRoot.start();
-        catchException(assetDistributionPluginRoot).distributeAssets(digitalAssetsToDistribute, "ASDS-16988807");
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNull();
+        assetDistributionDigitalAssetTransactionPluginRoot.start();
+        assetDistributionDigitalAssetTransactionPluginRoot.distributeAssets(digitalAssetsToDistribute, "ASDS-16988807");
     }
 
     /*@Test
-    public void distributeAssetsThrowsCantDistributeDigitalAssetsExceptionTest() throws CantDistributeDigitalAssetsException, CantStartPluginException {
+    public void distributeAssetsThrowsCantDistributeDigitalAssetsExceptionTest() throws CantDistributeDigitalAssetsException, CantStartPluginException, CantStartPluginException {
         System.out.println("Test method distributeAssetsDigitalAssetsToDistributeNullTest()");
-        assetDistributionPluginRoot.start();
-        catchException(assetDistributionPluginRoot).distributeAssets(null, null);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantDistributeDigitalAssetsException.class);
+        assetDistributionDigitalAssetTransactionPluginRoot.start();
+
+        try {
+            assetDistributionDigitalAssetTransactionPluginRoot.distributeAssets(null, null);
+            fail("The method didn't throw when I expected it to");
+        }catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantDistributeDigitalAssetsException);
+        }
     }*/
 
 }

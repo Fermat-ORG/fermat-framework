@@ -12,7 +12,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantC
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.AssetActorIssuerPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantAddPendingAssetIssuerException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerActorDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -39,7 +39,7 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
     UUID pluginId;
     String userPublicKey;
     AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
-    AssetActorIssuerPluginRoot assetActorIssuerPluginRoot;
+    AssetIssuerActorPluginRoot assetActorIssuerPluginRoot;
 
     public ActorAssetIssuerMonitorAgent(EventManager eventManager,
                                         PluginDatabaseSystem pluginDatabaseSystem,
@@ -47,7 +47,7 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
                                         UUID pluginId,
                                         AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager,
                                         AssetIssuerActorDao assetIssuerActorDao,
-                                        AssetActorIssuerPluginRoot assetActorIssuerPluginRoot) {
+                                        AssetIssuerActorPluginRoot assetActorIssuerPluginRoot) {
 
         this.pluginId = pluginId;
         this.eventManager = eventManager;
