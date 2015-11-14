@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">fermat-dap-android-sub-app-redeem-point-identity-bitdubai</string>
+    <string name="app_name">Intra User Identity</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_settings">Settings</string>
+    <string name="create">CREATE</string>
+    <string name="broker_name">Broker name</string>
+    <string name="identity_img">identity_image</string>
 </resources>

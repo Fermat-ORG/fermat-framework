@@ -138,6 +138,10 @@ public enum Activities {
     // DAP USER IDENTITY
     DAP_SUB_APP_ASSET_USER_IDENTITY("DAPSAAUI"),
     DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY("DAPSAAUICI"),
+    // DAP REDEEM POINT IDENTITY
+    DAP_SUB_APP_REDEEM_POINT_IDENTITY("DAPSARPI"),
+    DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY("DAPSARPICI"),
+    // end of dap identities
     DEVELOP_MODE("develop_mode"),
 
 
@@ -156,6 +160,10 @@ public enum Activities {
         //    }
         //}
         switch (code) {
+            case "DAPSARPI":
+                return Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY;
+            case "DAPSARPICI":
+                return Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY;
             case "DAPSAAUI":
                 return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY;
             case "DAPSAAUICI":
