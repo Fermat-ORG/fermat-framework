@@ -30,6 +30,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
@@ -42,6 +44,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.Receiv
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapterNew;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
@@ -82,9 +85,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private int book_offset=0;
 
     ReferenceWalletSession referenceWalletSession;
-
-
-
+    private long bookBalance;
 
 
     public static SendTransactionFragment2 newInstance() {
@@ -408,24 +409,26 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     private long loadBalance(BalanceType balanceType){
         long balance = 0;
-//        try {
-//            balance = cryptoWallet.getBalance(balanceType,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-//        } catch (CantGetBalanceException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            balance = referenceWalletSession.getCryptoWalletManager().getCryptoWallet().getBalance(balanceType, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+        } catch (CantGetBalanceException e) {
+            e.printStackTrace();
+        } catch (CantGetCryptoWalletException e) {
+            e.printStackTrace();
+        }
         return balance;
     }
 
 
     private void updateBalances(){
-        //bookBalance = loadBalance(BalanceType.BOOK);
+        bookBalance = loadBalance(BalanceType.BOOK);
         balanceAvailable = loadBalance(BalanceType.AVAILABLE);
-//        txt_balance_amount.setText(
-//                WalletUtils.formatBalanceString(
-//                        (referenceWalletSession.getBalanceTypeSelected() == BalanceType.AVAILABLE.getCode())
-//                                ? balanceAvailable : bookBalance,
-//                        referenceWalletSession.getTypeAmount())
-//        );
+        txt_balance_amount.setText(
+                WalletUtils.formatBalanceString(
+                        (referenceWalletSession.getBalanceTypeSelected() == BalanceType.AVAILABLE.getCode())
+                                ? balanceAvailable : bookBalance,
+                        referenceWalletSession.getTypeAmount())
+        );
     }
 
 
