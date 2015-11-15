@@ -157,7 +157,7 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
         }
     }
 
-    public boolean  hasIntraUserIdentity() throws CantListAssetRedeemPointException{
+    public boolean  hasRedeemPointIdentity() throws CantListAssetRedeemPointException{
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();

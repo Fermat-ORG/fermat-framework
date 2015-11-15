@@ -159,7 +159,7 @@ public class ReedemPointIdentityPluginRoot extends AbstractPlugin implements
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empty list
         return new ArrayList<>();
@@ -177,8 +177,8 @@ public class ReedemPointIdentityPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public boolean hasAssetUserIdentity() throws CantListAssetRedeemPointException {
-        return identityAssetRedeemPointManager.hasIntraUserIdentity();
+    public boolean hasRedeemPointIdentity() throws CantListAssetRedeemPointException {
+        return identityAssetRedeemPointManager.hasRedeemPointIdentity();
     }
 
     public void registerIdentities()  throws CantListAssetRedeemPointIdentitiesException {
