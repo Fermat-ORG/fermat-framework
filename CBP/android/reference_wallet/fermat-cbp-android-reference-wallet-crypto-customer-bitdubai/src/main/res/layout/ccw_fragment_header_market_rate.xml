@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="46dp">
+              android:layout_height="46dp"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,21 +16,25 @@
         android:paddingStart="16dp"
         android:paddingTop="15dp">
 
-        <TextView
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccw_sell_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/market_rate_container"
             android:textColor="@color/withe"
             tools:text="Buy: Bs 800,00"/>
 
         <LinearLayout
+            android:id="@+id/market_rate_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:orientation="vertical">
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/ccw_currencies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -39,7 +43,7 @@
                 android:textColor="@color/withe"
                 tools:text="BTC / USD"/>
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -48,13 +52,16 @@
                 android:textSize="@dimen/ccw_market_exchange_rate_text_size"/>
         </LinearLayout>
 
-        <TextView
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccw_buy_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/market_rate_container"
+            android:layout_toRightOf="@+id/market_rate_container"
+            android:gravity="right"
             android:textColor="@color/withe"
             tools:text="Buy: Bs 840,25"/>
     </RelativeLayout>
