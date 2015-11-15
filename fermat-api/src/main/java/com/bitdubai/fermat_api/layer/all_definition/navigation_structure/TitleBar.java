@@ -117,7 +117,7 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
         this.toggleIcon = toggleIcon;
     }
 
-    public byte[] getToggleIcon() {
+    public byte[] getNavigationIcon() {
         return toggleIcon;
     }
 }

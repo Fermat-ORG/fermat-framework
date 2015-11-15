@@ -70,12 +70,18 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
 
+            setUpScreen();
+
         } catch (Exception e)
         {
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
+
+    }
+
+    private void setUpScreen() {
 
     }
 

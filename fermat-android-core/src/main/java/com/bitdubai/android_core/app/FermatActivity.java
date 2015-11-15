@@ -382,6 +382,12 @@ public abstract class FermatActivity extends AppCompatActivity
                 }
             }else{
                 mToolbar.setNavigationIcon(R.drawable.ic_action_back);
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onBackPressed();
+                    }
+                });
             }
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.UNSTABLE,e);
@@ -477,10 +483,12 @@ public abstract class FermatActivity extends AppCompatActivity
         if (titleBar.getIconName() != null) {
             mToolbar.setLogo(R.drawable.world);
         }
-        if(titleBar.getToggleIcon().length > 0){
-            Bitmap bitmap = BitmapFactory.decodeByteArray(titleBar.getToggleIcon(),0,titleBar.getToggleIcon().length);
-            mToolbar.setNavigationIcon(new BitmapDrawable(getResources(), bitmap));
-        }
+        byte[] toolbarIcon = titleBar.getNavigationIcon();
+        if(toolbarIcon!=null)
+                if(toolbarIcon.length > 0){
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(titleBar.getNavigationIcon(),0,titleBar.getNavigationIcon().length);
+                    mToolbar.setNavigationIcon(new BitmapDrawable(getResources(), bitmap));
+                }
 
     }
 
