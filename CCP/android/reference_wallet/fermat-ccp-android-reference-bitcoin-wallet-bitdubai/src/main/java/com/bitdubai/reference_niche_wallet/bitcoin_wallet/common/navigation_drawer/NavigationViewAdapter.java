@@ -109,10 +109,10 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
                     break;
                 case 0:
                     if(intraUserLoginIdentity.getProfileImage()!=null) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length);
-                        holder.getIcon().setImageBitmap(bitmap);
+                        //Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length);
+                        //holder.getIcon().setImageBitmap(bitmap);
                     }else{
-                        Picasso.with(context).load(R.drawable.profile_image2).into(holder.getIcon());
+                        //Picasso.with(context).load(R.drawable.profile_image2).into(holder.getIcon());
                     }
 
                     break;

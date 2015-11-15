@@ -33,6 +33,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +42,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -1333,9 +1335,15 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     public void addNavigationViewHeader(View view){
         try {
-            navigationView.addHeaderView(view);
+            //navigationView.addHeaderView(view);
+            FrameLayout frameLayout = (FrameLayout) findViewById(R.id.navigation_view_header);
+            frameLayout.setVisibility(View.VISIBLE);
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.gravity= Gravity.CENTER_VERTICAL;
+            view.setLayoutParams(layoutParams);
+            frameLayout.addView(view);
             navigationView.invalidate();
-            navigationView.postInvalidate();
+            //navigationView.postInvalidate();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1444,6 +1452,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
     }
 
+    @Override
     public Toolbar getToolbar(){
         return mToolbar;
     }
