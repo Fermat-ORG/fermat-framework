@@ -13,8 +13,10 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.se
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.session.UserIdentitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.session.RedeemPointIdentitySubAppSession;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
@@ -97,6 +99,10 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                 UserIdentitySubAppSession userIdentitySession = new UserIdentitySubAppSession(subApps, errorManager, (IdentityAssetUserManager) moduleManager);
                 lstSubAppSession.put(subApps, userIdentitySession);
                 return userIdentitySession;
+            case DAP_REDEEM_POINT_IDENTITY:
+                RedeemPointIdentitySubAppSession redeemPointSession = new RedeemPointIdentitySubAppSession(subApps, errorManager, (RedeemPointIdentityManager) moduleManager);
+                lstSubAppSession.put(subApps, redeemPointSession);
+                return redeemPointSession;
             case CCP_INTRA_USER_COMMUNITY:
                 IntraUserSubAppSession intraUserSubAppSession = new IntraUserSubAppSession(subApps, errorManager, (IntraUserModuleManager) moduleManager);
                 lstSubAppSession.put(subApps, intraUserSubAppSession);

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_ccp_core.layer.middleware.MiddlewareLayer;
 import com.bitdubai.fermat_ccp_core.layer.module.ModuleLayer;
 import com.bitdubai.fermat_ccp_core.layer.network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_ccp_core.layer.request.RequestLayer;
-import com.bitdubai.fermat_ccp_core.layer.transaction.TransactionLayer;
+import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.TransactionLayer;
 import com.bitdubai.fermat_ccp_core.layer.wallet_module.WalletModuleLayer;
 
 /**

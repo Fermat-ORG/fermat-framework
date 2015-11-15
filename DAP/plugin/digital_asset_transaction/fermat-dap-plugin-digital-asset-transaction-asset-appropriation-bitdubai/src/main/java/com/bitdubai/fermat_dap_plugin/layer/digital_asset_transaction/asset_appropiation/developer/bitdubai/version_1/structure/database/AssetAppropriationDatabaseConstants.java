@@ -34,6 +34,7 @@ public class AssetAppropriationDatabaseConstants {
     public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME = "status";
     public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME = "da_public_key"; //The path to the file where the Digital Asset is stored.
     public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME = "user_wallet";
+    public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME = "btc_wallet";
     public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME = "addressto";
     public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_CURRENCY_TO_COLUMN_NAME = "currencyto";
     public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME = "start_time";

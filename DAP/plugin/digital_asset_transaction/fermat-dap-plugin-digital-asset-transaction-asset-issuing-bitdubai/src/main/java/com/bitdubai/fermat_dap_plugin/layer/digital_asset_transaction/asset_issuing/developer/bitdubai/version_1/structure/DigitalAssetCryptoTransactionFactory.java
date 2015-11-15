@@ -22,12 +22,18 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
@@ -81,12 +87,15 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     int assetsAmount;
     private AssetIssuingTransactionDao assetIssuingTransactionDao;
+    ActorAssetIssuerManager actorAssetIssuerManager;
     AssetVaultManager assetVaultManager;
     BitcoinWalletBalance bitcoinWalletBalance;
     BlockchainNetworkType blockchainNetworkType;
     CryptoVaultManager cryptoVaultManager;
     BitcoinWalletManager bitcoinWalletManager;
     CryptoAddressBookManager cryptoAddressBookManager;
+    IntraWalletUserActorManager intraWalletUserActorManager;
+    IntraWalletUserIdentityManager intraWalletUserIdentityManager;
     String digitalAssetFileName;
     String digitalAssetFileStoragePath;
     String digitalAssetLocalFilePath;
@@ -99,7 +108,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
     String walletPublicKey;
-    String actorToPublicKey;
+    String actorAssetIssuerPublicKey;
+    String intraActorPublicKey;
     //This flag must be used to select the way to send bitcoins from this plugin
     boolean SEND_BTC_FROM_CRYPTO_VAULT =false;
     long genesisAmount=100000;
@@ -170,16 +180,66 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     }
 
     public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
-        try {
-            this.actorToPublicKey=actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
-            if(this.actorToPublicKey==null){
-                this.actorToPublicKey="actorPublicKeyNotFound";
-            }
-            System.out.println("ASSET ISSUING Actor Asset Issuer public key "+actorToPublicKey);
-        } catch (CantGetAssetIssuerActorsException exception) {
-            throw new CantSetObjectException(exception, "Setting the actor asset issuer manager","Cannot get the actor asset issuer manager");
-        }
 
+        if (actorAssetIssuerManager == null) {
+            throw new CantSetObjectException("actorAssetIssuerManager is null");
+        }
+        this.actorAssetIssuerManager=actorAssetIssuerManager;
+    }
+
+    public void setIntraWalletUserActorManager(IntraWalletUserActorManager intraWalletUserActorManager) throws CantSetObjectException {
+
+        if (intraWalletUserActorManager == null) {
+            throw new CantSetObjectException("intraWalletUserActorManager is null");
+        }
+        this.intraWalletUserActorManager=intraWalletUserActorManager;
+    }
+
+    public void setIntraWalletUserIdentityManager(IntraWalletUserIdentityManager intraWalletUserIdentityManager) throws CantSetObjectException {
+
+        if (intraWalletUserIdentityManager == null) {
+            throw new CantSetObjectException("intraWalletUserIdentityManager is null");
+        }
+        this.intraWalletUserIdentityManager=intraWalletUserIdentityManager;
+    }
+
+    private void getActorAssetIssuerPublicKey() throws ObjectNotSetException, CantGetAssetIssuerActorsException {
+        if (actorAssetIssuerManager.getActorAssetIssuer() == null) {
+            throw new ObjectNotSetException("ActorAssetIssuer is null");
+        }
+        try {
+            this.actorAssetIssuerPublicKey = actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
+            if (this.actorAssetIssuerPublicKey == null) {
+                this.actorAssetIssuerPublicKey = "actorPublicKeyNotFound";
+            }
+            System.out.println("ASSET ISSUING Actor Asset Issuer public key " + actorAssetIssuerPublicKey);
+        } catch (CantGetAssetIssuerActorsException exception) {
+            throw new ObjectNotSetException(exception, "Setting the actor asset issuer manager", "Cannot get the actor asset issuer manager");
+        }
+    }
+
+    private void getIntraWalletActorUserPublicKey() throws ObjectNotSetException, CantGetAssetIssuerActorsException, CantGetIntraWalletUsersException {
+        try {
+            if(!this.intraWalletUserIdentityManager.hasIntraUserIdentity()){
+                throw new ObjectNotSetException("intraWalletUserIdentityManager does not have Intra User Identity");
+            }
+            List<IntraWalletUserIdentity> intraWalletUserIdentityList= this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+            if(intraWalletUserIdentityList.isEmpty()){
+                throw new ObjectNotSetException("intraWalletUserIdentityManager does not have Intra User Identity");
+            }
+            String intraWalletUserIdentityPublicKey;
+            for(IntraWalletUserIdentity intraWalletUserIdentity : intraWalletUserIdentityList){
+                intraWalletUserIdentityPublicKey=intraWalletUserIdentity.getPublicKey();
+                List<IntraWalletUserActor> intraWalletUserActorList=intraWalletUserActorManager.getConnectedIntraWalletUsers(intraWalletUserIdentityPublicKey);
+                if(intraWalletUserActorList.isEmpty()){
+                    throw new CantGetIntraWalletUsersException(CantGetIntraWalletUsersException.DEFAULT_MESSAGE,null,"Getting Intra Actor public key","intraWalletUserActorManager does not have an actor registered");
+                }
+                this.intraActorPublicKey=intraWalletUserActorList.get(0).getPublicKey();
+                return;
+            }
+        } catch (CantListIntraWalletUsersException exception) {
+            throw new ObjectNotSetException(exception, "Getting IntraActor Public Key","intraWalletUserIdentityManager does not have Intra User Identity");
+        }
     }
 
     /**
@@ -377,6 +437,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         int counter=0;
         //Check if digital asset is complete
         try {
+
+            getActorAssetIssuerPublicKey();
+            getIntraWalletActorUserPublicKey();
             setBlockchainNetworkType(blockchainNetworkType);
             setWalletPublicKey(walletPublicKey);
             this.digitalAssetIssuingVault.setWalletPublicKey(walletPublicKey);
@@ -448,6 +511,12 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         } catch (CantCheckAssetIssuingProgressException exception) {
             //ALREADY UPDATED STATUS IN THE ROOT OF THIS EXCEPTION.
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets - Asset number "+counter,"Cannot check the asset issuing progress");
+        } catch (CantGetAssetIssuerActorsException exception) {
+            this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.ACTOR_ISSUER_NULL);
+            throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets","The Actor Issuer is null");
+        } catch (CantGetIntraWalletUsersException exception) {
+            this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.INTRA_ACTOR_NULL);
+            throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets","The Actor Issuer is null");
         }
     }
 
@@ -497,73 +566,90 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         }
     }
 
+    private void readDigitalAssetFile(String transactionId) throws Exception {
+        //Es necesario leer el archivo para recobrar dicha transacción
+        String digitalAssetPublicKey=this.assetIssuingTransactionDao.getDigitalAssetPublicKeyById(transactionId);
+        setDigitalAssetLocalFilePath(digitalAssetPublicKey);
+        //Leemos el archivo que contiene el digitalAsset
+        getDigitalAssetFileFromLocalStorage();
+    }
+
+    private void formingGenesis(String transactionId) throws Exception {
+        //FORMING_GENESIS: genesisAddress solicitada pero no presistida en base de datos, Asset persistido en archivo
+        readDigitalAssetFile(transactionId);
+
+        //Obtenemos la digital address y la persisitimos en base de datos
+        getDigitalAssetGenesisAddressByUUID(transactionId);
+
+        issueUnfinishedDigitalAsset(transactionId);
+    }
+
+    private DigitalAssetMetadata getDigitalAssetMetadataFromGenesisAddress(String transactionId, CryptoAddress cryptoAssetGenesisAddress) throws Exception {
+        String digitalAssetGenesisAddress=this.assetIssuingTransactionDao.getDigitalAssetGenesisAddressById(transactionId);
+        cryptoAssetGenesisAddress.setAddress(digitalAssetGenesisAddress);
+        setDigitalAssetGenesisAddress(transactionId, cryptoAssetGenesisAddress);
+        DigitalAssetMetadata digitalAssetMetadata=new DigitalAssetMetadata(this.digitalAsset);
+        return digitalAssetMetadata;
+    }
+
+    private void genesisObtainedOrSettled(String transactionId) throws Exception {
+        readDigitalAssetFile(transactionId);
+        CryptoAddress cryptoAssetGenesisAddress=new CryptoAddress();
+        DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromGenesisAddress(transactionId, cryptoAssetGenesisAddress);
+
+        String digitalAssetHash=getDigitalAssetHash(digitalAssetMetadata, transactionId);
+        sendBitcoins(cryptoAssetGenesisAddress, digitalAssetHash, transactionId);
+
+        issueUnfinishedDigitalAsset(transactionId);
+    }
+
+    private void sendingCrypto(String transactionId) throws Exception {
+        readDigitalAssetFile(transactionId);
+        CryptoAddress cryptoAssetGenesisAddress=new CryptoAddress();
+        DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromGenesisAddress(transactionId, cryptoAssetGenesisAddress);
+
+        String digitalAssetHashFromDatabase=this.assetIssuingTransactionDao.getDigitalAssetHashById(transactionId);
+        String digitalAssetHash=digitalAssetMetadata.getDigitalAssetHash();
+        if(!digitalAssetHash.equals(digitalAssetHashFromDatabase)){
+            this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.ISSUED_FAILED);
+            throw new CantIssueDigitalAssetException("The hash recorded in database for this DigitalAsset "+transactionId+" is not equal to the generated:\n" +
+                    "Hash from database: "+digitalAssetHashFromDatabase+"\n" +
+                    "hash from DigitalAssetMetadada: "+digitalAssetHash);
+        }
+        String genesisTransaction=this.assetIssuingTransactionDao.getDigitalAssetGenesisTransactionById(transactionId);
+        digitalAssetMetadata=setDigitalAssetGenesisTransaction(transactionId, genesisTransaction, digitalAssetMetadata);
+        //We kept the DigitalAssetMetadata in DAMVault
+        saveDigitalAssetMetadataInVault(digitalAssetMetadata, transactionId);
+    }
+
     /**
      * This is a test method, this process is changing.
      * @param transactionId
      */
-    private void issueUnfinishedDigitalAsset(String transactionId){
+    private void issueUnfinishedDigitalAsset(String transactionId) {
         /***
          *Este método debe verificar el estatus de cada Asset y proceder de acuerdo a cada uno de ellos.
          * El objetivo es finalizar los digital assets, ya persistidos en base de datos, pero sin emitir.
          */
-        //TODO: to improve
-        String digitalAssetPublicKey;
         try {
             TransactionStatus digitalAssetTransactionStatus=this.assetIssuingTransactionDao.getDigitalAssetTransactionStatus(transactionId);
             //Caso Forming_genesis
             if(digitalAssetTransactionStatus==TransactionStatus.FORMING_GENESIS){
-                //FORMING_GENESIS: genesisAddress solicitada pero no presistida en base de datos, Asset persistido en archivo
-                //Es necesario leer el archivo para recobrar dicha transacción
-                digitalAssetPublicKey=this.assetIssuingTransactionDao.getDigitalAssetPublicKeyById(transactionId);
-                setDigitalAssetLocalFilePath(digitalAssetPublicKey);
-                //Leemos el archivo que contiene el digitalAsset
-                getDigitalAssetFileFromLocalStorage();
-                //Obtenemos la digital address y la persisitimos en base de datos
-                getDigitalAssetGenesisAddressByUUID(transactionId);
-                issueUnfinishedDigitalAsset(transactionId);
-            }
-            //Caso Genesis_obtained o Genesis_settled
-            if(digitalAssetTransactionStatus==TransactionStatus.GENESIS_OBTAINED || digitalAssetTransactionStatus==TransactionStatus.GENESIS_SETTLED || digitalAssetTransactionStatus==TransactionStatus.HASH_SETTLED){
+                formingGenesis(transactionId);
+            } else if(digitalAssetTransactionStatus==TransactionStatus.GENESIS_OBTAINED || digitalAssetTransactionStatus==TransactionStatus.GENESIS_SETTLED || digitalAssetTransactionStatus==TransactionStatus.HASH_SETTLED){ //Caso Genesis_obtained o Genesis_settled
                 //Se obtuvo la genesisAddress, se persisitió en bases de datos, se recrea el digital asset desde el archivo y se le setea la genesisAddress desde la base de datos
-                digitalAssetPublicKey=this.assetIssuingTransactionDao.getDigitalAssetPublicKeyById(transactionId);
-                setDigitalAssetLocalFilePath(digitalAssetPublicKey);
-                getDigitalAssetFileFromLocalStorage();
-                String digitalAssetGenesisAddress=this.assetIssuingTransactionDao.getDigitalAssetGenesisAddressById(transactionId);
-                CryptoAddress cryptoAssetGenesisAddress=new CryptoAddress();
-                cryptoAssetGenesisAddress.setAddress(digitalAssetGenesisAddress);
-                setDigitalAssetGenesisAddress(transactionId, cryptoAssetGenesisAddress);
-                DigitalAssetMetadata digitalAssetMetadata=new DigitalAssetMetadata(this.digitalAsset);
-                String digitalAssetHash=getDigitalAssetHash(digitalAssetMetadata, transactionId);
-                sendBitcoins(cryptoAssetGenesisAddress, digitalAssetHash, transactionId);
-                issueUnfinishedDigitalAsset(transactionId);
+                genesisObtainedOrSettled(transactionId);
+            } else if(digitalAssetTransactionStatus==TransactionStatus.SENDING_CRYPTO){
+                sendingCrypto(transactionId);
             }
-            if(digitalAssetTransactionStatus==TransactionStatus.SENDING_CRYPTO){
-                digitalAssetPublicKey=this.assetIssuingTransactionDao.getDigitalAssetPublicKeyById(transactionId);
-                setDigitalAssetLocalFilePath(digitalAssetPublicKey);
-                getDigitalAssetFileFromLocalStorage();
-                String digitalAssetGenesisAddress=this.assetIssuingTransactionDao.getDigitalAssetGenesisAddressById(transactionId);
-                CryptoAddress cryptoAssetGenesisAddress=new CryptoAddress();
-                cryptoAssetGenesisAddress.setAddress(digitalAssetGenesisAddress);
-                setDigitalAssetGenesisAddress(transactionId, cryptoAssetGenesisAddress);
-                DigitalAssetMetadata digitalAssetMetadata=new DigitalAssetMetadata(this.digitalAsset);
-                String digitalAssetHashFromDatabase=this.assetIssuingTransactionDao.getDigitalAssetHashById(transactionId);
-                String digitalAssetHash=digitalAssetMetadata.getDigitalAssetHash();
-                if(!digitalAssetHash.equals(digitalAssetHashFromDatabase)){
-                    this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.ISSUED_FAILED);
-                    throw new CantIssueDigitalAssetException("The hash recorded in database for this DigitalAsset "+transactionId+" is not equal to the generated:\n" +
-                            "Hash from database: "+digitalAssetHashFromDatabase+"\n" +
-                            "hash from DigitalAssetMetadada: "+digitalAssetHash);
-                }
-                String genesisTransaction=this.assetIssuingTransactionDao.getDigitalAssetGenesisTransactionById(transactionId);
-                digitalAssetMetadata=setDigitalAssetGenesisTransaction(transactionId, genesisTransaction, digitalAssetMetadata);
-                //We kept the DigitalAssetMetadata in DAMVault
-                saveDigitalAssetMetadataInVault(digitalAssetMetadata, transactionId);
-            }
+            //TODO manejar excepciones correctamente
         } catch (CantIssueDigitalAssetException | CantSendGenesisAmountException | CantGetGenesisAddressException | CantPersistsGenesisTransactionException | CantExecuteQueryException | CantPersistsGenesisAddressException | CantCheckAssetIssuingProgressException | CantGetDigitalAssetFromLocalStorageException | UnexpectedResultReturnedFromDatabaseException exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         } catch (CantDeliverDigitalAssetToAssetWalletException e) {
             e.printStackTrace();
         } catch (CantCreateDigitalAssetFileException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -646,9 +732,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         //TODO: solicitar los publickeys de los actors, la publicKey de la wallet
         //I'm gonna harcode the actors publicKey
         this.cryptoAddressBookManager.registerCryptoAddress(genesisAddress,
-                "testDeliveredByActorPublicKey",
+                this.intraActorPublicKey,
                 Actors.INTRA_USER,
-                "AssetIssuerPublicKey",
+                this.actorAssetIssuerPublicKey,
                 Actors.DAP_ASSET_ISSUER,
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 VaultType.ASSET_VAULT,
@@ -740,8 +826,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                     this.digitalAsset.getGenesisAmount(),
                     digitalAssetHash,
                     this.digitalAsset.getDescription(),
-                    "senderPublicKey",
-                    this.actorToPublicKey,
+                    this.intraActorPublicKey,
+                    this.actorAssetIssuerPublicKey,
                     Actors.INTRA_USER,
                     Actors.DAP_ASSET_ISSUER,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
