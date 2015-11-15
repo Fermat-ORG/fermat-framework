@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSumaryForCurrenciesOfInterestException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CouldNotStartNegotiationException;
@@ -46,17 +47,17 @@ public interface CryptoCustomerWallet {
      * @param customerId the crypto customer id
      * @return the list of crypto brokers
      */
-    List<CryptoBrokerIdentity> getListOfConnectedBrokers(UUID customerId) throws CantGetCryptoBrokerListException;
+    Collection<CryptoBrokerIdentity> getListOfConnectedBrokers(UUID customerId) throws CantGetCryptoBrokerListException;
 
     /**
      * @return list of identities associated with this wallet
      */
-    List<CryptoCustomerIdentity> getListOfIdentities() throws CantGetCryptoCustomerIdentityListException;
+    Collection<CryptoCustomerIdentity> getListOfIdentities() throws CantGetCryptoCustomerIdentityListException;
 
     /**
      * @return a summary of the current market rate for the different currencies the customer is interested
      */
-    List<IndexInfoSummary> getCurrentIndexSummaryForCurrenciesOfInterest();
+    Collection<IndexInfoSummary> getCurrentIndexSummaryForCurrenciesOfInterest() throws CantGetCurrentIndexSumaryForCurrenciesOfInterestException;
 
     /**
      * associate an Identity to this wallet
