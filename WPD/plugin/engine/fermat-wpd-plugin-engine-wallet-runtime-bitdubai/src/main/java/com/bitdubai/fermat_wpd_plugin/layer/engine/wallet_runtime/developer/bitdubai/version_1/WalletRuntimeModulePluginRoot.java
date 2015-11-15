@@ -2610,7 +2610,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.setType(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY);
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY.getCode());
         runtimeActivity.setColor("#12aca1");
-        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS);
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
