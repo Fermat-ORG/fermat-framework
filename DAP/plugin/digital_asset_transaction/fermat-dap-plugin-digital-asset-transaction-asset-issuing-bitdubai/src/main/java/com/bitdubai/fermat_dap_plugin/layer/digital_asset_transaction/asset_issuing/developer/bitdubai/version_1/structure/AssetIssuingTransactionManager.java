@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -12,7 +13,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -121,6 +123,20 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
             throw new CantSetObjectException("actorAssetIssuerManager is null");
         }
         this.digitalAssetCryptoTransactionFactory.setActorAssetIssuerManager(actorAssetIssuerManager);
+    }
+
+    public void setIntraWalletUserActorManager(IntraWalletUserActorManager intraWalletUserActorManager) throws CantSetObjectException{
+        if(intraWalletUserActorManager==null){
+            throw new CantSetObjectException("intraWalletUserActorManager is null");
+        }
+        this.digitalAssetCryptoTransactionFactory.setIntraWalletUserActorManager(intraWalletUserActorManager);
+    }
+
+    public void setIntraWalletUserIdentityManager(IntraWalletUserIdentityManager intraWalletUserIdentityManager) throws CantSetObjectException{
+        if(intraWalletUserIdentityManager==null){
+            throw new CantSetObjectException("intraWalletUserIdentityManager is null");
+        }
+        this.digitalAssetCryptoTransactionFactory.setIntraWalletUserIdentityManager(intraWalletUserIdentityManager);
     }
 
     /**

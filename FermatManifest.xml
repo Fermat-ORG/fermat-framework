@@ -1659,6 +1659,7 @@
 		<platform code="CCP" name="Crypto Currency Platform" logo="CCP_logo.png" dependsOn="WPD, P2P">
 
 			<layer name="Reference Wallet">
+
 				<androids>
 					<android
 						name="Bitcoin Wallet"
@@ -1763,7 +1764,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Sub App Module" language="java">
+			<layer name="Module" language="java">
 				<plugins>
 					<plugin
 						name="Intra User"
@@ -1866,7 +1867,7 @@
 			<layer name="Request" language="java">
 				<plugins>
 					<plugin
-						name="Crypto Request"
+						name="Crypto Payment Request"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -2043,7 +2044,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Wallet" language="java">
+			<layer name="Basic Wallet" language="java">
 				<plugins>
 					<plugin
 						name="Bitcoin Wallet"
@@ -2218,7 +2219,7 @@
 			<layer name="Network Service" language="java">
 				<plugins>
 					<plugin
-						name="Crypto Address"
+						name="Crypto Addresses"
 						description="Enables the underground exchange of crypto addresses"
 						difficulty="5"
 						code-level="development"
@@ -2235,7 +2236,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Request"
+						name="Crypto Payment Request"
 						description=""
 						difficulty="8"
 						code-level="development"

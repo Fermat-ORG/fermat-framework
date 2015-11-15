@@ -21,9 +21,7 @@ import java.util.ArrayList;
  * Created by hp1 on 28-12-2014.
  */
 public class NavigationViewAdapterNew extends RecyclerView.Adapter<NavigationViewAdapterNew.ViewHolder>{
-     
-    private static final int TYPE_HEADER = 0;  // Declaring Variable to Understand which View is being worked on
-                                               // IF the view under inflation and population is header or Item
+
     private static final int TYPE_ITEM = 1;
 
 
@@ -89,27 +87,13 @@ public class NavigationViewAdapterNew extends RecyclerView.Adapter<NavigationVie
  
     @Override
     public NavigationViewAdapterNew.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
- 
-        if (viewType == TYPE_ITEM) {
+
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.navigation_row,parent,false); //Inflating the layout
  
             ViewHolder vhItem = new ViewHolder(v,viewType); //Creating ViewHolder and passing the object of type view
  
             return vhItem; // Returning the created object
- 
-            //inflate your layout and pass it to view holder
- 
-        } else if (viewType == TYPE_HEADER) {
- 
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.navigation_view_row_first,parent,false); //Inflating the layout
- 
-            ViewHolder vhHeader = new ViewHolder(v,viewType); //Creating ViewHolder and passing the object of type view
- 
-            return vhHeader; //returning the object created
- 
-             
-        }
-        return null;
+
  
     }
 
@@ -123,19 +107,19 @@ public class NavigationViewAdapterNew extends RecyclerView.Adapter<NavigationVie
             holder.textView.setText(lstItems.get(position - 1).getLabel()); // Setting the Text with the array of our Titles
 
             switch (position) {
-                case 1:
+                case 0:
                     holder.imageView.setImageResource(R.drawable.btn_drawer_home_normal);
                     break;
-                case 2:
+                case 1:
                     holder.imageView.setImageResource(R.drawable.btn_drawer_profile_normal);
                     break;
-                case 3:
+                case 2:
                     holder.imageView.setImageResource(R.drawable.btn_drawer_request_normal);
                     break;
-                case 4:
+                case 3:
                     holder.imageView.setImageResource(R.drawable.btn_drawer_settings_normal);
                     break;
-                case 5:
+                case 4:
                     holder.imageView.setImageResource(R.drawable.btn_drawer_logout_normal);
                     break;
                 default:
@@ -161,23 +145,9 @@ public class NavigationViewAdapterNew extends RecyclerView.Adapter<NavigationVie
      
     // Witht the following method we check what type of view is being passed
     @Override
-    public int getItemViewType(int position) { 
-        if (isPositionHeader(position))
-            return TYPE_HEADER;
- 
+    public int getItemViewType(int position) {
         return TYPE_ITEM;
     }
- 
-    private boolean isPositionHeader(int position) {
-        return position == 0;
-    }
 
-    public void addHeaderIdentity(IntraUserLoginIdentity intraUserLoginIdentity){
-        this.intraUserLoginIdentity = intraUserLoginIdentity;
-    }
-
-    public void addMenuItems(ArrayList<MenuItem> lstItems){
-        this.lstItems = lstItems;
-    }
  
 }

@@ -233,6 +233,7 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
             if (edit_text_name != null)
                 edit_text_name.setText(cryptoWalletWalletContact.getActorName());
             if (text_view_address != null)
+                if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0)
                 text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress());
         }
     }

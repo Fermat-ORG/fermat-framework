@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
@@ -154,6 +155,11 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     @Override
     public FermatHeader getHeader() {
         return header;
+    }
+
+    @Override
+    public void changeBackActivity(String activityCode) throws InvalidParameterException {
+        this.backActivity = Activities.getValueFromString(activityCode);
     }
 
     // TODO VER COMO HACER ESTO
