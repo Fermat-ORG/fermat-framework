@@ -1055,7 +1055,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 associatedCryptoTransactionHash,
                 cryptoAmount,
                 cryptoCurrency,
-                "actor_prueba_robert_public_key",
+                destinationPublicKey,
                 paymentDescription,
                 null,
                 senderPublicKey
