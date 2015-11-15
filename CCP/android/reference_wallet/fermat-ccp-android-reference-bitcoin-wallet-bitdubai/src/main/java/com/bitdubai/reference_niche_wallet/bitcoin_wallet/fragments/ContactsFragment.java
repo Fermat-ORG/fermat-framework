@@ -211,7 +211,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         frameLayout.setLayoutParams(lbs);
 
         ImageView icon = new ImageView(getActivity()); // Create an icon
-        icon.setImageResource(R.drawable.ic_action_add_grey);
+        icon.setImageResource(R.drawable.ic_contact_newcontact);
 
         frameLayout.addView(icon);
 
