@@ -304,14 +304,14 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
     @Override
-    public List<CryptoWalletIntraUserActor> listAllIntraUserConnections(String  intraUserSelectedPublicKey,
+    public List<CryptoWalletIntraUserActor> listAllIntraUserConnections(String  intraUserIdentityPublicKey,
                                                                         String  walletPublicKey,
                                                                         Integer max,
                                                                         Integer offset) throws CantGetAllIntraUserConnectionsException {
         try {
             List<CryptoWalletIntraUserActor> intraUserActorList = new ArrayList<>();
 
-            List<IntraWalletUserActor> intraUserList = intraUserManager.getAllIntraWalletUsers(intraUserSelectedPublicKey, max, offset);
+            List<IntraWalletUserActor> intraUserList = intraUserManager.getAllIntraWalletUsers(intraUserIdentityPublicKey, max, offset);
 
             for(IntraWalletUserActor intraUser : intraUserList)
                 intraUserActorList.add(new CryptoWalletWalletModuleIntraUserActor(
@@ -1344,7 +1344,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         paymentRecord.getDescription(),
                         paymentRecord.getAmount(),
                         cryptoWalletWalletContact,
-                        PaymentRequest.SEND_PAYMENT,
+                        PaymentRequest.RECEIVE_PAYMENT,
                         paymentRecord.getState().name()
                 );
                 lst.add(cryptoWalletPaymentRequest);
