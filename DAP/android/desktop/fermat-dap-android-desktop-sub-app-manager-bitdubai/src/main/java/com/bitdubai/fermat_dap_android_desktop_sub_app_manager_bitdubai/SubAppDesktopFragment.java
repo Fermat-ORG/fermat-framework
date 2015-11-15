@@ -100,6 +100,8 @@ public class SubAppDesktopFragment extends Fragment {
         mlist.add(installedSubApp);
         installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_USER, null, null, "sub-app-asset-identity-user", "Asset Identity User", "sub-app-asset-identity-user", "sub-app-asset-identity-user", new Version(1, 0, 0));
         mlist.add(installedSubApp);
+        installedSubApp = new InstalledSubApp(SubApps.DAP_REDEEM_POINT_IDENTITY, null, null, "sub-app-asset-identity-redeem-point", "Asset Redeem Point Identity", "sub-app-asset-identity-redeem-point", "sub-app-asset-identity-redeem-point", new Version(1, 0, 0));
+        mlist.add(installedSubApp);
 
         GridView gridView = new GridView(getActivity());
 
@@ -196,6 +198,20 @@ public class SubAppDesktopFragment extends Fragment {
 
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.sub_apps);
             switch (installedSubApp.getSubAppIcon()) {
+                case "sub-app-asset-identity-redeem-point":
+                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setTag("DevelopersActivity|1");
+                    linearLayout.setTag("DevelopersActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+
+                        }
+                    });
+                    break;
                 case "sub-app-asset-identity-user":
                     holder.imageView.setImageResource(R.drawable.intra_user);
                     holder.imageView.setTag("DevelopersActivity|1");
@@ -233,8 +249,15 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            try {
+                                if(identityAssetIssuerManager.hasIntraIssuerIdentity())
+                                    ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                                else
+                                    Toast.makeText(getActivity(), "Need Issuer Identity", Toast.LENGTH_SHORT).show();
 
+                            } catch (CantListAssetIssuersException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                     break;
