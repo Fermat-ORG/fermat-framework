@@ -16,6 +16,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
@@ -180,10 +181,12 @@ public class LocalStorageTest {
                 return Genders.MALE;
             }
 
-            @Override
+            //Comment by Luis Campo
+            //Method no exist in interface ActorAssetUser
+            /*@Override
             public ConnectionState getConnectionState() {
                 return ConnectionState.CONNECTED;
-            }
+            }*/
 
             /**
              * The method <code>getLocation</code> gives us the Location of the represented Asset user
@@ -203,6 +206,11 @@ public class LocalStorageTest {
             @Override
             public long getLastConnectionDate() {
                 return 0;
+            }
+
+            @Override
+            public DAPConnectionState getDapConnectionState() {
+                return null;
             }
 
             @Override

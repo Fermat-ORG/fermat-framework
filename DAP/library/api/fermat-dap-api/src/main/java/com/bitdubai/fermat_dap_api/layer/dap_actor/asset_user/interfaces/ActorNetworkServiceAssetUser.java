@@ -24,6 +24,4 @@ public interface ActorNetworkServiceAssetUser {
 
     void handleCompleteClientAssetUserActorRegistrationNotificationEvent(ActorAssetUser actorAssetUser);
 
-    void handleDeliveredCryptoAddresFromRemoteAssetUserEvent(ActorAssetUser actorAssetUser, CryptoAddress cryptoAddress);
-
 }

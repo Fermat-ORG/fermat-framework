@@ -52,13 +52,9 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
     public List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException {
 
         try {
-            actorAssetRedeemPointManager.registerActorInActorNetowrkSerice();
-
             return actorAssetRedeemPointManager.getAllAssetRedeemPointActorInTableRegistered();
         } catch (CantGetAssetRedeemPointActorsException e) {
             e.printStackTrace(); // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
-        } catch (CantCreateActorRedeemPointException e) {
-            e.printStackTrace();// TODO PLEASE MAKE USE OF THE ERROR MANAGER.
         }
 
         return new ArrayList<>();
@@ -66,19 +62,17 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
     @Override
     public void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException {
-        //todo SE DEBE CONOCER QUIEN ES EL REQUESTER SOLICITANTE Y QUIEN EL SOLICITADO
 
         ActorAssetUser actorAssetUser;
-        //TODO Para Realizacion de TEST se tomara el ISSUER de la BD LOCAL
-        //TODO Se necesita PASAR el Actor seleccionado en la Community
+        //TODO Actor Asset User de BD Local
         try {
             actorAssetUser = actorAssetUserManager.getActorAssetUser();
+
             actorAssetRedeemPointManager.connectToActorAssetRedeemPoint(actorAssetUser, actorAssetRedeemPoints);
+
         } catch (CantGetAssetUserActorsException e) {
             // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
             throw new CantConnectToActorAssetRedeemPointException(CantConnectToActorAssetRedeemPointException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
-        } catch (CantAssetUserActorNotFoundException e) {
-            e.printStackTrace();// TODO PLEASE MAKE USE OF THE ERROR MANAGER.
         }
     }
 }
