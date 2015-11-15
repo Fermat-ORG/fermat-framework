@@ -17,4 +17,7 @@
     <string name="waiting_for_you">Waiting for you</string>
     <string name="waiting_for_broker">Waiting for the Broker</string>
     <string name="ccw_unit_number">1</string>
+    <string name="sell_text_and_price">Sell: %1$s</string>
+    <string name="buy_text_and_price">Buy: %1$s</string>
+    <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
 </resources>

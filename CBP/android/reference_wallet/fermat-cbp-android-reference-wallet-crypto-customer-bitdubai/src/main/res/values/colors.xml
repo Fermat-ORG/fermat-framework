@@ -3,6 +3,11 @@
 
     <color name="app_background">#ffffff</color>
     <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="ccw_gradient_start_color">#a60f7f</color>
+    <color name="ccw_gradient_end_color">#492781</color>
+    <color name="ccw_header_start_background">#700a56</color>
+    <color name="ccw_header_end_background">#341c5c</color>
+    <color name="ccw_header_background">#990c75</color>
     <color name="ccw_grouper_text">#343434</color>
     <color name="ccw_activity_color">#1189a5</color>
     <color name="ccw_status_bar_color">#0e738b</color>
@@ -22,5 +27,6 @@
     <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
     <color name="waiting_for_customer_list_item_background">#ffffff</color>
     <color name="withe">#FFFFFF</color>
+    <color name="market_rate_text">#31beff</color>
 
 </resources>

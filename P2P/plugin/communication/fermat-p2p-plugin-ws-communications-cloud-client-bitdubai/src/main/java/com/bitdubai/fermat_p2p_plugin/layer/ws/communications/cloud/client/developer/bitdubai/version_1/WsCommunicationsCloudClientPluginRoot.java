@@ -93,6 +93,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     public static final String SERVER_IP = "52.11.156.16"; //AWS
     //public static final String SERVER_IP = "192.168.0.103";
+    //public static final String SERVER_IP = "192.168.0.111";
 
 
     /**
