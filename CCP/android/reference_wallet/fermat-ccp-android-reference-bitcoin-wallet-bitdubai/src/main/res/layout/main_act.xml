@@ -34,6 +34,7 @@
             android:layout_toLeftOf="@+id/clear_search_image_button"
             android:layout_toStartOf="@+id/clear_search_image_button"
             android:hint="@string/search_hint"
+            android:textColorHint="#fff"
             android:textSize="14sp"
             android:textColor="#ffffff"
             android:singleLine="true"
