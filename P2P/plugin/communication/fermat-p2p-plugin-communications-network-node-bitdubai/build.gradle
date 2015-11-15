@@ -31,9 +31,7 @@ repositories {
 			password 'bud@pestdcd16c'
 		}
 	}
-    maven {
-        url "http://maven.restlet.org"
-    }
+
 }
 
 dependencies {
@@ -44,6 +42,10 @@ dependencies {
     compile 'io.undertow:undertow-core:1.1.8+'
     compile 'io.undertow:undertow-servlet:1.1.8+'
     compile "io.undertow:undertow-websockets-jsr:1.1.8+"
+    compile 'org.jboss.resteasy:resteasy-undertow:3.0.13.Final'
+    compile 'org.jboss.resteasy:resteasy-cdi:3.0.13.Final'
+    compile 'org.jboss.weld.servlet:weld-servlet:2.3.1.Final'
+    compile 'javax:javaee-api:7.0'
 
     compile "org.xerial:sqlite-jdbc:3.7.2"
     //'net.kemitix:sqlite-dialect:0.1.0'
