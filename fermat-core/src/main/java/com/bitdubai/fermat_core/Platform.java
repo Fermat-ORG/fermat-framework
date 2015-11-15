@@ -315,7 +315,7 @@ public class Platform implements Serializable {
             boolean BCH = true;
             boolean CBP = true;
             boolean CCP = true;
-            boolean DAP = true; /* DAP no da errores al iniciar, si la desactivas enviar mensaje a Rodrigo por favor*/
+            boolean DAP = false; /* DAP no da errores al iniciar, si la desactivas enviar mensaje a Rodrigo por favor*/
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean PIP = true;
             boolean WPD = true;
