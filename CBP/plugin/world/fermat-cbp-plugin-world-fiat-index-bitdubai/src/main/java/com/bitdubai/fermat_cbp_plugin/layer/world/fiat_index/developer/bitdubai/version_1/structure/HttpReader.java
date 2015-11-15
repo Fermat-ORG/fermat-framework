@@ -13,28 +13,28 @@ import org.json.JSONObject;
 
 /**
  * Created by Alex on 11/2/2015.
- * This class deals with fetching JSON Objects from USL addresses
+ * This class deals with fetching JSON Objects from URL addresses
  */
-public class HttpJsonReader {
+public class HttpReader {
 
-    /**
-     * This method accepts an URL and, with the help of readAll(), returns a JSONObject
-     **/
-    public static JSONObject getJSONFromUrl(String url)  {
+    /*
+     * This method accepts an URL and fetches its content, returning it in a string
+     */
+    public static String getHTTPContent(String url)
+    {
         InputStream stream = null;
         BufferedReader reader;
-        String jsonText = "";
+        String content = "";
 
         try {
             stream = new URL(url).openStream();
             reader = new BufferedReader(new InputStreamReader(stream, Charset.forName("UTF-8")));
-            jsonText = readAll(reader);
+            content = readAll(reader);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new JSONObject(jsonText);
+        return content;
     }
-
 
     /**
      * This method accepts a reader object which reads the entire stream and returns a string
