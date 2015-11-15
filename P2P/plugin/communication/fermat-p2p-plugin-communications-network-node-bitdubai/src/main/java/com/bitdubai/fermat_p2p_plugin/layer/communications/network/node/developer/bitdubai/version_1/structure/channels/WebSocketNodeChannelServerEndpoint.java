@@ -26,7 +26,7 @@ import javax.websocket.Session;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@ServerEndpoint("/fermat/node-channel")
+@ServerEndpoint("/node-channel")
 public class WebSocketNodeChannelServerEndpoint {
 
     /**
