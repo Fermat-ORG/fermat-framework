@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractPluginDeveloper {
 
-    private final Map<PluginVersionReference, AbstractPlugin> versions;
+    private final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions;
 
     private final PluginDeveloperReference pluginDeveloperReference;
 
@@ -48,13 +48,8 @@ public abstract class AbstractPluginDeveloper {
 
         pluginVersionReference.setPluginDeveloperReference(this.pluginDeveloperReference);
 
-        if(versions.containsKey(pluginVersionReference))
-            throw new CantRegisterVersionException(pluginVersionReference.toString(), "version already exists for this plugin developer.");
-
-        versions.put(
-                pluginVersionReference,
-                abstractPlugin
-        );
+        if(versions.putIfAbsent(pluginVersionReference, abstractPlugin) != null)
+            throw new CantRegisterVersionException(pluginVersionReference.toString3(), "Version already exists for this plugin developer.");
 
     }
 
@@ -63,8 +58,13 @@ public abstract class AbstractPluginDeveloper {
             return versions.get(pluginVersionReference);
         } else {
 
-            throw new VersionNotFoundException(pluginVersionReference.toString(), "version not found in the specified plugin developer.");
+            throw new VersionNotFoundException(pluginVersionReference.toString3(), "version not found in the specified plugin developer.");
         }
+    }
+
+    public final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> listVersions() {
+
+        return versions;
     }
 
     public final PluginDeveloperReference getPluginDeveloperReference() {

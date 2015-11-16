@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
+import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeEnginePluginRoot;
 
 import junit.framework.TestCase;
 
@@ -51,14 +51,14 @@ public class StartTest extends TestCase {
     @Mock
     private FermatEventListener mockFermatEventListener1;
 
-    private WalletRuntimeModulePluginRoot testWalletRuntimeModulePluginRoot;
+    private WalletRuntimeEnginePluginRoot testWalletRuntimeEnginePluginRoot;
 
     @Before
     public void setUp() throws Exception {
-        testWalletRuntimeModulePluginRoot = new WalletRuntimeModulePluginRoot();
-        testWalletRuntimeModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
-        testWalletRuntimeModulePluginRoot.setEventManager(mockEventManager);
-        testWalletRuntimeModulePluginRoot.setErrorManager(mockErrorManager);
+        testWalletRuntimeEnginePluginRoot = new WalletRuntimeEnginePluginRoot();
+        testWalletRuntimeEnginePluginRoot.setPluginFileSystem(mockPluginFileSystem);
+        testWalletRuntimeEnginePluginRoot.setEventManager(mockEventManager);
+        testWalletRuntimeEnginePluginRoot.setErrorManager(mockErrorManager);
     }
 
 
@@ -68,9 +68,9 @@ public class StartTest extends TestCase {
 
         when(mockEventManager.getNewListener(EventType.WALLET_OPENED)).thenReturn(mockFermatEventListener);
 
-        catchException(testWalletRuntimeModulePluginRoot).start();
+        catchException(testWalletRuntimeEnginePluginRoot).start();
 
-        Assertions.assertThat(testWalletRuntimeModulePluginRoot.getStatus()).isEqualTo(ServiceStatus.CREATED);
+        Assertions.assertThat(testWalletRuntimeEnginePluginRoot.getStatus()).isEqualTo(ServiceStatus.CREATED);
     }
 
 }
