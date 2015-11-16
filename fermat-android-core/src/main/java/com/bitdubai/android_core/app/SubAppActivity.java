@@ -481,7 +481,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getSubAppType())) {
                     subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getSubAppType());
                 } else {
-                    ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext());
+                    ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatSystem());
                     subAppSession = getSubAppSessionManager().openSubAppSession(
                             installedSubApp.getSubAppType(),
                             getErrorManager(),

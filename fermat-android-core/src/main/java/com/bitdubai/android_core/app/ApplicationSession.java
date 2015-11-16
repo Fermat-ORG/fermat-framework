@@ -6,6 +6,7 @@ import android.support.multidex.MultiDexApplication;
 import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
+import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_core.Platform;
 
 import java.io.Serializable;
@@ -32,12 +33,11 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     public static final int STATE_NOT_CREATED=0;
     public static final int STATE_STARTED=1;
 
-
     /**
      *  Fermat platform
      */
 
-    private Platform fermatPlatform;
+    private FermatSystem fermatSystem;
 
     /**
      * Sub App session Manager
@@ -68,18 +68,19 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
     public ApplicationSession() {
         super();
-        fermatPlatform = new Platform();
+
+        fermatSystem = new FermatSystem();
         subAppSessionManager=new SubAppSessionManager();
         walletSessionManager = new WalletSessionManager();
     }
 
 
     /**
-     *  Method to get the fermat platform
-     * @return Platform
+     *  Method to get the fermat system
+     * @return FermatSystem
      */
-    public Platform getFermatPlatform() {
-        return fermatPlatform;
+    public FermatSystem getFermatSystem() {
+        return fermatSystem;
     }
 
     /**
