@@ -10,7 +10,7 @@ Most of the libraries in Fermat are part of Fermat Core or Fermat APIs. For thes
 
 >The MIT License (MIT)
 
->Copyright (c) 2015 Fermat Foundation
+>Copyright (c) 2015 Fermat Foundation.
 
 >Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ Addons are low level components. For these components the following license appl
 
 >The MIT License (MIT)
 
->Copyright (c) 2015 Fermat Foundation
+>Copyright (c) 2015 Fermat Foundation.
 
 >Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
