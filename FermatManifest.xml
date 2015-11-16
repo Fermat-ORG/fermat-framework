@@ -4297,71 +4297,7 @@
 
 			<layer name="Cash Money Transaction" language="java">
 				<plugins>
-					<plugin name="Give Cash On Hand"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="abicelis" scope="implementation" percentage="20"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin name="Receive Cash On Hand"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="20"></author>
-							<author name="abicelis" scope="implementation" percentage="25"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin name="Send Cash Delivery"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="20"></author>
-							<author name="abicelis" scope="implementation" percentage="25"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin name="Receive Cash Delivery"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="20"></author>
-							<author name="abicelis" scope="implementation" percentage="25"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin name="Cash Deposit"
+					<plugin name="Deposit"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4376,7 +4312,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin name="Cash Withdrawal"
+					<plugin name="Withdrawal"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4391,7 +4327,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin name="Cash Hold"
+					<plugin name="Hold"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4406,7 +4342,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin name="Cash Unhold"
+					<plugin name="Unhold"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4530,39 +4466,7 @@
 
 			<layer name="Bank Money Transaction" language="java">
 				<plugins>
-					<plugin	name="Make Offline Bank Transfer"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="guillermo20" scope="implementation" percentage="20"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin	name="Receive Offline Bank Transfer"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="guillermo20" scope="implementation" percentage="20"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin	name="Bank Deposit"
+					<plugin	name="Deposit"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4577,7 +4481,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Bank Withdraw"
+					<plugin	name="Withdraw"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4592,7 +4496,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Bank Hold"
+					<plugin	name="Hold"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4607,7 +4511,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Bank Unhold"
+					<plugin	name="Unhold"
 						description=""
 						difficulty="6"
 						code-level="development"
