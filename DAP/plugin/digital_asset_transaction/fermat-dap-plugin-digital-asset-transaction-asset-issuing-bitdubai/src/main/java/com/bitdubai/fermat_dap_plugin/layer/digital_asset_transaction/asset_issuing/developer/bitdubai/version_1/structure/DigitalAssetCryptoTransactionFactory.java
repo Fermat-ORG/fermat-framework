@@ -230,11 +230,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             String intraWalletUserIdentityPublicKey;
             for(IntraWalletUserIdentity intraWalletUserIdentity : intraWalletUserIdentityList){
                 intraWalletUserIdentityPublicKey=intraWalletUserIdentity.getPublicKey();
-                List<IntraWalletUserActor> intraWalletUserActorList=intraWalletUserActorManager.getConnectedIntraWalletUsers(intraWalletUserIdentityPublicKey);
-                if(intraWalletUserActorList.isEmpty()){
-                    throw new CantGetIntraWalletUsersException(CantGetIntraWalletUsersException.DEFAULT_MESSAGE,null,"Getting Intra Actor public key","intraWalletUserActorManager does not have an actor registered");
-                }
-                this.intraActorPublicKey=intraWalletUserActorList.get(0).getPublicKey();
+                this.intraActorPublicKey=intraWalletUserIdentityPublicKey;
                 return;
             }
         } catch (CantListIntraWalletUsersException exception) {
