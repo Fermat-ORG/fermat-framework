@@ -85,14 +85,17 @@ public class GrouperViewHolder extends ParentViewHolder {
      */
     public void bind(int childCount,CryptoWalletTransaction cryptoWalletTransaction) {
 
-        byte[] photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
+        byte[] photo = null;
+            photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
 
-        if(photo!=null){
-            contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
-        }else  contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image));
+        //TODO Ver porque se cae cuando el contacto tiene algunos bytes
+     //   if(photo!=null && photo.length > 0)
+        //    contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
+       // else
+         contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res, R.drawable.helen_profile_picture));
 
 
-            txt_contactName.setText(cryptoWalletTransaction.getInvolvedActor().getName());
+        txt_contactName.setText(cryptoWalletTransaction.getInvolvedActor().getName());
         txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");
 
         txt_notes.setText(cryptoWalletTransaction.getMemo());

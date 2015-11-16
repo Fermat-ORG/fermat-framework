@@ -28,6 +28,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wallet
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
@@ -252,32 +253,17 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     protected void loadUI(WalletSession walletSession) {
 
         try {
-            /**
-             * Selected wallet to paint
-             */
+
             WalletNavigationStructure wallet = getWalletRuntimeManager().getLastWallet();
 
-            /**
-             * Get current activity to paint
-             */
             Activity activity = wallet.getLastActivity();
 
-
-            /**
-             * Load screen basics returning PagerSlidingTabStrip to load fragments
-             */
             loadBasicUI(activity);
 
-            /**
-             * Paint a simgle fragment
-             */
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
             }
             if (activity.getTabStrip() != null) {
-                /**
-                 * Paint tabs
-                 */
                 setPagerTabs(wallet, activity.getTabStrip(), walletSession);
             }
             if (activity.getFragments().size() == 1) {
@@ -302,13 +288,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         String fragment = walletRuntime.getLastActivity().getLastFragment().getType();
         try {
             if (walletFragmentFactory != null) {
-//
-//                android.app.Fragment fragmet = walletFragmentFactory.getFragment(fragment.toString(), walletSession, getWalletSettingsManager().getSettings(walletPublicKey), getWalletResourcesProviderManager());
-//                FragmentTransaction FT = getFragmentManager().beginTransaction();
-//                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-//                FT.replace(R.id.only_fragment_container, fragmet);
-//                FT.commit();
-
 
                 TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
                 tabLayout.setVisibility(View.GONE);
@@ -397,39 +376,20 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 //        } catch (IllegalAccessException e) {
 //            e.printStackTrace();
 //        }
-
         try {
-
-
             WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
-
+            Activity lastActivity = walletNavigationStructure.getLastActivity();
             Activity activity = walletNavigationStructure.getActivity(Activities.getValueFromString(activityName));
-
-
-
-            try {
-
+            if(!activity.equals(lastActivity)) {
                 resetThisActivity();
-
                 loadUI(getWalletSessionManager().getWalletSession(getWalletRuntimeManager().getLastWallet().getPublicKey()));
-
-
-
-            } catch (Exception e) {
-                getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
-                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
-            } catch (Throwable throwable) {
-                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error. Throwable", Toast.LENGTH_LONG).show();
-                throwable.printStackTrace();
             }
-
-            //loadUI(getWalletSessionManager().getWalletSession());
-
-
         } catch (Exception e) {
-
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+        } catch (Throwable throwable) {
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error. Throwable", Toast.LENGTH_LONG).show();
+            throwable.printStackTrace();
         }
 
 
@@ -438,8 +398,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.i("FERMAT MATI", "New intent with flags " + intent.getFlags());
-        Log.i("FERMAT MATI", "New intent with flags " + intent.getFlags());
     }
 
     @Override
@@ -463,9 +421,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             FT.replace(R.id.fragment_container2, fragment);
-//            FT.addToBackStack(null);
-//            FT.attach(fragment);
-//            FT.show(fragment);
             FT.commit();
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeWalletFragment"));
@@ -481,10 +436,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     public void changeScreen(String fragment, int containerId, Object[] objects) {
 
-
-    }
-
-    private void loadFragment(String fragmentType) {
 
     }
 
@@ -561,6 +512,16 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 changeActivity(activityCode);
         }catch (Exception e){
 
+        }
+    }
+
+    @Override
+    public void changeActivityBack(String activityCode){
+        try {
+            getWalletRuntimeManager().getLastWallet().getLastActivity().changeBackActivity(activityCode);
+        } catch (InvalidParameterException e) {
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivityBack"));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
 }
