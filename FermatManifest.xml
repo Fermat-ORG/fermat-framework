@@ -2248,7 +2248,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Intra User"
+						name="Intra Actor"
 						description="Enables searching for Intra Users and conecting one to the other"
 						difficulty="6"
 						code-level="development"
