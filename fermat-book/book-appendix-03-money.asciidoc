@@ -1,5 +1,5 @@
 :numbered!: 
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/logo_fermat_2.png[FermatLogo2]
+https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/logo_fermat_2.png
 
 == Appendix 03: Money and Crypto Currency 
 
