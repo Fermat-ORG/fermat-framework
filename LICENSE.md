@@ -68,6 +68,6 @@ GUI Components provides an interface for end users. Anybody can write _GUI Compo
 
 Skins are graphic resources to be used by GUI Components. Anybody can provide _Skins_ so their authors holds all the rights over them. Please find at the root folder of each _Skin_ their LICENSE.md file.
 
-#### Language Package
+#### Language Packages
 
 Language Packages are files with translations to be used by GUI Components. Anybody can provide _Language Packages_ so their authors holds all the rights over them. Please find at the root folder of each _Language Packages_ their LICENSE.md file.
