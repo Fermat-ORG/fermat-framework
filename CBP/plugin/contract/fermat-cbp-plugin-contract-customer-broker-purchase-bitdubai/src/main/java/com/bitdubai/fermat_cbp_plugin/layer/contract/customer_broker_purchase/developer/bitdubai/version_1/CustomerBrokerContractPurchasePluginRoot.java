@@ -125,7 +125,7 @@ public class CustomerBrokerContractPurchasePluginRoot implements CustomerBrokerC
         }
 
         @Override
-        public DatabaseTableRecord getCustomerBrokerSaleContractTable() {
+        public DatabaseTableRecord getCustomerBrokerPurchaseContractTable() {
             return this.CustomerBrokerContractPurchaseDao.getCustomerBrokerContractPurchaseTable();
         }
 
