@@ -17,7 +17,7 @@ import java.util.UUID;
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 15/11/15.
+ * Created by Yordin Alayn - (y.alayn@gmail.com) on 16/11/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -70,6 +70,22 @@ public class CryptoCustomerActorDatabaseFactory implements DealsWithPluginDataba
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
+             * Create Crypto Customer Actor table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TABLE_NAME);
+
+            table.addColumn(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_ACTOR_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_ACTOR_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_DESCRIPTION_ACTOR_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+
+            table.addIndex(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }           /**
              * Create Crypto Customer Identity Wallet Relationship table.
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);

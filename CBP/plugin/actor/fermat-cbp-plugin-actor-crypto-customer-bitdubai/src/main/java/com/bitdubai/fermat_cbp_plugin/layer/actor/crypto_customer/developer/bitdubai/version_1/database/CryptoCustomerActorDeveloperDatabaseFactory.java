@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 15/11/15.
+ * Created by Yordin Alayn - (y.alayn@gmail.com) on 16/11/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -113,6 +113,20 @@ public class CryptoCustomerActorDeveloperDatabaseFactory implements DealsWithPlu
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
+
+        /**
+         * Table Crypto Customer Actor columns.
+         */
+        List<String> cryptoCustomerActorColumns = new ArrayList<String>();
+
+        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_ACTOR_ID_COLUMN_NAME);
+        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_ACTOR_COLUMN_NAME);
+        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_DESCRIPTION_ACTOR_COLUMN_NAME);
+        /**
+         * Table Crypto Customer Actor addition.
+         */
+        DeveloperDatabaseTable cryptoCustomerActorTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TABLE_NAME, cryptoCustomerActorColumns);
+        tables.add(cryptoCustomerActorTable);
 
         /**
          * Table Crypto Customer Identity Wallet Relationship columns.
