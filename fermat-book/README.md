@@ -1,7 +1,8 @@
 Readme
 ========= 
 
-image:: 
+image:: https://github.com/bitDubai/fermat-graphic-design/blob/master/2D%20Design/Fermat/Fermat%20Book%20Logotype/jpg/logo_fermat_book.jpg[FermatBook]
+
 Welcome to Fermat's  official book ! 
 ------------------------------------
 
@@ -22,6 +23,8 @@ Welcome to Fermat !
 
 Sincerely, 
 
-Gustavo Corradi. +
-Fermat Book Team +
+Gustavo Corradi.
+
+Fermat Book Team 
+
 ( book@fermat.org ) 

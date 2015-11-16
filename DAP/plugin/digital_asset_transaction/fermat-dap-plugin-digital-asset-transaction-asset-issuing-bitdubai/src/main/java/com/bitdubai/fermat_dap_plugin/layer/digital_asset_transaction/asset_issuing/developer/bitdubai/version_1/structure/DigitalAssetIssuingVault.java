@@ -46,10 +46,23 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
     }
 
     //TODO: method that update genesisTransaction
+    /**
+     * This method checks if the OP_return from Crypto Transaction is equals to DigitalAssetMetadata hash.
+     */
+    private boolean isDigitalAssetMetadataHashValid(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction){
+        String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
+        String cryptoTransactionOP_return=genesisTransaction.getOp_Return();
+        return digitalAssetMetadataHash.equals(cryptoTransactionOP_return);
+    }
 
     public void deliverDigitalAssetMetadataToAssetWallet(CryptoTransaction genesisTransaction, String internalId, AssetBalanceType assetBalanceType)throws CantDeliverDigitalAssetToAssetWalletException{
         try{
             DigitalAssetMetadata digitalAssetMetadataToDeliver=getDigitalAssetMetadataFromLocalStorage(internalId);
+            if(!isDigitalAssetMetadataHashValid(digitalAssetMetadataToDeliver,genesisTransaction)){
+                throw new CantDeliverDigitalAssetToAssetWalletException("The Digital Asset Metadata Hash is not valid:\n" +
+                        "Hash: "+digitalAssetMetadataToDeliver.getDigitalAssetHash()+"\n"+
+                        "OP_return: "+genesisTransaction.getOp_Return());
+            }
             BalanceType balanceType;
             switch (assetBalanceType.getCode()){
                 case "BOOK":

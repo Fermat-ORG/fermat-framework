@@ -60,14 +60,14 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
     @Override
     public void connectToActorAssetIssuer(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToAssetIssuerException {
-        //todo SE DEBE CONOCER QUIEN ES EL REQUESTER SOLICITANTE Y QUIEN EL SOLICITADO
 
         ActorAssetRedeemPoint actorAssetRedeemPoint;
-        //TODO Para Realizacion de TEST se tomara el ISSUER de la BD LOCAL
-        //TODO Se necesita PASAR el Actor seleccionado en la Community
+        //TODO Actor Asset Redeem Point de BD Local
         try {
             actorAssetRedeemPoint = actorAssetRedeemPointManager.getActorAssetRedeemPoint();
+
             actorAssetIssuerManager.connectToActorAssetIssuer(actorAssetRedeemPoint, actorAssetIssuers);
+
         } catch (CantGetAssetRedeemPointActorsException e) {
             // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
             throw new CantConnectToAssetIssuerException(CantConnectToAssetIssuerException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
