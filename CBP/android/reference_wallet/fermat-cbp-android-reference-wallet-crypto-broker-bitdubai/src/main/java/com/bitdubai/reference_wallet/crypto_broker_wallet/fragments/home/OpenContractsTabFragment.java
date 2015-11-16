@@ -1,8 +1,12 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
 
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -73,6 +77,8 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     protected void initViews(View layout) {
         super.initViews(layout);
 
+        configureActionBar(getActivity());
+
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
 
@@ -80,6 +86,24 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
             recyclerView.setVisibility(View.GONE);
             View emptyListViewsContainer = layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void configureActionBar(Activity activity) {
+
+        if (activity instanceof AppCompatActivity) {
+            android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
+            if (actionBar != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
+                else
+                    actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+            }
+        } else {
+            ActionBar actionBar = activity.getActionBar();
+            if (actionBar != null) {
+                actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+            }
         }
     }
 
@@ -131,16 +155,16 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
                 CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
                 GrouperItem<ContractBasicInformation> grouper;
 
-                grouperText = getActivity().getString(R.string.waiting_for_you);
-                List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
-                waitingForBroker.addAll(cryptoBrokerWallet.getContractsWaitingForBroker(10, 0));
-                grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-                data.add(grouper);
-
                 grouperText = getActivity().getString(R.string.waiting_for_the_customer);
                 List<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
                 waitingForCustomer.addAll(cryptoBrokerWallet.getContractsWaitingForCustomer(10, 0));
                 grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+                data.add(grouper);
+
+                grouperText = getActivity().getString(R.string.waiting_for_you);
+                List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
+                waitingForBroker.addAll(cryptoBrokerWallet.getContractsWaitingForBroker(10, 0));
+                grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
                 data.add(grouper);
 
             } catch (CantGetContractsWaitingForCustomerException | CantGetContractsWaitingForBrokerException | CantGetCryptoBrokerWalletException ex) {

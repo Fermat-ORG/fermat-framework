@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.DeveloperNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractAddonSubsystem {
 
-    private final Map<AddonDeveloperReference, AbstractAddonDeveloper> developers;
+    private final ConcurrentHashMap<AddonDeveloperReference, AbstractAddonDeveloper> developers;
 
     private final AddonReference addonReference;
 
@@ -74,6 +75,16 @@ public abstract class AbstractAddonSubsystem {
 
     public AddonReference getAddonReference() {
         return addonReference;
+    }
+
+    public final ConcurrentHashMap<AddonVersionReference, AbstractAddon> listVersions() {
+
+        final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions = new ConcurrentHashMap<>();
+
+        for(ConcurrentHashMap.Entry<AddonDeveloperReference, AbstractAddonDeveloper> developer : developers.entrySet())
+            versions.putAll(developer.getValue().listVersions());
+
+        return versions;
     }
 
     public abstract void start() throws CantStartSubsystemException;

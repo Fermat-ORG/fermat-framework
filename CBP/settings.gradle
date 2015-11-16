@@ -60,6 +60,7 @@ include ':fermat-cbp-plugin-business-transaction-cash-money-stock-replenishment-
 project(':fermat-cbp-plugin-business-transaction-cash-money-stock-replenishment-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-cash-money-stock-replenishment-bitdubai')
 include ':fermat-cbp-plugin-business-transaction-crypto-money-stock-replenishment-bitdubai'
 project(':fermat-cbp-plugin-business-transaction-crypto-money-stock-replenishment-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-money-stock-replenishment-bitdubai')
+
 include ':fermat-cbp-plugin-business-transaction-customer-broker-bank-purchase-bitdubai'
 project(':fermat-cbp-plugin-business-transaction-customer-broker-bank-purchase-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-bank-purchase-bitdubai')
 include ':fermat-cbp-plugin-business-transaction-customer-broker-bank-sale-bitdubai'
@@ -85,6 +86,19 @@ include ':fermat-cbp-plugin-business-transaction-cash-money-restock-bitdubai'
 project(':fermat-cbp-plugin-business-transaction-cash-money-restock-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-cash-money-restock-bitdubai')
 include ':fermat-cbp-plugin-business-transaction-crypto-money-restock-bitdubai'
 project(':fermat-cbp-plugin-business-transaction-crypto-money-restock-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-money-restock-bitdubai')
+
+include ':fermat-cbp-plugin-business-transaction-customer-broker-purchase-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-customer-broker-purchase-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-purchase-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-customer-broker-sale-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-customer-broker-sale-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-sale-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-customer-payment-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-customer-payment-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-payment-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-ack-payment-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-ack-payment-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-ack-payment-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-submit-merchandise-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-submit-merchandise-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-submit-merchandise-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-ack-merchandise-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-ack-merchandise-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-ack-merchandise-bitdubai')
 
 
 //Contract
