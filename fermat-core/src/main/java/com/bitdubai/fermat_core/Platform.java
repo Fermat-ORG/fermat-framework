@@ -509,7 +509,7 @@ public class Platform implements Serializable {
                 pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_DISTRIBUTION     )   ,   Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION);
                 pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_ISSUING          )   ,   Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION);
                 pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_RECEPTION        )   ,   Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
-                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ASSET_RECEPTION        )   ,   Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION);
+                pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.ISSUER_REDEMPTION      )   ,   Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION);
                 pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.REDEEM_POINT_REDEMPTION)   ,   Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION);
                 pluginsToInstantiate.put(ref(Platforms.DIGITAL_ASSET_PLATFORM, Layers.DIGITAL_ASSET_TRANSACTION, Plugins.USER_REDEMPTION        )   ,   Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION);
 
