@@ -1,6 +1,7 @@
 :numbered!:
 
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/logo_fermat_3.png[FermatLogo]
+
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/logo_fermat_3.png[FermatLogo3]
 
 == Introduction
 
