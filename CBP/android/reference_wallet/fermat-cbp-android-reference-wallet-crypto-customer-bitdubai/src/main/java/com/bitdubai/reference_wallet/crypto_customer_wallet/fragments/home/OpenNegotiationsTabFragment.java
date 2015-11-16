@@ -1,8 +1,15 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -12,7 +19,6 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFr
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetNegotiationsWaitingForBrokerException;
@@ -24,7 +30,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.GrouperItem;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.NegotiationInformationTestData;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.NavigationViewAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
@@ -48,7 +54,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     // Data
     private List<GrouperItem> openNegotiationList;
-    private CryptoCustomerWallet cryptoCustomerWallet;
 
 
     public static OpenNegotiationsTabFragment newInstance() {
@@ -76,6 +81,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     protected void initViews(View layout) {
         super.initViews(layout);
 
+        configureActionBar(getActivity());
+
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.ccw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
 
@@ -84,11 +91,44 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             View emptyListViewsContainer = layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
+
+        NavigationViewAdapter adapter = new NavigationViewAdapter(getActivity(), null);
+        setNavigationDrawer(adapter);
+    }
+
+    private void configureActionBar(Activity activity) {
+
+        if (activity instanceof AppCompatActivity) {
+            android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
+            if (actionBar != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
+                else
+                    actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
+            }
+        } else {
+            ActionBar actionBar = activity.getActionBar();
+            if (actionBar != null) {
+                actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
+            }
+        }
     }
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.ccw_menu_home, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -131,7 +171,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
+                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
                 GrouperItem<CustomerBrokerNegotiationInformation> grouper;
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
