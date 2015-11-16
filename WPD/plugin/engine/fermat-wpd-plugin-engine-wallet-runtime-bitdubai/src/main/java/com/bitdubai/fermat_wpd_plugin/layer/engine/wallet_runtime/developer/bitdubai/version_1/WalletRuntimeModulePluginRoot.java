@@ -1335,6 +1335,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Market rate");
+        runtimeActivity.setHeader(runtimeHeader);
+
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS.getKey(), runtimeFragment);
@@ -1606,9 +1608,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Market rate");
+        runtimeActivity.setHeader(runtimeHeader);
+
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey(), runtimeFragment);
+
 
         runtimeTabStrip = new TabStrip();
         runtimeTabStrip.setTabsColor("#502681");

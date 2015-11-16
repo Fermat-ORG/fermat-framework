@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/ccw_market_exchange_rate_layout_height"
-              android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="@dimen/ccw_market_exchange_rate_layout_height"
+             android:background="@drawable/ccw_header_gradient_background"
+             android:orientation="vertical">
 
-    <RelativeLayout
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_no_market_rate"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/ccw_header_gradient_background"
+        android:gravity="center"
+        android:text="@string/ccw_no_market_exchange_rates_to_show"
+        android:textColor="@color/withe"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/ccw_market_rate_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         android:paddingEnd="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingStart="16dp"
-        android:paddingTop="15dp">
+        android:paddingTop="15dp"
+        android:visibility="visible">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccw_sell_price"
@@ -66,4 +78,4 @@
             tools:text="Buy: Bs 840,25"/>
     </RelativeLayout>
 
-</LinearLayout>
+</FrameLayout>
