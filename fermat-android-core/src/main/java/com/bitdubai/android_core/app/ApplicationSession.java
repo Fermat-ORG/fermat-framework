@@ -7,7 +7,6 @@ import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionMana
 import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
 import com.bitdubai.fermat_core.FermatSystem;
-import com.bitdubai.fermat_core.Platform;
 
 import java.io.Serializable;
 import java.util.HashMap;
