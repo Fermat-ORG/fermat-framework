@@ -2,11 +2,11 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.de
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
@@ -16,9 +16,6 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.dev
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This plugin is the responsible to keep updated the location values of the device to deliver this necessary data to other plugins,.
  *
@@ -26,9 +23,14 @@ import java.util.List;
  */
 public class LocationManagerPlatformServicePluginRoot extends AbstractAddon {
 
-    private ErrorManager                errorManager               ;
-    private LocationManager             locationManager            ;
-    private PlatformDatabaseSystem      platformDatabaseSystem     ;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER       )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLATFORM_DATABASE_SYSTEM)
+    private PlatformDatabaseSystem platformDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager            ;
 
     private LocationServiceMonitorAgent locationServiceMonitorAgent;
 
@@ -51,9 +53,6 @@ public class LocationManagerPlatformServicePluginRoot extends AbstractAddon {
         } catch (final LocationServiceException ex) {
 
             errorManager.reportUnexpectedAddonsException(Addons.LOCATION_MANAGER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, ex);
-
-            throw new CantStartPluginException(ex, "", "Error trying to start Location Manager.");
-
         }
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -67,42 +66,23 @@ public class LocationManagerPlatformServicePluginRoot extends AbstractAddon {
     }
 
     @Override
+    public void resume() {
+
+        try {
+            locationServiceMonitorAgent.start();
+
+            serviceStatus = ServiceStatus.STARTED;
+
+        } catch (final LocationServiceException ex) {
+
+            errorManager.reportUnexpectedAddonsException(Addons.LOCATION_MANAGER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, ex);
+
+        }
+    }
+
+    @Override
     public void stop() {
         locationServiceMonitorAgent.stop();
         serviceStatus = ServiceStatus.STOPPED;
     }
-/*
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-
-        final List<AddonVersionReference> addonsNeeded = new ArrayList<>();
-
-        addonsNeeded.add(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER, Developers.BITDUBAI, new Version()));
-
-        return addonsNeeded;
-    }*/
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
-    }
-/*
-    @Override
-    protected void validateAndAssignReferences() throws MissingReferencesException {
-
-        this.errorManager = (ErrorManager) this.getAddonReference(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER, Developers.BITDUBAI, new Version()));
-
-        if (errorManager == null) {
-            throw new MissingReferencesException(
-                    "errorManager: "+ errorManager,
-                    "There is missing references for Event Manager Addon."
-            );
-        }
-
-    }*/
 }

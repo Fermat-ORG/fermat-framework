@@ -39,6 +39,12 @@ public final class FermatPluginManager {
 
     private       FermatPluginIdsManager  pluginIdsManager;
 
+    /**
+     * Constructor with params:
+     *
+     * @param systemContext  fermat system context to get the plugin references.
+     * @param addonManager   fermat addon manager instance to start and get the addon references.
+     */
     public FermatPluginManager(final FermatSystemContext systemContext,
                                final FermatAddonManager  addonManager ) {
 
@@ -46,6 +52,14 @@ public final class FermatPluginManager {
         this.systemContext = systemContext;
     }
 
+    /**
+     * Through the method <code>getPluginIdsManager</code> you can get an existing or a new instance of the plugin id's manager.
+     * Its necessary to have an OSA Platform with the File System Addon in it to work with it.
+     *
+     * @return an instance of a fermat plugin ids manager.
+     *
+     * @throws CantStartPluginIdsManagerException if something goes wrong.
+     */
     private FermatPluginIdsManager getPluginIdsManager() throws CantStartPluginIdsManagerException {
 
         if (this.pluginIdsManager != null) {
@@ -134,6 +148,67 @@ public final class FermatPluginManager {
         }
     }
 
+
+    public final void startPluginAndReferences(final AbstractPlugin abstractPlugin) throws CantStartPluginException {
+
+        final PluginVersionReference pluginVersionReference = abstractPlugin.getPluginVersionReference();
+
+        try {
+
+            final FermatPluginIdsManager pluginIdsManager = getPluginIdsManager();
+
+
+
+            if (!abstractPlugin.isStarted()) {
+
+                final List<AddonVersionReference> neededAddons = abstractPlugin.getNeededAddons();
+
+                for (final AddonVersionReference avr : neededAddons) {
+                    AbstractAddon reference = addonManager.startAddonAndReferences(avr);
+                    abstractPlugin.assignAddonReference(reference);
+                }
+
+                final List<PluginVersionReference> neededPlugins = abstractPlugin.getNeededPlugins();
+
+                for (final PluginVersionReference pvr : neededPlugins) {
+
+                    AbstractPlugin reference = systemContext.getPluginVersion(pvr);
+
+                    compareReferences(pluginVersionReference, pvr, reference.getNeededPlugins());
+
+                    startPluginAndReferences(pvr);
+
+                    abstractPlugin.assignPluginReference(reference);
+                }
+
+                abstractPlugin.setId(pluginIdsManager.getPluginId(pluginVersionReference));
+
+                startPlugin(abstractPlugin);
+
+            }
+        } catch (CantListNeededReferencesException e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error listing references for the plugin.");
+        } catch(CantAssignReferenceException   |
+                IncompatibleReferenceException |
+                CantStartAddonException        e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error assigning references for the plugin.");
+        } catch(final CantStartPluginIdsManagerException e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to get the pluginIdsManager.");
+        } catch(final CantGetPluginIdException e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to set the plugin id.");
+        } catch (final CyclicalRelationshipFoundException e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Cyclical References found for the plugin.");
+        } catch(VersionNotFoundException e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to find a reference for the plugin.");
+        }
+    }
+
     public final void startPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
                                                                                               VersionNotFoundException {
 
@@ -143,6 +218,15 @@ public final class FermatPluginManager {
 
     }
 
+    /**
+     * Through the method <code>startPlugin</code> you can start a plugin.
+     * If the plugin is started it will return the instance of it.
+     * If not, it will try to start it.
+     *
+     * @param abstractPlugin  instance of the plugin to start.
+     *
+     * @throws CantStartPluginException if something goes wrong.
+     */
     public final void startPlugin(final AbstractPlugin abstractPlugin) throws CantStartPluginException {
 
         if (abstractPlugin.isStarted())

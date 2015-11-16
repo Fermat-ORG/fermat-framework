@@ -5,6 +5,7 @@
  * -Name.
  */
 
+// libraries
 include ':fermat-pip-api'
 project(':fermat-pip-api').projectDir = new File('PIP/library/api/fermat-pip-api')
 
@@ -31,10 +32,6 @@ project(':fermat-pip-addon-user-device-user-bitdubai').projectDir = new File('PI
 include ':fermat-pip-plugin-engine-desktop-runtime-bitdubai'
 project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai').projectDir = new File('PIP/plugin/engine/fermat-pip-plugin-engine-desktop-runtime-bitdubai')
 
-include ':fermat-pip-plugin-identity-developer-bitdubai'
-project(':fermat-pip-plugin-identity-developer-bitdubai').projectDir = new File('PIP/plugin/identity/fermat-pip-plugin-identity-developer-bitdubai')
-
-
 include ':fermat-pip-plugin-module-developer-bitdubai'
 project(':fermat-pip-plugin-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai')
 
@@ -43,9 +40,6 @@ project(':fermat-pip-plugin-module-notification-bitdubai').projectDir = new File
 
 include ':fermat-pip-plugin-network-service-subapp-resources-bitdubai'
 project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai').projectDir = new File('PIP/plugin/network_service/fermat-pip-plugin-network-service-subapp-resources-bitdubai')
-
-include ':fermat-pip-plugin-actor-developer-bitdubai'
-project(':fermat-pip-plugin-actor-developer-bitdubai').projectDir = new File('PIP/plugin/actor/fermat-pip-plugin-actor-developer-bitdubai')
 
 // Android
 

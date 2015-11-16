@@ -145,6 +145,9 @@ public enum Activities {
     // end of dap identities
     DEVELOP_MODE("develop_mode"),
 
+    //CONNECTIONS ACTIVITY
+    BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY("BWCIUC"),
+
 
     WPD_DESKTOP("WPD"), ;
 
@@ -369,6 +372,8 @@ public enum Activities {
                 return CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY;
             case "CCPBWACA":
                 return CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY;
+            case "BWCIUC":
+                return BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
