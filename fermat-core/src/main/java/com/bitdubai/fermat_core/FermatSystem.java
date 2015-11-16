@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_core;
 
+import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -21,7 +23,16 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Ver
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
@@ -34,6 +45,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_core.PIPPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -249,6 +261,11 @@ public final class FermatSystem {
     @Deprecated
     public final void startAllRegisteredPlatforms() throws CantStartAllRegisteredPlatformsException {
 
+        final Map<PluginVersionReference, Plugin> dealsWithDatabaseManagersPlugins = new ConcurrentHashMap<>();
+        final Map<PluginVersionReference, Plugin> dealsWithLogManagersPlugins = new ConcurrentHashMap<>();
+        final Map<AddonVersionReference, Addon> dealsWithDatabaseManagersAddons = new ConcurrentHashMap<>();
+        final Map<AddonVersionReference, Addon> dealsWithLogManagersAddons = new ConcurrentHashMap<>();
+
         final ConcurrentHashMap<AddonVersionReference, AbstractAddon> addonList = this.fermatSystemContext.listAddonVersions();
 
         final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> pluginList = this.fermatSystemContext.listPluginVersions();
@@ -260,25 +277,50 @@ public final class FermatSystem {
 
                 fermatAddonManager.startAddonAndReferences(addon.getValue());
 
+                if (addon.getValue() instanceof DatabaseManagerForDevelopers)
+                    dealsWithDatabaseManagersAddons.put(addon.getKey(), addon.getValue());
+
+                if (addon.getValue() instanceof LogManagerForDevelopers)
+                    dealsWithLogManagersAddons.put(addon.getKey(), addon.getValue());
+
             } catch (final CantStartAddonException e) {
                 System.out.println(e.toString());
-               // throw new CantStartAllRegisteredPlatformsException(e, "", "Error starting add-ons or plug-ins during the start of all platforms.");
-            } catch (final Exception e) {
+                // throw new CantStartAllRegisteredPlatformsException(e, "", "Error starting add-ons or plug-ins during the start of all platforms.");
+            } catch (Exception e) {
                 System.out.println(e.toString());
-                //throw new CantStartAllRegisteredPlatformsException(e, "", "Unhandled Exception.");
+                //throw new CantStartAllRegisteredPlatformsException(e, "", "Unhandled Error.");
             }
         }
+
         for(ConcurrentHashMap.Entry<PluginVersionReference, AbstractPlugin> plugin : pluginList.entrySet()) {
+
             try {
-                    fermatPluginManager.startPluginAndReferences(plugin.getValue());
+
+                fermatPluginManager.startPluginAndReferences(plugin.getValue());
+
+                if (plugin.getValue() instanceof DatabaseManagerForDevelopers)
+                    dealsWithDatabaseManagersPlugins.put(plugin.getKey(), plugin.getValue());
+
+                if (plugin.getValue() instanceof LogManagerForDevelopers)
+                    dealsWithLogManagersPlugins.put(plugin.getKey(), plugin.getValue());
 
             } catch (final CantStartPluginException e) {
                 System.out.println(e.toString());
                 //throw new CantStartAllRegisteredPlatformsException(e, "", "Error starting plug-ins during the start of all platforms.");
-            } catch (final Exception e) {
+            } catch (Exception e) {
                 System.out.println(e.toString());
-                //throw new CantStartAllRegisteredPlatformsException(e, "", "Unhandled Exception.");
+                //throw new CantStartAllRegisteredPlatformsException(e, "", "Unhandled Error.");
             }
+        }
+
+        try {
+            AbstractPlugin developerModule = startAndGetPluginVersion(new PluginVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.SUB_APP_MODULE, Plugins.DEVELOPER, Developers.BITDUBAI, new Version()));
+
+            ((DealWithDatabaseManagers) developerModule).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
+            ((DealsWithLogManagers) developerModule).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
+        } catch (Exception e) {
+            System.out.println("************************* ERROR TRYING TO ASSIGN REFERENCES TO THE DEVELOPER SUB_APP_MODULE.");
+            System.out.println(e.toString());
         }
     }
 
