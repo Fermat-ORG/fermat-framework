@@ -122,6 +122,7 @@ public class Platform implements Serializable {
         }
 
         if (CCP) {
+            pluginsToInstantiate.put(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY       , Plugins.INTRA_WALLET_USER     ), Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
 
             pluginsToInstantiate.put(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION    , Plugins.INCOMING_EXTRA_USER   ), Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
             pluginsToInstantiate.put(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION    , Plugins.INCOMING_INTRA_USER   ), Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION);
@@ -190,6 +191,8 @@ public class Platform implements Serializable {
 
         for (Map.Entry<PluginVersionReference, Plugins> pvr : pluginsToInstantiate.entrySet())
             startEachPlugin(pvr.getKey(), pvr.getValue());
+
+        System.out.println("soy BITDUBAI_INTRA_USER_FACTORY_MODULE: "+corePlatformContext.getPlugin(Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE));
 
         List<Map.Entry<Plugins, Long>> list = new LinkedList<>(pluginsStartUpTime.entrySet());
         Collections.sort(list, new Comparator<Map.Entry<Plugins, Long>>() {
@@ -319,16 +322,5 @@ public class Platform implements Serializable {
      */
     public CorePlatformContext getCorePlatformContext() {
         return corePlatformContext;
-        // Luis: TODO: Este metodo debe ser removido y lo que se debe devolver es un context con referencias a los plugins que la interfaz grafica puede acceder, no a todos los que existen como esta ahora mismo.
-    }
-
-    /**
-     * Get the plugin reference from the context
-     *
-     * @param key
-     * @return Plugin
-     */
-    public Plugin getPlugin(Plugins key) {
-        return corePlatformContext.getPlugin(key);
     }
 }
