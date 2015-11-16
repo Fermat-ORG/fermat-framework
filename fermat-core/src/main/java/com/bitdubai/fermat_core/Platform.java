@@ -122,7 +122,7 @@ public class Platform implements Serializable {
         }
 
         if (CCP) {
-            pluginsToInstantiate.put(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY       , Plugins.INTRA_WALLET_USER     ), Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
+            pluginsToInstantiate.put(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY       , Plugins.INTRA_WALLET_USER     ), Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY);
 
             pluginsToInstantiate.put(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION    , Plugins.INCOMING_EXTRA_USER   ), Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
             pluginsToInstantiate.put(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION    , Plugins.INCOMING_INTRA_USER   ), Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION);
@@ -215,7 +215,7 @@ public class Platform implements Serializable {
 
         try {
 
-            Addon addon = fermatSystem.getAddon(addonVersionReference);
+            Addon addon = fermatSystem.startAndGetAddon(addonVersionReference);
 
             corePlatformContext.registerAddon(
                     addon,
@@ -275,7 +275,7 @@ public class Platform implements Serializable {
 
     private void reportUnexpectedError(UnexpectedPlatformExceptionSeverity severity, Exception e) {
         try {
-            ErrorManager errorManager = (ErrorManager) fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER));
+            ErrorManager errorManager = (ErrorManager) fermatSystem.startAndGetAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER));
             errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, severity, e);
         } catch (CantGetAddonException | VersionNotFoundException z) {
             System.out.println("can't get error manager");

@@ -213,7 +213,7 @@ public final class FermatSystemContext {
 
             return getPlatform(layerReference.getPlatformReference()).getLayer(layerReference);
 
-        } catch (PlatformNotFoundException e) {
+        } catch (final PlatformNotFoundException e) {
 
             throw new LayerNotFoundException(e, "layer: " + layerReference.toString(), "the platform of the layer was not founded in the system context.");
         }
@@ -235,6 +235,26 @@ public final class FermatSystemContext {
         } else {
             throw new PlatformNotFoundException("platform: " + platformReference.toString(), "platform not found in the system context.");
         }
+    }
+
+    public final ConcurrentHashMap<AddonVersionReference, AbstractAddon> listAddonVersions() {
+
+        final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions = new ConcurrentHashMap<>();
+
+        for(ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
+            versions.putAll(platform.getValue().listAddonVersions());
+
+        return versions;
+    }
+
+    public final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> listPluginVersions() {
+
+        final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions = new ConcurrentHashMap<>();
+
+        for(ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
+            versions.putAll(platform.getValue().listPluginVersions());
+
+        return versions;
     }
 
     public final Object getOsContext() {
