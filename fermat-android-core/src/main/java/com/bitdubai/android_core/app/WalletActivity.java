@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
-import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
@@ -29,9 +28,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Mod
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ResourcesManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
