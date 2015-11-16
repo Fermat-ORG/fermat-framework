@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesInstallationNetworkServiceDAO;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.Repository;
@@ -120,16 +120,16 @@ public class UninstallLanguageForSubAppTest {
 
     String repoManifest = "<skin ></skin >";
 
-    SubAppResourcesInstallationNetworkServicePluginRoot subAppResourcesInstallationNetworkServicePluginRoot;
+    SubAppResourcesNetworkServicePluginRoot subAppResourcesNetworkServicePluginRoot;
     private SubAppResourcesInstallationNetworkServiceDAO subAppResourcesDAO;
 
     @Before
     public void setUp() throws Exception {
-        subAppResourcesInstallationNetworkServicePluginRoot = new SubAppResourcesInstallationNetworkServicePluginRoot();
-        subAppResourcesInstallationNetworkServicePluginRoot.setPluginFileSystem(pluginFileSystem);
-        subAppResourcesInstallationNetworkServicePluginRoot.setEventManager(mockEventManager);
-        subAppResourcesInstallationNetworkServicePluginRoot.setErrorManager(errorManager);
-        subAppResourcesInstallationNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        subAppResourcesNetworkServicePluginRoot = new SubAppResourcesNetworkServicePluginRoot();
+        subAppResourcesNetworkServicePluginRoot.setPluginFileSystem(pluginFileSystem);
+        subAppResourcesNetworkServicePluginRoot.setEventManager(mockEventManager);
+        subAppResourcesNetworkServicePluginRoot.setErrorManager(errorManager);
+        subAppResourcesNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         when(githubConnection.getFile(anyString())).thenReturn(repoManifest);
@@ -167,14 +167,14 @@ public class UninstallLanguageForSubAppTest {
     }
     @Test
     public void testUninstallLanguageForSubApp_FileFound() throws Exception{
-        subAppResourcesInstallationNetworkServicePluginRoot.start();
-        catchException(subAppResourcesInstallationNetworkServicePluginRoot).uninstallLanguageForSubApp(UUID.randomUUID(), "en", "subAppPublicKey");
+        subAppResourcesNetworkServicePluginRoot.start();
+        catchException(subAppResourcesNetworkServicePluginRoot).uninstallLanguageForSubApp(UUID.randomUUID(), "en", "subAppPublicKey");
         assertThat(caughtException()).isNull();
     }
     @Test
         public void testUninstallLanguageForSubApp_FileNotFoundException() throws Exception{
-            subAppResourcesInstallationNetworkServicePluginRoot.start();
-            catchException(subAppResourcesInstallationNetworkServicePluginRoot).uninstallLanguageForSubApp(null, "en", "subAppPublicKey");
+            subAppResourcesNetworkServicePluginRoot.start();
+            catchException(subAppResourcesNetworkServicePluginRoot).uninstallLanguageForSubApp(null, "en", "subAppPublicKey");
             assertThat(caughtException()).isNotNull();
         }
 }

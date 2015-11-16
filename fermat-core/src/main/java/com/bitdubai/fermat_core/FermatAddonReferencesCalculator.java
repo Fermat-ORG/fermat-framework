@@ -20,7 +20,7 @@ public class FermatAddonReferencesCalculator {
     }
 
     /**
-     * Throw the method <code>listReferencesByInstantiationOrder</code> we can get the list of addon version references of
+     * Through the method <code>listReferencesByInstantiationOrder</code> we can get the list of addon version references of
      * a plugin version ordered by instantiation need.
      *
      * @param addonVersionReference data of the addon version that we need to calculate the references.
@@ -64,7 +64,7 @@ public class FermatAddonReferencesCalculator {
     }
 
     *//**
-     * Throw the method <code>getAddonsInstantiationOrder</code> we can order the addon by instantiation level.
+     * Through the method <code>getAddonsInstantiationOrder</code> we can order the addon by instantiation level.
      *
      * @param addonLevels map that saves the addons levels at the moment, the key is the addon version reference, and the value is an integer indicating the level.
      *
@@ -88,7 +88,7 @@ public class FermatAddonReferencesCalculator {
     }
 
     *//**
-     * Throw the method <code>setLevels</code> we give to the addon reference the level that it must have.
+     * Through the method <code>setLevels</code> we give to the addon reference the level that it must have.
      *
      * @param arToCalc      addon version which we are calculating.
      * @param lvlToAssign   level to assign to the addon version that we are calculating..
@@ -128,7 +128,7 @@ public class FermatAddonReferencesCalculator {
     }
 
     *//**
-     * Throw the method <code>setLevels</code> we give to the addon reference the level that it must have.
+     * Through the method <code>setLevels</code> we give to the addon reference the level that it must have.
      *
      * @param arToCalc      addon version which we are calculating.
      * @param arList        list of references of the addon version which we are calculating.
@@ -168,7 +168,7 @@ public class FermatAddonReferencesCalculator {
     }
 
     *//**
-     * Throw the method <code>assignLvlToReferences</code> we give to the reference the lvl that they must have.
+     * Through the method <code>assignLvlToReferences</code> we give to the reference the lvl that they must have.
      *
      * @param arToCalc      addon version which we are calculating.
      * @param lvlToAssign   level to assign to the references.
@@ -191,7 +191,7 @@ public class FermatAddonReferencesCalculator {
     }
 
     *//**
-     * Throw the method <code>assignLvlToReferences</code> we give to the reference the lvl that they must have.
+     * Through the method <code>assignLvlToReferences</code> we give to the reference the lvl that they must have.
      *
      * @param arToCalc      addon version which we are calculating.
      * @param arList        list of references of the addon version which we are calculating.
@@ -215,7 +215,7 @@ public class FermatAddonReferencesCalculator {
     }
 
     *//**
-     * Throw the method <code>compareReferences</code> you can check if there is a cyclical relationship between the addon version and its references.
+     * Through the method <code>compareReferences</code> you can check if there is a cyclical relationship between the addon version and its references.
      *
      * @param referenceAnalyzing       reference that we're watching.
      * @param subReferenceAnalyzed     reference of the reference that we're watching.

@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.dmp_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.dmp_module.ModuleSubsystem;
-import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.DeveloperBitDubai;
 
 
 /**

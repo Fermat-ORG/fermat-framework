@@ -172,12 +172,6 @@ public final class FermatSystem {
     }
 
     // TODO TEMPORAL METHOD
-    public final AbstractPlugin getPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException {
-
-        return fermatSystemContext.getPluginVersion(pluginVersionReference);
-    }
-
-    // TODO TEMPORAL METHOD
     public final AbstractPlugin startAndGetPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException ,
                                                                                                                      CantStartPluginException {
 
