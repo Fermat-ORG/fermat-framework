@@ -22,7 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
@@ -140,7 +140,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.CRASH,ex);
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH,ex);
         }
     }
 
