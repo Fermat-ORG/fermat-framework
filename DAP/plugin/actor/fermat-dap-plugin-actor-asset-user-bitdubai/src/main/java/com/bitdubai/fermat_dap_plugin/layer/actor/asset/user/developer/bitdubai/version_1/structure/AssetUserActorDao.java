@@ -694,7 +694,7 @@ public class AssetUserActorDao implements Serializable {
             }
             // 2) Find  Asset Users by Connection State.
             //TODO Actor Asset User en Tabla REGISTERED con DAPDAPConnectionState CONNECTED_ONLINE indicara que tiene CryptoAddress
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
+//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
