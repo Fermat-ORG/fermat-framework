@@ -21,7 +21,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.ex
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesInstallationNetworkServiceDAO;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.Repository;
@@ -123,16 +123,16 @@ public class InstallLanguageForSubAppTest extends TestCase {
 
     String repoManifest = "<skin ></skin >";
 
-    SubAppResourcesInstallationNetworkServicePluginRoot subAppResourcesInstallationNetworkServicePluginRoot;
+    SubAppResourcesNetworkServicePluginRoot subAppResourcesNetworkServicePluginRoot;
     private SubAppResourcesInstallationNetworkServiceDAO subAppResourcesDAO;
 
     @Before
     public void setUp() throws Exception {
-        subAppResourcesInstallationNetworkServicePluginRoot = new SubAppResourcesInstallationNetworkServicePluginRoot();
-        subAppResourcesInstallationNetworkServicePluginRoot.setPluginFileSystem(pluginFileSystem);
-        subAppResourcesInstallationNetworkServicePluginRoot.setEventManager(mockEventManager);
-        subAppResourcesInstallationNetworkServicePluginRoot.setErrorManager(errorManager);
-        subAppResourcesInstallationNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        subAppResourcesNetworkServicePluginRoot = new SubAppResourcesNetworkServicePluginRoot();
+        subAppResourcesNetworkServicePluginRoot.setPluginFileSystem(pluginFileSystem);
+        subAppResourcesNetworkServicePluginRoot.setEventManager(mockEventManager);
+        subAppResourcesNetworkServicePluginRoot.setErrorManager(errorManager);
+        subAppResourcesNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         when(githubConnection.getFile(anyString())).thenReturn(repoManifest);
@@ -170,9 +170,9 @@ public class InstallLanguageForSubAppTest extends TestCase {
     }
     @Test
     public void testInstallLanguageForSubApp_ThrowsCantInstallSubAppLanguageException() throws Exception {
-        subAppResourcesInstallationNetworkServicePluginRoot.start();
+        subAppResourcesNetworkServicePluginRoot.start();
 
-        catchException(subAppResourcesInstallationNetworkServicePluginRoot).installLanguageForSubApp("wallet_factory",
+        catchException(subAppResourcesNetworkServicePluginRoot).installLanguageForSubApp("wallet_factory",
                 "bitDubai",
                 "medium",
                 UUID.randomUUID(),
@@ -183,8 +183,8 @@ public class InstallLanguageForSubAppTest extends TestCase {
     }
     @Test
     public void testInstallLanguageForSubApp_FileNotFoundThrowsCantInstallSubAppLanguageException() throws Exception {
-        subAppResourcesInstallationNetworkServicePluginRoot.start();
-        catchException(subAppResourcesInstallationNetworkServicePluginRoot).installLanguageForSubApp(
+        subAppResourcesNetworkServicePluginRoot.start();
+        catchException(subAppResourcesNetworkServicePluginRoot).installLanguageForSubApp(
                 "wallet_factory",
                 "bitDubai",
                 "medium",

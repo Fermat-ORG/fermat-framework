@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesInstallationNetworkServiceDAO;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.Repository;
@@ -124,16 +124,16 @@ public class GetLayoutResourceTest extends TestCase {
 
     String repoManifest = "<skin ></skin >";
 
-    SubAppResourcesInstallationNetworkServicePluginRoot subAppResourcesInstallationNetworkServicePluginRoot;
+    SubAppResourcesNetworkServicePluginRoot subAppResourcesNetworkServicePluginRoot;
     private SubAppResourcesInstallationNetworkServiceDAO subAppResourcesDAO;
 
     @Before
     public void setUp() throws Exception {
-        subAppResourcesInstallationNetworkServicePluginRoot = new SubAppResourcesInstallationNetworkServicePluginRoot();
-        subAppResourcesInstallationNetworkServicePluginRoot.setPluginFileSystem(pluginFileSystem);
-        subAppResourcesInstallationNetworkServicePluginRoot.setEventManager(mockEventManager);
-        subAppResourcesInstallationNetworkServicePluginRoot.setErrorManager(errorManager);
-        subAppResourcesInstallationNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        subAppResourcesNetworkServicePluginRoot = new SubAppResourcesNetworkServicePluginRoot();
+        subAppResourcesNetworkServicePluginRoot.setPluginFileSystem(pluginFileSystem);
+        subAppResourcesNetworkServicePluginRoot.setEventManager(mockEventManager);
+        subAppResourcesNetworkServicePluginRoot.setErrorManager(errorManager);
+        subAppResourcesNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         when(githubConnection.getFile(anyString())).thenReturn(repoManifest);
@@ -171,8 +171,8 @@ public class GetLayoutResourceTest extends TestCase {
     }
     @Test
     public void testGetLayoutResource_ReturnOk_ThrowsCantGetResourcesException() throws Exception {
-        subAppResourcesInstallationNetworkServicePluginRoot.start();
-        catchException(subAppResourcesInstallationNetworkServicePluginRoot).getLayoutResource(
+        subAppResourcesNetworkServicePluginRoot.start();
+        catchException(subAppResourcesNetworkServicePluginRoot).getLayoutResource(
                 "default/medium/landscape/layouts",
                 ScreenOrientation.LANDSCAPE,
                 UUID.randomUUID(),
@@ -181,8 +181,8 @@ public class GetLayoutResourceTest extends TestCase {
     }
     @Test
     public void testcheckResources_TheResourcesRepositoryNotExist_ThrowsCantGetResourcesException() throws Exception {
-        subAppResourcesInstallationNetworkServicePluginRoot.start();
-        catchException(subAppResourcesInstallationNetworkServicePluginRoot).getLayoutResource(null,null,null,null);
+        subAppResourcesNetworkServicePluginRoot.start();
+        catchException(subAppResourcesNetworkServicePluginRoot).getLayoutResource(null,null,null,null);
         assertThat(caughtException()).isNotNull();
     }
     @Ignore
