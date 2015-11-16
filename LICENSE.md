@@ -2,7 +2,7 @@
 
 # Fermat License
 
-Fermat is a system built with components. The main componets are:
+Fermat is a system built with components. The main component types are:
 
 #### Libraries
 
