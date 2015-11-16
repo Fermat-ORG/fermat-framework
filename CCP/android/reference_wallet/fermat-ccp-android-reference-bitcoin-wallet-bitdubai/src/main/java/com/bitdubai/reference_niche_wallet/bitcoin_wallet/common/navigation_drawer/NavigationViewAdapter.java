@@ -44,15 +44,6 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
         this.intraUserLoginIdentity = intraUserLoginIdentity;
     }
-
-    public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
-
-    }
-
-    public void setOnClickListerRefuseButton(View.OnClickListener onClickListener){
-
-    }
-
     /**
      * Create a new holder instance
      *
@@ -91,30 +82,23 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
 
 
             switch (position) {
-                case 1:
+                case 0:
                     holder.getIcon().setImageResource(R.drawable.btn_drawer_home_normal);
                     break;
-                case 2:
+                case 1:
                     holder.getIcon().setImageResource(R.drawable.btn_drawer_profile_normal);
                     break;
-                case 3:
+                case 2:
                     holder.getIcon().setImageResource(R.drawable.btn_drawer_request_normal);
                     break;
-                case 4:
+                case 3:
                     holder.getIcon().setImageResource(R.drawable.btn_drawer_settings_normal);
 
                     break;
-                case 5:
+                case 4:
                     holder.getIcon().setImageResource(R.drawable.btn_drawer_logout_normal);
                     break;
-                case 0:
-                    if(intraUserLoginIdentity.getProfileImage()!=null) {
-                        //Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length);
-                        //holder.getIcon().setImageBitmap(bitmap);
-                    }else{
-                        //Picasso.with(context).load(R.drawable.profile_image2).into(holder.getIcon());
-                    }
-
+                default:
                     break;
             }
         }catch (Exception e){

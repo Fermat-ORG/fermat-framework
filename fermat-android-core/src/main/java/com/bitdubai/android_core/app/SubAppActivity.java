@@ -532,4 +532,13 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
         }
     }
+    @Override
+    public void changeActivityBack(String activityCode){
+        try {
+            getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().changeBackActivity(activityCode);
+        } catch (InvalidParameterException e) {
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivityBack"));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+        }
+    }
 }
