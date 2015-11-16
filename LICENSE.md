@@ -58,15 +58,15 @@ SOFTWARE.
 
 #### Plug-ins
 
-Plugins are middleware components. Anybody can write _Plug-ins_ for Fermat and their authors holds all the rights over them. Please find at the root folder of each _Plug-in_ their LICENSE.md file.
+Plugins are middleware components. Anybody can write _Plug-ins_ for Fermat and their authors hold all the rights over them. Please find at the root folder of each _Plug-in_ their LICENSE.md file.
 
 #### GUI Components
 
-GUI Components provides an interface for end users. Anybody can write _GUI Components_ for Fermat and their authors holds all the rights over them. Please find at the root folder of each _GUI Component_ their LICENSE.md file.
+GUI Components provides an interface for end users. Anybody can write _GUI Components_ for Fermat and their authors hold all the rights over them. Please find at the root folder of each _GUI Component_ their LICENSE.md file.
 
 #### Skins
 
-Skins are graphic resources to be used by GUI Components. Anybody can provide _Skins_ so their authors holds all the rights over them. Please find at the root folder of each _Skin_ their LICENSE.md file.
+Skins are graphic resources to be used by GUI Components. Anybody can provide _Skins_ so their authors hold all the rights over them. Please find at the root folder of each _Skin_ their LICENSE.md file.
 
 #### Language Packages
 
