@@ -153,13 +153,18 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                         walletContact = (CryptoWalletWalletContact) mListItems.get(position);
                         //guardo el contacto
                         contactPositionItem.put(position, walletContact);
-                        if (walletContact.getProfilePicture() != null) {
-                            if (walletContact.getProfilePicture().length>0) {
-                                holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), walletContact.getProfilePicture()));
-                            } else {
-                                holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(),R.drawable.profile_image));
-                            }
-                        }else holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(),R.drawable.profile_image));
+                        try {
+                            if (walletContact.getProfilePicture() != null) {
+                                if (walletContact.getProfilePicture().length > 0) {
+                                    holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), walletContact.getProfilePicture()));
+                                } else {
+                                    holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), R.drawable.profile_image));
+                                }
+                            } else
+                                holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), R.drawable.profile_image));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                         text = walletContact.getActorName();
                         //contact image
 //                        ImageView contact_image = (ImageView)convertView.findViewById(R.id.imageView_contact);

@@ -31,7 +31,7 @@ public class FermatPluginReferencesCalculator {
     }
 
     /**
-     * Throw the method <code>listReferencesByInstantiationOrder</code> we can get the list of plugin version references of
+     * Through the method <code>listReferencesByInstantiationOrder</code> we can get the list of plugin version references of
      * a plugin version ordered by instantiation need.
      *
      * @param pluginVersionReference data of the plugin version that we need to calculate the references.
@@ -75,7 +75,7 @@ public class FermatPluginReferencesCalculator {
     }
 
     /**
-     * Throw the method <code>orderPluginsByLevel</code> we can order the plugin by instantiation level.
+     * Through the method <code>orderPluginsByLevel</code> we can order the plugin by instantiation level.
      *
      * @param pluginLevels map that saves the plugins levels at the moment, the key is the plugin version reference, and the value is an integer indicating the level.
      *
@@ -99,7 +99,7 @@ public class FermatPluginReferencesCalculator {
     }
 
     /**
-     * Throw the method <code>setLevels</code> we give to the plugin reference the level that it must have.
+     * Through the method <code>setLevels</code> we give to the plugin reference the level that it must have.
      *
      * @param prToCalc      plugin version which we are calculating.
      * @param lvlToAssign   level to assign to the plugin version that we are calculating..
@@ -140,7 +140,7 @@ public class FermatPluginReferencesCalculator {
     }
 
     /**
-     * Throw the method <code>setLevels</code> we give to the plugin reference the level that it must have.
+     * Through the method <code>setLevels</code> we give to the plugin reference the level that it must have.
      *
      * @param prToCalc      plugin version which we are calculating.
      * @param prList        list of references of the plugin version which we are calculating.
@@ -181,7 +181,7 @@ public class FermatPluginReferencesCalculator {
     }
 
     /**
-     * Throw the method <code>assignLvlToReferences</code> we give to the reference the lvl that they must have.
+     * Through the method <code>assignLvlToReferences</code> we give to the reference the lvl that they must have.
      *
      * @param prToCalc      plugin version which we are calculating.
      * @param lvlToAssign   level to assign to the references.
@@ -205,7 +205,7 @@ public class FermatPluginReferencesCalculator {
     }
 
     /**
-     * Throw the method <code>assignLvlToReferences</code> we give to the reference the lvl that they must have.
+     * Through the method <code>assignLvlToReferences</code> we give to the reference the lvl that they must have.
      *
      * @param prToCalc      plugin version which we are calculating.
      * @param prList        list of references of the plugin version which we are calculating.
@@ -230,7 +230,7 @@ public class FermatPluginReferencesCalculator {
     }
 
     /**
-     * Throw the method <code>compareReferences</code> you can check if there is a cyclical relationship between the plugin version and its references.
+     * Through the method <code>compareReferences</code> you can check if there is a cyclical relationship between the plugin version and its references.
      *
      * @param referenceAnalyzing       reference that we're watching.
      * @param subReferenceAnalyzed     reference of the reference that we're watching.

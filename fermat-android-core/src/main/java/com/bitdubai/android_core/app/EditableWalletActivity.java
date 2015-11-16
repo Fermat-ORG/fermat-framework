@@ -17,6 +17,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -38,6 +39,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -447,6 +449,16 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     @Override
     public void onCallbackViewObserver(FermatCallback fermatCallback) {
 
+    }
+
+    @Override
+    public void connectWithOtherApp(Engine emgine, Objects... objectses) {
+
+    }
+
+    @Override
+    public Object[] connectBetweenAppsData() {
+        return new Object[0];
     }
 
 

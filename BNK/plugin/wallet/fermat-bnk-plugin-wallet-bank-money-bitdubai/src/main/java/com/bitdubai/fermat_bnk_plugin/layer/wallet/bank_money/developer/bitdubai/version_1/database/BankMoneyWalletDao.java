@@ -138,51 +138,42 @@ public class BankMoneyWalletDao {
 
             if (balanceType == BalanceType.AVAILABLE){
                 availableAmount  = BankMoneyBalanceRecord.getAmount();
-                runningAvailableBalance = (long) (getCurrentBalance(BalanceType.AVAILABLE) + (-availableAmount));
+                runningAvailableBalance = (long) (getAvailableBalance() + (-availableAmount));
                 addBankMoney(BankMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
 
             }
             if (balanceType == BalanceType.BOOK) {
-                bookAmount = BankMoneyBalanceRecord.getAmount();
-
-                runningBookBalance = (long) (getCurrentBalance(BalanceType.BOOK) + (-bookAmount));
+                bookAmount  = BankMoneyBalanceRecord.getAmount();
+                runningBookBalance =  (long) (getBookBalance() + (-bookAmount));;
                 addBankMoney(BankMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
             }
-                } catch (CantGetCurrentBalanceException e) {
-            throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE,e,"Cant Add Debit Exception","Cant Get Current Balance Exception");
-                } catch (CantGetBankMoneyTotalBalanceException e) {
-                    e.printStackTrace();
-                } catch (CantAddBankMoneyException e) {
+                }catch (CantAddBankMoneyException e) {
             throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE,e,"Cant Add Debit Exception","Cant Add Bank Money Exception");
         }
     }
    public void addCredit(BankMoneyBalanceRecord BankMoneyBalanceRecord, BalanceType balanceType) throws CantAddCreditException {
-        try {
-            double availableAmount;
-            double bookAmount;
-            long runningAvailableBalance = 0;
-            long runningBookBalance = 0;
+       try {
+           double availableAmount;
+           double bookAmount;
+           long runningAvailableBalance = 0;
+           long runningBookBalance = 0;
 
-            if (balanceType == BalanceType.AVAILABLE){
-                availableAmount  = BankMoneyBalanceRecord.getAmount();
-                runningAvailableBalance = (long) (getCurrentBalance(BalanceType.AVAILABLE) + (-availableAmount));
-                addBankMoney(BankMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
+           if (balanceType == BalanceType.AVAILABLE) {
+               availableAmount = BankMoneyBalanceRecord.getAmount();
+               runningAvailableBalance = (long) (getAvailableBalance() + availableAmount);
+               addBankMoney(BankMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
 
-            }
-            if (balanceType == BalanceType.BOOK) {
-                bookAmount = BankMoneyBalanceRecord.getAmount();
-
-                runningBookBalance = (long) (getCurrentBalance(BalanceType.BOOK) + (-bookAmount));
-                addBankMoney(BankMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
-            }
-        } catch (CantGetCurrentBalanceException e) {
-            throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE,e,"Cant Add Credit Exception","Cant Get Current Balance Exception");
-        } catch (CantGetBankMoneyTotalBalanceException e) {
-            e.printStackTrace();
-        } catch (CantAddBankMoneyException e) {
-            throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE,e,"Cant Add Credit Exception","Cant Add Bank Money Exception");
-        }
-    }
+           }
+           if (balanceType == BalanceType.BOOK) {
+               bookAmount = BankMoneyBalanceRecord.getAmount();
+               runningBookBalance = (long) (getBookBalance() + bookAmount);
+               ;
+               addBankMoney(BankMoneyBalanceRecord, balanceType, runningBookBalance, runningAvailableBalance);
+           }
+       } catch (CantAddBankMoneyException e) {
+           throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE, e, "Cant Add Credit Exception", "Cant Add Bank Money Exception");
+       }
+   }
     public double getAmaunt()  {
         double balanceAmount = 0;
         for (DatabaseTableRecord record : getCashMoneyList()){
@@ -190,6 +181,22 @@ public class BankMoneyWalletDao {
             balanceAmount +=balanceAmount;
         }
         return balanceAmount;
+    }
+    public long getAvailableBalance()  {
+        long availableBalance = 0;
+        for (DatabaseTableRecord record : getCashMoneyList()){
+            availableBalance= record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
+            availableBalance +=availableBalance;
+        }
+        return availableBalance;
+    }
+    public long getBookBalance()  {
+        long bookBalance = 0;
+        for (DatabaseTableRecord record : getCashMoneyList()){
+            bookBalance= record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME);
+            bookBalance +=bookBalance;
+        }
+        return bookBalance;
     }
     private List<DatabaseTableRecord> getCashMoneyList() {
         DatabaseTable totalBalancesTable = null;
