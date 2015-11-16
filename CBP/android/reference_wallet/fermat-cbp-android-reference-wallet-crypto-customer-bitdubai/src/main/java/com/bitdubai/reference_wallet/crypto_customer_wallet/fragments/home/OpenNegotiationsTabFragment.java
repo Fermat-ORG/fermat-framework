@@ -3,8 +3,6 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,11 +11,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -26,7 +22,6 @@ import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerWalletException;
@@ -35,17 +30,17 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.excep
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWallet;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.MarketExchangeRatesPageAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.NavigationViewAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
-import com.viewpagerindicator.LinePageIndicator;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +94,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         Activity activity = getActivity();
         configureActionBar();
-        configureActivityHeader(activity.getLayoutInflater());
+        LayoutInflater layoutInflater = activity.getLayoutInflater();
+        configureActivityHeader(layoutInflater);
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.ccw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
@@ -110,8 +106,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
 
-        NavigationViewAdapter adapter = new NavigationViewAdapter(activity, null);
-        setNavigationDrawer(adapter);
+        try {
+            addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), null));
+            NavigationViewAdapter adapter = new NavigationViewAdapter(activity, null);
+            setNavigationDrawer(adapter);
+        } catch (CantGetActiveLoginIdentityException e) {
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+        }
     }
 
     private void configureActionBar() {
@@ -133,22 +134,22 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
         }
         toolbarHeader.setVisibility(View.VISIBLE);
-        View headerLayout = layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
+        layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
 
-        if (marketExchageRateSummaryList.isEmpty()) {
-            FermatTextView noMarketRateTextView = (FermatTextView) headerLayout.findViewById(R.id.ccw_no_market_rate);
-            noMarketRateTextView.setVisibility(View.VISIBLE);
-            View marketRateViewPagerContainer = headerLayout.findViewById(R.id.ccw_market_rate_view_pager_container);
-            marketRateViewPagerContainer.setVisibility(View.GONE);
-        } else {
-            ViewPager viewPager = (ViewPager) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager);
-            viewPager.setOffscreenPageLimit(3);
-            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchageRateSummaryList);
-            viewPager.setAdapter(pageAdapter);
-
-            LinePageIndicator indicator = (LinePageIndicator) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
-            indicator.setViewPager(viewPager);
-        }
+//        if (marketExchageRateSummaryList.isEmpty()) {
+//            FermatTextView noMarketRateTextView = (FermatTextView) headerLayout.findViewById(R.id.ccw_no_market_rate);
+//            noMarketRateTextView.setVisibility(View.VISIBLE);
+//            View marketRateViewPagerContainer = headerLayout.findViewById(R.id.ccw_market_rate_view_pager_container);
+//            marketRateViewPagerContainer.setVisibility(View.GONE);
+//        } else {
+//            ViewPager viewPager = (ViewPager) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager);
+//            viewPager.setOffscreenPageLimit(3);
+//            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchageRateSummaryList);
+//            viewPager.setAdapter(pageAdapter);
+//
+//            LinePageIndicator indicator = (LinePageIndicator) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
+//            indicator.setViewPager(viewPager);
+//        }
 
     }
 
