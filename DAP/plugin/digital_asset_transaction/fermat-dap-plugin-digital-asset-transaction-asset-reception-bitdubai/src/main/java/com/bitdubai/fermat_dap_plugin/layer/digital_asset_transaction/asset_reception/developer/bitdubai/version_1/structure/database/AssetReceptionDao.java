@@ -298,6 +298,12 @@ public class AssetReceptionDao {
             databaseTable.setStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.toString(), DatabaseFilterType.EQUAL);
             databaseTable.setStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
+            System.out.println("ASSET RECEPTION: " + "Event Status: " + EventStatus.PENDING.getCode());
+            System.out.println("ASSET RECEPTION: " + "Event Source: " + eventSource.getCode());
+            if(databaseTable.getRecords().size() > 0) {
+                System.out.println("ASSET RECEPTION: " + "Records: "+ databaseTable.getRecords().size());
+            }
+
             this.database.closeDatabase();
             return !databaseTable.getRecords().isEmpty();
         } catch (CantLoadTableToMemoryException exception) {
