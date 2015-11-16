@@ -12,9 +12,9 @@ import com.bitdubai.fermat_ccp_core.layer.module.intra_wallet_user.IntraWalletUs
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ModuleLayer extends AbstractLayer {
+public class SubAppModuleLayer extends AbstractLayer {
 
-    public ModuleLayer() {
+    public SubAppModuleLayer() {
         super(Layers.SUB_APP_MODULE);
     }
 

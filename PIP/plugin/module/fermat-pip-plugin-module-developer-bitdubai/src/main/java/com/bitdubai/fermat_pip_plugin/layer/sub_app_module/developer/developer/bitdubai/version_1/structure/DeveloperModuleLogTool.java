@@ -2,6 +2,8 @@ package com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -23,29 +25,29 @@ import java.util.regex.Pattern;
 public class DeveloperModuleLogTool implements LogTool {
 
 
-    private Map<Plugins,Plugin> LoggingLstPlugins;
-    private Map<Addons,Addon> LoggingLstAddons;
+    private Map<PluginVersionReference,Plugin> LoggingLstPlugins;
+    private Map<AddonVersionReference,Addon> LoggingLstAddons;
 
-    public DeveloperModuleLogTool(Map<Plugins, Plugin> LoggingLstPlugins, Map<Addons, Addon> LoggingLstAddons) {
+    public DeveloperModuleLogTool(Map<PluginVersionReference, Plugin> LoggingLstPlugins, Map<AddonVersionReference, Addon> LoggingLstAddons) {
         this.LoggingLstPlugins = LoggingLstPlugins;
         this.LoggingLstAddons = LoggingLstAddons;
     }
 
     @Override
-    public List<Plugins> getAvailablePluginList() {
-        List<Plugins> lstPlugins=new ArrayList<Plugins>();
-        for(Map.Entry<Plugins, Plugin> entry : LoggingLstPlugins.entrySet()) {
-            Plugins key = entry.getKey();
+    public List<PluginVersionReference> getAvailablePluginList() {
+        List<PluginVersionReference> lstPlugins=new ArrayList<>();
+        for(Map.Entry<PluginVersionReference, Plugin> entry : LoggingLstPlugins.entrySet()) {
+            PluginVersionReference key = entry.getKey();
             lstPlugins.add(key);
         }
         return lstPlugins;
     }
 
     @Override
-    public List<Addons> getAvailableAddonList() {
-        List<Addons> lstAddons=new ArrayList<Addons>();
-        for(Map.Entry<Addons, Addon> entry : LoggingLstAddons.entrySet()) {
-            Addons key = entry.getKey();
+    public List<AddonVersionReference> getAvailableAddonList() {
+        List<AddonVersionReference> lstAddons=new ArrayList<>();
+        for(Map.Entry<AddonVersionReference, Addon> entry : LoggingLstAddons.entrySet()) {
+            AddonVersionReference key = entry.getKey();
             lstAddons.add(key);
         }
         return lstAddons;
@@ -59,7 +61,7 @@ public class DeveloperModuleLogTool implements LogTool {
      * @return
      */
     @Override
-    public List<ClassHierarchyLevels> getClassesHierarchyPlugins(Plugins plugin) throws CantGetClasessHierarchyPluginsException{
+    public List<ClassHierarchyLevels> getClassesHierarchyPlugins(PluginVersionReference plugin) throws CantGetClasessHierarchyPluginsException{
 
         try
         {
@@ -97,7 +99,7 @@ public class DeveloperModuleLogTool implements LogTool {
             for (String myClass : classes) {
                 String[] packages = myClass.split(Pattern.quote("."));
                 ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
-                classesAndPackages.setLevel0(plugin.getKey());
+                classesAndPackages.setLevel0(plugin.toKey());
                 classesAndPackages.setFullPath(myClass);
                 if (packages.length == minPackages) {
                     /**
@@ -144,7 +146,7 @@ public class DeveloperModuleLogTool implements LogTool {
         Created by matias, used in fragment to get loglevels
      */
     @Override
-    public List<ClassHierarchyLevels> getClassesHierarchyAddons(Addons addon) throws CantGetClasessHierarchyAddonsException {
+    public List<ClassHierarchyLevels> getClassesHierarchyAddons(AddonVersionReference addon) throws CantGetClasessHierarchyAddonsException {
         try
         {
             /**
@@ -175,13 +177,13 @@ public class DeveloperModuleLogTool implements LogTool {
              * Level 2: the last package
              * Level 3: the class name.
              */
-            List<ClassHierarchyLevels> returnedClasses = new ArrayList<ClassHierarchyLevels>();
+            List<ClassHierarchyLevels> returnedClasses = new ArrayList<>();
 
 
             for (String myClass : classes) {
                 String[] packages = myClass.split(Pattern.quote("."));
                 ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
-                classesAndPackages.setLevel0(addon.getCode());
+                classesAndPackages.setLevel0(addon.toKey());
                 classesAndPackages.setFullPath(myClass);
                 if (packages.length == minPackages) {
                     /**
