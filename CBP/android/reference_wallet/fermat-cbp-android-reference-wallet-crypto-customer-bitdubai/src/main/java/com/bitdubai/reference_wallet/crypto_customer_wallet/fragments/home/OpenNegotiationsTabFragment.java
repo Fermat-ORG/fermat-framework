@@ -62,7 +62,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     // Data
     private List<GrouperItem> openNegotiationList;
-    private List<IndexInfoSummary> marketExchageRateSummaryList;
+    private List<IndexInfoSummary> marketExchangeRateSummaryList;
 
 
     public static OpenNegotiationsTabFragment newInstance() {
@@ -84,7 +84,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
 
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        marketExchageRateSummaryList = getMarketExchangeRateSummaryData();
+        marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
     }
 
 
@@ -93,9 +93,9 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         super.initViews(layout);
 
         Activity activity = getActivity();
-        configureActionBar();
         LayoutInflater layoutInflater = activity.getLayoutInflater();
         configureActivityHeader(layoutInflater);
+        configureActionBar();
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.ccw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
@@ -136,7 +136,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         toolbarHeader.setVisibility(View.VISIBLE);
         layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
 
-//        if (marketExchageRateSummaryList.isEmpty()) {
+//        if (marketExchangeRateSummaryList.isEmpty()) {
 //            FermatTextView noMarketRateTextView = (FermatTextView) headerLayout.findViewById(R.id.ccw_no_market_rate);
 //            noMarketRateTextView.setVisibility(View.VISIBLE);
 //            View marketRateViewPagerContainer = headerLayout.findViewById(R.id.ccw_market_rate_view_pager_container);
@@ -144,7 +144,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 //        } else {
 //            ViewPager viewPager = (ViewPager) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager);
 //            viewPager.setOffscreenPageLimit(3);
-//            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchageRateSummaryList);
+//            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchangeRateSummaryList);
 //            viewPager.setAdapter(pageAdapter);
 //
 //            LinePageIndicator indicator = (LinePageIndicator) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
