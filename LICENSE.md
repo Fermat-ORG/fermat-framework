@@ -6,7 +6,7 @@ Fermat is a system built with components. The main component types are:
 
 #### Libraries
 
-Most of the libraries in Fermat are part of Fermat Core or Fermat APIs. For these libraries applies the following license:
+Most of the libraries in Fermat are part of Fermat Core or Fermat APIs. For these libraries the following license apply:
 
 >The MIT License (MIT)
 
@@ -32,7 +32,7 @@ SOFTWARE.
 
 #### Addons
 
-Addons are low level components. For these components applies the following license:
+Addons are low level components. For these components the following license apply:
 
 >The MIT License (MIT)
 
