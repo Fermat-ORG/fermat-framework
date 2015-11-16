@@ -1,4 +1,5 @@
-![alt text](https://github.com/bitDubai/fermat-graphic-design/blob/master/3D%20Design/3DLogotypes/FermatLogotype3D/Fermat_Logo_3D_Readme_header.jpg "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/Fermat_Logo_3D.png "Fermat Logo")
+
 
 #Installation Guide
 

@@ -148,7 +148,9 @@ public class AssetCryptoVaultManager  {
         BlockchainNetworkType networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
 
         /**
-         * I will create a new wallet from my own set of keys
+         * I will create a new wallet with all the keys that I generated.
+         * Then I will import all the transactions from the crypto network.
+         * Then I will create a new transaction and broadcast it.
          */
 
         return "";
