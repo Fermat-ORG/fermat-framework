@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 

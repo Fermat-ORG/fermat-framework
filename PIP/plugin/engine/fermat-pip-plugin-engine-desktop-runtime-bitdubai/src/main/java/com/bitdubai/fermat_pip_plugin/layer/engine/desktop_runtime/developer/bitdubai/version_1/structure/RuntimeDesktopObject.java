@@ -1,40 +1,49 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bitdubai.version_1.structure;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Matias Furszyfer on 24/07/15.
+ * Created by Matias Furszyfer 16/9/2015
  */
 
-public class RuntimeSubApp implements SubApp {
+public class RuntimeDesktopObject implements DesktopObject {
 
-    SubApps type;
+    //SubApps type;
 
-    Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
+    /**
+     *  Tipo de desktop
+     *  si es subApp, wallet
+     *  Deberia tomaerlo como String
+     */
+     private String desktopType;
 
-    Activities startActivity;
+    /**
+     *  Desktop identifier
+     */
+    private String identifier;
 
-    Activities lastActivity;
+    private Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
 
-    Map<String,LanguagePackage> languagePackages = new HashMap<String,LanguagePackage>();
+    private Activities startActivity;
+
+    private Activities lastActivity;
+
+    private Map<String,LanguagePackage> languagePackages = new HashMap<String,LanguagePackage>();
 
 
     /**
      * RuntimeSubApp interface implementation.
      */
-    public void setType(SubApps type) {
-        this.type = type;
+    public void setType(String desktopType) {
+        this.desktopType = desktopType;
     }
     
     public void addActivity (Activity activity){
@@ -47,12 +56,12 @@ public class RuntimeSubApp implements SubApp {
     }
 
     /**
-     * SubApp interface implementation.
+     * DesktopObject interface implementation.
      */
 
     @Override
-    public SubApps getType() {
-        return type;
+    public String getType() {
+        return desktopType;
     }
 
     @Override
@@ -74,7 +83,6 @@ public class RuntimeSubApp implements SubApp {
         return activities.get(lastActivity);
     }
 
-    @Override
     public void setStartActivity(Activities activity) {
         this.startActivity=activity;
     }

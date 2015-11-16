@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.exceptions.AppRuntimeExceptions;
 

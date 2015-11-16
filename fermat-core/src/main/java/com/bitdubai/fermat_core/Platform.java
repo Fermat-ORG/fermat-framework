@@ -116,7 +116,7 @@ public class Platform implements Serializable {
             pluginsToInstantiate.put(ref(Platforms.PLUG_INS_PLATFORM, Layers.SUB_APP_MODULE , Plugins.NOTIFICATION     ), Plugins.BITDUBAI_MIDDLEWARE_NOTIFICATION);
 
             pluginsToInstantiate.put(ref(Platforms.PLUG_INS_PLATFORM, Layers.ENGINE         , Plugins.DESKTOP_RUNTIME  ), Plugins.BITDUBAI_DESKTOP_RUNTIME);
-            pluginsToInstantiate.put(ref(Platforms.PLUG_INS_PLATFORM, Layers.ENGINE         , Plugins.APP_RUNTIME      ), Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+            pluginsToInstantiate.put(ref(Platforms.PLUG_INS_PLATFORM, Layers.ENGINE         , Plugins.SUB_APP_RUNTIME), Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
             pluginsToInstantiate.put(ref(Platforms.PLUG_INS_PLATFORM, Layers.NETWORK_SERVICE, Plugins.SUB_APP_RESOURCES), Plugins.BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE);
         }

@@ -155,7 +155,7 @@ public enum Plugins implements FermatEnum {
 
     // Init new Plugins
 
-    APP_RUNTIME                 ("APR"),
+    SUB_APP_RUNTIME("APR"),
     ASSET_APPROPRIATION         ("ASAP"),
     ASSET_DISTRIBUTION          ("ASD"),
     ASSET_FACTORY               ("ASF"),
@@ -233,7 +233,7 @@ public enum Plugins implements FermatEnum {
 
         switch (code) {
 
-            case "APR":   return APP_RUNTIME;
+            case "APR":   return SUB_APP_RUNTIME;
             case "ASAP":  return ASSET_APPROPRIATION;
             case "ASD":   return ASSET_DISTRIBUTION;
             case "ASF":   return ASSET_FACTORY;

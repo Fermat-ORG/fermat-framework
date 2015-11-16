@@ -1,14 +1,13 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1;
-
-
-/**
- * Created by Matias Furszyfer 24/07/15
- */
+package com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -28,95 +27,48 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardPageTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Apps;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.event_handlers.WalletResourcesInstalledEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeApp;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.event_handlers.WalletResourcesInstalledEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * The App Runtime is the module in charge of the UI navigation structure. A user is always at a certain point in this
  * structure.
- */
-
-
-/**
+ *
  * A Navigation stack is maintained by this plugin to allow the user to go back all the stack down to the root if necessary.
+ *
+ * Created by Matias Furszyfer 24/07/15
  */
+public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements SubAppRuntimeManager {
 
-
-public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntimeManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     /**
      * SubAppRuntimeManager Interface member variables.
      */
-
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-    Map<SubApps, SubApp> listSubApp = new HashMap<SubApps, SubApp>();
+    Map<SubApps, SubApp> listSubApp = new HashMap<>();
 
     SubApps lastSubapp;
 
     RuntimeSubApp homeScreen;
 
-    /**
-     * UsesFileSystem Interface member variables.
-     */
-    PluginFileSystem pluginFileSystem;
-
-
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    ErrorManager errorManager;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    EventManager eventManager;
-
-    /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
-
-
-    public void addToNavigationStructure(/*String NavigationStructure, WalletModule*/) {
-
-        /*
-        FermatEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
-        ((NavigationStructureUpdatedEvent) platformEvent).----------(this.-----);
-        eventManager.raiseEvent(platformEvent);
-        */
+    public SubAppRuntimeEnginePluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
-    
-    /*
-    FermatEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
-    ((NavigationStructureUpdatedEvent) platformEvent).--------(this.-------);
-    eventManager.raiseEvent(platformEvent);
-*/
-
 
     @Override
     public void start() throws CantStartPluginException {
@@ -127,8 +79,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
             fermatEventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED);
-            fermatEventHandler = new WalletResourcesInstalledEventHandler();
-            ((WalletResourcesInstalledEventHandler) fermatEventHandler).setSubAppRuntimeManager(this);
+            fermatEventHandler = new WalletResourcesInstalledEventHandler(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
@@ -141,7 +92,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             factoryReset();
 
             this.serviceStatus = ServiceStatus.STARTED;
-        } catch (CantFactoryResetException ex) {
+        } catch (com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException ex) {
             String message = CantStartPluginException.DEFAULT_MESSAGE;
             FermatException cause = ex;
             String context = "App Runtime Start";
@@ -150,18 +101,6 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Unchecked Exception occurred, check the cause");
         }
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-
-        this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
@@ -179,17 +118,9 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
     }
 
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-
     /**
      * AppRuntime Interface implementation.
      */
-
-
     @Override
     public SubApp getLastSubApp() {
         if (lastSubapp != null) {
@@ -227,68 +158,16 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
         return homeScreen;
     }
 
-
-    /**
-     * UsesFileSystem Interface implementation.
-     */
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
-    /**
-     * The first time this plugins runs, it will setup the initial structure for the App, subApp and so on through the local
-     * interfaces of the classes involved,
-     */
-    private void firstRunCheck() {
-
-        /**
-         * First I check weather this a structure already created, if not I create the "Factory" structure.
-         */
-
-
-    }
-
-
     /**
      * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the
      * factory structure.
      */
-    private void factoryReset() throws CantFactoryResetException {
+    private void factoryReset() throws com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException {
 
         loadHomeScreen();
 
         try {
-            RuntimeApp runtimeApp = new RuntimeApp();
+            com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.structure.RuntimeApp runtimeApp = new com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.structure.RuntimeApp();
             runtimeApp.setType(Apps.CRYPTO_WALLET_PLATFORM);
 
             RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
@@ -1539,11 +1418,11 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
 
         } catch (Exception e) {
-            String message = CantFactoryResetException.DEFAULT_MESSAGE;
+            String message = com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
             String context = "Error on method Factory Reset, setting the structure of the apps";
             String possibleReason = "some null definition";
-            throw new CantFactoryResetException(message, cause, context, possibleReason);
+            throw new com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException(message, cause, context, possibleReason);
 
         }
 

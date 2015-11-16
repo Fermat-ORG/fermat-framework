@@ -1,10 +1,13 @@
-package com.bitdubai.fermat_pip_plugin.layer.engine.app_runtime.developer.bitdubai.version_1;
-
+package com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -17,38 +20,30 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_pip_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
-import com.bitdubai.fermat_pip_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeDesktopObject;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
+import com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bitdubai.version_1.structure.RuntimeDesktopObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 
 /**
+ *
+ * TODO this plugin DO.....
+ *
  * Created by Matias Furszyfer 16/9/2015
  */
+public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements DesktopRuntimeManager {
 
-
-public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     /**
      * SubAppRuntimeManager Interface member variables.
      */
-
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
@@ -62,51 +57,9 @@ public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeMa
      */
     String lastDesktopObject;
 
-    /**
-     * Start desktop object
-     */
-    String startDesktopObject;
-
-    //SubApps lastSubapp;
-
-    //RuntimeSubApp homeScreen;
-
-    /**
-     * UsesFileSystem Interface member variables.
-     */
-    PluginFileSystem pluginFileSystem;
-
-
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    ErrorManager errorManager;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    EventManager eventManager;
-
-    /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
-
-
-    public void addToNavigationStructure(/*String NavigationStructure, WalletModule*/) {
-
-        /*
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
-        ((NavigationStructureUpdatedEvent) platformEvent).----------(this.-----);
-        eventManager.raiseEvent(platformEvent);
-        */
+    public DesktopRuntimeEnginePluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
-    
-    /*
-    PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
-    ((NavigationStructureUpdatedEvent) platformEvent).--------(this.-------);
-    eventManager.raiseEvent(platformEvent);
-*/
 
 
     @Override
@@ -115,14 +68,6 @@ public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeMa
             /**
              * I will initialize the handling of com.bitdubai.platform events.
              */
-//            EventListener eventListener;
-//            EventHandler eventHandler;
-//            eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED);
-//            eventHandler = new WalletResourcesInstalledEventHandler();
-//            ((WalletResourcesInstalledEventHandler) eventHandler).setSubAppRuntimeManager(this);
-//            eventListener.setEventHandler(eventHandler);
-//            eventManager.addListener(eventListener);
-//            listenersAdded.add(eventListener);
 
             /**
              * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
@@ -144,18 +89,6 @@ public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeMa
     }
 
     @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-
-        this.serviceStatus = ServiceStatus.STARTED;
-
-    }
-
-    @Override
     public void stop() {
         /**
          * I will remove all the listeners registered with the event manager. 
@@ -170,17 +103,9 @@ public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeMa
 
     }
 
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-
     /**
      * AppRuntime Interface implementation.
      */
-
-
     @Override
     public DesktopObject getLastDesktopObject() {
         if (lastDesktopObject != null) {
@@ -205,57 +130,6 @@ public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeMa
     public List<DesktopObject> listDesktops() {
         return lstDesktops;
     }
-
-    /**
-     * UsesFileSystem Interface implementation.
-     */
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
-    /**
-     * The first time this plugins runs, it will setup the initial structure for the App, subApp and so on through the local
-     * interfaces of the classes involved,
-     */
-    private void firstRunCheck() {
-
-        /**
-         * First I check weather this a structure already created, if not I create the "Factory" structure.
-         */
-
-
-    }
-
 
     /**
      * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the

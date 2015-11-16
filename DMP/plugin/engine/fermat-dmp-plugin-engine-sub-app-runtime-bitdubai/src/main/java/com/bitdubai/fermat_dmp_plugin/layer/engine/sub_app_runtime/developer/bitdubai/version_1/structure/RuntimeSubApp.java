@@ -1,49 +1,40 @@
-package com.bitdubai.fermat_pip_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.structure;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Matias Furszyfer 16/9/2015
+ * Created by Matias Furszyfer on 24/07/15.
  */
 
-public class RuntimeDesktopObject implements DesktopObject {
+public class RuntimeSubApp implements SubApp {
 
-    //SubApps type;
+    SubApps type;
 
-    /**
-     *  Tipo de desktop
-     *  si es subApp, wallet
-     *  Deberia tomaerlo como String
-     */
-     private String desktopType;
+    Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
 
-    /**
-     *  Desktop identifier
-     */
-    private String identifier;
+    Activities startActivity;
 
-    private Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
+    Activities lastActivity;
 
-    private Activities startActivity;
-
-    private Activities lastActivity;
-
-    private Map<String,LanguagePackage> languagePackages = new HashMap<String,LanguagePackage>();
+    Map<String,LanguagePackage> languagePackages = new HashMap<String,LanguagePackage>();
 
 
     /**
      * RuntimeSubApp interface implementation.
      */
-    public void setType(String desktopType) {
-        this.desktopType = desktopType;
+    public void setType(SubApps type) {
+        this.type = type;
     }
     
     public void addActivity (Activity activity){
@@ -56,12 +47,12 @@ public class RuntimeDesktopObject implements DesktopObject {
     }
 
     /**
-     * DesktopObject interface implementation.
+     * SubApp interface implementation.
      */
 
     @Override
-    public String getType() {
-        return desktopType;
+    public SubApps getType() {
+        return type;
     }
 
     @Override
@@ -83,6 +74,7 @@ public class RuntimeDesktopObject implements DesktopObject {
         return activities.get(lastActivity);
     }
 
+    @Override
     public void setStartActivity(Activities activity) {
         this.startActivity=activity;
     }
