@@ -11,6 +11,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.ReceiveTransactionFragment2;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestFormFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestHomePaymentFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestReceiveHistoryFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestSendHistoryFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendTransactionFragment2;
@@ -82,7 +83,7 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                     currentFragment = TransactionsSendHistory.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_REQUEST_RECEIVED_HISTORY:
-                    currentFragment = RequestSendHistoryFragment.newInstance();
+                    currentFragment = RequestReceiveHistoryFragment.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_REQUEST_SENT_HISTORY:
                     currentFragment = RequestSendHistoryFragment.newInstance();
