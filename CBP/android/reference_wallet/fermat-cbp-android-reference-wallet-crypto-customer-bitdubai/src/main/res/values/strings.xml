@@ -20,4 +20,5 @@
     <string name="sell_text_and_price">Sell: %1$s</string>
     <string name="buy_text_and_price">Buy: %1$s</string>
     <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
+    <string name="ccw_no_market_exchange_rates_to_show">No Market Exchange Rates to Show</string>
 </resources>

@@ -14,29 +14,17 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 
 public class NavigationItemMenuViewHolder extends FermatViewHolder {
-    private int holderType;
     private TextView label;
     private ImageView icon;
-    private TextView userName;
-    private ImageView userImage;
 
 
-    public NavigationItemMenuViewHolder(View itemView, int type) {
+    public NavigationItemMenuViewHolder(View itemView) {
         super(itemView);
 
-        if (type == NavigationViewAdapter.TYPE_ITEM) {
-            label = (TextView) itemView.findViewById(R.id.textView_label);
-            icon = (ImageView) itemView.findViewById(R.id.imageView_icon);
-        }else{
-            userName = (TextView) itemView.findViewById(R.id.textView_label);
-            userImage = (ImageView) itemView.findViewById(R.id.imageView_icon);
-        }
+        label = (TextView) itemView.findViewById(R.id.textView_label);
+        icon = (ImageView) itemView.findViewById(R.id.imageView_icon);
 
-        holderType = type;
-    }
 
-    public int getHolderType() {
-        return holderType;
     }
 
     public TextView getLabel() {
@@ -45,13 +33,5 @@ public class NavigationItemMenuViewHolder extends FermatViewHolder {
 
     public ImageView getIcon() {
         return icon;
-    }
-
-    public ImageView getUserImage() {
-        return userImage;
-    }
-
-    public TextView getUserName() {
-        return userName;
     }
 }
