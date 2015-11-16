@@ -440,15 +440,19 @@ public abstract class FermatActivity extends AppCompatActivity
                     if(collapsingToolbarLayout!=null) {
 
                         collapsingToolbarLayout.setBackgroundColor(Color.parseColor(titleBar.getColor()));
+                        collapsingToolbarLayout.setScrimsShown(true);
+                        collapsingToolbarLayout.setContentScrimColor(Color.parseColor(titleBar.getColor()));
+                        mToolbar.setBackgroundColor(Color.parseColor(titleBar.getColor()));
+                        appBarLayout.setBackgroundColor(Color.parseColor(titleBar.getColor()));
                         //  mutedColor = palette.getMutedColor(R.attr.colorPrimary);
                         //collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(R.color.gps_friends_green_main));
-                        collapsingToolbarLayout.setContentScrimColor(Color.parseColor(titleBar.getColor()));
                         if(titleBar.getTitleColor()!=null) {
                             collapsingToolbarLayout.setCollapsedTitleTextColor(Color.parseColor(titleBar.getTitleColor()));
                         }
                     }else {
                             mToolbar.setBackgroundColor(Color.parseColor(titleBar.getColor()));
                             appBarLayout.setBackgroundColor(Color.parseColor(titleBar.getColor()));
+
 
                         if(titleBar.getTitleColor()!=null) {
                             mToolbar.setTitleTextColor(Color.parseColor(titleBar.getTitleColor()));
