@@ -148,6 +148,67 @@ public final class FermatPluginManager {
         }
     }
 
+
+    public final void startPluginAndReferences(final AbstractPlugin abstractPlugin) throws CantStartPluginException {
+
+        final PluginVersionReference pluginVersionReference = abstractPlugin.getPluginVersionReference();
+
+        try {
+
+            final FermatPluginIdsManager pluginIdsManager = getPluginIdsManager();
+
+
+
+            if (!abstractPlugin.isStarted()) {
+
+                final List<AddonVersionReference> neededAddons = abstractPlugin.getNeededAddons();
+
+                for (final AddonVersionReference avr : neededAddons) {
+                    AbstractAddon reference = addonManager.startAddonAndReferences(avr);
+                    abstractPlugin.assignAddonReference(reference);
+                }
+
+                final List<PluginVersionReference> neededPlugins = abstractPlugin.getNeededPlugins();
+
+                for (final PluginVersionReference pvr : neededPlugins) {
+
+                    AbstractPlugin reference = systemContext.getPluginVersion(pvr);
+
+                    compareReferences(pluginVersionReference, pvr, reference.getNeededPlugins());
+
+                    startPluginAndReferences(pvr);
+
+                    abstractPlugin.assignPluginReference(reference);
+                }
+
+                abstractPlugin.setId(pluginIdsManager.getPluginId(pluginVersionReference));
+
+                startPlugin(abstractPlugin);
+
+            }
+        } catch (CantListNeededReferencesException e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error listing references for the plugin.");
+        } catch(CantAssignReferenceException   |
+                IncompatibleReferenceException |
+                CantStartAddonException        e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error assigning references for the plugin.");
+        } catch(final CantStartPluginIdsManagerException e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to get the pluginIdsManager.");
+        } catch(final CantGetPluginIdException e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to set the plugin id.");
+        } catch (final CyclicalRelationshipFoundException e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Cyclical References found for the plugin.");
+        } catch(VersionNotFoundException e) {
+
+            throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to find a reference for the plugin.");
+        }
+    }
+
     public final void startPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
                                                                                               VersionNotFoundException {
 

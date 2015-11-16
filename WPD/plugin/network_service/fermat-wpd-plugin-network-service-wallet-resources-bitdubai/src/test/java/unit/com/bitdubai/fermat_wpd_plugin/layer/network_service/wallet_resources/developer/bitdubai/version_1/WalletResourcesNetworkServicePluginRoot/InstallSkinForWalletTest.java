@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 
-import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
+import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -74,7 +74,7 @@ public class InstallSkinForWalletTest extends TestCase {
     private Repository repository;
 
     @Mock
-    private GithubConnection githubConnection;
+    private GitHubConnection gitHubConnection;
 
     @Mock
     private XMLParser mockXMLParser;
@@ -95,7 +95,7 @@ public class InstallSkinForWalletTest extends TestCase {
         walletResourcePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
-        when(githubConnection.getFile(anyString())).thenReturn(repoManifest);
+        when(gitHubConnection.getFile(anyString())).thenReturn(repoManifest);
 
         when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockFermatEventListener);
         when(pluginFileSystem.getTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(mockPluginTextFile);

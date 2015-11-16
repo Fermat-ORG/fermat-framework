@@ -5,25 +5,34 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantCreateSystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetResourcesManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ErrorManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ResourcesManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_cbp_core.CBPPlatform;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
 import com.bitdubai.fermat_dap_core.DAPPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The class <code>com.bitdubai.fermat_core.FermatSystem</code>
@@ -88,7 +97,6 @@ public final class FermatSystem {
 
             throw new CantStartSystemException(e, "", "Unhandled Exception.");
         }
-
     }
 
     /**
@@ -113,6 +121,37 @@ public final class FermatSystem {
     }
 
     /**
+     * Through the method <code>getResourcesManager</code> the graphic interface can access to the resources manager in fermat.
+     *
+     * @param pluginVersionReference plugin version reference data.
+     *
+     * @return an instance of the requested resources manager.
+     *
+     * @throws CantGetResourcesManagerException   if something goes wrong.
+     * @throws ResourcesManagerNotFoundException  if we can't find the requested resources manager.
+     */
+    public final ResourcesManager getResourcesManager(final PluginVersionReference pluginVersionReference) throws CantGetResourcesManagerException  ,
+                                                                                                                  ResourcesManagerNotFoundException {
+
+        try {
+
+            final AbstractPlugin resourcesManager = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
+
+            if (resourcesManager instanceof ResourcesManager)
+                return (ResourcesManager) resourcesManager;
+            else
+                throw new CantGetResourcesManagerException(pluginVersionReference.toString3(), "The plugin version requested not implements resources manager interface.");
+
+        } catch(final VersionNotFoundException e) {
+
+            throw new ResourcesManagerNotFoundException(e, pluginVersionReference.toString3(), "The resources manager cannot be found.");
+        } catch (final Exception e) {
+
+            throw new CantGetResourcesManagerException(e, pluginVersionReference.toString3(), "Unhandled error.");
+        }
+    }
+
+    /**
      * Through the method <code>getModuleManager</code> the graphic interface can access to the modules of
      * its sub-apps and wallets.
      *
@@ -124,39 +163,91 @@ public final class FermatSystem {
      * @throws ModuleManagerNotFoundException  if we can't find the requested module manager.
      */
     public final ModuleManager getModuleManager(final PluginVersionReference pluginVersionReference) throws CantGetModuleManagerException  ,
-
                                                                                                             ModuleManagerNotFoundException {
 
         try {
 
-            AbstractPlugin moduleManager = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
+            final AbstractPlugin moduleManager = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
 
             if (moduleManager instanceof ModuleManager)
                 return (ModuleManager) moduleManager;
             else
-                throw new CantGetModuleManagerException(pluginVersionReference.toString(), "The plugin version requested not implements module manager interface.");
+                throw new CantGetModuleManagerException(pluginVersionReference.toString3(), "The plugin version requested not implements module manager interface.");
 
-        } catch(VersionNotFoundException e) {
+        } catch(final VersionNotFoundException e) {
 
-            throw new ModuleManagerNotFoundException(e, pluginVersionReference.toString(), "The module manager cannot be found.");
-        } catch (Exception e) {
+            throw new ModuleManagerNotFoundException(e, pluginVersionReference.toString3(), "The module manager cannot be found.");
+        } catch(final CantGetModuleManagerException e) {
 
-            throw new CantGetModuleManagerException(e, pluginVersionReference.toString(), "Unhandled error.");
+            throw e;
+        } catch (final Exception e) {
+
+            throw new CantGetModuleManagerException(e, pluginVersionReference.toString3(), "Unhandled error.");
         }
     }
 
     /**
-     * Through the method <code>getAddon</code> the graphic interface can access to the addons of fermat
+     * Through the method <code>getErrorManager</code> the graphic interface can access to the error managers of fermat.
      *
      * @param addonVersionReference addon version reference data.
      *
-     * @return an instance of the requested module manager.
+     * @return an instance of the requested error manager.
      *
-     * @throws CantGetAddonException      if something goes wrong.
-     * @throws VersionNotFoundException   if we can't find the requested addon.
+     * @throws CantGetErrorManagerException    if something goes wrong.
+     * @throws ErrorManagerNotFoundException   if we can't find the requested error manager.
      */
-    public final AbstractAddon getAddon(final AddonVersionReference addonVersionReference) throws VersionNotFoundException,
-                                                                                                  CantGetAddonException   {
+    public final ErrorManager getErrorManager(final AddonVersionReference addonVersionReference) throws ErrorManagerNotFoundException,
+                                                                                                        CantGetErrorManagerException {
+
+        try {
+
+            final AbstractAddon errorManager = fermatAddonManager.startAddonAndReferences(addonVersionReference);
+
+            if (errorManager instanceof ErrorManager)
+                return (ErrorManager) errorManager;
+            else
+                throw new CantGetModuleManagerException(addonVersionReference.toString3(), "The addon version requested not implements error manager interface.");
+
+
+        } catch(CantStartAddonException e) {
+
+            throw new CantGetErrorManagerException(e, addonVersionReference.toString3(), "The addon cannot be started.");
+        } catch (Exception e) {
+
+            throw new CantGetErrorManagerException(e, addonVersionReference.toString3(), "Unhandled error.");
+        }
+    }
+
+    // TODO THINK ABOUT THIS.
+    @Deprecated
+    public final void startAllRegisteredPlatforms() throws CantStartAllRegisteredPlatformsException {
+
+        final ConcurrentHashMap<AddonVersionReference, AbstractAddon> addonList = this.fermatSystemContext.listAddonVersions();
+
+        final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> pluginList = this.fermatSystemContext.listPluginVersions();
+
+        try {
+
+            for(ConcurrentHashMap.Entry<AddonVersionReference, AbstractAddon> addon : addonList.entrySet())
+                fermatAddonManager.startAddonAndReferences(addon.getValue());
+
+            for(ConcurrentHashMap.Entry<PluginVersionReference, AbstractPlugin> plugin : pluginList.entrySet())
+                fermatPluginManager.startPluginAndReferences(plugin.getValue());
+
+        } catch (final CantStartAddonException  |
+                       CantStartPluginException e) {
+
+            throw new CantStartAllRegisteredPlatformsException(e, "", "Error starting add-ons or plug-ins during the start of all platforms.");
+        } catch (final Exception e) {
+
+            throw new CantStartAllRegisteredPlatformsException(e, "", "Unhandled Exception.");
+        }
+    }
+
+    // TODO TEMPORAL METHOD UNTIL ALL THE ADD-ONS COULD BE REQUESTED BY ITS OWN METHODS.
+    @Deprecated
+    public final AbstractAddon startAndGetAddon(final AddonVersionReference addonVersionReference) throws VersionNotFoundException,
+                                                                                                          CantGetAddonException   {
 
         try {
 
@@ -164,14 +255,15 @@ public final class FermatSystem {
 
         } catch(CantStartAddonException e) {
 
-            throw new CantGetAddonException(e, addonVersionReference.toString(), "The addon cannot be started.");
+            throw new CantGetAddonException(e, addonVersionReference.toString3(), "The addon cannot be started.");
         } catch (Exception e) {
 
-            throw new CantGetAddonException(e, addonVersionReference.toString(), "Unhandled error.");
+            throw new CantGetAddonException(e, addonVersionReference.toString3(), "Unhandled error.");
         }
     }
 
-    // TODO TEMPORAL METHOD
+    // TODO TEMPORAL METHOD UNTIL ALL THE PLUG-INS COULD BE REQUESTED THROUGH GET RESOURCES MANAGER OR GET MODULE MANAGER METHODS.
+    @Deprecated
     public final AbstractPlugin startAndGetPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException ,
                                                                                                                      CantStartPluginException {
 
