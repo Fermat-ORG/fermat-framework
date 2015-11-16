@@ -5,7 +5,7 @@
  * This file incorporates work covered by the following copyright and
  * permission notice:
  *
- *   Copyright 2015 Fermat foundation
+ *   Copyright 2015 Fermat Foundation
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
