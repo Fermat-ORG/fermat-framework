@@ -4,7 +4,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure.FiatIndexImpl;
 import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.interfaces.IndexProvider;
-import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure.HttpJsonReader;
+import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure.HttpReader;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Date;
@@ -20,7 +20,7 @@ public class VEFIndexProvider implements IndexProvider {
 
         //ALEX_TODO: Quiza sea mejor not to rely on bitcoinvenezuela, e implementar directamente lo que hace DolarToday.php.
 
-        JSONObject json = HttpJsonReader.getJSONFromUrl("http://api.bitcoinvenezuela.com/DolarToday.php?json=yes");
+        JSONObject json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/DolarToday.php?json=yes"));
         //System.out.println("String JSON:" + json.toString());
 
         double purchasePrice = 0;
