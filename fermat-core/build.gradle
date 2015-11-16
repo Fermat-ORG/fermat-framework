@@ -1,6 +1,9 @@
 apply plugin: 'java'
+
 sourceCompatibility = 1.7
+
 version = '1.0'
+
 repositories {
     mavenCentral()
 }
@@ -12,6 +15,7 @@ dependencies {
      */
 
     compile project(':fermat-api')
+
     compile project(':fermat-bch-core')
     compile project(':fermat-cbp-core')
     compile project(':fermat-ccp-core')
@@ -20,22 +24,11 @@ dependencies {
     compile project(':fermat-pip-core')
     compile project(':fermat-wpd-core')
 
-    // PIP Projects
-    compile project(':fermat-pip-plugin-actor-developer-bitdubai')
-    compile project(':fermat-pip-plugin-identity-developer-bitdubai')
-    compile project(':fermat-pip-plugin-module-developer-bitdubai')
-    compile project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai')
-    compile project(':fermat-pip-plugin-module-notification-bitdubai')
-    compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
-
-    // DMP Projects (Plugins)
-    compile project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
-    // DMP Projects (Addons)
-
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     testCompile 'info.cukes:cucumber-java:1.2.4'
     testCompile 'info.cukes:cucumber-junit:1.2.4'
+
 }
 

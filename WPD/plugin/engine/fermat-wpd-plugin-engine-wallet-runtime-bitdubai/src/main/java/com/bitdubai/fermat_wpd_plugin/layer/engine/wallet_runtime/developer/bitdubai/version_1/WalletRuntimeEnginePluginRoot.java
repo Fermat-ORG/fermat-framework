@@ -4,6 +4,12 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
@@ -23,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -65,63 +72,37 @@ import java.util.UUID;
  * Created by Matias Furszyfer on 23.07.15.
  */
 
-public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeManager, XML, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithWalletResources, Plugin {
+public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
+        WalletRuntimeManager,
+        XML {
+
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM    )
+    private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    private EventManager eventManager;
+
 
     /**
      * Path of xml files
      */
     final String NAVIGATION_STRUCTURE_FILE_PATH = "navigation_structure";
 
-    /**
-     * PlatformService Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-    /**
-     * UsesFileSystem Interface member variables.
-     */
-    PluginFileSystem pluginFileSystem;
-
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    ErrorManager errorManager;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    EventManager eventManager;
-
-    /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
     /**
      * WalletRuntimeManager Interface member variables.
      */
 
     WalletNavigationStructure walletNavigationStructureOpen;
-    String lastWalletPublicKey;
 
-    //Map<String, WalletNavigationStructure> listWallets = new HashMap<String, WalletNavigationStructure>();
-    /**
-     * UsesDatabaseSystem Interface member variables
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * LanguageDescriptorFactoryProjectManager Interface member variables
-     */
-    /**
-     * DealsWithWalletResources
-     */
-    private WalletResourcesInstalationManager walletResourcesManger;
-
-
-    /**
-     * PlatformService Interface implementation.
-     */
+    public WalletRuntimeEnginePluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     @Override
     public void start() throws CantStartPluginException {
@@ -191,20 +172,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
     }
 
-
-    @Override
-    public void pause() {
-
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-
-
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
     @Override
     public void stop() {
 
@@ -217,11 +184,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         }
 
         listenersAdded.clear();
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
     }
 
     /**
@@ -276,41 +238,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     public WalletNavigationStructure getNavigationStructureFromWallet(String publicKey) {
         return getNavigationStructure(publicKey);
     }
-
-    /**
-     * UsesFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
 
     @Override
     public WalletNavigationStructure getLastWallet() {
@@ -2644,11 +2571,5 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
         return runtimeWalletNavigationStructure;
-    }
-
-
-    @Override
-    public void setWalletResourcesManager(WalletResourcesInstalationManager walletResources) {
-        this.walletResourcesManger = walletResources;
     }
 }

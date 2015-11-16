@@ -10,11 +10,6 @@ project(':fermat-wpd-api').projectDir = new File('WPD/library/api/fermat-wpd-api
 include ':fermat-wpd-core'
 project(':fermat-wpd-core').projectDir = new File('WPD/library/core/fermat-wpd-core')
 
-
-//actor
-include ':fermat-wpd-plugin-actor-publisher-bitdubai'
-project(':fermat-wpd-plugin-actor-publisher-bitdubai').projectDir = new File('WPD/plugin/actor/fermat-wpd-plugin-actor-publisher-bitdubai')
-
 //DESKTOP MODULE
 include ':fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai'
 project(':fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai').projectDir = new File('WPD/plugin/desktop_module/fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai')
