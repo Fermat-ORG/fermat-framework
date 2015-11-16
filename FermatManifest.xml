@@ -1887,7 +1887,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Crypto Money Transaction" language="java">
+			<layer name="Crypto Transaction" language="java">
 				<plugins>
 					<plugin
 						name="Incoming Device User"
@@ -1923,7 +1923,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Incoming Intra Actor"
+						name="Incoming Intra User"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -1971,7 +1971,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Outgoing Extra Actor"
+						name="Outgoing Extra User"
 						description=""
 						difficulty="10"
 						code-level="production"
