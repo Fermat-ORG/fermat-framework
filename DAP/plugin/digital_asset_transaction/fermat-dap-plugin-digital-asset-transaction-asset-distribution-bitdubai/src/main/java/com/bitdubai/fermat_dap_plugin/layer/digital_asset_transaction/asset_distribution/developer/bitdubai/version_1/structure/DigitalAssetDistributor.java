@@ -44,7 +44,7 @@ import java.util.UUID;
  */
 public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
 
-    //ActorAssetIssuerManager actorAssetIssuerManager;
+    ActorAssetIssuerManager actorAssetIssuerManager;
     ActorAssetIssuer actorAssetIssuer;
     //AssetVaultManager assetVaultManager;
     ErrorManager errorManager;
@@ -79,11 +79,8 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     }
 
     public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantGetActorAssetIssuerException {
-        try {
-            this.actorAssetIssuer=actorAssetIssuerManager.getActorAssetIssuer();
-        } catch (CantGetAssetIssuerActorsException exception) {
-            throw new CantGetActorAssetIssuerException(exception, "Setting the Actor Asset Issuer", "Getting the Actor Asset Issuer");
-        }
+        //            this.actorAssetIssuer=actorAssetIssuerManager.getActorAssetIssuer();
+        this.actorAssetIssuerManager = actorAssetIssuerManager;
     }
 
     /**
@@ -193,13 +190,15 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
             System.out.println("ASSET DISTRIBUTION Delivering genesis transaction "+genesisTransaction);
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.DELIVERING, genesisTransaction);
-            System.out.println("ASSET DISTRIBUTION Sender Actor name "+this.actorAssetIssuer.getName());
+            System.out.println("ASSET DISTRIBUTION Sender Actor name: " + actorAssetIssuerManager.getActorAssetIssuer().getName());
             System.out.println("ASSET DISTRIBUTION Before deliver - remote asset user ");
             this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(this.actorAssetIssuer,remoteActorAssetUser,digitalAssetMetadata);
         } catch (CantExecuteQueryException exception) {
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE,exception,"Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE,exception,"Delivering Digital Asset Metadata to Remote Actor", "The database return an unexpected result");
+        } catch (CantGetAssetIssuerActorsException e) {
+            e.printStackTrace();
         }
 
     }
