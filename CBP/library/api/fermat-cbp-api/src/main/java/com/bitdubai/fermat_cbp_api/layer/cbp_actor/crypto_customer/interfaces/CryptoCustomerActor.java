@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.interfaces;
 
 import com.bitdubai.fermat_cbp_api.all_definition.actor.Actor;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerNegotiation;
@@ -34,13 +35,13 @@ public interface CryptoCustomerActor extends Actor {
     Collection<ActorIdentity> getConnectedBrokers();
 
     //RELATIONSHIP IDENTIDAD-WALLET
-    CustomerIdentityWalletRelationship createCustomerIdentityWalletRelationship(CryptoCustomerIdentity identity, UUID Wallet) throws CantCreateCustomerIdentiyWalletRelationshipException;
-    CustomerIdentityWalletRelationship updateCustomerIdentityWalletRelationship(UUID RelationshipId, CryptoCustomerIdentity identity, UUID Wallet) throws CantUpdateCustomerIdentiyWalletRelationshipException;
+    CustomerIdentityWalletRelationship createCustomerIdentityWalletRelationship(String WalletPublicKey, String identityPublicKey) throws CantCreateCustomerIdentiyWalletRelationshipException;
+    CustomerIdentityWalletRelationship updateCustomerIdentityWalletRelationship(UUID RelationshipId, String WalletPublicKey, String identityPublicKey) throws CantUpdateCustomerIdentiyWalletRelationshipException;
     CustomerIdentityWalletRelationship deleteCustomerIdentityWalletRelationship(UUID RelationshipId) throws CantDeleteCustomerIdentiyWalletRelationshipException;
     Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationships() throws CantGetCustomerIdentiyWalletRelationshipException;
     CustomerIdentityWalletRelationship getAllCustomerIdentityWalletRelationships(UUID RelationshipId) throws CantGetCustomerIdentiyWalletRelationshipException;
-    CustomerIdentityWalletRelationship getAllCustomerIdentityWalletRelationshipsByIdentity(CryptoCustomerIdentity identity) throws CantGetCustomerIdentiyWalletRelationshipException;
-    CustomerIdentityWalletRelationship getAllCustomerIdentityWalletRelationshipsByWallet(UUID Wallet) throws CantGetCustomerIdentiyWalletRelationshipException;
+    CustomerIdentityWalletRelationship getAllCustomerIdentityWalletRelationshipsByIdentity(String identityPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException;
+    CustomerIdentityWalletRelationship getAllCustomerIdentityWalletRelationshipsByWallet(String WalletPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException;
 
     //NEGOTIATION
     CustomerBrokerNegotiation createNegotiationPurchase(ActorIdentity cryptoBroker,Collection<Clause> clauses) throws CantCreatePurchaseNegotiationException;
@@ -57,8 +58,8 @@ public interface CryptoCustomerActor extends Actor {
     CustomerBrokerContractPurchase updateContractPurchase(UUID contractId) throws CantUpdateStatusPurchaseContractException;
     CustomerBrokerContractPurchase getContractPurchase(UUID negotiationId) throws CantGetPurchaseContractException;
     Collection<CustomerBrokerContractPurchase> getContractPurchases() throws CantGetPurchaseContractException;
-    Collection<CustomerBrokerContractPurchase> getContractPurchases(NegotiationStatus status) throws CantGetPurchaseContractException;
-    void sendActorNetworkServiceContractPurchases(CustomerBrokerNegotiation negotiation);
-    void receiveActorNetworkServiceContractPurchases(CustomerBrokerNegotiation negotiation);
+    Collection<CustomerBrokerContractPurchase> getContractPurchases(ContractStatus status) throws CantGetPurchaseContractException;
+    void sendActorNetworkServiceContractPurchases(CustomerBrokerContractPurchase contract) throws CantSendActorNetworkServiceException;
+    void receiveActorNetworkServiceContractPurchases(CustomerBrokerContractPurchase contract) throws CantReceiveActorNetworkServiceException;
 
 }
