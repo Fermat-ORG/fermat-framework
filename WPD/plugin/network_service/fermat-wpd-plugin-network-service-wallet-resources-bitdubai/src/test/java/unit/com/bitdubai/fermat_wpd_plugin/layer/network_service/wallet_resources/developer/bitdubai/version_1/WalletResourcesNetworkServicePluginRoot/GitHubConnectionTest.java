@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 
-import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
+import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubCredentialsExpectedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
@@ -24,7 +24,7 @@ import java.util.Properties;
  */
 
 
-public class GithubConnectionTest {
+public class GitHubConnectionTest {
 
 
     @Test
@@ -102,9 +102,9 @@ public class GithubConnectionTest {
                 "    </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.WalletNavigationStructure>";
 
 
-        GithubConnection githubConnection = new GithubConnection("acostarodrigo/fermat","acostarodrigo","passs");
+        GitHubConnection gitHubConnection = new GitHubConnection("acostarodrigo/fermat","acostarodrigo","passs");
 
-        githubConnection.createGitHubTextFile("seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/RODRI_TE_QUIERO!!.xml",c,"probando github connection");
+        gitHubConnection.createGitHubTextFile("seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/RODRI_TE_QUIERO!!.xml",c,"probando github connection");
 
 
     }

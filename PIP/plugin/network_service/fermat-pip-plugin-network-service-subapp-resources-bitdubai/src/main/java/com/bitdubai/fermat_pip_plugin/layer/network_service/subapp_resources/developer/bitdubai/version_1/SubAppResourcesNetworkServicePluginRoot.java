@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -11,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
+import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetImageResourceException;
@@ -61,6 +60,7 @@ import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.dev
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantDownloadLayouts;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantDownloadResource;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantDownloadResourceFromRepo;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantGetGitHubConnectionException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantGetRepositoryPathRecordException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesSubAppResourcesDatabaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantUninstallSubApp;
@@ -138,11 +138,35 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     /**
      * Github connection until the main repository be open source
      */
-    private GithubConnection githubConnection;
+    private GitHubConnection gitHubConnection;
 
     /**
      * Service Interface implementation.
      */
+
+    private GitHubConnection getGitHubConnection() throws CantGetGitHubConnectionException {
+
+
+        try {
+
+            if (this.gitHubConnection != null)
+                return this.gitHubConnection;
+
+            this.gitHubConnection = new GitHubConnection();
+            return this.gitHubConnection;
+
+        }  catch (GitHubNotAuthorizedException e) {
+
+            throw new CantGetGitHubConnectionException(e, null, "Error in github authentication");
+        } catch (GitHubRepositoryNotFoundException e) {
+
+            throw new CantGetGitHubConnectionException(e, null, "Error init github repository not found");
+        } catch (Exception e) {
+
+            throw new CantGetGitHubConnectionException(e, null, "Unhandled Exception.");
+
+        }
+    }
 
     @Override
     public void start() throws CantStartPluginException {
@@ -172,26 +196,16 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             /**
              *  Connect with main repository
              */
-            githubConnection = new GithubConnection();
+
 
             this.serviceStatus = ServiceStatus.STARTED;
-        }
-        catch(CantInitializeNetworkServicesSubAppResourcesDatabaseException e)
-        {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"Error init plugin data base");
+        } catch (CantInitializeNetworkServicesSubAppResourcesDatabaseException e) {
 
-        }
-        catch( GitHubNotAuthorizedException e)
-        {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"Error in github authentication");
-        }
-        catch(GitHubRepositoryNotFoundException  e)
-        {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"Error init github repository not found");
-        }
-        catch(Exception  e)
-        {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"");
+            throw new CantStartPluginException(e, null, "Error init plugin data base");
+
+        } catch (Exception e) {
+
+            throw new CantStartPluginException(e, null, "Unhandled Exception.");
 
         }
 
@@ -458,7 +472,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             Repository repository = subAppResourcesDAO.getRepository(skinId);
             String linkToRepo = "seed-resources/";
 
-            String repoManifest = githubConnection.getFile(linkToRepo + repository.getPath() + "skin.xml");
+            String repoManifest = getGitHubConnection().getFile(linkToRepo + repository.getPath() + "skin.xml");
 
             Skin skin = new Skin();
             skin = (Skin) XMLParser.parseXML(repoManifest, skin);
@@ -473,16 +487,27 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             deleteResources(repository.getPath(),skin.getResources(),skinId);
 
         } catch (CantGetRepositoryPathRecordException e) {
+
             throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN",e,"Error get skin on data base","");
 
         }catch (CantDeleteRepositoryException cantCheckResourcesException){
+
             throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN",cantCheckResourcesException,"Error delete repository exception","");
 
         }  catch (CantDeleteResourcesFromDisk cantDownloadResourceFromRepo) {
+
             throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN", cantDownloadResourceFromRepo, "Error delete resources", "");
         } catch (IOException e) {
+
             throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN", e, "Skin file not found on github", "");
 
+        } catch (CantGetGitHubConnectionException e) {
+
+            throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN", e, "Error downloading resources.", "Can't connect with github.");
+
+        } catch (Exception e) {
+
+            throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN", e, "Error downloading resources.", "Unhandled Exception.");
         }
     }
 
@@ -922,7 +947,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
                         // this will be used when the main repository be open source
                         //byte[] image = getRepositoryImageFile(link, entry.getValue().getFileName());
                         // this is used because the main repository is private
-                        byte[] image = githubConnection.getImage(link + entry.getValue().getFileName());
+                        byte[] image = getGitHubConnection().getImage(link + entry.getValue().getFileName());
 
 
                         recordImageResource(image, entry.getKey(), skinId, localStoragePath);
@@ -939,9 +964,18 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             throw new CantDownloadResource("CAN'T DOWNLOAD RESOURCES", e, "Error check resources", "");
 
         } catch (MalformedURLException e) {
+
             throw new CantDownloadResource("CAN'T DOWNLOAD RESOURCES", e, "Error get resources from github, mailformed url", "");
         } catch (IOException e) {
+
             throw new CantDownloadResource("CAN'T DOWNLOAD RESOURCES", e, "Error get resources from github, io exception", "");
+        } catch (CantGetGitHubConnectionException e) {
+
+            throw new CantDownloadResource("CAN'T DOWNLOAD RESOURCES", e, "Error downloading resources.", "Can't connect with github.");
+
+        } catch (Exception e) {
+
+            throw new CantDownloadResource("CAN'T DOWNLOAD RESOURCES", e, "Error downloading resources.", "Unhandled Exception.");
         }
     }
     private void deleteResources(String link, Map<String, Resource> resourceMap, UUID skinId) throws CantDeleteResourcesFromDisk {
@@ -978,7 +1012,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
                 //String layoutXML = getRepositoryStringFile(link, entry.getValue().getFilename());
 
                 // this is because the main repository is private
-                String layoutXML = githubConnection.getFile(link + entry.getValue().getFilename());
+                String layoutXML = getGitHubConnection().getFile(link + entry.getValue().getFilename());
 
                 // layouts.put(entry.getValue().getName(), layoutXML);
 
@@ -991,26 +1025,60 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             throw new CantDownloadLayouts("CAN'T DOWNLOAD LAYOUTS", e, "Error check resources", "");
 
         } catch (MalformedURLException e) {
-            throw new CantDownloadLayouts("CAN'T DOWNLOAD RESOURCES", e, "Malformed url", "");
+            throw new CantDownloadLayouts("CAN'T DOWNLOAD LAYOUTS", e, "Malformed url", "");
 
         } catch (IOException e) {
-            throw new CantDownloadLayouts("CAN'T DOWNLOAD RESOURCES", e, "IOException", "");
+            throw new CantDownloadLayouts("CAN'T DOWNLOAD LAYOUTS", e, "IOException", "");
 
+        } catch (CantGetGitHubConnectionException e) {
+
+            throw new CantDownloadLayouts("CAN'T DOWNLOAD LAYOUTS", e, "Error downloading layouts.", "Can't connect with github.");
+
+        } catch (Exception e) {
+
+            throw new CantDownloadLayouts("CAN'T DOWNLOAD LAYOUTS", e, "Error downloading layouts.", "Unhandled Exception.");
         }
     }
 
-    private void downloadLanguage(String link,String languageName, UUID skinId,String localStoragePath,String subAppType) throws CantDownloadLanguage {
+    /**
+     * Through the method <code>downloadLanguage</code> TODO COMPLETE
+     *
+     * @param link TODO COMPLETE
+     * @param languageName
+     * @param skinId
+     * @param localStoragePath
+     * @param subAppType
+     *
+     * @throws CantDownloadLanguage if something goes wrong.
+     */
+    private void downloadLanguage(final String link            ,
+                                  final String languageName    ,
+                                  final UUID   skinId          ,
+                                  final String localStoragePath,
+                                  final String subAppType      ) throws CantDownloadLanguage {
+
         try {
-            String languageXML = githubConnection.getFile(link);
+
+            String languageXML = getGitHubConnection().getFile(link);
 
             recordXML(languageXML, languageName, skinId, localStoragePath,subAppType);
 
         } catch (MalformedURLException e) {
+
             throw new CantDownloadLanguage("CAN'T DOWNLOAD RESOURCES", e, "MalformedURLException", "");
         } catch (IOException e) {
+
             throw new CantDownloadLanguage("CAN'T DOWNLOAD RESOURCES", e, "IOException", "");
         } catch (CantCheckResourcesException e) {
-            e.printStackTrace();
+
+            throw new CantDownloadLanguage("CAN'T DOWNLOAD RESOURCES", e, "Can't check resources.", "");
+        } catch (CantGetGitHubConnectionException e) {
+
+            throw new CantDownloadLanguage("CAN'T DOWNLOAD RESOURCES", e, "Error downloading navigation structure.", "Can't connect with github.");
+
+        } catch (Exception e) {
+
+            throw new CantDownloadLanguage("CAN'T DOWNLOAD RESOURCES", e, "Error downloading navigation structure.", "Unhandled Exception.");
         }
     }
 
@@ -1042,7 +1110,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             //String navigationStructureXML = getRepositoryStringFile(link, navigationStructureName);
 
             // this is used because we have a private main repository
-            String navigationStructureXML = githubConnection.getFile(link+navigationStructureName);
+            String navigationStructureXML = getGitHubConnection().getFile(link + navigationStructureName);
 
             recordXML(navigationStructureXML,navigationStructureName,skinId,localStoragePath,walletPublicKey);
 
@@ -1065,6 +1133,13 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
         catch (IOException e) {
             throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD RESOURCES", e, "Error get navigation Structure for github ", "");
 
+        } catch (CantGetGitHubConnectionException e) {
+
+            throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD RESOURCES", e, "Error downloading navigation structure.", "Can't connect with github.");
+
+        } catch (Exception e) {
+
+            throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD RESOURCES", e, "Error downloading navigation structure.", "Unhandled Exception.");
         }
     }
 
@@ -1165,7 +1240,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             //repoManifest = getRepositoryStringFile(linkToSkin, skinFilename);
 
             //this work only for the private repository
-            repoManifest = githubConnection.getFile(linkToSkin+skinFilename);
+            repoManifest = getGitHubConnection().getFile(linkToSkin + skinFilename);
 
 
             Skin skin = new Skin();
@@ -1189,10 +1264,13 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
             throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Error load manifest file ", "Repository not exist or manifest file not exist");
 
-        }
-        catch (Exception e) {
+        } catch (CantGetGitHubConnectionException e) {
 
-            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Error load manifest file ", "Generic Exception");
+            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Error load manifest file ", "Can't connect with github.");
+
+        } catch (Exception e) {
+
+            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Error load manifest file ", "Unhandled Exception.");
 
         }
     }

@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
+import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
@@ -157,7 +157,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     /**
      * Github connection until the main repository be open source
      */
-    private GithubConnection githubConnection;
+    private GitHubConnection gitHubConnection;
 
     /**
      * Service Interface implementation.
@@ -190,7 +190,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             /**
              *  Connect with main repository
              */
-            githubConnection = new GithubConnection();
+            gitHubConnection = new GitHubConnection();
 
 
             this.serviceStatus = ServiceStatus.STARTED;
@@ -1041,7 +1041,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
                         // this will be used when the main repository be open source
                         //byte[] image = getRepositoryImageFile(link, entry.getValue().getFileName());
                         // this is used because the main repository is private
-                        byte[] image = githubConnection.getImage(link + entry.getValue().getFileName());
+                        byte[] image = gitHubConnection.getImage(link + entry.getValue().getFileName());
 
                         //testing purpose
                        // imagenes.put(entry.getValue().getName(), image);
@@ -1099,7 +1099,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
                 //String layoutXML = getRepositoryStringFile(link, entry.getValue().getFilename());
 
                 // this is because the main repository is private
-                String layoutXML = githubConnection.getFile(link + entry.getValue().getFilename());
+                String layoutXML = gitHubConnection.getFile(link + entry.getValue().getFilename());
 
                // layouts.put(entry.getValue().getName(), layoutXML);
 
@@ -1122,7 +1122,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
     private void downloadLanguage(String link,String languageName, UUID skinId,String localStoragePath,String walletPublicKey) throws CantDownloadLanguage {
         try {
-            String languageXML = githubConnection.getFile(link);
+            String languageXML = gitHubConnection.getFile(link);
 
             recordXML(languageXML, languageName, skinId, localStoragePath,walletPublicKey);
 
@@ -1164,7 +1164,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             //String navigationStructureXML = getRepositoryStringFile(link, navigationStructureName);
 
             // this is used because we have a private main repository
-            String navigationStructureXML = githubConnection.getFile(link+navigationStructureName);
+            String navigationStructureXML = gitHubConnection.getFile(link+navigationStructureName);
 
                 recordXML(navigationStructureXML,navigationStructureName,skinId,localStoragePath,walletPublicKey);
 
@@ -1281,7 +1281,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             //repoManifest = getRepositoryStringFile(linkToSkin, skinFilename);
 
             //this work only for the private repository
-            repoManifest = githubConnection.getFile(linkToSkin+skinFilename);
+            repoManifest = gitHubConnection.getFile(linkToSkin+skinFilename);
 
 
             Skin skin = new Skin();

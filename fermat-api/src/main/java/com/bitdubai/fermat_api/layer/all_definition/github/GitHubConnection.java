@@ -28,7 +28,7 @@ import java.util.Properties;
  *  Class used for Fermat connection with Github
  */
 
-public class GithubConnection {
+public class GitHubConnection {
 
     String mainRepository;
 
@@ -38,12 +38,12 @@ public class GithubConnection {
     Properties properties;
     GHRepository ghRepository;
 
-    public GithubConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
+    public GitHubConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
         mainRepository="furszy/fermat";
         setUpConnection();
     }
 
-    public GithubConnection(String repository, String user, String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
+    public GitHubConnection(String repository, String user, String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
         this.mainRepository = repository;
         setUpConnection(user, password);
     }

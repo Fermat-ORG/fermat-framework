@@ -1,7 +1,7 @@
 package unit.com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
+import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -87,7 +87,7 @@ public class InstallLanguageForSubAppTest extends TestCase {
     private Repository repository;
 
     @Mock
-    private GithubConnection githubConnection;
+    private GitHubConnection gitHubConnection;
 
     @Mock
     private XMLParser mockXMLParser;
@@ -135,7 +135,7 @@ public class InstallLanguageForSubAppTest extends TestCase {
         subAppResourcesNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
-        when(githubConnection.getFile(anyString())).thenReturn(repoManifest);
+        when(gitHubConnection.getFile(anyString())).thenReturn(repoManifest);
         when(pluginFileSystem.createTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(layoutFile);
         when(pluginFileSystem.createBinaryFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(imageFile);
 
