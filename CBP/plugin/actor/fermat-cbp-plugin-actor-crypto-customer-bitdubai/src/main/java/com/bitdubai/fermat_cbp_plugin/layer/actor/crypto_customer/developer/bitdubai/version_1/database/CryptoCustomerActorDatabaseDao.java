@@ -77,12 +77,14 @@ public class CryptoCustomerActorDatabaseDao {
         }
     }
 
+    //### ACTOR ###
+
     //### RELATIONSHIP ###
     //CREATE RELATIONSHIP
     public CustomerIdentityWalletRelationship createRegisterCustomerIdentityWalletRelationship(String walletPublicKey, String identityPublicKey) throws CantRegisterCryptoCustomerIdentityWalletRelationshipException{
         try {
             if (relationshipExists(walletPublicKey, identityPublicKey))
-                throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException ("Cant create new Crypto Broker Wallet, It exists.","Crypto Broker Wallet", "Cant create new Crypto Broker Wallet, alias exists.");
+                throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException ("Cant create new Customer Identity Wallet Relationship, It exists.","Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, Relationship exists.");
 
             DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
@@ -93,15 +95,30 @@ public class CryptoCustomerActorDatabaseDao {
 
             return new CryptoCustomerIdentityWalletRelationshipImpl(walletPublicKey, identityPublicKey);
         } catch (CantInsertRecordException e){
-            throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException (e.getMessage(), e, "Crypto Broker Wallet", "Cant create new Crypto Broker Wallet, insert database problems.");
+            throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException (e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, insert database problems.");
         } catch (Exception e) {
-            throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException (e.getMessage(), FermatException.wrapException(e), "Crypto Broker Wallet", "Cant create new Crypto Broker Wallet, unknown failure.");
+            throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, unknown failure.");
         }
     }
 
     //UPDATE RELATIONSHIP
-    public CustomerIdentityWalletRelationship updateRegisterCustomerIdentityWalletRelationship(UUID RelationshipId, CryptoCustomerIdentity identity, UUID Wallet) throws CantUpdateCustomerIdentiyWalletRelationshipException{
-        return null;
+    public CustomerIdentityWalletRelationship updateRegisterCustomerIdentityWalletRelationship(UUID relationshipId, String walletPublicKey, String identityPublicKey) throws CantRegisterCryptoCustomerIdentityWalletRelationshipException{
+        try {
+            if (relationshipExists(relationshipId))
+                throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException ("Cant create new Customer Identity Wallet Relationship, It exists.","Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, Relationship exists.");
+
+            DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
+            DatabaseTableRecord record = table.getEmptyRecord();
+            record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_WALLET_COLUMN_NAME, walletPublicKey);
+            record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_IDENTITY_COLUMN_NAME, identityPublicKey);
+
+            table.insertRecord(record);
+            return new CryptoCustomerIdentityWalletRelationshipImpl(walletPublicKey, identityPublicKey);
+        } catch (CantInsertRecordException e){
+            throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException (e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, insert database problems.");
+        } catch (Exception e) {
+            throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, unknown failure.");
+        }
     }
 
     //DELETE RELATIONSHIP
@@ -206,4 +223,20 @@ public class CryptoCustomerActorDatabaseDao {
         }
     }
 
+    private boolean relationshipExists(UUID relationshipId) throws CantRegisterCryptoCustomerIdentityWalletRelationshipException{
+        DatabaseTable table;
+        try {
+            table = this.database.getTable (CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if relationship exists", "Crypto Customer Actor", "");
+            }
+            table.setUUIDFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME, relationshipId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return table.getRecords ().size () > 0;
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException (em.getMessage(), em, "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "Cant load " + CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "unknown failure.");
+        }
+    }
 }
