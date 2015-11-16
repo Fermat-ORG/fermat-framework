@@ -21,9 +21,9 @@ public interface CustomerBrokerContractPurchaseManager {
 
     CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(final UUID ContractId) throws CantGetListCustomerBrokerContractPurchaseException;
 
-    DatabaseTableRecord getCustomerBrokerSaleContractTable();
+    DatabaseTableRecord getCustomerBrokerPurchaseContractTable();
 
-    public CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(
+    CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(
             String publicKeyCustomer,
             String publicKeyBroker,
             Float merchandiseAmount,
@@ -35,7 +35,7 @@ public interface CustomerBrokerContractPurchaseManager {
             long paymentExpirationDate,
             long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerContractPurchaseException;
 
-    public void updateCustomerBrokerContractPurchase(UUID contractId, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException;
+    void updateCustomerBrokerContractPurchase(UUID contractId, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException;
 
     void deleteCustomerBrokerContractPurchase(UUID contractID) throws CantDeleteCustomerBrokerContractPurchaseException;
 }
