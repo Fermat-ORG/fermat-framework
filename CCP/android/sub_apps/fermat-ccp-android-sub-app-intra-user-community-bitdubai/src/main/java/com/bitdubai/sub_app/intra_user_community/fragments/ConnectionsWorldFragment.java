@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -106,6 +107,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
     private View rootView;
     private IntraUserSubAppSession intraUserSubAppSession;
 
+    private String searchName;
 
     /**
      * Create a new instance of this fragment
@@ -128,6 +130,9 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
             errorManager = subAppsSession.getErrorManager();
 
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
+
+            //get search name if
+            searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();
 
             // TODO: display unread notifications.
             // Run a task to fetch the notifications count
@@ -241,13 +246,22 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
         inflater.inflate(R.menu.intra_user_menu, menu);
 
         //MenuItem menuItem = new SearchView(getActivity());
+        try {
+            MenuItem searchItem = menu.findItem(R.id.action_search);
+            searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
+            //MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
+            //mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+            mSearchView = (SearchView) searchItem.getActionView();
+            mSearchView.setOnQueryTextListener(this);
+            mSearchView.setSubmitButtonEnabled(true);
+            mSearchView.setOnCloseListener(this);
 
-//        MenuItem searchItem = menu.findItem(R.id.action_search);
-//        MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-//        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//        mSearchView.setOnQueryTextListener(this);
-//        mSearchView.setSubmitButtonEnabled(true);
-//        mSearchView.setOnCloseListener(this);
+        }catch (Exception e){
+
+        }
+//        MenuItem menuItem = menu.add(0, IntraUserCommunityConstants.IC_ACTION_SEARCH, 0, "send");
+//        menuItem.setIcon(R.drawable.ic_action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        menuItem.setActionProvider(new SearchView(getActivity()))
 
 
 
