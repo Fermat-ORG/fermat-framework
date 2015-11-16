@@ -6,18 +6,7 @@
              android:background="@drawable/ccw_header_gradient_background"
              android:orientation="vertical">
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/ccw_no_market_rate"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/ccw_no_market_exchange_rates_to_show"
-        android:textColor="@color/withe"
-        android:textSize="16sp"
-        android:visibility="gone"/>
-
     <RelativeLayout
-        android:id="@+id/ccw_market_rate_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"

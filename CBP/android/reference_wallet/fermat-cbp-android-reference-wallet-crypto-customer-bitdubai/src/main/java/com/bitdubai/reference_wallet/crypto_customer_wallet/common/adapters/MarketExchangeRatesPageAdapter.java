@@ -25,8 +25,6 @@ public class MarketExchangeRatesPageAdapter extends FragmentStatePagerAdapter {
 
     public MarketExchangeRatesPageAdapter(FragmentManager fragmentManager, Collection<IndexInfoSummary> summaryList) {
         super(fragmentManager);
-
-
         this.summaryList = new ArrayList<>();
         this.summaryList.addAll(summaryList);
     }
