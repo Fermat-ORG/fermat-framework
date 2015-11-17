@@ -52,6 +52,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -171,11 +172,11 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
 
         //TODO REMOVE TEST METHOD.
-//        try {
-//            test();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            test();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -206,7 +207,9 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
     @Override
     public List<String> getClassesFullPath() {
-        return null; //TODO implement
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.AssetAppropriationDigitalAssetTransactionPluginRoot");
+        return returnedClasses;
     }
 
     @Override
