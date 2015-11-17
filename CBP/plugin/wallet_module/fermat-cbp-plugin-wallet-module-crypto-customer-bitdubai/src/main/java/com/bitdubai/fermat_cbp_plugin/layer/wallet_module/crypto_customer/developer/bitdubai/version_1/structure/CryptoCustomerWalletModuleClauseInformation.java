@@ -7,12 +7,12 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.ClauseInformat
 /**
  * Created by nelson on 05/11/15.
  */
-public class CryptoBrokerWalletModuleClauseInformation implements ClauseInformation {
+public class CryptoCustomerWalletModuleClauseInformation implements ClauseInformation {
     private ClauseType clauseType;
     private String value;
     private ClauseStatus status;
 
-    public CryptoBrokerWalletModuleClauseInformation(ClauseType clauseType, String value, ClauseStatus status) {
+    public CryptoCustomerWalletModuleClauseInformation(ClauseType clauseType, String value, ClauseStatus status) {
         this.clauseType = clauseType;
         this.value = value;
         this.status = status;
