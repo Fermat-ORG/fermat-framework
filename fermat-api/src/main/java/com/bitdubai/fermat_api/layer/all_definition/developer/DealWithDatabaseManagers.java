@@ -2,11 +2,9 @@ package com.bitdubai.fermat_api.layer.all_definition.developer;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,6 +12,6 @@ import java.util.Map;
  */
 public interface DealWithDatabaseManagers {
 
-    public void setDatabaseManagers (Map<Plugins,Plugin> databaseManagersOnPlugins,Map<Addons,Addon> databaseManagersOnAddons);
+    void setDatabaseManagers (Map<PluginVersionReference, Plugin> databaseManagersOnPlugins,Map<AddonVersionReference,Addon> databaseManagersOnAddons);
 
 }

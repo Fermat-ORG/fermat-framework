@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -69,6 +71,8 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
      */
     private CryptoWalletWalletContact cryptoWalletWalletContact;
 
+    private ImageView btn_search_world;
+
 
     public static SendFormFragment newInstance() {
         return new SendFormFragment();
@@ -114,6 +118,9 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
         imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
+
+        btn_search_world = (ImageView) rootView.findViewById(R.id.btn_search_world);
+        btn_search_world.setOnClickListener(this);
     }
 
     private void setUpActions(){
@@ -187,9 +194,14 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         else if (id == R.id.imageView_contact){
             // if user press the profile image
         }
+        else if (id == R.id.btn_search_world){
+            changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY);
+        }
 
 
     }
+
+
 
 
     //TODO: VER QUE PASA  SI EL CONTACTO NO TIENE UNA WALLET ADDRESS

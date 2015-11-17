@@ -12,14 +12,23 @@ repositories {
 }
 
 dependencies {
+
     compile project(':fermat-api')
-    compile project(':fermat-pip-api')
 
     compile project(':fermat-pip-addon-user-device-user-bitdubai')
+
     compile project(':fermat-pip-addon-platform-service-error-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-event-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-location-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-platform-info-bitdubai')
+
+    compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
+    compile project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
+
+    compile project(':fermat-pip-plugin-module-developer-bitdubai')
+    compile project(':fermat-pip-plugin-module-notification-bitdubai')
+
+    compile project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.managers.ManagerFactory;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
@@ -19,6 +20,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.*;
@@ -38,6 +40,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat.R;
 
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -391,6 +394,17 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
     }
 
+    @Override
+    public void connectWithOtherApp(Engine emgine, Objects... objectses) {
+
+    }
+
+    @Override
+    public Object[] connectBetweenAppsData() {
+        Objects[] objectses = (Objects[]) getIntent().getSerializableExtra(ConnectionConstants.SEARCH_NAME);
+        return objectses;
+    }
+
 
     /**
      * Method that loads the UI
@@ -471,21 +485,23 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         SubAppsSession subAppSession = null;
         try {
             Bundle bundle = getIntent().getExtras();
-            InstalledSubApp installedSubApp=null;
+            SubApps installedSubApp=null;
             if(bundle!=null){
                 if(bundle.containsKey(INSTALLED_SUB_APP)){
-                    installedSubApp  = (InstalledSubApp) bundle.getSerializable(INSTALLED_SUB_APP);
+                    installedSubApp  = ((InstalledSubApp) bundle.getSerializable(INSTALLED_SUB_APP)).getSubAppType();
+                }else if(bundle.containsKey(ConnectionConstants.SUB_APP_CONNECTION)){
+                    installedSubApp = (SubApps) bundle.getSerializable(ConnectionConstants.SUB_APP_CONNECTION);
                 }
             }
             if(installedSubApp!=null){
-                if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getSubAppType())) {
-                    subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getSubAppType());
+                if (getSubAppSessionManager().isSubAppOpen(installedSubApp)) {
+                    subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp);
                 } else {
-                    ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext());
+                    ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatSystem());
                     subAppSession = getSubAppSessionManager().openSubAppSession(
-                            installedSubApp.getSubAppType(),
+                            installedSubApp,
                             getErrorManager(),
-                            managerFactory.getModuleManagerFactory(installedSubApp.getSubAppType())
+                            managerFactory.getModuleManagerFactory(installedSubApp)
                     );
                 }
             }
@@ -541,4 +557,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
+
+
 }

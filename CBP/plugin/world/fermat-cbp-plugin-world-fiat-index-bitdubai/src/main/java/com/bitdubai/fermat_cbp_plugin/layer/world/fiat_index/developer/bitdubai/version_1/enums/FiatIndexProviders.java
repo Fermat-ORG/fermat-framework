@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.enums;
 
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.interfaces.IndexProvider;
+import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.providers.ARSIndexProvider;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.providers.VEFIndexProvider;
 
 /**
@@ -12,7 +13,7 @@ public enum FiatIndexProviders {
         public VEFIndexProvider getProviderInstance() { return new VEFIndexProvider(); }
     },
     ARS {
-        public VEFIndexProvider getProviderInstance() { return new VEFIndexProvider(); }
+        public ARSIndexProvider getProviderInstance() { return new ARSIndexProvider(); }
     },
     CAD {
         public VEFIndexProvider getProviderInstance() { return new VEFIndexProvider(); }
