@@ -16,7 +16,9 @@ import org.bitcoinj.crypto.DeterministicHierarchy;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -203,5 +205,20 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         }
 
         return dao;
+    }
+
+    public List<ECKey> getDerivedKeys(HierarchyAccount account){
+        DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
+        List<ECKey> childKeys = new ArrayList<>();
+
+        //todo I need to get the value of generated keys from the database
+        for (int i = 0; i < 101; i++) {
+            // I derive the key at position i
+            DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
+            // I add this key to the ECKey list
+            childKeys.add(ECKey.fromPrivate(derivedKey.getPrivKey()));
+        }
+
+        return childKeys;
     }
 }

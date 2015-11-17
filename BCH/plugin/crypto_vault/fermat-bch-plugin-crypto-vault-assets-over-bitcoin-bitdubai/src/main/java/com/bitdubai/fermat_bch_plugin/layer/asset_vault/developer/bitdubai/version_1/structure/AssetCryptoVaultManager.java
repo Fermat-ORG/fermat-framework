@@ -23,9 +23,15 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.crypto.TransactionSignature;
+import org.bitcoinj.script.Script;
+import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
 
@@ -157,10 +163,10 @@ public class AssetCryptoVaultManager  {
         NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(networkType);
 
         /**
-         * I will get the transaction from the CryptoNetwork
+         * I will get the genesis transaction  I will use to form the input from the CryptoNetwork
          */
-        Transaction transaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionId);
-        if (transaction == null){
+        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionId);
+        if (genesisTransaction  == null){
             StringBuilder output = new StringBuilder("The specified transaction hash ");
             output.append(genesisTransactionId);
             output.append(System.lineSeparator());
@@ -168,25 +174,18 @@ public class AssetCryptoVaultManager  {
             throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
         }
 
+
         /**
          * I will get the key that I will use to sign the new transaction
          */
-        List<ECKey> keyList = new ArrayList<>();
         HierarchyAccount vaultAccount = new HierarchyAccount(0, "Asset Vault");
+        ECKey ecKey = null;
         try {
 
-            ECKey ecKey = getNextAvailableECKey(vaultAccount);
-            keyList.add(ecKey);
+            ecKey = getNextAvailableECKey(vaultAccount);
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "There was an error getting the next available key to sign the send transaction", "database issue");
         }
-
-        /**
-         * I create a new bitcoinj Wallet from the unused key and add the transaction collected from the CryptoNetwork
-         */
-        Wallet wallet = Wallet.fromKeys(networkParameters,keyList);
-        WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.UNSPENT, transaction);
-        wallet.addWalletTransaction(walletTransaction);
 
         /**
          * I get the bitcoin address
@@ -198,25 +197,26 @@ public class AssetCryptoVaultManager  {
             throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "The specified address is not valid. " + addressTo.getAddress(), null);
         }
 
-        /**
-         * I create the new transaction
-         */
+
+        List<ECKey> derivedKeys = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount);
+        Wallet wallet = Wallet.fromKeys(networkParameters, derivedKeys);
+        WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.UNSPENT, genesisTransaction);
+        wallet.addWalletTransaction(walletTransaction);
+
         Wallet.SendRequest sendRequest = Wallet.SendRequest.to(address, Coin.valueOf(amount));
-        Transaction sendTransaction = null;
         try {
             wallet.completeTx(sendRequest);
-            sendTransaction = sendRequest.tx;
         } catch (InsufficientMoneyException e) {
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "not enought balance.", null);
+            e.printStackTrace();
         }
 
         try {
-            bitcoinNetworkManager.broadcastTransaction(networkType, sendTransaction);
+            bitcoinNetworkManager.broadcastTransaction(networkType, sendRequest.tx);
         } catch (CantBroadcastTransactionException e) {
             e.printStackTrace();
         }
 
-        return sendTransaction.getHashAsString();
+        return sendRequest.tx.getHashAsString();
     }
 
     /**
