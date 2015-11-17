@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
 import android.view.animation.RotateAnimation;
@@ -54,9 +55,43 @@ public class GrouperViewHolder extends ParentViewHolder {
         mDataTextView.setText(parentText);
     }
 
-    public void setBackgroundColor(int colorResource) {
-        int color = itemView.getResources().getColor(colorResource);
+    public void configureStyle(int backgroundColorResource, int textColorResource, int arrowImageResource){
+        setBackgroundColor(backgroundColorResource);
+        setTextColor(textColorResource);
+        setArrowImage(arrowImageResource);
+    }
+
+    private void setBackgroundColor(int colorResource) {
+        int color;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            color = itemView.getResources().getColor(colorResource, null);
+        else
+            color = itemView.getResources().getColor(colorResource);
+
         itemView.setBackgroundColor(color);
+    }
+
+    private void setTextColor(int colorResource) {
+        int color;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            color = itemView.getResources().getColor(colorResource, null);
+        else
+            color = itemView.getResources().getColor(colorResource);
+
+        mDataTextView.setTextColor(color);
+    }
+
+    private void setArrowImage(int imageResource){
+        Drawable drawable;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            drawable = itemView.getResources().getDrawable(imageResource, null);
+        else
+            drawable = itemView.getResources().getDrawable(imageResource);
+
+        mArrowExpandImageView.setImageDrawable(drawable);
     }
 
     @Override
