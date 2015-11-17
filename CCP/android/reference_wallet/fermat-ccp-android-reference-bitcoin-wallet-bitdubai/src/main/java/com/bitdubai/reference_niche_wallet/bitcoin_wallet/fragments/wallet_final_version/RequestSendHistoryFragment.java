@@ -238,10 +238,13 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     public void onClick(View v) {
         int id = v.getId();
         if(id == R.id.btn_refuse_request){
-            Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
+
+           // cryptoWallet.refuseRequest(id);
+            Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
         }
         else if ( id == R.id.btn_accept_request){
-            Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
+           // cryptoWallet.approveRequest(id);
+            Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
         }
     }
 
