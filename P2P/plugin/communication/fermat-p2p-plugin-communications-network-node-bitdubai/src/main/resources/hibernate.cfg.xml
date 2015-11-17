@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
+        <property name="dialect">org.hibernate.dialect.SQLiteDialect</property>
+        <property name="connection.driver_class">org.sqlite.JDBC</property>
+        <property name="connection.url">jdbc:sqlite:network_node.db</property>
+        <property name="connection.username">fermat</property>
+        <property name="connection.password">fermat</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.ActorsCatalog"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.ActorsCatalogTransaction"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.ActorsCatalogTransactionsPendingForPropagation"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.ActorsCatalogTransactionsPendingForPropagationPK"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.CallsLog"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.CheckedActorsHistory"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.CheckedClientsHistory"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.CheckedInActor"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.CheckedInClient"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.CheckedInNetworkService"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.CheckedNetworkServicesHistory"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.ClientsConnectionHistory"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.MethodCallsHistory"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.NodesCatalog"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.NodesCatalogTransaction"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.NodesCatalogTransactionsPendingForPropagation"/>
+        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.NodeConnectionHistory"/>
+
+    </session-factory>
+</hibernate-configuration>
