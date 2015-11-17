@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -55,6 +56,9 @@ import java.util.List;
  */
 public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
+
+    private static final String CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY = "crypto_customer_wallet";
+    private static final String TAG = "ContractsHistoryActivityFragment";
 
     // Fermat Managers
     private CryptoCustomerWalletModuleManager moduleManager;
@@ -127,13 +131,14 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     private void configureActivityHeader(LayoutInflater layoutInflater) {
 
         RelativeLayout toolbarHeader = getToolbarHeader();
-        try {
-            toolbarHeader.removeAllViews();
-        } catch (Exception exception) {
-            CommonLogger.exception(TAG, "Error removing all views from toolbarHeader ", exception);
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
-        }
+//        try {
+//            toolbarHeader.removeAllViews();
+//        } catch (Exception exception) {
+//            CommonLogger.exception(TAG, "Error removing all views from toolbarHeader ", exception);
+//            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
+//        }
         toolbarHeader.setVisibility(View.VISIBLE);
+        toolbarHeader.setBackgroundColor(Color.BLUE);
         layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
 
 //        if (marketExchangeRateSummaryList.isEmpty()) {
@@ -214,7 +219,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
+                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY);
                 GrouperItem<CustomerBrokerNegotiationInformation> grouper;
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
@@ -249,7 +254,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
+                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY);
                 data.addAll(cryptoCustomerWallet.getCurrentIndexSummaryForCurrenciesOfInterest());
 
             } catch (CantGetCryptoCustomerWalletException | CantGetCurrentIndexSumaryForCurrenciesOfInterestException ex) {
