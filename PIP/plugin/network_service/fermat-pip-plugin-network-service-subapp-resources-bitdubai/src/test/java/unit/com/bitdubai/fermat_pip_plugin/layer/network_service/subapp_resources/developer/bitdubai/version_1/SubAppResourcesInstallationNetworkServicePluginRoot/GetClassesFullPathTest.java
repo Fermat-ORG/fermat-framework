@@ -1,7 +1,7 @@
 package unit.com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesNetworkServicePluginRoot;
 
 import org.junit.Test;
 
@@ -14,11 +14,11 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 public class GetClassesFullPathTest {
 //
-    private SubAppResourcesInstallationNetworkServicePluginRoot pluginRoot;
+    private SubAppResourcesNetworkServicePluginRoot pluginRoot;
 
     @Test
     public void getClassTest() throws CantStartPluginException {
-        pluginRoot = new SubAppResourcesInstallationNetworkServicePluginRoot();
+        pluginRoot = new SubAppResourcesNetworkServicePluginRoot();
         assertThat(pluginRoot.getClassesFullPath()).isInstanceOf(List.class);
     }
 }

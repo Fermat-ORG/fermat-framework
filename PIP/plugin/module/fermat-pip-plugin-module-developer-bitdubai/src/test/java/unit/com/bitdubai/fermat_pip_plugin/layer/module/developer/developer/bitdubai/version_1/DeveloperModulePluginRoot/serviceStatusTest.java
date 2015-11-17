@@ -1,7 +1,7 @@
 package unit.com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.DeveloperModulePluginRoot;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.ModuleDeveloperPluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.DeveloperSubAppModulePluginRoot;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,14 +18,14 @@ public class serviceStatusTest {
 
     @Test
     public void pausedTest() {
-        ModuleDeveloperPluginRoot root = new ModuleDeveloperPluginRoot();
+        DeveloperSubAppModulePluginRoot root = new DeveloperSubAppModulePluginRoot();
         root.pause();
         Assert.assertEquals(PAUSED, root.getStatus());
     }
 
     @Test
     public void startedTest() throws CantStartPluginException {
-        ModuleDeveloperPluginRoot root = new ModuleDeveloperPluginRoot();
+        DeveloperSubAppModulePluginRoot root = new DeveloperSubAppModulePluginRoot();
         try {
             root.start();
         } catch (CantStartPluginException exception) {
@@ -38,20 +38,20 @@ public class serviceStatusTest {
 
     @Test
     public void resumeTest() {
-        ModuleDeveloperPluginRoot root = new ModuleDeveloperPluginRoot();
+        DeveloperSubAppModulePluginRoot root = new DeveloperSubAppModulePluginRoot();
         root.resume();
         Assert.assertEquals(STARTED, root.getStatus());
     }
 
     @Test
     public void createdTest() {
-        ModuleDeveloperPluginRoot root = new ModuleDeveloperPluginRoot();
+        DeveloperSubAppModulePluginRoot root = new DeveloperSubAppModulePluginRoot();
         Assert.assertEquals(CREATED, root.getStatus());
     }
 
     @Test
     public void stopTest() {
-        ModuleDeveloperPluginRoot root = new ModuleDeveloperPluginRoot();
+        DeveloperSubAppModulePluginRoot root = new DeveloperSubAppModulePluginRoot();
         root.stop();
         Assert.assertEquals(STOPPED, root.getStatus());
     }

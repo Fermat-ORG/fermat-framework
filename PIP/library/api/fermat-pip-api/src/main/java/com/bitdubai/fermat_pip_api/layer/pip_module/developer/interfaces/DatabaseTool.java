@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 import java.util.List;
 
@@ -13,20 +13,20 @@ import java.util.List;
  */
 public interface DatabaseTool {
 
-    List<Plugins> getAvailablePluginList();
+    List<PluginVersionReference> getAvailablePluginList();
 
-    List<Addons> getAvailableAddonList();
+    List<AddonVersionReference> getAvailableAddonList();
 
-    List<DeveloperDatabase> getDatabaseListFromPlugin(Plugins plugin);
+    List<DeveloperDatabase> getDatabaseListFromPlugin(PluginVersionReference plugin);
 
-    List<DeveloperDatabase>  getDatabaseListFromAddon(Addons Addon);
+    List<DeveloperDatabase>  getDatabaseListFromAddon(AddonVersionReference Addon);
 
-    List<DeveloperDatabaseTable> getPluginTableListFromDatabase(Plugins plugin, DeveloperDatabase developerDatabase);
+    List<DeveloperDatabaseTable> getPluginTableListFromDatabase(PluginVersionReference plugin, DeveloperDatabase developerDatabase);
 
-    List<DeveloperDatabaseTable> getAddonTableListFromDatabase(Addons addon, DeveloperDatabase developerDatabase);
+    List<DeveloperDatabaseTable> getAddonTableListFromDatabase(AddonVersionReference addon, DeveloperDatabase developerDatabase);
 
-    List<DeveloperDatabaseTableRecord>  getPluginTableContent(Plugins plugin, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
+    List<DeveloperDatabaseTableRecord>  getPluginTableContent(PluginVersionReference plugin, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
 
-    List<DeveloperDatabaseTableRecord>  getAddonTableContent(Addons addon, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
+    List<DeveloperDatabaseTableRecord>  getAddonTableContent(AddonVersionReference addon, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
 
 }

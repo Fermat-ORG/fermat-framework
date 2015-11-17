@@ -4,7 +4,7 @@
  * -Layer name.
  * -Name.
  */
-
+/*
 include ':fermat-ccm-api'
 project(':fermat-ccm-api').projectDir = new File('CCM/library/api/fermat-ccm-api')
 
@@ -17,3 +17,4 @@ project(':fermat-ccm-plugin-network-service-money-request-bitdubai').projectDir 
 
 include ':fermat-ccm-plugin-network-service-money-transmission-bitdubai'
 project(':fermat-ccm-plugin-network-service-money-transmission-bitdubai').projectDir = new File('CCM/plugin/network_service/fermat-ccm-plugin-network-service-money-transmission-bitdubai')
+*/

@@ -25,6 +25,7 @@ public enum Activities {
     CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY("CCPBWRFA"),
     CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY("CCPBWCDA"),
     CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY("CCPBWSA"),
+    CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY("CCPBWACA"),
 
     /**
      * Intra user
@@ -138,10 +139,17 @@ public enum Activities {
     // DAP USER IDENTITY
     DAP_SUB_APP_ASSET_USER_IDENTITY("DAPSAAUI"),
     DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY("DAPSAAUICI"),
+    // DAP REDEEM POINT IDENTITY
+    DAP_SUB_APP_REDEEM_POINT_IDENTITY("DAPSARPI"),
+    DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY("DAPSARPICI"),
+    // end of dap identities
     DEVELOP_MODE("develop_mode"),
 
+    //CONNECTIONS ACTIVITY
+    BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY("BWCIUC"),
 
-    WPD_DESKTOP("WPD"),;
+
+    WPD_DESKTOP("WPD"), ;
 
     private String code;
 
@@ -156,6 +164,10 @@ public enum Activities {
         //    }
         //}
         switch (code) {
+            case "DAPSARPI":
+                return Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY;
+            case "DAPSARPICI":
+                return Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY;
             case "DAPSAAUI":
                 return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY;
             case "DAPSAAUICI":
@@ -358,6 +370,10 @@ public enum Activities {
                 return CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY;
             case "CCPBWSA":
                 return CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY;
+            case "CCPBWACA":
+                return CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY;
+            case "BWCIUC":
+                return BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

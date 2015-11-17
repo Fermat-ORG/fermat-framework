@@ -13,12 +13,10 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -29,6 +27,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantExecuteAppropriationTransactionException;
@@ -92,6 +93,14 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
     private BitcoinNetworkManager bitcoinNetworkManager;
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
+    private CryptoAddressBookManager cryptoAddressBookManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
+    private CryptoVaultManager cryptoVaultManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
+    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
@@ -107,18 +116,28 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
     //PUBLIC METHODS
 
+
+    /**
+     * This method starts the appropriation flow. Saves the information in the database and store
+     * the asset in the file system.
+     *
+     * @param digitalAsset             the asset to be appropriated
+     * @param assetUserWalletPublicKey the public key from the asset user wallet where this asset will be debited.
+     * @param bitcoinWalletPublicKey   the bitcoin wallet public key where the bitcoins will be sent.
+     * @throws CantExecuteAppropriationTransactionException in case something bad happen and the appropriation flow can't start.
+     * @throws TransactionAlreadyStartedException           in case for some reason you try to appropriate the same asset twice.
+     */
     @Override
-    public void appropriateAsset(DigitalAsset digitalAsset, String assetUserWalletPublicKey, CryptoAddress addressTo) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
-        String context = "Asset: " + digitalAsset + " - User Wallet: " + assetUserWalletPublicKey + " - Address To: " + addressTo;
+    public void appropriateAsset(DigitalAsset digitalAsset, String assetUserWalletPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+        String context = "Asset: " + digitalAsset + " - User Wallet: " + assetUserWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey;
 
         try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
-            AssetAppropriationTransactionRecord record = dao.startAppropriation(digitalAsset, assetUserWalletPublicKey, addressTo);
+            String transactionId = dao.startAppropriation(digitalAsset, assetUserWalletPublicKey, bitcoinWalletPublicKey);
             //TODO THIS METHOD WILL RETURN A STRING. USE IT!
                             /*String genesisTransaction = */
-            assetVaultManager.sendAssetBitcoins(record.digitalAsset().getGenesisAddress().getAddress(), record.addressTo(), record.digitalAsset().getGenesisAmount());
-
-//                            dao.updateGenesisTransaction(genesisTransaction, record.transactionRecordId());
-            dao.updateTransactionStatusBitcoinsSent(record.transactionRecordId());
+//            assetVaultManager.sendAssetBitcoins(digitalAsset.getGenesisAddress().getAddress(), addressTo, digitalAsset.getGenesisAmount());
+//                            dao.updateGenesisTransaction(genesisTransaction, transactionId);
+//            dao.updateTransactionStatusBitcoinsSent(transactionId);
 
         } catch (TransactionAlreadyStartedException | CantExecuteAppropriationTransactionException e) {
             throw e;
@@ -126,6 +145,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
             throw new CantExecuteAppropriationTransactionException(context, e);
         }
     }
+
 
     @Override
     public void start() throws CantStartPluginException {
@@ -148,14 +168,19 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
             assetVault = new AssetAppropriationVault(pluginId, pluginFileSystem);
             recorderService = new AssetAppropriationRecorderService(pluginId, eventManager, pluginDatabaseSystem, assetVault);
             recorderService.start();
-            monitorAgent = new AssetAppropriationMonitorAgent(assetVault, pluginDatabaseSystem, logManager, errorManager, pluginId, assetVaultManager, assetUserWalletManager, bitcoinNetworkManager);
+            monitorAgent = new AssetAppropriationMonitorAgent(assetVault, pluginDatabaseSystem, logManager, errorManager, pluginId, assetVaultManager, assetUserWalletManager, bitcoinNetworkManager, cryptoAddressBookManager, cryptoVaultManager, intraWalletUserIdentityManager);
             monitorAgent.start();
-
-            //TODO REMOVE TEST METHOD.
-            //test();
         } catch (Exception e) {
             throw new CantStartPluginException(FermatException.wrapException(e), context, e.getMessage());
         }
+
+
+        //TODO REMOVE TEST METHOD.
+//        try {
+//            test();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -172,9 +197,8 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     private void test() throws Exception {
         DigitalAsset asset = new MockDigitalAssetForTesting();
         String userWalletPublicKey = "walletPublicKeyTest";
-        String bitcoinAddressTo = "addressTo"; //TODO GET THE ADDRESS
-        CryptoAddress addressTo = new CryptoAddress(bitcoinAddressTo, CryptoCurrency.BITCOIN);
-        appropriateAsset(asset, userWalletPublicKey, addressTo);
+        String bitcoinWalletPublicKey = "addressTo"; //TODO GET THE ADDRESS
+        appropriateAsset(asset, userWalletPublicKey, bitcoinWalletPublicKey);
     }
 
     //GETTERS AND SETTERS
@@ -185,10 +209,10 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     }
 
     @Override
-    public AssetAppropriationTransactionRecord getTransaction(DigitalAsset digitalAsset, String assetUserWalletPublicKey, CryptoAddress addressTo) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
-        String context = "Asset: " + digitalAsset + " - User Wallet: " + assetUserWalletPublicKey + " - Address To: " + addressTo;
+    public AssetAppropriationTransactionRecord getTransaction(DigitalAsset digitalAsset, String assetUserWalletPublicKey, String bitcoinWalletPublicKey) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        String context = "Asset: " + digitalAsset + " - User Wallet: " + assetUserWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey;
         try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
-            return dao.getTransaction(digitalAsset, assetUserWalletPublicKey, addressTo);
+            return dao.getTransaction(digitalAsset, assetUserWalletPublicKey, bitcoinWalletPublicKey);
         } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch bolck.
             throw e;
         } catch (Exception e) {
@@ -222,7 +246,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
         String context = "User Wallet: " + assetUserWalletPublicKey;
         try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             return dao.getTransactionsForUserWallet(assetUserWalletPublicKey);
-        } catch (CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch bolck.
+        } catch (CantLoadAssetAppropriationTransactionListException e) {  //If I don't catch this exception it'll be elapsed by the exception catch block.
             throw e;
         } catch (Exception e) {
             throw new CantLoadAssetAppropriationTransactionListException(context, e);
@@ -234,7 +258,26 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
         String context = "Status: " + status.getCode();
         try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             return dao.getTransactionsForStatus(status);
-        } catch (CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch bolck.
+        } catch (CantLoadAssetAppropriationTransactionListException e) { //If I don't catch this exception it'll be elapsed by the exception catch block.
+            throw e;
+        } catch (Exception e) {
+            throw new CantLoadAssetAppropriationTransactionListException(context, e);
+        }
+    }
+
+    /**
+     * Querys all the transactions associated for an bitcoin wallet public key.
+     *
+     * @param bitcoinWalletPublicKey The bitcoin wallet public key.
+     * @return {@link List} instance filled with all the transactions associated or an empty list if there were none.
+     * @throws CantLoadAssetAppropriationTransactionListException
+     */
+    @Override
+    public List<AssetAppropriationTransactionRecord> getTransactionsForBitcoinWallet(String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
+        String context = "BitcoinWallet: " + bitcoinWalletPublicKey;
+        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+            return dao.getTransactionsForBitcoinWallet(bitcoinWalletPublicKey);
+        } catch (CantLoadAssetAppropriationTransactionListException e) { //If I don't catch this exception it'll be elapsed by the exception catch block.
             throw e;
         } catch (Exception e) {
             throw new CantLoadAssetAppropriationTransactionListException(context, e);

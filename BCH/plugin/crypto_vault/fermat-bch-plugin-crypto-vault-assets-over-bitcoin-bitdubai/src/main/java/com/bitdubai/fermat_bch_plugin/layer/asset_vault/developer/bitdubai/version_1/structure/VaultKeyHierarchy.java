@@ -10,6 +10,7 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 
+import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicHierarchy;
 import org.bitcoinj.crypto.DeterministicKey;
@@ -107,25 +108,18 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      */
     public CryptoAddress getBitcoinAddress(BlockchainNetworkType blockchainNetworkType, HierarchyAccount hierarchyAccount) throws GetNewCryptoAddressException {
         /**
-         * The depth of the next available public key for this account
+         * I get the next available key for this account
          */
-        int pubKeyDepth = 0;
+        ECKey ecKey = null;
         try {
-            pubKeyDepth = getNextAvailablePublicKeyDepth(hierarchyAccount);
+            ecKey = getNextAvailableKey(hierarchyAccount);
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "there was a problem getting the key depth from the database.", "database issue");
+            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "There was an error getting the actual unused Key depth to derive a new key.", "database problem.");
         }
-
         /**
-         * I will derive a new public Key from this account
+         * I will create the CryptoAddress with the key I just got
          */
-        DeterministicHierarchy pubKeyHierarchy = getKeyHierarchyFromAccount(hierarchyAccount);
-        DeterministicKey pubKey = pubKeyHierarchy.deriveChild(pubKeyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(pubKeyDepth, false));
-
-        /**
-         * I will create the CryptoAddress
-         */
-        String address = pubKey.toAddress(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
+        String address = ecKey.toAddress(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
         CryptoAddress cryptoAddress = new CryptoAddress(address, CryptoCurrency.BITCOIN);
 
         /**
@@ -138,6 +132,27 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         }
 
         return cryptoAddress;
+    }
+
+    /**
+     * gets the next available key from the specified account
+     * @param account
+     * @return
+     */
+    public ECKey getNextAvailableKey(HierarchyAccount account) throws CantExecuteDatabaseOperationException {
+        /**
+         * I get from database the next available key depth
+         */
+        int keyDepth = 0;
+        keyDepth = getNextAvailableKeyDepth(account);
+
+        /**
+         * I will derive a new Key from this account
+         */
+        DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
+        DeterministicKey ecKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(keyDepth, false));
+
+        return ecKey;
     }
 
     /**
@@ -158,7 +173,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param hierarchyAccount
      * @return
      */
-    private int getNextAvailablePublicKeyDepth(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
+    private int getNextAvailableKeyDepth(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
         int returnValue = 0;
         int currentUsedKey = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
         /**

@@ -22,16 +22,22 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
@@ -88,6 +94,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     CryptoVaultManager cryptoVaultManager;
     BitcoinWalletManager bitcoinWalletManager;
     CryptoAddressBookManager cryptoAddressBookManager;
+    IntraWalletUserActorManager intraWalletUserActorManager;
+    IntraWalletUserIdentityManager intraWalletUserIdentityManager;
     String digitalAssetFileName;
     String digitalAssetFileStoragePath;
     String digitalAssetLocalFilePath;
@@ -100,7 +108,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
     String walletPublicKey;
-    String actorToPublicKey;
+    String actorAssetIssuerPublicKey;
+    String intraActorPublicKey;
     //This flag must be used to select the way to send bitcoins from this plugin
     boolean SEND_BTC_FROM_CRYPTO_VAULT =false;
     long genesisAmount=100000;
@@ -176,8 +185,22 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantSetObjectException("actorAssetIssuerManager is null");
         }
         this.actorAssetIssuerManager=actorAssetIssuerManager;
+    }
 
+    public void setIntraWalletUserActorManager(IntraWalletUserActorManager intraWalletUserActorManager) throws CantSetObjectException {
 
+        if (intraWalletUserActorManager == null) {
+            throw new CantSetObjectException("intraWalletUserActorManager is null");
+        }
+        this.intraWalletUserActorManager=intraWalletUserActorManager;
+    }
+
+    public void setIntraWalletUserIdentityManager(IntraWalletUserIdentityManager intraWalletUserIdentityManager) throws CantSetObjectException {
+
+        if (intraWalletUserIdentityManager == null) {
+            throw new CantSetObjectException("intraWalletUserIdentityManager is null");
+        }
+        this.intraWalletUserIdentityManager=intraWalletUserIdentityManager;
     }
 
     private void getActorAssetIssuerPublicKey() throws ObjectNotSetException, CantGetAssetIssuerActorsException {
@@ -185,13 +208,33 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new ObjectNotSetException("ActorAssetIssuer is null");
         }
         try {
-            this.actorToPublicKey = actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
-            if (this.actorToPublicKey == null) {
-                this.actorToPublicKey = "actorPublicKeyNotFound";
+            this.actorAssetIssuerPublicKey = actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
+            if (this.actorAssetIssuerPublicKey == null) {
+                this.actorAssetIssuerPublicKey = "actorPublicKeyNotFound";
             }
-            System.out.println("ASSET ISSUING Actor Asset Issuer public key " + actorToPublicKey);
+            System.out.println("ASSET ISSUING Actor Asset Issuer public key " + actorAssetIssuerPublicKey);
         } catch (CantGetAssetIssuerActorsException exception) {
             throw new ObjectNotSetException(exception, "Setting the actor asset issuer manager", "Cannot get the actor asset issuer manager");
+        }
+    }
+
+    private void getIntraWalletActorUserPublicKey() throws ObjectNotSetException, CantGetAssetIssuerActorsException, CantGetIntraWalletUsersException {
+        try {
+            if(!this.intraWalletUserIdentityManager.hasIntraUserIdentity()){
+                throw new ObjectNotSetException("intraWalletUserIdentityManager does not have Intra User Identity");
+            }
+            List<IntraWalletUserIdentity> intraWalletUserIdentityList= this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+            if(intraWalletUserIdentityList.isEmpty()){
+                throw new ObjectNotSetException("intraWalletUserIdentityManager does not have Intra User Identity");
+            }
+            String intraWalletUserIdentityPublicKey;
+            for(IntraWalletUserIdentity intraWalletUserIdentity : intraWalletUserIdentityList){
+                intraWalletUserIdentityPublicKey=intraWalletUserIdentity.getPublicKey();
+                this.intraActorPublicKey=intraWalletUserIdentityPublicKey;
+                return;
+            }
+        } catch (CantListIntraWalletUsersException exception) {
+            throw new ObjectNotSetException(exception, "Getting IntraActor Public Key","intraWalletUserIdentityManager does not have Intra User Identity");
         }
     }
 
@@ -392,6 +435,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         try {
 
             getActorAssetIssuerPublicKey();
+            getIntraWalletActorUserPublicKey();
             setBlockchainNetworkType(blockchainNetworkType);
             setWalletPublicKey(walletPublicKey);
             this.digitalAssetIssuingVault.setWalletPublicKey(walletPublicKey);
@@ -465,6 +509,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets - Asset number "+counter,"Cannot check the asset issuing progress");
         } catch (CantGetAssetIssuerActorsException exception) {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.ACTOR_ISSUER_NULL);
+            throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets","The Actor Issuer is null");
+        } catch (CantGetIntraWalletUsersException exception) {
+            this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.INTRA_ACTOR_NULL);
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets","The Actor Issuer is null");
         }
     }
@@ -681,9 +728,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         //TODO: solicitar los publickeys de los actors, la publicKey de la wallet
         //I'm gonna harcode the actors publicKey
         this.cryptoAddressBookManager.registerCryptoAddress(genesisAddress,
-                "testDeliveredByActorPublicKey",
+                this.intraActorPublicKey,
                 Actors.INTRA_USER,
-                "AssetIssuerPublicKey",
+                this.actorAssetIssuerPublicKey,
                 Actors.DAP_ASSET_ISSUER,
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 VaultType.ASSET_VAULT,
@@ -775,8 +822,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                     this.digitalAsset.getGenesisAmount(),
                     digitalAssetHash,
                     this.digitalAsset.getDescription(),
-                    "senderPublicKey",
-                    this.actorToPublicKey,
+                    this.intraActorPublicKey,
+                    this.actorAssetIssuerPublicKey,
                     Actors.INTRA_USER,
                     Actors.DAP_ASSET_ISSUER,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);

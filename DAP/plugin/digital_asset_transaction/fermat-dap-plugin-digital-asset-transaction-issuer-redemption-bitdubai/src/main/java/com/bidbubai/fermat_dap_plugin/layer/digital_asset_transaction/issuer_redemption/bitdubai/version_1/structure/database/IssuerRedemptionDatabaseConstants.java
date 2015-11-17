@@ -4,7 +4,7 @@ package com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_re
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/11/15.
  */
 public class IssuerRedemptionDatabaseConstants {
-    public static final String ASSET_ISSUER_REDEMPTION_DATABASE = "asset_issuer_redemption_database";
+    public static final String ASSET_ISSUER_REDEMPTION_DATABASE = "assetIssuerRedemptionDatabase";
     /**
      * Asset reception database table definition.
      */
@@ -23,7 +23,7 @@ public class IssuerRedemptionDatabaseConstants {
     /**
      * Events recorded database table definition.
      */
-    public static final String ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME = "reception_events_recorded";
+    public static final String ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME = "redemption_events_recorded";
 
     public static final String ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME = "event_id";
     public static final String ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME = "event";
