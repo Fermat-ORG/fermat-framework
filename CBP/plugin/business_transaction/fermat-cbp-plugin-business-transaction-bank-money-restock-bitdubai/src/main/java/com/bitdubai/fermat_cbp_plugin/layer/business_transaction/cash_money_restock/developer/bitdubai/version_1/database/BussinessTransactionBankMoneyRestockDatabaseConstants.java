@@ -24,6 +24,7 @@ public class BussinessTransactionBankMoneyRestockDatabaseConstants {
     static final String BANK_MONEY_RESTOCK_BNK_WALLET_PUBLIC_KEY_COLUMN_NAME = "bnk_wallet_public_key";
     static final String BANK_MONEY_RESTOCK_BANK_ACCOUNT_COLUMN_NAME          = "bank_account";
     static final String BANK_MONEY_RESTOCK_CONCEPT_COLUMN_NAME               = "concept";
+    static final String BANK_MONEY_RESTOCK_MEMO_COLUMN_NAME                  = "memo";
     static final String BANK_MONEY_RESTOCK_AMOUNT_COLUMN_NAME                = "amount";
     static final String BANK_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME             = "timestamp";
     static final String BANK_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME    = "transaction_status";
