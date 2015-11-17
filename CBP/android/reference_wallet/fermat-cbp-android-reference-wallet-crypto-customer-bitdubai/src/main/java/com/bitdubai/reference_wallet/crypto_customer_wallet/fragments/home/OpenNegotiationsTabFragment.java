@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -36,12 +38,14 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.MarketExchangeRatesPageAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.NavigationViewAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
+import com.viewpagerindicator.LinePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,13 +61,16 @@ import java.util.List;
 public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
+    private static final String CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY = "crypto_customer_wallet";
+    private static final String TAG = "ContractsHistoryActivityFragment";
+
     // Fermat Managers
     private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
     // Data
     private List<GrouperItem> openNegotiationList;
-    private List<IndexInfoSummary> marketExchageRateSummaryList;
+    private List<IndexInfoSummary> marketExchangeRateSummaryList;
 
 
     public static OpenNegotiationsTabFragment newInstance() {
@@ -85,7 +92,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
 
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        marketExchageRateSummaryList = getMarketExchangeRateSummaryData();
+        marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
     }
 
 
@@ -94,9 +101,9 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         super.initViews(layout);
 
         Activity activity = getActivity();
-        configureActionBar();
         LayoutInflater layoutInflater = activity.getLayoutInflater();
         configureActivityHeader(layoutInflater);
+        configureActionBar();
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.ccw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
@@ -138,7 +145,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         toolbarHeader.setBackgroundColor(Color.BLUE);
         layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
 
-//        if (marketExchageRateSummaryList.isEmpty()) {
+//        if (marketExchangeRateSummaryList.isEmpty()) {
 //            FermatTextView noMarketRateTextView = (FermatTextView) headerLayout.findViewById(R.id.ccw_no_market_rate);
 //            noMarketRateTextView.setVisibility(View.VISIBLE);
 //            View marketRateViewPagerContainer = headerLayout.findViewById(R.id.ccw_market_rate_view_pager_container);
@@ -146,7 +153,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 //        } else {
 //            ViewPager viewPager = (ViewPager) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager);
 //            viewPager.setOffscreenPageLimit(3);
-//            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchageRateSummaryList);
+//            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchangeRateSummaryList);
 //            viewPager.setAdapter(pageAdapter);
 //
 //            LinePageIndicator indicator = (LinePageIndicator) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
@@ -216,7 +223,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
+                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY);
                 GrouperItem<CustomerBrokerNegotiationInformation> grouper;
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
@@ -251,7 +258,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
+                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY);
                 data.addAll(cryptoCustomerWallet.getCurrentIndexSummaryForCurrenciesOfInterest());
 
             } catch (CantGetCryptoCustomerWalletException | CantGetCurrentIndexSumaryForCurrenciesOfInterestException ex) {
