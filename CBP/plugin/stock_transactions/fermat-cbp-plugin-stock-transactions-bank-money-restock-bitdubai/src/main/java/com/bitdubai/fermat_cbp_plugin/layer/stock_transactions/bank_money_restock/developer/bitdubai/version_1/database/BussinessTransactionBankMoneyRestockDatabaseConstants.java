@@ -14,7 +14,7 @@ public class BussinessTransactionBankMoneyRestockDatabaseConstants {
     /**
      * Bank Money Stock database table definition.
      */
-    static final String BANK_MONEY_STOCK_DATABASE_NAME                       = "bank_money_restock_DB";
+    public static final String BANK_MONEY_STOCK_DATABASE_NAME                       = "bank_money_restock_DB";
     static final String BANK_MONEY_STOCK_TABLE_NAME                          = "bank_money_restock";
 
     static final String BANK_MONEY_RESTOCK_TRANSACTION_ID_COLUMN_NAME        = "transaction_id";
