@@ -28,6 +28,8 @@ import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptChunk;
 import org.bitcoinj.script.ScriptOpCodes;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -42,6 +44,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * Class variables
      */
     BitcoinCryptoNetworkDatabaseDao dao;
+    File walletFilename;
 
     /**
      * Platform variables
@@ -53,9 +56,10 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * Constructor
      * @param pluginDatabaseSystem
      */
-    public BitcoinNetworkEvents(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public BitcoinNetworkEvents(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, File walletFilename) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
+        this.walletFilename = walletFilename;
     }
 
     @Override
@@ -212,7 +216,14 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onWalletChanged(Wallet wallet) {
-
+        /**
+         * I will save the wallet after a change.
+         */
+        try {
+            wallet.saveToFile(walletFilename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
