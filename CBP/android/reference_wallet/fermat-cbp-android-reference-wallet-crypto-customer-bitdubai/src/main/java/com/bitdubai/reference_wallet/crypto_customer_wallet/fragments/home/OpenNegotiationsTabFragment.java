@@ -56,6 +56,9 @@ import java.util.List;
 public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
+    private static final String CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY = "crypto_customer_wallet";
+    private static final String TAG = "ContractsHistoryActivityFragment";
+
     // Fermat Managers
     private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -214,7 +217,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
+                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY);
                 GrouperItem<CustomerBrokerNegotiationInformation> grouper;
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
@@ -249,7 +252,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
+                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY);
                 data.addAll(cryptoCustomerWallet.getCurrentIndexSummaryForCurrenciesOfInterest());
 
             } catch (CantGetCryptoCustomerWalletException | CantGetCurrentIndexSumaryForCurrenciesOfInterestException ex) {
