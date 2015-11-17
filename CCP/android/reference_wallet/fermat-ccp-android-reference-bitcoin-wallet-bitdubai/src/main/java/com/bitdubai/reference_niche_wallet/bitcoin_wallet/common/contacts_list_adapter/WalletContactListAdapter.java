@@ -51,11 +51,17 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
             TextView contact_name = (TextView) v.findViewById(R.id.contact_name);
             contact_name.setText(contact.name);
             ImageView contact_profile_image = (ImageView) v.findViewById(R.id.contact_profile_image);
-            if(contact.profileImage!=null){
-                if(contact.profileImage.length>0){
-                    contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(),contact.profileImage));
-                }else  contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(),R.drawable.profile_image));
-            } else  contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(),R.drawable.profile_image));
+            try {
+                if (contact.profileImage != null) {
+                    if (contact.profileImage.length > 0) {
+                        contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), contact.profileImage));
+                    } else
+                        contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image));
+                } else
+                    contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image));
+            }catch (Exception e){
+                contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image));
+            }
         }
         return v;
     }
