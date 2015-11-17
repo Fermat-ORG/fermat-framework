@@ -99,7 +99,7 @@ public class Platform implements Serializable {
 
         boolean CBP = true;
         boolean CCP = true;
-        boolean DAP = true;
+        boolean DAP = false;
         boolean PIP = true;
         boolean WPD = true;
 
