@@ -32,7 +32,7 @@ public class EventsLauncher implements DealsWithEvents {
 
     public void sendEvents(Set<SpecialistAndCryptoStatus> specialists) throws SpecialistNotRegisteredException, CryptoStatusNotHandledException {
         for (SpecialistAndCryptoStatus specialistAndCryptoStatus : specialists) {
-        // TODO WHEN THE SPECIALIST IS NOT FOUNDED I RAISE AN EXCEPTION BUT WHAT DO I DO WITH THE REST OF SPECIALISTS?
+        // TODO WHEN THS E SPECIALIST INOT FOUNDED I RAISE AN EXCEPTION BUT WHAT DO I DO WITH THE REST OF SPECIALISTS?
             Specialist specialist = specialistAndCryptoStatus.getSpecialist();
             CryptoStatus cryptoStatus = specialistAndCryptoStatus.getCryptoStatus();
             decideTheEventToRaiseAndRaiseIt(specialist, cryptoStatus);
@@ -69,18 +69,23 @@ public class EventsLauncher implements DealsWithEvents {
             case INTRA_USER_SPECIALIST:
                 switch (cryptoStatus) {
                     case ON_CRYPTO_NETWORK:
+                        System.out.println("INCOMING CRYPTO ROUTER ON CRYPTO NETWORK, LAUNCH EVENT");
                         raiseEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER);
                         break;
                     case ON_BLOCKCHAIN:
+                        System.out.println("INCOMING CRYPTO ROUTER ON BLOCKCHAIN, LAUNCH EVENT");
                         raiseEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER);
                         break;
                     case REVERSED_ON_CRYPTO_NETWORK:
+                        System.out.println("INCOMING CRYPTO ROUTER REVERSED ON CRYPRO NETWORK, LAUNCH EVENT");
                         raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER);
                         break;
                     case REVERSED_ON_BLOCKCHAIN:
+                        System.out.println("INCOMING CRYPTO ROUTER REVERSED ON BLOCKCHAIN, LAUNCH EVENT");
                         raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER);
                         break;
                     case IRREVERSIBLE:
+                        System.out.println("INCOMING CRYPTO ROUTER IRREVERSIBLE LAUNCH EVENT");
                         //define what to do.
                         break;
                     default:
