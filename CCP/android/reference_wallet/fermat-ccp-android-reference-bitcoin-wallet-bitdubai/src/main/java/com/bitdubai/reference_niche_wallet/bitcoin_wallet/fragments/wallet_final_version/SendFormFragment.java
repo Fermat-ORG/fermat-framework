@@ -326,7 +326,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         else if (id == R.id.imageView_contact){
             // if user press the profile image
         }
-        else if (id == R.id.btn_search_world){
+        else if (id == R.id.btn_expand_send_form){
             changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY);
         }
 

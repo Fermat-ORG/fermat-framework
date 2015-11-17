@@ -174,7 +174,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
                 public void run() {
                     try {
                         Thread.sleep(5000);
-                        assetCryptoVaultManager.sendAssetBitcoins("33f9a2f7d2efbf70d49f1f56236f979757aeb5143d0276b42aef200ce681656c", new CryptoAddress("miEqSfhmUcfUigUVPzVp3DoUJL3Yt48puX", CryptoCurrency.BITCOIN), 10000);
+                        assetCryptoVaultManager.sendAssetBitcoins("978252efd8f7affdf4ba2d6f064fee04eaf0860678bd4b0f85c98ee8240833b6", new CryptoAddress("mhdFJdh5QmiKnWjD8yoDdH2ZSGVS3aVVKE", CryptoCurrency.BITCOIN), 10000);
                     } catch (CantSendAssetBitcoinsToUserException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {

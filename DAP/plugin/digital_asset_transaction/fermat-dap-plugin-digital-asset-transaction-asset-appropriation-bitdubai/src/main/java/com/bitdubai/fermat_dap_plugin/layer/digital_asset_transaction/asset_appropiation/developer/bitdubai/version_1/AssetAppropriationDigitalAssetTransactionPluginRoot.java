@@ -133,11 +133,6 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
         try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             String transactionId = dao.startAppropriation(digitalAsset, assetUserWalletPublicKey, bitcoinWalletPublicKey);
-            //TODO THIS METHOD WILL RETURN A STRING. USE IT!
-                            /*String genesisTransaction = */
-//            assetVaultManager.sendAssetBitcoins(digitalAsset.getGenesisAddress().getAddress(), addressTo, digitalAsset.getGenesisAmount());
-//                            dao.updateGenesisTransaction(genesisTransaction, transactionId);
-//            dao.updateTransactionStatusBitcoinsSent(transactionId);
 
         } catch (TransactionAlreadyStartedException | CantExecuteAppropriationTransactionException e) {
             throw e;
@@ -190,6 +185,12 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
         monitorAgent.stop();
         recorderService.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
+    }
+
+    //TODO DELETE THIS METHOD AND ALL ITS USAGES.
+
+    public static void debugAssetAppropriation(String message) {
+        System.out.println("ASSET APPROPRIATION - " + message);
     }
 
     //PRIVATE METHODS
