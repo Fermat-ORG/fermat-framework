@@ -121,24 +121,24 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent  implements Agent{
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de Bank Hold y si lo consigue entonces le cambia el status de IN_WALLET y hace el credito
-                        try {
-                            WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(bankMoneyTransaction.getTransactionId(),
-                                                                                                            null,
-                                                                                                            BalanceType.AVAILABLE,
-                                                                                                            TransactionType.CREDIT,
-                                                                                                            CurrencyType.BANK_MONEY,
-                                                                                                            bankMoneyTransaction.getCbpWalletPublicKey(),
-                                                                                                            bankMoneyTransaction.getActorPublicKey(),
-                                                                                                            bankMoneyTransaction.getAmount(),
-                                                                                                            0,
-                                                                                                            bankMoneyTransaction.getConcept());
-
-                            cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
-                        } catch (CantPerformTransactionException e) {
-                            e.printStackTrace();
-                        } catch (CryptoBrokerWalletNotFoundException e) {
-                            e.printStackTrace();
-                        }
+//                        try {
+//                            WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(bankMoneyTransaction.getTransactionId(),
+//                                                                                                            null,
+//                                                                                                            BalanceType.AVAILABLE,
+//                                                                                                            TransactionType.CREDIT,
+//                   0                                                                                         CurrencyType.BANK_MONEY,
+//                                                                                                            bankMoneyTransaction.getCbpWalletPublicKey(),
+//                                                                                                            bankMoneyTransaction.getActorPublicKey(),
+//                                                                                                            bankMoneyTransaction.getAmount(),
+//                                                                                                            0,
+//                                                                                                            bankMoneyTransaction.getConcept());
+//
+//                            cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
+//                        } catch (CantPerformTransactionException e) {
+//                            e.printStackTrace();
+//                        } catch (CryptoBrokerWalletNotFoundException e) {
+//                            e.printStackTrace();
+//                        }
                         bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                         stockTransactionBankMoneyRestockManager.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
                         break;
