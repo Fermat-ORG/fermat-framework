@@ -152,20 +152,20 @@ Donde:
    
 He aqui un ejemplo:
 
-    + CBP                       
-      + android     
+    + CBP
+      + android
         + desktop
           - fermat-cbp-android-desktop-sub-app-manager-bitdubai
           - fermat-cbp-android-desktop-wallet-manager-bitdubai
         + reference_wallet
           - fermat-cbp-android-reference-wallet-crypto-broker-bitdubai
-          - fermat-cbp-android-reference-wallet-crypto-customer-bitdubai 
+          - fermat-cbp-android-reference-wallet-crypto-customer-bitdubai
         + sub_app
           - fermat-cbp-android-sub-app-crypto-broker-community-bitdubai
           - fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai
           - fermat-cbp-android-sub-app-crypto-customer-community-bitdubai
           - fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai
-          
+
 Esto quiere decir que tengo un total de 8 proyectos que albergan componentes GUI, de los cuales 2 son Desktops, 2 son Wallets y 4 son SubApps.
 
 
@@ -174,9 +174,9 @@ Esto quiere decir que tengo un total de 8 proyectos que albergan componentes GUI
 Los nombres de los proyectos siguen el siguiente patron:
 
     fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]
-    
+
 Donde:                                                                               
-                                                                                 
+
 - **platform_Name**: se refiere a la plataforma done vas a crear tus componentes.
 - **client_type**: se refiere a que dispositivo donde se va a crear el cliente, llamese Android, IPhone, una aplicacion Web, una aplicacion Desktop, etc, donde actualmente el ciente que estamos usando es Android por lo que el nombre de esta carpeta es "android".
 - **project_type**: se refiere al tipo de proyecto para los que vas a crear los componentes GUI. Pueden ser **desktop**, **reference-wallet** o **sub-app**.  
@@ -188,6 +188,84 @@ He aqui un ejemplo:
     fermat-cbp-android-sub-app-crypto-broker-community-bitdubai
 
 Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es el tipo de proyecto, **crypto-broker-community** es el nombre del proyecto y **bitdubai** es la organizacion resposable de los componentes de este proyecto. Esto quiere decir que el proyecto es una SubApp llamada Crypto Broker Community desarrollada para dispositivos Android y creada por BitDubai para la plataforma CBP.
+
+
+#### What's Inside an Android GUI Components Project
+
+Un proyecto GUI Component para Android en fermat tiene la siguiente estructura basica (Leyenda: **+** carpeta, **>** paquete, **-** archivo):
+
+    + fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]
+      - .gitignore
+      - build.gradle
+      - proguard-rules.pro
+      + src
+        + main
+          + java
+            > com.bitdubai.[project_type].[name_of_the_project]
+              > fragmentFactory
+              > fragments
+              > preference_settings
+              > session
+          + res
+            + drawable
+            + layout
+            + menu
+            + values
+        + test
+          + java
+            > unit.com.bitdubai.[project_type].[name_of_the_project]
+
+Donde:
+
+- Todo lo que va en la carpeta `src` main son archivos y recursos que vas a necesitar para desarrollar tu wallet/subapp/desktop en android
+- Dentro de `src/main/java` se encuentra el paquete donde vas a colocar archivos Java (clases, intefaces, enums..) con tu codigo android que ejecuta la logica de programacion y el mismo tiene los siguientes paquetes basicos para la pataforma: **fragmentFactory**, **fragments**, **preference_settings** y **session** Cada uno de ellos explica en detalle mas adelante en este README
+- Dentro de `src/main/res` se encuentran archivos xml que representan layouts, menus, colores, strings y tamaños asi como archivos de imagenes y otros que representan los recursos visuales con los que van a interactuar las clases Java que tiene la logica android
+- Todo lo que va en la carpeta `test` es codigo que se utiliza para hacer Unit Testing sobre la funcionalidades que desarrolles en `src`
+- Los Unit Test se crean dentro del paquete `unit.com.bitdubai.[project_type].[name_of_the_project]`
+- El archivo `build.gradle` es donde defines las dependencias del proyecto con los otros de la plataforma o con librerias de terceros y aquellas que ofrece google pero no por default (las Support Libraries por ejemplo). Tambien se define la version minima de Android sobre la que va a correr la app asi como la version del Android SDK que se va a usar, entre otras cosas (para mas informacion revisa [este enlace](http://developer.android.com/tools/building/configuring-gradle.html))
+- El archivo `proguard-rules.pro` configura la herramienta Proguard. (para mas informacion revisa [este enlace](http://developer.android.com/guide/developing/tools/proguard.html)). **NOTA:** *Actualmente no cofiguramos este archivo, por lo que esta vacio*
+
+### Agregardo tu proyecto el archivo settings.gradle
+
+cuando creas tu proyecto android para desarrollar tu wallet/subapp/desktop en un principio no va a ser reconocido como tal en la estructura de dependencias del proyecto raiz (fermat) y se va a mostrar como un directorio mas. Para que tu proyecto sea incluido en la estructura de dependencias es necesario agregar las siguientes lineas en el archivo `settings.gradle` que se encuentra en la carpeta de la plataforma done vas a trabajar:
+
+```Gradle
+include ':fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]'
+project(':fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]').projectDir = new File('platform_name/client_type/project_type/fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]')
+```
+He aqui un ejemplo de parte del archivo `settings.gradle` de la plataforma CBP (`fermat/CBP/settings.gradle`):
+
+```Gradle
+...
+
+//Desktop
+include ':fermat-cbp-android-desktop-sub-app-manager-bitdubai'
+project(':fermat-cbp-android-desktop-sub-app-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-sub-app-manager-bitdubai')
+include ':fermat-cbp-android-desktop-wallet-manager-bitdubai'
+project(':fermat-cbp-android-desktop-wallet-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-wallet-manager-bitdubai')
+
+//Reference Wallet
+include ':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai'
+project(':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-broker-bitdubai')
+include ':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai'
+project(':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-customer-bitdubai')
+
+//Sub App
+include ':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai'
+project(':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-community-bitdubai')
+include ':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai'
+project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
+include ':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai'
+project(':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-community-bitdubai')
+include ':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai'
+project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
+include ':fermat-cbp-android-sub-app-customers-bitdubai'
+project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-customers-bitdubai')
+
+//PLUGINS
+...
+
+```
 
 <br>
 
