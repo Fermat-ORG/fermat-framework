@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.network.client.developer.bitdubai.version_2.WsCommunicationsNetworkClientPluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.network.client.developer.bitdubai.version_1.WsCommunicationsNetworkClientPluginRoot;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.network.client.developer.bitdubai.version_2.WsCommunicationsNetworkClientPluginRoot</code>
