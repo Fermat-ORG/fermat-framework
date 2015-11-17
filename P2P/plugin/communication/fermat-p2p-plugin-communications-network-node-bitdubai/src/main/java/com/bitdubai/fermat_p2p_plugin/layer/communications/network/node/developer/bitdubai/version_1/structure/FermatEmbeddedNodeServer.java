@@ -8,7 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketClientChannelServerEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketNodeChannelServerEndpoint;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.FermatApplication;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.JaxRsActivator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.servlets.HomeServlet;
 
 import org.jboss.logging.Logger;
@@ -17,16 +17,11 @@ import org.jboss.resteasy.spi.ResteasyDeployment;
 import org.xnio.BufferAllocator;
 import org.xnio.ByteBufferSlicePool;
 
-import java.io.File;
-
 import javax.servlet.ServletException;
 
 import io.undertow.Handlers;
 import io.undertow.Undertow;
-import io.undertow.server.HttpHandler;
 import io.undertow.server.handlers.PathHandler;
-import io.undertow.server.handlers.resource.ClassPathResourceManager;
-import io.undertow.server.handlers.resource.FileResourceManager;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
@@ -125,7 +120,7 @@ public class FermatEmbeddedNodeServer {
         appWebSocketDeploymentInfo.addEndpoint(WebSocketClientChannelServerEndpoint.class);
 
         ResteasyDeployment deployment = new ResteasyDeployment();
-        deployment.setApplicationClass(FermatApplication.class.getName());
+        deployment.setApplicationClass(JaxRsActivator.class.getName());
         deployment.setInjectorFactoryClass("org.jboss.resteasy.cdi.CdiInjectorFactory");
 
         /*
