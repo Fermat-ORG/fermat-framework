@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
+import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
@@ -23,7 +23,7 @@ import java.util.Map;
  * Created by rodrigo on 8/22/15.
  */
 public class GithubManager {
-    GithubConnection githubConnection;
+    GitHubConnection gitHubConnection;
     final String ROOT_PATH = "seed-resources/wallet_resources/bitDubai/reference_wallet/";
     String walletPath;
 
@@ -33,7 +33,7 @@ public class GithubManager {
      * @throws GitHubNotAuthorizedException
      */
     public GithubManager(String repository, String user, String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
-        githubConnection = new GithubConnection(repository, user, password);
+        gitHubConnection = new GitHubConnection(repository, user, password);
     }
 
     /**
@@ -79,14 +79,14 @@ public class GithubManager {
         else
             savingPath = walletPath + "languages/" + languageFileName;
 
-        githubConnection.createGitHubTextFile(savingPath, XMLParser.parseObject(language), "new language");
+        gitHubConnection.createGitHubTextFile(savingPath, XMLParser.parseObject(language), "new language");
     }
 
     private void saveNavigationStructure (WalletNavigationStructure navigationStructure){
         String savingPath = walletPath + "navigation_structure/navigation_structure.xml";
         String content = XMLParser.parseObject(navigationStructure);
 
-        githubConnection.createGitHubTextFile(savingPath, content, "new navigation structure");
+        gitHubConnection.createGitHubTextFile(savingPath, content, "new navigation structure");
     }
 
     private void saveSkin(Skin skin, boolean isDefault) throws IOException {
@@ -103,7 +103,7 @@ public class GithubManager {
 
         // I save the skin.xml file
 
-        githubConnection.createGitHubTextFile(savingPath + skinFileName, XMLParser.parseObject(skin), "new skin added");
+        gitHubConnection.createGitHubTextFile(savingPath + skinFileName, XMLParser.parseObject(skin), "new skin added");
 
         //will save both layouts
         saveLandscapeLayouts(savingPath, skin.getLandscapeLayouts());
@@ -113,14 +113,14 @@ public class GithubManager {
     private void savePortraitLayouts(String savingPath, Map<String, Layout> portraitLayouts) {
         savingPath = savingPath + "portrait/layouts/";
         for (Layout layout : portraitLayouts.values()){
-            githubConnection.createGitHubTextFile(savingPath + layout.getFilename(), "", "new layout");
+            gitHubConnection.createGitHubTextFile(savingPath + layout.getFilename(), "", "new layout");
         }
     }
 
     private void saveLandscapeLayouts(String savingPath, Map<String, Layout> landscapeLayouts) {
         savingPath = savingPath + "landscape/layouts/";
         for (Layout layout : landscapeLayouts.values()){
-            githubConnection.createGitHubTextFile(savingPath + layout.getFilename(), "", "new layout");
+            gitHubConnection.createGitHubTextFile(savingPath + layout.getFilename(), "", "new layout");
         }
     }
 
@@ -129,7 +129,7 @@ public class GithubManager {
         for (Resource resource : resources.values()){
             //right now I can only support images types to upload to github
             if (resource.getResourceType() == ResourceType.IMAGE){
-                githubConnection.createGitHubImageFile(savingPath + resource.getResourceDensity().toString() + "drawables/" + resource.getFileName(), getGithubImage(resource.getResourceFile()), "new image uploaded.");
+                gitHubConnection.createGitHubImageFile(savingPath + resource.getResourceDensity().toString() + "drawables/" + resource.getFileName(), getGithubImage(resource.getResourceFile()), "new image uploaded.");
             }
         }
     }
