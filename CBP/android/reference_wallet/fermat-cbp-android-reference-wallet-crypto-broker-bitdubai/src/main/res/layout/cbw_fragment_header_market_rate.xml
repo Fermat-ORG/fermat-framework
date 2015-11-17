@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,6 +24,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/market_rate_container"
+            android:layout_toStartOf="@+id/market_rate_container"
             android:textColor="@color/withe"
             tools:text="Buy: Bs 800,00"/>
 
@@ -61,9 +62,15 @@
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/market_rate_container"
             android:layout_toRightOf="@+id/market_rate_container"
-            android:gravity="right"
+            android:gravity="end"
             android:textColor="@color/withe"
             tools:text="Buy: Bs 840,25"/>
     </RelativeLayout>
 
-</FrameLayout>
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/cbw_market_rate_line_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/cbw_action_bar_gradient_colors"
+        android:paddingBottom="8dp"/>
+</LinearLayout>

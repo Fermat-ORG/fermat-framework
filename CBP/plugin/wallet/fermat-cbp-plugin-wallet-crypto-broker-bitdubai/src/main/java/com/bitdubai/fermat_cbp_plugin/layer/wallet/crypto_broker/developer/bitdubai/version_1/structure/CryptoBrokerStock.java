@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.Stock;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantCalculateBalanceException;
@@ -20,12 +21,12 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
  */
 public class CryptoBrokerStock implements Stock {
 
-    private final FermatEnum stockType;
+    private final CurrencyType currencyType;
     private KeyPair walletKeys;
     private final CryptoBrokerWalletDatabaseDao databaseDao;
 
-    public CryptoBrokerStock(final FermatEnum stockType, final KeyPair walletKeys ,final CryptoBrokerWalletDatabaseDao databaseDao){
-        this.stockType = stockType;
+    public CryptoBrokerStock(final CurrencyType currencyType, final KeyPair walletKeys ,final CryptoBrokerWalletDatabaseDao databaseDao){
+        this.currencyType = currencyType;
         this.walletKeys = walletKeys;
         this.databaseDao = databaseDao;
     }
@@ -33,7 +34,7 @@ public class CryptoBrokerStock implements Stock {
     @Override
     public float getBookedBalance() throws CantGetBookedBalanceCryptoBrokerWalletException {
         try {
-            return databaseDao.getCalculateBookBalance(this.stockType,this.walletKeys.getPublicKey());
+            return databaseDao.getCalculateBookBalance(this.currencyType,this.walletKeys.getPublicKey());
         } catch (CantCalculateBalanceException e) {
             throw new CantGetBookedBalanceCryptoBrokerWalletException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", e, "", "");
         } catch (Exception e) {
@@ -44,7 +45,7 @@ public class CryptoBrokerStock implements Stock {
     @Override
     public float getAvailableBalance() throws CantGetAvailableBalanceCryptoBrokerWalletException {
         try {
-            return databaseDao.getCalculateAvailableBalance(this.stockType,this.walletKeys.getPublicKey());
+            return databaseDao.getCalculateAvailableBalance(this.currencyType,this.walletKeys.getPublicKey());
         } catch (CantCalculateBalanceException e) {
             throw new CantGetAvailableBalanceCryptoBrokerWalletException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", e, "", "");
         } catch (Exception e) {

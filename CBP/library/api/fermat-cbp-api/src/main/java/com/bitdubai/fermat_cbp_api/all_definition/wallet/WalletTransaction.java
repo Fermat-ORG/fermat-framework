@@ -11,9 +11,8 @@ import java.util.UUID;
  * Created by jorge on 26-10-2015.
  */
 public interface WalletTransaction {
-    UUID getTransactionId();
 
-    FermatEnum getStockType();
+    UUID getTransactionId();
 
     BalanceType getBalanceType();
 
