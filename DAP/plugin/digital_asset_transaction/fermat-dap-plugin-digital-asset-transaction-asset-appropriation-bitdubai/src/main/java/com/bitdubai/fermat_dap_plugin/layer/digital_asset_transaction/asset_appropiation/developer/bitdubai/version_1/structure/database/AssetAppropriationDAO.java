@@ -153,6 +153,10 @@ public class AssetAppropriationDAO implements AutoCloseable {
         updateStatus(AppropriationStatus.CRYPTOADDRESS_OBTAINED, transactionId);
     }
 
+    public void updateTransactionStatusCryptoAddressRegistered(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        updateStatus(AppropriationStatus.CRYPTOADDRESS_REGISTERED, transactionId);
+    }
+
     public void updateTransactionStatusBitcoinsSent(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
         updateStatus(AppropriationStatus.BITCOINS_SENT, transactionId);
     }
