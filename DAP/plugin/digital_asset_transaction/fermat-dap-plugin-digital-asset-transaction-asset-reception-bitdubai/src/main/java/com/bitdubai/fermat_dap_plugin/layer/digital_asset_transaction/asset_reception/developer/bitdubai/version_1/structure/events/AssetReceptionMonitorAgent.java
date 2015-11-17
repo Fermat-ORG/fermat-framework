@@ -215,8 +215,6 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                  */
                 iterationNumber++;
                 try {
-                    System.out.println("Asset Reception Protocol Notification Agent: running...");
-
                     Thread.sleep(SLEEP_TIME);
                 } catch (InterruptedException interruptedException) {
                     return;
