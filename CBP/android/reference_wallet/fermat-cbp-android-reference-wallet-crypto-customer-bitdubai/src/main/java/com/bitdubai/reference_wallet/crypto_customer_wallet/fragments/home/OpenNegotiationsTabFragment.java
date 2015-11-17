@@ -143,24 +143,22 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 //        }
         toolbarHeader.setVisibility(View.VISIBLE);
         toolbarHeader.setBackgroundColor(Color.BLUE);
+        layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
 
-        View view = layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
-        view.setBackgroundColor(Color.CYAN);
-
-        //if (marketExchageRateSummaryList.isEmpty()) {
-            FermatTextView noMarketRateTextView = (FermatTextView) view.findViewById(R.id.ccw_no_market_rate);
-            noMarketRateTextView.setVisibility(View.VISIBLE);
-            View marketRateViewPagerContainer = view.findViewById(R.id.ccw_market_rate_view_pager_container);
-            marketRateViewPagerContainer.setVisibility(View.VISIBLE);
-       //} else {
-            ViewPager viewPager = (ViewPager) view.findViewById(R.id.ccw_exchange_rate_view_pager);
-            viewPager.setOffscreenPageLimit(3);
-            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchageRateSummaryList);
-            viewPager.setAdapter(pageAdapter);
-
-            LinePageIndicator indicator = (LinePageIndicator) view.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
-            indicator.setViewPager(viewPager);
-       // }
+//        if (marketExchangeRateSummaryList.isEmpty()) {
+//            FermatTextView noMarketRateTextView = (FermatTextView) headerLayout.findViewById(R.id.ccw_no_market_rate);
+//            noMarketRateTextView.setVisibility(View.VISIBLE);
+//            View marketRateViewPagerContainer = headerLayout.findViewById(R.id.ccw_market_rate_view_pager_container);
+//            marketRateViewPagerContainer.setVisibility(View.GONE);
+//        } else {
+//            ViewPager viewPager = (ViewPager) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager);
+//            viewPager.setOffscreenPageLimit(3);
+//            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchangeRateSummaryList);
+//            viewPager.setAdapter(pageAdapter);
+//
+//            LinePageIndicator indicator = (LinePageIndicator) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
+//            indicator.setViewPager(viewPager);
+//        }
 
     }
 
