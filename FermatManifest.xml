@@ -11,10 +11,11 @@
 						code-level="development"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="implementation" percentage="70"></author>
-							<author name="lnacosta" scope="implementation" percentage="30"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="50"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="50"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="50"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="50"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="lnacosta"></mantainer>
@@ -55,12 +56,14 @@
 					<library
 						name="OSA Core"
 						description=""
-						difficulty="0"
+						difficulty="3"
 						code-level="concept"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="60"></author>
+							<author name="lnacosta" scope="architecture" percentage="40"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -70,12 +73,14 @@
 					<library
 						name="BCH Core"
 						description=""
-						difficulty="0"
+						difficulty="3"
 						code-level="concept"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="60"></author>
+							<author name="lnacosta" scope="architecture" percentage="40"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -85,12 +90,14 @@
 					<library
 						name="P2P Core"
 						description=""
-						difficulty="0"
+						difficulty="3"
 						code-level="concept"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="60"></author>
+							<author name="lnacosta" scope="architecture" percentage="40"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -119,24 +126,11 @@
 						code-level="concept"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="60"></author>
+							<author name="lnacosta" scope="architecture" percentage="40"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>-
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</library>
-					<library
-						name="DMP Core"
-						description=""
-						difficulty="0"
-						code-level="concept"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
 						<mantainers>
 						</mantainers>
 						<certifications>
@@ -149,8 +143,10 @@
 						code-level="concept"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="60"></author>
+							<author name="lnacosta" scope="architecture" percentage="40"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -164,8 +160,10 @@
 						code-level="concept"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="60"></author>
+							<author name="lnacosta" scope="architecture" percentage="40"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -1015,7 +1013,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Messanger"
+						name="Messenger"
 						description=""
 						difficulty="0"
 						code-level="concept"
@@ -1188,7 +1186,8 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="implementation" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="implementation" percentage="50"></author>
+							<author name="lnacosta" scope="implementation" percentage="50"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="lnacosta"></mantainer>
@@ -1752,13 +1751,14 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="lnacosta" scope="implementation" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="50"></author>
+							<author name="nattyco" scope="implementation" percentage="25"></author>
+							<author name="furszy" scope="implementation" percentage="25"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="lnacosta"></mantainer>
+							<mantainer name="nattyco"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification signed-by="lnacosta" type="implementation"></certification>
 						</certifications>
 					</plugin>
 				</plugins>
@@ -1792,6 +1792,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -1858,7 +1859,6 @@
 							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification signed-by="lnacosta" type="implementation"></certification>
 						</certifications>
 					</plugin>
 				</plugins>
@@ -1881,7 +1881,6 @@
 							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification signed-by="lnacosta" type="implementation"></certification>
 						</certifications>
 					</plugin>
 				</plugins>
