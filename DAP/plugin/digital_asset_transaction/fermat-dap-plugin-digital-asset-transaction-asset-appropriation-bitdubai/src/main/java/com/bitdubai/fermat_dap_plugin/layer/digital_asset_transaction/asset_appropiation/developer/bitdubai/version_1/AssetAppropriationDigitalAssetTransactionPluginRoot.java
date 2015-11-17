@@ -171,11 +171,11 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
 
         //TODO REMOVE TEST METHOD.
-        try {
-            test();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            test();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
