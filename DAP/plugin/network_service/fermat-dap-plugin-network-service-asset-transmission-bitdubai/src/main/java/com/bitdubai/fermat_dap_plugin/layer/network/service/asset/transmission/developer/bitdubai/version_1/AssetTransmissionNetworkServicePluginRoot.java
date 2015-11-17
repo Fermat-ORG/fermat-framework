@@ -1054,7 +1054,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
             List<DigitalAssetMetadataTransactionImpl> pendingDigitalAssetMetadataTransactions = digitalAssetMetaDataTransactionDao.findAll(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_PROCESSED_COLUMN_NAME, DigitalAssetMetadataTransactionImpl.NO_PROCESSED);
 
-            if (pendingTransactions != null && !pendingTransactions.isEmpty()){
+            if (!pendingDigitalAssetMetadataTransactions.isEmpty()){
 
                 for (DigitalAssetMetadataTransactionImpl digitalAssetMetadataTransaction: pendingDigitalAssetMetadataTransactions) {
 

@@ -955,7 +955,7 @@ public class RedeemPointActorDao implements Serializable {
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists, table not  found.", "Actor Redeem Point", "Cant check if alias exists, table not found.");
             }
-            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, assetRedeemPointAddPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, assetRedeemPointAddPublicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             return table.getRecords().size() > 0;

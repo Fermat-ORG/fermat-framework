@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
@@ -18,10 +19,23 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.crypto.TransactionSignature;
+import org.bitcoinj.script.Script;
+import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.wallet.DeterministicSeed;
+import org.bitcoinj.wallet.WalletTransaction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -146,15 +160,74 @@ public class AssetCryptoVaultManager  {
          * I get the network for this address.
          */
         BlockchainNetworkType networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
+        NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(networkType);
 
         /**
-         * I will create a new wallet with all the keys that I generated.
-         * Then I will import all the transactions from the crypto network.
-         * Then I will create a new transaction and broadcast it.
+         * I will get the genesis transaction  I will use to form the input from the CryptoNetwork
          */
+        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionId);
+        if (genesisTransaction  == null){
+            StringBuilder output = new StringBuilder("The specified transaction hash ");
+            output.append(genesisTransactionId);
+            output.append(System.lineSeparator());
+            output.append("doesn't exists in the CryptoNetwork.");
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
 
-        return "";
+
+        /**
+         * I will get the key that I will use to sign the new transaction
+         */
+        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Asset Vault");
+        ECKey ecKey = null;
+        try {
+
+            ecKey = getNextAvailableECKey(vaultAccount);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "There was an error getting the next available key to sign the send transaction", "database issue");
+        }
+
+        /**
+         * I get the bitcoin address
+         */
+        Address address = null;
+        try {
+            address = new Address(networkParameters, addressTo.getAddress());
+        } catch (AddressFormatException e) {
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "The specified address is not valid. " + addressTo.getAddress(), null);
+        }
+
+
+        List<ECKey> derivedKeys = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount);
+        Wallet wallet = Wallet.fromKeys(networkParameters, derivedKeys);
+        WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.UNSPENT, genesisTransaction);
+        wallet.addWalletTransaction(walletTransaction);
+
+        Wallet.SendRequest sendRequest = Wallet.SendRequest.to(address, Coin.valueOf(amount));
+        try {
+            wallet.completeTx(sendRequest);
+        } catch (InsufficientMoneyException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            bitcoinNetworkManager.broadcastTransaction(networkType, sendRequest.tx);
+        } catch (CantBroadcastTransactionException e) {
+            e.printStackTrace();
+        }
+
+        return sendRequest.tx.getHashAsString();
     }
+
+    /**
+     * Gets the next available key from the specified account.
+     * @return
+     */
+    private ECKey getNextAvailableECKey(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
+        ECKey ecKey = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getNextAvailableKey(hierarchyAccount);
+        return ecKey;
+    }
+
 
     /**
      * Will make sure that we have a listening network running for this address that we are trying to send bitcoins to.
@@ -210,9 +283,8 @@ public class AssetCryptoVaultManager  {
          * if the network parameters calculated is different that the Default network I will double check
          */
         if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.DEFAULT){
-            //todo find another way to validate the network to which the address belongs to.
-        }
-
+            return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT);
+        } else
         return networkParameters;
     }
 

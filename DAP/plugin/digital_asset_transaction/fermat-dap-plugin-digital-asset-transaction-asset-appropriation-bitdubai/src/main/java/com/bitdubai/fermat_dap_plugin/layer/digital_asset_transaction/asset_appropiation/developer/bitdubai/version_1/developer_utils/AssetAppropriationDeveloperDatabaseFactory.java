@@ -70,9 +70,9 @@ public class AssetAppropriationDeveloperDatabaseFactory implements DealsWithPlug
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            AssetAppropriationDatabaseFactory redeemPointRedemptionDatabaseFactory = null;
+            AssetAppropriationDatabaseFactory assetAppropriationDatabaseFactory = null;
             try {
-                redeemPointRedemptionDatabaseFactory = new AssetAppropriationDatabaseFactory(pluginDatabaseSystem);
+                assetAppropriationDatabaseFactory = new AssetAppropriationDatabaseFactory(pluginDatabaseSystem);
             } catch (CantSetObjectException e1) {
                 throw new CantInitializeAssetRedeemPointRedemptionTransactionDatabaseException(e1.getMessage());
             }
@@ -81,7 +81,7 @@ public class AssetAppropriationDeveloperDatabaseFactory implements DealsWithPlug
                   /*
                    * We create the new database
                    */
-                database = redeemPointRedemptionDatabaseFactory.createDatabase(pluginId);
+                database = assetAppropriationDatabaseFactory.createDatabase(pluginId);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.

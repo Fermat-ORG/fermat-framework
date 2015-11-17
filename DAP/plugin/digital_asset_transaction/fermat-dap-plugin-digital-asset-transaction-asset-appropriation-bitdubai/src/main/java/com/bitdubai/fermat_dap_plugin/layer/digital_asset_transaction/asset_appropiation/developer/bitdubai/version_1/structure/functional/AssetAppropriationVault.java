@@ -50,6 +50,14 @@ public class AssetAppropriationVault {
         }
     }
 
+    //PRIVATE METHODS
+
+    private String createFilename(String digitalAssetPublicKey) {
+        return digitalAssetPublicKey + ".xml";
+    }
+
+    //GETTER AND SETTERS
+
     public DigitalAsset getDigitalAssetFromLocalStorage(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
         try {
 
@@ -62,13 +70,6 @@ public class AssetAppropriationVault {
             throw new CantGetDigitalAssetFromLocalStorageException(e, "Getting Digital Asset file from local storage", "Unexpected exception creating '" + STORAGE_PATH + createFilename(assetPublicKey) + "' file");
         }
     }
-    //PRIVATE METHODS
-
-    private String createFilename(String digitalAssetPublicKey) {
-        return digitalAssetPublicKey + ".xml";
-    }
-
-    //GETTER AND SETTERS
 
     //INNER CLASSES
 }
