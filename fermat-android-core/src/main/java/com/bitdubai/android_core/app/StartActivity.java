@@ -14,19 +14,22 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
-import com.bitdubai.fermat_api.CantStartPlatformException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
-import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_core.FermatSystem;
-import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_osa_android_core.OSAPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
@@ -56,11 +59,6 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
     private static boolean WAS_START_ACTIVITY_LOADED = false;
 
     ArrayList<Platforms> activePlatforms;
-
-    private CorePlatformContext platformContext;
-
-    private Platform platform;
-
 
     private ProgressDialog mDialog;
 
@@ -189,8 +187,26 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
      */
     @Override
     public void onPostExecute(Object... result) {
-        PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.PLATFORM_INFO);
-        setPlatformDeviceInfo(platformInfoManager);
+
+        try {
+
+            final FermatSystem fermatSystem = ((ApplicationSession)getApplication()).getFermatSystem();
+
+            PlatformInfoManager platformInfoManager = (PlatformInfoManager) fermatSystem.startAndGetAddon(
+                    new AddonVersionReference(
+                            Platforms.PLUG_INS_PLATFORM,
+                            Layers.PLATFORM_SERVICE,
+                            Addons.PLATFORM_INFO,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+
+            setPlatformDeviceInfo(platformInfoManager);
+        } catch (CantGetAddonException | VersionNotFoundException e) {
+
+            System.out.println(e.toString());
+        }
         //mDialog.dismiss();
 
         imageView_fermat.clearAnimation();
@@ -229,40 +245,30 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
         @Override
         protected Object doInBackground() throws Exception {
 
+            final FermatSystem fermatSystem =((ApplicationSession) getApplication()).getFermatSystem();
+
+            try {
                 Context context = getApplicationContext();
+                fermatSystem.start(context, new OSAPlatform());
 
-                platform = ((ApplicationSession)getApplication()).getFermatPlatform();
+            } catch (FermatException e) {
+                System.err.println(e.toString());
+                System.out.println(e.getPossibleReason());
+                System.out.println(e.getFormattedContext());
+                System.out.println(e.getFormattedTrace());
+            }
 
-                try {
-                    final FermatSystem fermatSystem = new FermatSystem(context, new OSAPlatform());
-                    fermatSystem.start();
-                    platform.setFermatSystem(fermatSystem);
-                } catch (FermatException e) {
-                    System.err.println(e.toString());
-                    System.out.println(e.getPossibleReason());
-                    System.out.println(e.getFormattedContext());
-                    System.out.println(e.getFormattedTrace());
-                }
-                //execute start platform
-                try {
+            try {
+                fermatSystem.startAllRegisteredPlatforms();
 
-                    platform.start();
+            } catch (FermatException e) {
+                System.err.println(e.toString());
+                System.out.println(e.getPossibleReason());
+                System.out.println(e.getFormattedContext());
+                System.out.println(e.getFormattedTrace());
+            }
 
-                } catch (CantStartPlatformException | CantReportCriticalStartingProblemException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-                }
-
-                /**
-                 * get platform object
-                 */
-
-                platformContext = platform.getCorePlatformContext();
-
-
-
-
-                return true;
+            return true;
         }
     }
 

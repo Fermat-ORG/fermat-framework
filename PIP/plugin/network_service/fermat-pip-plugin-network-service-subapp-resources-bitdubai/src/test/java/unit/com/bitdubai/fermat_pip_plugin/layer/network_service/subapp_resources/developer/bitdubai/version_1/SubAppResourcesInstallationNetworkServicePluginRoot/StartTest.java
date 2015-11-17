@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesNetworkServicePluginRoot;
 import com.googlecode.catchexception.CatchException;
 
 import junit.framework.TestCase;
@@ -64,16 +64,16 @@ public class StartTest extends TestCase {
     @Mock
     private LogManager mockLogManager;
 
-    private SubAppResourcesInstallationNetworkServicePluginRoot subAppResourcesInstallationNetworkServicePluginRoot;
+    private SubAppResourcesNetworkServicePluginRoot subAppResourcesNetworkServicePluginRoot;
 
     @Before
     public void setUp() throws Exception {
-        subAppResourcesInstallationNetworkServicePluginRoot = new SubAppResourcesInstallationNetworkServicePluginRoot();
-        subAppResourcesInstallationNetworkServicePluginRoot.setPluginFileSystem(mockPluginFileSystem);
-        subAppResourcesInstallationNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
-        subAppResourcesInstallationNetworkServicePluginRoot.setLogManager(mockLogManager);
-        subAppResourcesInstallationNetworkServicePluginRoot.setEventManager(mockEventManager);
-        subAppResourcesInstallationNetworkServicePluginRoot.setErrorManager(mockErrorManager);
+        subAppResourcesNetworkServicePluginRoot = new SubAppResourcesNetworkServicePluginRoot();
+        subAppResourcesNetworkServicePluginRoot.setPluginFileSystem(mockPluginFileSystem);
+        subAppResourcesNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        subAppResourcesNetworkServicePluginRoot.setLogManager(mockLogManager);
+        subAppResourcesNetworkServicePluginRoot.setEventManager(mockEventManager);
+        subAppResourcesNetworkServicePluginRoot.setErrorManager(mockErrorManager);
 
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
@@ -82,9 +82,9 @@ public class StartTest extends TestCase {
     @Test
     public void teststart_ThePlugInHasStartedOk_ThrowsCantStartPluginException() throws Exception {
         when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockFermatEventListener);
-        catchException(subAppResourcesInstallationNetworkServicePluginRoot).start();
+        catchException(subAppResourcesNetworkServicePluginRoot).start();
         assertThat(CatchException.<Exception>caughtException()).isNull();
-        assertThat(subAppResourcesInstallationNetworkServicePluginRoot.getStatus()).isEqualTo(ServiceStatus.STARTED);
+        assertThat(subAppResourcesNetworkServicePluginRoot.getStatus()).isEqualTo(ServiceStatus.STARTED);
     }
 
 
@@ -92,14 +92,14 @@ public class StartTest extends TestCase {
     public void getStatusTest()  {
 
 
-        subAppResourcesInstallationNetworkServicePluginRoot.resume();
-        assertThat(subAppResourcesInstallationNetworkServicePluginRoot.getStatus()).isEqualTo(ServiceStatus.STARTED);
+        subAppResourcesNetworkServicePluginRoot.resume();
+        assertThat(subAppResourcesNetworkServicePluginRoot.getStatus()).isEqualTo(ServiceStatus.STARTED);
 
-        subAppResourcesInstallationNetworkServicePluginRoot.pause();
-        assertThat(subAppResourcesInstallationNetworkServicePluginRoot.getStatus()).isEqualTo(ServiceStatus.PAUSED);
+        subAppResourcesNetworkServicePluginRoot.pause();
+        assertThat(subAppResourcesNetworkServicePluginRoot.getStatus()).isEqualTo(ServiceStatus.PAUSED);
 
-        subAppResourcesInstallationNetworkServicePluginRoot.stop();
-        assertThat(subAppResourcesInstallationNetworkServicePluginRoot.getStatus()).isEqualTo(ServiceStatus.STOPPED);
+        subAppResourcesNetworkServicePluginRoot.stop();
+        assertThat(subAppResourcesNetworkServicePluginRoot.getStatus()).isEqualTo(ServiceStatus.STOPPED);
 
     }
 

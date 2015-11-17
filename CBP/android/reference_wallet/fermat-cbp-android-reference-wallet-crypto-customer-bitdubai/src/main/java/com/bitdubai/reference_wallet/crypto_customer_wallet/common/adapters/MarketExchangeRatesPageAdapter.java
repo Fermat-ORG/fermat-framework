@@ -21,13 +21,10 @@ import java.util.List;
  */
 public class MarketExchangeRatesPageAdapter extends FragmentStatePagerAdapter {
 
-    private final MarketRateStatisticsFragment fragment;
     private final List<IndexInfoSummary> summaryList;
 
     public MarketExchangeRatesPageAdapter(FragmentManager fragmentManager, Collection<IndexInfoSummary> summaryList) {
         super(fragmentManager);
-
-        fragment = MarketRateStatisticsFragment.newInstance();
         this.summaryList = new ArrayList<>();
         this.summaryList.addAll(summaryList);
     }
@@ -39,6 +36,7 @@ public class MarketExchangeRatesPageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        MarketRateStatisticsFragment fragment = MarketRateStatisticsFragment.newInstance();
         IndexInfoSummary summary = summaryList.get(position);
         fragment.bind(summary);
 

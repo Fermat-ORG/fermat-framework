@@ -1,9 +1,9 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +21,7 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFr
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.IndexInfoSummary;
@@ -30,17 +31,17 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.excep
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWallet;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.MarketExchangeRatesPageAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.NavigationViewAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
-import com.viewpagerindicator.LinePageIndicator;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,13 +57,16 @@ import java.util.List;
 public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
+    private static final String CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY = "crypto_customer_wallet";
+    private static final String TAG = "ContractsHistoryActivityFragment";
+
     // Fermat Managers
     private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
     // Data
     private List<GrouperItem> openNegotiationList;
-    private List<IndexInfoSummary> marketExchageRateSummaryList;
+    private List<IndexInfoSummary> marketExchangeRateSummaryList;
 
 
     public static OpenNegotiationsTabFragment newInstance() {
@@ -84,7 +88,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
 
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        marketExchageRateSummaryList = getMarketExchangeRateSummaryData();
+        marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
     }
 
 
@@ -93,10 +97,9 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         super.initViews(layout);
 
         Activity activity = getActivity();
-
-
+        LayoutInflater layoutInflater = activity.getLayoutInflater();
+        configureActivityHeader(layoutInflater);
         configureActionBar();
-        configureActivityHeader(activity);
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.ccw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
@@ -107,8 +110,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
 
-        NavigationViewAdapter adapter = new NavigationViewAdapter(activity, null);
-        setNavigationDrawer(adapter);
+        try {
+            addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), null));
+            NavigationViewAdapter adapter = new NavigationViewAdapter(activity, null);
+            setNavigationDrawer(adapter);
+        } catch (CantGetActiveLoginIdentityException e) {
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+        }
     }
 
     private void configureActionBar() {
@@ -120,26 +128,34 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
     }
 
-    private void configureActivityHeader(Activity activity) {
-        LayoutInflater layoutInflater = activity.getLayoutInflater();
+    private void configureActivityHeader(LayoutInflater layoutInflater) {
 
-        RelativeLayout activityHeaderLayout = getToolbarHeader();
-        try {
-            activityHeaderLayout.removeAllViews();
-        } catch (Exception exception) {
-            CommonLogger.exception(TAG, "Error removing all views from activityHeaderLayout ", exception);
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
-        }
-        activityHeaderLayout.setVisibility(View.VISIBLE);
-        View container = layoutInflater.inflate(R.layout.ccw_header_layout, activityHeaderLayout, true);
+        RelativeLayout toolbarHeader = getToolbarHeader();
+//        try {
+//            toolbarHeader.removeAllViews();
+//        } catch (Exception exception) {
+//            CommonLogger.exception(TAG, "Error removing all views from toolbarHeader ", exception);
+//            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
+//        }
+        toolbarHeader.setVisibility(View.VISIBLE);
+        toolbarHeader.setBackgroundColor(Color.BLUE);
+        layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
 
-        ViewPager viewPager = (ViewPager) container.findViewById(R.id.ccw_exchange_rate_view_pager);
-        viewPager.setOffscreenPageLimit(3);
-        MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(activity.getFragmentManager(), marketExchageRateSummaryList);
-        viewPager.setAdapter(pageAdapter);
+//        if (marketExchangeRateSummaryList.isEmpty()) {
+//            FermatTextView noMarketRateTextView = (FermatTextView) headerLayout.findViewById(R.id.ccw_no_market_rate);
+//            noMarketRateTextView.setVisibility(View.VISIBLE);
+//            View marketRateViewPagerContainer = headerLayout.findViewById(R.id.ccw_market_rate_view_pager_container);
+//            marketRateViewPagerContainer.setVisibility(View.GONE);
+//        } else {
+//            ViewPager viewPager = (ViewPager) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager);
+//            viewPager.setOffscreenPageLimit(3);
+//            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchangeRateSummaryList);
+//            viewPager.setAdapter(pageAdapter);
+//
+//            LinePageIndicator indicator = (LinePageIndicator) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
+//            indicator.setViewPager(viewPager);
+//        }
 
-        LinePageIndicator indicator = (LinePageIndicator) container.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
-        indicator.setViewPager(viewPager);
     }
 
     @Override
@@ -156,7 +172,11 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_start_negotiation) {
+            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST);
+        }
+
+        return true;
     }
 
     @Override
@@ -199,7 +219,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
+                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY);
                 GrouperItem<CustomerBrokerNegotiationInformation> grouper;
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
@@ -234,7 +254,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
+                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY);
                 data.addAll(cryptoCustomerWallet.getCurrentIndexSummaryForCurrenciesOfInterest());
 
             } catch (CantGetCryptoCustomerWalletException | CantGetCurrentIndexSumaryForCurrenciesOfInterestException ex) {
@@ -258,7 +278,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     @Override
     public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
-        //TODO abrir actividad de detalle de contrato abierto
+        walletSession.setData("negotiation_data", data);
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS);
     }
 
     @Override

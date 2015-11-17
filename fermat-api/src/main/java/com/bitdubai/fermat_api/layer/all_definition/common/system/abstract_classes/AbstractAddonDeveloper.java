@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Ver
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -17,12 +16,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractAddonDeveloper {
 
-    private final Map<AddonVersionReference, AbstractAddon> versions;
+    private final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions;
 
     private final AddonDeveloperReference addonDeveloperReference;
 
     /**
-     * normal constructor with params.
+     * Constructor with params.
      * assigns a developer to the addon developer class
      *
      * @param addonDeveloperReference a directly built developer reference.
@@ -35,7 +34,7 @@ public abstract class AbstractAddonDeveloper {
     }
 
     /**
-     * Throw the method <code>registerVersion</code> you can add new versions to the addon developer.
+     * Through the method <code>registerVersion</code> you can add new versions to the addon developer.
      * Here we'll corroborate too that the version is not added twice.
      *
      * @param abstractAddon  addon in-self.
@@ -48,23 +47,30 @@ public abstract class AbstractAddonDeveloper {
 
         addonVersionReference.setAddonDeveloperReference(this.addonDeveloperReference);
 
-        if(versions.containsKey(addonVersionReference))
-            throw new CantRegisterVersionException(addonVersionReference.toString(), "version already exists for this addon developer.");
-
-        versions.put(
-                addonVersionReference,
-                abstractAddon
-        );
-
+        if(versions.putIfAbsent(addonVersionReference, abstractAddon) != null)
+            throw new CantRegisterVersionException(addonVersionReference.toString3(), "Version already exists for this addon developer.");
     }
 
+    /**
+     * Through the method <code>getAddonByVersion</code> you can get a specific version of the addon.
+     *
+     * @param addonVersionReference  addon reference.
+     *
+     * @throws VersionNotFoundException if something goes wrong.
+     */
     public final AbstractAddon getAddonByVersion(final AddonVersionReference addonVersionReference) throws VersionNotFoundException {
+
         if (versions.containsKey(addonVersionReference)) {
             return versions.get(addonVersionReference);
         } else {
 
-            throw new VersionNotFoundException(addonVersionReference.toString(), "version not found in the specified addon developer.");
+            throw new VersionNotFoundException(addonVersionReference.toString3(), "version not found in the specified addon developer.");
         }
+    }
+
+    public final ConcurrentHashMap<AddonVersionReference, AbstractAddon> listVersions() {
+
+        return versions;
     }
 
     public final AddonDeveloperReference getAddonDeveloperReference() {
