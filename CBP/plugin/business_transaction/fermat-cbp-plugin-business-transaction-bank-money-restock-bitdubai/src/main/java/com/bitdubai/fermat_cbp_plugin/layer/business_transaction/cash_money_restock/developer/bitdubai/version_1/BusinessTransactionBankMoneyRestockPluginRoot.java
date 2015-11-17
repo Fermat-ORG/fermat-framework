@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_restock.interfaces.BankMoneyRestockManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.cash_money_restock.developer.bitdubai.version_1.database.BusinessTransactionBankMoneyRestockDeveloperFactory;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -60,17 +61,27 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        BusinessTransactionBankMoneyRestockDeveloperFactory businessTransactionBankMoneyRestockDeveloperFactory = new BusinessTransactionBankMoneyRestockDeveloperFactory(pluginDatabaseSystem, pluginId);
+        return businessTransactionBankMoneyRestockDeveloperFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        BusinessTransactionBankMoneyRestockDeveloperFactory businessTransactionBankMoneyRestockDeveloperFactory = new BusinessTransactionBankMoneyRestockDeveloperFactory(pluginDatabaseSystem, pluginId);
+        return businessTransactionBankMoneyRestockDeveloperFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        BusinessTransactionBankMoneyRestockDeveloperFactory businessTransactionBankMoneyRestockDeveloperFactory = new BusinessTransactionBankMoneyRestockDeveloperFactory(pluginDatabaseSystem, pluginId);
+        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = null;
+        try {
+            businessTransactionBankMoneyRestockDeveloperFactory.initializeDatabase();
+            developerDatabaseTableRecordList = businessTransactionBankMoneyRestockDeveloperFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (Exception e) {
+            System.out.println("******* Error trying to get database table list for plugin Bank Money Restock ******");
+        }
+        return developerDatabaseTableRecordList;
     }
 
     @Override
