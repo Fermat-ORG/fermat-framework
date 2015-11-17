@@ -217,12 +217,12 @@ Un proyecto GUI Component para Android en fermat tiene la siguiente estructura b
 
 Donde:
 
-- Todo lo que va en la carpeta `src` main son archivos y recursos que vas a necesitar para desarrollar tu wallet/subapp/desktop en android
-- Dentro de `src/main/java` se encuentra el paquete donde vas a colocar archivos Java (clases, intefaces, enums..) con tu codigo android que ejecuta la logica de programacion y el mismo tiene los siguientes paquetes basicos para la pataforma: **fragmentFactory**, **fragments**, **preference_settings** y **session** Cada uno de ellos explica en detalle mas adelante en este README
-- Dentro de `src/main/res` se encuentran archivos xml que representan layouts, menus, colores, strings y tamaños asi como archivos de imagenes y otros que representan los recursos visuales con los que van a interactuar las clases Java que tiene la logica android
+- Todo lo que va en la carpeta `src` son archivos y recursos que vas a necesitar para desarrollar tu wallet/subapp/desktop en android
+- Dentro de `src/main/java` se encuentra el paquete donde vas a colocar archivos Java (clases, intefaces, enums..) con tu codigo android. El mismo tiene los siguientes paquetes basicos: **fragmentFactory**, **fragments**, **preference_settings** y **session**. Cada uno de ellos explica en detalle mas adelante en este README.
+- Dentro de `src/main/res` se encuentran archivos `xml` que representan *layouts, menus, colores, strings, tamaños* asi como archivos de imagenes y otros que representan los recursos visuales con los que van a interactuar las clases Java que tienen la logica android.
 - Todo lo que va en la carpeta `test` es codigo que se utiliza para hacer Unit Testing sobre la funcionalidades que desarrolles en `src`
-- Los Unit Test se crean dentro del paquete `unit.com.bitdubai.[project_type].[name_of_the_project]`
-- El archivo `build.gradle` es donde defines las dependencias del proyecto con los otros de la plataforma o con librerias de terceros y aquellas que ofrece google pero no por default (las Support Libraries por ejemplo). Tambien se define la version minima de Android sobre la que va a correr la app asi como la version del Android SDK que se va a usar, entre otras cosas (para mas informacion revisa [este enlace](http://developer.android.com/tools/building/configuring-gradle.html))
+- Los Unit Test se crean dentro del paquete `unit.com.bitdubai.[project_type].[name_of_the_project]` en `test/java`
+- El archivo `build.gradle` es donde defines las dependencias del proyecto con otros de la plataforma o con librerias de terceros y aquellas que ofrece Android pero no por default (las Support Libraries por ejemplo). Tambien se define la version minima del S.O. sobre la que va a correr la app asi como la version del Android SDK que se va a usar, entre otras cosas (para mas informacion revisa [este enlace](http://developer.android.com/tools/building/configuring-gradle.html))
 - El archivo `proguard-rules.pro` configura la herramienta Proguard. (para mas informacion revisa [este enlace](http://developer.android.com/guide/developing/tools/proguard.html)). **NOTA:** *Actualmente no cofiguramos este archivo, por lo que esta vacio*
 
 ### Agregardo tu proyecto el archivo settings.gradle
