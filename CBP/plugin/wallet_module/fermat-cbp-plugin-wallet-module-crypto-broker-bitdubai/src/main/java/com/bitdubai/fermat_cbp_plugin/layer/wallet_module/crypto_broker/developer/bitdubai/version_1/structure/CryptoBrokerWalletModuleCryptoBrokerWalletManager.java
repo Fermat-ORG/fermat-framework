@@ -10,7 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBroker
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForCustomerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSumaryForStockCurrenciesException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
@@ -18,7 +18,6 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfa
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.StockInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.StockStatistics;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSumaryForCurrenciesOfInterestException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -121,7 +120,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies() throws CantGetCurrentIndexSumaryForStockCurrenciesException {
+    public Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies() throws CantGetCurrentIndexSummaryForStockCurrenciesException {
         try {
             IndexInfoSummary indexInfoSummary;
             Collection<IndexInfoSummary> summaryList = new ArrayList<>();
@@ -138,7 +137,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             return summaryList;
 
         } catch (Exception ex) {
-            throw new CantGetCurrentIndexSumaryForStockCurrenciesException(ex);
+            throw new CantGetCurrentIndexSummaryForStockCurrenciesException(ex);
         }
     }
 

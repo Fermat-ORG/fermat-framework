@@ -2,12 +2,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:app="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
-             android:layout_height="@dimen/ccw_market_exchange_rate_layout_height"
+             android:layout_height="@dimen/cbw_market_exchange_rate_layout_height"
              android:layout_marginTop="?attr/actionBarSize"
              android:background="@drawable/cbw_header_gradient_background">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/ccw_no_market_rate"
+        android:id="@+id/cbw_no_market_rate"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -17,19 +17,19 @@
         android:visibility="gone"/>
 
     <FrameLayout
-        android:id="@+id/ccw_market_rate_view_pager_container"
+        android:id="@+id/cbw_market_rate_view_pager_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible">
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/ccw_exchange_rate_view_pager"
+            android:id="@+id/cbw_exchange_rate_view_pager"
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <com.viewpagerindicator.LinePageIndicator
-            android:id="@+id/ccw_exchange_rate_view_pager_indicator"
+            android:id="@+id/cbw_exchange_rate_view_pager_indicator"
             android:layout_width="match_parent"
             android:layout_height="@dimen/cbw_market_exchange_rate_indicator_height"
             android:padding="5dp"

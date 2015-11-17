@@ -1,7 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -28,7 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSumaryForCurrenciesOfInterestException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSummaryForCurrenciesOfInterestException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWallet;
@@ -61,7 +60,7 @@ import java.util.List;
 public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
-    private static final String CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY = "crypto_customer_wallet";
+    private static final String WALLET_PUBLIC_KEY = "crypto_customer_wallet";
     private static final String TAG = "ContractsHistoryActivityFragment";
 
     // Fermat Managers
@@ -221,7 +220,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY);
+                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(WALLET_PUBLIC_KEY);
                 GrouperItem<CustomerBrokerNegotiationInformation> grouper;
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
@@ -256,10 +255,10 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY);
-                data.addAll(cryptoCustomerWallet.getCurrentIndexSummaryForCurrenciesOfInterest());
+                CryptoCustomerWallet wallet = moduleManager.getCryptoCustomerWallet(WALLET_PUBLIC_KEY);
+                data.addAll(wallet.getCurrentIndexSummaryForCurrenciesOfInterest());
 
-            } catch (CantGetCryptoCustomerWalletException | CantGetCurrentIndexSumaryForCurrenciesOfInterestException ex) {
+            } catch (CantGetCryptoCustomerWalletException | CantGetCurrentIndexSummaryForCurrenciesOfInterestException ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null) {
                     errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,

@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by nelson on 22/09/15.
  */
-public class CantGetCurrentIndexSumaryForStockCurrenciesException extends FermatException {
+public class CantGetCurrentIndexSummaryForCurrenciesOfInterestException extends FermatException {
     public static final String DEFAULT_MESSAGE = "Cant get the index summary for the currencies the customer is interested";
 
     /**
@@ -16,7 +16,7 @@ public class CantGetCurrentIndexSumaryForStockCurrenciesException extends Fermat
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetCurrentIndexSumaryForStockCurrenciesException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetCurrentIndexSummaryForCurrenciesOfInterestException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -25,7 +25,7 @@ public class CantGetCurrentIndexSumaryForStockCurrenciesException extends Fermat
      *
      * @param cause the exception that triggered the throwing of the current exception, if there are no other exceptions to be declared here, the cause should be null
      */
-    public CantGetCurrentIndexSumaryForStockCurrenciesException(Exception cause) {
+    public CantGetCurrentIndexSummaryForCurrenciesOfInterestException(Exception cause) {
         super(DEFAULT_MESSAGE, cause, "", "");
     }
 }

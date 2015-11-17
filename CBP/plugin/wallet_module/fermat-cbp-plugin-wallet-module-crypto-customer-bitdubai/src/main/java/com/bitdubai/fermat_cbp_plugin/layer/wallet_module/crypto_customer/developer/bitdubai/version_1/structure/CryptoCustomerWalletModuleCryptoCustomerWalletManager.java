@@ -10,7 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBroker
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSumaryForCurrenciesOfInterestException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSummaryForCurrenciesOfInterestException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CouldNotStartNegotiationException;
@@ -114,7 +114,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public Collection<IndexInfoSummary> getCurrentIndexSummaryForCurrenciesOfInterest() throws CantGetCurrentIndexSumaryForCurrenciesOfInterestException {
+    public Collection<IndexInfoSummary> getCurrentIndexSummaryForCurrenciesOfInterest() throws CantGetCurrentIndexSummaryForCurrenciesOfInterestException {
         try {
             IndexInfoSummary indexInfoSummary;
             Collection<IndexInfoSummary> summaryList = new ArrayList<>();
@@ -131,7 +131,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             return summaryList;
 
         } catch (Exception ex) {
-            throw new CantGetCurrentIndexSumaryForCurrenciesOfInterestException(ex);
+            throw new CantGetCurrentIndexSummaryForCurrenciesOfInterestException(ex);
         }
     }
 }

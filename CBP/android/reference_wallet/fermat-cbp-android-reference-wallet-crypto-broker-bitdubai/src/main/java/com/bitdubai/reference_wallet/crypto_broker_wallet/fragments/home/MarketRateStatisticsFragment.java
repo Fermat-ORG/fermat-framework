@@ -27,9 +27,9 @@ public class MarketRateStatisticsFragment extends FermatWalletFragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.cbw_fragment_header_market_rate, container, false);
 
-        FermatTextView buyPrice = (FermatTextView) rootView.findViewById(R.id.ccw_buy_price);
-        FermatTextView sellPrice = (FermatTextView) rootView.findViewById(R.id.ccw_sell_price);
-        FermatTextView currencies = (FermatTextView) rootView.findViewById(R.id.ccw_currencies);
+        FermatTextView buyPrice = (FermatTextView) rootView.findViewById(R.id.cbw_buy_price);
+        FermatTextView sellPrice = (FermatTextView) rootView.findViewById(R.id.cbw_sell_price);
+        FermatTextView currencies = (FermatTextView) rootView.findViewById(R.id.cbw_currencies);
 
         currencies.setText(currencyPair);
         String buyText = rootView.getResources().getString(R.string.buy_text_and_price, buy);
