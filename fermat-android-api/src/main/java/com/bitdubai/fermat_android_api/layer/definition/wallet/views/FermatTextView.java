@@ -70,4 +70,6 @@ public class FermatTextView extends TextView {
             ex.printStackTrace();
         }
     }
+
+
 }
