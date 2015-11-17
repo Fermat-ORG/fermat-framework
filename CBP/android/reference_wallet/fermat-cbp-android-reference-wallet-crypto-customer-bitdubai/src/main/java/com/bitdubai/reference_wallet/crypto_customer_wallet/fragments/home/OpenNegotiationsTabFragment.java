@@ -61,13 +61,16 @@ import java.util.List;
 public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
+    private static final String CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY = "crypto_customer_wallet";
+    private static final String TAG = "ContractsHistoryActivityFragment";
+
     // Fermat Managers
     private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
     // Data
     private List<GrouperItem> openNegotiationList;
-    private List<IndexInfoSummary> marketExchageRateSummaryList;
+    private List<IndexInfoSummary> marketExchangeRateSummaryList;
 
 
     public static OpenNegotiationsTabFragment newInstance() {
@@ -89,7 +92,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
 
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        marketExchageRateSummaryList = getMarketExchangeRateSummaryData();
+        marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
     }
 
 
@@ -98,9 +101,9 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         super.initViews(layout);
 
         Activity activity = getActivity();
-        configureActionBar();
         LayoutInflater layoutInflater = activity.getLayoutInflater();
         configureActivityHeader(layoutInflater);
+        configureActionBar();
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.ccw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
@@ -140,23 +143,22 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 //        }
         toolbarHeader.setVisibility(View.VISIBLE);
         toolbarHeader.setBackgroundColor(Color.BLUE);
-        View view = layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
-        view.setBackgroundColor(Color.CYAN);
+        layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
 
-        //if (marketExchageRateSummaryList.isEmpty()) {
-            FermatTextView noMarketRateTextView = (FermatTextView) view.findViewById(R.id.ccw_no_market_rate);
-            noMarketRateTextView.setVisibility(View.VISIBLE);
-            View marketRateViewPagerContainer = view.findViewById(R.id.ccw_market_rate_view_pager_container);
-            marketRateViewPagerContainer.setVisibility(View.VISIBLE);
-       //} else {
-            ViewPager viewPager = (ViewPager) view.findViewById(R.id.ccw_exchange_rate_view_pager);
-            viewPager.setOffscreenPageLimit(3);
-            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchageRateSummaryList);
-            viewPager.setAdapter(pageAdapter);
-
-            LinePageIndicator indicator = (LinePageIndicator) view.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
-            indicator.setViewPager(viewPager);
-       // }
+//        if (marketExchangeRateSummaryList.isEmpty()) {
+//            FermatTextView noMarketRateTextView = (FermatTextView) headerLayout.findViewById(R.id.ccw_no_market_rate);
+//            noMarketRateTextView.setVisibility(View.VISIBLE);
+//            View marketRateViewPagerContainer = headerLayout.findViewById(R.id.ccw_market_rate_view_pager_container);
+//            marketRateViewPagerContainer.setVisibility(View.GONE);
+//        } else {
+//            ViewPager viewPager = (ViewPager) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager);
+//            viewPager.setOffscreenPageLimit(3);
+//            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchangeRateSummaryList);
+//            viewPager.setAdapter(pageAdapter);
+//
+//            LinePageIndicator indicator = (LinePageIndicator) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
+//            indicator.setViewPager(viewPager);
+//        }
 
     }
 
@@ -221,7 +223,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
+                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY);
                 GrouperItem<CustomerBrokerNegotiationInformation> grouper;
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
@@ -256,7 +258,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet("crypto_customer_wallet");
+                CryptoCustomerWallet cryptoCustomerWallet = moduleManager.getCryptoCustomerWallet(CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY);
                 data.addAll(cryptoCustomerWallet.getCurrentIndexSummaryForCurrenciesOfInterest());
 
             } catch (CantGetCryptoCustomerWalletException | CantGetCurrentIndexSumaryForCurrenciesOfInterestException ex) {
