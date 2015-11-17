@@ -175,7 +175,6 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             System.out.println("VAMM: " + eventId);
 
                             List<Transaction<DigitalAssetMetadataTransaction>> newAssetTransaction = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
-//                            if (newAssetTransaction.isEmpty()) break;
 
                             for (Transaction<DigitalAssetMetadataTransaction> transaction : newAssetTransaction) {
                                 if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT) {
