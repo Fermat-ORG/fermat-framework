@@ -7,7 +7,7 @@
 
 <br>
 #### This _GUI Component_ carries the following license:
-
+<br>
 
 >Copyright (c) 2015 bitDubai, and contributors.
 All rights reserved.
