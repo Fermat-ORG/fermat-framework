@@ -4,7 +4,7 @@ image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%2
 
 === What is a Digital Asset ?
 
-A Digital Asset is a digital representation of a product or service that can be obtained in exchange of the asset. Another way of saying this, is that it is a representation of something of value that comes with a "right to use" for the assets possesor. ( The asset can be *redeemed* and the end user gets the product or service represented by it) + 
+A Digital Asset is a digital representation of a product or service that can be obtained in exchange of the asset. Another way of saying this, is that it is a representation of something of value that comes with a "right to use" for the assets possessor. ( The asset can be *redeemed* and the end user gets the product or service represented by it) + 
 To create a digital asset two main components are needed:
  
 the asset meta-data :: a set of information of what is represented by the asset and the conditions attached to it (*asset contract*)
@@ -19,10 +19,10 @@ The application of Digital Assets is as wide as the digital world. There are som
 * *Corporate world*: Company's shares
 
 === Fermat Digital Assets
-Other Digital Assets over crypto implementations available in the market are dependant on the cryptocurrency chosen ( Bitcoin, Litecoin, Ripple, etc) but thanks to Fermat infrastructural connectivity to several cryptonetworks, Fermat Digital Assets can be issued in different cryptocurrencies. The whole set of functionalities to i Digital Assets handling in Fermat is provided by _Fermat Digital Assets Platform_, and from it a new whole branch on _platforms based in digital assets_ is created. The first application is taken by _Fermat Marketing Platform_ which focuses on applications for the Marketing Agencies world.
+Other Digital Assets over crypto implementations available in the market are dependent on the cryptocurrency chosen ( Bitcoin, Litecoin, Ripple, etc) but thanks to Fermat infrastructural connectivity to several cryptonetworks, Fermat Digital Assets can be issued in different cryptocurrencies. The whole set of functionalities to i Digital Assets handling in Fermat is provided by _Fermat Digital Assets Platform_, and from it a new whole branch on _platforms based in digital assets_ is created. The first application is taken by _Fermat Marketing Platform_ which focuses on applications for the Marketing Agencies world.
 
 image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
-==== Continue Reading
+==== _Continue Reading ..._
 link:book-chapter-19.asciidoc[Digital Assets Platform]
 
 link:book-chapter-20.asciidoc[Marketing Platform]
