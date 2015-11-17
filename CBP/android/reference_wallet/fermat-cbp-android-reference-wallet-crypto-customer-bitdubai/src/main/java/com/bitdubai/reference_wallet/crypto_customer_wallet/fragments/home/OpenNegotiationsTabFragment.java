@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -36,12 +38,14 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.MarketExchangeRatesPageAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.NavigationViewAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
+import com.viewpagerindicator.LinePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,22 +140,23 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 //        }
         toolbarHeader.setVisibility(View.VISIBLE);
         toolbarHeader.setBackgroundColor(Color.BLUE);
-        layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
+        View view = layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
+        view.setBackgroundColor(Color.CYAN);
 
-//        if (marketExchageRateSummaryList.isEmpty()) {
-//            FermatTextView noMarketRateTextView = (FermatTextView) headerLayout.findViewById(R.id.ccw_no_market_rate);
-//            noMarketRateTextView.setVisibility(View.VISIBLE);
-//            View marketRateViewPagerContainer = headerLayout.findViewById(R.id.ccw_market_rate_view_pager_container);
-//            marketRateViewPagerContainer.setVisibility(View.GONE);
-//        } else {
-//            ViewPager viewPager = (ViewPager) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager);
-//            viewPager.setOffscreenPageLimit(3);
-//            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchageRateSummaryList);
-//            viewPager.setAdapter(pageAdapter);
-//
-//            LinePageIndicator indicator = (LinePageIndicator) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
-//            indicator.setViewPager(viewPager);
-//        }
+        //if (marketExchageRateSummaryList.isEmpty()) {
+            FermatTextView noMarketRateTextView = (FermatTextView) view.findViewById(R.id.ccw_no_market_rate);
+            noMarketRateTextView.setVisibility(View.VISIBLE);
+            View marketRateViewPagerContainer = view.findViewById(R.id.ccw_market_rate_view_pager_container);
+            marketRateViewPagerContainer.setVisibility(View.VISIBLE);
+       //} else {
+            ViewPager viewPager = (ViewPager) view.findViewById(R.id.ccw_exchange_rate_view_pager);
+            viewPager.setOffscreenPageLimit(3);
+            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchageRateSummaryList);
+            viewPager.setAdapter(pageAdapter);
+
+            LinePageIndicator indicator = (LinePageIndicator) view.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
+            indicator.setViewPager(viewPager);
+       // }
 
     }
 
