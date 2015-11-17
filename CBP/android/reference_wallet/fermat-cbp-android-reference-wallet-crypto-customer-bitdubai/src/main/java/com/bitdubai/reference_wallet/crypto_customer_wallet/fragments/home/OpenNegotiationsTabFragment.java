@@ -135,30 +135,29 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     private void configureActivityHeader(LayoutInflater layoutInflater) {
 
         RelativeLayout toolbarHeader = getToolbarHeader();
-//        try {
-//            toolbarHeader.removeAllViews();
-//        } catch (Exception exception) {
-//            CommonLogger.exception(TAG, "Error removing all views from toolbarHeader ", exception);
-//            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
-//        }
+        try {
+            toolbarHeader.removeAllViews();
+        } catch (Exception exception) {
+            CommonLogger.exception(TAG, "Error removing all views from toolbarHeader ", exception);
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
+        }
         toolbarHeader.setVisibility(View.VISIBLE);
-        toolbarHeader.setBackgroundColor(Color.BLUE);
-        layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
+        View container = layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
 
-//        if (marketExchangeRateSummaryList.isEmpty()) {
-//            FermatTextView noMarketRateTextView = (FermatTextView) headerLayout.findViewById(R.id.ccw_no_market_rate);
-//            noMarketRateTextView.setVisibility(View.VISIBLE);
-//            View marketRateViewPagerContainer = headerLayout.findViewById(R.id.ccw_market_rate_view_pager_container);
-//            marketRateViewPagerContainer.setVisibility(View.GONE);
-//        } else {
-//            ViewPager viewPager = (ViewPager) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager);
-//            viewPager.setOffscreenPageLimit(3);
-//            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchangeRateSummaryList);
-//            viewPager.setAdapter(pageAdapter);
-//
-//            LinePageIndicator indicator = (LinePageIndicator) headerLayout.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
-//            indicator.setViewPager(viewPager);
-//        }
+        if (marketExchangeRateSummaryList.isEmpty()) {
+            FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.ccw_no_market_rate);
+            noMarketRateTextView.setVisibility(View.VISIBLE);
+            View marketRateViewPagerContainer = container.findViewById(R.id.ccw_market_rate_view_pager_container);
+            marketRateViewPagerContainer.setVisibility(View.VISIBLE);
+        } else {
+            ViewPager viewPager = (ViewPager) container.findViewById(R.id.ccw_exchange_rate_view_pager);
+            viewPager.setOffscreenPageLimit(3);
+            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchangeRateSummaryList);
+            viewPager.setAdapter(pageAdapter);
+
+            LinePageIndicator indicator = (LinePageIndicator) container.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
+            indicator.setViewPager(viewPager);
+        }
 
     }
 
@@ -169,8 +168,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
+        menu.clear();
         inflater.inflate(R.menu.ccw_menu_home, menu);
     }
 
