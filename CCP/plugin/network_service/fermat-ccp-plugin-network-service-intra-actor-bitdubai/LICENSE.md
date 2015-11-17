@@ -1,11 +1,12 @@
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
-# bitDubai License
+# bitDubai Plug-in License
 
 [bitDubai](https://www.bitDubai.com) is a company that develops _plug-ins_ for the Fermat Framework.
 
+<br>
 #### This _plug-in_ carries the following license:
-
+<br>
 
 >Copyright (c) 2015 bitDubai, and contributors.
 All rights reserved.
