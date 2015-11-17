@@ -12,6 +12,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_module.developer.ClassHierarchyLeve
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetClasessHierarchyAddonsException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetClasessHierarchyPluginsException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool;
+import com.sun.beans.finder.ClassFinder;
 
 import java.util.ArrayList;
 import java.util.HashMap;

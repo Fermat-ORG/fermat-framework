@@ -175,15 +175,18 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     }
 
     public void setViewPager(ViewPager pager) {
+        System.out.println("debuging setViewPager");
+        System.out.println("pager: "+pager);
         try {
             this.pager = pager;
 
             if (pager.getAdapter() == null) {
+                System.out.println("ViewPager does not have adapter instance.");
                 throw new IllegalStateException("ViewPager does not have adapter instance.");
             }
 
             pager.setOnPageChangeListener(pageListener);
-
+            System.out.println("pageLister: "+pageListener);
             notifyDataSetChanged();
         }
         catch (Exception e)
@@ -198,12 +201,13 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     }
 
     public void notifyDataSetChanged() {
-
+        System.out.println("Debug notifyDataSetChanged()");
         try {
+            System.out.println("tabsContainer: "+tabsContainer);
             tabsContainer.removeAllViews();
-
+            System.out.println("pager: " + pager);
             tabCount = pager.getAdapter().getCount();
-
+            System.out.println("tabCount: "+tabCount);
             for (int i = 0; i < tabCount; i++) {
 
                 if (pager.getAdapter() instanceof IconTabProvider) {
@@ -213,8 +217,8 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
                 }
 
             }
-
-            updateTabStyles();
+            System.out.println("hasta aqui todo bien");
+                    updateTabStyles();
 
             getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
@@ -233,7 +237,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
                     scrollToChild(currentPosition, 0);
                 }
             });
-
+            System.out.println("final getViewTreeObserver().addOnGlobalLayoutListener");
 
         }
     catch (Exception e)
