@@ -2,7 +2,7 @@
 
 # bitDubai License
 
-bitDubai is a company that develops _plug-ins_ for the Fermat Framework.
+[bitDubai](https://www.bitDubai.com) is a company that develops _plug-ins_ for the Fermat Framework.
 
 #### This _plug-in_ carries the following license:
 
