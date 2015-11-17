@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.interfaces;
 
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_cbp_api.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.exception.CantGetCryptoWalletListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.exception.CantListWalletsException;
