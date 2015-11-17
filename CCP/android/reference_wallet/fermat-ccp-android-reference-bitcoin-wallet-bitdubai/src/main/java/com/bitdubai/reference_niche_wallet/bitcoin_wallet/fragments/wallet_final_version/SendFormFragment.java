@@ -184,12 +184,14 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
 
     private void setUpUIData(){
         cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
-        try {
-            imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
-        }catch (Exception e){
-            imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(),R.drawable.profile_image));
+        if(cryptoWalletWalletContact!=null) {
+            try {
+                imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
+            } catch (Exception e) {
+                imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), R.drawable.profile_image));
+            }
+            contactName.setText(cryptoWalletWalletContact.getActorName());
         }
-        contactName.setText(cryptoWalletWalletContact.getActorName());
     }
 
     private void setUpContactAddapter(){
