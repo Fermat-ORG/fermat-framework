@@ -1062,13 +1062,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 JsonObject jsonObject = new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
                 //Se desencripta la imagen para luego ser agregada a la lista.
-                //String encoded = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString();
+                String encoded = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString();
                 byte[] image = null;
-//                try {
-//                    image = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
-//                } catch (Exception e) {
-//                    image = null;
-//                }
+                try {
+                    image = Base64.decode(encoded.getBytes(), Base64.DEFAULT);} catch (Exception e) {
+                    image = null;
+                }
                 lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), image, platformComponentProfile.getAlias()));
             }
 
@@ -1289,7 +1288,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 e.printStackTrace();
             }
 
-            //jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE, encodedImage);
+            jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE, encodedImage);
             // jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE,actor.getPhoto().toString());
             PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
                     (actor.getName().toLowerCase()),
