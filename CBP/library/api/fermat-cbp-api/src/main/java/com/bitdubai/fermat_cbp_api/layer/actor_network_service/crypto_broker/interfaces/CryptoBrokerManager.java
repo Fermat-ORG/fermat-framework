@@ -6,9 +6,11 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionNewsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -105,5 +107,15 @@ public interface CryptoBrokerManager {
      * @throws ConnectionRequestNotFoundException     if the connection request cannot be found.
      */
     void acceptConnection(final UUID requestId) throws CantAcceptConnectionRequestException, ConnectionRequestNotFoundException;
+
+    /**
+     * Through the method <code>getPendingConnectionNews</code> we can list all the connection news
+     * with a pending local action.
+     *
+     * @return a list of instance of CryptoBrokerConnectionNews
+     *
+     * @throws CantListPendingConnectionNewsException if something goes wrong.
+     */
+    List<CryptoBrokerConnectionNew> getPendingConnectionNews() throws CantListPendingConnectionNewsException;
 
 }
