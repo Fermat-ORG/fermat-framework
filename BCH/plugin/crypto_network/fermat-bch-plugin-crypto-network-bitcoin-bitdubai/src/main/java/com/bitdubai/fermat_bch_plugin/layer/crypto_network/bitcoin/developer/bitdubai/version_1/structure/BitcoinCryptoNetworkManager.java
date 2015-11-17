@@ -161,7 +161,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
                 /**
                  * If the agent for the network is not running, I will start a new one.
                  */
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet);
+                File walletFilename = new File(WALLET_FILENAME + blockchainNetworkType.getCode());
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 bitcoinCryptoNetworkMonitor.start();
@@ -197,9 +198,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
                 e1.printStackTrace(); // I will continue because the key addition will trigger an autosave anyway.
             }
         }
-
-
-
         return wallet;
     }
 
