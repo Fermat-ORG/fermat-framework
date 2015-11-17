@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,22 +45,18 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
             v = vi.inflate(R.layout.wallets_bitcoin_fragment_contacts_list_item, null);
         }
 
-        WalletContact p = getItem(position);
+        WalletContact contact = getItem(position);
 
-        if (p != null) {
-
-
-            TextView tt1 = (TextView) v.findViewById(R.id.contact_name);
-
-            if (tt1 != null) {
-                tt1.setText(p.name);
-                tt1.setTypeface(tf, Typeface.BOLD);
-
-                if(p.isConnection)
-                    tt1.setTextColor(Color.RED);
-            }
+        if (contact != null) {
+            TextView contact_name = (TextView) v.findViewById(R.id.contact_name);
+            contact_name.setText(contact.name);
+            ImageView contact_profile_image = (ImageView) v.findViewById(R.id.contact_profile_image);
+            if(contact.profileImage!=null){
+                if(contact.profileImage.length>0){
+                    contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(),contact.profileImage));
+                }else  contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(),R.drawable.profile_image));
+            } else  contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(),R.drawable.profile_image));
         }
-
         return v;
     }
 
