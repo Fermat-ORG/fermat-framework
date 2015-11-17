@@ -275,13 +275,16 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 Actors.DAP_ASSET_USER,
                 Actors.DAP_ASSET_USER,
                 20000,
-                0,
+                20000,
                 "memo",
                 "digitalAssetMetadaHash",
                 UUID.randomUUID().toString()
         );
         try {
+
+            assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper, BalanceType.BOOK);
             assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper, BalanceType.AVAILABLE);
+            assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper3, BalanceType.BOOK);
             assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper3, BalanceType.AVAILABLE);
 
             AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper1 = new AssetIssuerWalletTransactionRecordWrapper(
@@ -296,7 +299,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                     Actors.DAP_ASSET_USER,
                     Actors.DAP_ASSET_USER,
                     10000,
-                    0,
+                    10000,
                     "memo",
                     "digitalAssetMetadaHash",
                     UUID.randomUUID().toString()
