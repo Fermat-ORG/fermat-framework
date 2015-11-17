@@ -121,6 +121,7 @@ public class CryptoCustomerActorDeveloperDatabaseFactory implements DealsWithPlu
 
         cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_ACTOR_ID_COLUMN_NAME);
         cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_ACTOR_COLUMN_NAME);
+        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_IDENTITY_COLUMN_NAME);
         cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_DESCRIPTION_ACTOR_COLUMN_NAME);
         /**
          * Table Crypto Customer Actor addition.

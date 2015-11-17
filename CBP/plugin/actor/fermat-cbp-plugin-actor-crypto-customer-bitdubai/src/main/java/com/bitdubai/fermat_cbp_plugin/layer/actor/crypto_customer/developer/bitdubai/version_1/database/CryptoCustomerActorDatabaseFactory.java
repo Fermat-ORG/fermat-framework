@@ -76,6 +76,7 @@ public class CryptoCustomerActorDatabaseFactory implements DealsWithPluginDataba
 
             table.addColumn(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_ACTOR_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_ACTOR_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_IDENTITY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_DESCRIPTION_ACTOR_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             table.addIndex(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_FIRST_KEY_COLUMN);

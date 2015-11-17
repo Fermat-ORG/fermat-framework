@@ -19,6 +19,7 @@ public class CryptoCustomerActorDatabaseConstants {
 
     static final String CRYPTO_CUSTOMER_ACTOR_ACTOR_ID_COLUMN_NAME = "actor_id";
     static final String CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_ACTOR_COLUMN_NAME = "public_key_actor";
+    static final String CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_IDENTITY_COLUMN_NAME = "public_key_identity";
     static final String CRYPTO_CUSTOMER_ACTOR_DESCRIPTION_ACTOR_COLUMN_NAME = "description_actor";
 
     static final String CRYPTO_CUSTOMER_ACTOR_FIRST_KEY_COLUMN = "actor_id";
