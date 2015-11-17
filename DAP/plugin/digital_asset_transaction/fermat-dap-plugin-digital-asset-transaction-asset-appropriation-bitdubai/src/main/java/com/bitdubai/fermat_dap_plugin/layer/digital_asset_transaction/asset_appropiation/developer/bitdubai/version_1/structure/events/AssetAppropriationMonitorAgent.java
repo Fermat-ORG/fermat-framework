@@ -1,9 +1,14 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
@@ -13,6 +18,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -58,6 +67,9 @@ public class AssetAppropriationMonitorAgent implements Agent {
     private final AssetVaultManager assetVaultManager;
     private final AssetUserWalletManager assetUserWalletManager;
     private final BitcoinNetworkManager bitcoinNetworkManager;
+    private final CryptoAddressBookManager cryptoAddressBookManager;
+    private final CryptoVaultManager cryptoVaultManager;
+    private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     private EventAgent eventAgent;
     //VARIABLES ACCESSED BY AGENT INNER CLASS.
@@ -75,7 +87,10 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                           UUID pluginId,
                                           AssetVaultManager assetVaultManager,
                                           AssetUserWalletManager assetUserWalletManager,
-                                          BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException {
+                                          BitcoinNetworkManager bitcoinNetworkManager,
+                                          CryptoAddressBookManager cryptoAddressBookManager,
+                                          CryptoVaultManager cryptoVaultManager,
+                                          IntraWalletUserIdentityManager intraWalletUserIdentityManager) throws CantSetObjectException {
         this.assetVault = assetVault;
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
@@ -84,6 +99,10 @@ public class AssetAppropriationMonitorAgent implements Agent {
         this.assetVaultManager = Validate.verifySetter(assetVaultManager, "assetVaultManager is null");
         this.assetUserWalletManager = Validate.verifySetter(assetUserWalletManager, "assetUserWalletManager is null");
         this.bitcoinNetworkManager = Validate.verifySetter(bitcoinNetworkManager, "bitcoinNetworkManager is null");
+        this.cryptoAddressBookManager = Validate.verifySetter(cryptoAddressBookManager, "cryptoAddressBookManager is null");
+        this.cryptoVaultManager = Validate.verifySetter(cryptoVaultManager, "cryptoVaultManager is null");
+        this.intraWalletUserIdentityManager = Validate.verifySetter(intraWalletUserIdentityManager, "intraWalletUserIdentityManager is null");
+
     }
 
     //PUBLIC METHODS
@@ -231,9 +250,25 @@ public class AssetAppropriationMonitorAgent implements Agent {
                 switch (record.status()) {
                     case APPROPRIATION_STARTED:
                         //TODO SEARCH FOR THE CRYPTO ADDRESS WHERE I'LL SEND THE BITCOINS.
+                        CryptoAddress cryptoAddress = cryptoVaultManager.getAddress();
+                        dao.updateCryptoAddress(cryptoAddress, record.transactionRecordId());
                         dao.updateTransactionStatusCryptoAddressObtained(record.transactionRecordId());
                         break;
                     case CRYPTOADDRESS_OBTAINED:
+                        IntraWalletUserIdentity assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser("Asset Appropriation: " + record.digitalAsset().getName(), null);
+                        cryptoAddressBookManager.registerCryptoAddress(record.addressTo(),
+                                assetIdentity.getPublicKey(),
+                                Actors.INTRA_USER,
+                                record.btcWalletPublicKey(),
+                                Actors.EXTRA_USER,
+                                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                                VaultType.CRYPTO_CURRENCY_VAULT,
+                                CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                                record.userWalletPublicKey(),
+                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+                        dao.updateTransactionStatusCryptoAddressRegistered(record.transactionRecordId());
+                        break;
+                    case CRYPTOADDRESS_REGISTERED:
                         if (record.addressTo() == null) {
                             dao.updateTransactionStatusAppropriationStarted(record.transactionRecordId());
                         } else {
