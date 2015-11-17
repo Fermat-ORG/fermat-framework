@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
+import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
@@ -72,6 +72,7 @@ import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.dev
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDownloadLayouts;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDownloadResource;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDownloadResourceFromRepo;
+import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantGetGitHubConnectionException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantGetRepositoryPathRecordException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantUninstallWallet;
@@ -157,7 +158,31 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     /**
      * Github connection until the main repository be open source
      */
-    private GithubConnection githubConnection;
+    private GitHubConnection gitHubConnection;
+
+    private GitHubConnection getGitHubConnection() throws CantGetGitHubConnectionException {
+
+
+        try {
+
+            if (this.gitHubConnection != null)
+                return this.gitHubConnection;
+
+            this.gitHubConnection = new GitHubConnection();
+            return this.gitHubConnection;
+
+        }  catch (GitHubNotAuthorizedException e) {
+
+            throw new CantGetGitHubConnectionException(e, null, "Error in github authentication");
+        } catch (GitHubRepositoryNotFoundException e) {
+
+            throw new CantGetGitHubConnectionException(e, null, "Error init github repository not found");
+        } catch (Exception e) {
+
+            throw new CantGetGitHubConnectionException(e, null, "Unhandled Exception.");
+
+        }
+    }
 
     /**
      * Service Interface implementation.
@@ -187,30 +212,15 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
             networkServicesWalletResourcesDAO.initializeDatabase(pluginId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
 
-            /**
-             *  Connect with main repository
-             */
-            githubConnection = new GithubConnection();
-
-
             this.serviceStatus = ServiceStatus.STARTED;
         }
             catch(CantInitializeNetworkServicesWalletResourcesDatabaseException e)
             {
                 throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"Error init plugin data base");
 
-            }
-        catch( GitHubNotAuthorizedException e)
+            } catch(Exception  e)
         {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"Error in github authentication");
-        }
-        catch(GitHubRepositoryNotFoundException  e)
-        {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"Error init github repository not found");
-        }
-        catch(Exception  e)
-        {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"");
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"Unhandled Exception.");
 
         }
     }
@@ -1041,7 +1051,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
                         // this will be used when the main repository be open source
                         //byte[] image = getRepositoryImageFile(link, entry.getValue().getFileName());
                         // this is used because the main repository is private
-                        byte[] image = githubConnection.getImage(link + entry.getValue().getFileName());
+                        byte[] image = getGitHubConnection().getImage(link + entry.getValue().getFileName());
 
                         //testing purpose
                        // imagenes.put(entry.getValue().getName(), image);
@@ -1063,6 +1073,13 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             throw new CantDownloadResource("CAN'T DOWNLOAD RESOURCES", e, "Error get resources from github, mailformed url", "");
         } catch (IOException e) {
             throw new CantDownloadResource("CAN'T DOWNLOAD RESOURCES", e, "Error get resources from github, io exception", "");
+        } catch (CantGetGitHubConnectionException e) {
+
+            throw new CantDownloadResource("CAN'T DOWNLOAD REQUESTED RESOURCES", e, "Error downloading LAYOUTS.", "Can't connect with github.");
+
+        } catch (Exception e) {
+
+            throw new CantDownloadResource("CAN'T DOWNLOAD REQUESTED RESOURCES", e, "Error downloading LAYOUTS.", "Unhandled Exception.");
         }
     }
 
@@ -1099,7 +1116,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
                 //String layoutXML = getRepositoryStringFile(link, entry.getValue().getFilename());
 
                 // this is because the main repository is private
-                String layoutXML = githubConnection.getFile(link + entry.getValue().getFilename());
+                String layoutXML = getGitHubConnection().getFile(link + entry.getValue().getFilename());
 
                // layouts.put(entry.getValue().getName(), layoutXML);
 
@@ -1117,12 +1134,19 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
         } catch (IOException e) {
             throw new CantDownloadLayouts("CAN'T DOWNLOAD RESOURCES", e, "IOException", "");
 
+        } catch (CantGetGitHubConnectionException e) {
+
+            throw new CantDownloadLayouts("CAN'T DOWNLOAD REQUESTED RESOURCES", e, "Error downloading LAYOUTS.", "Can't connect with github.");
+
+        } catch (Exception e) {
+
+            throw new CantDownloadLayouts("CAN'T DOWNLOAD REQUESTED RESOURCES", e, "Error downloading LAYOUTS.", "Unhandled Exception.");
         }
     }
 
     private void downloadLanguage(String link,String languageName, UUID skinId,String localStoragePath,String walletPublicKey) throws CantDownloadLanguage {
         try {
-            String languageXML = githubConnection.getFile(link);
+            String languageXML = getGitHubConnection().getFile(link);
 
             recordXML(languageXML, languageName, skinId, localStoragePath,walletPublicKey);
 
@@ -1132,6 +1156,13 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             throw new CantDownloadLanguage("CAN'T DOWNLOAD RESOURCES", e, "IOException", "");
         } catch (CantCheckResourcesException e) {
             throw new CantDownloadLanguage("CAN'T DOWNLOAD RESOURCES", e, "Error saving file", "");
+        } catch (CantGetGitHubConnectionException e) {
+
+            throw new CantDownloadLanguage("CAN'T DOWNLOAD REQUESTED RESOURCES", e, "Error downloading language.", "Can't connect with github.");
+
+        } catch (Exception e) {
+
+            throw new CantDownloadLanguage("CAN'T DOWNLOAD REQUESTED RESOURCES", e, "Error downloading language.", "Unhandled Exception.");
         }
     }
 
@@ -1164,7 +1195,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             //String navigationStructureXML = getRepositoryStringFile(link, navigationStructureName);
 
             // this is used because we have a private main repository
-            String navigationStructureXML = githubConnection.getFile(link+navigationStructureName);
+            String navigationStructureXML = getGitHubConnection().getFile(link + navigationStructureName);
 
                 recordXML(navigationStructureXML,navigationStructureName,skinId,localStoragePath,walletPublicKey);
 
@@ -1185,6 +1216,13 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
          catch (IOException e) {
             throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD RESOURCES", e, "Error get navigation Structure for github ", "");
 
+        } catch (CantGetGitHubConnectionException e) {
+
+            throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD REQUESTED RESOURCES", e, "Error downloading navigation Structure.", "Can't connect with github.");
+
+        } catch (Exception e) {
+
+            throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD REQUESTED RESOURCES", e, "Error downloading navigation Structure.", "Unhandled Exception.");
         }
     }
 
@@ -1281,7 +1319,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             //repoManifest = getRepositoryStringFile(linkToSkin, skinFilename);
 
             //this work only for the private repository
-            repoManifest = githubConnection.getFile(linkToSkin+skinFilename);
+            repoManifest = getGitHubConnection().getFile(linkToSkin + skinFilename);
 
 
             Skin skin = new Skin();
@@ -1302,11 +1340,13 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
             throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Error load manifest file ", "Repository not exist or manifest file not exist");
 
-        }
-         catch (Exception e) {
+        } catch (CantGetGitHubConnectionException e) {
 
-            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Error load manifest file ", "Generic Exception");
+            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Error checking resources.", "Can't connect with github.");
 
+        } catch (Exception e) {
+
+            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Error checking resources.", "Unhandled Exception.");
         }
     }
 

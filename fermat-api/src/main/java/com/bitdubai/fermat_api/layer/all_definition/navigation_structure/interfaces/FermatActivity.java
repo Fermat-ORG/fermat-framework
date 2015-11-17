@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -44,5 +45,7 @@ public interface FermatActivity extends Serializable{
     public Activities getBackActivity();
 
     public FermatHeader getHeader();
+
+    public void changeBackActivity(String activityCode) throws InvalidParameterException;
 
 }

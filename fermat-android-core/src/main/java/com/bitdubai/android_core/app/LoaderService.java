@@ -8,14 +8,17 @@ import android.os.IBinder;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
-import com.bitdubai.fermat_api.CantStartPlatformException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
-import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
-import com.bitdubai.fermat_core.CorePlatformContext;
-import com.bitdubai.fermat_core.Platform;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
@@ -32,12 +35,6 @@ public class LoaderService extends Service {
 
     // Indicate if the app was loaded, for not load again the start activity.
     private static boolean WAS_START_ACTIVITY_LOADED = false;
-
-
-    private CorePlatformContext platformContext;
-
-    private Platform platform;
-
 
     //private ProgressDialog mDialog;
 
@@ -82,32 +79,28 @@ public class LoaderService extends Service {
         protected Boolean doInBackground(Object... params) {
             //init runtime app
 
-            Context context = getApplicationContext();
-
-            platform = ((ApplicationSession)getApplication()).getFermatPlatform();
-
-            //execute start platform
             try {
 
-                platform.start();
+                final FermatSystem fermatSystem = ((ApplicationSession)getApplication()).getFermatSystem();
 
-            } catch (CantStartPlatformException | CantReportCriticalStartingProblemException e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+                PlatformInfoManager platformInfoManager = (PlatformInfoManager) fermatSystem.startAndGetAddon(
+                        new AddonVersionReference(
+                                Platforms.PLUG_INS_PLATFORM,
+                                Layers.PLATFORM_SERVICE,
+                                Addons.PLATFORM_INFO,
+                                Developers.BITDUBAI,
+                                new Version()
+                        )
+                );
+
+                setPlatformDeviceInfo(platformInfoManager);
+            } catch (CantGetAddonException | VersionNotFoundException e) {
+
+                System.out.println(e.toString());
             }
 
 
-            /**
-             * get platform object
-             */
-
-            platformContext = platform.getCorePlatformContext();
-
-
-            PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.PLATFORM_INFO);
-            setPlatformDeviceInfo(platformInfoManager);
-
-            return true;
+            return false;
         }
 
         @Override

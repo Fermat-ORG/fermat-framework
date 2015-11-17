@@ -75,10 +75,16 @@ public class AssetAppropriationRecorderService implements AssetTransactionServic
 
         try {
 
-            //TODO ANALYZE THE EVENTS THAT I'LL NEED TO HANDLE.
-            FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
-            fermatEventListener.setEventHandler(new AssetAppropriationEventHandler(this));
-            addListener(fermatEventListener);
+            //TODO CHANGE THESE EVENTS TO THE NEW ONES!!
+
+            FermatEventListener onCryptoNetwork = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
+            onCryptoNetwork.setEventHandler(new AssetAppropriationEventHandler(this));
+            addListener(onCryptoNetwork);
+
+            FermatEventListener onBlockChain = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
+            onBlockChain.setEventHandler(new AssetAppropriationEventHandler(this));
+            addListener(onBlockChain);
+
 
         } catch (Exception e) {
             throw new CantStartServiceException(e, context, "An unexpected exception happened while trying to start the AssetAppropriationRecordeService.");
