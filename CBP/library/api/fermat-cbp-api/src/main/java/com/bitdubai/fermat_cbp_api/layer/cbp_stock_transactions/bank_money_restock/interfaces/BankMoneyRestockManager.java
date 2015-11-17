@@ -15,6 +15,7 @@ public interface BankMoneyRestockManager  {
             String       cbpWalletPublicKey,
             String       bankWalletPublicKey,
             String       bankAccount,
+            float        amount,
             String       memo
     ) throws CantCreateBankMoneyRestockException;
 }
