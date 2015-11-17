@@ -3,12 +3,12 @@
 image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/WPD.jpg[FermatWPD]
 == Chapter 9: Fermat Wallet Production & Distribution Line
 
-Fermat builds the necessary services to run a wallet application at a user level collecting different functionalities available. Each functionality has its own workflow, i.e the thread connecting the plug-ins from different layers to complete the task. +
-First group of functionalities are wrapped in the *reference wallets*, which are designed to fullfill only a specific objective. +
+Fermat builds the necessary services to run a wallet application at a user level collecting different functionalities available. Each functionality has its own work-flow, i.e the thread connecting the plug-ins from different layers to complete the task. +
+First group of functionalities are wrapped in the *reference wallets*, which are designed to fulfill only a specific objective. +
 *Niche wallets* are built combining a set of *reference wallets* to satisfy the specific needs of a certain type of *actor*. + 
-* For example, Fermat _Bitcoin Wallet_ is the niche wallet of the _Crypto Currency Platform_, designed for those actors that only require a wallet to manage their value in *Bitcoins* without further complexity. This is based on the _Crypto Wallet_ as reference wallet, which in turns sets in motion  the specific workflows to fullfill its duties. +
+* For example, Fermat _Bitcoin Wallet_ is the niche wallet of the _Crypto Currency Platform_, designed for those actors that only require a wallet to manage their value in *Bitcoins* without further complexity. This is based on the _Crypto Wallet_ as reference wallet, which in turns sets in motion  the specific work-flows to fulfill its duties. +
 
-Inside a wallet, there are two distincts groups of the components: +
+Inside a wallet, there are two distinct groups of the components: +
 * components oriented towards the user (what he sees and how he manages the wallet), called *front-end* components. + 
 * components that perform each function of the wallet at operational level, called *back-end* components.
 
@@ -16,19 +16,19 @@ Fermat provides a _Wallet Manager application_ to install available wallets in t
 
 === Fermat Wallet Factory
 
-Once we have at least one *Niche Wallet* (e.g.*Bitcoin Reference Wallet*), we can realize that in the *front-end* there are two disctint tasks taking place: on one hand, there exist a *navigation structure* (available menus, tabs, buttons, etc) that provides the means by which the user operates the wallet, an on the other hand, there exists a set of *resources* (multimedia files, images, etc) used for the visualization of each element of the wallet.
-At the *back-end* , where the real action is occuring, we have a lot of components acting to provide the necessary functions, like: +
+Once we have at least one *Niche Wallet* (e.g.*Bitcoin Reference Wallet*), we can realize that in the *front-end* there are two distinct tasks taking place: on one hand, there exist a *navigation structure* (available menus, tabs, buttons, etc) that provides the means by which the user operates the wallet, an on the other hand, there exists a set of *resources* (multimedia files, images, etc) used for the visualization of each element of the wallet.
+At the *back-end* , where the real action is occurring, we have a lot of components acting to provide the necessary functions, like: +
 
 * sending and receiving the cryptocurrency
 * keeping track of the balance of the wallet
 * managing the contacts ( register, identification, etc)
 
-If someone having the required programmer's skills wants to build a wallet in the traditional way in the industry (i.e. without using Fermat), he would necessary have to build every and each one of the components needed for the wallet to run writting the code from zero. However, _Fermat Wallet Factory_ enables developers to take any of the available *niche wallets* to reutilize its COMPLETE back-end (all the programming code stuff!), and concentrate his endeavour only to the *front-end* making his job a lot easier and allowing all his creativity to be channeled in a better and more attractive result for the end user. (not only for a nice look but also for improved and more efficient functionalities!). 
+If someone having the required programmer's skills wants to build a wallet in the traditional way in the industry (i.e. without using Fermat), he would necessary have to build every and each one of the components needed for the wallet to run writing the code from zero. However, _Fermat Wallet Factory_ enables developers to take any of the available *niche wallets* to reutilizes its COMPLETE back-end (all the programming code stuff!), and concentrate his endeavor only to the *front-end* making his job a lot easier and allowing all his creativity to be channeled in a better and more attractive result for the end user. (not only for a nice look but also for improved and more efficient functionalities!). 
 
 ==== Inside the Wallet Factory
 The first step to create a wallet is to join Fermat an get an identification as *plug-in developer*.
-Then, by login into the _Wallet Factory application_ he choses a *reference niche wallet* to import, gives his walletś project a new name and saves it as a new WFP-file (WALLET FACTORY PROJECT FILE). +
-Once in his *own project* he will re-define the *navigation structure* and then he will assign which *wallet ressources* he will choose to give his wallet an unique appearance. +
+Then, by login into the _Wallet Factory application_ he choses a *reference niche wallet* to import, gives his wallet's project a new name and saves it as a new WFP-file (WALLET FACTORY PROJECT FILE). +
+Once in his *own project* he will re-define the *navigation structure* and then he will assign which *wallet resources* he will choose to give his wallet an unique appearance. +
 The last step is to run the project and test how it works until he is satisfied with the result. + 
 To give birth the new wallet into the world, he will have to *publish* it using _Fermat Wallet Publisher_
 
@@ -41,12 +41,12 @@ The publisher is also responsible of notifying the release of new updates for ea
 The Wallet Store component is inside Fermat a DAPP (Distributed Application), i.e. and undetermined amount of nodes collaborate between them to provide the functionality of the application inside the whole system. + 
 The Wallet Store functions in a similar way of known app-stores, and it serves to show the user the wallet that may be attractive to him. It is a *distributed catalog* of wallets. +
 When one new wallet is chosen, the Wallet Store notifies the Wallet Manager to make it available to the user. +
-Internally, the Wallet Store  keeps the identity of the wallet, of its developer, and of the ressources used by it.
+Internally, the Wallet Store  keeps the identity of the wallet, of its developer, and of the resources used by it.
 
 Let's explore the different niches covered by Fermat in the platforms described in next chapters.
 
 image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
-==== Continue Reading
+==== _Continue Reading ..._
 link:book-chapter-10.asciidoc[Next Chapter]
 
 link:book-chapter-08.asciidoc[Previous Chapter]
