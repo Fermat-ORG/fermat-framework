@@ -52,7 +52,7 @@ import java.util.List;
  */
 public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
 
-    private static final String ARG_POSITION = "position";
+    private static final String ARG_POS1ITION = "position";
     private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS.getKey();
 
     View rootView;
@@ -136,7 +136,6 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
         gridView =(GridView) rootView.findViewById(R.id.gridView);
 
         try {
-
             if (databases.type==Databases.TYPE_ADDON) {
                 Addons addon = Addons.getByKey(databases.code);
                 this.developerDatabaseTableList = databaseTools.getAddonTableListFromDatabase(addon, developerDatabase);
