@@ -5,8 +5,8 @@
 
     <gradient
         android:angle="180"
-        android:startColor="@color/cbw_toolbar_start_background"
-        android:endColor="@color/cbw_toolbar_end_background"
+        android:startColor="@color/cbw_header_start_background"
+        android:endColor="@color/cbw_header_end_background"
         android:type="linear" />
 
 </shape>

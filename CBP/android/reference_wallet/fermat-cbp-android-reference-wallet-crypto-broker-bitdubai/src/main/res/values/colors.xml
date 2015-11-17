@@ -22,5 +22,10 @@
     <color name="contract_closed_list_item_background">#c6c6c6</color>
     <color name="contract_cancelled_list_item_background">#ff8b8b</color>
     <color name="cbw_grouper_text">#343434</color>
+    <color name="market_rate_text">#31beff</color>
+    <color name="cbw_toolbar_start_background">#12aca0</color>
+    <color name="cbw_toolbar_end_background">#1375a7</color>
+    <color name="cbw_header_start_background">#064b45</color>
+    <color name="cbw_header_end_background">#09364d</color>
 
 </resources>
