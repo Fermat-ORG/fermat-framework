@@ -4,7 +4,9 @@
 
 [Fermat Foundation](https://www.fermat.org) is the non-profit organization that develops the Fermat Framework.
 
+<br>
 #### This _library_ carries the following license:
+<br>
 
 >The MIT License (MIT)
 
