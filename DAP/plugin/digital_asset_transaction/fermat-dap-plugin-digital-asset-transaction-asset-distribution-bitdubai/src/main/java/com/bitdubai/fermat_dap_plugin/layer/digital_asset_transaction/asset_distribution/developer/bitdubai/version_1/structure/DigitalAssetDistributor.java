@@ -44,11 +44,10 @@ import java.util.UUID;
  */
 public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
 
-    //ActorAssetIssuerManager actorAssetIssuerManager;
-    ActorAssetIssuer actorAssetIssuer;
+    ActorAssetIssuerManager actorAssetIssuerManager;
     //AssetVaultManager assetVaultManager;
     ErrorManager errorManager;
-    final String LOCAL_STORAGE_PATH="digital-asset-distribution/";
+    final String LOCAL_STORAGE_PATH = "digital-asset-distribution/";
     String digitalAssetFileStoragePath;
     //String digitalAssetMetadataFileStoragePath;
     AssetDistributionDao assetDistributionDao;
@@ -57,18 +56,18 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
 
     public DigitalAssetDistributor(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
         super(/*assetVaultManager,*/  pluginId, pluginFileSystem);
-        this.errorManager=errorManager;
+        this.errorManager = errorManager;
     }
 
-    public void setAssetDistributionDao(AssetDistributionDao assetDistributionDao)throws CantSetObjectException{
-        if(assetDistributionDao==null){
+    public void setAssetDistributionDao(AssetDistributionDao assetDistributionDao) throws CantSetObjectException {
+        if (assetDistributionDao == null) {
             throw new CantSetObjectException("assetDistributionDao is null");
         }
-        this.assetDistributionDao=assetDistributionDao;
+        this.assetDistributionDao = assetDistributionDao;
     }
 
     public void setDigitalAssetDistributionVault(DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantSetObjectException {
-        if(digitalAssetDistributionVault ==null){
+        if (digitalAssetDistributionVault == null) {
             throw new CantSetObjectException("digitalAssetDistributionVault is null");
         }
         this.digitalAssetDistributionVault = digitalAssetDistributionVault;
@@ -79,84 +78,81 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     }
 
     public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantGetActorAssetIssuerException {
-        try {
-            this.actorAssetIssuer=actorAssetIssuerManager.getActorAssetIssuer();
-        } catch (CantGetAssetIssuerActorsException exception) {
-            throw new CantGetActorAssetIssuerException(exception, "Setting the Actor Asset Issuer", "Getting the Actor Asset Issuer");
-        }
+        //            this.actorAssetIssuer=actorAssetIssuerManager.getActorAssetIssuer();
+        this.actorAssetIssuerManager = actorAssetIssuerManager;
     }
 
     /**
      * This method check if the DigitalAssetMetadata remains with not modifications
-     * */
+     */
     public void checkDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata) throws CantDeliverDigitalAssetException {
-        try{
-            String genesisTransactionFromDigitalAssetMetadata=digitalAssetMetadata.getGenesisTransaction();
-            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_HASH,genesisTransactionFromDigitalAssetMetadata);
-            String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
+        try {
+            String genesisTransactionFromDigitalAssetMetadata = digitalAssetMetadata.getGenesisTransaction();
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_HASH, genesisTransactionFromDigitalAssetMetadata);
+            String digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
             List<CryptoTransaction> cryptoTransactionList = bitcoinNetworkManager.getCryptoTransaction(genesisTransactionFromDigitalAssetMetadata);
-            if(cryptoTransactionList==null||cryptoTransactionList.isEmpty()){
-                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,"Getting the genesis transaction from Crypto Network","The crypto transaction received is null");
+            if (cryptoTransactionList == null || cryptoTransactionList.isEmpty()) {
+                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
             }
             //This won't work until I can get the CryptoTransaction from AssetVault
-            String op_ReturnFromAssetVault=cryptoTransaction.getOp_Return();
-            if(!digitalAssetMetadataHash.equals(op_ReturnFromAssetVault)){
+            String op_ReturnFromAssetVault = cryptoTransaction.getOp_Return();
+            if (!digitalAssetMetadataHash.equals(op_ReturnFromAssetVault)) {
                 throw new CantDeliverDigitalAssetException("Cannot deliver Digital Asset because the " +
                         "Hash was modified:\n" +
-                        "Op_return:"+op_ReturnFromAssetVault+"\n" +
-                        "digitalAssetMetadata:"+digitalAssetMetadata);
+                        "Op_return:" + op_ReturnFromAssetVault + "\n" +
+                        "digitalAssetMetadata:" + digitalAssetMetadata);
             }
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransactionFromDigitalAssetMetadata);
         } catch (CantGetCryptoTransactionException exception) {
             throw new CantDeliverDigitalAssetException(exception,
-                    "Delivering the Digital Asset \n"+digitalAssetMetadata,
+                    "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Cannot get the genesis transaction from Asset vault");
         } catch (CantExecuteQueryException exception) {
             throw new CantDeliverDigitalAssetException(exception,
-                    "Delivering the Digital Asset \n"+digitalAssetMetadata,
+                    "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Cannot execute a database operation");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
             throw new CantDeliverDigitalAssetException(exception,
-                    "Delivering the Digital Asset \n"+digitalAssetMetadata,
+                    "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Unexpected result in database");
         }
     }
 
     /**
      * This method will deliver the DigitalAssetMetadata to ActorAssetUser
-     * */
+     */
     private void deliverDigitalAssetToRemoteDevice(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantDeliverDigitalAssetException {
-        try{
+        try {
             //First, I going to persist in database the basic information about digitalAssetMetadata
-            System.out.println("ASSET DISTRIBUTION begins for "+actorAssetUser.getPublicKey());
+            System.out.println("ASSET DISTRIBUTION begins for " + actorAssetUser.getPublicKey());
             persistDigitalAsset(digitalAssetMetadata, actorAssetUser);
             System.out.println("ASSET DISTRIBUTION begins for persisted");
             //Now, I'll check is Hash wasn't modified
             //checkDigitalAssetMetadata(digitalAssetMetadata);
-            DigitalAsset digitalAsset=digitalAssetMetadata.getDigitalAsset();
-            System.out.println("ASSET DISTRIBUTION Digital Asset genesis address: "+digitalAsset.getGenesisAddress());
-            String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
-            System.out.println("ASSET DISTRIBUTION Genesis transaction:"+genesisTransaction);
-            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_AVAILABLE_BALANCE,genesisTransaction);
-            if(!isAvailableBalanceInAssetVault(digitalAsset.getGenesisAmount(), genesisTransaction)){
-                System.out.println("ASSET DISTRIBUTION The Available balance in asset vault is insufficient - genesisAmount:"+digitalAsset.getGenesisAmount());
+            DigitalAsset digitalAsset = digitalAssetMetadata.getDigitalAsset();
+            System.out.println("ASSET DISTRIBUTION Digital Asset genesis address: " + digitalAsset.getGenesisAddress());
+            String genesisTransaction = digitalAssetMetadata.getGenesisTransaction();
+            System.out.println("ASSET DISTRIBUTION Genesis transaction:" + genesisTransaction);
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_AVAILABLE_BALANCE, genesisTransaction);
+            if (!isAvailableBalanceInAssetVault(digitalAsset.getGenesisAmount(), genesisTransaction)) {
+                System.out.println("ASSET DISTRIBUTION The Available balance in asset vault is insufficient - genesisAmount:" + digitalAsset.getGenesisAmount());
                 throw new CantDeliverDigitalAssetException("The Available balance in asset vault is incorrect");
             }
-            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.AVAILABLE_BALANCE_CHECKED,genesisTransaction);
-            DigitalAssetContract digitalAssetContract=digitalAsset.getContract();
-            System.out.println("ASSET DISTRIBUTION Digital Asset contract: "+digitalAssetContract);
-            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_CONTRACT,genesisTransaction);
-            if(!isValidContract(digitalAssetContract)){
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.AVAILABLE_BALANCE_CHECKED, genesisTransaction);
+            DigitalAssetContract digitalAssetContract = digitalAsset.getContract();
+            System.out.println("ASSET DISTRIBUTION Digital Asset contract: " + digitalAssetContract);
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_CONTRACT, genesisTransaction);
+            if (!isValidContract(digitalAssetContract)) {
                 System.out.println("ASSET DISTRIBUTION The contract is not valid");
                 throw new CantDeliverDigitalAssetException("The DigitalAsset Contract is not valid, the expiration date has passed");
             }
-            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CONTRACT_CHECKED,genesisTransaction);
-            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_HASH,genesisTransaction);
-            if(!isDigitalAssetHashValid(digitalAssetMetadata)){
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CONTRACT_CHECKED, genesisTransaction);
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_HASH, genesisTransaction);
+            if (!isDigitalAssetHashValid(digitalAssetMetadata)) {
                 System.out.println("ASSET DISTRIBUTION The DAM Hash is not valid");
                 throw new CantDeliverDigitalAssetException("The DigitalAsset hash is not valid");
             }
-            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED,genesisTransaction);
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransaction);
             System.out.println("ASSET DISTRIBUTION set debit in asset issuer wallet:" + genesisTransaction);
             digitalAssetDistributionVault.setDigitalAssetMetadataAssetIssuerWalletDebit(digitalAssetMetadata, this.cryptoTransaction, BalanceType.AVAILABLE);
             System.out.println("ASSET DISTRIBUTION Begins the deliver to an remote actor");
@@ -185,21 +181,22 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     }
 
 
-
-    private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser remoteActorAssetUser)throws CantSendDigitalAssetMetadataException{
+    private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser remoteActorAssetUser) throws CantSendDigitalAssetMetadataException {
         String genesisTransaction;
         try {
             System.out.println("ASSET DISTRIBUTION Preparing delivering to remote actor");
-            genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
-            System.out.println("ASSET DISTRIBUTION Delivering genesis transaction "+genesisTransaction);
+            genesisTransaction = digitalAssetMetadata.getGenesisTransaction();
+            System.out.println("ASSET DISTRIBUTION Delivering genesis transaction " + genesisTransaction);
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.DELIVERING, genesisTransaction);
-            System.out.println("ASSET DISTRIBUTION Sender Actor name "+this.actorAssetIssuer.getName());
+            System.out.println("ASSET DISTRIBUTION Sender Actor name: " + actorAssetIssuerManager.getActorAssetIssuer().getName());
             System.out.println("ASSET DISTRIBUTION Before deliver - remote asset user ");
-            this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(this.actorAssetIssuer,remoteActorAssetUser,digitalAssetMetadata);
+            this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(actorAssetIssuerManager.getActorAssetIssuer(), remoteActorAssetUser, digitalAssetMetadata);
         } catch (CantExecuteQueryException exception) {
-            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE,exception,"Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
+            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE,exception,"Delivering Digital Asset Metadata to Remote Actor", "The database return an unexpected result");
+            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "The database return an unexpected result");
+        } catch (CantGetAssetIssuerActorsException e) {
+            e.printStackTrace();
         }
 
     }
@@ -207,13 +204,13 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
         System.out.println("ASSET DISTRIBUTION Persist DAM: " + digitalAssetMetadata.getGenesisTransaction());
         setDigitalAssetLocalFilePath(digitalAssetMetadata);
-        CryptoAddress cryptoAddress=actorAssetUser.getCryptoAddress();
+        CryptoAddress cryptoAddress = actorAssetUser.getCryptoAddress();
         String actorAddress;
-        if(cryptoAddress==null){
-            actorAddress="UNDEFINED";
-            System.out.println("ASSET DISTRIBUTION Harcoding Actor address because is null" );
-        }else{
-            actorAddress=cryptoAddress.getAddress();
+        if (cryptoAddress == null) {
+            actorAddress = "UNDEFINED";
+            System.out.println("ASSET DISTRIBUTION Harcoding Actor address because is null");
+        } else {
+            actorAddress = cryptoAddress.getAddress();
         }
         this.assetDistributionDao.persistDigitalAsset(
                 digitalAssetMetadata.getGenesisTransaction(),
@@ -235,39 +232,39 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
         //DigitalAsset Path structure: digital-asset-distribution/hash/digital-asset.xml
         //DigitalAssetMetadata Path structure: digital-asset-distribution/hash/digital-asset-metadata.xml
         //TODO: create an UUID for this asset and persists in database
-        try{
-            UUID distributionId=UUID.randomUUID();
-            System.out.println("ASSET DISTRIBUTION Internal Id: "+distributionId);
-            this.assetDistributionDao.persistDistributionId(digitalAssetMetadata.getGenesisTransaction(),distributionId);
+        try {
+            UUID distributionId = UUID.randomUUID();
+            System.out.println("ASSET DISTRIBUTION Internal Id: " + distributionId);
+            this.assetDistributionDao.persistDistributionId(digitalAssetMetadata.getGenesisTransaction(), distributionId);
             this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, distributionId.toString());
         } catch (CantPersistsTransactionUUIDException exception) {
             throw new CantCreateDigitalAssetFileException(exception, "Persisting Internal distribution id", "Cannot update the internal Id by genesis transaction");
         }
     }
 
-    public void setDigitalAssetLocalFilePath(DigitalAssetMetadata digitalAssetMetadata){
+    public void setDigitalAssetLocalFilePath(DigitalAssetMetadata digitalAssetMetadata) {
         //this.digitalAssetFileName=digitalAssetMetadata.getDigitalAssetHash()+".xml";
-        this.digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+"/"+digitalAssetMetadata.getDigitalAssetHash();
+        this.digitalAssetFileStoragePath = this.LOCAL_STORAGE_PATH + "/" + digitalAssetMetadata.getDigitalAssetHash();
         this.digitalAssetDistributionVault.setDigitalAssetLocalFilePath(this.digitalAssetFileStoragePath);
         //this.digitalAssetFileName=digitalAssetMetadata.getDigitalAssetHash()+".xml";
         //this.digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+"/"+digitalAssetFileName;
     }
 
     public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute) throws CantDistributeDigitalAssetsException {
-        try{
-            System.out.println("ASSET DISTRIBUTION DistributionMap size:"+digitalAssetsToDistribute.size());
-            for(Map.Entry<DigitalAssetMetadata, ActorAssetUser> entry: digitalAssetsToDistribute.entrySet()){
-                DigitalAssetMetadata digitalAssetMetadata=entry.getKey();
-                ActorAssetUser actorAssetUser=entry.getValue();
+        try {
+            System.out.println("ASSET DISTRIBUTION DistributionMap size:" + digitalAssetsToDistribute.size());
+            for (Map.Entry<DigitalAssetMetadata, ActorAssetUser> entry : digitalAssetsToDistribute.entrySet()) {
+                DigitalAssetMetadata digitalAssetMetadata = entry.getKey();
+                ActorAssetUser actorAssetUser = entry.getValue();
                 //Deliver one DigitalAsset
-                System.out.println("ASSET DISTRIBUTION DAM-Hash:"+digitalAssetMetadata.getDigitalAssetHash());
-                System.out.println("ASSET DISTRIBUTION ActorAssetUser - PublicKey:"+actorAssetUser.getPublicKey());
-                System.out.println("ASSET DISTRIBUTION ActorAssetUser - Name:"+actorAssetUser.getName());
+                System.out.println("ASSET DISTRIBUTION DAM-Hash:" + digitalAssetMetadata.getDigitalAssetHash());
+                System.out.println("ASSET DISTRIBUTION ActorAssetUser - PublicKey:" + actorAssetUser.getPublicKey());
+                System.out.println("ASSET DISTRIBUTION ActorAssetUser - Name:" + actorAssetUser.getName());
                 deliverDigitalAssetToRemoteDevice(digitalAssetMetadata, actorAssetUser);
             }
-        } catch(CantDeliverDigitalAssetException exception){
+        } catch (CantDeliverDigitalAssetException exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-        } catch(Exception exception){
+        } catch (Exception exception) {
             throw new CantDistributeDigitalAssetsException(exception, "Distributing Assets", "Unexpected exception");
         }
 
