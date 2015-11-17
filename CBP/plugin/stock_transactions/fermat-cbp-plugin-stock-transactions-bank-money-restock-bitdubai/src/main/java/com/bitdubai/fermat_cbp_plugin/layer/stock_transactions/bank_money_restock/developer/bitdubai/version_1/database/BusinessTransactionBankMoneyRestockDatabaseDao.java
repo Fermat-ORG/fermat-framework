@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
+ * The Class <code>BusinessTransactionBankMoneyRestockDatabaseDao</code>
+ * contains the logic for handling database the plugin
  * Created by franklin on 17/11/15.
  */
 public class BusinessTransactionBankMoneyRestockDatabaseDao {

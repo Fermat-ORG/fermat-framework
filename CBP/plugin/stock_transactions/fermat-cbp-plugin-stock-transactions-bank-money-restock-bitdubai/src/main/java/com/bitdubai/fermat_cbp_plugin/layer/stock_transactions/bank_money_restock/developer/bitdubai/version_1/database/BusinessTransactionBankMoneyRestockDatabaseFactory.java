@@ -12,6 +12,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
+ * The Class <code>BusinessTransactionBankMoneyRestockDatabaseFactory</code>
+ * contains the logic for handling database the plugin
  * Created by franklin on 16/11/15.
  */
 public class BusinessTransactionBankMoneyRestockDatabaseFactory {
