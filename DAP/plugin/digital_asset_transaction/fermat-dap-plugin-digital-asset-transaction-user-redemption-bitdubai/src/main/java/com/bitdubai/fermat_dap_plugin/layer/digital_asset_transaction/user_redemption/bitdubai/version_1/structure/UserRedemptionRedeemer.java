@@ -76,7 +76,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
     public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantGetAssetUserActorsException {
         try {
             this.actorAssetUser =actorAssetUserManager.getActorAssetUser();
-        } catch (CantAssetUserActorNotFoundException exception) {
+        } catch (CantGetAssetUserActorsException exception) {
             throw new CantGetAssetUserActorsException(CantAssetUserActorNotFoundException.DEFAULT_MESSAGE,exception, "Setting the Actor Asset User", "Getting the Actor Asset User");
         }
     }

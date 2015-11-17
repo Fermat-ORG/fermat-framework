@@ -31,13 +31,13 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
@@ -230,11 +230,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             String intraWalletUserIdentityPublicKey;
             for(IntraWalletUserIdentity intraWalletUserIdentity : intraWalletUserIdentityList){
                 intraWalletUserIdentityPublicKey=intraWalletUserIdentity.getPublicKey();
-                List<IntraWalletUserActor> intraWalletUserActorList=intraWalletUserActorManager.getConnectedIntraWalletUsers(intraWalletUserIdentityPublicKey);
-                if(intraWalletUserActorList.isEmpty()){
-                    throw new CantGetIntraWalletUsersException(CantGetIntraWalletUsersException.DEFAULT_MESSAGE,null,"Getting Intra Actor public key","intraWalletUserActorManager does not have an actor registered");
-                }
-                this.intraActorPublicKey=intraWalletUserActorList.get(0).getPublicKey();
+                this.intraActorPublicKey=intraWalletUserIdentityPublicKey;
                 return;
             }
         } catch (CantListIntraWalletUsersException exception) {

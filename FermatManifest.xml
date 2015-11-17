@@ -1764,7 +1764,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Sub App Module" language="java">
+			<layer name="Module" language="java">
 				<plugins>
 					<plugin
 						name="Intra User"
@@ -1867,7 +1867,7 @@
 			<layer name="Request" language="java">
 				<plugins>
 					<plugin
-						name="Crypto Payment Request"
+						name="Crypto Payment"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -1887,7 +1887,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Crypto Money Transaction" language="java">
+			<layer name="Crypto Transaction" language="java">
 				<plugins>
 					<plugin
 						name="Incoming Device User"
@@ -1923,7 +1923,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Incoming Intra Actor"
+						name="Incoming Intra User"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -1971,7 +1971,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Outgoing Extra Actor"
+						name="Outgoing Extra User"
 						description=""
 						difficulty="10"
 						code-level="production"
@@ -2044,7 +2044,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Wallet" language="java">
+			<layer name="Basic Wallet" language="java">
 				<plugins>
 					<plugin
 						name="Bitcoin Wallet"
@@ -2191,30 +2191,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Actor Network Service" language="java">
-				<plugins>
-					<plugin
-						name="Intra User"
-						description="Enables searching for Intra Users and conecting one to the other"
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="furszy" scope="implementation" percentage="100"></author>
-							<author name="nattyco" scope="unit-tests" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="furszy"></mantainer>
-						</mantainers>
-						<certifications>
-							<certification type="implementation" signed-by=""></certification>
-							<certification type="testing" signed-by=""></certification>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
+
 
 			<layer name="Network Service" language="java">
 				<plugins>
@@ -2270,6 +2247,26 @@
 						<certifications>
 						</certifications>
 					</plugin>
+					<plugin
+						name="Intra Actor"
+						description="Enables searching for Intra Users and conecting one to the other"
+						difficulty="6"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+							<author name="nattyco" scope="unit-tests" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification type="implementation" signed-by=""></certification>
+							<certification type="testing" signed-by=""></certification>
+						</certifications>
+					</plugin>
 				</plugins>
 			</layer>
 
@@ -2322,7 +2319,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Crypto Money Transaction" language="java">
+			<layer name="Crypto Transaction" language="java">
 				<plugins>
 					<plugin
 						name="Incoming Device User"
@@ -2358,7 +2355,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Incoming Intra Actor"
+						name="Incoming Intra User"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -2406,7 +2403,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Outgoing Extra Actor"
+						name="Outgoing Extra User"
 						description=""
 						difficulty="10"
 						code-level="production"
@@ -2424,7 +2421,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Outgoin Intra Actor"
+						name="Outgoing Intra Actor"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -4297,7 +4294,7 @@
 
 			<layer name="Cash Money Transaction" language="java">
 				<plugins>
-					<plugin name="Give Cash On Hand"
+					<plugin name="Deposit"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4305,15 +4302,14 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="abicelis" scope="implementation" percentage="20"></author>
+							<author name="abicelis" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin name="Receive Cash On Hand"
+					<plugin name="Withdrawal"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4321,15 +4317,14 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="20"></author>
-							<author name="abicelis" scope="implementation" percentage="25"></author>
+							<author name="abicelis" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin name="Send Cash Delivery"
+					<plugin name="Hold"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4337,15 +4332,14 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="20"></author>
-							<author name="abicelis" scope="implementation" percentage="25"></author>
+							<author name="abicelis" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin name="Receive Cash Delivery"
+					<plugin name="Unhold"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4353,8 +4347,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="20"></author>
-							<author name="abicelis" scope="implementation" percentage="25"></author>
+							<author name="abicelis" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4470,7 +4463,7 @@
 
 			<layer name="Bank Money Transaction" language="java">
 				<plugins>
-					<plugin	name="Make Offline Bank Transfer"
+					<plugin	name="Deposit"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4478,15 +4471,14 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="guillermo20" scope="implementation" percentage="20"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Receive Offline Bank Transfer"
+					<plugin	name="Withdraw"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4494,8 +4486,37 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="guillermo20" scope="implementation" percentage="20"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Hold"
+						description=""
+						difficulty="6"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Unhold"
+						description=""
+						difficulty="6"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5121,7 +5142,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Crypto Sale"
+					<plugin	name="Customer Broker Sale"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -5137,7 +5158,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Cash Sale"
+					<plugin	name="Customer Broker Purchase"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -5153,7 +5174,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Bank Sale"
+					<plugin	name="Customer Payment"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -5169,7 +5190,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Crypto Purchase"
+					<plugin	name="Ack Payment"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -5185,7 +5206,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Cash Purchase"
+					<plugin	name="Submit Merchandise"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -5201,7 +5222,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Bank Purchase"
+					<plugin	name="Ack Merchandise"
 						description=""
 						difficulty="8"
 						code-level="development"

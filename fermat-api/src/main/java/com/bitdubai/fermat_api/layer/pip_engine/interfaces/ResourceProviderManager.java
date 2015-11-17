@@ -6,13 +6,14 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesExcepti
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetImageResourceException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
+import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
 
 import java.util.UUID;
 
 /**
  * Created by Matias Furszyfer on 2015.09.21..
  */
-public interface ResourceProviderManager {
+public interface ResourceProviderManager extends ResourcesManager {
 
     /**
      * This method returns the resourcesId

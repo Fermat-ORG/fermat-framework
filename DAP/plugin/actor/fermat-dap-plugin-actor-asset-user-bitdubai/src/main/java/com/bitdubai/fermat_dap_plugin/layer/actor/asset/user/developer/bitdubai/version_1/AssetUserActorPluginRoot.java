@@ -35,7 +35,6 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -66,20 +65,21 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
-
 
 /**
  * Created by Nerio on 09/09/15.
  */
-
 public class AssetUserActorPluginRoot extends AbstractPlugin implements
         ActorAssetUserManager,
         ActorNetworkServiceAssetUser,
         DatabaseManagerForDevelopers {
 
+    public AssetUserActorPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -96,41 +96,31 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_ADDRESSES)
     private CryptoAddressesManager cryptoAddressesNetworkServiceManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
-    private CryptoAddressBookManager cryptoAddressBookManager;
-
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
     private AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
 
     private AssetUserActorDao assetUserActorDao;
+
     private AssetUserActorMonitorAgent assetUserActorMonitorAgent;
 
-    private final List<FermatEventListener> listenersAdded;
-
-    public AssetUserActorPluginRoot() {
-        super(new PluginVersionReference(new Version()));
-
-        listenersAdded = new ArrayList<>();
-    }
+    private final List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     @Override
     public void start() throws CantStartPluginException {
         try {
             /**
-             * I created instance of AssetUserActorDao
-             * and initialize Database
+             * Created instance of AssetUserActorDao and initialize Database
              */
             this.assetUserActorDao = new AssetUserActorDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
+
+            initializeListener();
 
             /**
              * Agent for Search Actor Asset User REGISTERED in Actor Network Service User
              */
-            initializeListener();
-
             startMonitorAgent();
 
             this.serviceStatus = ServiceStatus.STARTED;
-//            testRaiseEvent();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -142,36 +132,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     public void stop() {
         this.assetUserActorMonitorAgent.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        AssetUserActorDeveloperDatabaseFactory dbFactory = new AssetUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-        return dbFactory.getDatabaseList(developerObjectFactory);
-    }
-
-    @Override
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        AssetUserActorDeveloperDatabaseFactory dbFactory = new AssetUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-        return dbFactory.getDatabaseTableList(developerObjectFactory);
-    }
-
-    @Override
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        try {
-            AssetUserActorDeveloperDatabaseFactory dbFactory = new AssetUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-            dbFactory.initializeDatabase();
-            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeAssetUserActorDatabaseException e) {
-            /**
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
-        // If we are here the database could not be opened, so we return an empry list
-        return new ArrayList<>();
     }
 
     @Override
@@ -232,8 +192,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public ActorAssetUser getActorAssetUser() throws CantGetAssetUserActorsException,
-            CantAssetUserActorNotFoundException {
+    public ActorAssetUser getActorAssetUser() throws CantGetAssetUserActorsException {
 
         ActorAssetUser actorAssetUser;
         try {
@@ -247,12 +206,13 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
     @Override
     public List<ActorAssetUser> getAllAssetUserActorInTableRegistered() throws CantGetAssetUserActorsException {
-        List<ActorAssetUser> list; // Asset User Actor list.
+        List<ActorAssetUser> list;
         try {
             list = this.assetUserActorDao.getAllAssetUserActorRegistered();
         } catch (CantGetAssetUsersListException e) {
             throw new CantGetAssetUserActorsException("CAN'T GET ASSET USER REGISTERED ACTOR", e, "", "");
         }
+
         return list;
     }
 
@@ -272,23 +232,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         } catch (CantGetAssetUsersListException e) {
             throw new CantGetAssetUserActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
         }
+
         return list;
-    }
-
-    public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetUserException {
-        try {
-            /*
-             * Send the Actor Asset User Local for Register in Actor Network Service
-             */
-            ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
-
-            assetUserActorNetworkServiceManager.registerActorAssetUser(actorAssetUser);
-
-        } catch (CantRegisterActorAssetUserException e) {
-            throw new CantRegisterActorAssetUserException("CAN'T Register Actor Asset User in Actor Network Service", e, "", "");
-        } catch (CantGetAssetUserActorsException e) {
-            throw new CantRegisterActorAssetUserException("CAN'T GET ACTOR ASSET USER", e, "", "");
-        }
     }
 
     @Override
@@ -296,7 +241,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             for (ActorAssetUser actorAssetUser : actorAssetUsers) {
                 try {
-                    cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(null,
+                    cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(
+                            null,
                             CryptoCurrency.BITCOIN,
                             Actors.DAP_ASSET_ISSUER,
                             Actors.DAP_ASSET_USER,
@@ -313,24 +259,22 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         } catch (CantSendAddressExchangeRequestException e) {
             e.printStackTrace();
         }
-
-        //ademas, debemos al iniciar el plugin del actor, debemos escuchar al evento del requestCryptoAddress del network service, para cuando
-        //alguien nos pida la dirección, y llamar a los metodos de getGenesisAddress y registrarla en el address book. para luego enviar
-        // la direccion a traves del sendCryptoAddress del network service.
     }
 
-    @Override
-    public void handleDeliveredCryptoAddresFromRemoteAssetUserEvent(ActorAssetUser actorAssetUser, CryptoAddress cryptoAddress) {
+    public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetUserException {
         try {
-            System.out.println("=============Actor Asset Inicia Recepcion Crypto=========");
-            //todo actualizar tabla de usuarios registrados con nueva crypto address.
-            this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(actorAssetUser, DAPConnectionState.CONNECTED_ONLINE, cryptoAddress);
-            System.out.println("=============Actor Asset User Recibida Crypto================");
-            System.out.println("Actor Asset User: " + actorAssetUser.getName());
-            System.out.println("Actor Asset Crypto Address: " + actorAssetUser.getCryptoAddress().getAddress());
-            System.out.println("==========================================================");
-        } catch (CantAddPendingAssetUserException e) {
-            e.printStackTrace();
+            /*
+             * Send the Actor Asset User Local for Register in Actor Network Service
+             */
+            ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
+
+            if (actorAssetUser != null)
+                assetUserActorNetworkServiceManager.registerActorAssetUser(actorAssetUser);
+
+        } catch (CantRegisterActorAssetUserException e) {
+            throw new CantRegisterActorAssetUserException("CAN'T Register Actor Asset User in Actor Network Service", e, "", "");
+        } catch (CantGetAssetUserActorsException e) {
+            throw new CantRegisterActorAssetUserException("CAN'T GET ACTOR ASSET USER", e, "", "");
         }
     }
 
@@ -341,7 +285,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         System.out.println("Actor Asset User se Registro " + actorAssetUser.getName());
         try {
             //TODO Cambiar luego por la publicKey Linked proveniente de Identity
-            this.assetUserActorDao.updateAssetUserDAPConnectionStateOrCrpytoAddress(actorAssetUser.getPublicKey(),
+            this.assetUserActorDao.updateAssetUserDAPConnectionStateOrCrpytoAddress(
+                    actorAssetUser.getPublicKey(),
                     DAPConnectionState.REGISTERED_ONLINE,
                     actorAssetUser.getCryptoAddress());
         } catch (CantUpdateAssetUserConnectionException e) {
@@ -349,49 +294,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         }
         System.out.println("***************************************************************");
     }
-
-    /**
-     * Private methods
-     */
-    private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantStartAgentException {
-        if (this.assetUserActorMonitorAgent == null) {
-//            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
-            this.assetUserActorMonitorAgent = new AssetUserActorMonitorAgent(
-                    this.eventManager,
-                    this.pluginDatabaseSystem,
-                    this.errorManager,
-                    this.pluginId,
-                    this.assetUserActorNetworkServiceManager,
-                    this.assetUserActorDao,
-                    this);
-//            this.assetUserActorMonitorAgent.setLogManager(this.logManager);
-            this.assetUserActorMonitorAgent.start();
-        } else {
-            this.assetUserActorMonitorAgent.start();
-        }
-    }
-
-    private void initializeListener() {
-        /**
-         * I will initialize the handling of com.bitdubai.platform events.
-         */
-        FermatEventListener fermatEventListener;
-        FermatEventHandler fermatEventHandler;
-
-        /**
-         * Listener Accepted connection event
-         */
-        fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
-        fermatEventListener.setEventHandler(new AssetUserActorCompleteRegistrationNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.all_definition.enums.EventType.CRYPTO_ADDRESSES_NEWS);
-        fermatEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-    }
-
 
     public void handleCryptoAddressesNewsEvent() throws CantHandleCryptoAddressesNewsEventException {
         final List<CryptoAddressRequest> list;
@@ -458,5 +360,77 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         } catch (CantConfirmAddressExchangeRequestException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        AssetUserActorDeveloperDatabaseFactory dbFactory = new AssetUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        AssetUserActorDeveloperDatabaseFactory dbFactory = new AssetUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        try {
+            AssetUserActorDeveloperDatabaseFactory dbFactory = new AssetUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            dbFactory.initializeDatabase();
+            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeAssetUserActorDatabaseException e) {
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        // If we are here the database could not be opened, so we return an empry list
+        return Collections.EMPTY_LIST;
+    }
+
+    /**
+     * Private methods
+     */
+    private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantStartAgentException {
+        if (this.assetUserActorMonitorAgent == null) {
+//            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+            this.assetUserActorMonitorAgent = new AssetUserActorMonitorAgent(
+                    this.eventManager,
+                    this.pluginDatabaseSystem,
+                    this.errorManager,
+                    this.pluginId,
+                    this.assetUserActorNetworkServiceManager,
+                    this.assetUserActorDao,
+                    this);
+//            this.assetUserActorMonitorAgent.setLogManager(this.logManager);
+            this.assetUserActorMonitorAgent.start();
+        } else {
+            this.assetUserActorMonitorAgent.start();
+        }
+    }
+
+    private void initializeListener() {
+        /**
+         * I will initialize the handling of com.bitdubai.platform events.
+         */
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
+
+        /**
+         * Listener Accepted connection event
+         */
+        fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
+        fermatEventListener.setEventHandler(new AssetUserActorCompleteRegistrationNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.all_definition.enums.EventType.CRYPTO_ADDRESSES_NEWS);
+        fermatEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 }

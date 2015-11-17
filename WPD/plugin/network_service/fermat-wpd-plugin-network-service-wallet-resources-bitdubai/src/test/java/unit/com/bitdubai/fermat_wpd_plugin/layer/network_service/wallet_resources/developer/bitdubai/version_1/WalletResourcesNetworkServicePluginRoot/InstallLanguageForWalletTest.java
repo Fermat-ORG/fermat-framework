@@ -1,6 +1,6 @@
 //package unit.com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 //
-//import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
+//import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 //import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 //import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 //import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -75,7 +75,7 @@
 //    private Repository repository;
 //
 //    @Mock
-//    private GithubConnection githubConnection;
+//    private GitHubConnection githubConnection;
 //
 //    @Mock
 //    private XMLParser mockXMLParser;

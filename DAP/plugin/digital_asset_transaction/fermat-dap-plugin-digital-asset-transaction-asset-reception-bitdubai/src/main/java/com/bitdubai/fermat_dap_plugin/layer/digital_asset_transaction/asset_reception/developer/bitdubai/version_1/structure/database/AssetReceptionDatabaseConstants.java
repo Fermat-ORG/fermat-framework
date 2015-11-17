@@ -4,7 +4,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rec
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 12/10/15.
  */
 public class AssetReceptionDatabaseConstants {
-    public static final String ASSET_RECEPTION_DATABASE = "asset_reception_database";
+    public static final String ASSET_RECEPTION_DATABASE = "assetReceptionDatabase";
     /**
      * Asset reception database table definition.
      */

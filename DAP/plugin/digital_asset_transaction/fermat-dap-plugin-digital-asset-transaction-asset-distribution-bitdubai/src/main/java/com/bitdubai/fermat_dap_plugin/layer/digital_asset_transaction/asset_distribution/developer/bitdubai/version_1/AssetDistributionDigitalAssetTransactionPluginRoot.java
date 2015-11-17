@@ -247,7 +247,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
         }
         //Commented by Luis Campo
         //Test not runnig
-        //digitalAssetsToDistribute=getDistributionHashMapForTesting();
+        digitalAssetsToDistribute=getDistributionHashMapForTesting();
 
         for (DigitalAssetMetadata digitalAssetMetadata: digitalAssetsToDistribute.keySet()){
             digitalAssetsToDistribute.put(digitalAssetMetadata, registeredActorAssetUser);

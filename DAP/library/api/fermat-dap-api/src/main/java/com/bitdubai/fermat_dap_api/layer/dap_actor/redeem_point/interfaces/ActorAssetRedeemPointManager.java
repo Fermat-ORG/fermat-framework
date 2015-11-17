@@ -55,16 +55,6 @@ public interface ActorAssetRedeemPointManager {
      */
     List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException;
 
-
-    /**
-     * The method <code>registerActorInActorNetowrkSerice</code> Register or Add Actor a Lst in
-     * Actor Network Service
-     *
-     * @throws CantCreateActorRedeemPointException
-     */
-    //TODO Metodo sera removido luego que existan las Sub App Identity
-    void registerActorInActorNetowrkSerice() throws CantCreateActorRedeemPointException;
-
     /**
      * The method <code>connectToActorAssetUser</code> Stablish Connection
      * with Issuer (Requester) and Lists Users for get a CryptoAdress (Delivered)

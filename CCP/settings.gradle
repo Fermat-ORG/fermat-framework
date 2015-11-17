@@ -44,17 +44,17 @@ project(':fermat-ccp-plugin-network-service-intra-actor-bitdubai').projectDir = 
 include ':fermat-ccp-plugin-request-crypto-payment-bitdubai'
 project(':fermat-ccp-plugin-request-crypto-payment-bitdubai').projectDir = new File('CCP/plugin/request/fermat-ccp-plugin-request-crypto-payment-bitdubai')
 
-include ':fermat-ccp-plugin-transaction-incoming-extra-user-bitdubai'
-project(':fermat-ccp-plugin-transaction-incoming-extra-user-bitdubai').projectDir = new File('CCP/plugin/transaction/fermat-ccp-plugin-transaction-incoming-extra-user-bitdubai')
+include ':fermat-ccp-plugin-crypto-transaction-incoming-extra-actor-bitdubai'
+project(':fermat-ccp-plugin-crypto-transaction-incoming-extra-actor-bitdubai').projectDir = new File('CCP/plugin/crypto_transaction/fermat-ccp-plugin-crypto-transaction-incoming-extra-actor-bitdubai')
 
-include ':fermat-ccp-plugin-transaction-incoming-intra-user-bitdubai'
-project(':fermat-ccp-plugin-transaction-incoming-intra-user-bitdubai').projectDir = new File('CCP/plugin/transaction/fermat-ccp-plugin-transaction-incoming-intra-user-bitdubai')
+include ':fermat-ccp-plugin-crypto-transaction-incoming-intra-user-bitdubai'
+project(':fermat-ccp-plugin-crypto-transaction-incoming-intra-user-bitdubai').projectDir = new File('CCP/plugin/crypto_transaction/fermat-ccp-plugin-crypto-transaction-incoming-intra-user-bitdubai')
 
-include ':fermat-ccp-plugin-transaction-outgoing-extra-user-bitdubai'
-project(':fermat-ccp-plugin-transaction-outgoing-extra-user-bitdubai').projectDir = new File('CCP/plugin/transaction/fermat-ccp-plugin-transaction-outgoing-extra-user-bitdubai')
+include ':fermat-ccp-plugin-crypto-transaction-outgoing-extra-user-bitdubai'
+project(':fermat-ccp-plugin-crypto-transaction-outgoing-extra-user-bitdubai').projectDir = new File('CCP/plugin/crypto_transaction/fermat-ccp-plugin-crypto-transaction-outgoing-extra-user-bitdubai')
 
-include ':fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai'
-project(':fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai').projectDir = new File('CCP/plugin/transaction/fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai')
+include ':fermat-ccp-plugin-crypto-transaction-outgoing-intra-actor-bitdubai'
+project(':fermat-ccp-plugin-crypto-transaction-outgoing-intra-actor-bitdubai').projectDir = new File('CCP/plugin/crypto_transaction/fermat-ccp-plugin-crypto-transaction-outgoing-intra-actor-bitdubai')
 
 include ':fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai'
 project(':fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai').projectDir = new File('CCP/plugin/wallet_module/fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai')

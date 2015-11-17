@@ -12,6 +12,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wizard
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettings;
@@ -121,7 +122,7 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
      * Change activity
      */
     protected final void changeFragment(String fragment,int idContainer) {
-        ((FermatScreenSwapper) getActivity()).changeScreen(fragment,idContainer ,null);
+        ((FermatScreenSwapper) getActivity()).changeScreen(fragment, idContainer, null);
     }
 
     protected final RelativeLayout getToolbarHeader() {
@@ -140,6 +141,13 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
         getPaintActivtyFeactures().addNavigationViewHeader(view);
     }
 
+    protected void changeApp(Engine emgine){
+        getFermatScreenSwapper().connectWithOtherApp(emgine);
+    }
+
+    protected FermatScreenSwapper getFermatScreenSwapper(){
+        return (FermatScreenSwapper) getActivity();
+    }
 
 
 
