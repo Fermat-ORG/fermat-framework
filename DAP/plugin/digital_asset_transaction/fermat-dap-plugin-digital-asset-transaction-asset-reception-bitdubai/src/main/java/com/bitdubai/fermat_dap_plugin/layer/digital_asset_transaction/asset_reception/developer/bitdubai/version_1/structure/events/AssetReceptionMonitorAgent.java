@@ -209,7 +209,7 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
         public void run() {
 
             logManager.log(AssetReceptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Reception Protocol Notification Agent: running...", null, null);
-            while(true){
+            while (true) {
                 /**
                  * Increase the iteration counter
                  */
@@ -415,7 +415,7 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
             }
         }
 
-        private void checkTransactionsByReceptionStatus(ReceptionStatus receptionStatus) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException, CantCheckAssetReceptionProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException {
+        private void checkTransactionsByReceptionStatus(ReceptionStatus receptionStatus) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException, CantCheckAssetReceptionProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantExecuteQueryException {
             DistributionStatus distributionStatus = DistributionStatus.ASSET_REJECTED_BY_CONTRACT;
             ActorAssetIssuer actorAssetIssuer;
             List<String> genesisTransactionList;
@@ -441,6 +441,7 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                         actorAssetIssuer,
                         genesisTransaction,
                         distributionStatus);
+                assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.RECEPTION_FINISHED, genesisTransaction);
             }
         }
 
