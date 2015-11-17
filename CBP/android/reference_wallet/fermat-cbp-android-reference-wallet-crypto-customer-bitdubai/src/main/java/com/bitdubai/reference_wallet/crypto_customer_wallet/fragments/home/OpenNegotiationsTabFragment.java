@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -130,13 +131,14 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     private void configureActivityHeader(LayoutInflater layoutInflater) {
 
         RelativeLayout toolbarHeader = getToolbarHeader();
-        try {
-            toolbarHeader.removeAllViews();
-        } catch (Exception exception) {
-            CommonLogger.exception(TAG, "Error removing all views from toolbarHeader ", exception);
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
-        }
+//        try {
+//            toolbarHeader.removeAllViews();
+//        } catch (Exception exception) {
+//            CommonLogger.exception(TAG, "Error removing all views from toolbarHeader ", exception);
+//            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
+//        }
         toolbarHeader.setVisibility(View.VISIBLE);
+        toolbarHeader.setBackgroundColor(Color.BLUE);
         layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
 
 //        if (marketExchangeRateSummaryList.isEmpty()) {
