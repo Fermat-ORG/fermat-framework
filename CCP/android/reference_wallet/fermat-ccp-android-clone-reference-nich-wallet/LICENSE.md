@@ -4,6 +4,8 @@
 
 [bitDubai](https://www.bitDubai.com) is a company that develops _GUI Components_ for the Fermat Framework.
 
+
+<br>
 #### This _GUI Component_ carries the following license:
 
 
