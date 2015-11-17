@@ -1989,7 +1989,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Outgoin Intra Actor"
+						name="Outgoing Intra Actor"
 						description=""
 						difficulty="10"
 						code-level="development"
