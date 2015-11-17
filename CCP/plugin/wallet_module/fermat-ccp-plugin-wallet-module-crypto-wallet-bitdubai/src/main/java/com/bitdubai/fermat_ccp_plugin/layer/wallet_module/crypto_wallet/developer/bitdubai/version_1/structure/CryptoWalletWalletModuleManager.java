@@ -1295,6 +1295,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                     cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
 
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(
+                        paymentRecord.getRequestId(),
                         convertTime(paymentRecord.getStartTimeStamp()),
                         paymentRecord.getDescription(),
                         paymentRecord.getAmount(),
@@ -1307,9 +1308,9 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
             //TODO: Harcoder
             if(lst.size() == 0){
-                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
                 lst.add(cryptoWalletPaymentRequest);
-                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
 
                 lst.add(cryptoWalletPaymentRequest);
             }
@@ -1347,6 +1348,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                     cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
 
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(
+                        paymentRecord.getRequestId(),
                         convertTime(paymentRecord.getStartTimeStamp()),
                         paymentRecord.getDescription(),
                         paymentRecord.getAmount(),
@@ -1359,9 +1361,9 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
             //TODO: Harcoder
             if(lst.size() == 0) {
-                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago", "Starbucks coffe", 500000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"1 hour ago", "Starbucks coffe", 500000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
                 lst.add(cryptoWalletPaymentRequest);
-                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago", "Hamburguer from MC donald", 100000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
+                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"2 hour ago", "Hamburguer from MC donald", 100000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
 
                 lst.add(cryptoWalletPaymentRequest);
             }

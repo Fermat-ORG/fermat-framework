@@ -3,14 +3,22 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -18,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 /**
  * Created by Matias Furszyfer on 2015.09.30..
@@ -41,6 +50,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     }
 
     public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
+
 
     }
 
@@ -78,7 +88,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
      * @param position position to render
      */
     @Override
-    protected void bindHolder(PaymentHistoryItemViewHolder holder, PaymentRequest data, int position) {
+    protected void bindHolder(PaymentHistoryItemViewHolder holder, final PaymentRequest data, int position) {
 
         try {
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), data.getContact().getProfilePicture()));
@@ -110,8 +120,28 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 //            holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
 //        }
 
-        holder.getBtn_accept_request().setOnClickListener(mOnClickListener);
-        holder.getBtn_refuse_request().setOnClickListener(mOnClickListener);
+        holder.getBtn_accept_request().setOnClickListener (new View.OnClickListener () {
+           @Override
+            public void onClick(View view) {
+                try {
+                    referenceWalletSession.setLastRequestSelected(data);
+
+                } catch (Exception ex) {
+
+                }
+            }
+        });
+        holder.getBtn_refuse_request().setOnClickListener(new View.OnClickListener () {
+            @Override
+            public void onClick(View view) {
+                try {
+                    referenceWalletSession.setLastRequestSelected(data);
+
+                } catch (Exception ex) {
+
+                }
+            }
+        });
 
     }
 
