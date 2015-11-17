@@ -7043,7 +7043,7 @@
 		<layer name="Request" language="java"></layer>
 		<layer name="Business Transaction" language="java"></layer>
 		<layer name="Digital Asset Transaction" language="java"></layer>
-		<layer name="Crypto Money Transaction" language="java"></layer>
+		<layer name="Crypto Transaction" language="java"></layer>
 		<layer name="Cash Money Transaction" language="java"></layer>
 		<layer name="Bank Money Transaction" language="java"></layer>
 		<layer name="Contract" language="java"></layer>
