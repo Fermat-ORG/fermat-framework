@@ -15,7 +15,7 @@ public enum NicheWallet implements FermatWalletEnum {
     /**
      * The value NONE is used to store the information of no wallet
      * <p/>
-     * In order to do the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * In order to make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     NONE           ("NONE", null),
     UNKNOWN_WALLET ("UNKW", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET)

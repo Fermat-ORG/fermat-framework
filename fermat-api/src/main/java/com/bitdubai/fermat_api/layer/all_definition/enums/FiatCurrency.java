@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum FiatCurrency implements FermatEnum {
     /**
-     * In order to do the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * In order to make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     ARGENTINE_PESO  ("ARS", Country.ARGENTINA),
     CANADIAN_DOLLAR ("CAD", Country.CANADA),

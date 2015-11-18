@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum Genders implements FermatEnum {
     /**
-     * In order to do the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * In order to make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     FEMALE      ("F"),
     INDEFINITE  ("I"),

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum NetworkServices implements FermatEnum {
     /**
-     * In order to do the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * In order to make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     BANK_NOTES          ("BNOTES"),
     CRYPTO_ADDRESSES    ("CRYPTADD"),
