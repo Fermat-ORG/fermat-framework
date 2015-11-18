@@ -342,6 +342,7 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     }
 
     private Clause modifyClause(UUID negotiationId, UUID clauseId, Clause clause){
+
         return null;
     }
 }
