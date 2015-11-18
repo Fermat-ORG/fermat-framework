@@ -20,7 +20,7 @@ import java.text.NumberFormat;
 /**
  * Created by nelson on 21/10/15.
  */
-public class ContractViewHolder extends ChildViewHolder {
+public class ContractExpandableListViewHolder extends ChildViewHolder {
     public ImageView customerImage;
     public FermatTextView customerName;
     public FermatTextView contractAction;
@@ -36,7 +36,7 @@ public class ContractViewHolder extends ChildViewHolder {
      *
      * @param itemView the child ViewHolder's view
      */
-    public ContractViewHolder(View itemView) {
+    public ContractExpandableListViewHolder(View itemView) {
         super(itemView);
 
         this.itemView = itemView;
