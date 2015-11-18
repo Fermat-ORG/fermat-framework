@@ -322,9 +322,9 @@ public class AssetIssuingTransactionDao {
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
-            if (databaseTableRecords.size() > 1) {
+            if (databaseTableRecords.size() == 0) {
                 this.database.closeDatabase();
-                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", indexColumn + ":" + value);
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. No values returned.", indexColumn + ":" + value);
             } else {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
