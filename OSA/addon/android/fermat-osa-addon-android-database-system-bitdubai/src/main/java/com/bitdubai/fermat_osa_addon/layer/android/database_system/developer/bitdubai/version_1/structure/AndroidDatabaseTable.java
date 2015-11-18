@@ -504,7 +504,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
                                 .append(tableFilter.get(i).getValue())
                                 .append("'");
                         break;
-                    case GRATER_THAN:
+                    case GREATER_THAN:
                         strFilter.append(" >'")
                                 .append(tableFilter.get(i).getValue())
                                 .append("'");;
@@ -753,7 +753,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
                         .append(filter.getValue())
                         .append("'");
                 break;
-            case GRATER_THAN:
+            case GREATER_THAN:
                 strFilter.append(" > ")
                         .append(filter.getValue());
                 break;

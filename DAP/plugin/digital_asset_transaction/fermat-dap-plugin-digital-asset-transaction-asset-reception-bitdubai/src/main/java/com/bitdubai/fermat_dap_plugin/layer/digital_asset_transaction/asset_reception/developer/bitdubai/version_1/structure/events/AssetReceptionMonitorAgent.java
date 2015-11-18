@@ -143,13 +143,13 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
 
         monitorAgent = new MonitorAgent();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
+        this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
+            this.monitorAgent.Initialize();
         } catch (CantInitializeAssetMonitorAgentException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
         this.agentThread = new Thread(monitorAgent);
@@ -215,6 +215,8 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                  */
                 iterationNumber++;
                 try {
+                    System.out.println("Asset Reception Protocol Notification Agent: running...");
+
                     Thread.sleep(SLEEP_TIME);
                 } catch (InterruptedException interruptedException) {
                     return;
@@ -260,7 +262,7 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 assetReceptionDao = new AssetReceptionDao(pluginDatabaseSystem, pluginId);
                 if (assetReceptionDao.isPendingNetworkLayerEvents()) {
                     System.out.println("ASSET RECEPTION is network layer pending events");
-                    List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_ISSUER_SPECIALIST);
+                    List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
                     System.out.println("ASSET RECEPTION is " + pendingEventsList.size() + " events");
                     for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList) {
                         if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER) {

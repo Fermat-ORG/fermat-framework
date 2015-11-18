@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.interfaces;
 
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_cbp_api.all_definition.util.Version;
 
 import java.util.List;
