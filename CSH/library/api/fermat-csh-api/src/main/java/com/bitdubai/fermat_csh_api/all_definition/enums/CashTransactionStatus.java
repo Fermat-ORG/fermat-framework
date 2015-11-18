@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_csh_api.all_definition.enums;
 
-import com.bitdubai.fermat_csh_api.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by Yordin Alayn on 23.09.15.

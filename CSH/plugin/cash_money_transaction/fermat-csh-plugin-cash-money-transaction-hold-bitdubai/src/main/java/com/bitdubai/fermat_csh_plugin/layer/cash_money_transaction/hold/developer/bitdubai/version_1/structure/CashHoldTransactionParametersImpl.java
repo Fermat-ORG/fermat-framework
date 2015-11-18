@@ -13,12 +13,14 @@ public class CashHoldTransactionParametersImpl implements CashHoldTransactionPar
     private UUID transactionId;
     private String publicKeyWallet;
     private String publicKeyActor;
+    private String publicKeyPlugin;
     private float amount;
     FiatCurrency currency;
     private String memo;
 
 
-    public CashHoldTransactionParametersImpl( UUID transactionId, String publicKeyWallet, String publicKeyActor, float amount, FiatCurrency currency, String memo)
+    public CashHoldTransactionParametersImpl( UUID transactionId, String publicKeyWallet, String publicKeyActor,
+                                              String publicKeyPlugin, float amount, FiatCurrency currency, String memo)
     {
         this.transactionId = transactionId;
         this.publicKeyWallet = publicKeyWallet;
@@ -43,6 +45,9 @@ public class CashHoldTransactionParametersImpl implements CashHoldTransactionPar
     public String getPublicKeyActor() {
         return publicKeyActor;
     }
+
+    @Override
+    public String getPublicKeyPlugin() { return this.publicKeyPlugin; }
 
     @Override
     public float getAmount() {
