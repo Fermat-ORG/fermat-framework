@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.interfaces;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.TypeRequest;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.CantCreateCryptoBrokerActorException;
@@ -74,5 +75,8 @@ public interface CryptoBrokerActorManager {
 
         void sendActorNetworkServiceContractPurchases(CryptoBrokerActorContract negotiation);
         void receiveActorNetworkServiceContractPurchases(CryptoBrokerActorContract negotiation);
+
+        void requestReceivedProcessed(TypeRequest type);
+        void requestSentProcessed(TypeRequest type);
 
 }
