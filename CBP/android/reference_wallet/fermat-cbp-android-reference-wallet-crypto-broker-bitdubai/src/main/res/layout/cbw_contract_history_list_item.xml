@@ -70,6 +70,6 @@
         android:layout_toRightOf="@+id/cbw_customer_image"
         android:singleLine="true"
         android:textColor="@color/cbw_contract_history_exchange_rate_text"
-        android:textSize="@dimen/cbw_title_text_size"
+        android:textSize="@dimen/cbw_regular_text_size"
         android:text="@string/cbw_exchange_rate_amount_and_currency"/>
 </RelativeLayout>
