@@ -102,7 +102,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1063,8 +1065,14 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 JsonObject jsonObject = new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
                 //Se desencripta la imagen para luego ser agregada a la lista.
                 String encoded = "";
+                byte[] imageProfile = null;
 
                 try {
+
+                    Type collectionType = new TypeToken<byte[]>(){}.getType();
+                    Gson gson = new Gson();
+                    imageProfile = gson.fromJson(platformComponentProfile.getExtraData(), collectionType);
+
                     encoded = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString();
                 }catch (Exception e){
                     encoded = "";
@@ -1072,7 +1080,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 }
                 byte[] image = null;
                 try {
-                    image = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
+
+                    image = Base64.decode(imageProfile, Base64.DEFAULT);
+                    //image = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
                 } catch (Exception e) {
                     image = null;
                 }
@@ -1291,19 +1301,27 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             //Se encripta la imagen para luego ser agregada al json.
             String encodedImage = null;
             try {
+
                 encodedImage = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE, encodedImage);
-            // jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE,actor.getPhoto().toString());
+            Type collectionType = new TypeToken<byte[]>(){}.getType();
+
+            Gson gson = new Gson();
+
+            String jsonImageProfile = gson.toJson(Base64.encode(actor.getPhoto(), Base64.DEFAULT), collectionType);
+
+            jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE, jsonImageProfile);
+            //jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE,actor.getPhoto().toString());
+
             PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
                     (actor.getName().toLowerCase()),
                     (actor.getName().toLowerCase() + "_" + this.getName()),
                     NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
                     PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
-                    jsonObject.toString());
+                    jsonImageProfile.trim());
 
 
             if (!actorsToRegisterCache.contains(platformComponentProfile)) {

@@ -44,12 +44,13 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.drafts.Draft_17;
-import org.restlet.data.MediaType;
-import org.restlet.engine.application.Decoder;
+
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -379,31 +380,47 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             /*
              * Construct the parameters JsonRepresentation
              */
-            Representation parameters = new JsonRepresentation(gson.toJson(jsonObject));
-            parameters.setMediaType(MediaType.APPLICATION_JSON);
+            JsonRepresentation parameters = new JsonRepresentation(gson.toJson(jsonObject));
 
             /*
              * Do the request via post and obtain the result
              */
             Representation respond = requestResource.post(parameters);
+
+           // JsonRepresentation jsonRepresentationRespond = new JsonRepresentation(respond);
+           // JSONObject jsonObjectRespond = jsonRepresentationRespond.getJsonObject();
+           // JSONArray jsonArray = jsonObjectRespond.getJSONArray(JsonAttNamesConstants.RESULT_LIST);
+
+           // System.out.println("WsCommunicationsCloudClientConnection - jsonArray length:" + jsonArray.length());
+
            // Decoder decoder = new Decoder(requestResource.getContext());
 
             //String respondText = decoder.decode(respond).getText();
-            String respondText = respond.getText();
+            //String respondText = respond.getText();
 
-            System.out.println("WsCommunicationsCloudClientConnection - Respond length:" + respondText.length());
-            System.out.println("WsCommunicationsCloudClientConnection - Respond Text:" + respondText);
+            System.out.println("WsCommunicationsCloudClientConnection - Respond getSize:" + respond.getSize());
+           // System.out.println("WsCommunicationsCloudClientConnection - Respond Text:" + respondText);
 
             /*
              * if respond have the result list
              */
-            if (respondText.contains(JsonAttNamesConstants.RESULT_LIST)){
+            if (respond.getSize() > 11){
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(respond.getStream(), "UTF-8"));
+                StringBuilder builder = new StringBuilder();
+
+                int len;
+                char[] buf = new char[20];
+                while((len = reader.read(buf)) != -1) {
+                    builder.append(buf, 0, len);
+                }
 
                 /*
                  * Decode into a json object
                  */
                 JsonParser parser = new JsonParser();
-                JsonObject respondJsonObject = parser.parse(respondText).getAsJsonObject();
+                //JsonObject respondJsonObject = (JsonObject) parser.parse(new InputStreamReader(respond.getStream(), "UTF-8"));
+                JsonObject respondJsonObject = (JsonObject) parser.parse(builder.toString());
 
                  /*
                  * Get the receivedList
@@ -418,7 +435,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }
 
         }catch (Exception e){
-
+            e.printStackTrace();
             CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
             throw cantRequestListException;
 
