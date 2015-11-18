@@ -65,8 +65,8 @@ project(':fermat-ccp-android-reference-bitcoin-wallet-bitdubai').projectDir = ne
 include ':fermat-ccp-android-clone-reference-nich-wallet'
 project(':fermat-ccp-android-clone-reference-nich-wallet').projectDir = new File('CCP/android/reference_wallet/fermat-ccp-android-clone-reference-nich-wallet')
 
-include ':fermat-ccp-android-sub-app-intra-user-identity-bitdubai'
-project(':fermat-ccp-android-sub-app-intra-user-identity-bitdubai').projectDir = new File('CCP/android/sub_apps/fermat-ccp-android-sub-app-intra-user-identity-bitdubai')
+include ':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai'
+project(':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai').projectDir = new File('CCP/android/sub_app/fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai')
 
-include ':fermat-ccp-android-sub-app-intra-user-community-bitdubai'
-project(':fermat-ccp-android-sub-app-intra-user-community-bitdubai').projectDir = new File('CCP/android/sub_apps/fermat-ccp-android-sub-app-intra-user-community-bitdubai')
+include ':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai'
+project(':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai').projectDir = new File('CCP/android/sub_app/fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai')
