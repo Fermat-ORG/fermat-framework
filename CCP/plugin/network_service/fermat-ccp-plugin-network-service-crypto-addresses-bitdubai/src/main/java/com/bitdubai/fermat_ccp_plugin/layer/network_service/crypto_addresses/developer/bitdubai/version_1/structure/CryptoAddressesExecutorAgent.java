@@ -243,6 +243,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
                 FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
                 eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
                 eventManager.raiseEvent(eventToRaise);
+                System.out.println("CRYPTO ADDRESS NEWS");
             }
 
         } catch(CantListPendingCryptoAddressRequestsException e) {
@@ -266,10 +267,6 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
                 if (cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) == null) {
 
-                    if (wsCommunicationsCloudClientManager != null) {
-
-                        if (cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
-
                             PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
                                     .constructBasicPlatformComponentProfileFactory(
                                             identityPublicKey,
@@ -289,9 +286,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
                             // i put the actor in the pool of connections waiting for response-
                             poolConnectionsWaitingForResponse.put(actorPublicKey, actorPublicKey);
-                        }
 
-                    }
 
                     return false;
 
@@ -326,7 +321,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
                     actorPublicKey,
                     jsonMessage
             );
-
+            System.out.println("mensaje enviado");
             poolConnectionsWaitingForResponse.remove(actorPublicKey);
 
             return true;

@@ -70,7 +70,7 @@ public class GithubManager {
     }
 
     private void saveLanguage(Language language, boolean isDefault){
-        String languageFileName = language.getType().value() + ".xml";
+        String languageFileName = language.getType().getCode() + ".xml";
 
 
         String savingPath;

@@ -49,7 +49,7 @@
                         android:src="@drawable/profile_image"
                         android:layout_marginLeft="12dp"/>
 
-                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    <AutoCompleteTextView
                         android:id="@+id/contact_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -239,13 +239,6 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/btn_search_world"
-                android:src="@drawable/btn_contact_send"
-                android:layout_marginLeft="12dp"
-                android:layout_alignParentEnd="true"/>
         </RelativeLayout>
     </LinearLayout>
 

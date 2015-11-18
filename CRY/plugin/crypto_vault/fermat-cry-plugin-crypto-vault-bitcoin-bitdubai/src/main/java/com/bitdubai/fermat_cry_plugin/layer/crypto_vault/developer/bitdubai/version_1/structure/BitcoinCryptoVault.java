@@ -308,8 +308,15 @@ public class BitcoinCryptoVault implements
             peerGroup.startAsync();
             peerGroup.startBlockChainDownload(new AbstractPeerEventListener(){
                 @Override
+                public void onPeerConnected(Peer peer, int peerCount) {
+                    System.out.println("Connected to Peer from Crypto Vault: " + peer.toString());
+                }
+
+                @Override
                 public void onTransaction(Peer peer, Transaction t) {
                     System.out.println("Transaction from Peer: " + t.toString());
+
+
 
                 }
             });
