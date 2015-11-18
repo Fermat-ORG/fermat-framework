@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by memo on 17/11/15.
  */
 public class CantMakeUnholdTransactionException extends FermatException {
-    public static final String DEFAULT_MESSAGE = "Failed to make a hold funds on the account";
+    public static final String DEFAULT_MESSAGE = "Failed to make Unhold funds on the account";
     public CantMakeUnholdTransactionException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
