@@ -345,7 +345,7 @@ public class IncomingIntraUserDao {
 
         recordToFill.setUUIDValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ID_COLUMN_NAME, transaction.getTransactionID());
         recordToFill.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PAYMENT_REQUEST_FLAG_COLUMN_NAME, flag);
-        recordToFill.setUUIDValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_REQUEST_ID_COLUMN_NAME, transaction.getInformation().getRequestId());
+        if(transaction.getInformation().getRequestId()!=null) recordToFill.setUUIDValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_REQUEST_ID_COLUMN_NAME, transaction.getInformation().getRequestId());
         recordToFill.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_SENDER_PUBLIC_KEY_COLUMN_NAME, transaction.getInformation().getSenderPublicKey());
         recordToFill.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME, transaction.getInformation().getDestinationPublicKey());
         recordToFill.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME,transaction.getInformation().getAssociatedCryptoTransactionHash());

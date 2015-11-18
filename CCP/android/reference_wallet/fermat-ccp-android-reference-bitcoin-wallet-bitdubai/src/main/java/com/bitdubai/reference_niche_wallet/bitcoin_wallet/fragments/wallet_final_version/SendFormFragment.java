@@ -94,6 +94,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
 
     private WalletContact walletContact;
     private boolean connectionDialogIsShow;
+    private boolean onFocus;
 
 
     public static SendFormFragment newInstance() {
@@ -156,14 +157,14 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
 
             public boolean onEditorAction(TextView v, int actionId,
                                           KeyEvent event) {
-                if (event != null&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                     InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     // in.hideSoftInputFromWindow(autoEditText.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                     //Commented line is for hide keyboard. Just make above code as comment and test your requirement
                     //It will work for your need. I just putted that line for your understanding only
                     //You can use own requirement here also.
 
-                    if(!connectionDialogIsShow) {
+                    if (!connectionDialogIsShow) {
                         ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), referenceWalletSession, referenceWalletSession.getWalletResourcesProviderManager());
                         connectionWithCommunityDialog.show();
                         connectionWithCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -180,25 +181,17 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                 return false;
             }
         });
-//        contactName.setOnKeyListener(new View.OnKeyListener() {
-//            @Override
-//            public boolean onKey(View v, int keyCode, KeyEvent event) {
-//
-//                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-//                    ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(),referenceWalletSession, referenceWalletSession.getWalletResourcesProviderManager());
-//                    connectionWithCommunityDialog.show();
-//                    connectionWithCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                        @Override
-//                        public void onDismiss(DialogInterface dialog) {
-//                            contactName.setText("");
-//                        }
-//                    });
-//                    return true;
-//                }
-//
-//                return false;
-//            }
-//        });
+        contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                onFocus = hasFocus;
+                if (!onFocus) {
+                    if (walletContact == null) {
+                        contactName.setText("");
+                    }
+                }
+            }
+        });
         /**
          *  Amount observer
          */
@@ -225,7 +218,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         /**
          * Selector
          */
-        send_button.selector(R.drawable.bg_home_accept_active, R.drawable.bg_home_accept_normal, R.drawable.bg_home_accept_active);
+        send_button.selector(R.drawable.bg_home_accept_normal,R.drawable.bg_home_accept_active, R.drawable.bg_home_accept_normal );
     }
 
     private void setUpUIData(){
@@ -237,7 +230,10 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                 imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), R.drawable.profile_image));
             }
             contactName.setText(cryptoWalletWalletContact.getActorName());
+        }else{
+            imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(),R.drawable.profile_image));
         }
+
     }
 
     private void setUpContactAddapter(){
