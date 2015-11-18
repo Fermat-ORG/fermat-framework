@@ -19,5 +19,5 @@ public interface Negotiation {
     long getStartDate();
     NegotiationStatus getStatus();
     void setStatus(NegotiationStatus status);
-    Collection<Clause> getClauses();
+    Collection<Clause> getClauses() throws CantGetListClauseException;
 }
