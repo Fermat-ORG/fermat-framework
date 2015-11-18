@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.Service;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +31,8 @@ import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -61,7 +62,7 @@ public class DatabaseToolsFragment extends FermatFragment {
 
     private ArrayList<Resource> mlist;
 
-    private GridView gridView;
+    private ListView listView;
 
     public static DatabaseToolsFragment newInstance() {
         return new DatabaseToolsFragment();
@@ -97,9 +98,9 @@ public class DatabaseToolsFragment extends FermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        rootView = inflater.inflate(R.layout.start, container, false);
+        rootView = inflater.inflate(R.layout.start_init, container, false);
         rootView.setTag(1);
-        gridView=(GridView) rootView.findViewById(R.id.gridView);
+        listView =(ListView) rootView.findViewById(R.id.gridView);
         try {
 
             List<PluginVersionReference> plugins = databaseTools.getAvailablePluginList();
@@ -111,14 +112,14 @@ public class DatabaseToolsFragment extends FermatFragment {
 
                 PluginVersionReference pvr = plugins.get(i);
 
-                String label = pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getPlatformReference().getPlatform().name()+" "+
+                String label = pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getPlatformReference().getPlatform().getCode()+" "+
                         pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getLayer().name()+" "+
                         pvr.getPluginDeveloperReference().getPluginReference().getPlugin().name();
 
                 mlist.add(
                         new Resource(
                                 "plugin",
-                                label,
+                                label.replaceAll("_", " "),
                                 pvr.toKey(),
                                 pvr.getPluginDeveloperReference().getDeveloper().name(),
                                 Resource.TYPE_PLUGIN
@@ -135,23 +136,23 @@ public class DatabaseToolsFragment extends FermatFragment {
                 mlist.add(item);
             }
 
-            Configuration config = getResources().getConfiguration();
-            if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                gridView.setNumColumns(6);
-            } else {
-                gridView.setNumColumns(3);
-            }
-            AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
-            adapter.notifyDataSetChanged();
-            gridView.setAdapter(adapter);
+            Collections.sort(mlist, new Comparator<Resource>() {
+                public int compare(Resource o1, Resource o2) {
+                    return (o1.label).compareTo(o2.label);
+                }
+            });
 
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item_init, mlist);
+            adapter.notifyDataSetChanged();
+            listView.setAdapter(adapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
 
-                    Resource item=(Resource) gridView.getItemAtPosition(position);
-                    developerSubAppSession.setData("resource",item);
-                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),R.id.startContainer,null);
+                    Resource item = (Resource) listView.getItemAtPosition(position);
+                    developerSubAppSession.setData("resource", item);
+                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), R.id.startContainer, null);
 
 
                 }
@@ -183,7 +184,7 @@ public class DatabaseToolsFragment extends FermatFragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.developer_app_grid_item, parent, false);
+                convertView = inflater.inflate(R.layout.developer_app_grid_item_init, parent, false);
 
 
                 holder = new ViewHolder();
