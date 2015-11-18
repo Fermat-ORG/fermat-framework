@@ -18,12 +18,16 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerClause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantAddNewClausesException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetNextClauseTypeException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantUpdateClausesException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDaoException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException;
@@ -270,5 +274,66 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
         } catch (InvalidParameterException e) {
             throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
         }
+    }
+
+    // Clauses
+
+    public ClauseType getNextClauseType(UUID negotiation) throws CantGetNextClauseTypeException {
+
+        try {
+            ClauseType type = this.customerBrokerPurchaseNegotiationDao.getNextClauseType(negotiation);
+
+            switch (type) {
+                case CUSTOMER_CURRENCY:
+                    return ClauseType.EXCHANGE_RATE;
+
+                case EXCHANGE_RATE:
+                    return ClauseType.CUSTOMER_CURRENCY_QUANTITY;
+
+                case CUSTOMER_CURRENCY_QUANTITY:
+                    return ClauseType.CUSTOMER_PAYMENT_METHOD;
+
+                case CUSTOMER_PAYMENT_METHOD:
+                    CurrencyType paymentMethod = CurrencyType.getByCode(this.customerBrokerPurchaseNegotiationDao.getPaymentMethod(negotiation));
+                    return getNextClauseTypeByCurrencyType(paymentMethod);
+
+                case CUSTOMER_BANK:
+                    return ClauseType.CUSTOMER_BANK_ACCOUNT;
+
+                case PLACE_TO_MEET:
+                    return ClauseType.DATE_TIME_TO_MEET;
+
+                case CUSTOMER_PLACE_TO_DELIVER:
+                    return ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER;
+
+                default:
+                    throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
+            }
+        } catch (InvalidParameterException e) {
+            throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
+        }
+    }
+
+    private ClauseType getNextClauseTypeByCurrencyType(CurrencyType paymentMethod) throws CantGetNextClauseTypeException {
+        switch (paymentMethod) {
+            case CRYPTO_MONEY:
+                return ClauseType.CUSTOMER_CRYPTO_ADDRESS;
+
+            case BANK_MONEY:
+                return ClauseType.CUSTOMER_BANK;
+
+            case CASH_ON_HAND_MONEY:
+                return ClauseType.PLACE_TO_MEET;
+
+            case CASH_DELIVERY_MONEY:
+                return ClauseType.CUSTOMER_PLACE_TO_DELIVER;
+
+            default:
+                throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
+        }
+    }
+
+    private Clause modifyClause(UUID negotiationId, UUID clauseId, Clause clause){
+        return null;
     }
 }
