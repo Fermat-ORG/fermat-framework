@@ -68,30 +68,20 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
     protected void bindHolder(NavigationItemMenuViewHolder holder, MenuItem data, int position) {
 
         try {
-
             holder.getLabel().setText(data.getLabel());
-
-
             switch (position) {
+                case 0:
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_friends);
+                    break;
                 case 1:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_share);
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_connections);
                     break;
                 case 2:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_share);
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_notifications);
                     break;
                 case 3:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_share);
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings);
                     break;
-                case 4:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_share);
-
-                    break;
-                case 5:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_share);
-                    break;
-
-                default:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_share);
             }
         }catch (Exception e){
             e.printStackTrace();

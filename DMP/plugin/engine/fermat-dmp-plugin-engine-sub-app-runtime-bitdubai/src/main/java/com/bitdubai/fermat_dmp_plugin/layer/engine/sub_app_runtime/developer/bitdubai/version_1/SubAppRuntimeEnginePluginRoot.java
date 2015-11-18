@@ -598,8 +598,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setColor("#FF0B46F0");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-
-            statusBar.setColor("#FF0B46F0");
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("World");
@@ -640,27 +640,24 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("");
+            runtimeMenuItem.setLabel("Explore");
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Connections");
+            runtimeMenuItem.setLabel("Your conections");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("World");
+            runtimeMenuItem.setLabel("Notifications");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Pending request");
+            runtimeMenuItem.setLabel("Settings");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-            runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Exit");
-            runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
