@@ -300,7 +300,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithRegistry, Transactio
             // After finishing all the steps we mark the event as seen.
             try {
                 this.registry.disableEvent(eventWrapper.eventId);
-                System.out.println("TTF - INCOMING CRYPTO MONITR: EVENT DISABLED");
+                System.out.println("TTF - INCOMING CRYPTO MONITOR: EVENT DISABLED");
 
             } catch (Exception e) { // There are two exceptions and we react in the same way to both
                 // We will inform the exception and try again in the next round

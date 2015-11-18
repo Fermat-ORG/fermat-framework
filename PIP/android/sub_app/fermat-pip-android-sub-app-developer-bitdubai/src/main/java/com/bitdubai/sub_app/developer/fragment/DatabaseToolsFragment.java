@@ -110,6 +110,7 @@ public class DatabaseToolsFragment extends FermatFragment {
             for (int i = 0; i < plugins.size(); i++) {
 
                 PluginVersionReference pvr = plugins.get(i);
+
                 String label = pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getPlatformReference().getPlatform().name()+" "+
                         pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getLayer().name()+" "+
                         pvr.getPluginDeveloperReference().getPluginReference().getPlugin().name();
@@ -123,6 +124,7 @@ public class DatabaseToolsFragment extends FermatFragment {
                                 Resource.TYPE_PLUGIN
                         )
                 );
+
             }
             for (int i = 0; i < addons.size(); i++) {
                 Resource item = new Resource();
