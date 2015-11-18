@@ -31,11 +31,11 @@ public enum Languages implements FermatEnum {
 
         switch (code) {
 
-            case "AMERICAN_ENGLISH":       return Languages.AMERICAN_ENGLISH;
-            case "ENGLISH":                return Languages.ENGLISH;
-            case "GREAT_BRITAIN_ENGLISH":  return Languages.GREAT_BRITAIN_ENGLISH;
-            case "LATIN_AMERICAN_SPANISH": return Languages.LATIN_AMERICAN_SPANISH;
-            case "SPANISH":                return Languages.SPANISH;
+            case "AMERICAN_ENGLISH":       return AMERICAN_ENGLISH;
+            case "ENGLISH":                return ENGLISH;
+            case "GREAT_BRITAIN_ENGLISH":  return GREAT_BRITAIN_ENGLISH;
+            case "LATIN_AMERICAN_SPANISH": return LATIN_AMERICAN_SPANISH;
+            case "SPANISH":                return SPANISH;
 
             default:
                 return Languages.ENGLISH;
@@ -43,5 +43,7 @@ public enum Languages implements FermatEnum {
     }
 
     @Override
-    public String getCode() { return code; }
+    public String getCode() {
+        return this.code;
+    }
 }
