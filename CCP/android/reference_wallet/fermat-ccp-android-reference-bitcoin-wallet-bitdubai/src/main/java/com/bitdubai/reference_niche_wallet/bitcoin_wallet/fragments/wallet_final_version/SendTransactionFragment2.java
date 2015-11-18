@@ -338,6 +338,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             e.printStackTrace();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         }
         return data;
     }

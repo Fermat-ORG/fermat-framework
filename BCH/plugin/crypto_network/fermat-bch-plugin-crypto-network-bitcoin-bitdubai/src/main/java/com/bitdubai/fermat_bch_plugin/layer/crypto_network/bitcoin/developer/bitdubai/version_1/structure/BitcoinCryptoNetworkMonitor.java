@@ -28,7 +28,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by rodrigo on 10/4/15.
  */
-class BitcoinCryptoNetworkMonitor implements Agent {
+public class BitcoinCryptoNetworkMonitor implements Agent {
     /**
      * agent execution flag
      */
@@ -39,7 +39,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
      */
     Wallet wallet;
     File walletFileName;
-    BitcoinCryptoNetworkMonitorAgent bitcoinCryptoNetworkMonitorAgent;
+    public BitcoinCryptoNetworkMonitorAgent bitcoinCryptoNetworkMonitorAgent;
 
 
     /**
@@ -200,6 +200,15 @@ class BitcoinCryptoNetworkMonitor implements Agent {
              */
             peerGroup.start();
             peerGroup.startBlockChainDownload(null);
+
+            while (true){
+                try {
+                    Thread.sleep(60000);
+                    System.out.println("*****CryptoNetwork isRunning: " + peerGroup.isRunning());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         /**
