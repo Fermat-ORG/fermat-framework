@@ -78,7 +78,7 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
             return res.getColor(R.color.waiting_for_broker_list_item_background);
 
         if (status == ContractStatus.COMPLETED)
-            return res.getColor(R.color.contract_closed_list_item_background);
+            return res.getColor(R.color.contract_completed_list_item_background);
 
         return res.getColor(R.color.contract_cancelled_list_item_background);
     }

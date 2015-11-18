@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
@@ -22,14 +21,15 @@ import java.text.NumberFormat;
  * Created by nelson on 21/10/15.
  */
 public class ContractListViewHolder extends FermatViewHolder {
-    public ImageView customerImage;
-    public FermatTextView customerName;
-    public FermatTextView contractAction;
-    public FermatTextView typeOfPayment;
-    public FermatTextView lastUpdateDate;
-    public FermatTextView status;
+    private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
     private Resources res;
     private View itemView;
+
+    public ImageView customerImage;
+    public FermatTextView customerName;
+    public FermatTextView soldQuantityAndCurrency;
+    public FermatTextView exchangeRateAmountAndCurrency;
+    public FermatTextView lastUpdateDate;
 
 
     /**
@@ -45,59 +45,63 @@ public class ContractListViewHolder extends FermatViewHolder {
 
         customerImage = (ImageView) itemView.findViewById(R.id.cbw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.cbw_customer_name);
-        contractAction = (FermatTextView) itemView.findViewById(R.id.cbw_receiving_or_sending);
-        typeOfPayment = (FermatTextView) itemView.findViewById(R.id.cbw_type_of_payment);
-        lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.cbw_update_date);
-        status = (FermatTextView) itemView.findViewById(R.id.cbw_contract_status);
+        soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_sold_quantity_and_currency);
+        exchangeRateAmountAndCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_amount_and_currency);
+        lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.cbw_last_update_date);
     }
 
     public void bind(ContractBasicInformation itemInfo) {
-
         ContractStatus contractStatus = itemInfo.getStatus();
+
         itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
-        status.setText(getStatusStringRes(contractStatus));
-        contractAction.setText(getContractActionDescription(itemInfo, contractStatus));
         customerName.setText(itemInfo.getCryptoCustomerAlias());
-        typeOfPayment.setText(itemInfo.getTypeOfPayment());
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
+
+        String soldQuantityAndCurrencyText = getSoldQuantityAndCurrencyText(itemInfo, contractStatus);
+        soldQuantityAndCurrency.setText(soldQuantityAndCurrencyText);
+
+        String exchangeRateAmountAndCurrencyText = getExchangeRateAmountAndCurrencyText(itemInfo);
+        exchangeRateAmountAndCurrency.setText(exchangeRateAmountAndCurrencyText);
 
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
         lastUpdateDate.setText(date);
     }
 
     @NonNull
-    private String getContractActionDescription(ContractBasicInformation itemInfo, ContractStatus contractStatus) {
-        DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-        return getReceivingOrSendingText(contractStatus) + " " + decimalFormat.format(itemInfo.getAmount()) + " " + itemInfo.getMerchandise();
+    private String getSoldQuantityAndCurrencyText(ContractBasicInformation itemInfo, ContractStatus contractStatus) {
+        String sellingOrSoldText = getSellingOrSoldText(contractStatus);
+        String amount = decimalFormat.format(itemInfo.getAmount());
+        String merchandise = itemInfo.getMerchandise();
+
+        return res.getString(R.string.cbw_sold_quantity_and_currency, sellingOrSoldText, amount, merchandise);
+    }
+
+    @NonNull
+    private String getExchangeRateAmountAndCurrencyText(ContractBasicInformation itemInfo) {
+        String merchandise = itemInfo.getMerchandise();
+        String exchangeAmount = decimalFormat.format(itemInfo.getExchangeRateAmount());
+        String paymentCurrency = itemInfo.getPaymentCurrency();
+
+        return res.getString(R.string.cbw_exchange_rate_amount_and_currency, merchandise, exchangeAmount, paymentCurrency);
     }
 
     private int getStatusBackgroundColor(ContractStatus status) {
         if (status == ContractStatus.PENDING_PAYMENT)
             return res.getColor(R.color.waiting_for_customer_list_item_background);
 
-        if (status == ContractStatus.PAUSED)
-            return res.getColor(R.color.waiting_for_broker_list_item_background);
+        if (status == ContractStatus.CANCELLED)
+            return res.getColor(R.color.contract_cancelled_list_item_background);
 
         if (status == ContractStatus.COMPLETED)
-            return res.getColor(R.color.contract_closed_list_item_background);
+            return res.getColor(R.color.contract_completed_list_item_background);
 
-        return res.getColor(R.color.contract_cancelled_list_item_background);
+        return res.getColor(R.color.waiting_for_broker_list_item_background);
     }
 
-    private String getReceivingOrSendingText(ContractStatus status) {
-        if (status == ContractStatus.PENDING_PAYMENT)
-            return res.getString(R.string.receiving);
-        return res.getString(R.string.sending);
-    }
-
-    private int getStatusStringRes(ContractStatus status) {
-        if (status == ContractStatus.CANCELLED)
-            return R.string.contract_cancelled;
-
-        if (status == ContractStatus.PENDING_PAYMENT)
-            return R.string.waiting_for_the_customer;
-
-        return R.string.waiting_for_you;
+    private String getSellingOrSoldText(ContractStatus status) {
+        if (status == ContractStatus.COMPLETED)
+            return res.getString(R.string.sold);
+        return res.getString(R.string.selling);
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

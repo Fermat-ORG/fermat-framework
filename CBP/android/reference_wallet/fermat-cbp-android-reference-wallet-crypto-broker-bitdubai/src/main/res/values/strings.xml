@@ -21,7 +21,11 @@
     <string name="contract_cancelled">Cancelled</string>
     <string name="receiving">Receiving</string>
     <string name="sending">Sending</string>
+    <string name="sold">Sold</string>
+    <string name="selling">Selling</string>
     <string name="sell_text_and_price">Sell: %1$s</string>
     <string name="buy_text_and_price">Buy: %1$s</string>
     <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
+    <string name="cbw_exchange_rate_amount_and_currency">1 %1$s @ %2$s %3$s</string>
+    <string name="cbw_sold_quantity_and_currency">%1$s %2$s %3$s</string>
 </resources>

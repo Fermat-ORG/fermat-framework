@@ -46,10 +46,10 @@
         android:singleLine="true"
         android:textColor="@color/cbw_second_line_item"
         android:textSize="@dimen/cbw_title_text_size"
-        tools:text="Sold 312 USD"/>
+        android:text="@string/cbw_sold_quantity_and_currency"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/cbw_update_date"
+        android:id="@+id/cbw_last_update_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -71,5 +71,5 @@
         android:singleLine="true"
         android:textColor="@color/cbw_third_line_item"
         android:textSize="@dimen/cbw_title_text_size"
-        tools:text="1 USD @ 0.2 BTC"/>
+        android:text="@string/cbw_exchange_rate_amount_and_currency"/>
 </RelativeLayout>
