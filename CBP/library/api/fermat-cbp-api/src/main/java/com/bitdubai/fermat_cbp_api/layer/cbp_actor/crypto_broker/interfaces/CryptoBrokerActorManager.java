@@ -76,7 +76,7 @@ public interface CryptoBrokerActorManager {
         void sendActorNetworkServiceContractPurchases(CryptoBrokerActorContract negotiation);
         void receiveActorNetworkServiceContractPurchases(CryptoBrokerActorContract negotiation);
 
-        void requestReceivedProcessed(TypeRequest type);
-        void requestSentProcessed(TypeRequest type);
+        void requestReceivedProcessed(ActorIdentity cryptoCustomer, TypeRequest type);
+        void requestSentProcessed(ActorIdentity cryptoCustomer, TypeRequest type);
 
 }
