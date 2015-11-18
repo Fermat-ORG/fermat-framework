@@ -4,14 +4,14 @@ import com.bitdubai.fermat_csh_api.all_definition.exceptions.InvalidParameterExc
 
 /**
  * Created by Yordin Alayn on 23.09.15.
+ * Modified by Alejandro Bicelis on 11/17/2015.
  */
  
 public enum CashTransactionStatus {
-    NEGOTIATION("NEG"),
-    PAUSED("PAU"),
+    ACKNOWLEDGED("ACK"),
     PENDING("PEN"),
     COMPLETED("COM"),
-    CANCELLED ("CAN");
+    REJECTED("REJ");
 
     private String code;
 
@@ -25,12 +25,11 @@ public enum CashTransactionStatus {
 
     public static CashTransactionStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "NEG": return CashTransactionStatus.NEGOTIATION;
-            case "PAU": return CashTransactionStatus.PAUSED;
+            case "NEG": return CashTransactionStatus.ACKNOWLEDGED;
             case "PEN": return CashTransactionStatus.PENDING;
             case "COM": return CashTransactionStatus.COMPLETED;
-            case "CAN": return CashTransactionStatus.CANCELLED;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the CashTransactionStatus enum");
+            case "CAN": return CashTransactionStatus.REJECTED;
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This is an invalid CashTransactionStatus code");
         }
     }
 }
