@@ -191,7 +191,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     //TODO DELETE THIS METHOD AND ALL ITS USAGES.
 
     public static void debugAssetAppropriation(String message) {
-        System.out.println("ASSET APPROPRIATION - " + message);
+//        System.out.println("ASSET APPROPRIATION - " + message);
     }
 
     //PRIVATE METHODS
@@ -217,7 +217,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
         String context = "Asset: " + digitalAsset + " - User Wallet: " + assetUserWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey;
         try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             return dao.getTransaction(digitalAsset, assetUserWalletPublicKey, bitcoinWalletPublicKey);
-        } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch bolck.
+        } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch block.
             throw e;
         } catch (Exception e) {
             throw new CantLoadAssetAppropriationTransactionListException(context, e);
@@ -238,7 +238,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
         String context = "Genesis Transaction: " + genesisTransaction;
         try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             return dao.getTransaction(genesisTransaction);
-        } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch bolck.
+        } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch block.
             throw e;
         } catch (Exception e) {
             throw new CantLoadAssetAppropriationTransactionListException(context, e);
