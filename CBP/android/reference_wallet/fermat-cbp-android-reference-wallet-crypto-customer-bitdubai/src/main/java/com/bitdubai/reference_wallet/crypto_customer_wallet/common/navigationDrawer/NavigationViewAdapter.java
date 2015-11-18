@@ -59,11 +59,9 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
      */
     @Override
     protected void bindHolder(NavigationItemMenuViewHolder holder, MenuItem data, int position) {
-
         try {
 
             holder.getLabel().setText(data.getLabel());
-
 
             switch (position) {
                 case 0:
@@ -77,12 +75,6 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
                     break;
                 case 3:
                     holder.getIcon().setImageResource(R.drawable.btn_drawer_settings_normal);
-
-                    break;
-                case 4:
-                    holder.getIcon().setImageResource(R.drawable.btn_drawer_logout_normal);
-                    break;
-                default:
                     break;
             }
         } catch (Exception e) {

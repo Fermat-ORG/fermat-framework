@@ -27,6 +27,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantExecuteAppropriationTransactionException;
@@ -90,6 +93,14 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
     private BitcoinNetworkManager bitcoinNetworkManager;
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
+    private CryptoAddressBookManager cryptoAddressBookManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
+    private CryptoVaultManager cryptoVaultManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
+    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
@@ -122,11 +133,6 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
         try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             String transactionId = dao.startAppropriation(digitalAsset, assetUserWalletPublicKey, bitcoinWalletPublicKey);
-            //TODO THIS METHOD WILL RETURN A STRING. USE IT!
-                            /*String genesisTransaction = */
-//            assetVaultManager.sendAssetBitcoins(digitalAsset.getGenesisAddress().getAddress(), addressTo, digitalAsset.getGenesisAmount());
-//                            dao.updateGenesisTransaction(genesisTransaction, transactionId);
-//            dao.updateTransactionStatusBitcoinsSent(transactionId);
 
         } catch (TransactionAlreadyStartedException | CantExecuteAppropriationTransactionException e) {
             throw e;
@@ -157,7 +163,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
             assetVault = new AssetAppropriationVault(pluginId, pluginFileSystem);
             recorderService = new AssetAppropriationRecorderService(pluginId, eventManager, pluginDatabaseSystem, assetVault);
             recorderService.start();
-            monitorAgent = new AssetAppropriationMonitorAgent(assetVault, pluginDatabaseSystem, logManager, errorManager, pluginId, assetVaultManager, assetUserWalletManager, bitcoinNetworkManager);
+            monitorAgent = new AssetAppropriationMonitorAgent(assetVault, pluginDatabaseSystem, logManager, errorManager, pluginId, assetVaultManager, assetUserWalletManager, bitcoinNetworkManager, cryptoAddressBookManager, cryptoVaultManager, intraWalletUserIdentityManager);
             monitorAgent.start();
         } catch (Exception e) {
             throw new CantStartPluginException(FermatException.wrapException(e), context, e.getMessage());
@@ -165,11 +171,11 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
 
         //TODO REMOVE TEST METHOD.
-        try {
-            test();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            test();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -179,6 +185,12 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
         monitorAgent.stop();
         recorderService.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
+    }
+
+    //TODO DELETE THIS METHOD AND ALL ITS USAGES.
+
+    public static void debugAssetAppropriation(String message) {
+        System.out.println("ASSET APPROPRIATION - " + message);
     }
 
     //PRIVATE METHODS
