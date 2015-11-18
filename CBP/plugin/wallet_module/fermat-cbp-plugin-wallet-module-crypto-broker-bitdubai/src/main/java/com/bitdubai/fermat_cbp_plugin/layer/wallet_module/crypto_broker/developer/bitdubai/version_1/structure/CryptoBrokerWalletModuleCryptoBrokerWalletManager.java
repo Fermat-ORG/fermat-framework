@@ -8,6 +8,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.C
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
@@ -138,6 +139,60 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
         } catch (Exception ex) {
             throw new CantGetCurrentIndexSummaryForStockCurrenciesException(ex);
+        }
+    }
+
+    @Override
+    public Collection<ContractBasicInformation> getContractsHistory(int max, int offset) throws CantGetContractHistoryException {
+        try {
+            ContractBasicInformation contract;
+            Collection<ContractBasicInformation> contractsHistory = new ArrayList<>();
+
+            contract = new CryproBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.CANCELLED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("Carlos Ruiz", "USD", "Bank Transfer", "Col $", ContractStatus.CANCELLED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.CANCELLED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("Carlos Ruiz", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT);
+            contractsHistory.add(contract);
+            contract = new CryproBrokerWalletModuleContractBasicInformation("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+
+            return contractsHistory;
+
+        } catch (Exception ex) {
+            throw new CantGetContractHistoryException(ex);
         }
     }
 

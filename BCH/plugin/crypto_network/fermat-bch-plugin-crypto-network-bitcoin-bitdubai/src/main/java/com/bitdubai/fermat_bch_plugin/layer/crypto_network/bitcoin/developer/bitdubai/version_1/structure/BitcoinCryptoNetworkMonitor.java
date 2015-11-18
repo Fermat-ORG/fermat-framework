@@ -12,12 +12,18 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
+import org.bitcoinj.wallet.WalletTransaction;
 
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by rodrigo on 10/4/15.
@@ -32,6 +38,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
      * class variables
      */
     Wallet wallet;
+    File walletFileName;
     BitcoinCryptoNetworkMonitorAgent bitcoinCryptoNetworkMonitorAgent;
 
 
@@ -45,10 +52,11 @@ class BitcoinCryptoNetworkMonitor implements Agent {
      * Constructor
      * @param pluginDatabaseSystem
      */
-    public BitcoinCryptoNetworkMonitor(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, Wallet wallet) {
+    public BitcoinCryptoNetworkMonitor(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, Wallet wallet, File walletFilename) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.wallet = wallet;
         this.plugId = pluginId;
+        this.walletFileName = walletFilename;
     }
 
     /**
@@ -67,7 +75,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * Then I will start the agent that connects to the bitcoin network to get new transactions
          */
-        bitcoinCryptoNetworkMonitorAgent = new BitcoinCryptoNetworkMonitorAgent(this.wallet);
+        bitcoinCryptoNetworkMonitorAgent = new BitcoinCryptoNetworkMonitorAgent(this.wallet, this.walletFileName);
         try {
             bitcoinCryptoNetworkMonitorAgent.doTheMainTask();
         } catch (BlockchainException e) {
@@ -107,6 +115,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
          */
         PeerGroup peerGroup;
         Wallet wallet;
+        File walletFilename;
 
         /**
          * sets this agent network type
@@ -117,8 +126,9 @@ class BitcoinCryptoNetworkMonitor implements Agent {
          * Constructor
          * @param wallet
          */
-        public BitcoinCryptoNetworkMonitorAgent(Wallet wallet) {
+        public BitcoinCryptoNetworkMonitorAgent(Wallet wallet, File walletFilename) {
             this.wallet = wallet;
+            this.walletFilename = walletFilename;
             NETWORK_PARAMETERS = wallet.getNetworkParameters();
         }
 
@@ -156,7 +166,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * add the events
              */
-            BitcoinNetworkEvents events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId);
+            BitcoinNetworkEvents events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId, walletFilename);
             peerGroup.addEventListener(events);
             this.wallet.addEventListener(events);
 
@@ -190,10 +200,6 @@ class BitcoinCryptoNetworkMonitor implements Agent {
              */
             peerGroup.start();
             peerGroup.startBlockChainDownload(null);
-
-            while(true){
-
-            }
         }
 
         /**
@@ -203,10 +209,33 @@ class BitcoinCryptoNetworkMonitor implements Agent {
          */
         public void broadcastTransaction(Transaction tx) throws CantBroadcastTransactionException {
             try{
-                peerGroup.broadcastTransaction(tx).future().get();
+                /**
+                 * I will add this transaction to the wallet.
+                 */
+                WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
+                wallet.addWalletTransaction(walletTransaction);
 
-            } catch (Exception e){
-                throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, null, null);
+                /**
+                 * Broadcast it.
+                 */
+                TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
+                broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
+                    @Override
+                    public void onBroadcastProgress(double progress) {
+                        System.out.println("****CryptoNetwork: progress broadcast " + progress);
+                    }
+                });
+
+                broadcast.broadcast().get(2, TimeUnit.MINUTES);
+                broadcast.future().get(2, TimeUnit.MINUTES);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            } catch (Exception exception){
+                throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, exception, "There was an unexpected issue while broadcasting a transaction.", null);
             }
 
         }

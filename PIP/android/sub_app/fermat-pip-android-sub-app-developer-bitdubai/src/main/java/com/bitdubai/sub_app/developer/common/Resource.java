@@ -20,6 +20,22 @@ public class Resource implements Serializable {
 
         public int type;
 
+        public Resource() {
+        }
+
+        public Resource(final String picture  ,
+                        final String label    ,
+                        final String code     ,
+                        final String developer,
+                        final int    type     ) {
+
+                this.picture = picture;
+                this.label = label;
+                this.code = code;
+                this.developer = developer;
+                this.type = type;
+        }
+
         @Override
         public String toString() {
                 return "Resource{" +
