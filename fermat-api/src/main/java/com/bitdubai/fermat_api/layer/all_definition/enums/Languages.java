@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum Languages implements FermatEnum {
     /**
-     * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * In order to do the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     AMERICAN_ENGLISH        ("AMERICAN_ENGLISH"),
     ENGLISH                 ("ENGLISH"),
