@@ -25,7 +25,7 @@ public class FragmentsCommons {
          * Navigation view header
          */
         RelativeLayout relativeLayout = new RelativeLayout(activity);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 220);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 180);
         relativeLayout.setLayoutParams(layoutParams);
         View view = inflater.inflate(R.layout.intra_user_community_navigation_first_row, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
