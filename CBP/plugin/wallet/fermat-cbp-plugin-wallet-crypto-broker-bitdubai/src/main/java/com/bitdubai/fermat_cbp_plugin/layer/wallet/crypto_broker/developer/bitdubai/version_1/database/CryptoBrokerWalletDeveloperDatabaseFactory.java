@@ -135,7 +135,7 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory implements DealsWithPlug
         cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_WALLET_PUBLIC_KEY_COLUMN_NAME);
         cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME);
         cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME);
-        cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_STOCK_TYPE_COLUMN_NAME);
+        cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME);
         cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_DESCRIPTION_COLUMN_NAME);
         cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME);
         cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BOOK_BALANCE_COLUMN_NAME);
@@ -157,7 +157,7 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory implements DealsWithPlug
         cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME);
         cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME);
         cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_CURRENCY_TYPE_COLUMN_NAME);
-        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_STOCK_TYPE_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
         cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_BOOK_BALANCE_COLUMN_NAME);
         cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
         cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME);

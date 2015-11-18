@@ -53,7 +53,7 @@ public class DatabaseToolsFragment extends FermatFragment {
      * SubApp session
      */
 
-    public  DeveloperSubAppSession developerSubAppSession;
+    public DeveloperSubAppSession developerSubAppSession;
 
     View rootView;
 
@@ -73,7 +73,7 @@ public class DatabaseToolsFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(super.subAppsSession!=null){
+        if (super.subAppsSession != null) {
             developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
         }
 
@@ -100,13 +100,15 @@ public class DatabaseToolsFragment extends FermatFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.start_init, container, false);
         rootView.setTag(1);
+
         listView =(ListView) rootView.findViewById(R.id.gridView);
+
         try {
 
             List<PluginVersionReference> plugins = databaseTools.getAvailablePluginList();
             List<AddonVersionReference> addons = databaseTools.getAvailableAddonList();
 
-            mlist=new ArrayList<>();
+            mlist = new ArrayList<Resource>();
 
             for (int i = 0; i < plugins.size(); i++) {
 
@@ -132,7 +134,7 @@ public class DatabaseToolsFragment extends FermatFragment {
                 item.picture = "addon";
                 item.label = addons.get(i).toString3();
                 item.code = addons.get(i).toKey();
-                item.type=Resource.TYPE_ADDON;
+                item.type = Resource.TYPE_ADDON;
                 mlist.add(item);
             }
 
@@ -143,6 +145,7 @@ public class DatabaseToolsFragment extends FermatFragment {
             });
 
             AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item_init, mlist);
+
             adapter.notifyDataSetChanged();
             listView.setAdapter(adapter);
 
@@ -169,21 +172,22 @@ public class DatabaseToolsFragment extends FermatFragment {
 
 
     public class AppListAdapter extends ArrayAdapter<Resource> {
+        private int layoutResource;
 
-
-        public AppListAdapter(Context context, int textViewResourceId, List<Resource> objects) {
-            super(context, textViewResourceId, objects);
+        public AppListAdapter(Context context, int layoutResource, List<Resource> objects) {
+            super(context, layoutResource, objects);
+            this.layoutResource = layoutResource;
         }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-           final Resource item = getItem(position);
-
+            final Resource item = getItem(position);
 
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
+
                 convertView = inflater.inflate(R.layout.developer_app_grid_item_init, parent, false);
 
 
@@ -196,14 +200,12 @@ public class DatabaseToolsFragment extends FermatFragment {
                 textView.setTypeface(tf);
                 holder.companyTextView = textView;
 
-
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             holder.companyTextView.setText(item.label);
-
 
             switch (item.picture) {
                 case "plugin":
@@ -220,14 +222,10 @@ public class DatabaseToolsFragment extends FermatFragment {
                     break;
             }
 
-
-
             return convertView;
         }
-
-
-
     }
+
     /**
      * ViewHolder.
      */
