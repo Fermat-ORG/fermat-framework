@@ -148,7 +148,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
     private class EventAgent implements Runnable {
 
         private volatile boolean agentRunning;
-        private static final int WAIT_TIME = 20; //SECONDS
+        private static final int WAIT_TIME = 5 * 1000; //SECONDS
 
         public EventAgent() {
             startAgent();
@@ -159,7 +159,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
             while (agentRunning) {
                 try {
                     doTheMainTask();
-                    Thread.sleep(WAIT_TIME * 1000);
+                    Thread.sleep(WAIT_TIME);
                 } catch (InterruptedException e) {
                     /*If this happen there's a chance that the information remains
                     in a corrupt state. That probably would be fixed in a next run.
