@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 
 import org.bitcoinj.core.BlockChain;
@@ -67,7 +69,7 @@ class BitcoinCryptoNetworkBlockChain implements Serializable{
          * I will define the SPV blockstore were I will save the blockchain.
          * I will be saving the file under the network type I'm being created for.
          */
-        String fileName = BLOCKCHAIN_FILENAME + networkParameters.toString();
+        String fileName = BLOCKCHAIN_FILENAME + BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters).getCode();
         File blockChainFile = new File(fileName);
         try {
             blockStore = new SPVBlockStore(networkParameters, blockChainFile);

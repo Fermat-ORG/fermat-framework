@@ -5,32 +5,44 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.CallToGetByCodeOn
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
+ * The enum class <code>com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet</code>
+ * Lists all the NicheWallets of Fermat.
  * Created by eze on 2015.07.19..
  * Modified by Leon Acosta (laion.cj91@gmail.com) on 23/09/2015.
+ * Updated by PatricioGesualdi - (pmgesualdi@hotmail.com) on 18/11/2015.
  */
 public enum NicheWallet implements FermatWalletEnum {
     /**
      * The value NONE is used to store the information of no wallet
      * <p/>
-     * Please for doing the code more readable, keep the elements of the enum ordered.
+     * In order to make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     NONE           ("NONE", null),
-    UNKNOWN_WALLET ("UNKW", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+    UNKNOWN_WALLET ("UNKW", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET)
 
-    private String code;
-    private ReferenceWallet referenceWallet;
+    ;
 
-    NicheWallet(String code, ReferenceWallet referenceWallet) {
+    private final String code;
+
+    private final ReferenceWallet referenceWallet;
+
+    NicheWallet(final String code, final ReferenceWallet referenceWallet) {
         this.code = code;
         this.referenceWallet = referenceWallet;
     }
 
     public static NicheWallet getByCode(String code) throws InvalidParameterException, CallToGetByCodeOnNONEException {
+
         switch (code) {
+
             case "NONE": throw new CallToGetByCodeOnNONEException("method getByCode called by a NONE wallet", null, "", "");
             case "UNKW": return UNKNOWN_WALLET;
+
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NicheWallet enum");
+                throw new InvalidParameterException(
+                        "Code Received: " + code,
+                        "The received code is not valid for the NicheWallet enum"
+                );
         }
     }
 
