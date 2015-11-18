@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_cbp_api.all_definition.enums;
+package com.bitdubai.fermat_api.layer.world.enums;
 
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 
 /**
- * Created by Alex on 11/2/2015.
+ * Created by Alejandro Bicelis on 11/17/2015.
  */
 
 public enum FiatCurrency implements Currency {
@@ -57,3 +57,4 @@ public enum FiatCurrency implements Currency {
         }
     }
 }
+
