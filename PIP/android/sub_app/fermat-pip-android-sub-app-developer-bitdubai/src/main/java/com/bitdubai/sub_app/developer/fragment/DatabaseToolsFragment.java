@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +52,7 @@ public class DatabaseToolsFragment extends FermatFragment {
      * SubApp session
      */
 
-    public  DeveloperSubAppSession developerSubAppSession;
+    public DeveloperSubAppSession developerSubAppSession;
 
     View rootView;
 
@@ -61,7 +61,7 @@ public class DatabaseToolsFragment extends FermatFragment {
 
     private ArrayList<Resource> mlist;
 
-    private GridView gridView;
+    private ListView listView;
 
     public static DatabaseToolsFragment newInstance() {
         return new DatabaseToolsFragment();
@@ -72,7 +72,7 @@ public class DatabaseToolsFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(super.subAppsSession!=null){
+        if (super.subAppsSession != null) {
             developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
         }
 
@@ -99,24 +99,24 @@ public class DatabaseToolsFragment extends FermatFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.start, container, false);
         rootView.setTag(1);
-        gridView=(GridView) rootView.findViewById(R.id.gridView);
+        listView = (ListView) rootView.findViewById(R.id.gridView);
+
         try {
 
             List<PluginVersionReference> plugins = databaseTools.getAvailablePluginList();
             List<AddonVersionReference> addons = databaseTools.getAvailableAddonList();
 
-
-
-            mlist=new ArrayList<Resource>();
+            mlist = new ArrayList<Resource>();
 
             for (int i = 0; i < plugins.size(); i++) {
 
                 PluginVersionReference pvr = plugins.get(i);
                 Resource item = new Resource();
                 item.picture = "plugin";
-                item.label = pvr.toString3().replaceAll("_", "").substring(7,pvr.toString3().replaceAll("_", " ").length()-1);
+                String string = pvr.toString3().replaceAll("_", "");
+                item.label = string.substring(7, string.length() - 1);
                 item.code = pvr.toKey();
-                item.type=Resource.TYPE_PLUGIN;
+                item.type = Resource.TYPE_PLUGIN;
                 mlist.add(item);
             }
             for (int i = 0; i < addons.size(); i++) {
@@ -124,27 +124,21 @@ public class DatabaseToolsFragment extends FermatFragment {
                 item.picture = "addon";
                 item.label = addons.get(i).toString3();
                 item.code = addons.get(i).toKey();
-                item.type=Resource.TYPE_ADDON;
+                item.type = Resource.TYPE_ADDON;
                 mlist.add(item);
             }
 
-            Configuration config = getResources().getConfiguration();
-            if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                gridView.setNumColumns(6);
-            } else {
-                gridView.setNumColumns(3);
-            }
-            AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
+            AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.list_single, mlist);
             adapter.notifyDataSetChanged();
-            gridView.setAdapter(adapter);
+            listView.setAdapter(adapter);
 
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
 
-                    Resource item=(Resource) gridView.getItemAtPosition(position);
-                    developerSubAppSession.setData("resource",item);
-                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),R.id.startContainer,null);
+                    Resource item = (Resource) listView.getItemAtPosition(position);
+                    developerSubAppSession.setData("resource", item);
+                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), R.id.startContainer, null);
 
 
                 }
@@ -161,50 +155,26 @@ public class DatabaseToolsFragment extends FermatFragment {
 
 
     public class AppListAdapter extends ArrayAdapter<Resource> {
+        private int layoutResource;
 
-
-        public AppListAdapter(Context context, int textViewResourceId, List<Resource> objects) {
-            super(context, textViewResourceId, objects);
+        public AppListAdapter(Context context, int layoutResource, List<Resource> objects) {
+            super(context, layoutResource, objects);
+            this.layoutResource = layoutResource;
         }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-           final Resource item = getItem(position);
-
+            final Resource item = getItem(position);
 
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.developer_app_grid_item, parent, false);
-
+                convertView = inflater.inflate(layoutResource, parent, false);
 
                 holder = new ViewHolder();
-
-                holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
-
-                //no hago el click listener en este punto porque la position no es correcta cuando va a la segunda pagina
-               /* holder.imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                      //  Resource item=(Resource) gridView.getItemAtPosition(position);
-
-                        //set the next fragment and params
-                      //  Object[] params = new Object[1];
-                       // params[0] = item;
-
-                        developerSubAppSession.setData("resource",view.getTag(position));
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),null);
-
-                    }
-                });*/
-
-                TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
-                Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-                textView.setTypeface(tf);
-                holder.companyTextView = textView;
-
+                holder.imageView = (ImageView) convertView.findViewById(R.id.img);
+                holder.companyTextView = (TextView) convertView.findViewById(R.id.txt);
 
                 convertView.setTag(holder);
             } else {
@@ -212,7 +182,6 @@ public class DatabaseToolsFragment extends FermatFragment {
             }
 
             holder.companyTextView.setText(item.label);
-
 
             switch (item.picture) {
                 case "plugin":
@@ -229,24 +198,15 @@ public class DatabaseToolsFragment extends FermatFragment {
                     break;
             }
 
-
-
             return convertView;
         }
-
-
-
     }
+
     /**
      * ViewHolder.
      */
     private class ViewHolder {
-
-
-
         public ImageView imageView;
         public TextView companyTextView;
-
-
     }
 }
