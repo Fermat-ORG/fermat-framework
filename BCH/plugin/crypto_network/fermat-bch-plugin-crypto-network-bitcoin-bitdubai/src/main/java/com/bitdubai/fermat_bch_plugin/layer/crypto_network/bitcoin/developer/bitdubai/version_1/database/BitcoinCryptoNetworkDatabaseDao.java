@@ -251,7 +251,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @return
      */
     private long getCurrentDateTime(){
-        return  System.currentTimeMillis() % 1000;
+        return  System.currentTimeMillis();
     }
 
     /**
