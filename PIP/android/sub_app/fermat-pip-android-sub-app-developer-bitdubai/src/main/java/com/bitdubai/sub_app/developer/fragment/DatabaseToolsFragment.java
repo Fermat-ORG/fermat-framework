@@ -105,19 +105,24 @@ public class DatabaseToolsFragment extends FermatFragment {
             List<PluginVersionReference> plugins = databaseTools.getAvailablePluginList();
             List<AddonVersionReference> addons = databaseTools.getAvailableAddonList();
 
-
-
-            mlist=new ArrayList<Resource>();
+            mlist=new ArrayList<>();
 
             for (int i = 0; i < plugins.size(); i++) {
 
                 PluginVersionReference pvr = plugins.get(i);
-                Resource item = new Resource();
-                item.picture = "plugin";
-                item.label = pvr.toString3().replaceAll("_", "").substring(7,pvr.toString3().replaceAll("_", " ").length()-1);
-                item.code = pvr.toKey();
-                item.type=Resource.TYPE_PLUGIN;
-                mlist.add(item);
+                String label = pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getPlatformReference().getPlatform().name()+" "+
+                        pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getLayer().name()+" "+
+                        pvr.getPluginDeveloperReference().getPluginReference().getPlugin().name();
+
+                mlist.add(
+                        new Resource(
+                                "plugin",
+                                label,
+                                pvr.toKey(),
+                                pvr.getPluginDeveloperReference().getDeveloper().name(),
+                                Resource.TYPE_PLUGIN
+                        )
+                );
             }
             for (int i = 0; i < addons.size(); i++) {
                 Resource item = new Resource();
@@ -183,23 +188,6 @@ public class DatabaseToolsFragment extends FermatFragment {
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
 
-                //no hago el click listener en este punto porque la position no es correcta cuando va a la segunda pagina
-               /* holder.imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                      //  Resource item=(Resource) gridView.getItemAtPosition(position);
-
-                        //set the next fragment and params
-                      //  Object[] params = new Object[1];
-                       // params[0] = item;
-
-                        developerSubAppSession.setData("resource",view.getTag(position));
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),null);
-
-                    }
-                });*/
-
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
@@ -241,12 +229,7 @@ public class DatabaseToolsFragment extends FermatFragment {
      * ViewHolder.
      */
     private class ViewHolder {
-
-
-
         public ImageView imageView;
         public TextView companyTextView;
-
-
     }
 }
