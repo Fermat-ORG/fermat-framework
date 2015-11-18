@@ -3,13 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp"
     android:layout_marginBottom="16dp"
     android:layout_marginTop="16dp"
     >
 
     <FrameLayout
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:id="@+id/image_container"
@@ -36,15 +38,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:singleLine="true"
-        android:paddingTop="7dp"
+        android:paddingTop="16dp"
         android:textColor="@color/green"
         android:layout_toRightOf="@+id/image_container"
         tools:text="Mati was here" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/btn_drawer_home_normal"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_contact_new_added"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
 
