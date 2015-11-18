@@ -195,6 +195,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
          */
         NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null);
         setNavigationDrawer(navigationViewAdapter);
+        setNavigationBackgroundColor(getResources().getColor(R.color.nav_drawer_color));
     }
     @Override
     public void onRefresh() {
