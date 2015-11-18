@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
+
 /**
  * Created by mati on 2015.09.30..
  */
@@ -251,7 +253,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
         } catch (Exception e)
         {
-
+            showMessage(getActivity(), "Cant Accept or Denied Send Payment Exception- " + e.getMessage());
         }
 
     }
