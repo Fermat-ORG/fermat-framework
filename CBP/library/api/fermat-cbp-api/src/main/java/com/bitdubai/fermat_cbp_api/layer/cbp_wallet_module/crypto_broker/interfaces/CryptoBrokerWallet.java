@@ -4,6 +4,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.C
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
@@ -82,6 +83,17 @@ public interface CryptoBrokerWallet {
      * @return a summary of the current market rate for the different currencies the broker have as stock
      */
     Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies() throws CantGetCurrentIndexSummaryForStockCurrenciesException;
+
+    /**
+     * Return as much as "max" results from the list of Contract Basic Info in this wallet waiting for my response,
+     * starting from the "offset" result
+     *
+     * @param max    the max quantity of results
+     * @param offset the start point for the results
+     * @return the list of Contract Basic Info
+     */
+    Collection<ContractBasicInformation> getContractsHistory(int max, int offset) throws CantGetContractHistoryException;
+
     /**
      * Confirm the given negotiation to create a contract based on this negotiation
      *
