@@ -67,7 +67,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Cry
     @Override
     public CryptoCustomerActor createNewCryptoCustomerActor(ActorIdentity identity) throws CantCreateCryptoCustomerActorException {
 
-        // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG.
+        // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG. LET'S THINK TOGETHER.
         // TODO MAKE USE OF THE ERROR MANAGER.
         return new CryptoCustomerActorImpl(identity, purchaseNegotiationManager, databaseDao);
     }
@@ -75,7 +75,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Cry
     @Override
     public CryptoCustomerActor getCryptoCustomer(ActorIdentity identity) {
 
-        // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG.
+        // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG. LET'S THINK TOGETHER.
         // TODO MAKE USE OF THE ERROR MANAGER.
         return new CryptoCustomerActorImpl(identity, purchaseNegotiationManager, databaseDao);
     }

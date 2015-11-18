@@ -1,83 +1,27 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by jorge on 30-10-2015.
  */
-public class CryptoBrokerActorPluginRoot implements DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class CryptoBrokerActorPluginRoot extends AbstractPlugin {
 
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
-    private LogManager logManager;
-    private UUID pluginId;
-    private ServiceStatus status;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
     public CryptoBrokerActorPluginRoot(){
-        this.pluginId = UUID.randomUUID();
-        this.status = ServiceStatus.CREATED;
+        super(new PluginVersionReference(new Version()));
     }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public List<String> getClassesFullPath() {
-        return null;
-    }
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-
-    }
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    @Override
-    public void start() throws CantStartPluginException {
-        this.status = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void pause() {
-        this.status = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.status = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.status = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.status;
-    }
-
 }
