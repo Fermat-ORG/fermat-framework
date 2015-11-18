@@ -113,7 +113,7 @@ public class DistributeAssetsTest {
         assetDistributionDigitalAssetTransactionPluginRoot = Mockito.mock(AssetDistributionDigitalAssetTransactionPluginRoot.class);
         assetDistributionDigitalAssetTransactionPluginRoot = new AssetDistributionDigitalAssetTransactionPluginRoot();
         assetDistributionDigitalAssetTransactionPluginRoot.setId(pluginId);
-        assetDistributionDigitalAssetTransactionPluginRoot.setErrorManager(errorManager);
+        /*assetDistributionDigitalAssetTransactionPluginRoot.setErrorManager(errorManager);
         assetDistributionDigitalAssetTransactionPluginRoot.setLogManager(logManager);
         assetDistributionDigitalAssetTransactionPluginRoot.setEventManager(eventManager);
         assetDistributionDigitalAssetTransactionPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
@@ -125,7 +125,7 @@ public class DistributeAssetsTest {
         assetDistributionDigitalAssetTransactionPluginRoot.setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
         assetDistributionDigitalAssetTransactionPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
         assetDistributionDigitalAssetTransactionPluginRoot.setActorAssetUserManager(actorAssetUserManager);
-        assetDistributionDigitalAssetTransactionPluginRoot.setLoggingLevelPerClass(newLoggingLevel);
+        assetDistributionDigitalAssetTransactionPluginRoot.setLoggingLevelPerClass(newLoggingLevel);*/
 
         MockDigitalAssetMetadataForTesting mockDigitalAssetMetadata = new MockDigitalAssetMetadataForTesting();
         ActorAssetUser actorAssetUser = new MockActorAssetUserForTesting();

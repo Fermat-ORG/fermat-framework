@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginSubsystem;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPlatformException;
@@ -20,9 +19,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Ver
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
@@ -35,7 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 21/10/2015.
  */
-public class FermatSystemContext {
+public final class FermatSystemContext {
 
     private final Map<PlatformReference, AbstractPlatform> platforms;
 
@@ -53,7 +52,7 @@ public class FermatSystemContext {
     }
 
     /**
-     * Throw the method <code>registerLayer</code> you can add new layers to the platform.
+     * Through the method <code>registerLayer</code> you can add new layers to the platform.
      * Here we'll corroborate too that the layer is not added twice.
      *
      * @param abstractPlatform  platform instance.
@@ -83,7 +82,7 @@ public class FermatSystemContext {
     }
 
     /**
-     * Throw the method <code>getAddonVersion</code> you can get a addon version instance passing like parameter a version reference instance.
+     * Through the method <code>getAddonVersion</code> you can get a addon version instance passing like parameter a version reference instance.
      *
      * @param addonVersionReference addon version reference data.
      *
@@ -104,7 +103,7 @@ public class FermatSystemContext {
     }
 
     /**
-     * Throw the method <code>getAddonDeveloper</code> you can get a addonDeveloper instance passing like parameter a developer reference instance.
+     * Through the method <code>getAddonDeveloper</code> you can get a addonDeveloper instance passing like parameter a developer reference instance.
      *
      * @param addonDeveloperReference addon developer reference data.
      *
@@ -137,7 +136,7 @@ public class FermatSystemContext {
     }
 
     /**
-     * Throw the method <code>getPluginVersion</code> you can get a plugin version instance passing like parameter a version reference instance.
+     * Through the method <code>getPluginVersion</code> you can get a plugin version instance passing like parameter a version reference instance.
      *
      * @param pluginVersionReference plugin version reference data.
      *
@@ -158,7 +157,7 @@ public class FermatSystemContext {
     }
 
     /**
-     * Throw the method <code>getPluginDeveloper</code> you can get a pluginDeveloper instance passing like parameter a developer reference instance.
+     * Through the method <code>getPluginDeveloper</code> you can get a pluginDeveloper instance passing like parameter a developer reference instance.
      *
      * @param pluginDeveloperReference plugin developer reference data.
      *
@@ -179,7 +178,7 @@ public class FermatSystemContext {
     }
 
     /**
-     * Throw the method <code>getPluginSubsystem</code> you can get a subsystem instance passing like parameter a plugin reference instance.
+     * Through the method <code>getPluginSubsystem</code> you can get a subsystem instance passing like parameter a plugin reference instance.
      *
      * @param pluginReference plugin reference data.
      *
@@ -200,7 +199,7 @@ public class FermatSystemContext {
     }
 
     /**
-     * Throw the method <code>getLayer</code> you can get a Layer instance passing like parameter a layer reference instance.
+     * Through the method <code>getLayer</code> you can get a Layer instance passing like parameter a layer reference instance.
      *
      * @param layerReference layer reference data.
      *
@@ -214,14 +213,14 @@ public class FermatSystemContext {
 
             return getPlatform(layerReference.getPlatformReference()).getLayer(layerReference);
 
-        } catch (PlatformNotFoundException e) {
+        } catch (final PlatformNotFoundException e) {
 
             throw new LayerNotFoundException(e, "layer: " + layerReference.toString(), "the platform of the layer was not founded in the system context.");
         }
     }
 
     /**
-     * Throw the method <code>getPlatform</code> you can get a Platform instance passing like parameter a platform reference instance.
+     * Through the method <code>getPlatform</code> you can get a Platform instance passing like parameter a platform reference instance.
      *
      * @param platformReference platform reference data.
      *
@@ -236,6 +235,26 @@ public class FermatSystemContext {
         } else {
             throw new PlatformNotFoundException("platform: " + platformReference.toString(), "platform not found in the system context.");
         }
+    }
+
+    public final ConcurrentHashMap<AddonVersionReference, AbstractAddon> listAddonVersions() {
+
+        final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions = new ConcurrentHashMap<>();
+
+        for(ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
+            versions.putAll(platform.getValue().listAddonVersions());
+
+        return versions;
+    }
+
+    public final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> listPluginVersions() {
+
+        final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions = new ConcurrentHashMap<>();
+
+        for(ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
+            versions.putAll(platform.getValue().listPluginVersions());
+
+        return versions;
     }
 
     public final Object getOsContext() {

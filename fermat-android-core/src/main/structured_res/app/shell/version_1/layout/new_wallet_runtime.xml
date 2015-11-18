@@ -25,14 +25,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/toolbar_header_container"
-                    android:fitsSystemWindows="true"
                     app:layout_collapseMode="parallax"
                     >
 
@@ -42,7 +42,8 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin" />
+                    app:layout_collapseMode="pin"
+                   />
 
             </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -50,9 +51,6 @@
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/wallet_factory_orange"
-                app:tabIndicatorColor="#ac2acc"
-                app:tabSelectedTextColor="#aaa222"
                 app:tabTextColor="#fff"
 
                 />
@@ -79,11 +77,27 @@
         android:background="#fff"
         >
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/navigation_recycler_view"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:id="@+id/navigation_view_header"
+                android:visibility="visible">
+
+            </FrameLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/navigation_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"/>
+
+
+        </LinearLayout>
 
         </android.support.design.widget.NavigationView>
 

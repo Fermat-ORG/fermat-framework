@@ -51,11 +51,40 @@ public final class FermatAddonManager {
             return abstractAddon;
         } catch (CantListNeededReferencesException e) {
 
-            throw new CantStartAddonException(e, addonVersionReference.toString(), "Error listing references for the addon.");
+            throw new CantStartAddonException(e, addonVersionReference.toString3(), "Error listing references for the addon.");
         } catch(CantAssignReferenceException   |
                 IncompatibleReferenceException e) {
 
-            throw new CantStartAddonException(e, addonVersionReference.toString(), "Error assigning references for the addon.");
+            throw new CantStartAddonException(e, addonVersionReference.toString3(), "Error assigning references for the addon.");
+        }
+    }
+
+    public final void startAddonAndReferences(final AbstractAddon abstractAddon) throws CantStartAddonException {
+
+        try {
+
+            if (!abstractAddon.isStarted()) {
+
+                final List<AddonVersionReference> neededAddons = abstractAddon.getNeededAddons();
+
+                for (final AddonVersionReference avr : neededAddons) {
+                    AbstractAddon reference = startAddonAndReferences(avr);
+                    abstractAddon.assignAddonReference(reference);
+                }
+
+                startAddon(abstractAddon);
+
+            }
+        } catch (CantListNeededReferencesException e) {
+
+            throw new CantStartAddonException(e, abstractAddon.getAddonVersionReference().toString3(), "Error listing references for the addon.");
+        } catch(VersionNotFoundException e) {
+
+            throw new CantStartAddonException(e, abstractAddon.getAddonVersionReference().toString3(), "Error trying to find a reference for the addon.");
+        } catch(CantAssignReferenceException   |
+                IncompatibleReferenceException e) {
+
+            throw new CantStartAddonException(e, abstractAddon.getAddonVersionReference().toString3(), "Error assigning references for the addon.");
         }
     }
 

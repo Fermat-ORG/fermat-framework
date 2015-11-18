@@ -87,17 +87,28 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     public AssetIssuerWalletPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
-
+    boolean existWallet = false;
+    String walletPublicKey = "walletPublicKeyTest";
     AssetIssuerWallet assetIssuerWallet;
 
     @Override
     public void start() throws CantStartPluginException {
         try{
             loadWalletIssuerMap();
-            createWalletAssetIssuer("walletPublicKeyTest");
-            assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
+
+            try {
+                if(!existWallet) {
+                    createWalletAssetIssuer(walletPublicKey);
+                }
+
+                assetIssuerWallet = loadAssetIssuerWallet(walletPublicKey);
+
+            } catch (CantLoadWalletException e) {
+                e.printStackTrace();
+            }
+
             testWallet();
-            System.out.println("Star Plugin AssetWalletIssuer");
+            System.out.println("Start Plugin AssetWalletIssuer");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(CantStartPluginException exception){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
@@ -109,7 +120,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
         }
     }
 
-    private void loadWalletIssuerMap() throws CantStartPluginException {
+    private boolean loadWalletIssuerMap() throws CantStartPluginException {
         PluginTextFile walletIssuerFile = getWalletIssuerFile();
         String[] stringWalletIssuer = walletIssuerFile.getContent().split(";", -1);
 
@@ -117,7 +128,9 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
             if (!stringWalletId.equals("")) {
                 String[] idPair = stringWalletId.split(",", -1);
                 walletIssuer.put(idPair[0], UUID.fromString(idPair[1]));
+                existWallet = true;
             }
+        return existWallet;
     }
 
     private PluginTextFile getWalletIssuerFile() throws CantStartPluginException {
@@ -262,13 +275,16 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 Actors.DAP_ASSET_USER,
                 Actors.DAP_ASSET_USER,
                 20000,
-                0,
+                20000,
                 "memo",
                 "digitalAssetMetadaHash",
                 UUID.randomUUID().toString()
         );
         try {
+
+            assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper, BalanceType.BOOK);
             assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper, BalanceType.AVAILABLE);
+            assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper3, BalanceType.BOOK);
             assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper3, BalanceType.AVAILABLE);
 
             AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper1 = new AssetIssuerWalletTransactionRecordWrapper(
@@ -283,7 +299,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                     Actors.DAP_ASSET_USER,
                     Actors.DAP_ASSET_USER,
                     10000,
-                    0,
+                    10000,
                     "memo",
                     "digitalAssetMetadaHash",
                     UUID.randomUUID().toString()

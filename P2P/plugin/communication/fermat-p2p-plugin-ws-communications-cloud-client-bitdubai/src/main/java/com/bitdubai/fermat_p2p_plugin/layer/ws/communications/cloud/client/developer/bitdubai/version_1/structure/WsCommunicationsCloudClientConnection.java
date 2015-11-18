@@ -386,9 +386,12 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
              * Do the request via post and obtain the result
              */
             Representation respond = requestResource.post(parameters);
-            Decoder decoder = new Decoder(requestResource.getContext());
+           // Decoder decoder = new Decoder(requestResource.getContext());
 
-            String respondText = decoder.decode(respond).getText();
+            //String respondText = decoder.decode(respond).getText();
+            String respondText = respond.getText();
+
+            System.out.println("WsCommunicationsCloudClientConnection - Respond length:" + respondText.length());
             System.out.println("WsCommunicationsCloudClientConnection - Respond Text:" + respondText);
 
             /*

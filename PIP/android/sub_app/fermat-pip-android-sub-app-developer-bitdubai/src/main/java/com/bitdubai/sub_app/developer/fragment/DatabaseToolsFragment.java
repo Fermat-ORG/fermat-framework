@@ -15,11 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
@@ -28,8 +28,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
@@ -104,26 +102,28 @@ public class DatabaseToolsFragment extends FermatFragment {
         gridView=(GridView) rootView.findViewById(R.id.gridView);
         try {
 
-            List<Plugins> plugins = databaseTools.getAvailablePluginList();
-            List<Addons> addons = databaseTools.getAvailableAddonList();
+            List<PluginVersionReference> plugins = databaseTools.getAvailablePluginList();
+            List<AddonVersionReference> addons = databaseTools.getAvailableAddonList();
 
 
 
             mlist=new ArrayList<Resource>();
 
             for (int i = 0; i < plugins.size(); i++) {
+
+                PluginVersionReference pvr = plugins.get(i);
                 Resource item = new Resource();
                 item.picture = "plugin";
-                item.label = plugins.get(i).toString().toLowerCase().replace("_", " ");
-                item.code = plugins.get(i).getKey();
+                item.label = pvr.toString3().replaceAll("_", "").substring(7,pvr.toString3().replaceAll("_", " ").length()-1);
+                item.code = pvr.toKey();
                 item.type=Resource.TYPE_PLUGIN;
                 mlist.add(item);
             }
             for (int i = 0; i < addons.size(); i++) {
                 Resource item = new Resource();
                 item.picture = "addon";
-                item.label = addons.get(i).toString().replace("_", " ");
-                item.code = addons.get(i).getCode();
+                item.label = addons.get(i).toString3();
+                item.code = addons.get(i).toKey();
                 item.type=Resource.TYPE_ADDON;
                 mlist.add(item);
             }
