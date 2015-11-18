@@ -3,13 +3,16 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -18,7 +21,9 @@ import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
@@ -28,12 +33,14 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.MarketExchangeRatesPageAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.NavigationViewAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
+import com.viewpagerindicator.LinePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +65,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     // Data
     private List<GrouperItem> openNegotiationList;
+    private List<IndexInfoSummary> marketExchangeRateSummaryList;
 
 
     public static OpenNegotiationsTabFragment newInstance() {
@@ -79,7 +87,10 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
 
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
     }
+
+
 
     @Override
     protected void initViews(View layout) {
@@ -119,7 +130,32 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     }
 
     private void configureActivityHeader(LayoutInflater layoutInflater) {
-        // TODO
+
+        RelativeLayout toolbarHeader = getToolbarHeader();
+        try {
+            toolbarHeader.removeAllViews();
+        } catch (Exception exception) {
+            CommonLogger.exception(TAG, "Error removing all views from toolbarHeader ", exception);
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
+        }
+        toolbarHeader.setVisibility(View.VISIBLE);
+        View container = layoutInflater.inflate(R.layout.cbw_header_layout, toolbarHeader, true);
+
+        if (marketExchangeRateSummaryList.isEmpty()) {
+            FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.cbw_no_market_rate);
+            noMarketRateTextView.setVisibility(View.VISIBLE);
+            View marketRateViewPagerContainer = container.findViewById(R.id.cbw_market_rate_view_pager_container);
+            marketRateViewPagerContainer.setVisibility(View.VISIBLE);
+        } else {
+            ViewPager viewPager = (ViewPager) container.findViewById(R.id.cbw_exchange_rate_view_pager);
+            viewPager.setOffscreenPageLimit(3);
+            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchangeRateSummaryList);
+            viewPager.setAdapter(pageAdapter);
+
+            LinePageIndicator indicator = (LinePageIndicator) container.findViewById(R.id.cbw_exchange_rate_view_pager_indicator);
+            indicator.setViewPager(viewPager);
+        }
+
     }
 
     @Override
@@ -189,6 +225,28 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 }
             }
 
+        } else {
+            Toast.makeText(getActivity(), "Sorry, an error happened OpenNegotiationsTabFragment (Module == null)", Toast.LENGTH_SHORT).show();
+        }
+
+        return data;
+    }
+
+    private List<IndexInfoSummary> getMarketExchangeRateSummaryData() {
+        List<IndexInfoSummary> data = new ArrayList<>();
+
+        if (moduleManager != null) {
+            try {
+                CryptoBrokerWallet wallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
+                data.addAll(wallet.getCurrentIndexSummaryForStockCurrencies());
+
+            } catch (CantGetCryptoBrokerWalletException | CantGetCurrentIndexSummaryForStockCurrenciesException ex) {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+                if (errorManager != null) {
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                }
+            }
         } else {
             Toast.makeText(getActivity(), "Sorry, an error happened OpenNegotiationsTabFragment (Module == null)", Toast.LENGTH_SHORT).show();
         }

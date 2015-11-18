@@ -62,10 +62,14 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
      */
     @Override
     public UUID getUUIDValue(String columnName) {
-        for (int i = 0; i < values.size(); i++) {
-            if(values.get(i).getName().equals(columnName)){
-                return UUID.fromString(values.get(i).getValue());
+        try {
+            for (int i = 0; i < values.size(); i++) {
+                if (values.get(i).getName().equals(columnName)) {
+                    return UUID.fromString(values.get(i).getValue());
+                }
             }
+        }catch (NullPointerException nullPointerException){
+            return null;
         }
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
