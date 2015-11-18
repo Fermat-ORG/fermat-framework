@@ -2,7 +2,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contracts_h
 
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,10 +41,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragmento que muestra el Historial del Contratos. Muestra una lista de contratos completados, cancelados, o en reclamo
+ *
+ * @author Nelson Ramirez
+ * @version 1.0
+ * @since 18/11/2015
  */
 public class ContractsHistoryActivityFragment extends FermatWalletListFragment<ContractBasicInformation>
-        implements FermatListItemListeners<CryptoBrokerIdentityInformation> {
+        implements FermatListItemListeners<ContractBasicInformation> {
 
     // Constants
     private static final String WALLET_PUBLIC_KEY = "crypto_broker_wallet";
@@ -57,6 +60,9 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     // Data
     private ArrayList<ContractBasicInformation> contractHistoryList;
+
+    //UI
+    private View noContractsView;
 
 
     public static ContractsHistoryActivityFragment newInstance() {
@@ -76,6 +82,24 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+        }
+    }
+
+    @Override
+    protected void initViews(View layout) {
+        super.initViews(layout);
+
+        configureActionBar();
+        configureNavigationDrawer();
+
+        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
+        recyclerView.addItemDecoration(itemDecoration);
+
+        noContractsView = layout.findViewById(R.id.cbw_no_contracts);
+
+        if (contractHistoryList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            noContractsView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -131,17 +155,6 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         return true;
     }
 
-    @Override
-    protected void initViews(View layout) {
-        super.initViews(layout);
-
-        configureActionBar();
-        configureNavigationDrawer();
-
-        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
-        recyclerView.addItemDecoration(itemDecoration);
-    }
-
     private void configureActionBar() {
         Toolbar toolbar = getToolbar();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -163,13 +176,13 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     }
 
     @Override
-    public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {
+    public void onItemClickListener(ContractBasicInformation data, int position) {
         walletSession.setData("contract_data", data);
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS);
     }
 
     @Override
-    public void onLongItemClickListener(CryptoBrokerIdentityInformation data, int position) {
+    public void onLongItemClickListener(ContractBasicInformation data, int position) {
     }
 
     @Override
