@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 11/11/15.
  */
-public class CryproBrokerWalletModuleContractBasicInformation implements ContractBasicInformation {
+public class CryptoBrokerWalletModuleContractBasicInformation implements ContractBasicInformation {
     private static Random random = new Random(321515131);
     private static Calendar instance = Calendar.getInstance();
 
@@ -25,7 +25,7 @@ public class CryproBrokerWalletModuleContractBasicInformation implements Contrac
     private long date;
     private ContractStatus status;
 
-    public CryproBrokerWalletModuleContractBasicInformation(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status) {
+    public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status) {
         this.customerAlias = customerAlias;
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
