@@ -23,6 +23,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
@@ -60,6 +61,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     // Data
     private ArrayList<ContractBasicInformation> contractHistoryList;
+    private ContractStatus filterContractStatus = null;
 
     //UI
     private View noContractsView;
@@ -76,6 +78,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         try {
             moduleManager = ((CryptoBrokerWalletSession) walletSession).getModuleManager();
             errorManager = walletSession.getErrorManager();
+
             contractHistoryList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -97,10 +100,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         noContractsView = layout.findViewById(R.id.cbw_no_contracts);
 
-        if (contractHistoryList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            noContractsView.setVisibility(View.VISIBLE);
-        }
+        showOrHideNoContractsView(contractHistoryList.isEmpty());
     }
 
     @Override
@@ -112,17 +112,23 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_no_filter) {
-            Toast.makeText(getActivity(), "no filter", Toast.LENGTH_SHORT).show();
+            filterContractStatus = null;
+            swipeRefreshLayout.setRefreshing(true);
+            onRefresh();
             return true;
         }
 
         if (item.getItemId() == R.id.action_filter_succeed) {
-            Toast.makeText(getActivity(), "action_filter_succeed", Toast.LENGTH_SHORT).show();
+            filterContractStatus = ContractStatus.COMPLETED;
+            swipeRefreshLayout.setRefreshing(true);
+            onRefresh();
             return true;
         }
 
         if (item.getItemId() == R.id.action_filter_cancel) {
-            Toast.makeText(getActivity(), "no action_filter_cancel", Toast.LENGTH_SHORT).show();
+            filterContractStatus = ContractStatus.CANCELLED;
+            swipeRefreshLayout.setRefreshing(true);
+            onRefresh();
             return true;
         }
 
@@ -194,6 +200,16 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         }
     }
 
+    private void showOrHideNoContractsView(boolean show) {
+        if (show) {
+            recyclerView.setVisibility(View.GONE);
+            noContractsView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            noContractsView.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
         walletSession.setData("contract_data", data);
@@ -211,7 +227,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         if (moduleManager != null) {
             try {
                 CryptoBrokerWallet wallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
-                data.addAll(wallet.getContractsHistory(null, 0, 20));
+                data.addAll(wallet.getContractsHistory(filterContractStatus, 0, 20));
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -240,6 +256,8 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
                 contractHistoryList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(contractHistoryList);
+
+                showOrHideNoContractsView(contractHistoryList.isEmpty());
             }
         }
     }
