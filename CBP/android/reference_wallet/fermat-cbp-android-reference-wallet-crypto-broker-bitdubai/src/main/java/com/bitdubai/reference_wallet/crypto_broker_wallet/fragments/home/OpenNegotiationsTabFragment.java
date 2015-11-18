@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -99,7 +100,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         Activity activity = getActivity();
         LayoutInflater layoutInflater = activity.getLayoutInflater();
         configureActivityHeader(layoutInflater);
-        configureActionBar();
+        configureToolbar();
 
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.cbw_divider_shape);
@@ -120,13 +121,16 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
     }
 
-    private void configureActionBar() {
-
+    private void configureToolbar() {
         Toolbar toolbar = getToolbar();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+
+        Menu menu = toolbar.getMenu();
+        if (menu != null) menu.clear();
     }
 
     private void configureActivityHeader(LayoutInflater layoutInflater) {

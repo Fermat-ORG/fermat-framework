@@ -29,4 +29,7 @@
     <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
     <string name="cbw_exchange_rate_amount_and_currency">1 %1$s @ %2$s %3$s</string>
     <string name="cbw_sold_quantity_and_currency">%1$s %2$s %3$s</string>
+    <string name="cbw_contract_history_action_no_filter_text">No filter</string>
+    <string name="cbw_contract_history_action_filter_succeed_text">Succeed</string>
+    <string name="cbw_contract_history_action_filter_cancel_text">Cancel</string>
 </resources>

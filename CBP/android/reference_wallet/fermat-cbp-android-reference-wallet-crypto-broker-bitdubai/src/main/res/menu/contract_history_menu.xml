@@ -11,13 +11,13 @@
         <menu>
             <item
                 android:id="@+id/action_no_filter"
-                android:title="No filter"/>
+                android:title="@string/cbw_contract_history_action_no_filter_text"/>
             <item
                 android:id="@+id/action_filter_succeed"
-                android:title="Succeed"/>
+                android:title="@string/cbw_contract_history_action_filter_succeed_text"/>
             <item
                 android:id="@+id/action_filter_cancel"
-                android:title="Cancel"/>
+                android:title="@string/cbw_contract_history_action_filter_cancel_text"/>
         </menu>
 
     </item>

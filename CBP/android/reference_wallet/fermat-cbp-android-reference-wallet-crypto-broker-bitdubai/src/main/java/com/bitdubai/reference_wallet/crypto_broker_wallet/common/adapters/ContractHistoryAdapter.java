@@ -15,10 +15,6 @@ import java.util.List;
  */
 public class ContractHistoryAdapter extends FermatAdapter<ContractBasicInformation, ContractListViewHolder> {
 
-    public ContractHistoryAdapter(Context context) {
-        super(context);
-    }
-
     public ContractHistoryAdapter(Context context, List<ContractBasicInformation> dataSet) {
         super(context, dataSet);
     }

@@ -1,14 +1,14 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
 
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -75,10 +75,15 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+    }
+
+    @Override
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        configureActionBar(getActivity());
+        configureToolbar();
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
@@ -90,22 +95,16 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         }
     }
 
-    private void configureActionBar(Activity activity) {
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
 
-        if (activity instanceof AppCompatActivity) {
-            android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
-            if (actionBar != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                    actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
-                else
-                    actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
-            }
-        } else {
-            ActionBar actionBar = activity.getActionBar();
-            if (actionBar != null) {
-                actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
-            }
-        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+
+        Menu menu = toolbar.getMenu();
+        if (menu != null) menu.clear();
     }
 
     @Override
