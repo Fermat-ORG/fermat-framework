@@ -25,7 +25,7 @@ public class FragmentsCommons {
          * Navigation view header
          */
         RelativeLayout relativeLayout = new RelativeLayout(activity);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 180);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 220);
         relativeLayout.setLayoutParams(layoutParams);
         View view = inflater.inflate(R.layout.intra_user_community_navigation_first_row, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
@@ -34,13 +34,14 @@ public class FragmentsCommons {
                 if (intraUserLoginIdentity.getProfileImage().length > 0) {
                     imageView.setImageBitmap((BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length)));
                 } else
-                    Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
+                    Picasso.with(activity).load(R.drawable.tessa_profile_picture).into(imageView);
             }
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             fermatTextView.setText(intraUserLoginIdentity.getAlias());
         }
 
         return view;
+
 
     }
 }
