@@ -119,29 +119,10 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 //            holder.getLinear_layour_container_state().setVisibility(View.GONE);
 //            holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
 //        }
+        referenceWalletSession.setLastRequestSelected(data);
+        holder.getBtn_accept_request().setOnClickListener(mOnClickListener);
+        holder.getBtn_refuse_request().setOnClickListener(mOnClickListener);
 
-        holder.getBtn_accept_request().setOnClickListener (new View.OnClickListener () {
-           @Override
-            public void onClick(View view) {
-                try {
-                    referenceWalletSession.setLastRequestSelected(data);
-
-                } catch (Exception ex) {
-
-                }
-            }
-        });
-        holder.getBtn_refuse_request().setOnClickListener(new View.OnClickListener () {
-            @Override
-            public void onClick(View view) {
-                try {
-                    referenceWalletSession.setLastRequestSelected(data);
-
-                } catch (Exception ex) {
-
-                }
-            }
-        });
 
     }
 

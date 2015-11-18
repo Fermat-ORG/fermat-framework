@@ -1339,14 +1339,21 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                     offset
             )) {
 
-                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(
-                        paymentRecord.getActorPublicKey(),
-                        walletPublicKey
-                );
+                try
+                {
+                    WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(
+                            paymentRecord.getActorPublicKey(),
+                            walletPublicKey
+                    );
 
-                if (walletContactRecord != null)
-                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
+                    if (walletContactRecord != null)
+                        cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
 
+                }
+                catch(com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e)
+                {
+                    //not found contact, set contact null
+                }
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(
                         paymentRecord.getRequestId(),
                         convertTime(paymentRecord.getStartTimeStamp()),
@@ -1356,6 +1363,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         PaymentRequest.RECEIVE_PAYMENT,
                         paymentRecord.getState().name()
                 );
+
                 lst.add(cryptoWalletPaymentRequest);
             }
 
