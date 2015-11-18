@@ -217,7 +217,7 @@
 			<layer name="Actor" language="java"></layer>
 			<layer name="Middleware" language="java"></layer>
 			<layer name="Request" language="java"></layer>
-			<layer name="User Level Transaction" language="java"></layer>
+			<layer name="User Level Business Transaction" language="java"></layer>
 			<layer name="Business Transaction" language="java"></layer>
 			<layer name="Stock Transaction" language="java"></layer>
 			<layer name="Digital Asset Transaction" language="java"></layer>
@@ -7115,7 +7115,7 @@
 		<layer name="Actor" language="java"></layer>
 		<layer name="Middleware" language="java"></layer>
 		<layer name="Request" language="java"></layer>
-		<layer name="User Level Transaction" language="java"></layer>
+		<layer name="User Level Business Transaction" language="java"></layer>
 		<layer name="Business Transaction" language="java"></layer>
 		<layer name="Stock Transaction" language="java"></layer>
 		<layer name="Digital Asset Transaction" language="java"></layer>
