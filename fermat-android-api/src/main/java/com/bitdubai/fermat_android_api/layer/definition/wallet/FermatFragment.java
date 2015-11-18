@@ -137,6 +137,10 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
         getPaintActivtyFeactures().changeNavigationDrawerAdapter(adapter);
     }
 
+    protected void setNavigationBackgroundColor(int color){
+        getPaintActivtyFeactures().setNavigationBackgroundColor(color);
+    }
+
     protected void addNavigationHeader(View view){
         getPaintActivtyFeactures().addNavigationViewHeader(view);
     }
