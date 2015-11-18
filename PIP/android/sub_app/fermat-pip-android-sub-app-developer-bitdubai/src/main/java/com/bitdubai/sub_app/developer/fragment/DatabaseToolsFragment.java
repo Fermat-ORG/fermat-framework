@@ -114,10 +114,8 @@ public class DatabaseToolsFragment extends FermatFragment {
                 PluginVersionReference pvr = plugins.get(i);
                 Resource item = new Resource();
                 item.picture = "plugin";
-                String labelIni = pvr.toString3().replaceAll("_", "");
-                System.out.println("labelIni: "+ labelIni);
+                String labelIni = pvr.toString3().replaceAll("_", " ");
                 int lenght = labelIni.length();
-                System.out.println("lenght: "+lenght);
                 //Comment by Luis Campo
                // item.label = pvr.toString3().replaceAll("_", "").substring(7,pvr.toString3().replaceAll("_", " ").length()-1);
                 item.label = labelIni.substring(7, lenght - 1);
