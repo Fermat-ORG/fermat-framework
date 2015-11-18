@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
@@ -92,7 +93,7 @@ public interface CryptoBrokerWallet {
      * @param offset the start point for the results
      * @return the list of Contract Basic Info
      */
-    Collection<ContractBasicInformation> getContractsHistory(int max, int offset) throws CantGetContractHistoryException;
+    Collection<ContractBasicInformation> getContractsHistory(ContractStatus status, int max, int offset) throws CantGetContractHistoryException;
 
     /**
      * Confirm the given negotiation to create a contract based on this negotiation
