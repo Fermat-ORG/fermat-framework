@@ -20,7 +20,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -138,30 +137,30 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     }
 
     @Override
-    public void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+    public void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         try {
             customerBrokerPurchaseNegotiationDao.cancelNegotiation(negotiation);
-        } catch (CantUpdateCustomerBrokerPurchaseException e) {
-            throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+        } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
+            throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
     @Override
-    public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+    public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         try {
             if(verifyStatusClause(customerBrokerPurchaseNegotiationDao.getClauses(negotiation.getNegotiationId()))){
                 customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
             }else{
-                throw new CantUpdateCustomerBrokerPurchaseException();
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException();
             }
         } catch (CantGetListClauseException e) {
-            throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
-        } catch (CantUpdateCustomerBrokerPurchaseException e){
-            throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
+        } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e){
+            throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
-    private boolean verifyStatusClause(Collection<Clause> clausules) throws CantUpdateCustomerBrokerPurchaseException {
+    private boolean verifyStatusClause(Collection<Clause> clausules) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         Map<ClauseType, String> clausesAgreed = new HashMap<ClauseType, String>();
 
         for(Clause clause : clausules) {
@@ -216,12 +215,12 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     }
 
     @Override
-    public CustomerBrokerPurchaseNegotiation sendToBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+    public CustomerBrokerPurchaseNegotiation sendToBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         return customerBrokerPurchaseNegotiationDao.sendToBroker(negotiation);
     }
 
     @Override
-    public CustomerBrokerPurchaseNegotiation waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+    public CustomerBrokerPurchaseNegotiation waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         return customerBrokerPurchaseNegotiationDao.waitForBroker(negotiation);
     }
 
