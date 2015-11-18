@@ -1,10 +1,12 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.squareup.picasso.Picasso;
@@ -89,9 +92,9 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
      */
     private CryptoWalletWalletContact cryptoWalletWalletContact;
 
-    private ImageView btn_search_world;
-
     private WalletContact walletContact;
+    private boolean connectionDialogIsShow;
+    private boolean onFocus;
 
 
     public static SendFormFragment newInstance() {
@@ -139,9 +142,6 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
         imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
-
-        btn_search_world = (ImageView) rootView.findViewById(R.id.btn_search_world);
-        btn_search_world.setOnClickListener(this);
     }
 
     private void setUpActions(){
@@ -153,6 +153,45 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         send_button.setOnClickListener(this);
         rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
 
+        contactName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            public boolean onEditorAction(TextView v, int actionId,
+                                          KeyEvent event) {
+                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    // in.hideSoftInputFromWindow(autoEditText.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    //Commented line is for hide keyboard. Just make above code as comment and test your requirement
+                    //It will work for your need. I just putted that line for your understanding only
+                    //You can use own requirement here also.
+
+                    if (!connectionDialogIsShow) {
+                        ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), referenceWalletSession, referenceWalletSession.getWalletResourcesProviderManager());
+                        connectionWithCommunityDialog.show();
+                        connectionWithCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                contactName.setText("");
+                                connectionDialogIsShow = false;
+                            }
+                        });
+                        connectionDialogIsShow = true;
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+        contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                onFocus = hasFocus;
+                if (!onFocus) {
+                    if (walletContact == null) {
+                        contactName.setText("");
+                    }
+                }
+            }
+        });
         /**
          *  Amount observer
          */
@@ -179,7 +218,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         /**
          * Selector
          */
-        send_button.selector(R.drawable.bg_home_accept_active, R.drawable.bg_home_accept_normal, R.drawable.bg_home_accept_active);
+        send_button.selector(R.drawable.bg_home_accept_normal,R.drawable.bg_home_accept_active, R.drawable.bg_home_accept_normal );
     }
 
     private void setUpUIData(){
@@ -191,7 +230,10 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                 imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), R.drawable.profile_image));
             }
             contactName.setText(cryptoWalletWalletContact.getActorName());
+        }else{
+            imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(),R.drawable.profile_image));
         }
+
     }
 
     private void setUpContactAddapter(){
@@ -280,7 +322,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         else if (id == R.id.imageView_contact){
             // if user press the profile image
         }
-        else if (id == R.id.btn_search_world){
+        else if (id == R.id.btn_expand_send_form){
             changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY);
         }
 
