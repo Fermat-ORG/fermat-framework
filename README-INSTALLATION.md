@@ -136,6 +136,15 @@ You can also modify these values after the project is imported; you can change t
 
 TIP: Android Developer Studio incorporates an SDK Tools package inside of its installation, it's better and more manageable if you configure the tools you've downloaded and handle these dependencies yourself, you can do this in the *__File->Project Structure__* menu. You must always configure this value when using IntelliJ IDEA.
 
+<br>
+
+IMPORTANT: If you running an Ubuntu 64 bits System, you must execute below command BEFORE run Android Studio for first time.
+
+```bash
+sudo apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
+```
+
+This will enable 64-bit linux distros to run 32-bit applications like adb and aapt (Android tools). More information found here: [Android Issue 82711](https://code.google.com/p/android/issues/detail?id=82711)
 
 
 <br>
