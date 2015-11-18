@@ -28,6 +28,12 @@ public interface CashUnholdTransactionParameters {
     String getPublicKeyActor();
 
     /**
+     * Returns the public key of the Plugin which made the transaction
+     * @return      Public key of the Plugin which made the transaction
+     */
+    String getPublicKeyPlugin();
+
+    /**
      * Returns the amount of the transaction
      * @return      Amount of the transaction
      */
