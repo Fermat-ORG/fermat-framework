@@ -15,20 +15,9 @@ import java.util.UUID;
  * Created by jorge on 09-10-2015.
  */
 public interface Negotiation {
-    UUID getNegotiationId();k
+    UUID getNegotiationId();
     long getStartDate();
     NegotiationStatus getStatus();
     void setStatus(NegotiationStatus status);
-
-    Collection<Clause> getClauses() throws CantGetListClauseException;
-
-    Clause addNewBrokerClause(ClauseType type, String value) throws CantAddNewClausesException;
-    Clause addNewCustomerClause(ClauseType type, String value) throws CantAddNewClausesException;
-
-    Clause modifyClause(Clause clause, String value) throws CantUpdateClausesException;
-    Clause modifyClauseStatus(Clause clause, ClauseStatus status) throws CantUpdateClausesException;
-
-    void rejectClauseByType(ClauseType type) throws CantUpdateClausesException;
-
-    ClauseType getNextClauseType() throws CantGetNextClauseTypeException;
+    Collection<Clause> getClauses();
 }
