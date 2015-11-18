@@ -19,6 +19,7 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFr
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.IndexInfoSummary;
@@ -89,7 +90,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
     }
-
 
 
     @Override
@@ -261,7 +261,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     @Override
     public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
-        //TODO abrir actividad de detalle de negociacion abierta
+        walletSession.setData("negotiation_data", data);
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS);
     }
 
     @Override

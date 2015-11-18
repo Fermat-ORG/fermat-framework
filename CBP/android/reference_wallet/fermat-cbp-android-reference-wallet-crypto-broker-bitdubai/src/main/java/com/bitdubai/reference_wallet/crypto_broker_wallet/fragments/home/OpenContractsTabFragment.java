@@ -17,6 +17,7 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerA
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForCustomerException;
@@ -190,7 +191,8 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
-        //TODO abrir actividad de detalle de contrato abierto
+        walletSession.setData("contract_data", data);
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS);
     }
 
     @Override
