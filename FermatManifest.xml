@@ -1704,7 +1704,7 @@
 			<layer name="Sub App">
 				<androids>
 					<android
-						name="Intra Wallet User identit"
+						name="Intra Wallet User identity"
 						description=""
 						difficulty="4"
 						code-level="development"
