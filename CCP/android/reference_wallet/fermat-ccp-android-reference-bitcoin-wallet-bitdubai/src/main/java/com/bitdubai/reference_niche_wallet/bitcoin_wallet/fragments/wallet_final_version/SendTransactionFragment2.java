@@ -242,8 +242,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             int id = item.getItemId();
 
             if(id == BitcoinWalletConstants.IC_ACTION_SEND){
-                referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS,Boolean.TRUE);
-                changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
+                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY);
                 return true;
             }
 
@@ -338,6 +337,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         } catch (CantListTransactionsException e) {
             e.printStackTrace();
         } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        } catch (Exception e){
             e.printStackTrace();
         }
         return data;

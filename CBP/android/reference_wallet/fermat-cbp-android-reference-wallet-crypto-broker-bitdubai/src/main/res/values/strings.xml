@@ -10,6 +10,7 @@
     <string name="arrow" translatable="false">arrow</string>
     <string name="at">\@</string>
     <string name="cbw_unit_number">1</string>
+    <string name="cbw_no_market_exchange_rates_to_show">No Market Exchange Rates to Show</string>
     <string name="buy">Buying</string>
     <string name="unit_number" translatable="false">1</string>
     <string name="waiting_for_you">Waiting for you</string>
@@ -20,4 +21,7 @@
     <string name="contract_cancelled">Cancelled</string>
     <string name="receiving">Receiving</string>
     <string name="sending">Sending</string>
+    <string name="sell_text_and_price">Sell: %1$s</string>
+    <string name="buy_text_and_price">Buy: %1$s</string>
+    <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
 </resources>

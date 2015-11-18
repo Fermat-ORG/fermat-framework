@@ -12,13 +12,18 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
+import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by rodrigo on 10/4/15.
@@ -195,10 +200,6 @@ class BitcoinCryptoNetworkMonitor implements Agent {
              */
             peerGroup.start();
             peerGroup.startBlockChainDownload(null);
-
-            while(true){
-
-            }
         }
 
         /**
@@ -208,10 +209,33 @@ class BitcoinCryptoNetworkMonitor implements Agent {
          */
         public void broadcastTransaction(Transaction tx) throws CantBroadcastTransactionException {
             try{
-                peerGroup.broadcastTransaction(tx).future().get();
+                /**
+                 * I will add this transaction to the wallet.
+                 */
+                WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
+                wallet.addWalletTransaction(walletTransaction);
 
-            } catch (Exception e){
-                throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, null, null);
+                /**
+                 * Broadcast it.
+                 */
+                TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
+                broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
+                    @Override
+                    public void onBroadcastProgress(double progress) {
+                        System.out.println("****CryptoNetwork: progress broadcast " + progress);
+                    }
+                });
+
+                broadcast.broadcast().get(2, TimeUnit.MINUTES);
+                broadcast.future().get(2, TimeUnit.MINUTES);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            } catch (Exception exception){
+                throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, exception, "There was an unexpected issue while broadcasting a transaction.", null);
             }
 
         }
