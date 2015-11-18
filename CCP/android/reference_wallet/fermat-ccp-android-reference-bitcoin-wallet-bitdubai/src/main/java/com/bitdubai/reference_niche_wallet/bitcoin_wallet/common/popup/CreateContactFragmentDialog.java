@@ -68,8 +68,6 @@ public class CreateContactFragmentDialog extends Dialog implements
     public Activity activity;
     public Dialog d;
 
-    private WalletContactListAdapter contactsAdapter;
-
     private CreateContactDialogCallback createContactDialogCallback;
 
 
@@ -177,74 +175,6 @@ public class CreateContactFragmentDialog extends Dialog implements
                     pasteFromClipboard();
                 }
             });
-
-
-
-
-            contactsAdapter = new WalletContactListAdapter(activity, R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
-
-            contact_name.setAdapter(contactsAdapter);
-            //autocompleteContacts.setTypeface(tf);
-            contact_name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                    walletContact = (WalletContact) arg0.getItemAtPosition(position);
-
-                    //add connection like a wallet contact
-                    try
-                    {
-                        if(walletContact.isConnection)
-                            referenceWalletSession.getCryptoWalletManager().getCryptoWallet().convertConnectionToContact(
-                                    walletContact.name,
-                                    Actors.INTRA_USER,
-                                    walletContact.actorPublicKey,
-                                    walletContact.profileImage,
-                                    Actors.INTRA_USER,
-                                    referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),
-                                    referenceWalletSession.getWalletSessionType().getWalletPublicKey() ,
-                                    CryptoCurrency.BITCOIN,
-                                    BlockchainNetworkType.TEST);
-
-                    }
-                    catch (CantGetActiveLoginIdentityException e) {
-                        referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        showMessage(activity, "CantGetActiveLoginIdentityException- " + e.getMessage());
-                    }
-                    catch(CantCreateWalletContactException e)
-                    {
-                        referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        showMessage(activity, "CantCreateWalletContactException- " + e.getMessage());
-
-                    }
-                    catch(ContactNameAlreadyExistsException e)
-                    {
-                        referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        showMessage(activity, "ContactNameAlreadyExistsException- " + e.getMessage());
-
-                    } catch (CantGetCryptoWalletException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-
-            contact_name.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-//                    linear_address.setVisibility(activeAddress ? View.VISIBLE : View.GONE);
-//                    // if (!editTextAddress.getText().equals("")) linear_address.setVisibility(View.VISIBLE);
-                }
-            });
-
             //getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }catch (Exception e){
             e.printStackTrace();
@@ -374,35 +304,5 @@ public class CreateContactFragmentDialog extends Dialog implements
         return stream.toByteArray();
     }
 
-    /**
-     * Obtain the wallet contacts from the cryptoWallet
-     *
-     * @return
-     */
-    private List<WalletContact> getWalletContactList() {
-        List<WalletContact> contacts = new ArrayList<>();
-        try
-        {
-            List<CryptoWalletWalletContact> walletContactRecords = referenceWalletSession.getCryptoWalletManager().getCryptoWallet().listAllActorContactsAndConnections(referenceWalletSession.getWalletSessionType().getWalletPublicKey(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
-            for (CryptoWalletWalletContact wcr : walletContactRecords) {
-
-                String contactAddress = "";
-                if(wcr.getReceivedCryptoAddress().size() > 0)
-                    contactAddress = wcr.getReceivedCryptoAddress().get(0).getAddress();
-                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress,wcr.isConnection(),wcr.getProfilePicture()));
-            }
-        }
-        catch (CantGetAllWalletContactsException e) {
-            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(activity, "CantGetAllWalletContactsException- " + e.getMessage());
-        }
-        catch (CantGetActiveLoginIdentityException e) {
-            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(activity, "CantGetActiveLoginIdentityException- " + e.getMessage());
-        } catch (CantGetCryptoWalletException e) {
-            e.printStackTrace();
-        }
-        return contacts;
-    }
 
 }

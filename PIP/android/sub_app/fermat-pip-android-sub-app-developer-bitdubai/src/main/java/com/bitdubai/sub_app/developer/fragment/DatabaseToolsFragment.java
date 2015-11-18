@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.Service;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,6 +31,8 @@ import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -97,9 +98,10 @@ public class DatabaseToolsFragment extends FermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        rootView = inflater.inflate(R.layout.start, container, false);
+        rootView = inflater.inflate(R.layout.start_init, container, false);
         rootView.setTag(1);
-        listView = (ListView) rootView.findViewById(R.id.gridView);
+
+        listView =(ListView) rootView.findViewById(R.id.gridView);
 
         try {
 
@@ -111,13 +113,21 @@ public class DatabaseToolsFragment extends FermatFragment {
             for (int i = 0; i < plugins.size(); i++) {
 
                 PluginVersionReference pvr = plugins.get(i);
-                Resource item = new Resource();
-                item.picture = "plugin";
-                String string = pvr.toString3().replaceAll("_", "");
-                item.label = string.substring(7, string.length() - 1);
-                item.code = pvr.toKey();
-                item.type = Resource.TYPE_PLUGIN;
-                mlist.add(item);
+
+                String label = pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getPlatformReference().getPlatform().getCode()+" "+
+                        pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getLayer().name()+" "+
+                        pvr.getPluginDeveloperReference().getPluginReference().getPlugin().name();
+
+                mlist.add(
+                        new Resource(
+                                "plugin",
+                                label.replaceAll("_", " "),
+                                pvr.toKey(),
+                                pvr.getPluginDeveloperReference().getDeveloper().name(),
+                                Resource.TYPE_PLUGIN
+                        )
+                );
+
             }
             for (int i = 0; i < addons.size(); i++) {
                 Resource item = new Resource();
@@ -128,7 +138,14 @@ public class DatabaseToolsFragment extends FermatFragment {
                 mlist.add(item);
             }
 
-            AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.list_single, mlist);
+            Collections.sort(mlist, new Comparator<Resource>() {
+                public int compare(Resource o1, Resource o2) {
+                    return (o1.label).compareTo(o2.label);
+                }
+            });
+
+            AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item_init, mlist);
+
             adapter.notifyDataSetChanged();
             listView.setAdapter(adapter);
 
@@ -170,11 +187,18 @@ public class DatabaseToolsFragment extends FermatFragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(layoutResource, parent, false);
+
+                convertView = inflater.inflate(R.layout.developer_app_grid_item_init, parent, false);
+
 
                 holder = new ViewHolder();
-                holder.imageView = (ImageView) convertView.findViewById(R.id.img);
-                holder.companyTextView = (TextView) convertView.findViewById(R.id.txt);
+
+                holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
+
+                TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
+                Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+                textView.setTypeface(tf);
+                holder.companyTextView = textView;
 
                 convertView.setTag(holder);
             } else {

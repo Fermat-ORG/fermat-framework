@@ -31,4 +31,6 @@ public interface PaintActivtyFeactures {
     public RelativeLayout getToolbarHeader();
 
     public void invalidate();
+
+    void setNavigationBackgroundColor(int color);
 }

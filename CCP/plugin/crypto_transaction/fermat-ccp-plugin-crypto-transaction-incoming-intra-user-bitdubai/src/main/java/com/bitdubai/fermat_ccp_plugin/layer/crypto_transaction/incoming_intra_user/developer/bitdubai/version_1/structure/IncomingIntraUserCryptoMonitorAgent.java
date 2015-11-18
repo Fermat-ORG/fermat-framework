@@ -156,7 +156,7 @@ public class IncomingIntraUserCryptoMonitorAgent {
                 TransactionProtocolManager<CryptoTransaction> source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.getEventSource()));
                 List<Transaction<CryptoTransaction>> transactionList = source.getPendingTransactions(Specialist.INTRA_USER_SPECIALIST);
 
-                System.out.println("TTF - INTRA USER CRYPTO MONITOR: " + transactionList.size() + " TRAMSACTION(s) DETECTED");
+                System.out.println("TTF -  INTRA USER CRYPTO MONITOR: " + transactionList.size() + " TRAMSACTION(s) DETECTED");
 
                 this.registry.acknowledgeTransactions(transactionList);
 

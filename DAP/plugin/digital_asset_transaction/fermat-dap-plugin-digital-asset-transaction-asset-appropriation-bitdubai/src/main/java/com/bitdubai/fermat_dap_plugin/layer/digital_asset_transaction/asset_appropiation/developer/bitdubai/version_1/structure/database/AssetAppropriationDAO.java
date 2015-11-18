@@ -419,7 +419,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             String context = "Status: " + status;
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
             if (databaseTable.getRecords().isEmpty()) {
@@ -612,6 +612,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
         List<AssetAppropriationTransactionRecord> uncompleted = new ArrayList<>();
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.APPROPRIATION_STARTED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_OBTAINED));
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_REGISTERED));
         return uncompleted;
     }
 

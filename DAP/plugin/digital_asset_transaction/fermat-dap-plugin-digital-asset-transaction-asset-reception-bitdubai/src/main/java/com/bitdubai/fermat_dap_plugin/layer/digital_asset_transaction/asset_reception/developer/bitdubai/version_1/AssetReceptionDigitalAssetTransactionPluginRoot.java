@@ -95,7 +95,7 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
     DeviceUserManager deviceUserManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    protected PluginFileSystem pluginFileSystem        ;
+    protected PluginFileSystem pluginFileSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -103,10 +103,10 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
@@ -125,7 +125,7 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        AssetReceptionDeveloperDatabaseFactory assetReceptionDatabaseFactory=new AssetReceptionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        AssetReceptionDeveloperDatabaseFactory assetReceptionDatabaseFactory = new AssetReceptionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return assetReceptionDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
@@ -140,19 +140,18 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
             return AssetReceptionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
-        }catch (CantOpenDatabaseException cantOpenDatabaseException){
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            FermatException e = new CantDeliverDatabaseException("Cannot open the database",cantOpenDatabaseException,"DeveloperDatabase: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-        }
-        catch (DatabaseNotFoundException databaseNotFoundException) {
-            FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"DeveloperDatabase: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-        } catch(Exception exception){
-            FermatException e = new CantDeliverDatabaseException("Unexpected Exception",exception,"DeveloperDatabase: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            FermatException e = new CantDeliverDatabaseException("Cannot open the database", cantOpenDatabaseException, "DeveloperDatabase: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (DatabaseNotFoundException databaseNotFoundException) {
+            FermatException e = new CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, "DeveloperDatabase: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception exception) {
+            FermatException e = new CantDeliverDatabaseException("Unexpected Exception", exception, "DeveloperDatabase: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empty list
         return new ArrayList<>();
@@ -195,32 +194,36 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
     @Override
     public void start() throws CantStartPluginException {
         //printSomething(">>> starting asset reception plugin");
-        try{
+        try {
             try {
-                this.assetReceptionDatabase=this.pluginDatabaseSystem.openDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
-            } catch (CantOpenDatabaseException |DatabaseNotFoundException e) {
+                this.assetReceptionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
+            } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
                 //printSomething("CREATING A PLUGIN DATABASE.");
                 try {
                     createAssetReceptionTransactionDatabase();
                 } catch (CantCreateDatabaseException innerException) {
-                    throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset Reception plugin - "+this.pluginId, "Cannot open or create the plugin database");
+                    throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException, "Starting Asset Reception plugin - " + this.pluginId, "Cannot open or create the plugin database");
                 }
             }
-            digitalAssetReceptionVault=new DigitalAssetReceptionVault(
+            digitalAssetReceptionVault = new DigitalAssetReceptionVault(
                     pluginId,
                     pluginFileSystem,
                     errorManager);
             digitalAssetReceptionVault.setAssetUserWalletManager(this.assetUserWalletManager);
             printSomething("The wallet public key is hardcoded");
             digitalAssetReceptionVault.setWalletPublicKey("walletPublicKeyTest");
-            digitalAssetReceptor=new DigitalAssetReceptor(this.errorManager, this.pluginId, this.pluginFileSystem);
-            AssetReceptionDao assetReceptionDao=new AssetReceptionDao(this.pluginDatabaseSystem, this.pluginId);
-            this.assetReceptionRecorderService =new AssetReceptionRecorderService(assetReceptionDao, eventManager);
-            try{
+            digitalAssetReceptor = new DigitalAssetReceptor(this.errorManager, this.pluginId, this.pluginFileSystem);
+            digitalAssetReceptor.setDigitalAssetReceptionVault(digitalAssetReceptionVault);
+
+            AssetReceptionDao assetReceptionDao = new AssetReceptionDao(this.pluginDatabaseSystem, this.pluginId);
+            digitalAssetReceptor.setAssetReceptionDao(assetReceptionDao);
+
+            this.assetReceptionRecorderService = new AssetReceptionRecorderService(assetReceptionDao, eventManager);
+            try {
                 //I need to check if this works
                 this.assetReceptionRecorderService.setAssetReceptionDigitalAssetTransactionPluginRoot(this);
                 this.assetReceptionRecorderService.start();
-            } catch(CantStartServiceException exception){
+            } catch (CantStartServiceException exception) {
                 //This plugin must be stopped if this happens.
                 this.serviceStatus = ServiceStatus.STOPPED;
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
@@ -229,33 +232,34 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
             //testDeveloperDatabase();
 
         } catch (CantSetObjectException exception) {
-            this.serviceStatus=ServiceStatus.STOPPED;
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Reception plugin", "Cannot set an object, probably is null");
+            this.serviceStatus = ServiceStatus.STOPPED;
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset Reception plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
-            this.serviceStatus=ServiceStatus.STOPPED;
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Reception plugin", "Cannot execute a database operation");
+            this.serviceStatus = ServiceStatus.STOPPED;
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset Reception plugin", "Cannot execute a database operation");
         } catch (CantStartServiceException exception) {
-            this.serviceStatus=ServiceStatus.STOPPED;
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Reception plugin", "Cannot start event recorder service");
-        }catch(Exception exception){
-            System.out.println("ASSET RECEPTION EXCEPTION TEST "+exception);
+            this.serviceStatus = ServiceStatus.STOPPED;
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset Reception plugin", "Cannot start event recorder service");
+        } catch (Exception exception) {
+            System.out.println("ASSET RECEPTION EXCEPTION TEST " + exception);
             exception.printStackTrace();
         }
 
-        this.serviceStatus=ServiceStatus.STARTED;
+        this.serviceStatus = ServiceStatus.STARTED;
         //testRaiseEvent();
     }
 
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the asset distribution plugin
+     *
      * @throws CantGetLoggedInDeviceUserException
      * @throws CantSetObjectException
      * @throws CantStartAgentException
      */
     public void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
-        if(this.assetReceptionMonitorAgent ==null){
+        if (this.assetReceptionMonitorAgent == null) {
             String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
-            this.assetReceptionMonitorAgent =new AssetReceptionMonitorAgent(this.eventManager,
+            this.assetReceptionMonitorAgent = new AssetReceptionMonitorAgent(this.eventManager,
                     this.pluginDatabaseSystem,
                     this.errorManager,
                     this.pluginId,
@@ -274,19 +278,19 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
     }
 
     //TODO: DELETE THIS USELESS METHOD
-    private void printSomething(String information){
+    private void printSomething(String information) {
         LOG.info("ASSET RECEPTION: " + information);
     }
 
-    public static LogLevel getLogLevelByClass(String className){
-        try{
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
             /**
              * sometimes the classname may be passed dinamically with an $moretext
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return AssetReceptionDigitalAssetTransactionPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
+        } catch (Exception e) {
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
@@ -294,7 +298,7 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
         }
     }
 
-    private void testRaiseEvent(){
+    private void testRaiseEvent() {
         printSomething("Start event test");
         FermatEvent eventToRaise = eventManager.getNewEvent(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
         eventToRaise.setSource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
@@ -304,17 +308,17 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
 
     private void testDeveloperDatabase() throws CantExecuteDatabaseOperationException, CantDefineContractPropertyException, CantPersistDigitalAssetException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetReceptionProgressException {
         System.out.println("START TEST DEVELOPER DATABASE ASSET RECEPTION");
-        MockDigitalAssetMetadataForTesting mockDigitalAssetMetadataForTesting=new MockDigitalAssetMetadataForTesting();
+        MockDigitalAssetMetadataForTesting mockDigitalAssetMetadataForTesting = new MockDigitalAssetMetadataForTesting();
         System.out.println("ASSET RECEPTION MOCKED DAM:" + mockDigitalAssetMetadataForTesting);
-        AssetReceptionDao assetReceptionDao=new AssetReceptionDao(pluginDatabaseSystem,pluginId);
+        AssetReceptionDao assetReceptionDao = new AssetReceptionDao(pluginDatabaseSystem, pluginId);
         assetReceptionDao.persistDigitalAsset(
                 mockDigitalAssetMetadataForTesting.getGenesisTransaction(),
                 "testLocalStorage",
                 mockDigitalAssetMetadataForTesting.getDigitalAssetHash(),
                 "testReceiverPublicKey");
-        System.out.println("ASSET RECEPTION status settled: " + ReceptionStatus.ASSET_ACCEPTED+"\nfor GT "+mockDigitalAssetMetadataForTesting.getGenesisTransaction());
+        System.out.println("ASSET RECEPTION status settled: " + ReceptionStatus.ASSET_ACCEPTED + "\nfor GT " + mockDigitalAssetMetadataForTesting.getGenesisTransaction());
         assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.ASSET_ACCEPTED, mockDigitalAssetMetadataForTesting.getGenesisTransaction());
-        System.out.println("ASSET RECEPTION status from data base is:  "+assetReceptionDao.getGenesisTransactionByReceptionStatus(ReceptionStatus.ASSET_ACCEPTED));
+        System.out.println("ASSET RECEPTION status from data base is:  " + assetReceptionDao.getGenesisTransactionByReceptionStatus(ReceptionStatus.ASSET_ACCEPTED));
     }
 
 }

@@ -586,8 +586,11 @@ public abstract class FermatActivity extends AppCompatActivity
      * Method used from a subApp to paint tabs
      */
     protected void setPagerTabs(SubApp subApp, TabStrip tabStrip, SubAppsSession subAppsSession) throws InvalidParameterException {
-
-        PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
+        //comment by luis campo
+        //PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        System.out.println("tabLayout: "+ tabLayout);
+        tabLayout.setVisibility(View.VISIBLE);
 
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
@@ -614,9 +617,12 @@ public abstract class FermatActivity extends AppCompatActivity
         /**
          * Put tabs in pagerSlidingTabsStrp
          */
-        pagerSlidingTabStrip.setViewPager(pagertabs);
-
+        //Comment by luis campo
+        //System.out.println("pagerSlidingTabStrip: " + pagerSlidingTabStrip);
+        //pagerSlidingTabStrip.setViewPager(pagertabs);
+        tabLayout.setupWithViewPager(pagertabs);
         pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
+        System.out.println("se hizo bien si ");
 
 
     }
@@ -1808,6 +1814,11 @@ public abstract class FermatActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void setNavigationBackgroundColor(int color){
+        navigationView.setBackgroundColor(color);
     }
 
 

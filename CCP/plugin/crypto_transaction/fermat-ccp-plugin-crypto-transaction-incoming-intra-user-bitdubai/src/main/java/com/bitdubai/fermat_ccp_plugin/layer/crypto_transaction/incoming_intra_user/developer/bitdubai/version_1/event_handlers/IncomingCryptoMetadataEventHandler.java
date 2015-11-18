@@ -19,8 +19,10 @@ public class IncomingCryptoMetadataEventHandler implements FermatEventHandler {
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if (this.incomingIntraUserEventRecorderService.getServiceStatus().equals(ServiceStatus.STARTED))
+        if (this.incomingIntraUserEventRecorderService.getServiceStatus().equals(ServiceStatus.STARTED)) {
+            System.out.println("INCOMING INTRA ACTOR METADATA ARRIVED, RECEIVE EVENT");
             this.incomingIntraUserEventRecorderService.saveEvent(fermatEvent);
+        }
         else
             throw new TransactionServiceNotStartedException();
     }
