@@ -586,7 +586,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         try {
             //FORMING_GENESIS: genesisAddress solicitada pero no presistida en base de datos, Asset persistido en archivo
             readDigitalAssetFile(transactionId);
-
             //Obtenemos la digital address y la persisitimos en base de datos
             getDigitalAssetGenesisAddressByUUID(transactionId);
         } catch(CantReadDigitalAssetFileException e) {
