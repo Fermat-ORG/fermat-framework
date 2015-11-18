@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_cbp_plugin.layer.user_level_transactions.customer_broker_purchase.developer.bitdubai;
+package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transactions.customer_broker_purchase.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cbp_plugin.layer.user_level_transactions.customer_broker_purchase.developer.bitdubai.version_1.CustomerBrokerPurchasePluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transactions.customer_broker_purchase.developer.bitdubai.version_1.CustomerBrokerPurchasePluginRoot;
 
 
 /**

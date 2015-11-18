@@ -28,7 +28,7 @@
 ######
 #CHANGELOG	
 ######
-#	1.0.1: 	- Fixes the issue publication in repositories that not owned by the developer
+#	1.0.2: 	- Fixes the issue publication in repositories that not owned by the developer
 #		- The developer message for a team leader is not longer print if the githubLogin is equal to teamLeaderGithubUser 
  
 from pygithub3 import Github
@@ -112,7 +112,7 @@ for eventHandler in eventHandlers:
 #Testing issues
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - Testing - Unit Testing"
 bodyGenerated="It is closed whenever all testing is done."
-issues.create(dict(title=titleGenerated,body=bodyGenerated),user=githubLogin,repo=repository)
+issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - Testing - Integration Testing"
 bodyGenerated="It is closed whenever all testing is done."
 issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)

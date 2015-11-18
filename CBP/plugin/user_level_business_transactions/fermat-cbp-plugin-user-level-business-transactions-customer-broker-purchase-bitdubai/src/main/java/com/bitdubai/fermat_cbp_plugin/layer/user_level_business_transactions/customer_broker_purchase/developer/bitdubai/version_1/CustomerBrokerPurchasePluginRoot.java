@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.user_level_transactions.customer_broker_purchase.developer.bitdubai.version_1;
+package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transactions.customer_broker_purchase.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
