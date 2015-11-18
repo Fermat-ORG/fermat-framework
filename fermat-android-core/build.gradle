@@ -78,7 +78,7 @@ dependencies {
     compile project(':fermat-osa-android-core')
 
     // DMP Projects (Wallets)
-    compile project(':fermat-ccp-android-reference-bitcoin-wallet-bitdubai')
+    compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-ccp-android-clone-reference-nich-wallet')
 
     // DMP Projects (Sub APPs)
