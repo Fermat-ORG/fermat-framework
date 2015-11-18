@@ -31,14 +31,11 @@ public interface BankMoneyTransaction {
     FiatCurrency getFiatCurrency();
     void setFiatCurrency(FiatCurrency fiatCurrency);
 
-    String getCBPWalletPublicKey();
-    void setCBPWalletPublicKey(String cbpWalletPublicKey);
-
     String getCbpWalletPublicKey();
     void setCbpWalletPublicKey(String cbpWalletPublicKey);
 
     String getBnkWalletPublicKey();
-    void setBnkWalletPublicKey(String cbpWalletPublicKey);
+    void setBnkWalletPublicKey(String bnkWalletPublicKey);
 
     String getBankAccount();
     void setBankAccount(String bankAccount);
@@ -47,7 +44,7 @@ public interface BankMoneyTransaction {
     void setConcept(String concept);
 
     float getAmount();
-    void setAmount(String amount);
+    void setAmount(float amount);
 
     Timestamp getTimeStamp();
     void setTimeStamp(Timestamp timeStamp);
