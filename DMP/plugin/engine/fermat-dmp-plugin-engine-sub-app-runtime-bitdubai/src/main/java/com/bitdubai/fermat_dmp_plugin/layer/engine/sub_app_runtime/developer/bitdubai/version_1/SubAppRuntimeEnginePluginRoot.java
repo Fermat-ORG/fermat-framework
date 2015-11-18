@@ -721,8 +721,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setColor("#FF0B46F0");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-
-            statusBar.setColor("#FF0B46F0");
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("World");
@@ -760,7 +760,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
 
             runtimeSideMenu = new SideMenu();
-            runtimeSideMenu.setBackgroundColor("#0072bb");
+
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Explore");
