@@ -176,38 +176,43 @@ public class AssetCryptoVaultManager  {
 
 
         /**
-         * I will get the key that I will use to sign the new transaction
-         */
-        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Asset Vault");
-        ECKey ecKey = null;
-        try {
-
-            ecKey = getNextAvailableECKey(vaultAccount);
-        } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "There was an error getting the next available key to sign the send transaction", "database issue");
-        }
-
-        /**
          * I get the bitcoin address
          */
         Address address = null;
         try {
-            address = new Address(networkParameters, addressTo.getAddress());
+            address = getBitcoinAddress(networkParameters,addressTo);
         } catch (AddressFormatException e) {
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "The specified address is not valid. " + addressTo.getAddress(), null);
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
         }
 
 
-        List<ECKey> derivedKeys = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount);
-        Wallet wallet = Wallet.fromKeys(networkParameters, derivedKeys);
+        /**
+         * Create the bitcoinj wallet from the keys of this account
+         */
+        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Asset Vault");
+        Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
+
+        /**
+         * Adds the Genesis Transaction as a UTXO
+         */
         WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.UNSPENT, genesisTransaction);
         wallet.addWalletTransaction(walletTransaction);
 
-        Wallet.SendRequest sendRequest = Wallet.SendRequest.to(address, Coin.valueOf(amount));
+        /**
+         * Calculates the amount to be sent by removing the fee from the passed value.
+         */
+        Coin fee = Coin.valueOf(10000);
+        Coin coinToSend = Coin.valueOf(amount).subtract(fee);
+
+        /**
+         * creates the send request and broadcast it on the network.
+         */
+        Wallet.SendRequest sendRequest = Wallet.SendRequest.to(address, coinToSend);
         try {
+            sendRequest.fee = fee;
             wallet.completeTx(sendRequest);
         } catch (InsufficientMoneyException e) {
-            e.printStackTrace();
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Not enought money to send bitcoins.", null);
         }
 
         try {
@@ -217,6 +222,29 @@ public class AssetCryptoVaultManager  {
         }
 
         return sendRequest.tx.getHashAsString();
+    }
+
+    /**
+     * Creates a bitcoinj Wallet from the already derived keys of the specified account.
+     * @param vaultAccount
+     * @param networkParameters
+     * @return
+     */
+    private Wallet getWalletForAccount(HierarchyAccount vaultAccount, NetworkParameters networkParameters) {
+        List<ECKey> derivedKeys = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount);
+        Wallet wallet = Wallet.fromKeys(networkParameters, derivedKeys);
+        return wallet;
+    }
+
+    /**
+     * Transform a CryptoAddress into a BitcoinJ Address
+     * * @param networkParameters the network parameters where we are using theis address.
+     * @param cryptoAddress the Crypto Address
+     * @return a bitcoinJ address.
+     */
+    private Address getBitcoinAddress(NetworkParameters networkParameters, CryptoAddress cryptoAddress) throws AddressFormatException {
+        Address address = new Address(networkParameters, cryptoAddress.getAddress());
+        return address;
     }
 
     /**
