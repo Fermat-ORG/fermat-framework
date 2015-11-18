@@ -109,6 +109,7 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION          ("BRPRT"     ),
     BITDUBAI_USER_REDEMPTION_TRANSACTION                  ("BURT"      ),
     BITDUBAI_ASSET_APPROPRIATION_TRANSACTION              ("BAAT"      ),
+    BITDUBAI_ASSET_APPROPRIATION_STATS_TRANSACTION        ("BAAST"     ),
     BITDUBAI_ASSET_WALLET_ISSUER                          ("BASWI"     ),
     BITDUBAI_ASSET_FACTORY                                ("BASF"      ),
     BITDUBAI_ASSET_FACTORY_MODULE                         ("BASFM"     ),
@@ -157,6 +158,7 @@ public enum Plugins implements FermatEnum {
     // Init new Plugins
 
     SUB_APP_RUNTIME("APR"),
+    ASSET_APPROPRIATION_STATS   ("ASAPS"),
     ASSET_APPROPRIATION         ("ASAP"),
     ASSET_DISTRIBUTION          ("ASD"),
     ASSET_FACTORY               ("ASF"),
@@ -235,6 +237,7 @@ public enum Plugins implements FermatEnum {
         switch (code) {
 
             case "APR":   return SUB_APP_RUNTIME;
+            case "ASAPS":  return ASSET_APPROPRIATION_STATS;
             case "ASAP":  return ASSET_APPROPRIATION;
             case "ASD":   return ASSET_DISTRIBUTION;
             case "ASF":   return ASSET_FACTORY;
