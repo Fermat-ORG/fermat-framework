@@ -89,7 +89,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        configureAppBar();
+        configureToolbar();
         configureNavigationDrawer();
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
@@ -171,14 +171,15 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         return true;
     }
 
-    private void configureAppBar() {
+    private void configureToolbar() {
         Toolbar toolbar = getToolbar();
-        toolbar.setTitleTextColor(Color.WHITE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
     }
 
     private void configureNavigationDrawer() {

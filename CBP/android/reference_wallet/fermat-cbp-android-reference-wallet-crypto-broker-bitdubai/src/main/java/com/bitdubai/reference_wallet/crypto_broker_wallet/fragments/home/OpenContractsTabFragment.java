@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
 
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -103,8 +104,8 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
 
-        Menu menu = toolbar.getMenu();
-        if (menu != null) menu.clear();
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     @Override
