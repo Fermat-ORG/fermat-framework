@@ -15,7 +15,7 @@ import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager</code>
- * provide the methods to interact with the crypto broker actor network service.
+ * provides the methods to interact with the crypto broker actor network service.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/11/2015.
  */
@@ -23,7 +23,7 @@ public interface CryptoBrokerManager {
 
     /**
      * Through the method <code>buildCryptoBrokerData</code> we can construct a CryptoBrokerData Instance.
-     * Here we make all the necessary validations in the information to send.
+     * Here we'l make all the necessary validations in the information to send/expose.
      *
      * @param publicKey of the crypto broker.
      * @param alias     which represents to it.

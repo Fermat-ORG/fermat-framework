@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 /**
  * Created by ciencias on 2/13/15.
+ * Updated by lnacosta (laion.cj91@gmail.com) on 18/11/2015.
  */
 public enum Plugins implements FermatEnum {
 
@@ -144,19 +145,8 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE("BWPDWSSAM"),
     // End  WPD Plugins
 
-    //Init CBP Plugins
-    BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY("BCBPCBI"),
-    BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY("BCBPCCI"),
-    BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE("BCBPCBISAM"),
-    BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE("BCBPCCISAM"),
-    BITDUBAI_CBP_CRYPTO_BROKER_WALLET_MODULE("BCBPCBWM"),
-    BITDUBAI_CBP_CRYPTO_CUSTOMER_WALLET_MODULE("BCBPCCWM"),
-    BITDUBAI_CBP_STOCK_TRANSACTIONS_BANK_MONEY_RESTOCK("BCBPSTBMR"),
-    //End CBP Plugins
-
     // Init new Plugins
 
-    SUB_APP_RUNTIME("APR"),
     ASSET_APPROPRIATION         ("ASAP"),
     ASSET_DISTRIBUTION          ("ASD"),
     ASSET_FACTORY               ("ASF"),
@@ -176,6 +166,8 @@ public enum Plugins implements FermatEnum {
     CRYPTO_ADDRESS_BOOK         ("CAB"),
     CRYPTO_BROKER               ("CB"),
     CRYPTO_BROKER_IDENTITY      ("CBI"),
+    CRYPTO_BROKER_PURCHASE      ("CBP"),
+    CRYPTO_BROKER_SALE          ("CBS"),
     CRYPTO_CUSTOMER             ("CC"),
     CRYPTO_CUSTOMER_IDENTITY    ("CCI"),
     CRYPTO_PAYMENT_REQUEST      ("CPR"),
@@ -198,6 +190,7 @@ public enum Plugins implements FermatEnum {
     REDEEM_POINT_COMMUNITY      ("RPC"),
     REDEEM_POINT_REDEMPTION     ("RPR"),
     SUB_APP_RESOURCES           ("SAR"),
+    SUB_APP_RUNTIME             ("SPR"),
     USER_REDEMPTION             ("UR"),
     WALLET_COMMUNITY            ("WCOM"),
     WALLET_CONTACTS             ("WC"),
@@ -221,20 +214,10 @@ public enum Plugins implements FermatEnum {
         this.code = code;
     }
 
-    public String getKey() {
-        return this.code;
-    }
-
-    @Override
-    public String getCode() {
-        return this.code;
-    }
-
-    public static Plugins getByKey(String code) throws InvalidParameterException {
+    public static Plugins getByCode(final String code) throws InvalidParameterException {
 
         switch (code) {
 
-            case "APR":   return SUB_APP_RUNTIME;
             case "ASAP":  return ASSET_APPROPRIATION;
             case "ASD":   return ASSET_DISTRIBUTION;
             case "ASF":   return ASSET_FACTORY;
@@ -254,6 +237,8 @@ public enum Plugins implements FermatEnum {
             case "CAB":   return CRYPTO_ADDRESS_BOOK;
             case "CB":    return CRYPTO_BROKER;
             case "CBI":   return CRYPTO_BROKER_IDENTITY;
+            case "CBP":   return CRYPTO_BROKER_PURCHASE;
+            case "CBS":   return CRYPTO_BROKER_SALE;
             case "CC":    return CRYPTO_CUSTOMER;
             case "CCI":   return CRYPTO_CUSTOMER_IDENTITY;
             case "CPR":   return CRYPTO_PAYMENT_REQUEST;
@@ -275,6 +260,7 @@ public enum Plugins implements FermatEnum {
             case "RPC":   return REDEEM_POINT_COMMUNITY;
             case "RPR":   return REDEEM_POINT_REDEMPTION;
             case "SAR":   return SUB_APP_RESOURCES;
+            case "SPR":   return SUB_APP_RUNTIME;
             case "UR":    return USER_REDEMPTION;
             case "WCOM":  return WALLET_COMMUNITY;
             case "WC":    return WALLET_CONTACTS;
@@ -294,6 +280,11 @@ public enum Plugins implements FermatEnum {
                         "This Code Is Not Valid for the Plugins enum"
                 );
         }
+    }
+
+    @Override
+    public String getCode() {
+        return this.code;
     }
 
 }
