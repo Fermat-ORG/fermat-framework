@@ -118,10 +118,10 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                 LOG.info("MAP_DNAM:"+developerName);
                 LOG.info("MAP_SSIZ:"+screenSize);
                 LOG.info("MAP_SNAM:"+skinName);
-                LOG.info("MAP_LVAL:"+language.value());
+                LOG.info("MAP_LVAL:"+language.getCode());
                 LOG.info("MAP_NSV:"+navigationStructureVersion);
                 LOG.info("MAP_WPK"+walletPublicKey);
-                walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.value(), navigationStructureVersion, walletPublicKey);
+                walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.getCode(), navigationStructureVersion, walletPublicKey);
                 //TODO: erase this test line.
                 //walletResources.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0","TestPublicKey");
                 /**

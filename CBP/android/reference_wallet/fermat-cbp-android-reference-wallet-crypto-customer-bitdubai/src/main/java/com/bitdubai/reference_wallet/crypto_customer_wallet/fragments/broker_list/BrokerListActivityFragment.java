@@ -6,6 +6,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -44,6 +46,7 @@ public class BrokerListActivityFragment extends FermatWalletFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(false);
 
         try {
             moduleManager = ((CryptoCustomerWalletSession) walletSession).getModuleManager();
@@ -81,5 +84,10 @@ public class BrokerListActivityFragment extends FermatWalletFragment {
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
     }
 }

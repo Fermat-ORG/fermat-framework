@@ -27,7 +27,7 @@ public class CryptoBrokerWalletDatabaseConstants {
     static final String CRYPTO_BROKER_STOCK_BALANCE_WALLET_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key";
     static final String CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
     static final String CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME = "currency_type";
-    static final String CRYPTO_BROKER_STOCK_BALANCE_STOCK_TYPE_COLUMN_NAME = "stock_type";
+    static final String CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME = "merchandise";
     static final String CRYPTO_BROKER_STOCK_BALANCE_DESCRIPTION_COLUMN_NAME = "description";
     static final String CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME = "available_balance";
     static final String CRYPTO_BROKER_STOCK_BALANCE_BOOK_BALANCE_COLUMN_NAME = "book_balance";
@@ -46,7 +46,7 @@ public class CryptoBrokerWalletDatabaseConstants {
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME = "amount";
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_CURRENCY_TYPE_COLUMN_NAME = "currency_type";
-    static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_STOCK_TYPE_COLUMN_NAME = "stock_type";
+    static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME = "merchandise";
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_BOOK_BALANCE_COLUMN_NAME = "running_book_balance";
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME = "running_available_balance";
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME = "timestamp";
