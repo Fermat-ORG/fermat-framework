@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1;
+package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -10,11 +10,11 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantCreateHoldTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantGetHoldTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransaction;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionManager;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionParameters;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.exceptions.CantCreateUnholdTransactionException;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransaction;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionManager;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionParameters;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * Created by Alex on 11/17/2015
  */
 
-public class CashMoneyTransactionHoldPluginRoot implements CashHoldTransactionManager, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class CashMoneyTransactionUnholdPluginRoot implements CashUnholdTransactionManager, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
     ErrorManager errorManager;
 
@@ -52,11 +52,11 @@ public class CashMoneyTransactionHoldPluginRoot implements CashHoldTransactionMa
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         try {
             for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-                if (CashMoneyTransactionHoldPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    CashMoneyTransactionHoldPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    CashMoneyTransactionHoldPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                if (CashMoneyTransactionUnholdPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    CashMoneyTransactionUnholdPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    CashMoneyTransactionUnholdPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 } else {
-                    CashMoneyTransactionHoldPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                    CashMoneyTransactionUnholdPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
         } catch (Exception exception) {
@@ -113,7 +113,7 @@ public class CashMoneyTransactionHoldPluginRoot implements CashHoldTransactionMa
     public static LogLevel getLogLevelByClass(String className) {
         try {
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return CashMoneyTransactionHoldPluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return CashMoneyTransactionUnholdPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
             System.err.println("CantGetLogLevelByClass: " + e.getMessage());
             return DEFAULT_LOG_LEVEL;
@@ -135,12 +135,12 @@ public class CashMoneyTransactionHoldPluginRoot implements CashHoldTransactionMa
 
 
     @Override
-    public CashHoldTransaction createCashHoldTransaction(CashHoldTransactionParameters holdParameters) throws CantCreateHoldTransactionException {
+    public CashUnholdTransaction createCashUnholdTransaction(CashUnholdTransactionParameters holdParameters) throws CantCreateUnholdTransactionException {
         return null;
     }
 
     @Override
-    public CashTransactionStatus getCashHoldTransactionStatus(UUID transactionId) throws CantGetHoldTransactionException {
+    public CashTransactionStatus getCashUnholdTransactionStatus(UUID transactionId) throws CantGetUnholdTransactionException {
         return null;
     }
 }

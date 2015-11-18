@@ -4,6 +4,10 @@ package com.bitdubai.fermat_csh_api.all_definition.enums;
  * Created by Yordin Alayn on 24.09.15.
  */
 public enum BalanceType {
+
+    //TODO: Verify usefulness. Not needed for transactions (i think)
+
+
     AVAILABLE("AVAILABLE"),
     BOOK("BOOK");
 
