@@ -1704,7 +1704,7 @@
 			<layer name="Sub App">
 				<androids>
 					<android
-						name="Intra User identity"
+						name="Intra Wallet User identity"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -1721,7 +1721,7 @@
 						</certifications>
 					</android>
 					<android
-						name="Intra User Community"
+						name="Intra Wallet User Community"
 						description=""
 						difficulty="4"
 						code-level="development"
