@@ -1,10 +1,16 @@
-# Draft
+##### -- draft --
 
-## Fermat: A Peer-to-Peer Financial Application Framework
+# Fermat 
 
-Luis Fernando Molina
+## A Peer-to-Peer Financial Application Framework
 
-luis.molina@bitDubai.com
+**Contributors** : Luis Fernando Molina
+
+**Advisors** : 
+
+**Reviewers** : 
+
+_www.fermat.org_
 
 <br>
 ### Abstract
