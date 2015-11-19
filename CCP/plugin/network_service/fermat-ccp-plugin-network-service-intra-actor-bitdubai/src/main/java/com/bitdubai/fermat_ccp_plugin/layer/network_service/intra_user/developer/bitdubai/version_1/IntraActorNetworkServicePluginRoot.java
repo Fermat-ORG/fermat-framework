@@ -1267,7 +1267,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                  * Construct  profile and register
                  */
                 String imageString = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);
-                System.out.println("imageString = "+imageString);
+                //System.out.println("imageString = "+imageString);
 
                 PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
                                                                                                                                             (actor.getName().toLowerCase()),

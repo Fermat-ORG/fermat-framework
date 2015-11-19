@@ -42,15 +42,15 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 
 import org.java_websocket.drafts.Draft_17;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.restlet.Client;
+import org.restlet.Context;
+import org.restlet.data.MediaType;
+import org.restlet.data.Protocol;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 
 import java.io.BufferedReader;
@@ -96,6 +96,11 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     private LocationManager locationManager;
 
     /**
+     * Represent the client
+     */
+    private Client client;
+
+    /**
      * Constructor whit parameters
      *
      * @param uri
@@ -108,6 +113,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         this.wsCommunicationsCloudClientPingAgent = new WsCommunicationsCloudClientPingAgent(wsCommunicationsCloudClientChannel);
         this.wsCommunicationVPNClientManagerAgent = new WsCommunicationVPNClientManagerAgent();
         this.locationManager                      = locationManager;
+        this.client = new Client(new Context(), Protocol.HTTP);
     }
 
     /**
@@ -380,7 +386,10 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             /*
              * Construct the web service client
              */
-            ClientResource requestResource = new ClientResource(WsCommunicationsCloudClientPluginRoot.HTTP_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.WEB_SERVICE_PORT + "/fermat/cloud-server/v1/components/registered/");
+            ClientResource clientResource = new ClientResource(WsCommunicationsCloudClientPluginRoot.HTTP_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.WEB_SERVICE_PORT + "/fermat/cloud-server/v1/components/registered/");
+            clientResource.setNext(client);
+            clientResource.setRequestEntityBuffering(true);
+            clientResource.accept(MediaType.APPLICATION_JSON);
 
             /*
              * Construct the parameters JsonRepresentation
@@ -390,7 +399,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             /*
              * Do the request via post and obtain the result
              */
-            Representation respond = requestResource.post(parameters);
+            Representation respond = clientResource.post(parameters);
 
             System.out.println("WsCommunicationsCloudClientConnection - respond:" + respond);
 
@@ -398,15 +407,15 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             StringBuilder stringBuilder = new StringBuilder();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
             String line;
-           // int index = 0;
+            int index = 0;
             while((line = bufferedReader.readLine()) != null) {
                 stringBuilder.append(line);
 
-             /* for (Character character:line.toCharArray()) {
+               for (Character character:line.toCharArray()) {
                     System.out.print(index + " -- character = " + character);
                     System.out.println("");
                     index++;
-                } */
+                }
 
             }
 
