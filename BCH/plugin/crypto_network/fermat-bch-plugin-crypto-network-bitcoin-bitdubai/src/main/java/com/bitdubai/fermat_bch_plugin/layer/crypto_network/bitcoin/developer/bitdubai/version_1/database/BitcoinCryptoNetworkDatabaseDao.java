@@ -251,7 +251,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @return
      */
     private long getCurrentDateTime(){
-        return  System.currentTimeMillis() % 1000;
+        return  System.currentTimeMillis();
     }
 
     /**
@@ -740,7 +740,42 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @throws CantExecuteDatabaseOperationException
      */
     public void setTransactionProtocolStatus(UUID transactionId, ProtocolStatus protocolStatus) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
+        databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
 
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        /**
+         * If I didn't get the expected result, I will raise an error.
+         */
+        if (databaseTable.getRecords().size() != 1) {
+            StringBuilder output = new StringBuilder("There was an unexpected result executing the query.");
+            output.append(System.lineSeparator());
+            output.append("Records returned: " + databaseTable.getRecords().size());
+            output.append(System.lineSeparator());
+            output.append("Transaction id: " + transactionId.toString());
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
+
+        /**
+         * I will get the record and Update the protocol status to the passed value
+         */
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, protocolStatus.getCode() );
+        try {
+            databaseTable.updateRecord(record);
+        } catch (CantUpdateRecordException e) {
+            StringBuilder output = new StringBuilder("There was an error updating the protocol status value.");
+            output.append(System.lineSeparator());
+            output.append("Record returned: " + XMLParser.parseObject(record));
+            output.append(System.lineSeparator());
+            output.append("Protocol Status: " + protocolStatus.getCode());
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
     }
 
     /**

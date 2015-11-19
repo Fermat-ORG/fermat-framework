@@ -59,14 +59,14 @@ project(':fermat-ccp-plugin-crypto-transaction-outgoing-intra-actor-bitdubai').p
 include ':fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai'
 project(':fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai').projectDir = new File('CCP/plugin/wallet_module/fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai')
 
-include ':fermat-ccp-android-reference-bitcoin-wallet-bitdubai'
-project(':fermat-ccp-android-reference-bitcoin-wallet-bitdubai').projectDir = new File('CCP/android/reference_wallet/fermat-ccp-android-reference-bitcoin-wallet-bitdubai')
+include ':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai'
+project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai').projectDir = new File('CCP/android/reference_wallet/fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
 
 include ':fermat-ccp-android-clone-reference-nich-wallet'
 project(':fermat-ccp-android-clone-reference-nich-wallet').projectDir = new File('CCP/android/reference_wallet/fermat-ccp-android-clone-reference-nich-wallet')
 
-include ':fermat-ccp-android-sub-app-intra-user-identity-bitdubai'
-project(':fermat-ccp-android-sub-app-intra-user-identity-bitdubai').projectDir = new File('CCP/android/sub_apps/fermat-ccp-android-sub-app-intra-user-identity-bitdubai')
+include ':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai'
+project(':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai').projectDir = new File('CCP/android/sub_app/fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai')
 
-include ':fermat-ccp-android-sub-app-intra-user-community-bitdubai'
-project(':fermat-ccp-android-sub-app-intra-user-community-bitdubai').projectDir = new File('CCP/android/sub_apps/fermat-ccp-android-sub-app-intra-user-community-bitdubai')
+include ':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai'
+project(':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai').projectDir = new File('CCP/android/sub_app/fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai')

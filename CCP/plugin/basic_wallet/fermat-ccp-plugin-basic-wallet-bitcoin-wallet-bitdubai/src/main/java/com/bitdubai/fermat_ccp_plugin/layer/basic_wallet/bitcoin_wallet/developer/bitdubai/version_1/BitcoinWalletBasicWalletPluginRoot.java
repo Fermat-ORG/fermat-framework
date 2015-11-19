@@ -97,9 +97,16 @@ public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implement
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         List<DeveloperDatabaseTableRecord> databaseTableRecords = new ArrayList<>();
         try {
-            Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, developerDatabase.getName());
-            databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
-            database.closeDatabase();
+            List<String> databasesNames = new ArrayList<>();
+            Collection<UUID> ids = this.walletIds.values();
+            for (UUID id : ids)
+            {
+                Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, id.toString());
+                databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
+                database.closeDatabase();
+            }
+
+
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
              * The database exists but cannot be open. I can not handle this situation.

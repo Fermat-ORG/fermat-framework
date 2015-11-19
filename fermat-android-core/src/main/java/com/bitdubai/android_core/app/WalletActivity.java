@@ -484,7 +484,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     @Override
-    public void connectWithOtherApp(Engine engine,Objects... objectses) {
+    public void connectWithOtherApp(Engine engine,Object[] objectses) {
         switch (engine){
             case BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY:
 

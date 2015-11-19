@@ -49,7 +49,7 @@ public class NewSentMessagesNotificationEventHandler implements FermatEventHandl
         if (platformEvent.getSource() == AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE){
 
             System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
-            System.out.print("NOTIFICACION EVENTO MENSAJE ENVIADO!!!!");
+            System.out.print("ASSET TRANSMISSION - NOTIFICACION EVENTO MENSAJE ENVIADO!!!!");
             NewNetworkServiceMessageSentNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageSentNotificationEvent) platformEvent;
             FermatMessage fermatMessage = (FermatMessage) newNetworkServiceMessageSentNotificationEvent.getData();
 
