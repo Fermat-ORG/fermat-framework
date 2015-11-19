@@ -219,6 +219,7 @@
 			<layer name="Request" language="java"></layer>
 			<layer name="User Level Business Transaction" language="java"></layer>
 			<layer name="Business Transaction" language="java"></layer>
+			<layer name="Negotiation Transaction" language="java"></layer>
 			<layer name="Stock Transaction" language="java"></layer>
 			<layer name="Digital Asset Transaction" language="java"></layer>
 			<layer name="Crypto Money Transaction" language="java"></layer>
@@ -5274,6 +5275,53 @@
 				</plugins>
 			</layer>
 			
+			<layer name="Negotiation Transaction" language="java">
+				<plugins>
+					<plugin	name="New"
+						description=""
+						difficulty="8"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Update"
+						description=""
+						difficulty="8"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Close"
+						description=""
+						difficulty="8"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			
 			<layer name="Stock Transaction" language="java">
 				<plugin	name="Crypto Money Restock"
 					description=""
@@ -5454,12 +5502,10 @@
 
 			<layer name="Actor Network Service" language="java">
 				<plugins>
-					<plugin
-						name="Crypto Broker"
+					<plugin	name="Crypto Broker"
 						description=""
 						difficulty="8"
-						code-level="development"
-						>
+						code-level="development">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -5470,16 +5516,28 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Crypto Customer"
+					<plugin	name="Crypto Customer"
 						description=""
 						difficulty="8"
-						code-level="development"
-						>
+						code-level="development">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="lnacosta" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Negotiation Transmission"
+						description=""
+						difficulty="7"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -7147,6 +7205,7 @@
 		<layer name="Request" language="java"></layer>
 		<layer name="User Level Business Transaction" language="java"></layer>
 		<layer name="Business Transaction" language="java"></layer>
+		<layer name="Negotiation Transaction" language="java"></layer>
 		<layer name="Stock Transaction" language="java"></layer>
 		<layer name="Digital Asset Transaction" language="java"></layer>
 		<layer name="Crypto Money Transaction" language="java"></layer>
