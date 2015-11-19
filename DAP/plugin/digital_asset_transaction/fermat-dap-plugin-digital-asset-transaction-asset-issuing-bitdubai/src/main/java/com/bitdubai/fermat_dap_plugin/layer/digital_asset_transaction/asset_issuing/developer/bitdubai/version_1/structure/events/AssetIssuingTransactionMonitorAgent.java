@@ -416,8 +416,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                 String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                                 System.out.println("ASSET ISSUING internal id "+transactionInternalId);
                                 digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE);
-                                assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
-
+                                assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
+                                assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(genesisTransaction, TransactionStatus.ISSUED);
                             }
                             assetIssuingTransactionDao.updateEventStatus(eventId);
                         }
