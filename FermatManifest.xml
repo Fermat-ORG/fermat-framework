@@ -3301,7 +3301,7 @@
 						name="Asset Issuer"
 						description=""
 						difficulty="3"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
