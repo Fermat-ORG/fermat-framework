@@ -5,12 +5,23 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantMakeUnholdTransactionException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.interfaces.UnholdManager;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantPerformTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.exceptions.MissingBankMoneyDestockDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyDestockManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.utils.BankTransactionParametersWrapper;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.utils.WalletTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
@@ -30,14 +41,17 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent{
     private final ErrorManager errorManager;
     private final StockTransactionBankMoneyDestockManager stockTransactionBankMoneyDestockManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
+    private final UnholdManager unHoldManager;
 
     public BusinessTransactionBankMoneyDestockMonitorAgent(ErrorManager errorManager,
                                                            StockTransactionBankMoneyDestockManager stockTransactionBankMoneyDestockManager,
-                                                           CryptoBrokerWalletManager cryptoBrokerWalletManager) {
+                                                           CryptoBrokerWalletManager cryptoBrokerWalletManager,
+                                                           UnholdManager unHoldManager) {
 
         this.errorManager                            = errorManager;
         this.stockTransactionBankMoneyDestockManager = stockTransactionBankMoneyDestockManager;
         this.cryptoBrokerWalletManager               = cryptoBrokerWalletManager;
+        this.unHoldManager                           = unHoldManager;
     }
     @Override
     public void start() throws CantStartAgentException {
@@ -115,6 +129,28 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent{
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
+                        try {
+                            WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(bankMoneyTransaction.getTransactionId(),
+                                    null,
+                                    BalanceType.AVAILABLE,
+                                    TransactionType.CREDIT,
+                                    CurrencyType.BANK_MONEY,
+                                    bankMoneyTransaction.getCbpWalletPublicKey(),
+                                    bankMoneyTransaction.getActorPublicKey(),
+                                    bankMoneyTransaction.getAmount(),
+                                    0,
+                                    bankMoneyTransaction.getConcept());
+
+                            cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
+
+                            bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
+                            stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
+
+                        } catch (CantPerformTransactionException e) {
+                            e.printStackTrace();
+                        } catch (CryptoBrokerWalletNotFoundException e) {
+                            e.printStackTrace();
+                        }
                         bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                         stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
                         break;
@@ -122,26 +158,23 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent{
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de Bank Hold y si lo consigue entonces le cambia el status de IN_WALLET y hace el credito
-//                        try {
-//                            WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(bankMoneyTransaction.getTransactionId(),
-//                                                                                                            null,
-//                                                                                                            BalanceType.AVAILABLE,
-//                                                                                                            TransactionType.CREDIT,
-//                   0                                                                                         CurrencyType.BANK_MONEY,
-//                                                                                                            bankMoneyTransaction.getCbpWalletPublicKey(),
-//                                                                                                            bankMoneyTransaction.getActorPublicKey(),
-//                                                                                                            bankMoneyTransaction.getAmount(),
-//                                                                                                            0,
-//                                                                                                            bankMoneyTransaction.getConcept());
-//
-//                            cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
-//                        } catch (CantPerformTransactionException e) {
-//                            e.printStackTrace();
-//                        } catch (CryptoBrokerWalletNotFoundException e) {
-//                            e.printStackTrace();
-//                        }
-                        bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
-                        stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
+                        BankTransactionParametersWrapper bankTransactionParametersWrapper = new BankTransactionParametersWrapper(
+
+                                bankMoneyTransaction.getTransactionId(),
+                                bankMoneyTransaction.getFiatCurrency(),
+                                bankMoneyTransaction.getBnkWalletPublicKey(),
+                                bankMoneyTransaction.getActorPublicKey(),
+                                bankMoneyTransaction.getBankAccount(),
+                                bankMoneyTransaction.getAmount(),
+                                bankMoneyTransaction.getMemo(),
+                                "pluginId");
+                        unHoldManager.unHold(bankTransactionParametersWrapper);
+                        BankTransactionStatus bankTransactionStatus =  unHoldManager.getUnholdTransactionsStatus(bankMoneyTransaction.getTransactionId());
+                        if (BankTransactionStatus.CONFIRMED.getCode() == bankTransactionStatus.getCode())
+                        {
+                            bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
+                            stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
+                        }
                         break;
                 }
             }
@@ -150,6 +183,10 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent{
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         } catch (MissingBankMoneyDestockDataException e) {
+            e.printStackTrace();
+        } catch (CantGetUnholdTransactionException e) {
+            e.printStackTrace();
+        } catch (CantMakeUnholdTransactionException e) {
             e.printStackTrace();
         }
     }

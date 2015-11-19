@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.all_definition.wallet.WalletTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
 
 import java.util.UUID;
 
@@ -14,9 +14,9 @@ import java.util.UUID;
  *
  * Created by franklin on 17/11/15.
  */
-public class WalletTransactionWrapper implements WalletTransaction {
+public class WalletTransactionWrapper implements StockTransaction {
     private final UUID            transactionId;
-    private final FermatEnum      stockType;
+    private final FermatEnum      merchandise;
     private final BalanceType     balanceType;
     private final TransactionType transactionType;
     private final CurrencyType    currencyType;
@@ -26,19 +26,19 @@ public class WalletTransactionWrapper implements WalletTransaction {
     private final long            timeStamp;
     private final String          memo;
 
-    public WalletTransactionWrapper(UUID transactionId,
-                                    FermatEnum stockType,
-                                    BalanceType balanceType,
+    public WalletTransactionWrapper(UUID            transactionId,
+                                    FermatEnum      merchandise,
+                                    BalanceType     balanceType,
                                     TransactionType transactionType,
-                                    CurrencyType currencyType,
-                                    String walletPublicKey,
-                                    String ownerPublicKey,
-                                    float amount,
-                                    long timeStamp,
-                                    String memo){
+                                    CurrencyType    currencyType,
+                                    String          walletPublicKey,
+                                    String          ownerPublicKey,
+                                    float           amount,
+                                    long            timeStamp,
+                                    String          memo){
 
         this.transactionId   = transactionId;
-        this.stockType       = stockType;
+        this.merchandise       = merchandise;
         this.balanceType     = balanceType;
         this.transactionType = transactionType;
         this.currencyType    = currencyType;
@@ -54,10 +54,6 @@ public class WalletTransactionWrapper implements WalletTransaction {
         return transactionId;
     }
 
-    @Override
-    public FermatEnum getStockType() {
-        return stockType;
-    }
 
     @Override
     public BalanceType getBalanceType() {
@@ -72,6 +68,11 @@ public class WalletTransactionWrapper implements WalletTransaction {
     @Override
     public CurrencyType getCurrencyType() {
         return currencyType;
+    }
+
+    @Override
+    public FermatEnum getMerchandise() {
+        return merchandise;
     }
 
     @Override
