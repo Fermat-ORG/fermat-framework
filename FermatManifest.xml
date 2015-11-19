@@ -5050,7 +5050,8 @@
 			</layer>
 
 			<layer name="User Level Business Transaction" language="java">
-				<plugin	name="Customer Broker Sale"
+				<plugins>
+					<plugin	name="Customer Broker Sale"
 					description=""
 					difficulty="8"
 					code-level="development"
@@ -5066,7 +5067,7 @@
 					<certifications>
 					</certifications>
 				</plugin>
-				<plugin	name="Customer Broker Purchase"
+					<plugin	name="Customer Broker Purchase"
 					description=""
 					difficulty="8"
 					code-level="development"
@@ -5082,6 +5083,7 @@
 					<certifications>
 					</certifications>
 				</plugin>
+				</plugins>
 			</layer>
 			
 			<layer name="Business Transaction" language="java">
@@ -5323,102 +5325,104 @@
 			</layer>
 			
 			<layer name="Stock Transaction" language="java">
-				<plugin	name="Crypto Money Restock"
-					description=""
-					difficulty="4"
-					code-level="development"
-					>
-					<authors>
-						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						<author name="yalayn" scope="implementation" percentage="10"></author>
-						<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
-					</authors>
-					<mantainers>
-					</mantainers>
-					<certifications>
-					</certifications>
-				</plugin>
-				<plugin	name="Cash Money Restock"
-					description=""
-					difficulty="4"
-					code-level="development"
-					>
-					<authors>
-						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						<author name="yalayn" scope="implementation" percentage="10"></author>
-						<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
-					</authors>
-					<mantainers>
-					</mantainers>
-					<certifications>
-					</certifications>
-				</plugin>
-				<plugin name="Bank Money Restock"
-					description=""
-					difficulty="4"
-					code-level="development"
-					>
-					<authors>
-						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						<author name="yalayn" scope="implementation" percentage="10"></author>
-						<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
-					</authors>
-					<mantainers>
-					</mantainers>
-					<certifications>
-					</certifications>
-				</plugin>
-				<plugin	name="Crypto Money Destock"
-					description=""
-					difficulty="4"
-					code-level="development"
-					>
-					<authors>
-						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						<author name="yalayn" scope="implementation" percentage="10"></author>
-						<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
-					</authors>
-					<mantainers>
-					</mantainers>
-					<certifications>
-					</certifications>
-				</plugin>
-				<plugin	name="Cash Money Destock"
-					description=""
-					difficulty="4"
-					code-level="development"
-					>
-					<authors>
-						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						<author name="yalayn" scope="implementation" percentage="10"></author>
-						<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
-					</authors>
-					<mantainers>
-					</mantainers>
-					<certifications>
-					</certifications>
-				</plugin>
-				<plugin	name="Bank Money Destock"
-					description=""
-					difficulty="4"
-					code-level="development"
-					>
-					<authors>
-						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						<author name="yalayn" scope="implementation" percentage="10"></author>
-						<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
-					</authors>
-					<mantainers>
-					</mantainers>
-					<certifications>
-					</certifications>
-				</plugin>	
+				<plugins>
+					<plugin	name="Crypto Money Restock"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Cash Money Restock"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin name="Bank Money Restock"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Crypto Money Destock"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Cash Money Destock"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Bank Money Destock"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
 			</layer>
 
 			<layer name="Wallet" language="java">
