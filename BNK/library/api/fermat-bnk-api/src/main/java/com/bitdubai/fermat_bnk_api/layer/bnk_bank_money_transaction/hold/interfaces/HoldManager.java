@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfaces;
 
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankMoneyTransaction;
+import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantGetHoldTransactionException;
@@ -14,7 +15,7 @@ import java.util.UUID;
  */
 public interface HoldManager {
 
-    void hold(BankTransactionParameters parameters)throws CantMakeHoldTransactionException;
+    BankTransaction hold(BankTransactionParameters parameters)throws CantMakeHoldTransactionException;
 
     BankTransactionStatus getUnholdTransactionsStatus(UUID transactionId) throws CantGetHoldTransactionException;
 

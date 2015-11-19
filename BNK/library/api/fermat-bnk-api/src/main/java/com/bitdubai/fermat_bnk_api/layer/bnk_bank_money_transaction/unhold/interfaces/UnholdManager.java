@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.interfaces;
 
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankMoneyTransaction;
+import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
@@ -14,7 +15,7 @@ import java.util.UUID;
  */
 public interface UnholdManager {
 
-    void unHold(BankTransactionParameters parameters)throws CantMakeUnholdTransactionException;
+    BankTransaction unHold(BankTransactionParameters parameters)throws CantMakeUnholdTransactionException;
 
     BankTransactionStatus getUnholdTransactionsStatus(UUID transactionId) throws CantGetUnholdTransactionException;
 }
