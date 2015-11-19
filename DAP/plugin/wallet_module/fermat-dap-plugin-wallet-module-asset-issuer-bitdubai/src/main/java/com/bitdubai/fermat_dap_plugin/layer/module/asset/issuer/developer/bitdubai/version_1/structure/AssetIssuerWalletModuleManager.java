@@ -1,8 +1,13 @@
 package com.bitdubai.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -62,20 +67,11 @@ public class AssetIssuerWalletModuleManager {
 
     public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
         try {
-            //assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey).distributionAssets(assetPublicKey, walletPublicKey, actorAssetUsers);
-            //TODO: Solo para prueba de Distribution
             if (getAllAssetUserActorConnected().size() > 0){
                 System.out.println("******* ASSET DISTRIBUTION TEST (Init Distribution)******");
                 walletPublicKey = "walletPublicKeyTest"; //TODO: Solo para la prueba del Distribution
-                //createMapDistribution(walletPublicKey, assetPublicKey);
-                /////////////////////////////////////////
-                //TODO: Solo para prueba de Distribution
-                HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
-                actorAssetUsers = getAllAssetUserActorConnected();
-                for (ActorAssetUser actorAssetUser : actorAssetUsers){
-                    hashMap.put(null, actorAssetUser);
-                }
-                /////////////////////////////////////////
+                HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = createMapDistribution(walletPublicKey, assetPublicKey, getAllAssetUserActorConnected());
+
                 assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
             }else{
                 System.out.println("******* ASSET DISTRIBUTION TEST (The list must contain at least one Actor User)******");
@@ -104,28 +100,28 @@ public class AssetIssuerWalletModuleManager {
         }
     }
 
-    private HashMap<DigitalAssetMetadata, ActorAssetUser> createMapDistribution(String walletPublicKey, String assetPublicKey) throws CantGetTransactionsException{
+    private HashMap<DigitalAssetMetadata, ActorAssetUser> createMapDistribution(String walletPublicKey, String assetPublicKey, List<ActorAssetUser> actorAssetUsers) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException {
         List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = getTransactionsAssetAll(walletPublicKey, assetPublicKey);
         //TODO: Comentado para la prueba del Distribution no Borrar
         HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
-//        int i = 0;
-//        for (AssetIssuerWalletTransaction assetIssuerWalletTransactionList : assetIssuerWalletTransactions){
-//            //TODO: Optimizar para que vea el registro de la tabla Balance Wallet
-//            DigitalAsset digitalAsset = new  DigitalAsset();
-//            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, assetIssuerWalletTransactionList.getAssetPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-//            String digitalAssetData = pluginTextFile.getContent();
-//            digitalAsset = (DigitalAsset) XMLParser.parseXML(digitalAssetData, digitalAsset);
-//            DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
-//            digitalAssetMetadata.setDigitalAsset(digitalAsset);
-//            digitalAssetMetadata.setGenesisTransaction(assetIssuerWalletTransactionList.getTransactionHash());
-//            hashMap.put(digitalAssetMetadata, actorAssetUsers.get(i));
-//
-//            if (i > actorAssetUsers.size()){
-//                break;
-//            }
-//
-//            i++;
-//        }
+        int i = 0;
+        for (AssetIssuerWalletTransaction assetIssuerWalletTransactionList : assetIssuerWalletTransactions){
+            //TODO: Optimizar para que vea el registro de la tabla Balance Wallet
+            DigitalAsset digitalAsset = new  DigitalAsset();
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, assetIssuerWalletTransactionList.getAssetPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String digitalAssetData = pluginTextFile.getContent();
+            digitalAsset = (DigitalAsset) XMLParser.parseXML(digitalAssetData, digitalAsset);
+            DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
+            digitalAssetMetadata.setDigitalAsset(digitalAsset);
+            digitalAssetMetadata.setGenesisTransaction(assetIssuerWalletTransactionList.getTransactionHash());
+            hashMap.put(digitalAssetMetadata, actorAssetUsers.get(i));
+
+            if (i > actorAssetUsers.size()){
+                break;
+            }
+
+            i++;
+        }
         return hashMap;
     }
 }

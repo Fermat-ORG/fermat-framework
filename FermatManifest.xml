@@ -1665,7 +1665,7 @@
 						name="Bitcoin Wallet"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1704,7 +1704,7 @@
 			<layer name="Sub App">
 				<androids>
 					<android
-						name="Intra User identity"
+						name="Intra Wallet User identity"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -1721,7 +1721,7 @@
 						</certifications>
 					</android>
 					<android
-						name="Intra User Community"
+						name="Intra Wallet User Community"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -1747,7 +1747,7 @@
 						name="Crypto Wallet"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1770,7 +1770,7 @@
 						name="Intra User"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1807,7 +1807,7 @@
 						name="Intra User"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>

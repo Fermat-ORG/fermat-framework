@@ -3,6 +3,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.develop
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 
+import java.util.UUID;
+
 /**
  * Created by Matias Furszyfer on 2015.09.17..
  */
@@ -20,13 +22,23 @@ public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest{
 
     private String state;
 
-    public CryptoWalletWalletModulePaymentRequest(String date, String reason, long amount, CryptoWalletWalletContact cryptoWalletWalletContact, int type,String state) {
+    private UUID requestId;
+
+    public CryptoWalletWalletModulePaymentRequest(UUID requestId,String date, String reason, long amount, CryptoWalletWalletContact cryptoWalletWalletContact, int type,String state) {
+        this.requestId = requestId;
+
         this.date = date;
         this.reason = reason;
         this.amount = amount;
         this.cryptoWalletWalletContact = cryptoWalletWalletContact;
         this.type=type;
         this.state=state;
+    }
+
+    @Override
+    public UUID getRequestId()
+    {
+        return this.requestId;
     }
 
     @Override

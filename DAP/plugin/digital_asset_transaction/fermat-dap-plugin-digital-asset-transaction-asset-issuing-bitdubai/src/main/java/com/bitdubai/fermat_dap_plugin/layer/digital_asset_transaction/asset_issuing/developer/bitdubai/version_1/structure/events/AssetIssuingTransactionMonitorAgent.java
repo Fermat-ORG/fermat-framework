@@ -365,7 +365,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 CantCheckAssetIssuingProgressException,
                 UnexpectedResultReturnedFromDatabaseException,
                 CantGetCryptoTransactionException,
-                CantDeliverDigitalAssetToAssetWalletException, InvalidParameterException {
+                InvalidParameterException {
 
             if(isPendingEvents()){
                 System.out.println("ASSET ISSUING: is pending event");
@@ -390,7 +390,12 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                 System.out.println("ASSET ISSUING crypto transaction on crypto network "+cryptoGenesisTransaction.getTransactionHash());
                                 String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                                 System.out.println("ASSET ISSUING internal id "+transactionInternalId);
-                                digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK);
+                                try {
+                                    digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK);
+                                } catch (CantDeliverDigitalAssetToAssetWalletException e) {
+                                    e.printStackTrace();
+                                    continue;
+                                }
                                 assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
 
                             }
@@ -415,7 +420,12 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                 this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(publicKey);
                                 String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                                 System.out.println("ASSET ISSUING internal id "+transactionInternalId);
-                                digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE);
+                                try {
+                                    digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE);
+                                } catch (CantDeliverDigitalAssetToAssetWalletException e) {
+                                    e.printStackTrace();
+                                    continue;
+                                }
                                 assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
                                 assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(genesisTransaction, TransactionStatus.ISSUED);
                             }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="wallet_factory_orange">#ff9900</color>
+    <color name="wallet_store_link">#69b07f</color>
+    <color name="wallet_install_background_button">#69b07f</color>
+    <color name="wallet_install_text_button">#ffffff</color>
+    <color name="wallet_uninstall_background_button">#89c3c1ce</color>
+    <color name="wallet_uninstall_text_button">#181818</color>
+    <color name="wallet_name_black">#66000000</color>
+    <color name="wallet_store_activities_background">#fbf7ed</color>
+
+
+    <color name="green">#8bba9e</color>
+
+    <color name="nav_drawer_color">#0072bb</color>
+
+    <color name="color_black">#000000</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_gray_light1">#aadbfaC8</color>
+    <color name="color_gray_light">#99C9C9C9</color>
+    <color name="color_black_light">#99000000</color>
+
+    <color name="secondary_text">#727272</color>
+    <color name="primary_text">#212121</color>
+</resources>
