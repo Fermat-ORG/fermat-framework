@@ -122,7 +122,7 @@ public class EventsLauncher implements DealsWithEvents {
 
                 }
                 break;
-            case REDEEM_POINT_SPECIALIST:
+            case ASSET_USER_SPECIALIST:
                 switch (cryptoStatus) {
                     case ON_CRYPTO_NETWORK:
                         raiseEvent(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
@@ -146,19 +146,19 @@ public class EventsLauncher implements DealsWithEvents {
                         throw new CryptoStatusNotHandledException(message, null, context, possibleCause);
                 }
                 break;
-            case ASSET_USER_SPECIALIST:
+            case REDEEM_POINT_SPECIALIST:
                 switch (cryptoStatus) {
                     case ON_CRYPTO_NETWORK:
-                        raiseEvent(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
+                        raiseEvent(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT);
                         break;
                     case ON_BLOCKCHAIN:
-                        raiseEvent(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
+                        raiseEvent(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT);
                         break;
                     case REVERSED_ON_CRYPTO_NETWORK:
-                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
+                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT);
                         break;
                     case REVERSED_ON_BLOCKCHAIN:
-                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
+                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT);
                         break;
                     case IRREVERSIBLE:
                         //define what to do.
