@@ -214,7 +214,9 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         System.out.print("-------------- sendBitcoins to cryptoVaultManager");
                         dao.setTransactionHash(transaction, hash);
                         // TODO: The crypto vault should let us obtain the transaction hash before sending the currency. As this was never provided by the vault
+                        // Le setie el hash, mati
                         //       we will just send the metadata in this place. This MUST be corrected.
+                        transaction.setTransactionHash(hash);
                         dao.setToSTCV(transaction);
                         this.cryptoTransmissionManager.sendCrypto(transaction.getTransactionId(),
                                 transaction.getAddressTo().getCryptoCurrency(),
