@@ -59,17 +59,17 @@ Wallets are higher level abstractions and have their own set of Plug-ins to keep
 
 The network is intended for two main reasons: 
 
-a. For clients to find other clients.
+a. For network clients to find other network clients.
 
-b. For clients to call other clients.  
+b. For network clients to call other network clients.  
 
-Every Node has a copy of a distributed geo-localized inventory of all network nodes. They run a protocol that allows them to keep their copy synchronized. 
+Every network node has a copy of a distributed geo-localized inventory of all network nodes. They run a protocol that allows them to keep their copy synchronized. 
 
 An **actor** is a type of role an end user might play and in this context represents one of the end users identities.
  
 To be able to be found, a network client checks itself and its actors in with the geographically closest node. We call this the _Home Node_. When an actor needs to find another actor, it follows a protocol that requires the approximate location of the actor it's looking to connect to. This is possible because the system deals with end users and usually people know the city, state or country where the people they know live. In this way we avoid using phone numbers, emails or any other possible personal identifier that could compromise privacy.
 
-For scalability reasons, we moved the responsibility of finding actors within the network, from the network itself to the network clients. Each node has a distributed catalog of Actors and is responsible for keeping it updated. Instead of every node having the full catalog, only a set of nodes nearby the _Home Node_ of an actor knows that actor and which node is its home. This allows any actor who knows the approximate location of the actor it is searching for to easily find, trace and follow it to the current _Home Node_ where its friend are checked in, allowing them to stablish a connection between themselves. 
+For scalability reasons, we moved the responsibility of finding actors within the network, from the network itself to the network clients. Each node has a distributed catalog of Actors and is responsible for keeping it updated. Instead of every node having the full catalog, only a set of nodes nearby the _Home Node_ of an actor knows that actor and which node is its home. This allows any actors who know the approximate location of the actors they are searching for to easily find, trace and follow them to their current _Home Node_ where they are checked in, allowing them to stablish a connection between themselves. 
 
 <br>
 ### Incentive
