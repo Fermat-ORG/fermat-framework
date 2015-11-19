@@ -301,6 +301,9 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
         try {
             DatabaseTable databaseTableAssuerIssuerWallet = getAssetIssuerWalletTable();
             databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            
+            //// TODO: 11/19/15 Remover el comentario para que solamente traiga transacciones available una vez corregido el issue de la wallet. 
+            //databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME, BalanceType.AVAILABLE.getCode(), DatabaseFilterType.EQUAL);
 
             databaseTableAssuerIssuerWallet.loadToMemory();
             return createTransactionList(databaseTableAssuerIssuerWallet.getRecords());
