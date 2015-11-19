@@ -5566,20 +5566,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Negotiation Transmission"
-						description=""
-						difficulty="7"
-						code-level="development">
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
 				</plugins>
 			</layer>
 			
@@ -5593,6 +5579,20 @@
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="darkestpriest" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Negotiation Transmission"
+						description=""
+						difficulty="7"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
