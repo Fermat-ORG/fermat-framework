@@ -3255,6 +3255,57 @@
 						<certifications>
 						</certifications>
 					</android>
+					<android
+						name="Asset Issuer Identity"
+						description=""
+						difficulty="3"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+						name="Asset User Identity"
+						description=""
+						difficulty="3"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+						name="RedeemPoint Identity"
+						description=""
+						difficulty="3"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
 				</androids>
 			</layer>
 
@@ -3301,7 +3352,7 @@
 						name="Asset Issuer"
 						description=""
 						difficulty="3"
-						code-level="QA"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3317,7 +3368,7 @@
 						name="Asset User"
 						description=""
 						difficulty="3"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3333,7 +3384,7 @@
 						name="Redeem Point"
 						description=""
 						difficulty="3"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3354,7 +3405,7 @@
 						name="Asset Factory"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3371,7 +3422,7 @@
 						name="Asset Issuer Community"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3388,7 +3439,7 @@
 						name="Asset User Community"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3405,7 +3456,7 @@
 						name="Redeem Point Community"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3464,7 +3515,7 @@
 						name="Asset Issuer"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3480,7 +3531,7 @@
 						name="Asset User"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3496,7 +3547,7 @@
 						name="Redeem Point"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3517,7 +3568,7 @@
 						name="Asset Factory"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3539,7 +3590,7 @@
 						name="Asset Distribution"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3555,7 +3606,7 @@
 						name="Asset Reception"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3571,7 +3622,7 @@
 						name="Asset Issuing"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3587,7 +3638,7 @@
 						name="Issuer Redemption"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3603,7 +3654,7 @@
 						name="User Redemption"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3619,7 +3670,7 @@
 						name="Redeem Point Redemption"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3635,7 +3686,7 @@
 						name="Asset Appropriation"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3672,7 +3723,7 @@
 						name="Assets Issuer Wallet"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3688,7 +3739,7 @@
 						name="Assets User Wallet"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3704,7 +3755,7 @@
 						name="Redeem Point Wallet"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3725,7 +3776,7 @@
 						name="Asset Issuer"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3741,7 +3792,7 @@
 						name="Asset User"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3757,7 +3808,7 @@
 						name="Redeem Point"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3778,7 +3829,7 @@
 						name="Asset Issuer"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3794,7 +3845,7 @@
 						name="Asset User"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3810,7 +3861,7 @@
 						name="Redeem Point"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3831,7 +3882,7 @@
 						name="Asset Transmission"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -6827,7 +6878,7 @@
 						name="Assets Over Bitcoin"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -6911,7 +6962,7 @@
 						name="Bitcoin"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
