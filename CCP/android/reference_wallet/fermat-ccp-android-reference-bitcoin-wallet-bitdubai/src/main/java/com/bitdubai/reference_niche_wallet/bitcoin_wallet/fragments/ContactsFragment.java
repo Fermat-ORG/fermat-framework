@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -335,15 +336,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
-//       final FloatingActionButton fabAddPerson = (FloatingActionButton) rootView.findViewById(R.id.fab_add_person);
-//        fabAddPerson.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                walletContact = new WalletContact();
-//                walletContact.setName("");
-//                lauchCreateContactDialog(false);
-//            }
-//        });
+        mSearchView.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
         mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
             @Override

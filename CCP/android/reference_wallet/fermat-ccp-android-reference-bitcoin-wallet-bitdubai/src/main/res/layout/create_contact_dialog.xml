@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingTop="16dp">
+            android:paddingTop="7dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
@@ -77,15 +77,15 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:hint="Name"
-                android:textColorHint="#666666"
+                android:textColorHint="#9a9a9c"
                 android:inputType="textCapWords"
                 android:paddingBottom="7dip"
                 android:paddingLeft="15dip"
                 android:paddingRight="7dip"
                 android:paddingTop="7dip"
                 android:singleLine="true"
-                android:textColor="#666666"
-                android:textSize="12sp"
+                android:textColor="#1d1d26"
+                android:textSize="14sp"
                 android:layout_weight="1"
                 android:layout_marginLeft="15dp"
                 android:textStyle="normal" />
@@ -145,15 +145,15 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:hint="Address"
-            android:textColorHint="#666666"
+            android:textColorHint="#9a9a9c"
             android:inputType="textCapWords"
             android:paddingBottom="7dip"
             android:paddingLeft="15dip"
             android:paddingRight="7dip"
             android:paddingTop="7dip"
             android:singleLine="true"
-            android:textColor="#666666"
-            android:textSize="12sp"
+            android:textColor="#1d1d26"
+            android:textSize="14sp"
             android:layout_marginLeft="15dp"
             android:textStyle="normal" />
 
@@ -188,8 +188,8 @@
         android:paddingBottom="3dip"
         android:layout_marginTop="20dp"
         android:background="#FFFFFF"
-        android:paddingRight="60dp"
-        android:paddingLeft="12dp">
+        android:paddingRight="50dp"
+        >
 
         <Button
             android:id="@+id/cancel_btn"
