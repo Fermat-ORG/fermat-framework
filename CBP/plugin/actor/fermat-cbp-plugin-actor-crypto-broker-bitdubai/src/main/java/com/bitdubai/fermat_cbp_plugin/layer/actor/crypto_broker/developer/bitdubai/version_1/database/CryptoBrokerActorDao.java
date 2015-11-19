@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
@@ -80,13 +79,15 @@ public class CryptoBrokerActorDao implements CryptoBrokerActorManager {
 
                 BrokerActorTable.insertRecord(recordToInsert);
 
-                //return newCustomerBrokerBrokerActor(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, NegotiationStatus.WAITING_FOR_BROKER, clauses);
+                return constructCryptoBrokerActorRelationshipFromRecord(recordToInsert);
 
             } catch (CantInsertRecordException e) {
                 throw new CantCreateNewBrokerIdentityWalletRelationshipException(CantCreateNewBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantCreateNewBrokerIdentityWalletRelationshipException(CantCreateNewBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
+            } catch (CantGetListClauseException e) {
+                throw new CantCreateNewBrokerIdentityWalletRelationshipException(CantCreateNewBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
             }
-
-            return null;
         }
 
         @Override
@@ -124,18 +125,16 @@ public class CryptoBrokerActorDao implements CryptoBrokerActorManager {
                 String publicKeyBroker,
                 UUID   walletId
         ){
-            return new BrokerIdentityWalletRelationshipInformation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, statusNegotiation, clauses);
+            return new BrokerIdentityWalletRelationshipInformation(relationshipId, publicKeyBroker, walletId);
         }
 
         private BrokerIdentityWalletRelationship constructCryptoBrokerActorRelationshipFromRecord(DatabaseTableRecord record) throws InvalidParameterException, CantGetListClauseException {
 
-            UUID    negotiationId     = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME);
-            String  publicKeyCustomer = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-            String  publicKeyBroker   = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
-            long    startDataTime     = record.getLongValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME);
-            NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
+            UUID    relationshipId       = record.getUUIDValue(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME);
+            String  publicKeyBroker     = record.getStringValue(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_BROKER_PUBLIC_KEY_COLUMN_NAME);
+            UUID    walletId            = record.getUUIDValue(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME);
 
-            return newCryptoBrokerActorRelationship(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation, getClauses(negotiationId));
+            return newCryptoBrokerActorRelationship(relationshipId, publicKeyBroker, walletId);
         }
 
 }
