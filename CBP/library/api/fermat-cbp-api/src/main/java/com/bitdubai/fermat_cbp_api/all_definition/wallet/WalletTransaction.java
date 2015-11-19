@@ -18,6 +18,8 @@ public interface WalletTransaction {
 
     TransactionType getTransactionType();
 
+    FermatEnum getStockType();
+
     CurrencyType getCurrencyType();
 
     String getWalletPublicKey();

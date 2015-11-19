@@ -136,7 +136,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
              * Call the wallet resource to install new wallet
              */
             // TODO: Le tendria que pasar la wallet public key
-            walletResources.installCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(),installedWallet.getSkinsId().get(0).getAlias(), installedWallet.getLanguagesId().get(0).getLanguage().value(), installedWallet.getWalletNavigationStructureVersion(), installedWallet.getWalletPublicKey());
+            walletResources.installCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(),installedWallet.getSkinsId().get(0).getAlias(), installedWallet.getLanguagesId().get(0).getLanguage().getCode(), installedWallet.getWalletNavigationStructureVersion(), installedWallet.getWalletPublicKey());
 
             /**
              * I create a new clone wallet on database
@@ -324,7 +324,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * Call Wallet Resource to install Language
              */
-            walletResources.installLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(), languageId, language.value(), installedWallet.getWalletPublicKey());
+            walletResources.installLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(), languageId, language.getCode(), installedWallet.getWalletPublicKey());
 
             /**
              * Save language in the Data Base

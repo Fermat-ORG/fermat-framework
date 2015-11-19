@@ -83,6 +83,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionMetadataRecord;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionResponseMessage;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionTransactionProtocolManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
@@ -93,6 +95,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1121,65 +1124,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     @Override
     public TransactionProtocolManager<FermatCryptoTransaction> getTransactionManager() {
-
-
-//        TransactionProtocolManager<FermatCryptoTransaction> fermatCryptoTransactionTransactionProtocolManager = new FermatCryptoTransaction(
-//                false,
-//                null,
-//
-//        );
-        TransactionProtocolManager<FermatCryptoTransaction> transactionTransactionProtocolManager = new TransactionProtocolManager<FermatCryptoTransaction>() {
-            @Override
-            public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
-                try {
-
-                    cryptoTransmissionMetadataDAO.confirmReception(transactionID);
-
-
-
-                } catch (CantUpdateRecordDataBaseException e) {
-                    e.printStackTrace();
-                } catch (PendingRequestNotFoundException e) {
-                    e.printStackTrace();
-                } catch (CantGetCryptoTransmissionMetadataException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public List<Transaction<FermatCryptoTransaction>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
-                List<Transaction<FermatCryptoTransaction>> lst = new ArrayList<>();
-                try {
-
-                    for(CryptoTransmissionMetadata cryptoTransmissionMetadata : cryptoTransmissionMetadataDAO.getPendings()){
-
-                        FermatCryptoTransaction fermatCryptoTransaction = new FermatCryptoTransaction(
-                                false,
-                                null,
-                                cryptoTransmissionMetadata.getSenderPublicKey(),
-                                cryptoTransmissionMetadata.getDestinationPublicKey(),
-                                cryptoTransmissionMetadata.getAssociatedCryptoTransactionHash(),
-                                cryptoTransmissionMetadata.getPaymentDescription());
-
-                        Transaction transaction = new Transaction(
-                                cryptoTransmissionMetadata.getTransactionId(),
-                                fermatCryptoTransaction,
-                                Action.APPLY,
-                                System.currentTimeMillis()
-                                );
-
-
-                        lst.add(transaction);
-                    }
-
-                } catch (CantReadRecordDataBaseException e) {
-                    e.printStackTrace();
-                }
-                return lst;
-            }
-        };
-
-        return null;
+        CryptoTransmissionTransactionProtocolManager cryptoTransmissionTransactionProtocolManager = new CryptoTransmissionTransactionProtocolManager(cryptoTransmissionMetadataDAO);
+        return cryptoTransmissionTransactionProtocolManager;
     }
 
 
@@ -1210,8 +1156,81 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         return cacheConnections.get(actorPublicKey);
     }
 
-    public void handleNewMessages(FermatMessage data) {
+    public void handleNewMessages(FermatMessage fermatMessage){
 
+        Gson gson = new Gson();
+
+        System.out.println("Crypto transmission metadata arrived, handle new message");
+
+        try {
+
+
+            CryptoTransmissionMetadata cryptoTransmissionMetadata = gson.fromJson(fermatMessage.getContent(), CryptoTransmissionMetadataRecord.class);
+
+            if(cryptoTransmissionMetadata.getCryptoCurrency()!=null) {
+
+                cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
+
+                cryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
+
+                System.out.print("-----------------------\n" +
+                        "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
+                        "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
+
+
+            }else{
+
+                try {
+
+                    //JsonObject innerObject = new JsonObject();
+                    Gson gson1 = new Gson();
+                    CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage =  gson.fromJson(fermatMessage.getContent(), CryptoTransmissionResponseMessage.class);
+
+                    //UUID transcation_id = UUID.fromString( innerObject.get("transaction_id").getAsString());
+                    switch (cryptoTransmissionResponseMessage.getCryptoTransmissionStates()){
+
+                        case SEEN_BY_DESTINATION_NETWORK_SERVICE:
+                            cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE);
+                            System.out.print("-----------------------\n" +
+                                    "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
+                                    "-----------------------\n STATE: " + CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE);
+                            System.out.print("CryptoTransmission SEEN_BY_DESTINATION_NETWORK_SERVICE event");
+
+                            break;
+                        case SEEN_BY_DESTINATION_VAULT:
+                            // deberia ver si tengo que lanzar un evento acá
+                            cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionResponseMessage.getTransactionId(),CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
+                            System.out.print("-----------------------\n" +
+                                    "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
+                                    "-----------------------\n STATE: " + CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
+                            System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
+                            break;
+
+                        case CREDITED_IN_DESTINATION_WALLET:
+                            // Guardo estado
+                            cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                            System.out.print("-----------------------\n" +
+                                    "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
+                                    "-----------------------\n STATE: " + CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                            // deberia ver si tengo que lanzar un evento acá
+                            System.out.print("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
+
+                            break;
+                    }
+
+
+                } catch (CantUpdateRecordDataBaseException c) {
+                    c.printStackTrace();
+                }
+
+            }
+        } catch (CantSaveCryptoTransmissionMetadatatException e) {
+            e.printStackTrace();
+        }  catch (Exception e){
+            //quiere decir que no estoy reciviendo metadata si no una respuesta
+            e.printStackTrace();
+
+        }
     }
 
     public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfilePluginRoot) {

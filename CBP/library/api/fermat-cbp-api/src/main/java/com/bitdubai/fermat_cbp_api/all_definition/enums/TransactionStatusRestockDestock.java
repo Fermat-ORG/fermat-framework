@@ -11,7 +11,8 @@ public enum TransactionStatusRestockDestock implements FermatEnum {
     INIT_TRANSACTION("ITRANS"),
     IN_HOLD("IHOLD"),
     IN_UNHOLD("IUNHOLD"),
-    IN_WALLET("IWALLET");
+    IN_WALLET("IWALLET"),
+    COMPLETED("COMPLETED");
 
     TransactionStatusRestockDestock(String code) {
         this.code = code;
@@ -29,6 +30,7 @@ public enum TransactionStatusRestockDestock implements FermatEnum {
             case "IHOLD": return TransactionStatusRestockDestock.IN_HOLD;
             case "IUNHOLD": return TransactionStatusRestockDestock.IN_UNHOLD;
             case "IWALLET": return TransactionStatusRestockDestock.IN_WALLET;
+            case "COMPLETED": return TransactionStatusRestockDestock.COMPLETED;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
         }
     }
