@@ -1,9 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manager.interfaces;
 
 
-
 import com.bitdubai.fermat_cbp_api.all_definition.enums.SubAppCategory;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_cbp_api.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manager.exceptions.CantGetCryptoSubAppListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manager.exceptions.CantListSubAppsException;
@@ -13,16 +11,6 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manager.exce
 import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manager.exceptions.CantStartUninstallSubAppException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manager.exceptions.CantStartUninstallSubAppLanguageException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manager.exceptions.CantStartUninstallSubAppSkinException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.exception.CantGetCryptoWalletListException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.exception.CantListWalletsException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.exception.CantStartUninstallWalletException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.exception.CantStartUninstallWalletLanguageException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.exception.CantStartUninstallWalletSkinException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.exception.CantStartWalletInstallationException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.exception.CantStartWalletLanguageInstallationException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.exception.CantStartWalletSkinInstallationException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.interfaces.CryptoDesktopInstalledWallet;
-import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.interfaces.CryptoDesktopWalletInformation;
 
 import java.util.List;
 import java.util.UUID;

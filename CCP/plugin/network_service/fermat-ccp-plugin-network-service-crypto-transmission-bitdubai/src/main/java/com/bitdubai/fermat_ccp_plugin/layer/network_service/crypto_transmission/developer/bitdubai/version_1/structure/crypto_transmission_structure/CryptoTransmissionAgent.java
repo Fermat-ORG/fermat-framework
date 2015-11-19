@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoMetadataEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
@@ -586,6 +588,8 @@ public class CryptoTransmissionAgent {
                                             "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
 
+                                    lauchNotification();
+
                                     // Notifico recepcion de metadata
                                     CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(
                                             cryptoTransmissionMetadata.getTransactionId(),
@@ -633,80 +637,7 @@ public class CryptoTransmissionAgent {
         this.platformComponentProfile = platformComponentProfile;
     }
 
-    public void handleNewMessages(FermatMessage fermatMessage){
 
-        Gson gson = new Gson();
-
-        try {
-
-
-            CryptoTransmissionMetadata cryptoTransmissionMetadata = gson.fromJson(fermatMessage.getContent(), CryptoTransmissionMetadataRecord.class);
-
-            if(cryptoTransmissionMetadata.getCryptoCurrency()!=null) {
-
-                cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
-
-                cryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
-
-                System.out.print("-----------------------\n" +
-                        "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
-                        "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
-
-
-            }else{
-
-                try {
-
-                    //JsonObject innerObject = new JsonObject();
-                    Gson gson1 = new Gson();
-                    CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage =  gson.fromJson(fermatMessage.getContent(), CryptoTransmissionResponseMessage.class);
-
-                    //UUID transcation_id = UUID.fromString( innerObject.get("transaction_id").getAsString());
-                    switch (cryptoTransmissionResponseMessage.getCryptoTransmissionStates()){
-
-                        case SEEN_BY_DESTINATION_NETWORK_SERVICE:
-                            cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE);
-                            System.out.print("-----------------------\n" +
-                                    "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: " + CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE);
-                            System.out.print("CryptoTransmission SEEN_BY_DESTINATION_NETWORK_SERVICE event");
-
-                            break;
-                        case SEEN_BY_DESTINATION_VAULT:
-                            // deberia ver si tengo que lanzar un evento acá
-                            cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionResponseMessage.getTransactionId(),CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
-                            System.out.print("-----------------------\n" +
-                                    "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: " + CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
-                            System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
-                            break;
-
-                        case CREDITED_IN_DESTINATION_WALLET:
-                            // Guardo estado
-                            cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
-                            System.out.print("-----------------------\n" +
-                                    "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: " + CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
-                            // deberia ver si tengo que lanzar un evento acá
-                            System.out.print("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
-
-                            break;
-                    }
-
-
-                } catch (CantUpdateRecordDataBaseException c) {
-                    c.printStackTrace();
-                }
-
-            }
-        } catch (CantSaveCryptoTransmissionMetadatatException e) {
-            e.printStackTrace();
-        }  catch (Exception e){
-            //quiere decir que no estoy reciviendo metadata si no una respuesta
-            e.printStackTrace();
-
-        }
-    }
 
     public void connectionFailure(String identityPublicKey){
         this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
@@ -723,7 +654,8 @@ public class CryptoTransmissionAgent {
 
     private void lauchNotification(){
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_METADATA);
-        IncomingCryptoMetadataReceive incomingCryptoMetadataReceive = (IncomingCryptoMetadataReceive) fermatEvent;
+        IncomingCryptoMetadataEvent incomingCryptoMetadataReceive = (IncomingCryptoMetadataEvent) fermatEvent;
+        incomingCryptoMetadataReceive.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
         eventManager.raiseEvent(incomingCryptoMetadataReceive);
     }
 
