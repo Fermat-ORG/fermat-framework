@@ -71,7 +71,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
     private final CryptoVaultManager cryptoVaultManager;
     private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
-    private EventAgent eventAgent;
+    private AppropriationAgent appropriationAgent;
     //VARIABLES ACCESSED BY AGENT INNER CLASS.
     //NEEDS TO BE VOLATILE SINCE THEY'RE BEING USED ON ANOTHER THREAD.
     //I NEED THREAD TO NOTICE ASAP.
@@ -113,8 +113,8 @@ public class AssetAppropriationMonitorAgent implements Agent {
             logManager.log(AssetAppropriationDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: starting...", null, null);
             latch = new CountDownLatch(1);
 
-            eventAgent = new EventAgent();
-            Thread eventThread = new Thread(eventAgent);
+            appropriationAgent = new AppropriationAgent();
+            Thread eventThread = new Thread(appropriationAgent);
             eventThread.start();
         } catch (Exception e) {
             throw new CantStartAgentException();
@@ -126,13 +126,13 @@ public class AssetAppropriationMonitorAgent implements Agent {
     @Override
     public void stop() {
         logManager.log(AssetAppropriationDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: stopping...", null, null);
-        eventAgent.stopAgent();
+        appropriationAgent.stopAgent();
         try {
             latch.await(); //WAIT UNTIL THE LAST RUN FINISH
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
         }
-        eventAgent = null; //RELEASE RESOURCES.
+        appropriationAgent = null; //RELEASE RESOURCES.
         logManager.log(AssetAppropriationDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: successfully stopped...", null, null);
         this.status = ServiceStatus.STOPPED;
     }
@@ -145,12 +145,12 @@ public class AssetAppropriationMonitorAgent implements Agent {
     //GETTER AND SETTERS
 
     //INNER CLASSES
-    private class EventAgent implements Runnable {
+    private class AppropriationAgent implements Runnable {
 
         private volatile boolean agentRunning;
-        private static final int WAIT_TIME = 20; //SECONDS
+        private static final int WAIT_TIME = 5 * 1000; //SECONDS
 
-        public EventAgent() {
+        public AppropriationAgent() {
             startAgent();
         }
 
@@ -159,7 +159,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
             while (agentRunning) {
                 try {
                     doTheMainTask();
-                    Thread.sleep(WAIT_TIME * 1000);
+                    Thread.sleep(WAIT_TIME);
                 } catch (InterruptedException e) {
                     /*If this happen there's a chance that the information remains
                     in a corrupt state. That probably would be fixed in a next run.

@@ -191,9 +191,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                     } catch (OutgoingIntraActorWalletNotSupportedException | CantCalculateBalanceException
                             | CantRegisterDebitException | OutgoingIntraActorCantCancelTransactionException
                             | CantLoadWalletException e) {
-                        //reportUnexpectedException(e);
-                        // Todo: Rodrigo, since the wallet cant be loaded at this time, I'm still putting the transacction in PIA
-                        dao.setToPIA(transaction);
+                        reportUnexpectedException(e);
                     }
                 }
 
@@ -218,13 +216,6 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         //       we will just send the metadata in this place. This MUST be corrected.
                         transaction.setTransactionHash(hash);
                         dao.setToSTCV(transaction);
-                        this.cryptoTransmissionManager.sendCrypto(transaction.getTransactionId(),
-                                transaction.getAddressTo().getCryptoCurrency(),
-                                transaction.getAmount(),
-                                transaction.getActorFromPublicKey(),
-                                transaction.getActorToPublicKey(),
-                                transaction.getTransactionHash(),
-                                transaction.getMemo());
 
                     } catch (InsufficientCryptoFundsException e) {
                         // TODO: Raise informative event
@@ -249,8 +240,6 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                     } catch (CryptoTransactionAlreadySentException e) {
                         reportUnexpectedException(e);
                         // TODO: Verify what to do when the transaction has already been sent.
-                    } catch (CouldNotTransmitCryptoException | OutgoingIntraActorCantSetTranactionHashException | OutgoingIntraActorCantCancelTransactionException e) {
-                        reportUnexpectedException(e);
                     }
                 }
 
