@@ -1,4 +1,4 @@
-# Fermat CBP Plugin Negotiation Transaction New
+# Fermat CBP Plugin Negotiation Transaction Update
 
 Gestiona la actualizacion de la negociacion entre un Crypto Broker y un Crypto Customer.
 
@@ -9,7 +9,7 @@ Gestiona la actualizacion de la negociacion entre un Crypto Broker y un Crypto C
 * Actualiza el estatus de la transaccion.
 * Guarda en un log las operaciones.
 * Intercambia informacion entre el crypto broker y el crypto customer para mantener una sincronizacion de los datos en ambas partes.
-utilizando el Actor Network Service Negotiation Transmission.
+Utilizando el Actor Network Service Negotiation Transmission.
 
 ## Developer
 

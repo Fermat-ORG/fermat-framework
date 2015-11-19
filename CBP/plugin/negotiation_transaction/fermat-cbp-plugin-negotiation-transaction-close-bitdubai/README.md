@@ -1,6 +1,6 @@
-# Fermat CBP Plugin Negotiation Transaction New
+# Fermat CBP Plugin Negotiation Transaction Close
 
-Gestiona la negociacion entre un Crypto Broker y un Crypto Customer.
+Gestiona cierra la negociacion entre un Crypto Broker y un Crypto Customer.
 
 ## Caracteristicas
 * Valida la consistencia de los datos.
@@ -8,6 +8,8 @@ Gestiona la negociacion entre un Crypto Broker y un Crypto Customer.
 * Controla la interaccion del Broker al Customer.
 * Actualiza el estatus de la transaccion.
 * Guarda en un log las operaciones.
+* Intercambia informacion entre el crypto broker y el crypto customer para mantener una sincronizacion de los datos en ambas partes.
+Utilizando el Actor Network Service Negotiation Transmission.
 
 ## Developer
 
