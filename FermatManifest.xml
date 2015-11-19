@@ -4555,10 +4555,9 @@
 
 		<platform code="CBP" name="Crypto Broker Platform" logo="CBP_logo.png" dependsOn="CCP, CSH, BNK">
 
-			<layer name="Reference Wallet">
+			<layer name="Reference Wallet" language="java-android">
 				<androids>
-					<android
-						name="Crypto Broker"
+					<android name="Crypto Broker"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -4573,9 +4572,7 @@
 						<certifications>
 						</certifications>
 					</android>
-
-					<android
-						name="Crypto Customer"
+					<android name="Crypto Customer"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -4595,8 +4592,7 @@
 
 			<layer name="Sub App" language="java-android">
 				<androids>
-					<android
-						name="Crypto Broker Identity"
+					<android name="Crypto Broker Identity"
 						description=""
 						difficulty="4"
 						code-level="qa"
@@ -4611,8 +4607,7 @@
 						<certifications>
 						</certifications>
 					</android>
-					<android
-						name="Crypto Broker Community"
+					<android name="Crypto Broker Community"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4628,8 +4623,7 @@
 						</certifications>
 					</android>
 
-					<android
-						name="Crypto Customer Identity"
+					<android name="Crypto Customer Identity"
 						description=""
 						difficulty="4"
 						code-level="qa"
@@ -4644,8 +4638,7 @@
 						<certifications>
 						</certifications>
 					</android>
-					<android
-						name="Crypto Customer Community"
+					<android name="Crypto Customer Community"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4660,8 +4653,7 @@
 						<certifications>
 						</certifications>
 					</android>
-					<android
-						name="Suppliers"
+					<android name="Suppliers"
 						description=""
 						difficulty="6"
 						code-level="concept"
@@ -4680,11 +4672,10 @@
 
 			<layer name="Desktop" language="java-android">
 				<androids>
-					<android
-						name="Sub App Manager"
-						description=""
-						difficulty="4"
-						code-level="qa"
+					<android name="Sub App Manager"
+						 description=""
+						 difficulty="4"
+						 code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4696,9 +4687,7 @@
 						<certifications>
 						</certifications>
 					</android>
-
-					<android
-						name="Wallet Manager"
+					<android name="Wallet Manager"
 						description=""
 						difficulty="4"
 						code-level="qa"
@@ -4718,8 +4707,7 @@
 
 			<layer name="Wallet Module" language="java">
 				<plugins>
-					<plugin
-						name="Crypto Broker"
+					<plugin	name="Crypto Broker"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4735,9 +4723,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
-					<plugin
-						name="Crypto Customer"
+					<plugin	name="Crypto Customer"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4789,7 +4775,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
 					<plugin name="Crypto Customer Identity"
 						description=""
 						difficulty="4"
@@ -4821,7 +4806,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
 					<plugin name="Suppliers"
 						description=""
 						difficulty="4"
@@ -4836,14 +4820,12 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
 				</plugins>
 			</layer>
 
 			<layer name="Desktop Module" language="java">
 				<plugins>
-					<plugin
-						name="Sub App Manager"
+					<plugin	name="Sub App Manager"
 						description=""
 						difficulty="4"
 						code-level="qa"
@@ -4858,8 +4840,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Wallet Manager"
+					<plugin	name="Wallet Manager"
 						description=""
 						difficulty="4"
 						code-level="qa"
