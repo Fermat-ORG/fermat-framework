@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
 
 import java.util.UUID;
@@ -8,17 +7,18 @@ import java.util.UUID;
 /**
  * Created by angel on 19/11/15.
  */
+
 public class BrokerIdentityWalletRelationshipInformation implements BrokerIdentityWalletRelationship {
 
     // TODO: Cambiar los numeros primos
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1117;
     private static final int HASH_PRIME_NUMBER_ADD = 3001;
 
-    private final UUID relationshipId;
-    private final ActorIdentity identity;
-    private final UUID wallet;
+    private final UUID      relationshipId;
+    private final String    identity;
+    private final UUID      wallet;
 
-    public BrokerIdentityWalletRelationshipInformation(final UUID relationshipId, final ActorIdentity identity, final UUID Wallet){
+    public BrokerIdentityWalletRelationshipInformation(final UUID relationshipId, final String identity, final UUID Wallet){
         this.identity = identity;
         this.wallet = Wallet;
         this.relationshipId = relationshipId;
@@ -26,17 +26,17 @@ public class BrokerIdentityWalletRelationshipInformation implements BrokerIdenti
 
     @Override
     public UUID getRelationshipId() {
-        return null;
+        return this.relationshipId;
     }
 
     @Override
-    public ActorIdentity getCryptoBroker() {
-        return null;
+    public String getCryptoBroker() {
+        return this.identity;
     }
 
     @Override
     public UUID getWallet() {
-        return null;
+        return this.wallet;
     }
 
     @Override
