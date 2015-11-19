@@ -14,6 +14,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
@@ -100,19 +101,14 @@ public class AssetIssuerWalletModuleManager {
         }
     }
 
-    private HashMap<DigitalAssetMetadata, ActorAssetUser> createMapDistribution(String walletPublicKey, String assetPublicKey, List<ActorAssetUser> actorAssetUsers) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException {
+    private HashMap<DigitalAssetMetadata, ActorAssetUser> createMapDistribution(String walletPublicKey, String assetPublicKey, List<ActorAssetUser> actorAssetUsers) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException {
         List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = getTransactionsAssetAll(walletPublicKey, assetPublicKey);
         //TODO: Comentado para la prueba del Distribution no Borrar
         HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
         int i = 0;
         for (AssetIssuerWalletTransaction assetIssuerWalletTransactionList : assetIssuerWalletTransactions){
             //TODO: Optimizar para que vea el registro de la tabla Balance Wallet
-            DigitalAsset digitalAsset = new  DigitalAsset();
-            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, assetIssuerWalletTransactionList.getAssetPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            String digitalAssetData = pluginTextFile.getContent();
-            digitalAsset = (DigitalAsset) XMLParser.parseXML(digitalAssetData, digitalAsset);
-            DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
-            digitalAssetMetadata.setDigitalAsset(digitalAsset);
+            DigitalAssetMetadata digitalAssetMetadata = assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey).getDigitalAssetMetadata(assetIssuerWalletTransactionList.getAssetPublicKey());
             digitalAssetMetadata.setGenesisTransaction(assetIssuerWalletTransactionList.getTransactionHash());
             hashMap.put(digitalAssetMetadata, actorAssetUsers.get(i));
 
