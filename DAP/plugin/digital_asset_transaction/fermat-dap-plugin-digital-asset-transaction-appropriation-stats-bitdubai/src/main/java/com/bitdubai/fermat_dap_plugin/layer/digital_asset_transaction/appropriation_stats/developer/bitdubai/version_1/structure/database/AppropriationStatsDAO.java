@@ -68,8 +68,8 @@ public class AppropriationStatsDAO implements AutoCloseable {
         }
     }
 
-    public void updateEventStatus(EventStatus status, String eventId) throws CantLoadAppropriationStatsEventListException, RecordsNotFoundException {
-        updateStringFieldByEventId(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_STATUS_COLUMN_NAME, status.getCode(), eventId);
+    public void notifyEvent(String eventId) throws CantLoadAppropriationStatsEventListException, RecordsNotFoundException {
+        updateStringFieldByEventId(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.NOTIFIED.getCode(), eventId);
     }
 
 
@@ -111,7 +111,7 @@ public class AppropriationStatsDAO implements AutoCloseable {
      */
     @Override
     public void close() throws Exception {
-
+        database.closeDatabase();
     }
     //PRIVATE METHODS
 
