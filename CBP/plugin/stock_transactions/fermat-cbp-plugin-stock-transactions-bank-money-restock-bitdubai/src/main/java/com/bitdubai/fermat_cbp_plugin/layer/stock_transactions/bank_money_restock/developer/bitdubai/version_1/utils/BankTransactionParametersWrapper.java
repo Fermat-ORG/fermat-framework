@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 
 import java.util.UUID;
 
@@ -10,32 +10,40 @@ import java.util.UUID;
  */
 public class BankTransactionParametersWrapper implements BankTransactionParameters {
     private final UUID            transactionId;
-    private final FiatCurrency    fiatCurrency;
+    private final FiatCurrency fiatCurrency;
     private final String          walletPublicKey;
     private final String          publicActorKey;
-    private final String          accountNumber;
+    private final String          account;
     private final float           amount;
     private final String          memo;
+    private final String          publicKeyPlugin;
 
     public BankTransactionParametersWrapper(UUID            transactionId,
                                             FiatCurrency    fiatCurrency,
                                             String          walletPublicKey,
                                             String          publicActorKey,
-                                            String          accountNumber,
+                                            String          account,
                                             float           amount,
-                                            String          memo
+                                            String          memo,
+                                            String          publicKeyPlugin
     ){
         this.transactionId   = transactionId;
         this.fiatCurrency    = fiatCurrency;
         this.walletPublicKey = walletPublicKey;
         this.publicActorKey  = publicActorKey;
-        this.accountNumber   = accountNumber;
+        this.account         = account;
         this.amount          = amount;
         this.memo            = memo;
+        this.publicKeyPlugin = publicKeyPlugin;
     }
     @Override
     public UUID getTransactionId() {
         return transactionId;
+    }
+
+    @Override
+    public String getPublicKeyPlugin() {
+        return publicKeyPlugin;
     }
 
     @Override
@@ -53,14 +61,13 @@ public class BankTransactionParametersWrapper implements BankTransactionParamete
         return amount;
     }
 
-    //Cambiar a String
     @Override
-    public int getAccountNumber() {
-        return 0;
+    public String getAccount() {
+        return account;
     }
 
     @Override
-    public FiatCurrency getCurrency() {
+    public com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency getCurrency() {
         return fiatCurrency;
     }
 
