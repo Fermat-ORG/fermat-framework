@@ -54,6 +54,9 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
             case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT:
                 currentFragment = ConnectionsFragment.newInstance();
                 break;
+            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL_FRAGMENT:
+                currentFragment = null;
+                break;
             default:
                 throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.toString(), "Swith failed");
         }
