@@ -49,7 +49,7 @@ import java.util.UUID;
  * Created by franklin on 27/09/15.
  */
 public class AssetIssuerWalletImpl implements AssetIssuerWallet {
-    public static final String PATH_DIRECTORY = "assetissuer/assets";
+    public static final String PATH_DIRECTORY = "asset-issuer-swap/";
     private static final String ASSET_ISSUER_WALLET_FILE_NAME = "walletsIds";
 
     /**
