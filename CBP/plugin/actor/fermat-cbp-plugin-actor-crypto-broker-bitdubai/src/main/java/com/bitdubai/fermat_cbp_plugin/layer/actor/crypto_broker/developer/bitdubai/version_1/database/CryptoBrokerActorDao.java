@@ -1,11 +1,13 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
@@ -18,7 +20,9 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListC
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerActorDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.BrokerIdentityWalletRelationshipInformation;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -58,29 +62,21 @@ public class CryptoBrokerActorDao implements CryptoBrokerActorManager {
             }
         }
 
-
-        /*  Metodos del Manager Crypto Broker Actor */
-
         @Override
         public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException {
 
             try {
-                DatabaseTable BrokerActorTable = this.database.getTable(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME);
-                DatabaseTableRecord recordToInsert   = BrokerActorTable.getEmptyRecord();
-
+                DatabaseTable RelationshipTable = this.database.getTable(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME);
+                DatabaseTableRecord recordToInsert   = RelationshipTable.getEmptyRecord();
                 UUID relationshipId = UUID.randomUUID();
-
                 loadRecordAsNew(
                         recordToInsert,
                         relationshipId,
                         identity.getPublicKey(),
                         wallet
                 );
-
-                BrokerActorTable.insertRecord(recordToInsert);
-
+                RelationshipTable.insertRecord(recordToInsert);
                 return constructCryptoBrokerActorRelationshipFromRecord(recordToInsert);
-
             } catch (CantInsertRecordException e) {
                 throw new CantCreateNewBrokerIdentityWalletRelationshipException(CantCreateNewBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
@@ -91,18 +87,66 @@ public class CryptoBrokerActorDao implements CryptoBrokerActorManager {
         }
 
         @Override
-        public Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException {
-            return null;
+        public Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetListBrokerIdentityWalletRelationshipException {
+            try {
+                DatabaseTable RelationshipTable = this.database.getTable(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME);
+                RelationshipTable.loadToMemory();
+                List<DatabaseTableRecord> records = RelationshipTable.getRecords();
+                RelationshipTable.clearAllFilters();
+                Collection<BrokerIdentityWalletRelationship> resultados = new ArrayList<BrokerIdentityWalletRelationship>();
+                for (DatabaseTableRecord record : records) {
+                    resultados.add(constructCryptoBrokerActorRelationshipFromRecord(record));
+                }
+                return resultados;
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListBrokerIdentityWalletRelationshipException(CantGetListBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListBrokerIdentityWalletRelationshipException(CantGetListBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
+            } catch (CantGetListClauseException e) {
+                throw new CantGetListBrokerIdentityWalletRelationshipException(CantGetListBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
+            }
         }
 
         @Override
         public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException {
-            return null;
+            try {
+                DatabaseTable RelationshipTable = this.database.getTable(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME);
+                RelationshipTable.setStringFilter(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_BROKER_PUBLIC_KEY_COLUMN_NAME, identity.getPublicKey(), DatabaseFilterType.EQUAL);
+                RelationshipTable.loadToMemory();
+                List<DatabaseTableRecord> records = RelationshipTable.getRecords();
+                RelationshipTable.clearAllFilters();
+                for (DatabaseTableRecord record : records) {
+                    return  constructCryptoBrokerActorRelationshipFromRecord(record);
+                }
+                return null;
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListBrokerIdentityWalletRelationshipException(CantGetListBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListBrokerIdentityWalletRelationshipException(CantGetListBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
+            } catch (CantGetListClauseException e) {
+                throw new CantGetListBrokerIdentityWalletRelationshipException(CantGetListBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
+            }
         }
 
         @Override
         public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException {
-            return null;
+            try {
+                DatabaseTable RelationshipTable = this.database.getTable(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME);
+                RelationshipTable.setUUIDFilter(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_BROKER_PUBLIC_KEY_COLUMN_NAME, wallet, DatabaseFilterType.EQUAL);
+                RelationshipTable.loadToMemory();
+                List<DatabaseTableRecord> records = RelationshipTable.getRecords();
+                RelationshipTable.clearAllFilters();
+                for (DatabaseTableRecord record : records) {
+                    return  constructCryptoBrokerActorRelationshipFromRecord(record);
+                }
+                return null;
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListBrokerIdentityWalletRelationshipException(CantGetListBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListBrokerIdentityWalletRelationshipException(CantGetListBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
+            } catch (CantGetListClauseException e) {
+                throw new CantGetListBrokerIdentityWalletRelationshipException(CantGetListBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
+            }
         }
 
     /*
@@ -129,11 +173,9 @@ public class CryptoBrokerActorDao implements CryptoBrokerActorManager {
         }
 
         private BrokerIdentityWalletRelationship constructCryptoBrokerActorRelationshipFromRecord(DatabaseTableRecord record) throws InvalidParameterException, CantGetListClauseException {
-
             UUID    relationshipId       = record.getUUIDValue(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME);
             String  publicKeyBroker     = record.getStringValue(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_BROKER_PUBLIC_KEY_COLUMN_NAME);
             UUID    walletId            = record.getUUIDValue(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME);
-
             return newCryptoBrokerActorRelationship(relationshipId, publicKeyBroker, walletId);
         }
 
