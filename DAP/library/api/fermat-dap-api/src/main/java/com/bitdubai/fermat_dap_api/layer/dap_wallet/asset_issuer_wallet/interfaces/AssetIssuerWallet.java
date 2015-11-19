@@ -54,6 +54,6 @@ public interface AssetIssuerWallet {
 
     List<AssetIssuerWalletTransaction>  getTransactionsAssetAll(String assetPublicKey) throws CantGetTransactionsException;
 
-    //DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
+    DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
 
 }
