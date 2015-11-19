@@ -3,6 +3,8 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -84,6 +86,11 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
         isAttached = false;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+    }
+
     /**
      * Setting up SubApp Session
      *
@@ -145,8 +152,8 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
         getPaintActivtyFeactures().addNavigationViewHeader(view);
     }
 
-    protected void changeApp(Engine emgine){
-        getFermatScreenSwapper().connectWithOtherApp(emgine);
+    protected void changeApp(Engine emgine,Object[] objects){
+        getFermatScreenSwapper().connectWithOtherApp(emgine,objects);
     }
 
     protected FermatScreenSwapper getFermatScreenSwapper(){

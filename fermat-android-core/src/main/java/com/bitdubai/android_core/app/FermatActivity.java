@@ -63,9 +63,11 @@ import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSliding
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
@@ -392,6 +394,10 @@ public abstract class FermatActivity extends AppCompatActivity
                 if (backgroundColor != null) {
                     navigationView.setBackgroundColor(Color.parseColor(backgroundColor));
                 }
+                if(sideMenu.getNavigationIconColor().equals("#ffffff")){
+                    mToolbar.setNavigationIcon(R.drawable.ic_actionbar_menu);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_actionbar_menu);
+                }
             } else {
                 mToolbar.setNavigationIcon(R.drawable.ic_action_back);
                 mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -427,22 +433,36 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void paintTitleBar(TitleBar titleBar, Activity activity) {
         try {
             if (titleBar != null) {
+                Typeface typeface = null;
+                if(titleBar.getFont()!=null)
+                typeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/"+titleBar.getFont());
 
                 String title = titleBar.getLabel();
 
+                if(titleBar.isTitleTextStatic()){
+                    View toolabarContainer = getLayoutInflater().inflate(R.layout.text_view, null);
+                    FermatTextView txt_title = (FermatTextView) toolabarContainer.findViewById(R.id.txt_title);
+                    txt_title.setText(title);
+                    txt_title.setTypeface(typeface);
+                    txt_title.setTextSize(titleBar.getLabelSize());
+                    txt_title.setTextColor(Color.parseColor(titleBar.getTitleColor()));
+                    mToolbar.addView(toolabarContainer);
+                }else {
 
-                if (collapsingToolbarLayout != null) {
-                    collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
-                    collapsingToolbarLayout.setCollapsedTitleTypeface((Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf")));
-                    //if (titleBar.getLabelSize() != -1) {
-                    //collapsingToolbarLayout.setCollapsedTitleTex(titleBar.getLabelSize());
+                    if (collapsingToolbarLayout != null) {
+                        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
+                        collapsingToolbarLayout.setCollapsedTitleTypeface(typeface);
+                        //if (titleBar.getLabelSize() != -1) {
+                        //collapsingToolbarLayout.setCollapsedTitleTex(titleBar.getLabelSize());
 
-                    //}
-                    collapsingToolbarLayout.setTitle(title);
+                        //}
+                        collapsingToolbarLayout.setTitle(title);
 
 
-                } else {
-                    mToolbar.setTitle(title);
+                    } else {
+                        mToolbar.setTitle(title);
+
+                    }
                 }
 
                 if (titleBar.getColor() != null) {
@@ -481,6 +501,8 @@ public abstract class FermatActivity extends AppCompatActivity
                     collapsingToolbarLayout.setVisibility(View.GONE);
 
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -507,13 +529,13 @@ public abstract class FermatActivity extends AppCompatActivity
         SpannableString s = new SpannableString(title);
 
 
-        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "Roboto-Regular.ttf"), 0, s.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        // Update the action bar title with the TypefaceSpan instance
-        if (collapsingToolbarLayout != null)
-            collapsingToolbarLayout.setTitle(s);
-        mToolbar.setTitle(s);
+//        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "Roboto-Regular.ttf"), 0, s.length(),
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//        // Update the action bar title with the TypefaceSpan instance
+//        if (collapsingToolbarLayout != null)
+//            collapsingToolbarLayout.setTitle(s);
+//        mToolbar.setTitle(s);
 
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -668,10 +690,10 @@ public abstract class FermatActivity extends AppCompatActivity
                             scrollRange = appBarLayout.getTotalScrollRange();
                         }
                         if (scrollRange + verticalOffset == 0) {
-                            //collapsingToolbarLayout.setTitle("Title");
+                            collapsingToolbarLayout.setTitle("");
                             isShow = true;
                         } else if (isShow) {
-                            //ollapsingToolbarLayout.setTitle("");
+                            collapsingToolbarLayout.setTitle("");
                             isShow = false;
                         }
                     }
@@ -707,6 +729,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     // select the correct nav menu item
                     //navigationView.getMenu().findItem(mNavItemId).setChecked(true);
 
+                    mToolbar.setNavigationIcon(R.drawable.ic_actionbar_menu);
                             /* setting up drawer layout */
                     mDrawerToggle = new ActionBarDrawerToggle(this,
                             mDrawerLayout,
@@ -738,6 +761,7 @@ public abstract class FermatActivity extends AppCompatActivity
                             //findViewById(R.id.content).setTranslationX(moveFactor);
                         }
                     };
+
                     mDrawerLayout.setDrawerListener(mDrawerToggle);
                     mDrawerLayout.post(new Runnable() {
                         @Override
@@ -745,6 +769,8 @@ public abstract class FermatActivity extends AppCompatActivity
                             mDrawerToggle.syncState();
                         }
                     });
+
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_actionbar_menu);
 
                     navigate(mNavItemId);
                 }

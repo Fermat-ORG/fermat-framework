@@ -540,7 +540,7 @@ public class DigitalAssetMetaDataTransactionDao {
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_META_DATA_XML_COLUMN_NAME,       digitalAssetMetadataTransactionImpl.getDigitalAssetMetadata().toString());
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TYPE_COLUMN_NAME,                digitalAssetMetadataTransactionImpl.getType().getCode());
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_DISTRIBUTION_STATUS_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getDistributionStatus().getCode());
-        entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TIMESTAMP_COLUMN_NAME,             digitalAssetMetadataTransactionImpl.getTimestamp());
+        entityRecord.setLongValue(  CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TIMESTAMP_COLUMN_NAME,           digitalAssetMetadataTransactionImpl.getTimestamp());
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_PROCESSED_COLUMN_NAME,           digitalAssetMetadataTransactionImpl.getProcessed());
 
         /*

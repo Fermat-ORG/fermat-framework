@@ -52,6 +52,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -190,7 +191,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     //TODO DELETE THIS METHOD AND ALL ITS USAGES.
 
     public static void debugAssetAppropriation(String message) {
-        System.out.println("ASSET APPROPRIATION - " + message);
+//        System.out.println("ASSET APPROPRIATION - " + message);
     }
 
     //PRIVATE METHODS
@@ -206,7 +207,9 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
     @Override
     public List<String> getClassesFullPath() {
-        return null; //TODO implement
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.AssetAppropriationDigitalAssetTransactionPluginRoot");
+        return returnedClasses;
     }
 
     @Override
@@ -214,7 +217,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
         String context = "Asset: " + digitalAsset + " - User Wallet: " + assetUserWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey;
         try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             return dao.getTransaction(digitalAsset, assetUserWalletPublicKey, bitcoinWalletPublicKey);
-        } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch bolck.
+        } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch block.
             throw e;
         } catch (Exception e) {
             throw new CantLoadAssetAppropriationTransactionListException(context, e);
@@ -235,7 +238,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
         String context = "Genesis Transaction: " + genesisTransaction;
         try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             return dao.getTransaction(genesisTransaction);
-        } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch bolck.
+        } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch block.
             throw e;
         } catch (Exception e) {
             throw new CantLoadAssetAppropriationTransactionListException(context, e);

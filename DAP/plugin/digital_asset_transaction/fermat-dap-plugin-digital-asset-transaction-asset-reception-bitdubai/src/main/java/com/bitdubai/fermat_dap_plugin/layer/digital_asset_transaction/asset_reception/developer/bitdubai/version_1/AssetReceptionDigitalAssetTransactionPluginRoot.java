@@ -193,18 +193,16 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
 
     @Override
     public void start() throws CantStartPluginException {
-        //printSomething(">>> starting asset reception plugin");
         try {
+            this.assetReceptionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
             try {
-                this.assetReceptionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
-            } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
-                //printSomething("CREATING A PLUGIN DATABASE.");
-                try {
-                    createAssetReceptionTransactionDatabase();
-                } catch (CantCreateDatabaseException innerException) {
-                    throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException, "Starting Asset Reception plugin - " + this.pluginId, "Cannot open or create the plugin database");
-                }
+                createAssetReceptionTransactionDatabase();
+            } catch (CantCreateDatabaseException innerException) {
+                throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException, "Starting Asset Reception plugin - " + this.pluginId, "Cannot open or create the plugin database");
             }
+        }
+        try {
             digitalAssetReceptionVault = new DigitalAssetReceptionVault(
                     pluginId,
                     pluginFileSystem,
