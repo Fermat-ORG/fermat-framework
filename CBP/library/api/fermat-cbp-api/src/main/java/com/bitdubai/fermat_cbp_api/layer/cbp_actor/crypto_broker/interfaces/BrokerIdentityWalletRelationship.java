@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.interfaces;
 
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-
 import java.util.UUID;
 
 /**
@@ -9,6 +7,6 @@ import java.util.UUID;
  */
 public interface BrokerIdentityWalletRelationship {
     UUID getRelationshipId();
-    ActorIdentity getCryptoBroker();
+    String getCryptoBroker();
     UUID getWallet();
 }
