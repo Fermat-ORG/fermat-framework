@@ -34,13 +34,14 @@ public class FragmentsCommons {
                 if (intraUserLoginIdentity.getProfileImage().length > 0) {
                     imageView.setImageBitmap((BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length)));
                 } else
-                    Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
+                    Picasso.with(activity).load(R.drawable.tessa_profile_picture).into(imageView);
             }
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             fermatTextView.setText(intraUserLoginIdentity.getAlias());
         }
 
         return view;
+
 
     }
 }

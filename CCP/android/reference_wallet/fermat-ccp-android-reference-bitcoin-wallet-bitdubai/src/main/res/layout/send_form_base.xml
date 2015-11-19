@@ -49,25 +49,38 @@
                         android:src="@drawable/profile_image"
                         android:layout_marginLeft="12dp"/>
 
-                    <AutoCompleteTextView
-                        android:id="@+id/contact_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Name"
-                        android:textColor="#4f4f4f"
-                        android:textColorHint="#4f4f4f"
-                        android:textSize="16sp"
-                        android:textStyle="normal"
-                        android:paddingTop="20dip"
-                        android:paddingLeft="21dip"
-                        android:paddingRight="14dip"
-                        android:paddingBottom="7dip"
-                        android:ems="10"
-                        android:layout_weight="0.2"
-                        android:background="@null"
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                        />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Name"
+                            android:textColor="#12aca1"
+                            android:textSize="12sp"
+                            android:layout_marginLeft="16dp"
+                            />
 
+                        <AutoCompleteTextView
+                            android:id="@+id/contact_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Name"
+                            android:textColor="#1d1d26"
+                            android:textColorHint="#9a9a9c"
+                            android:textSize="16sp"
+                            android:textStyle="normal"
+                            android:paddingTop="25dip"
+                            android:paddingLeft="21dip"
+                            android:paddingRight="14dip"
+                            android:paddingBottom="7dip"
+                            android:ems="10"
+                            android:layout_weight="0.2"
+                            android:background="@null"
+                            />
+                    </FrameLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -88,7 +101,7 @@
                         android:textSize="20sp"
                         android:textStyle="normal"
                         android:hint="address"
-                        android:textColor="#4f4f4f"
+                        android:textColor="#1d1d26"
                         android:textColorHint="#4f4f4f"
                         android:paddingTop="7dip"
                         android:paddingLeft="14dip"
@@ -161,8 +174,8 @@
                         android:paddingLeft="14dip"
                         android:paddingRight="14dip"
                         android:paddingBottom="7dip"
-                        android:textColor="#4f4f4f"
-                        android:textColorHint="#4f4f4f"
+                        android:textColor="#1d1d26"
+                        android:textColorHint="#9a9a9c"
                         android:textSize="16sp"
                         android:textStyle="normal"
                         android:hint="0 Bits"
@@ -202,8 +215,8 @@
                         android:textSize="20sp"
                         android:textStyle="normal"
                         android:hint="Description"
-                        android:textColor="#4f4f4f"
-                        android:textColorHint="#4f4f4f"
+                        android:textColor="#1d1d26"
+                        android:textColorHint="#9a9a9c"
                         android:paddingTop="7dip"
                         android:paddingLeft="14dip"
                         android:paddingRight="14dip"

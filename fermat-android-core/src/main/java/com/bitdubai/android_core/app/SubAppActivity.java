@@ -16,7 +16,6 @@ import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFra
 import com.bitdubai.android_core.app.common.version_1.managers.ManagerFactory;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.FermatException;
@@ -35,7 +34,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bitdubai.fermat.R;
 
@@ -395,7 +393,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     @Override
-    public void connectWithOtherApp(Engine emgine, Objects... objectses) {
+    public void connectWithOtherApp(Engine emgine, Object[] objectses) {
 
     }
 

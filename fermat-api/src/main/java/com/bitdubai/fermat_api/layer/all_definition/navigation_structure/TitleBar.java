@@ -24,6 +24,12 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
     private int labelSize=-1;
     private String titleColor;
     private byte[] toggleIcon;
+    private boolean isTitleTextStatic;
+    private String font;
+
+    public void setFont(String font) {
+        this.font = font;
+    }
 
     /**
      * Class Constructors
@@ -119,5 +125,21 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public byte[] getNavigationIcon() {
         return toggleIcon;
+    }
+
+    public byte[] getToggleIcon() {
+        return toggleIcon;
+    }
+
+    public void setIsTitleTextStatic(boolean isTitleTextStatic) {
+        this.isTitleTextStatic = isTitleTextStatic;
+    }
+
+    public boolean isTitleTextStatic(){
+        return isTitleTextStatic;
+    }
+
+    public String getFont() {
+        return font;
     }
 }
