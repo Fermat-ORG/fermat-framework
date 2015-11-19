@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantMakeHoldTransactionException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfaces.HoldManager;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
@@ -30,20 +32,24 @@ import java.util.logging.Logger;
  */
 public class BusinessTransactionBankMoneyRestockMonitorAgent  implements Agent{
     //TODO: Documentar y manejo de excepciones. Inicializar los manager del Hold Bank y Wallet CBP para que seteados en el constructor
+    //TODO: Manejo de Eventos
 
     private Thread agentThread;
 
     private final ErrorManager errorManager;
     private final StockTransactionBankMoneyRestockManager stockTransactionBankMoneyRestockManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
+    private final HoldManager holdManager;
 
     public BusinessTransactionBankMoneyRestockMonitorAgent(ErrorManager                            errorManager,
                                                            StockTransactionBankMoneyRestockManager stockTransactionBankMoneyRestockManager,
-                                                           CryptoBrokerWalletManager               cryptoBrokerWalletManager) {
+                                                           CryptoBrokerWalletManager               cryptoBrokerWalletManager,
+                                                           HoldManager                             holdManager) {
 
         this.errorManager                            = errorManager;
         this.stockTransactionBankMoneyRestockManager = stockTransactionBankMoneyRestockManager;
         this.cryptoBrokerWalletManager               = cryptoBrokerWalletManager;
+        this.holdManager                             = holdManager;
     }
     @Override
     public void start() throws CantStartAgentException {
@@ -113,6 +119,7 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent  implements Agent{
                 switch(bankMoneyTransaction.getTransactionStatus()) {
                     case INIT_TRANSACTION:
                         //Llamar al metodo de la interfaz public del manager de Bank Hold
+                        holdManager.hold(null);
                         //Luego cambiar el status al registro de la transaccion leido
                         bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
                         stockTransactionBankMoneyRestockManager.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
@@ -156,6 +163,8 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent  implements Agent{
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         } catch (MissingBankMoneyRestockDataException e) {
+            e.printStackTrace();
+        } catch (CantMakeHoldTransactionException e) {
             e.printStackTrace();
         }
     }
