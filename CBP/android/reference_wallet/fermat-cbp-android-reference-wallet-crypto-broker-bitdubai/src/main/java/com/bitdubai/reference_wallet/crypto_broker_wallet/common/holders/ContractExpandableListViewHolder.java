@@ -20,7 +20,7 @@ import java.text.NumberFormat;
 /**
  * Created by nelson on 21/10/15.
  */
-public class ContractViewHolder extends ChildViewHolder {
+public class ContractExpandableListViewHolder extends ChildViewHolder {
     public ImageView customerImage;
     public FermatTextView customerName;
     public FermatTextView contractAction;
@@ -36,7 +36,7 @@ public class ContractViewHolder extends ChildViewHolder {
      *
      * @param itemView the child ViewHolder's view
      */
-    public ContractViewHolder(View itemView) {
+    public ContractExpandableListViewHolder(View itemView) {
         super(itemView);
 
         this.itemView = itemView;
@@ -78,7 +78,7 @@ public class ContractViewHolder extends ChildViewHolder {
             return res.getColor(R.color.waiting_for_broker_list_item_background);
 
         if (status == ContractStatus.COMPLETED)
-            return res.getColor(R.color.contract_closed_list_item_background);
+            return res.getColor(R.color.contract_completed_list_item_background);
 
         return res.getColor(R.color.contract_cancelled_list_item_background);
     }
