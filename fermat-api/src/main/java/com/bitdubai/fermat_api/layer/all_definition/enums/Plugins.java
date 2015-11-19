@@ -157,7 +157,7 @@ public enum Plugins implements FermatEnum {
 
     // Init new Plugins
 
-    SUB_APP_RUNTIME("APR"),
+    SUB_APP_RUNTIME             ("APR"),
     ASSET_APPROPRIATION_STATS   ("ASAPS"),
     ASSET_APPROPRIATION         ("ASAP"),
     ASSET_DISTRIBUTION          ("ASD"),
@@ -236,60 +236,61 @@ public enum Plugins implements FermatEnum {
 
         switch (code) {
 
-            case "APR":   return SUB_APP_RUNTIME;
-            case "ASAPS":  return ASSET_APPROPRIATION_STATS;
-            case "ASAP":  return ASSET_APPROPRIATION;
-            case "ASD":   return ASSET_DISTRIBUTION;
-            case "ASF":   return ASSET_FACTORY;
-            case "ASI":   return ASSET_ISSUER;
-            case "ASIC":  return ASSET_ISSUER_COMMUNITY;
-            case "ASIS":  return ASSET_ISSUING;
-            case "AR":    return ASSET_RECEPTION;
-            case "ASU":   return ASSET_USER;
-            case "ASUC":  return ASSET_USER_COMMUNITY;
-            case "AST":   return ASSET_TRANSMISSION;
-            case "BAV":   return BITCOIN_ASSET_VAULT;
-            case "BN":    return BITCOIN_NETWORK;
-            case "BV":    return BITCOIN_VAULT;
-            case "BW":    return BITCOIN_WALLET;
-            case "BWOV":  return BITCOIN_WATCH_ONLY_VAULT;
-            case "CA":    return CRYPTO_ADDRESSES;
-            case "CAB":   return CRYPTO_ADDRESS_BOOK;
-            case "CB":    return CRYPTO_BROKER;
-            case "CBI":   return CRYPTO_BROKER_IDENTITY;
-            case "CC":    return CRYPTO_CUSTOMER;
-            case "CCI":   return CRYPTO_CUSTOMER_IDENTITY;
-            case "CPR":   return CRYPTO_PAYMENT_REQUEST;
-            case "CT":    return CRYPTO_TRANSMISSION;
-            case "CW":    return CRYPTO_WALLET;
-            case "DER":   return DESKTOP_RUNTIME;
-            case "DEV":   return DEVELOPER;
-            case "DU":    return DEVICE_USER;
-            case "EWU":   return EXTRA_WALLET_USER;
-            case "IEU":   return INCOMING_EXTRA_USER;
-            case "IIU":   return INCOMING_INTRA_USER;
-            case "IWU":   return INTRA_WALLET_USER;
-            case "IR":    return ISSUER_REDEMPTION;
-            case "NOT":   return NOTIFICATION;
-            case "OEU":   return OUTGOING_EXTRA_USER;
-            case "OIA":   return OUTGOING_INTRA_ACTOR;
-            case "PBL":   return PUBLISHER;
-            case "RP":    return REDEEM_POINT;
-            case "RPC":   return REDEEM_POINT_COMMUNITY;
-            case "RPR":   return REDEEM_POINT_REDEMPTION;
-            case "SAR":   return SUB_APP_RESOURCES;
-            case "UR":    return USER_REDEMPTION;
-            case "WCOM":  return WALLET_COMMUNITY;
-            case "WC":    return WALLET_CONTACTS;
-            case "WF":    return WALLET_FACTORY;
-            case "WM":    return WALLET_MANAGER;
-            case "WPU":   return WALLET_PUBLISHER;
-            case "WRE":   return WALLET_RESOURCES;
-            case "WRU":   return WALLET_RUNTIME;
-            case "WSE":   return WALLET_SETTINGS;
-            case "WSTA":  return WALLET_STATISTICS;
-            case "WST":   return WALLET_STORE;
-            case "WCL":   return WS_CLOUD_CLIENT;
+            case "APR"  :   return SUB_APP_RUNTIME          ;
+            case "ASAPS":   return ASSET_APPROPRIATION_STATS;
+            case "ASAP" :   return ASSET_APPROPRIATION      ;
+            case "ASD"  :   return ASSET_DISTRIBUTION       ;
+            case "ASF"  :   return ASSET_FACTORY            ;
+            case "ASI"  :   return ASSET_ISSUER             ;
+            case "ASIC" :   return ASSET_ISSUER_COMMUNITY   ;
+            case "ASIS" :   return ASSET_ISSUING            ;
+            case "ASR"  :   return ASSET_RECEPTION          ;
+            case "ASU"  :   return ASSET_USER               ;
+            case "ASUC" :   return ASSET_USER_COMMUNITY     ;
+            case "AST"  :   return ASSET_TRANSMISSION       ;
+            case "BAV"  :   return BITCOIN_ASSET_VAULT      ;
+            case "BN"   :   return BITCOIN_NETWORK          ;
+            case "BV"   :   return BITCOIN_VAULT            ;
+            case "BW"   :   return BITCOIN_WALLET           ;
+            case "BWOV" :   return BITCOIN_WATCH_ONLY_VAULT ;
+            case "CA"   :   return CRYPTO_ADDRESSES         ;
+            case "CAB"  :   return CRYPTO_ADDRESS_BOOK      ;
+            case "CB"   :   return CRYPTO_BROKER            ;
+            case "CBI"  :   return CRYPTO_BROKER_IDENTITY   ;
+            case "CC"   :   return CRYPTO_CUSTOMER          ;
+            case "CCI"  :   return CRYPTO_CUSTOMER_IDENTITY ;
+            case "CPR"  :   return CRYPTO_PAYMENT_REQUEST   ;
+            case "CT"   :   return CRYPTO_TRANSMISSION      ;
+            case "CW"   :   return CRYPTO_WALLET            ;
+            case "DER"  :   return DESKTOP_RUNTIME          ;
+            case "DEV"  :   return DEVELOPER                ;
+            case "DU"   :   return DEVICE_USER              ;
+            case "EWU"  :   return EXTRA_WALLET_USER        ;
+            case "IC"   :   return INCOMING_CRYPTO          ;
+            case "IEU"  :   return INCOMING_EXTRA_USER      ;
+            case "IIU"  :   return INCOMING_INTRA_USER      ;
+            case "IWU"  :   return INTRA_WALLET_USER        ;
+            case "IR"   :   return ISSUER_REDEMPTION        ;
+            case "NOT"  :   return NOTIFICATION             ;
+            case "OEU"  :   return OUTGOING_EXTRA_USER      ;
+            case "OIA"  :   return OUTGOING_INTRA_ACTOR     ;
+            case "PBL"  :   return PUBLISHER                ;
+            case "RP"   :   return REDEEM_POINT             ;
+            case "RPC"  :   return REDEEM_POINT_COMMUNITY   ;
+            case "RPR"  :   return REDEEM_POINT_REDEMPTION  ;
+            case "SAR"  :   return SUB_APP_RESOURCES        ;
+            case "UR"   :   return USER_REDEMPTION          ;
+            case "WCOM" :   return WALLET_COMMUNITY         ;
+            case "WC"   :   return WALLET_CONTACTS          ;
+            case "WF"   :   return WALLET_FACTORY           ;
+            case "WM"   :   return WALLET_MANAGER           ;
+            case "WPU"  :   return WALLET_PUBLISHER         ;
+            case "WRE"  :   return WALLET_RESOURCES         ;
+            case "WRU"  :   return WALLET_RUNTIME           ;
+            case "WSE"  :   return WALLET_SETTINGS          ;
+            case "WSTA" :   return WALLET_STATISTICS        ;
+            case "WST"  :   return WALLET_STORE             ;
+            case "WCL"  :   return WS_CLOUD_CLIENT          ;
 
             default:
                 throw new InvalidParameterException(
