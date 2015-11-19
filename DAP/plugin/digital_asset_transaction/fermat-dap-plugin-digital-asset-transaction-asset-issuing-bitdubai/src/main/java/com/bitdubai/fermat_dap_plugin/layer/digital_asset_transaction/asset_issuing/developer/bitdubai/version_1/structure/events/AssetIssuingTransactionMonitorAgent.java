@@ -400,6 +400,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
                             }
 
+                            assetIssuingTransactionDao.updateEventStatus(eventId);
+
                         }
                     }
                     if(eventType.equals(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER.getCode())){
@@ -427,7 +429,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                     continue;
                                 }
                                 assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
-                                assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(genesisTransaction, TransactionStatus.ISSUED);
+
                             }
                             assetIssuingTransactionDao.updateEventStatus(eventId);
                         }
@@ -438,9 +440,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     if(eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER)){
                         //TODO: to handle
                     }
-
-                    assetIssuingTransactionDao.updateEventStatus(eventId);
-
                 }
             }
 
