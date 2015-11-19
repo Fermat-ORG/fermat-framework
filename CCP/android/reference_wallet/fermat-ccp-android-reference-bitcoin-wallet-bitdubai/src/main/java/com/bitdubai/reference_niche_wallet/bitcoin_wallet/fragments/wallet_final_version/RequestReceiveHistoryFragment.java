@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
+
 /**
  * Created by mati on 2015.09.30..
  */
@@ -235,12 +237,22 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
     @Override
     public void onClick(View v) {
-        int id = v.getId();
-        if(id == R.id.btn_refuse_request){
-            Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
-        }
-        else if ( id == R.id.btn_accept_request){
-            Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
+        try {
+            PaymentRequest paymentRequest = referenceWalletSession.getLastRequestSelected();
+            int id = v.getId();
+            if(id == R.id.btn_refuse_request){
+
+                cryptoWallet.refuseRequest(paymentRequest.getRequestId());
+                Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
+            }
+            else if ( id == R.id.btn_accept_request){
+                cryptoWallet.approveRequest(paymentRequest.getRequestId());
+                Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (Exception e)
+        {
+            showMessage(getActivity(), "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
         }
     }
 
