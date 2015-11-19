@@ -42,14 +42,19 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 import org.java_websocket.drafts.Draft_17;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
@@ -387,40 +392,40 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
              */
             Representation respond = requestResource.post(parameters);
 
-           // JsonRepresentation jsonRepresentationRespond = new JsonRepresentation(respond);
-           // JSONObject jsonObjectRespond = jsonRepresentationRespond.getJsonObject();
-           // JSONArray jsonArray = jsonObjectRespond.getJSONArray(JsonAttNamesConstants.RESULT_LIST);
+            System.out.println("WsCommunicationsCloudClientConnection - respond:" + respond);
 
-           // System.out.println("WsCommunicationsCloudClientConnection - jsonArray length:" + jsonArray.length());
+           InputStream in = respond.getStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+            String line;
+           // int index = 0;
+            while((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
 
-           // Decoder decoder = new Decoder(requestResource.getContext());
+             /* for (Character character:line.toCharArray()) {
+                    System.out.print(index + " -- character = " + character);
+                    System.out.println("");
+                    index++;
+                } */
 
-            //String respondText = decoder.decode(respond).getText();
-            //String respondText = respond.getText();
+            }
 
+            System.out.println("WsCommunicationsCloudClientConnection - jsonString length:" + stringBuilder.length());
             System.out.println("WsCommunicationsCloudClientConnection - Respond getSize:" + respond.getSize());
-           // System.out.println("WsCommunicationsCloudClientConnection - Respond Text:" + respondText);
+            System.out.println("WsCommunicationsCloudClientConnection - respond.getAvailableSize() :" + respond.getAvailableSize());
 
             /*
              * if respond have the result list
              */
-            if (respond.getSize() > 11){
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(respond.getStream(), "UTF-8"));
-                StringBuilder builder = new StringBuilder();
-
-                int len;
-                char[] buf = new char[20];
-                while((len = reader.read(buf)) != -1) {
-                    builder.append(buf, 0, len);
-                }
+            if (respond.getSize() > 39){
 
                 /*
                  * Decode into a json object
                  */
                 JsonParser parser = new JsonParser();
-                //JsonObject respondJsonObject = (JsonObject) parser.parse(new InputStreamReader(respond.getStream(), "UTF-8"));
-                JsonObject respondJsonObject = (JsonObject) parser.parse(builder.toString());
+                JsonObject respondJsonObject = (JsonObject) parser.parse(stringBuilder.toString());
+
+                //JsonObject respondJsonObject = (JsonObject) parser.parse(stringRepresentation.getText());
 
                  /*
                  * Get the receivedList
@@ -592,7 +597,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile) {
         return wsCommunicationVPNClientManagerAgent.getActiveVpnConnection(networkServiceType, remotePlatformComponentProfile);
-
     }
 
     /**

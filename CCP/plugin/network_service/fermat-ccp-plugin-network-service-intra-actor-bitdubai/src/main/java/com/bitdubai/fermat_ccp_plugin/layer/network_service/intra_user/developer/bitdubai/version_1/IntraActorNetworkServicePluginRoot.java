@@ -1062,31 +1062,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             for (PlatformComponentProfile platformComponentProfile : list) {
 
-                JsonObject jsonObject = new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
-                //Se desencripta la imagen para luego ser agregada a la lista.
-                String encoded = "";
-                byte[] imageProfile = null;
-
-                try {
-
-                    Type collectionType = new TypeToken<byte[]>(){}.getType();
-                    Gson gson = new Gson();
-                    imageProfile = gson.fromJson(platformComponentProfile.getExtraData(), collectionType);
-
-                    encoded = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString();
-                }catch (Exception e){
-                    encoded = "";
-                    e.printStackTrace();
-                }
-                byte[] image = null;
-                try {
-
-                    image = Base64.decode(imageProfile, Base64.DEFAULT);
-                    //image = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
-                } catch (Exception e) {
-                    image = null;
-                }
-                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), image, platformComponentProfile.getAlias()));
+                byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
+                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias()));
             }
 
         } catch (Exception e) {
@@ -1147,10 +1124,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
 
             ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, NotificationDescriptor.ACCEPTED, ActorProtocolState.DONE);
-
-//            actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
-//
-//            actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
             actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
@@ -1284,59 +1257,35 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         //TODO: deberia cambiaresto para que venga el tipo de actor a registrar
 
-
         CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
-
 
         for (Actor actor : actors) {
 
-
-
-        /*
-         * Construct  profile and register
-         */
-
-            //build jsonObject Photo
-            JsonObject jsonObject = new JsonObject();
-            //Se encripta la imagen para luego ser agregada al json.
-            String encodedImage = null;
             try {
 
-                encodedImage = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                /*
+                 * Construct  profile and register
+                 */
+                String imageString = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);
+                System.out.println("imageString = "+imageString);
 
-            Type collectionType = new TypeToken<byte[]>(){}.getType();
+                PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
+                                                                                                                                            (actor.getName().toLowerCase()),
+                                                                                                                                            (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
+                                                                                                                                            NetworkServiceType.UNDEFINED,
+                                                                                                                                            PlatformComponentType.ACTOR_INTRA_USER,
+                                                                                                                                            imageString);
+                if (!actorsToRegisterCache.contains(platformComponentProfile)) {
+                    actorsToRegisterCache.add(platformComponentProfile);
 
-            Gson gson = new Gson();
-
-            String jsonImageProfile = gson.toJson(Base64.encode(actor.getPhoto(), Base64.DEFAULT), collectionType);
-
-            jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE, jsonImageProfile);
-            //jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE,actor.getPhoto().toString());
-
-            PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
-                    (actor.getName().toLowerCase()),
-                    (actor.getName().toLowerCase() + "_" + this.getName()),
-                    NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
-                    jsonImageProfile.trim());
-
-
-            if (!actorsToRegisterCache.contains(platformComponentProfile)) {
-                actorsToRegisterCache.add(platformComponentProfile);
-
-                if (register) {
-                    try {
+                    if (register) {
                         communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
-
-                    } catch (CantRegisterComponentException e) {
-                        e.printStackTrace();
                     }
                 }
-            }
 
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
 
         }
     }

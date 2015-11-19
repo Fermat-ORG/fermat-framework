@@ -120,12 +120,12 @@ public class ComponentRegisteredListWebService extends ServerResource {
 
         String jsonString = gson.toJson(jsonObjectRespond);
 
-        JsonRepresentation jsonRepresentationRespond = new JsonRepresentation(jsonString);
+        JsonRepresentation jsonRepresentationRespond = new JsonRepresentation(jsonString.trim());
 
+        System.out.println("ComponentRegisteredListWebService - jsonString.length() = "+jsonString.length());
         System.out.println("ComponentRegisteredListWebService - jsonRepresentationRespond.getSize() = "+jsonRepresentationRespond.getSize());
 
         return  jsonRepresentationRespond;
-        //return new org.restlet.engine.application.EncodeRepresentation(org.restlet.data.Encoding.ZIP, (new StringRepresentation(jsonString, MediaType.APPLICATION_JSON)));
     }
 
     /**
@@ -176,7 +176,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
 
         /*
          * Remove the requester from the list
-
+         */
         Iterator<PlatformComponentProfile> iterator = list.iterator();
         while (iterator.hasNext()){
 
@@ -186,7 +186,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
                 iterator.remove();
             }
         }
-        */
+
 
         return list;
     }
