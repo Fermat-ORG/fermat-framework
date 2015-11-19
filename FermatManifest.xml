@@ -4986,12 +4986,12 @@
 					<plugin name="Customer Broker Purchase"
 						description=""
 						difficulty="4"
-						code-level="qa"
+						code-level="development"
 						>
 						<authors>
 							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
 							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
-							<author name="vlzangel" scope="implementation" percentage="100"></author>
+							<author name="vlzangel" scope="implementation" percentage="70"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5001,12 +5001,12 @@
 					<plugin name="Customer Broker Sale"
 						description=""
 						difficulty="4"
-						code-level="qa"
+						code-level="development"
 						>
 						<authors>
 							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
 							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
-							<author name="vlzangel" scope="implementation" percentage="100"></author>
+							<author name="vlzangel" scope="implementation" percentage="70"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5574,6 +5574,25 @@
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			
+			<layer name="Network Service" language="java">
+				<plugins>
+					<plugin	name="Transaction Transmission"
+						description=""
+						difficulty="8"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
