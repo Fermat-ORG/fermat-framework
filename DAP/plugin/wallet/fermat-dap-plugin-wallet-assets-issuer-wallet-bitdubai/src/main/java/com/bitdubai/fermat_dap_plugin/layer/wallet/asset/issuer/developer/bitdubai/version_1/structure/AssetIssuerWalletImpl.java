@@ -273,6 +273,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     @Override
     public List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String assetPublicKey) throws CantGetTransactionsException
     {
+        assetIssuerWalletDao = new AssetIssuerWalletDao(database);
         List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions;
         assetIssuerWalletTransactions = assetIssuerWalletDao.distributeAssets(assetPublicKey);
         return assetIssuerWalletTransactions;
