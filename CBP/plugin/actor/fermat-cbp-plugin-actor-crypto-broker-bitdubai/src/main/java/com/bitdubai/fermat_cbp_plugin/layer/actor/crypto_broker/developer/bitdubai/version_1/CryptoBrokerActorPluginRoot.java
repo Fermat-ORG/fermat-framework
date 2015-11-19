@@ -8,9 +8,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
+import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.interfaces.CryptoBrokerActorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by jorge on 30-10-2015.
  */
-public class CryptoBrokerActorPluginRoot implements DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class CryptoBrokerActorPluginRoot implements CryptoBrokerActorManager, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
     private ErrorManager errorManager;
     private LogManager logManager;
@@ -80,4 +86,27 @@ public class CryptoBrokerActorPluginRoot implements DealsWithErrors, DealsWithLo
         return this.status;
     }
 
+
+
+    // Metodos del Manager
+
+    @Override
+    public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException {
+        return null;
+    }
+
+    @Override
+    public Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException {
+        return null;
+    }
+
+    @Override
+    public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException {
+        return null;
+    }
+
+    @Override
+    public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException {
+        return null;
+    }
 }
