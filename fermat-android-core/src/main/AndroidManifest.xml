@@ -31,7 +31,6 @@
         <activity
             android:name="com.bitdubai.android_core.app.StartActivity"
             android:icon="@drawable/ic_launcher"
-            android:label="Fermat"
             android:theme="@style/AppTheme.NoActionBarStart">
 
             <intent-filter>
@@ -60,14 +59,14 @@
         <activity
             android:name="com.bitdubai.android_core.app.SubAppActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:label="Fermat">
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.StartActivity" />
         </activity>
         <activity
             android:name="com.bitdubai.android_core.app.EditableWalletActivity"
-            android:label="Factory">
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.SubAppActivity"/>
@@ -75,7 +74,7 @@
         <activity
             android:name="com.bitdubai.android_core.app.WalletActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:label="Wallet">
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.SubAppActivity" />
