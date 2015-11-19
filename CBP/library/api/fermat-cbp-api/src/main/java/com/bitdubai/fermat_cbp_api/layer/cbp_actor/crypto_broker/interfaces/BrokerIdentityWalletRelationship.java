@@ -7,9 +7,8 @@ import java.util.UUID;
 /**
  * Created by angel on 17/11/15.
  */
-public interface CryptoBrokerActorWalletIdentity {
-
+public interface BrokerIdentityWalletRelationship {
+    UUID getRelationshipId();
     ActorIdentity getCryptoBroker();
     UUID getWallet();
-
 }
