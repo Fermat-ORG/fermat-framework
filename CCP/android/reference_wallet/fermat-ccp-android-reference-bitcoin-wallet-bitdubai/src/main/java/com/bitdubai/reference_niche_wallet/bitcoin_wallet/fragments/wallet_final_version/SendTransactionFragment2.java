@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -148,6 +149,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
          */
         NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
         setNavigationDrawer(navigationViewAdapter);
+
     }
 
 
@@ -159,12 +161,12 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         }
 
+
         container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
         container_header_balance.setVisibility(View.VISIBLE);
 
 
         View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
-
 
         CircularProgressBar circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 
@@ -227,8 +229,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
-
-        menu.clear();
 
         menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);

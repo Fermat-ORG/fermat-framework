@@ -218,7 +218,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         /**
          * Selector
          */
-        send_button.selector(R.drawable.bg_home_accept_normal,R.drawable.bg_home_accept_active, R.drawable.bg_home_accept_normal );
+        //send_button.selector(R.drawable.bg_home_accept_normal,R.drawable.bg_home_accept_active, R.drawable.bg_home_accept_normal );
     }
 
     private void setUpUIData(){
@@ -323,7 +323,9 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
             // if user press the profile image
         }
         else if (id == R.id.btn_expand_send_form){
-            changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY);
+            Object[] objects = new Object[1];
+            objects[0]= walletContact;
+            changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY,objects);
         }
 
 
