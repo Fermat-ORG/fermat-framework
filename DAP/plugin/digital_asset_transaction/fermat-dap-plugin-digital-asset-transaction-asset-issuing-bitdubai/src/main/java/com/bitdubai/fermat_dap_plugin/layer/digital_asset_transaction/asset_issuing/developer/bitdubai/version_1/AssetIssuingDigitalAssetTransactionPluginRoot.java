@@ -288,7 +288,7 @@ public class AssetIssuingDigitalAssetTransactionPluginRoot extends AbstractPlugi
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
-        if(this.assetIssuingTransactionMonitorAgent==null){
+        if (this.assetIssuingTransactionMonitorAgent==null) {
             String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
             this.assetIssuingTransactionMonitorAgent=new AssetIssuingTransactionMonitorAgent(this.eventManager,
                     this.pluginDatabaseSystem,
@@ -301,9 +301,9 @@ public class AssetIssuingDigitalAssetTransactionPluginRoot extends AbstractPlugi
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
             this.assetIssuingTransactionMonitorAgent.setBitcoinNetworkManager(bitcoinNetworkManager);
             this.assetIssuingTransactionMonitorAgent.start();
-        }else{
-                this.assetIssuingTransactionMonitorAgent.start();
-            }
+        } else {
+            this.assetIssuingTransactionMonitorAgent.start();
+        }
     }
 
     /**
