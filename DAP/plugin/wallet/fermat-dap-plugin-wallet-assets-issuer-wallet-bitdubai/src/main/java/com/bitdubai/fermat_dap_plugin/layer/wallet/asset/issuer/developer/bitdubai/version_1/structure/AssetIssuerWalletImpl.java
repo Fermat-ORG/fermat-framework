@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdu
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -15,10 +16,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantInitializeAssetIssuerWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
@@ -46,7 +49,7 @@ import java.util.UUID;
  * Created by franklin on 27/09/15.
  */
 public class AssetIssuerWalletImpl implements AssetIssuerWallet {
-    public static final String PATH_DIRECTORY = "assetissuer/assets";
+    public static final String PATH_DIRECTORY = "asset-issuer-swap/";
     private static final String ASSET_ISSUER_WALLET_FILE_NAME = "walletsIds";
 
     /**
@@ -277,6 +280,29 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions;
         assetIssuerWalletTransactions = assetIssuerWalletDao.distributeAssets(assetPublicKey);
         return assetIssuerWalletTransactions;
+    }
+
+    @Override
+    public DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
+        DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
+        try  {
+                DigitalAsset digitalAsset = new  DigitalAsset();
+                PluginTextFile pluginTextFile = null;
+                pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, digitalAssetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                String digitalAssetData = pluginTextFile.getContent();
+                digitalAsset = (DigitalAsset) XMLParser.parseXML(digitalAssetData, digitalAsset);
+                digitalAssetMetadata.setDigitalAsset(digitalAsset);
+        } catch (FileNotFoundException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            throw new CantGetDigitalAssetFromLocalStorageException(FermatException.wrapException(e), "File no found", null);
+        } catch (CantCreateFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            throw new CantGetDigitalAssetFromLocalStorageException(FermatException.wrapException(e), "Cannot create file", null);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            throw new CantGetDigitalAssetFromLocalStorageException(FermatException.wrapException(e), null, null);
+        }
+        return digitalAssetMetadata;
     }
 
 //    @Override

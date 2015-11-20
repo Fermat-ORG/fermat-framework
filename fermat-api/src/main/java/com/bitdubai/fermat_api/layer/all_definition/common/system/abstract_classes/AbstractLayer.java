@@ -126,24 +126,16 @@ public abstract class AbstractLayer {
         }
     }
 
-    public final ConcurrentHashMap<AddonVersionReference, AbstractAddon> listAddonVersions() {
-
-        final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions = new ConcurrentHashMap<>();
+    public final void fillAddonVersions(final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions) {
 
         for(ConcurrentHashMap.Entry<AddonReference, AbstractAddonSubsystem> addon : addons.entrySet())
-            versions.putAll(addon.getValue().listVersions());
-
-        return versions;
+            addon.getValue().fillVersions(versions);
     }
 
-    public final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> listPluginVersions() {
-
-        final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions = new ConcurrentHashMap<>();
+    public final void fillPluginVersions(final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions) {
 
         for(ConcurrentHashMap.Entry<PluginReference, AbstractPluginSubsystem> plugin : plugins.entrySet())
-            versions.putAll(plugin.getValue().listVersions());
-
-        return versions;
+            plugin.getValue().fillVersions(versions);
     }
 
     public final LayerReference getLayerReference() {
