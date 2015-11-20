@@ -53,7 +53,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         try {
             // setting up  module
             referenceWalletSession = (ReferenceWalletSession) walletSession;
-            moduleManager = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
+            moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
             errorManager = referenceWalletSession.getErrorManager();
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -159,7 +159,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                 Toast.makeText(getActivity(),"Nodule manager null",Toast.LENGTH_SHORT).show();
             } else {
                 data = moduleManager.listAllIntraUserConnections(moduleManager.getActiveIdentities().get(0).getPublicKey(),
-                        referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                        referenceWalletSession.getAppPublicKey(),
                         MAX_USER_SHOW,
                         offset);
             }

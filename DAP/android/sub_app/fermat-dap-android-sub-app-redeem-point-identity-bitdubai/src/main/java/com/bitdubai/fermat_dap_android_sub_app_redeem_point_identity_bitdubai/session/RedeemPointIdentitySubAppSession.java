@@ -1,8 +1,13 @@
 package com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.session;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -11,7 +16,7 @@ import java.util.Map;
 /**
  * Created by Francisco Vasquez
  */
-public class RedeemPointIdentitySubAppSession implements SubAppsSession {
+public class RedeemPointIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp,RedeemPointIdentityManager,SubAppResourcesProviderManager> implements SubAppsSession {
 
     /**
      * SubApps type
@@ -37,25 +42,17 @@ public class RedeemPointIdentitySubAppSession implements SubAppsSession {
     /**
      * Create a session for the Wallet Store SubApp
      *
-     * @param subApps       the SubApp type
      * @param errorManager  the error manager
      * @param moduleManager the module of this SubApp
      */
-    public RedeemPointIdentitySubAppSession(SubApps subApps, ErrorManager errorManager, RedeemPointIdentityManager moduleManager) {
+    public RedeemPointIdentitySubAppSession(InstalledSubApp subApp, ErrorManager errorManager, RedeemPointIdentityManager moduleManager) {
+        super(subApp.getAppPublicKey(),subApp,errorManager,moduleManager,null);
         this.subApps = subApps;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
         this.moduleManager = moduleManager;
     }
 
-    /**
-     * Create a session for the Wallet Store SubApp
-     *
-     * @param subApps the SubApp type
-     */
-    public RedeemPointIdentitySubAppSession(SubApps subApps) {
-        this.subApps = subApps;
-    }
 
 
     /**
@@ -64,8 +61,8 @@ public class RedeemPointIdentitySubAppSession implements SubAppsSession {
      * @return SubApps instance indicating the type
      */
     @Override
-    public SubApps getSubAppSessionType() {
-        return subApps;
+    public InstalledSubApp getSubAppSessionType() {
+        return getFermatApp();
     }
 
     /**

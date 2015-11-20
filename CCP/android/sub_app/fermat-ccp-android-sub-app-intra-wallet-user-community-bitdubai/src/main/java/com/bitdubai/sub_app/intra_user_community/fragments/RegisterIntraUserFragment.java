@@ -299,7 +299,7 @@ public class RegisterIntraUserFragment extends FermatFragment {
 
             Toast.makeText(getActivity(), "Identity sucessfully created", Toast.LENGTH_SHORT).show();
 
-            ((FermatScreenSwapper)getActivity()).changeActivity(Activities.CWP_INTRA_USER_ACTIVITY.getCode());
+            ((FermatScreenSwapper)getActivity()).changeActivity(Activities.CWP_INTRA_USER_ACTIVITY.getCode(),subAppsSession.getAppPublicKey());
 
             //CryptoAddress validAddress = validateAddress(address.getText().toString(), cryptoWallet);
 

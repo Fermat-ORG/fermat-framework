@@ -1,7 +1,7 @@
 Readme
 ========= 
 
-image:: https://github.com/bitDubai/fermat-graphic-design/blob/master/2D%20Design/Fermat/Fermat%20Book%20Logotype/jpg/logo_fermat_book.jpg[FermatBook]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20book%20logotype/FermatBookLogotype3D/PNG_fermat_book_logo_3D_Low_800x813.png[FermatBook3D]
 
 Welcome to Fermat's  official book ! 
 ------------------------------------

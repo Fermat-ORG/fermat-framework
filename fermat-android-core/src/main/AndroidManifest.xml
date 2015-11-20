@@ -82,6 +82,12 @@
         </activity>
 
         <activity
+            android:name="com.bitdubai.android_core.app.DesktopActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+        </activity>
+
+        <activity
             android:name="com.bitdubai.android_core.app.common.version_1.test.ScrollingActivity"
             android:theme="@style/AppTheme.NoActionBar">
 

@@ -5,5 +5,5 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interf
  */
 public interface FermatRuntime {
 
-    public void changeActivityBack(String activityCode);
+    public void changeActivityBack(String appBackPublicKey,String activityCode);
 }

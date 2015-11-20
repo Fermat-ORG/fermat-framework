@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Languag
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
 
@@ -13,7 +14,7 @@ import java.util.Map;
 /**
  * Created by ciencias on 2/14/15.
  */
-public interface SubApp {
+public interface SubApp extends FermatApp {
 
     /**
      * SubApp type
@@ -23,6 +24,11 @@ public interface SubApp {
 
     public SubApps getType();
 
+    /**
+     * SubApp publicKey
+     * @return publicKey
+     */
+    public String getPublicKey();
     /**
      * Screens in a SubApp
      */

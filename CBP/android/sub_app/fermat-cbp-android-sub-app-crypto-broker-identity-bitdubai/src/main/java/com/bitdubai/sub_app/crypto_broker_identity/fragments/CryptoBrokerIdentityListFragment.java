@@ -100,7 +100,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         newIdentityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
+                //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
             }
         });
 
@@ -181,7 +181,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     @Override
     public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {
         subAppsSession.setData(IDENTITY_INFO, data);
-        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode());
+        //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode());
     }
 
     @Override
