@@ -44,3 +44,5 @@ Please, configure your script to generate all the issues following the next step
     * The developer message for a team leader is not longer print if the githubLogin is equal to teamLeaderGithubUser
 * 1.0.3:
     * If you are a Team Leader you can do an autoassignment.
+* 1.0.4:
+	* Added Public Interfaces, Internal Structure and Event Handler issue.

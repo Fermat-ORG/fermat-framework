@@ -31,6 +31,7 @@
 #	1.0.2: 	- Fixes the issue publication in repositories that not owned by the developer
 #		- The developer message for a team leader is not longer print if the githubLogin is equal to teamLeaderGithubUser
 #   1.0.3:	- If you are a Team Leader you can do an autoassignment.
+#   1.0.4:  - Added Public Interfaces, Internal Structure and Event Handler issue.
  
 from pygithub3 import Github
 
@@ -87,27 +88,42 @@ for rootIssue in rootIssues:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 
 #Public interfaces issues
+titleGenerated= platform+" - "+layer+" - "+pluginName+" - Implementation - Public Interfaces"
+bodyGenerated="This issue is closed when all public interface's code is written."+"\n"+teamLeaderMessage
+print titleGenerated+"\n"+bodyGenerated
+print "------------------------------------------\n"
+issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 for publicInterface in publicInterfaces:
 	titleGenerated= platform+" - "+layer+" - "+pluginName+" - Implementation - Public Interfaces - "+publicInterface
 	bodyGenerated="This issue is closed when the "+publicInterface+" is written."+"\n"+teamLeaderMessage
-    	print titleGenerated+"\n"+bodyGenerated
-    	print "------------------------------------------\n"
+    print titleGenerated+"\n"+bodyGenerated
+    print "------------------------------------------\n"
 	issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 
 #Internal structure issues
+titleGenerated= platform+" - "+layer+" - "+pluginName+" - Implementation - Internal Structure"
+bodyGenerated="This issue is closed when all internal structure's code is written."+"\n"+teamLeaderMessage
+print titleGenerated+"\n"+bodyGenerated
+print "------------------------------------------\n"
+issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 for internalStructureClass in internalStructureClasses:
 	titleGenerated= platform+" - "+layer+" - "+pluginName+" - Implementation - Internal Structure - "+internalStructureClass
 	bodyGenerated="This issue is closed when the "+internalStructureClass+" is written."+"\n"+teamLeaderMessage
-    	print titleGenerated+"\n"+bodyGenerated
-    	print "------------------------------------------\n"
+    print titleGenerated+"\n"+bodyGenerated
+    print "------------------------------------------\n"
 	issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 
-#Event handling issues
+#Event handling
+titleGenerated= platform+" - "+layer+" - "+pluginName+" - Implementation - Event Handler"
+bodyGenerated="This issue is closed when all event handler classes are written."+"\n"+teamLeaderMessage
+print titleGenerated+"\n"+bodyGenerated
+print "------------------------------------------\n"
+issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 for eventHandler in eventHandlers:
 	titleGenerated= platform+" - "+layer+" - "+pluginName+" - Implementation - Event Handler - "+eventHandler
 	bodyGenerated="This issue is closed when the "+eventHandler+" is written."+"\n"+teamLeaderMessage
-    	print titleGenerated+"\n"+bodyGenerated
-    	print "------------------------------------------\n"
+    print titleGenerated+"\n"+bodyGenerated
+    print "------------------------------------------\n"
 	issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 
 #Testing issues
