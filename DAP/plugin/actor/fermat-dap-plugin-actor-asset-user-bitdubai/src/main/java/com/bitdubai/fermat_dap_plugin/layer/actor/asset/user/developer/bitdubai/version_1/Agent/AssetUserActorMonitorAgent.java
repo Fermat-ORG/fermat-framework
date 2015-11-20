@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
@@ -30,7 +31,6 @@ import java.util.UUID;
 public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     private Thread agentThread;
-    private MonitorAgent monitorAgent;
     LogManager logManager;
     EventManager eventManager;
     ErrorManager errorManager;
@@ -58,7 +58,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
     @Override
     public void start() throws CantStartAgentException {
 
-        monitorAgent = new MonitorAgent(this.errorManager, this.pluginDatabaseSystem);
+        MonitorAgent monitorAgent = new MonitorAgent(this.errorManager, this.pluginDatabaseSystem);
         this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
     }
@@ -142,7 +142,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 
         private void listByActorAssetUserNetworkService() throws CantCreateAssetUserActorException {
             try {
-                if (assetUserActorNetworkServiceManager != null) {
+                if (assetUserActorNetworkServiceManager != null && assetUserActorDao.getActorAssetUser() != null) {
                     List<ActorAssetUser> list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
                     if (list.isEmpty()) {
                         System.out.println("Actor Asset User - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
@@ -162,39 +162,9 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
                 throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             } catch (CantAddPendingAssetUserException e) {
                 e.printStackTrace();
+            } catch (CantGetAssetUserActorsException e) {
+                e.printStackTrace();
             }
         }
-
-//        private void test_RegisterActorNetworkService() throws CantCreateAssetUserActorException {
-//            try {
-//                //Comentar CICLO FOR para realizar prueba directa con Actor Network Service
-//                for (int i = 0; i < 10; i++) {
-////                String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
-//                    String assetUserActorPublicKey = UUID.randomUUID().toString();
-////                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
-//                    CryptoAddress genesisAddress = assetActorUserPluginRoot.getGenesisAddress();
-////                    CryptoAddress genesisAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
-//                    ;
-//                    Genders genders = Genders.INDEFINITE;
-//                    String age = "25";
-//                    DAPConnectionState connectionState = DAPConnectionState.CONNECTED;
-//                    Double locationLatitude = new Random().nextDouble();
-//                    Double locationLongitude = new Random().nextDouble();
-//                    AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey, "ANS User_" + new Random().nextInt(10), age, genders,
-//                            connectionState, locationLatitude, locationLongitude,
-//                            genesisAddress, System.currentTimeMillis(),
-//                            System.currentTimeMillis(), new byte[0]);
-//
-//                    assetUserActorDao.createNewAssetUserRegisterInNetworkService(record);
-//
-//                    assetActorUserPluginRoot.registerGenesisAddressInCryptoAddressBook(genesisAddress);
-//                }
-//                System.out.println("Actores SIMULANDO Actor Network Service: GUARDADOS - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
-//            } catch (CantAddPendingAssetUserException e) {
-//                throw new CantCreateAssetUserActorException("CAN'T ADD (TEST) NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
-//            } catch (Exception e) {
-//                throw new CantCreateAssetUserActorException("CAN'T ADD (TEST) NEW ASSET USER ACTOR NETWORK SERVICE", FermatException.wrapException(e), "", "");
-//            }
-//        }
     }
 }
