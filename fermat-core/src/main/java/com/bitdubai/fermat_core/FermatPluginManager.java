@@ -120,7 +120,10 @@ public final class FermatPluginManager {
 
                 startPluginAndReferences(pvr);
 
-                abstractPlugin.assignPluginReference(reference);
+                if (reference.getManager() != null)
+                    abstractPlugin.assignPluginReference(pvr, reference.getManager());
+                else
+                    abstractPlugin.assignPluginReference(reference);
             }
 
             abstractPlugin.setId(pluginIdsManager.getPluginId(pluginVersionReference));
