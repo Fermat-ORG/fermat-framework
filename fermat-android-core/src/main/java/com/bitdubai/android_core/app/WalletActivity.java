@@ -235,6 +235,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 //            startActivity(intent);
 //            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             Intent intent = new Intent(this, DesktopActivity.class);
+            if(developMode==true) intent.putExtra("flag",true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             startActivity(intent);

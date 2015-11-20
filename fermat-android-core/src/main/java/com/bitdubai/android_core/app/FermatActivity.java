@@ -203,6 +203,7 @@ public abstract class FermatActivity extends AppCompatActivity
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ViewPager pagertabs;
     private CoordinatorLayout coordinatorLayout;
+    private boolean flag=false;
 
 
     /**
@@ -1043,7 +1044,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
             }
 
-            if (true) {
+            if (getIntent().getBooleanExtra("flag",false)) {
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
                 activePlatforms.add(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
                 activePlatforms.add(Platforms.DIGITAL_ASSET_PLATFORM);
