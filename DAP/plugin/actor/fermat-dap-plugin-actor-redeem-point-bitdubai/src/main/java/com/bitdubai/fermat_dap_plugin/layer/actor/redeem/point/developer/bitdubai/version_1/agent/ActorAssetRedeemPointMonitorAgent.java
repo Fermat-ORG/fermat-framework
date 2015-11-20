@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRequestListActorAssetRedeemPointRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
@@ -146,7 +147,7 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
 
         private void listByActorAssetRedeemPointNetworkService() throws CantCreateActorRedeemPointException {
             try {
-                if (assetRedeemPointActorNetworkServiceManager != null) {
+                if (assetRedeemPointActorNetworkServiceManager != null && redeemPointActorDao.getActorAssetRedeemPoint() != null) {
                     List<ActorAssetRedeemPoint> list = assetRedeemPointActorNetworkServiceManager.getListActorAssetRedeemPointRegistered();
                     if (list.isEmpty()) {
                         System.out.println("Actor Asset Redeem Point - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
@@ -165,6 +166,8 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
             } catch (CantRequestListActorAssetRedeemPointRegisteredException e) {
                 throw new CantCreateActorRedeemPointException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             } catch (CantAddPendingRedeemPointException e) {
+                e.printStackTrace();
+            } catch (CantGetAssetRedeemPointActorsException e) {
                 e.printStackTrace();
             }
         }
