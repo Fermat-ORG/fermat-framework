@@ -92,7 +92,7 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
      * @return the public key represented as a string
      */
     @Override
-    public String getSubAppPublicKey() {
+    public String getAppPublicKey() {
         return publicKey;
     }
 
