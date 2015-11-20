@@ -105,12 +105,12 @@ include ':fermat-cbp-plugin-business-transaction-ack-merchandise-bitdubai'
 project(':fermat-cbp-plugin-business-transaction-ack-merchandise-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-ack-merchandise-bitdubai')
 
 //Negotiation Transaction
-include ':fermat-cbp-plugin-negotiation-transaction-create-bitdubai'
-project(':fermat-cbp-plugin-negotiation-transaction-create-bitdubai').projectDir = new File('CBP/plugin/negotiation_transaction/fermat-cbp-plugin-negotiation-transaction-create-bitdubai')
-include ':fermat-cbp-plugin-negotiation-transaction-update-bitdubai'
-project(':fermat-cbp-plugin-negotiation-transaction-update-bitdubai').projectDir = new File('CBP/plugin/negotiation_transaction/fermat-cbp-plugin-negotiation-transaction-update-bitdubai')
-include ':fermat-cbp-plugin-negotiation-transaction-close-bitdubai'
-project(':fermat-cbp-plugin-negotiation-transaction-close-bitdubai').projectDir = new File('CBP/plugin/negotiation_transaction/fermat-cbp-plugin-negotiation-transaction-close-bitdubai')
+include ':fermat-cbp-plugin-negotiation-transaction-customer-broker-new-bitdubai'
+project(':fermat-cbp-plugin-negotiation-transaction-customer-broker-new-bitdubai').projectDir = new File('CBP/plugin/negotiation_transaction/fermat-cbp-plugin-negotiation-transaction-customer-broker-new-bitdubai')
+include ':fermat-cbp-plugin-negotiation-transaction-customer-broker-update-bitdubai'
+project(':fermat-cbp-plugin-negotiation-transaction-customer-broker-update-bitdubai').projectDir = new File('CBP/plugin/negotiation_transaction/fermat-cbp-plugin-negotiation-transaction-customer-broker-update-bitdubai')
+include ':fermat-cbp-plugin-negotiation-transaction-customer-broker-close-bitdubai'
+project(':fermat-cbp-plugin-negotiation-transaction-customer-broker-close-bitdubai').projectDir = new File('CBP/plugin/negotiation_transaction/fermat-cbp-plugin-negotiation-transaction-customer-broker-close-bitdubai')
 
 //Contract
 include ':fermat-cbp-plugin-contract-customer-broker-purchase-bitdubai'
