@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantCanc
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import java.util.UUID;
 
@@ -17,33 +16,25 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
  */
-public interface ActorConnectionManager<T extends ActorIdentity> {
+public interface ActorConnectionManager<T extends ActorIdentity, Z extends ActorConnection<T>, M extends ActorConnectionSearch> {
 
     /**
      * Through the method <code>getSearch</code> we can get a new instance of Actor Connection Search.
      * This Actor Connection search provides all the necessary functionality to make an Actor Connection Search.
      *
-     * @return a ActorConnectionSearch instance.
+     * @return an ActorConnectionSearch instance.
      */
-    ActorConnectionSearch getSearch(final T actorIdentitySearching);
+    M getSearch(final T actorIdentitySearching);
 
     /**
      * Through the method <code>requestConnection</code> we can request an actor for a connection.
      * When we're connected with an actor, we're enabled to interact with him.
      *
-     * @param actorIdentityRequestingConnection    the actor identity who requests the connection with another actor.
-     * @param actorConnectionPublicKey             the public key of the actor which is connected.
-     * @param actorConnectionActorType             the actor type of the actor which is connected.
-     * @param actorConnectionAlias                 the alias of the actor which is connected.
-     * @param actorConnectionImage                 the image of the actor which is connected.
+     * @param actorConnection    the actor connection that we're trying to generate.
      *
      * @throws CantRequestActorConnectionException if something goes wrong.
      */
-    void requestConnection(final T      actorIdentityRequestingConnection,
-                           final String actorConnectionPublicKey         ,
-                           final Actors actorConnectionActorType         ,
-                           final String actorConnectionAlias             ,
-                           final byte[] actorConnectionImage             ) throws CantRequestActorConnectionException;
+    void requestConnection(final Z actorConnection) throws CantRequestActorConnectionException;
 
     /**
      * Through the method <code>disconnect</code> we can disconnect from an actor.
