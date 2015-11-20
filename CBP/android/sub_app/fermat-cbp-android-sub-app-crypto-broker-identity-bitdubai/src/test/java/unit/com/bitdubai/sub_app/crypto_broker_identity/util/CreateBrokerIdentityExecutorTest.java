@@ -1,6 +1,6 @@
 package unit.com.bitdubai.sub_app.crypto_broker_identity.util;
 
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
 
 import org.junit.Before;
