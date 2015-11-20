@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by natalia on 17/09/15.
