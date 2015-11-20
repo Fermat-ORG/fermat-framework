@@ -4,6 +4,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.Abstrac
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -15,7 +16,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class CryptoBrokerCommunitySubAppSession extends AbstractFermatSession<SubApp,CryptoBrokerCommunityModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class CryptoBrokerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,CryptoBrokerCommunityModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
 
     /**
      * SubApps type
@@ -44,8 +45,8 @@ public class CryptoBrokerCommunitySubAppSession extends AbstractFermatSession<Su
      * @param errorManager             the error manager
      * @param moduleManager the module of this SubApp
      */
-    public CryptoBrokerCommunitySubAppSession(SubApp subApp, ErrorManager errorManager, CryptoBrokerCommunityModuleManager moduleManager) {
-        super(subApp.getPublicKey(),subApp,errorManager,moduleManager,null);
+    public CryptoBrokerCommunitySubAppSession(InstalledSubApp subApp, ErrorManager errorManager, CryptoBrokerCommunityModuleManager moduleManager) {
+        super(subApp.getAppPublicKey(),subApp,errorManager,moduleManager,null);
         this.subApps = subApps;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
@@ -53,16 +54,6 @@ public class CryptoBrokerCommunitySubAppSession extends AbstractFermatSession<Su
     }
 
 
-
-    /**
-     * Return the SubApp type
-     *
-     * @return SubApps instance indicating the type
-     */
-    @Override
-    public SubApp getSubAppSessionType() {
-        return getFermatApp();
-    }
 
     /**
      * Store any data you need to hold between the fragments of the sub app
@@ -119,5 +110,10 @@ public class CryptoBrokerCommunitySubAppSession extends AbstractFermatSession<Su
     @Override
     public int hashCode() {
         return subApps.hashCode();
+    }
+
+    @Override
+    public InstalledSubApp getSubAppSessionType() {
+        return getFermatApp();
     }
 }

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.Abstrac
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -16,7 +17,7 @@ import java.util.Map;
  */
 
 //TODO: Nelson fijate que el module manager está mal..
-public class CustomersSubAppSession extends AbstractFermatSession<SubApp,CustomerModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class CustomersSubAppSession extends AbstractFermatSession<InstalledSubApp,CustomerModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
 
     /**
      * SubApps type
@@ -45,8 +46,8 @@ public class CustomersSubAppSession extends AbstractFermatSession<SubApp,Custome
      * @param errorManager             the error manager
      * @param moduleManager the module of this SubApp
      */
-    public CustomersSubAppSession(SubApp subApp, ErrorManager errorManager, CustomerModuleManager moduleManager) {
-        super(subApp.getPublicKey(), subApp, errorManager, moduleManager, null);
+    public CustomersSubAppSession(InstalledSubApp subApp, ErrorManager errorManager, CustomerModuleManager moduleManager) {
+        super(subApp.getAppPublicKey(), subApp, errorManager, moduleManager, null);
         this.subApps = subApps;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
@@ -62,7 +63,7 @@ public class CustomersSubAppSession extends AbstractFermatSession<SubApp,Custome
      * @return SubApps instance indicating the type
      */
     @Override
-    public SubApp getSubAppSessionType() {
+    public InstalledSubApp getSubAppSessionType() {
         return getFermatApp();
     }
 
