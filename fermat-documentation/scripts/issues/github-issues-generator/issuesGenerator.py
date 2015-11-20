@@ -82,7 +82,8 @@ nsMessages=["nsMessage"]
 labels=[platform]
 
 #Please, not modify this plugin after this point
-if(teamLeaderGithubUser!=githubLogin):
+isTeamLeader=teamLeaderGithubUser!=githubLogin
+if(isTeamLeader):
 	teamLeaderMessage="@"+teamLeaderGithubUser+" please assign this issue to me."
 else:
 	teamLeaderMessage=''
