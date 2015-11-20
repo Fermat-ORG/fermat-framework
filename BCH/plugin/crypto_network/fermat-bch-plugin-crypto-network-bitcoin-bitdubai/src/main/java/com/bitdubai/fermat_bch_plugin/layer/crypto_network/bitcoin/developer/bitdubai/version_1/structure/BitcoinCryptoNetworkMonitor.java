@@ -70,12 +70,16 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
     @Override
     public void start() throws CantStartAgentException {
-        try {
-            doTheMainTask();
-        } catch (BlockchainException e) {
-            e.printStackTrace();
-            throw new CantStartAgentException();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    doTheMainTask();
+                } catch (BlockchainException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override

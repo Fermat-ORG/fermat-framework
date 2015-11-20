@@ -564,7 +564,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
          * I will insert each key. Since I don't want to repeat inserting keys, I will only insert the keys
          * which position is after currentGeneratedKeys value
          */
-        int i=0;
+        int i=1;
         for (ECKey key : keys){
             if (i >= currentGeneratedKeys){
                 DatabaseTableRecord record = databaseTable.getEmptyRecord();
