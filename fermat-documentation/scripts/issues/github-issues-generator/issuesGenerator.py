@@ -38,7 +38,6 @@
 #   1.0.3:	- If you are a Team Leader you can do an autoassignment.
 #   1.0.4:  - Added Public Interfaces, Internal Structure and Event Handler issue.
 #   1.2.0:	- Fixes the default repository user.
-#		- Changes by Leon Acosta
 #		- Add issues for Agents, Network Service, Network Service Messages and events.
 #		- Add the labels list (only for team leaders use).
 #   		- Add the variable networkService. 
@@ -112,7 +111,7 @@ for rootIssue in rootIssues:
     	print titleGenerated+"\n"+bodyGenerated
     	print "------------------------------------------\n"
 	if isTeamLeader:
-		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 	else:
 		issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 
@@ -122,7 +121,7 @@ bodyGenerated="This issue is closed when all public interface's code is written.
 print titleGenerated+"\n"+bodyGenerated
 print "------------------------------------------\n"
 if isTeamLeader:
-	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 else:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 for publicInterface in publicInterfaces:
@@ -131,7 +130,7 @@ for publicInterface in publicInterfaces:
     	print titleGenerated+"\n"+bodyGenerated
     	print "------------------------------------------\n"
 	if isTeamLeader:
-		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 	else:
 		issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 
@@ -141,7 +140,7 @@ bodyGenerated="This issue is closed when all internal structure's code is writte
 print titleGenerated+"\n"+bodyGenerated
 print "------------------------------------------\n"
 if isTeamLeader:
-	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 else:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 for internalStructureClass in internalStructureClasses:
@@ -150,7 +149,7 @@ for internalStructureClass in internalStructureClasses:
     	print titleGenerated+"\n"+bodyGenerated
     	print "------------------------------------------\n"
 	if isTeamLeader:
-		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 	else:
 		issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 
@@ -160,7 +159,7 @@ bodyGenerated="This issue is closed when all event handler classes are written."
 print titleGenerated+"\n"+bodyGenerated
 print "------------------------------------------\n"
 if isTeamLeader:
-	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 else:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 for eventHandler in eventHandlers:
@@ -169,7 +168,7 @@ for eventHandler in eventHandlers:
     	print titleGenerated+"\n"+bodyGenerated
     	print "------------------------------------------\n"
 	if isTeamLeader:
-		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 	else:
 		issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 
@@ -180,7 +179,7 @@ for event in events:
     	print title+"\n"+body
     	print "------------------------------------------\n"
 	if isTeamLeader:
-		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 	else:
 		issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 
@@ -191,7 +190,7 @@ for agent in agents:
     	print title+"\n"+body
     	print "------------------------------------------\n"
 	if isTeamLeader:
-		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 	else:
 		issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 
@@ -202,7 +201,7 @@ if isNetworkService:
     	print title+"\n"+body
     	print "------------------------------------------\n"
 	if isTeamLeader:
-		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 	else:
 		issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 
@@ -214,7 +213,7 @@ for nsMessage in nsMessages:
     	print title+"\n"+body
     	print "------------------------------------------\n"
 	if isTeamLeader:
-		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 	else:
 		issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 
@@ -223,13 +222,13 @@ for nsMessage in nsMessages:
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - Testing - Unit Testing"
 bodyGenerated="It is closed whenever all testing is done."
 if isTeamLeader:
-	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 else:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - Testing - Integration Testing"
 bodyGenerated="It is closed whenever all testing is done."
 if isTeamLeader:
-	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 else:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 
@@ -237,7 +236,7 @@ else:
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - QA"
 bodyGenerated="It is closed whenever QA tests are passed."
 if isTeamLeader:
-	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 else:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 
@@ -245,6 +244,6 @@ else:
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - Production"
 bodyGenerated="It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed."
 if isTeamLeader:
-	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=asignee, labels=labels),user=repositoryUser,repo=repository)
+	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 else:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
