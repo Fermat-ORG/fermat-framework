@@ -36,7 +36,7 @@ public class NegotiationTransactionCreatePluginRoot implements  DealsWithErrors,
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.BusinessTransactionAckMerchandisePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.create.developer.bitdubai.version_1.NegotiationTransactionCreatePluginRoot");
         return returnedClasses;
     }
 

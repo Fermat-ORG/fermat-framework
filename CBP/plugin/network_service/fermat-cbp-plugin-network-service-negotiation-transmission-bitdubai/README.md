@@ -1,4 +1,4 @@
-# Fermat CBP Plugin Actor Network Service Negotiation Transmission
+# Fermat CBP Plugin Network Service Negotiation Transmission
 
 Handles the communication between Customers and Brokers For Negotiation.
 
