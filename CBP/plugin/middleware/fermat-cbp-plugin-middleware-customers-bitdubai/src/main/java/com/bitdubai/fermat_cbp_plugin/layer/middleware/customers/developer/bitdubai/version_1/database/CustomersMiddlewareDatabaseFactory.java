@@ -72,14 +72,14 @@ public class CustomersMiddlewareDatabaseFactory implements DealsWithPluginDataba
             /**
              * Create Wallet Identity table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CustomersMiddlewareDatabaseConstants.CUSTOMERS_TABLE_NAME);
 
-            table.addColumn(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_RELATIONSHIP_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_CUSTOMER_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CustomersMiddlewareDatabaseConstants.CUSTOMERS_RELATIONSHIP_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CUSTOMER_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
 
-            table.addIndex(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_FIRST_KEY_COLUMN);
+            table.addIndex(CustomersMiddlewareDatabaseConstants.CUSTOMERS_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

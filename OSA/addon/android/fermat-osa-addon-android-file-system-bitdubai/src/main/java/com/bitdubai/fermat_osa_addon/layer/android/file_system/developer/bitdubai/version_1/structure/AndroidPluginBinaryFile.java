@@ -42,26 +42,18 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
     private final String directoryName;
     private final FilePrivacy privacyLevel;
     private final FileLifeSpan lifeSpan;
-    private Context context;
+    private String contextPath;
     private byte[] content;
 
 
-    public AndroidPluginBinaryFile(final UUID ownerId, final Context context, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
+    public AndroidPluginBinaryFile(final UUID ownerId, final String contextPath, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
         this.ownerId = ownerId;
-        this.context = context;
+        this.contextPath = contextPath;
         this.directoryName = directoryName;
         this.fileName = fileName;
         this.privacyLevel = privacyLevel;
         this.lifeSpan = lifeSpan;
     }
-    
-    public Context getContext() {
-		return context;
-	}
-
-	public void setContext(Context context) {
-		this.context = context;
-	}
 
 	public String getFileName() {
 		return fileName;
@@ -113,7 +105,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
+            path = contextPath;
         /**
          * I set the path where the file is going to be located.
          */
@@ -166,7 +158,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
+            path = contextPath;
 
         /**
          * Get the file handle.
@@ -208,7 +200,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         }
     }
     @Override
-    public void delete() throws FileNotFoundException{
+    public void delete() throws FileNotFoundException {
         /**
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */
@@ -217,7 +209,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
+            path = contextPath;
         File file = new File(path +"/"+ this.directoryName, this.fileName);
         file.delete();
         } catch (Exception e) {
@@ -249,7 +241,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
+            path = contextPath;
         return path +"/"+ this.directoryName + "/" + fileName;
     }
 

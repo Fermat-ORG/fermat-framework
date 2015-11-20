@@ -1,69 +1,57 @@
 package com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * AssetIssuer SubApp Session
+ * Redeem Point Wallet Session
  *
  * @author Francisco Vasquez
  * @version 1.0
  */
-public class RedeemPointSession implements SubAppsSession {
+public class RedeemPointSession implements WalletSession {
 
-    /**
-     * Issuer Manager
-     */
-    //private RedeemPointManager manager;
 
-    /**
-     * SubApps type
-     */
-    private SubApps subApps;
+    private AssetRedeemPointWalletSubAppModule manager;
 
-    /**
-     * Active objects in wallet session
-     */
+    private ErrorManager errorManager;
+    private InstalledWallet wallet;
+    private WalletSettings settings;
+    private WalletResourcesProviderManager resourceManager;
+
     private Map<String, Object> data;
 
-    /**
-     * Error manager
-     */
-    private ErrorManager errorManager;
 
-    /**
-     * Constructor
-     *
-     * @param subApps      SubApp Type
-     * @param errorManager Error Manager
-     * @param manager      AssetIssuerWallet Manager
-     */
-    public RedeemPointSession(SubApps subApps, ErrorManager errorManager, AssetIssuerWalletManager manager) {
-        this.subApps = subApps;
-        data = new HashMap<String, Object>();
+    public RedeemPointSession(WalletResourcesProviderManager resourceManager, InstalledWallet installedWallet, ErrorManager errorManager, AssetRedeemPointWalletSubAppModule manager) {
+        this.resourceManager = resourceManager;
+        this.wallet = installedWallet;
         this.errorManager = errorManager;
-        //this.manager = manager;
+        this.manager = manager;
     }
 
 
     @Override
-    public SubApps getSubAppSessionType() {
-        return subApps;
+    public InstalledWallet getWalletSessionType() {
+        return wallet;
     }
 
     @Override
     public void setData(String key, Object object) {
+        if (data == null)
+            data = new HashMap<>();
         data.put(key, object);
     }
 
     @Override
     public Object getData(String key) {
-        return data.get(key);
+        return data;
     }
 
     @Override
@@ -71,29 +59,21 @@ public class RedeemPointSession implements SubAppsSession {
         return errorManager;
     }
 
-
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        RedeemPointSession that = (RedeemPointSession) o;
-
-        return subApps == that.subApps;
-
+    public WalletResourcesProviderManager getWalletResourcesProviderManager() {
+        return resourceManager;
     }
 
     @Override
-    public int hashCode() {
-        return subApps.hashCode();
+    public WalletSettings getWalletSettings() {
+        return settings;
     }
 
-    /**
-     * Get Asset Issuer Wallet Manager instance
-     *
-     * @return AssetIssuerWalletManager object
-     */
-    public AssetIssuerWalletManager getManager() {
-        return null;
+    public AssetRedeemPointWalletSubAppModule getRedeemManager() {
+        return manager;
+    }
+
+    public void setSettings(WalletSettings settings) {
+        this.settings = settings;
     }
 }

@@ -1,0 +1,56 @@
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/logo_fermat_3.png[FermatLogo]
+
+== Chapter 1: Fermat Master Plan
+
+As a Master Plan, Fermat has it's own vision of how a collaborative project should be carried out. The main concept is to define a large master plan far into the future, and start building it phase by phase adjusting the target when needed. It is designed in this way to absorb the efforts of thousands of contributors over the years into a unified architectural vision. +
+
+After the pioneer step of Nakamoto who gave rise to *Bitcoin* and its revolutionary blockchain technology, in the last years, there has been a lot of fin tech investment money given to a myriad of startup initiating in this industry. This fostered the next evolutionary step, *"cryptocurrency 2.0"* but it has still not reached the level of adoption expected. There seems to exist an unbalance between the considerable investment of funds and effort needed to master this technology and the results they are bringing up. What is more, isolated projects trying to build something useful starting form zero point have it difficult to obtain the necessary support and the persistent endurance needed to succeed... + 
+Precisely aknowledging this weak points in the industry, and choosing *collaboration* within a *master plan* as starting point, it is how the Fermat Community believes to succeed in solving the challenges set in their mission and purpose by building a complete new framework that solves the problem in an efficient, inclusive and attractive way.
+
+=== Phase I: Foundations 
+The goal is to have a framework for developing financial applications in a trust-less environment. What are the services that had to be granted at the lower levels to enable this?
+
+The basic infrastructure ::  
+the _Fermat Core Platform_ is the part of the system which initilizes the entire set of components, starting every plugin and putting them to run. This creates the interconection that let all the services to be offered as being integral part of one unified system.
+The basic services ::
+** connection to the different Operating Systems that will run Fermat on a chosen device.
+** interconnectivity to cryptonetworks and blockchain services providers to enable the *transport of value*.
+** P2P communication of the devices running Fermat to enable the *transport of information (meta-data)*
+The plug-ins environment ::
+_Fermat Plug-ins Platform_ deals with this task allowing systems users to be identified, low level plugins to be recognized as part of the system, communications services to link plug-ins living in different devices and in a general way,..an so on. In general terms, all these underlying construct allow various _network services_ to run and start building the set of functionalities that will be taken by the applications built on top.
+
+NOTE: At this stage of development, Fermat already offers a wide scope of REUSABLE components for third parts to build on top, encouraging further development of the plan and enrichnening it with every single addition.
+
+
+=== Phase II: First constructs
+The foundations have been layed out, but to reach the end user oriented applications, it is necessary to create several functionalities. In order to make a visible structure available for further developments and also to provide certain focus to related functionalities, these are wrapped in substructures of Fermat system called *platforms* and *superlayers*. Each of them groups a subset of functionalities that offer the following services : 
+
+* a decentralized Wallet Production Line
+* a Crypto Currency platform to manage the transference of value trough crypto transactions
+* a Shoping platform to vinculate shop owners with brands and their customers 
+* a Digital Asset platform to allow issuing a vast type of digital coupons exchangeable for services and products
+* a Marketing platform based on Digital Assets
+* a Crypto Broker platform to easily administrate the business of exchanging crypto and fiat currency
+* a Crypto Distribution Network to create local commercial environments fostered by crypto money
+
+among others...
+    
+=== Phase III and beyond: 
+Have you grasped the _potential_ of Fermat ? Can you imagine the next phases of development ?
+Are you interested in getting to know Phase I and II deeper? + 
+Follow next chapters to get a more detailed description of each one.
+
+:numbered!:
+
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+  
+==== _Continue Reading ..._
+
+link:book-chapter-02.asciidoc[Next Chapter]
+
+link:book-chapter-00(intro).asciidoc[Previous Chapter]
+
+
+
+
+

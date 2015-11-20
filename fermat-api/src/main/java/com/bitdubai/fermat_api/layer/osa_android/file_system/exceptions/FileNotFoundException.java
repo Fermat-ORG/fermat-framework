@@ -16,6 +16,10 @@ public class FileNotFoundException extends FileSystemException {
 		super(message, cause, context, possibleReason);
 	}
 
+	public FileNotFoundException(final Exception cause, final String context, final String possibleReason) {
+		super(DEFAULT_MESSAGE, cause, context, possibleReason);
+	}
+
 	public FileNotFoundException(final String message, final Exception cause) {
 		this(message, cause, "", "");
 	}

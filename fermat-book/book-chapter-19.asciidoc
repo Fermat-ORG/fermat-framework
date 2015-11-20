@@ -1,0 +1,106 @@
+image::https://github.com/bitDubai/media-kit/blob/master/Coins/DAP.jpg[FermatDAP]
+[[DigitalAssets]]
+== Chapter 19: Fermat Digital Asset Platform
+=== Blockchain beyond currency 
+With the adoption of _Digital Asset Management_ within Fermat, the framework stablishes two disctint branches and its interconnected platform sets, one managing cryptocurrencies and therefore dealing with different cases of money transactions and another one, starting with this platform, to manage transactions and services based on digital assets. +
+
+.Asset Characteristics
+. They are created by an *asset issuer*
+. They have an *expiration date*
+. They belong to a certain *asset type* and *asset sub-type*
+. They have an associated *meta-data* (image, sound, multimedia file, etc)
+. They have compulsory conditions to complay enclosed in the *asset contract*, related separately to the *issuer*, to its *type* and *sub-type*
+
+
+=== New Identities
+The new identities introduced to run the basic life cycle of an digital asset are:
+
+Asset Issuer :: creator and owner of the asset. He "hashes" the assets meta-data and link it to a _crypto transaction_ of a small crypto currency amount to a predefined *asset issuer crypto address*, and by this conjunct actions the asset is *issued*.
+Asset User :: is the original recipient of the asset. After receiving it (as a part of a distribution campaign for example), he can perform several actions later described in the available transactions for digital asset, but the most frequent could be the transfer to a _redeem point_ to exchange it for the product/service represented by it.
+Redeem Point :: is the point where the asset is exchanged for the service/product.
+
+=== New Components
+The business logic of the use of digital assets and the new interelations between the actores involved need the folowing services to be granted: +
+[horizontal]
+Wallets :: one for each actor: Asset Issuer Wallet, Asset User Wallet, Redeem Point Wallet.
+Transactions :: Issuing, Distribution and Reception of digital assets. 
+Issuing :: tools to create an asset: _Asset Factory_
+Redemption :: three possible ways: by the Issuer, by the User and by a Redeem Point.
+Appropiation :: possibility of keeping the asset and *appropiating* the inherited crypto currency amount ( transforming it into its *nominal value* )
+Community :: tools to linking the Digital Assets actors among them ( Issuer, User and Redeem Point Communities )
+
+//// 
+=== _Network Service layer_
+Asset Transmission :: +
+
+=== _Actor Network Service layer_
+Asset Issuer :: 
+Asset User ::
+Redeem Point :: +
+
+=== _Identity layer_
+Asset Issuer :: 
+Asset User ::
+Redeem Point :: +
+
+=== _Wallet layer_
+Asset Issuer Wallet ::
+Asset User Wallet ::
+Redeem Point Wallet :: +
+
+=== _Digital Asset Transaction_
+Asset Distribution ::
+Asset Reception :: 
+Asset Issuing :: 
+Issuer Redemption :: 
+User Redemption ::
+Redeem Point Redemption ::
+Asset Appropiation :: 
+Appropiation Stats :: +
+
+=== _Middleware layer_
+Asset Factory :: +
+
+=== _Actor layer_
+Asset Issuer :: 
+Asset User ::
+Redeem Point :: +
+
+=== _Desktop Module layer_
+Sub App Manager :: 
+Wallet Manager :: +
+
+=== _Sub App Module layer_
+Asset Factory :: :: 
+Asset Issuer Community :: 
+Asset User Community ::
+Redeem Point Community ::+
+
+=== _Wallet Module layer_
+Asset Issuer :: 
+Asset User ::
+Redeem Point :: +
+
+=== _Desktop layer_
+Sub App Manager :: 
+Wallet Manager :: +
+
+=== _Sub App layer_
+Asset Factory :: :: 
+Asset Issuer Community :: 
+Asset User Community ::
+Redeem Point Community ::+
+
+=== _Reference Wallet layer_
+Asset Issuer :: 
+Asset User ::
+Redeem Point :: +
+
+////
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+==== Continue Reading
+link:book-chapter-11.asciidoc[Fermat Digital Assets Management]
+
+link:book-chapter-20.asciidoc[Next Chapter]
+
+link:book-chapter-21.asciidoc[Previous Chapter]

@@ -1,0 +1,61 @@
+image::https://github.com/bitDubai/media-kit/blob/master/Coins/MKT.jpg[FermatMKT]
+== Chapter 20: Fermat Marketing Platform
+=== Marketing with Digital Assets 
+The first implementation for Digital Assets aims to provide the Marketing Sector with a valuable tool for medium to large size enterprises 
+to run their campaigns profiting from the advantages of this technology. Assets take form of Vouchers, Coupons and Discount Offers commonly used in marketing strategies.
+
+=== New Actor
+Marketer :: responsible of elaborating marketing strategies in marketing areas of large enterprises or as a member of independent marketing agencies providing services to the corporate world.
+
+=== New Components
+Transactions :: incoming and outgoing assets types.
+Wallet Branding :: a special *Wallet Editor* to re-brand a niche wallet into a new one by changing their _navigation structure_ and _GUI components (skins..) with an ituitive interface *without* programming but *reutilizing* the funtionalities provided by Fermat wallets.
+Wallets :: to store and manage Vouchers, Coupon, Discounts...
+
+////
+=== _Identity layer_
+Marketer :: +
+
+=== _Wallet layer_
+Voucher  ::
+Coupon ::
+Discount:: +
+
+=== _Digital Asset Transaction_
+Incoming Voucher ::
+Outgoing Voucher :: 
+Incoming Coupon ::
+Outgoing Coupon ::
+Incoming Discount ::
+Outgoing Discount :: +
+
+=== _Actor layer_
+Marketer :: +
+
+=== _Sub App Module layer_
+Wallet Branding :: 
+Marketer :: +
+
+=== _Wallet Module layer_
+Voucher Wallet ::
+Coupon Wallet ::
+Discount Wallet :: +
+
+=== _Sub App layer_
+Wallet Branding :: 
+Marketer :: +
+
+=== _Reference Wallet layer_
+Voucher Wallet ::
+Coupon Wallet ::
+Discount Wallet :: +
+////
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+==== Continue Reading
+
+link:book-chapter-21.asciidoc[Next Chapter]
+
+link:book-chapter-19.asciidoc[Previous Chapter]
+
+
+

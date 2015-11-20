@@ -1,12 +1,13 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Enums the types of Compatibility in Fermat.
  * Created by Leon Acosta (laion.cj91@gmail.com) on 24/09/2015.
  */
-public enum Compatibility {
+public enum Compatibility implements FermatEnum {
 
     COMPATIBLE  ("COMP"),
     INCOMPATIBLE("INCO"),
@@ -18,6 +19,7 @@ public enum Compatibility {
         this.code = code;
     }
 
+    @Override
     public String getCode() {
         return this.code;
     }

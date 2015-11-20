@@ -6,26 +6,32 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.util.DistanceCalculator;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.WebSocket;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor</code> implement
@@ -38,6 +44,25 @@ import java.util.List;
  */
 public class RequestListComponentRegisterPacketProcessor extends FermatPacketProcessor {
 
+
+    /**
+     * Represent the gson
+     */
+    private Gson gson;
+
+    /**
+     * Represent the jsonParser
+     */
+    private JsonParser jsonParser;
+
+    /**
+     * Constructor
+     */
+    public RequestListComponentRegisterPacketProcessor() {
+        gson = new Gson();
+        jsonParser = new JsonParser();
+    }
+
     /**
      * (no-javadoc)
      * @see FermatPacketProcessor#processingPackage(WebSocket, FermatPacket, ECCKeyPair)
@@ -48,98 +73,186 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
 
-        /*
-         * Get the filters from the message content and decrypt
-         */
-        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
+        String packetContentJsonStringRepresentation = null;
+        NetworkServiceType networkServiceTypeApplicant = null;
+        DiscoveryQueryParameters discoveryQueryParameters = null;
 
+        try{
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+             /*
+             * Get the filters from the message content and decrypt
+             */
+            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
 
-        /*
-         * Construct the json object
-         */
-        Gson gson = new Gson();
-        DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(messageContentJsonStringRepresentation);
+            System.out.println("RequestListComponentRegisterPacketProcessor - Starting packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation);
 
-        /*
-         * Get the filters
-         */
-        PlatformComponentType platformComponentType = discoveryQueryParameters.getPlatformComponentType();
-        NetworkServiceType networkServiceType       = discoveryQueryParameters.getNetworkServiceType();
+            /*
+             * Construct the json object
+             */
+            JsonObject contentJsonObject = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            networkServiceTypeApplicant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString(), NetworkServiceType.class);
+            discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(contentJsonObject.get(JsonAttNamesConstants.DISCOVERY_PARAM).getAsString());
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - platformComponentType = "+platformComponentType);
-        System.out.println("RequestListComponentRegisterPacketProcessor - networkServiceType    = "+networkServiceType);
+            /*
+             * hold the result list
+             */
+            List<PlatformComponentProfile> resultList = null;
 
-        /*
-         * Get the list
-         */
-        List<PlatformComponentProfile> list = null;
+            if (discoveryQueryParameters.getFromOtherPlatformComponentType() == null &&
+                    discoveryQueryParameters.getFromOtherNetworkServiceType() == null){
 
-        /*
-         * Switch between platform component type
-         */
-        switch (platformComponentType.getCode()){
+                resultList = applyDiscoveryQueryParameters(discoveryQueryParameters, receiveFermatPacket);
 
-            //COMMUNICATION_CLOUD_SERVER_COMPONENT;
-            case "COM_CLD_SER_COMP" :
-                list = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
-                break;
+            }else{
 
-            //COMMUNICATION_CLOUD_CLIENT_COMPONENT
-            case "COM_CLD_CLI_COMP" :
-                list = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
-                break;
+                resultList = applyDiscoveryQueryParametersFromOtherComponent(discoveryQueryParameters, receiveFermatPacket);
 
-            //Others
-            default :
-                list = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType).get(networkServiceType);
-                break;
+            }
+
+            System.out.println("RequestListComponentRegisterPacketProcessor - filteredLis.size() ="+resultList.size());
+
+            /*
+             * Convert the list to json representation
+             */
+            String jsonListRepresentation = gson.toJson(resultList, new TypeToken<List<PlatformComponentProfileCommunication>>(){ }.getType());
+
+            /*
+             * Create the respond
+             */
+            JsonObject jsonObjectRespond = new JsonObject();
+            jsonObjectRespond.addProperty(JsonAttNamesConstants.COMPONENT_TYPE,       discoveryQueryParameters.getPlatformComponentType().toString());
+            jsonObjectRespond.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
+            jsonObjectRespond.addProperty(JsonAttNamesConstants.RESULT_LIST,          jsonListRepresentation);
+
+             /*
+             * Construct a fermat packet whit the list
+             */
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                    //Destination
+                    serverIdentity.getPublicKey(),                      //Sender
+                    gson.toJson(jsonObjectRespond),                     //Message Content
+                    FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED, //Packet type
+                    serverIdentity.getPrivateKey());                    //Sender private key
+            /*
+            * Send the encode packet to the server
+            */
+            clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+        }catch (Exception e){
+
+            System.out.println("RequestListComponentRegisterPacketProcessor - requested list is not available");
+            //e.printStackTrace();
+
+            /*
+             * Get the client connection destination
+             */
+            WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
+
+            /*
+             * Construct the json object
+             */
+            JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, networkServiceTypeApplicant.toString());
+            packetContent.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
+            packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in obtain the list requested: "+e.getMessage());
+
+            /*
+             * Create the respond packet
+             */
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
+                                                                                                                        serverIdentity.getPublicKey(), //Sender
+                                                                                                                        gson.toJson(packetContent), //packet Content
+                                                                                                                        FermatPacketType.FAILURE_REQUESTED_LIST_NOT_AVAILABLE, //Packet type
+                                                                                                                        serverIdentity.getPrivateKey()); //Sender private key
+            /*
+             * Send the packet
+             */
+            clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
         }
 
 
-        List<PlatformComponentProfile>  filteredLis = applyDiscoveryQueryParams(list, discoveryQueryParameters);
+    }
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - filteredLis.size()    = "+filteredLis.size());
+    /**
+     * Return the primary list from the cache filtered by the platformComponentType or
+     * networkServiceType
+     *
+     * @param platformComponentType
+     * @param networkServiceType
+     * @return List<PlatformComponentProfile>
+     */
+    public List<PlatformComponentProfile> getPrimaryFilteredListFromCache(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, FermatPacket receiveFermatPacket){
 
         /*
-         * Convert to json representation
+         * Get the list
          */
-        String jsonListRepresentation = gson.toJson(filteredLis, new TypeToken<List<PlatformComponentProfileCommunication>>() { }.getType());
-
-        System.out.println("RequestListComponentRegisterPacketProcessor - gson.toJson(list)    = "+jsonListRepresentation);
-
+        List<PlatformComponentProfile> list = new ArrayList<>();
 
          /*
-         * Construct a fermat packet whit the list
+         * Switch between platform component type
          */
-        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                    //Destination
-                                                                                                                    serverIdentity.getPublicKey(),                      //Sender
-                                                                                                                    jsonListRepresentation,                             //Message Content
-                                                                                                                    FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED, //Packet type
-                                                                                                                    serverIdentity.getPrivateKey());                    //Sender private key
+        switch (platformComponentType){
+
+            case COMMUNICATION_CLOUD_SERVER :
+                    if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().isEmpty()) {
+                        list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values()).clone();
+                    }
+                break;
+
+            case COMMUNICATION_CLOUD_CLIENT :
+                    if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()) {
+                        list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values()).clone();
+                    }
+                break;
+
+            case NETWORK_SERVICE :
+                    if (getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
+                        list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType)).clone();
+                    }
+                break;
+
+            //Others
+            default :
+                    if (getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
+                        list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType)).clone();
+                    }
+                break;
+
+        }
 
         /*
-        * Send the encode packet to the server
-        */
-        clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+         * Remove the requester from the list
+         */
+        Iterator<PlatformComponentProfile> iterator = list.iterator();
+        while (iterator.hasNext()){
+
+            PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
+            if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
+                System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
+                iterator.remove();
+            }
+        }
+
+        return list;
     }
 
 
     /**
      * Filter the PlatformComponentProfile that match with the discoveryQueryParameters
      *
-     * @param list
      * @param discoveryQueryParameters
+     * @param receiveFermatPacket
      * @return List<PlatformComponentProfile>
      */
-    private  List<PlatformComponentProfile> applyDiscoveryQueryParams(List<PlatformComponentProfile>  list, DiscoveryQueryParameters discoveryQueryParameters){
+    private  List<PlatformComponentProfile> applyDiscoveryQueryParameters(DiscoveryQueryParameters discoveryQueryParameters, FermatPacket receiveFermatPacket){
 
         int totalFilterToApply = countFilers(discoveryQueryParameters);
         int filterMatched = 0;
+
+        List<PlatformComponentProfile>  list = getPrimaryFilteredListFromCache(discoveryQueryParameters.getPlatformComponentType(), discoveryQueryParameters.getNetworkServiceType(), receiveFermatPacket);
         List<PlatformComponentProfile>  filteredLis = new ArrayList<>();
 
+        System.out.println("RequestListComponentRegisterPacketProcessor - totalFilterToApply    = "+totalFilterToApply);
 
         if (totalFilterToApply > 0){
 
@@ -149,30 +262,30 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
             for (PlatformComponentProfile platformComponentProfile: list) {
 
                 if (discoveryQueryParameters.getIdentityPublicKey() != null && discoveryQueryParameters.getIdentityPublicKey() != ""){
-                    if (platformComponentProfile.getIdentityPublicKey() == discoveryQueryParameters.getIdentityPublicKey()){
+                    if (platformComponentProfile.getIdentityPublicKey().equals(discoveryQueryParameters.getIdentityPublicKey())){
                         filterMatched += 1;
                     }
                 }
 
                 if (discoveryQueryParameters.getAlias() != null && discoveryQueryParameters.getAlias() != ""){
-                    if (platformComponentProfile.getAlias() == discoveryQueryParameters.getAlias()){
+                    if (discoveryQueryParameters.getAlias().toLowerCase().contains(platformComponentProfile.getAlias().toLowerCase())){
                         filterMatched += 1;
                     }
                 }
 
                 if (discoveryQueryParameters.getName() != null && discoveryQueryParameters.getName() != ""){
-                    if (platformComponentProfile.getName() == discoveryQueryParameters.getName()){
+                    if (discoveryQueryParameters.getName().toLowerCase().contains(platformComponentProfile.getName().toLowerCase())){
                         filterMatched += 1;
                     }
                 }
 
                 if (discoveryQueryParameters.getExtraData() != null && discoveryQueryParameters.getExtraData() != ""){
-                    if (platformComponentProfile.getExtraData() == discoveryQueryParameters.getExtraData()){
+                    if (discoveryQueryParameters.getExtraData().toLowerCase().contains(platformComponentProfile.getExtraData().toLowerCase())){
                         filterMatched += 1;
                     }
                 }
 
-                //if al filter matched
+                //if all filter matched
                 if (totalFilterToApply == filterMatched){
                     //Add to the list
                     filteredLis.add(platformComponentProfile);
@@ -185,7 +298,6 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
             filteredLis = list;
         }
 
-
         /*
          * Apply geo location filter
          */
@@ -193,18 +305,24 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
                 discoveryQueryParameters.getLocation().getLatitude() != 0 &&
                     discoveryQueryParameters.getLocation().getLongitude() != 0){
 
+
+            filteredLis = applyGeoLocationFilter(filteredLis, discoveryQueryParameters);
+
         }
 
-        if ((discoveryQueryParameters.getNumberRegister() != 0) && (discoveryQueryParameters.firstRecord() != 0)){
+        /*
+         * Apply pagination
+         */
+        if ((discoveryQueryParameters.getMax() != 0) && (discoveryQueryParameters.getOffset() != 0)){
 
             /*
              * Apply pagination
              */
-            if (filteredLis.size() > discoveryQueryParameters.getNumberRegister() &&
-                    filteredLis.size() > discoveryQueryParameters.firstRecord()){
-                filteredLis =  filteredLis.subList(discoveryQueryParameters.firstRecord(), discoveryQueryParameters.getNumberRegister());
+            if (filteredLis.size() > discoveryQueryParameters.getMax() &&
+                    filteredLis.size() > discoveryQueryParameters.getOffset()){
+                filteredLis =  filteredLis.subList(discoveryQueryParameters.getOffset(), discoveryQueryParameters.getMax());
             }else if (filteredLis.size() > 100) {
-                filteredLis = filteredLis.subList(discoveryQueryParameters.firstRecord(), 100);
+                filteredLis = filteredLis.subList(discoveryQueryParameters.getOffset(), 100);
             }
 
         }else if (filteredLis.size() > 100) {
@@ -214,6 +332,233 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         return filteredLis;
 
     }
+
+    /**
+     * Method that apply geo location filter to the list
+     *
+     * @param listToApply
+     * @return List<PlatformComponentProfile>
+     */
+    private List<PlatformComponentProfile> applyGeoLocationFilter(List<PlatformComponentProfile> listToApply, DiscoveryQueryParameters discoveryQueryParameters) {
+
+        /*
+         * Hold the data ordered by distance
+         */
+        Map<Double, PlatformComponentProfile> orderedByDistance = new TreeMap<>();
+
+        /*
+         * For each component
+         */
+        for (PlatformComponentProfile platformComponentProfile: listToApply) {
+
+            /*
+             * If component have a geo location
+             */
+            if (platformComponentProfile.getLocation() != null){
+
+                /*
+                 * Calculate the distance between the two points
+                 */
+                Double componentDistance = DistanceCalculator.distance(discoveryQueryParameters.getLocation(), platformComponentProfile.getLocation(), DistanceCalculator.KILOMETERS);
+
+                /*
+                 * Compare the distance
+                 */
+                if (componentDistance <= discoveryQueryParameters.getDistance()){
+
+                    /*
+                     * Add to the list
+                     */
+                    orderedByDistance.put(componentDistance, platformComponentProfile);
+                }
+
+            }
+
+        }
+
+        return new ArrayList<>(orderedByDistance.values());
+    }
+
+    /**
+     * Filter the PlatformComponentProfiles that match with the discoveryQueryParameters that get from other component
+     *
+     * @param discoveryQueryParameters
+     * @param receiveFermatPacket
+     * @return List<PlatformComponentProfile>
+     */
+    private  List<PlatformComponentProfile> applyDiscoveryQueryParametersFromOtherComponent(DiscoveryQueryParameters discoveryQueryParameters, FermatPacket receiveFermatPacket){
+
+        System.out.println("RequestListComponentRegisterPacketProcessor - applyDiscoveryQueryParametersFromOtherComponent    = ");
+
+        List<PlatformComponentProfile>  filteredListFromOtherComponentType = new ArrayList<>();
+
+        /*
+         * Get the list from the cache that match with the other componet
+         */
+        List<PlatformComponentProfile> otherComponentList = (List<PlatformComponentProfile>) new ArrayList<>(searchProfile(discoveryQueryParameters.getFromOtherPlatformComponentType(), discoveryQueryParameters.getFromOtherNetworkServiceType(), discoveryQueryParameters.getIdentityPublicKey())).clone();
+        System.out.println("RequestListComponentRegisterPacketProcessor - otherComponentList  = " + otherComponentList.size());
+
+        /*
+         * Find the other component that match with the identity
+         */
+        for (PlatformComponentProfile platformComponentProfile: otherComponentList) {
+
+            if (discoveryQueryParameters.getIdentityPublicKey() != null && discoveryQueryParameters.getIdentityPublicKey() != ""){
+                List<PlatformComponentProfile>  newList = searchProfileByCommunicationCloudClientIdentity(discoveryQueryParameters.getPlatformComponentType(), discoveryQueryParameters.getNetworkServiceType(), platformComponentProfile.getCommunicationCloudClientIdentity());
+                filteredListFromOtherComponentType.addAll(newList);
+            }
+
+        }
+
+        /*
+         * Remove the requester from the list
+         */
+        Iterator<PlatformComponentProfile> iterator = filteredListFromOtherComponentType.iterator();
+        while (iterator.hasNext()){
+
+            PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
+            if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
+                System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
+                iterator.remove();
+            }
+        }
+
+
+
+        System.out.println("RequestListComponentRegisterPacketProcessor - filteredListFromOtherComponentType  = "+filteredListFromOtherComponentType.size());
+
+
+        return filteredListFromOtherComponentType;
+
+    }
+
+    /**
+     * Method that search the PlatformComponentProfiles tha mach with the
+     * parameters
+     *
+     * @param platformComponentType
+     * @param networkServiceType
+     * @param identityPublicKey
+     * @return List<PlatformComponentProfile>
+     */
+    private List<PlatformComponentProfile> searchProfile(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String identityPublicKey) {
+
+        /*
+         * Prepare the list
+         */
+        List<PlatformComponentProfile> temporalList = new ArrayList<>();
+        List<PlatformComponentProfile>  finalFilteredList = new ArrayList<>();
+
+         /*
+         * Switch between platform component type
+         */
+        switch (platformComponentType){
+
+            case COMMUNICATION_CLOUD_SERVER :
+                    if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().isEmpty()){
+                        temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                    }
+                break;
+
+            case COMMUNICATION_CLOUD_CLIENT :
+                    if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()){
+                        temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                    }
+                break;
+
+            case NETWORK_SERVICE :
+                    if(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
+                        temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                    }
+                break;
+
+            //Others
+            default :
+                    if (getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()){
+                        temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                    }
+                break;
+
+        }
+
+        /*
+         * Find the component that match with the identity
+         */
+        for (PlatformComponentProfile platformComponentProfile: temporalList) {
+
+            if (platformComponentProfile.getIdentityPublicKey().equals(identityPublicKey)){
+                finalFilteredList.add(platformComponentProfile);
+            }
+        }
+
+
+        return finalFilteredList;
+
+    }
+
+
+    /**
+     * Method that search the PlatformComponentProfiles tha mach with the
+     * parameters
+     *
+     * @param platformComponentType
+     * @param networkServiceType
+     * @param communicationCloudClientIdentity
+     * @return List<PlatformComponentProfile>
+     */
+    private List<PlatformComponentProfile> searchProfileByCommunicationCloudClientIdentity(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String communicationCloudClientIdentity) {
+
+        /*
+         * Prepare the list
+         */
+        List<PlatformComponentProfile> temporalList =  new ArrayList<>();
+        List<PlatformComponentProfile>  finalFilteredList = new ArrayList<>();
+
+         /*
+         * Switch between platform component type
+         */
+        switch (platformComponentType){
+
+            case COMMUNICATION_CLOUD_SERVER :
+                    if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().isEmpty()) {
+                        temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                    }
+                break;
+
+            case COMMUNICATION_CLOUD_CLIENT :
+                    if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()){
+                        temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                    }
+                break;
+
+            case NETWORK_SERVICE :
+                    if(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
+                        temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                    }
+                break;
+
+            //Others
+            default :
+                   if (getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
+                       temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                   }
+                break;
+        }
+
+        /*
+         * Find the component that match with the CommunicationCloudClientIdentity
+         */
+        for (PlatformComponentProfile platformComponentProfile: temporalList) {
+
+            if (platformComponentProfile.getCommunicationCloudClientIdentity().equals(communicationCloudClientIdentity)){
+                finalFilteredList.add(platformComponentProfile);
+            }
+        }
+
+        return finalFilteredList;
+
+    }
+
 
     /**
      * Count the number of filter to apply

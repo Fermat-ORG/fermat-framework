@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerIdentityImpl;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.CryptoCustomerIdentity;
@@ -23,35 +23,33 @@ public class EqualsAndHashTest {
     private String testAlias = "TEST";
     private KeyPair testKeyPair;
     private byte[] testProfileImage = new byte[0];
-
-    @Mock
-    private PluginFileSystem mockPluginFileSystem;
+    private boolean testPublished = false;
 
     private CryptoCustomerIdentity testIdentity1, testIdentity2;
 
     @Before
     public void setUpIdentity(){
-        testKeyPair = AsymmectricCryptography.createKeyPair(TEST_PRIVATE_KEY);
-        testIdentity1 = new CryptoCustomerIdentityImpl(testAlias, testKeyPair, testProfileImage, mockPluginFileSystem);
+        testKeyPair = AsymmetricCryptography.createKeyPair(TEST_PRIVATE_KEY);
+        testIdentity1 = new CryptoCustomerIdentityImpl(testAlias, testKeyPair, testProfileImage, testPublished);
     }
 
     @Test
     public void Equals_SameValues_True(){
-        testIdentity2 = new CryptoCustomerIdentityImpl(testAlias, testKeyPair, testProfileImage, mockPluginFileSystem);
+        testIdentity2 = new CryptoCustomerIdentityImpl(testAlias, testKeyPair, testProfileImage, testPublished);
         assertThat(testIdentity1).isEqualTo(testIdentity2);
         assertThat(testIdentity1.hashCode()).isEqualTo(testIdentity2.hashCode());
     }
 
     @Test
     public void Equals_DifferentAlias_False(){
-        testIdentity2 = new CryptoCustomerIdentityImpl("OTHER_TEST", testKeyPair, testProfileImage, mockPluginFileSystem);
+        testIdentity2 = new CryptoCustomerIdentityImpl("OTHER_TEST", testKeyPair, testProfileImage, testPublished);
         assertThat(testIdentity1).isNotEqualTo(testIdentity2);
         assertThat(testIdentity1.hashCode()).isNotEqualTo(testIdentity2.hashCode());
     }
 
     @Test
     public void Equals_DifferentKeyPair_False(){
-        testIdentity2 = new CryptoCustomerIdentityImpl(testAlias, AsymmectricCryptography.generateECCKeyPair(), testProfileImage, mockPluginFileSystem);
+        testIdentity2 = new CryptoCustomerIdentityImpl(testAlias, AsymmetricCryptography.generateECCKeyPair(), testProfileImage, testPublished);
         assertThat(testIdentity1).isNotEqualTo(testIdentity2);
         assertThat(testIdentity1.hashCode()).isNotEqualTo(testIdentity2.hashCode());
     }

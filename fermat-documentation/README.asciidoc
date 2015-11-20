@@ -2,15 +2,15 @@
 
 If you want to read the documentation offline clone this repo and excecute.
 
- $ asciidoctor -d book -b docbook5 book.asciidoc
+ $ asciidoctor -d book -b docbook5 documentation.asciidoc
 
-This will create book.xml, you can navigate it using yelp
+This will create documentation.xml, you can navigate it using yelp
 
- $ yelp book.xml
+ $ yelp documentation.xml
 
 You can also create a local html file using:
 
- $ asciidoctor -d book book.asciidoc
+ $ asciidoctor -d book documentation.asciidoc
 
 And navigate it using your favourite browser.
 
@@ -19,7 +19,7 @@ If you want to navigate offline a subsection and not all the documentation you c
 
 To read the documentation here in github just start in the next link
 
-include::book.asciidoc[]
+include::documentation.asciidoc[]
 
 We decided to use asciidoc instead of markdown (the .md files) because of the support to build other document formats. +
 If you have something written in markdown syntax you can convert it to asciidoc using pandoc in this way:

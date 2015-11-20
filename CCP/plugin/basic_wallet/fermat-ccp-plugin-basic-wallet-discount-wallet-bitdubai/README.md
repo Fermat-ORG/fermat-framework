@@ -1,0 +1,1 @@
+# fermat-ccp-plugin-basic-wallet-discount-wallet-bitdubai

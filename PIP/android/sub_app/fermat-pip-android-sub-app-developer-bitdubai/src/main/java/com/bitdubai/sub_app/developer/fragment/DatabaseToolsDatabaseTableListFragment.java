@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,23 +14,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.DatabasesTable;
 import com.bitdubai.sub_app.developer.common.Resource;
@@ -52,7 +50,7 @@ import java.util.List;
  */
 public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
 
-    private static final String ARG_POSITION = "position";
+    private static final String ARG_POS1ITION = "position";
     private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS.getKey();
 
     View rootView;
@@ -72,7 +70,6 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
 
     private Resource databases;
 
-    private String[] params;
     private GridView gridView;
 
 
@@ -88,7 +85,13 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
+
+        if(super.subAppsSession!=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+
+            databases = (Resource)developerSubAppSession.getData("resource");
+        }
+
 
         errorManager = developerSubAppSession.getErrorManager();
         setRetainInstance(true);
@@ -131,12 +134,11 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
         gridView =(GridView) rootView.findViewById(R.id.gridView);
 
         try {
-
             if (databases.type==Databases.TYPE_ADDON) {
-                Addons addon = Addons.getByKey(databases.code);
+                AddonVersionReference addon = AddonVersionReference.getByKey(databases.code);
                 this.developerDatabaseTableList = databaseTools.getAddonTableListFromDatabase(addon, developerDatabase);
             } else if (databases.type==Databases.TYPE_PLUGIN) {
-                Plugins plugin = Plugins.getByKey(databases.code);
+                PluginVersionReference plugin = PluginVersionReference.getByKey(databases.code);
                 this.developerDatabaseTableList = databaseTools.getPluginTableListFromDatabase(plugin, developerDatabase);
             }
 
@@ -223,13 +225,12 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
                         dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabase(developerDatabase);
 
                         //set the next fragment and params
-                        Object[] params = new Object[3];
 
-                        params[0] = databases;
-                        params[1] = developerDatabase;
-                        params[2] = developerDatabaseTableList.get(position);
+                        developerSubAppSession.setData("resource",databases);
+                        developerSubAppSession.setData("developerDataBase",developerDatabase);
+                        developerSubAppSession.setData("databaseTable",developerDatabaseTableList.get(position));
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(),params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(),R.id.startContainer,null);
                     }
                 });
                 //holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);

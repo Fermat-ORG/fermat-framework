@@ -21,6 +21,7 @@ public class BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants {
     static final String BANK_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME = "status";
     static final String BANK_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME = "public_key_broker";
     static final String BANK_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME = "merchandise_currency";
+    static final String BANK_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_AMOUNT_COLUMN_NAME = "merchandise_amount";
     static final String BANK_MONEY_STOCK_REPLENISHMENT_EXECUTION_TRANSACTION_ID_COLUMN_NAME = "execution_transaction_id";
     static final String BANK_MONEY_STOCK_REPLENISHMENT_BANK_CURRENCY_TYPE_COLUMN_NAME = "bank_currency_type";
     static final String BANK_MONEY_STOCK_REPLENISHMENT_BANK_OPERATION_TYPE_COLUMN_NAME = "bank_operation_type";

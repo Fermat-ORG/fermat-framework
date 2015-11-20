@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.executors.BitcoinBasicWalletTransactionExecutor;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -8,8 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.UnexpectedTransactionException;
@@ -21,11 +21,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.math.BigInteger;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
-import static org.fest.assertions.api.Assertions.*;
 import static com.googlecode.catchexception.CatchException.*;
 /**
  * Created by jorgegonzalez on 2015.07.08..
@@ -101,11 +99,11 @@ public class ExecuteTransactionTest {
     }
 
     private CryptoTransaction setUpCryptoTransaction(final CryptoStatus testStatus){
-        String addressFromString = AsymmectricCryptography.generateTestAddress(AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey()));
-        String addressToString = AsymmectricCryptography.generateTestAddress(AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey()));
+        String addressFromString = AsymmetricCryptography.generateTestAddress(AsymmetricCryptography.derivePublicKey(AsymmetricCryptography.createPrivateKey()));
+        String addressToString = AsymmetricCryptography.generateTestAddress(AsymmetricCryptography.derivePublicKey(AsymmetricCryptography.createPrivateKey()));
         CryptoAddress addressFrom = new CryptoAddress(addressFromString, CryptoCurrency.BITCOIN);
         CryptoAddress addressTo = new CryptoAddress(addressToString, CryptoCurrency.BITCOIN);
-        String transactionHash = CryptoHasher.performSha256(AsymmectricCryptography.createPrivateKey());
+        String transactionHash = CryptoHasher.performSha256(AsymmetricCryptography.createPrivateKey());
         return new CryptoTransaction(transactionHash, addressFrom, addressTo, CryptoCurrency.BITCOIN, 1L, testStatus);
     }
 }

@@ -14,14 +14,14 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.R;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class HomeFragment extends FermatWalletFragment {
     String[] balances;
     String[] balances_available;
     private String[][] transactions;
-    private static final String ARG_POSITION = "position";
+    String walletPublicKey = "reference_wallet";
 
     TextView txtBalance;
     TextView balance_type;
@@ -102,12 +102,19 @@ public class HomeFragment extends FermatWalletFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_and_receive, container, false);
+        try{
+            rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_and_receive, container, false);
 
-        lstPaymentRequestReceived =  cryptoWallet.listReceivedPaymentRequest();
+            lstPaymentRequestReceived =  cryptoWallet.listReceivedPaymentRequest(walletPublicKey,10,0);
 
-        lstPaymentRequestSended = cryptoWallet.listSentPaymentRequest();
+            lstPaymentRequestSended = cryptoWallet.listSentPaymentRequest(walletPublicKey,10,0);
 
+
+        } catch (Exception e) {
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+            e.printStackTrace();
+        }
         return rootView;
     }
 
@@ -123,6 +130,8 @@ public class HomeFragment extends FermatWalletFragment {
 
 
         } catch (CantGetBalanceException e) {
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
             e.printStackTrace();
         }
 
@@ -376,7 +385,7 @@ public class HomeFragment extends FermatWalletFragment {
                         switch (groupPosition) {
 
                             case 3:
-                                account_picture.setImageResource(R.drawable.mati_profile);
+                                account_picture.setImageResource(R.drawable.juan_profile_picture);
                                 break;
                             case 4:
                                 account_picture.setImageResource(R.drawable.kimberly_profile_picture);

@@ -43,37 +43,14 @@
 
 
     </FrameLayout>
-
+    
     <ImageView
-        android:id="@+id/icon_edit_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:onClick="onNavigationDrawerEditProfileIconClicked"
-        android:paddingBottom="7dp"
-        android:paddingLeft="7dp"
-        android:paddingRight="7dp"
-        android:paddingTop="7dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_action_edit"
-        />
-
-
-    <ImageView
-        android:id="@+id/icon_edit_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:paddingBottom="7dp"
-        android:paddingLeft="7dp"
-        android:paddingRight="7dp"
-        android:paddingTop="7dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_action_camera"
-
-        />
+        android:id="@+id/imageView_intra_users"
+        android:src="@drawable/ic_action_search"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
 
 
 </RelativeLayout>

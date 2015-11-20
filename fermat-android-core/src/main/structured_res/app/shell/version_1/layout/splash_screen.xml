@@ -2,13 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartActivity" >
+    tools:context=".StartActivity"
+    android:background="#fff">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="Fermat "
+        android:id="@+id/imageView_fermat"
         android:scaleType="center"
-        android:src="@drawable/fermat_logo_310_x_310" />
+        android:src="@drawable/fondo_splash" />
 
 </RelativeLayout>

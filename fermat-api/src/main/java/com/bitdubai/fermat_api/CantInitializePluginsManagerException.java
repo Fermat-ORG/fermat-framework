@@ -16,6 +16,10 @@ public class CantInitializePluginsManagerException extends FermatException {
 		this(message, cause, "", "");
 	}
 
+	public CantInitializePluginsManagerException(final Exception cause, final String context, final String possibleReason) {
+		this(DEFAULT_MESSAGE, cause, context, possibleReason);
+	}
+
 	public CantInitializePluginsManagerException(final String message) {
 		this(message, null);
 	}

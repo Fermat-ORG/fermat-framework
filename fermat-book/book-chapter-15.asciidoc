@@ -1,0 +1,93 @@
+image::https://github.com/bitDubai/media-kit/blob/master/Coins/SHP.jpg[FermatSHP]
+== Chapter 15: Fermat Shoping Platform: + 
+
+This platform is designed to allow the interaction between the actors of traditional consumer market of products and services. +
+
+
+The new identities introduced are:
+[horizontal]
+Shop :: to identify shop owners who accept cryptocurrency in payment of their products 
+Brand :: for brands who accept cryptocurrency in their retailers network
+Retail :: for retailers of brands that accept cryptocurrency
+
+
+=== New components
+Some of the new components added to the framework by this platform are those to offer the following functionalities:
+
+* Purchase Transmission (purchase of products payed with crypto currency)
+* Purchase and Sale transactions 
+* Wallets: Shop Wallet, Brand Wallet and Retail Wallet
+
+=== Shop Wallet 
+This wallet includes the specific new functionalities:
+
+* to receive payments in crypto currency
+* to connect a purchase bill of the shop with a crypto request to cover the fiat currency amount billed
+
+=== Brand Wallet 
+
+
+=== Retail Wallet 
+
+
+////
+=== _Network Service layer_
+
+Purchase Transmission :: +
+
+=== _Actor Network Service layer_
+Shop :: 
+Brand ::
+Retailer :: +
+
+=== _Identity layer_
+Shop :: 
+Brand ::
+Retailer :: +
+
+=== _Wallet layer_
+Shop Wallet :: 
+Brand Wallet ::
+Retailer Wallet :: +
+
+=== _Crypto Money Transaction_
+Purchase ::
+Sale :: +
+
+=== _Actor layer_
+Shop :: 
+Brand ::
+Retailer :: +
+
+=== _Subapp Module layer_
+Shop :: 
+Brand ::
+Retailer :: +
+
+=== _Wallet Module layer_
+Shop Wallet :: 
+Brand Wallet ::
+Retailer Wallet :: +
+
+
+=== _Subapp layer_
+Shop :: 
+Brand ::
+Retailer :: +
+
+=== _Reference Wallet layer_
+Shop Wallet :: 
+Brand Wallet ::
+Retailer Wallet :: +
+
+////
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+==== Continue reading ...
+////
+link:book-chapter-19.asciidoc[Digital Assets Platform]
+////
+
+link:book-chapter-16.asciidoc[Next Chapter]
+
+link:book-chapter-14.asciidoc[Previous Chapter]
+

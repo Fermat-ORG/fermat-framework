@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+android:orientation="vertical" android:layout_width="match_parent"
+android:layout_height="105dp"
+android:background="#eaeaea"
+    >
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/container_data"
+    android:paddingBottom="20dp"
+    android:paddingTop="12dp"
+    android:layout_marginLeft="16dp"
+    >
+
+
+
+    <ImageView android:id="@+id/profile_Image"
+        android:layout_width="55dp"
+        android:layout_height="65dp"
+        android:src="@drawable/kid_3"
+        android:layout_margin="3dip"
+        android:layout_alignParentStart="true"
+        android:paddingTop="7dp"
+        />
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:orientation="vertical"
+        android:layout_toRightOf="@+id/profile_Image">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_contactName"
+            android:text="Matias Furszyfer"
+            android:textColor="#06356f"
+            android:fontFamily="roboto"
+            app:typeface="ROBOTO_REGULAR"
+            />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_amount"
+            android:text="1.4 BTC"
+            android:textSize="18dp"
+            android:textColor="#1d1d26"
+            android:fontFamily="roboto"
+            app:typeface="ROBOTO_REGULAR"
+            />
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_time"
+            android:text="03 Feb 2014"
+            android:textSize="10dp"
+            android:textColor="#9a9a9c"
+            android:fontFamily="roboto"
+            app:typeface="ROBOTO_REGULAR"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_notes"
+            android:text="Conference ticket"
+            android:textSize="12dp"
+            android:textColor="#9a9a9c"
+            android:fontFamily="roboto"
+            app:typeface="ROBOTO_REGULAR"
+
+            />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="end"
+        android:paddingRight="15dp"
+        >
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_total_balance"
+            android:text="15 BTC"
+            android:textSize="12dp"
+            android:textColor="#343434"
+            android:fontFamily="roboto"
+            android:layout_marginRight="10dp"
+            app:typeface="ROBOTO_REGULAR"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="3dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_total_number_transactions"
+                android:text="5 Records"
+                android:textSize="12dp"
+                android:textColor="#06356f"
+                android:fontFamily="roboto"
+                app:typeface="ROBOTO_REGULAR"
+                />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="18dp"
+                android:id="@+id/cbw_arrow"
+                android:src="@drawable/ic_arrow_down_grey"/>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
+
+
+</LinearLayout>

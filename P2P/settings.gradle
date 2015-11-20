@@ -1,0 +1,28 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+
+include ':fermat-p2p-api'
+project(':fermat-p2p-api').projectDir = new File('P2P/library/api/fermat-p2p-api')
+
+include ':fermat-p2p-core'
+project(':fermat-p2p-core').projectDir = new File('P2P/library/core/fermat-p2p-core')
+
+
+include ':fermat-p2p-plugin-ws-communications-cloud-server-bitdubai'
+project(':fermat-p2p-plugin-ws-communications-cloud-server-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-server-bitdubai')
+
+include ':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai'
+project(':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-client-bitdubai')
+
+include ':fermat-p2p-plugin-communication-wifi-bitdubai'
+project(':fermat-p2p-plugin-communication-wifi-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-wifi-bitdubai')
+
+include ':fermat-p2p-plugin-communications-network-node-bitdubai'
+project(':fermat-p2p-plugin-communications-network-node-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communications-network-node-bitdubai')
+
+include ':fermat-p2p-plugin-ws-communications-network-client-bitdubai'
+project(':fermat-p2p-plugin-ws-communications-network-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-ws-communications-network-client-bitdubai')

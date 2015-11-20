@@ -25,7 +25,7 @@ public class GetFermatFragmentEnumTypeTest {
 
     @Test
     public void enumTypeFound() throws Exception {
-        FermatFragmentsEnumType expectedEnumType = CryptoCustomerIdentityFragmentsEnumType.MAIN_FRAGMET;
+        FermatFragmentsEnumType expectedEnumType = CryptoCustomerIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT;
         FermatFragmentsEnumType actualEnumType = fragmentFactory.getFermatFragmentEnumType(ENUM_TYPE_CODE);
 
         assertThat(actualEnumType).isEqualTo(expectedEnumType);

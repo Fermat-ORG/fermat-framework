@@ -1,0 +1,145 @@
+:numbered!:
+
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/PIP.jpg[PlugIns Platform]
+== Chapter 8: Fermat Plug-ins Platform
+
+This platform encapsulates all the components that provide the basic services that build the back end infrastructure of Fermat framework. +
+An essential identity introduced in this platform is the *device user identity*, which is only valid within a specific device, and its public part is never revealed. + 
+There is also an *actor identity* introduced: the *plug-in developer identity* what is essential to this platform because it puts together  the basic functionalities that let Fermat function as a whole system, although it is made of distinct and separate components even created by different developers. +
+
+Plug-ins are arranged in the corresponding layers described in the previous chapter, starting from _Platform Services layer_ at the bottom up to _Subapp layer_ at the top. 
+
+////
+=== _Platform Services layer_
+In this platform, components in this layer handle exceptions and events: 
+
+Event Manager :: it keeps track of the _events_ occurring alongside the entire platform to let plugins listen to the events that correspond to its function to trigger the corresponding plugin activity. 
+
+Connectivity Subsystem ::
+Location Subsystem ::
+Power Subsystem ::
+Platform Info :: + 
+
+=== _Hardware layer_
+As Fermat runs distributed in different devices, this layer has the components necessary to identify each of this devices _independently_ of the user that is logged in, and also to provide all the device's information that is needed for the system to run.+
+
+Local Device ::
+Device Network :: +
+
+
+=== _Users layer_
+Fermat is a multiuser and multidevice system. Therefore, depending on how the user interacts with Fermat, users are divided into certain _users categories_ which allow to properly handle the user's activity within Fermat. +
+ 
+Device User :: + this component handles transactions that take place inside the same device, an the user is identified in Fermat as a *Device User*
+
+
+=== _Plugin layer_
+Identity ::
+Dependency :: +
+
+
+=== _License layer_
+Fermat system ensures a _microlicense_ system to let the developer of a certain plug-in or certain wallet or any other component to charge a *fee* for the use of the component, and the revenue is enforced programmatically by Fermat to reach the license owner.    
+Plugin :: +
+
+
+=== _Network Service layer_
+Sub App Resources ::
+
+
+System Monitor ::
+Error Manager ::
+Messenger ::
+Technical Support :: +
+
+
+=== _Actor Network Service layer_
+Developer:: +
+
+
+=== _Identity layer_
+Developer :: gathers information about developers of components of Fermat, not only to identify his products, but also to give technical support.
+Designer :: +
+
+
+=== _World layer_
+Location :: +
+
+=== _Middleware layer_
+
+Intra User Technical Report ::
+Developer User Technical Report ::
+Developer Error Manager ::
+Sub App Settings ::
+Notification :: +
+
+=== _Actor layer_
+Developer ::
+Designer :: +
+
+
+=== _Desktop Module layer_
+Sub App Manager :: +
+
+
+=== _Subapp Module layer_
+Shell ::
+Designer ::
+Developer ::
+Technical Support ::
+Sys Monitor ::
+Feedback ::
+Reviews :: +
+
+=== _Engine layer_
+
+Sub App Runtime ::
+Desktop Runtime :: +
+
+
+=== _Desktop layer_
+
+Sub App Manager :: +
+
+
+=== _Subapp layer_
+Shell ::
+Designer ::
+Developer ::
+Technical Support ::
+Sys Monitor ::
+Feedback ::
+Reviews :: +
+
+////
+
+=== Master Plan Phase II
+Fermat foundations had been layed out by the five platforms and superlayers described in the previous chapters. Now let us enter the Phase II, where different platforms type are built: those to manage _crypto currencies_ and those for _digital assets_. +
+
+._Crypto Currencies platforms_
+. *Fermat Wallet Production & Distribution Platform*
+. *Fermat Crypto Currency Platform*
+. *Fermat Crypto Commodity Money*
+. *Fermat Bank Notes Platform*
+. *Fermat Shop Platform*
+. *Fermat Cash Money Platform*
+. *Fermat Bank Money Platform*
+. *Fermat Crypto Brokers Platform*
+. *Fermat Crypto Distribution Network*
+
+._Digital Assets platforms_
+. *Fermat Digital Assets Platform*
+. *Fermat Marketing Platform*
+
+._Accesory services_
+. *Fermat Distributed Private Network*
+
+Would you like to see the first tangible use of the supporting infrastructure of Fermat ? We invite you in next chapter to meet the _Wallet Production & Distribution Line_.
+
+:numbered!:
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+==== Continue Reading
+link:book-chapter-09.asciidoc[Next Chapter]
+
+link:book-chapter-07.asciidoc[Previous Chapter]
+

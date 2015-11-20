@@ -121,7 +121,7 @@ public class DistanceCalculator {
      * @param unit
      * @return distance
      */
-    private static double distance(Location pointOne, Location pointTwo, String unit) {
+    public static double distance(Location pointOne, Location pointTwo, String unit) {
 
         double theta = pointOne.getLongitude() - pointTwo.getLongitude();
         double dist = Math.sin(deg2rad(pointOne.getLatitude())) * Math.sin(deg2rad(pointTwo.getLatitude())) + Math.cos(deg2rad(pointOne.getLatitude())) * Math.cos(deg2rad(pointTwo.getLatitude())) * Math.cos(deg2rad(theta));

@@ -30,7 +30,12 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
     /**
      * PlatformDatabaseSystem Interface member variables.
      */
-    private Context context;
+    private final String path;
+
+    public AndroidPlatformDatabaseSystem(final String path) {
+
+        this.path = path;
+    }
 
 
     /**
@@ -51,7 +56,7 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
         try{
             AndroidDatabase database;
             String hasDBName = hashDataBaseName(databaseName);
-            database = new AndroidDatabase(this.context, hasDBName);
+            database = new AndroidDatabase(path, hasDBName);
             database.openDatabase();
             return database;
         }
@@ -80,7 +85,7 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
         try{
             AndroidDatabase database;
             String hasDBName = hashDataBaseName(databaseName);
-            database = new AndroidDatabase(this.context, hasDBName);
+            database = new AndroidDatabase(path, hasDBName);
             database.createDatabase(hasDBName);
             return database;
         }
@@ -109,7 +114,7 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
         try{
             String hasDBName = hashDataBaseName(databaseName);
             AndroidDatabase database;
-            database = new AndroidDatabase(this.context, hasDBName);
+            database = new AndroidDatabase(path, hasDBName);
             database.deleteDatabase();
 
         } catch (NoSuchAlgorithmException e){
@@ -123,17 +128,6 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
             throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
         }
     }
-
-    /**
-     *<p> This method set the context object
-     *
-     * @param context Android Context object
-     */
-    @Override
-    public void setContext (Object context){
-        this.context = (Context)context;
-    }
-
 
     /**
      * <p> This method hash the database file name using the algorithm SHA 256

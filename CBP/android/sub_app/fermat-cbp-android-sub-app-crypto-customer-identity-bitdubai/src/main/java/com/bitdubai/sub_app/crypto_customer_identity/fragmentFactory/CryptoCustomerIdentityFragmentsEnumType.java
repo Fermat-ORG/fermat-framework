@@ -8,7 +8,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 
 public enum CryptoCustomerIdentityFragmentsEnumType implements FermatFragmentsEnumType<CryptoCustomerIdentityFragmentsEnumType> {
 
-    MAIN_FRAGMET("MF");
+    CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT("CBPSACCIMF"),
+    CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT("CBPSACCICIF"),
+    CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT("CBPSACCIEIF");
 
     private String key;
 

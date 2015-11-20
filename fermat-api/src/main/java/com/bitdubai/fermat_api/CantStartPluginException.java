@@ -2,6 +2,7 @@
 package com.bitdubai.fermat_api;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 
@@ -23,11 +24,24 @@ public class CantStartPluginException extends FermatException{
         this(message, cause, "", "");
     }
 
+    public CantStartPluginException(final Exception cause, final String context, final String possibleReason) {
+        this(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
     public CantStartPluginException(final String message) {
-        this(message, null);
+        this(message, null, null, null);
+    }
+
+    public CantStartPluginException(final String context, final String possibleReason) {
+        this(DEFAULT_MESSAGE, null, context, possibleReason);
     }
 
     public CantStartPluginException(final Exception exception, final Plugins plugin) {
+        this(plugin.toString() + " " + exception.getMessage());
+        setStackTrace(exception.getStackTrace());
+    }
+
+    public CantStartPluginException(final Exception exception, final PluginVersionReference plugin) {
         this(plugin.toString() + " " + exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }

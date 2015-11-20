@@ -23,10 +23,10 @@
 //import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 //import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 //import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-//import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
-//import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+//import CantRequestCryptoAddressException;
+//import CryptoWallet;
+//import ErrorManager;
+//import UnexpectedUIExceptionSeverity;
 //import com.google.zxing.WriterException;
 //
 //import java.util.UUID;

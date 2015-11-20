@@ -4,9 +4,10 @@ package com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.devel
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 
 import java.io.Serializable;
 import java.util.List;
@@ -89,7 +90,7 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
      * This method gives us the name of the wallet icon used to identify the image in the wallet resources plug-in
      *
      */
-    public String getWalletIcon(){
+    public String getIcon(){
         return walletIcon;
     }
 
@@ -102,11 +103,16 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
         return publicKey;
     }
 
+    @Override
+    public InterfaceType getType() {
+        return InterfaceType.WALLET;
+    }
+
     /**
      * This method gives us the wallet name
      *
      */
-    public String getWalletName(){
+    public String getName(){
         return walletName;
     }
 

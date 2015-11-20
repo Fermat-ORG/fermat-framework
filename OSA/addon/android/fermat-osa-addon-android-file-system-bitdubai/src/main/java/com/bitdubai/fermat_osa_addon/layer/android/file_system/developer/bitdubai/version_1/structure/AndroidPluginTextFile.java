@@ -55,7 +55,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
      * PluginTextFile interface member variables.
      */
     
-    private Context context;
+    private String contextPath;
 
     private final String directoryName;
     private final String fileName;
@@ -70,15 +70,15 @@ public class AndroidPluginTextFile implements PluginTextFile {
      * <p>PlugIn implementation constructor
      *
      * @param ownerId PlugIn Id
-     * @param context Android context object
+     * @param contextPath Android context object
      * @param directoryName name of the directory where the files are saved
      * @param fileName name of file
      * @param privacyLevel level of privacy for the file, if it is public or private
      * @param lifeSpan lifetime of the file, whether it is permanent or temporary
      */
-    public AndroidPluginTextFile(final UUID ownerId, final Context context, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
+    public AndroidPluginTextFile(final UUID ownerId, final String contextPath, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
         this.ownerId = ownerId;
-        this.context = context;
+        this.contextPath = contextPath;
         this.fileName = fileName;
         this.privacyLevel = privacyLevel;
         this.lifeSpan = lifeSpan;
@@ -87,14 +87,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
 
     public FileLifeSpan getLifeSpan() {
 		return lifeSpan;
-	}
-
-	public Context getContext() {
-		return context;
-	}
-
-	public void setContext(Context context) {
-		this.context = context;
 	}
 
 	public String getFileName() {
@@ -153,13 +145,13 @@ public class AndroidPluginTextFile implements PluginTextFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
+            path = contextPath;
 
         /**
          * If the directory does not exist, we create it here.
          */
 
-        File storagePath = new File(path +"/"+ this.directoryName);
+        File storagePath = new File(path +"/" + ownerId.toString()+ "/" + this.directoryName);
         if (!storagePath.exists() )
             storagePath.mkdirs();
 
@@ -221,12 +213,12 @@ public class AndroidPluginTextFile implements PluginTextFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
+            path = contextPath;
 
         /**
          * We open the file and read its encrypted content.
          */
-        File file = new File(path +"/"+ this.directoryName, this.fileName);
+        File file = new File(path +"/" + ownerId.toString()+ "/" +this.directoryName, this.fileName);
         String decryptedContent = "";
         try {
             InputStream inputStream =  new BufferedInputStream(new FileInputStream(file));
@@ -284,8 +276,8 @@ public class AndroidPluginTextFile implements PluginTextFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
-        File file = new File(path +"/"+ this.directoryName, this.fileName);
+            path = contextPath;
+        File file = new File(path +"/" + ownerId.toString() +"/"+ this.directoryName, this.fileName);
         file.delete();
     }
 
@@ -314,7 +306,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
+            path = contextPath;
         return path +"/"+ this.directoryName + "/" + fileName;
     }
 

@@ -17,19 +17,25 @@ import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.W
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDao;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedEventException;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressDeniedActionException;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedActionException;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressesNewsEventException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeWalletContactsMiddlewareDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,7 +49,7 @@ import java.util.UUID;
 public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry {
 
     private final CryptoAddressesManager cryptoAddressesManager;
-    private final ErrorManager           errorManager          ;
+    private final ErrorManager errorManager          ;
     private final LogManager             logManager            ;
     private final PluginDatabaseSystem   pluginDatabaseSystem  ;
     private final UUID                   pluginId              ;
@@ -106,6 +112,37 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
     }
 
     @Override
+    public WalletContactRecord createWalletContact(String              actorPublicKey ,
+                                                   String              actorAlias     ,
+                                                   String              actorFirstName ,
+                                                   String              actorLastName  ,
+                                                   Actors              actorType      ,
+                                                   String              walletPublicKey) throws CantCreateWalletContactException {
+        try {
+
+            UUID contactId = UUID.randomUUID();
+
+            return walletContactsMiddlewareDao.createWalletContact(
+                    contactId      ,
+                    actorPublicKey ,
+                    actorAlias     ,
+                    actorFirstName ,
+                    actorLastName  ,
+                    actorType      ,
+                    new ArrayList<CryptoAddress>(),
+                    walletPublicKey
+            );
+
+        } catch (CantCreateWalletContactException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+    @Override
     public void updateWalletContact(UUID                contactId      ,
                                     String              actorAlias     ,
                                     String              actorFirstName ,
@@ -115,13 +152,13 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
 
         try {
             walletContactsMiddlewareDao.updateWalletContact(
-                new WalletContactsMiddlewareRecord(
-                    contactId      ,
-                    actorAlias     ,
-                    actorFirstName ,
-                    actorLastName  ,
-                    cryptoAddresses
-                )
+                    new WalletContactsMiddlewareRecord(
+                            contactId,
+                            actorAlias,
+                            actorFirstName,
+                            actorLastName,
+                            cryptoAddresses
+                    )
             );
         } catch (CantUpdateWalletContactException |
                  WalletContactNotFoundException   e ){
@@ -171,7 +208,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         try {
 
             return walletContactsMiddlewareDao.findWalletContactByActorAndWalletPublicKey(
-                    actorPublicKey ,
+                    actorPublicKey,
                     walletPublicKey
             );
 
@@ -239,7 +276,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
             walletContactsMiddlewareDao.findWalletContactByContactId(contactId);
             // add crypto address
             walletContactsMiddlewareDao.addCryptoAddress(
-                    contactId    ,
+                    contactId,
                     cryptoAddress
             );
 
@@ -298,7 +335,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         try {
             // get contact id if exists
             WalletContactRecord walletContactRecord = walletContactsMiddlewareDao.findWalletContactByActorAndWalletPublicKey(
-                    actorPublicKey ,
+                    actorPublicKey,
                     walletPublicKey
             );
             // add crypto address
@@ -321,18 +358,86 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         }
     }
 
-    public void handleCryptoAddressReceivedEvent(UUID requestId) throws CantHandleCryptoAddressReceivedEventException {
+    public void handleCryptoAddressesNewsEvent() throws CantHandleCryptoAddressesNewsEventException {
 
         try {
-            AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
-            handleCryptoAddressReceivedEvent(request);
-        } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
+            final List<CryptoAddressRequest> list = cryptoAddressesManager.listAllPendingRequests();
 
-            throw new CantHandleCryptoAddressReceivedEventException(e, "RequestId: "+requestId);
+
+            for (final CryptoAddressRequest request : list) {
+
+
+                if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.CRYPTO_WALLET)) {
+
+                    if (request.getAction().equals(RequestAction.ACCEPT))
+                        this.handleCryptoAddressReceivedEvent(request);
+                    if (request.getAction().equals(RequestAction.DENY))
+                        this.handleCryptoAddressDeniedEvent(request);
+
+                }
+
+            }
+
+        } catch(CantListPendingCryptoAddressRequestsException |
+                CantHandleCryptoAddressDeniedActionException |
+                CantHandleCryptoAddressReceivedActionException e) {
+
+            throw new CantHandleCryptoAddressesNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
         }
     }
 
-    public void handleCryptoAddressReceivedEvent(AddressExchangeRequest request) throws CantHandleCryptoAddressReceivedEventException {
+    public void handleCryptoAddressReceivedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressReceivedActionException {
+
+        try {
+            try {
+                // search wallet contact
+                // if i can't find it (WalletContactNotFound) i confirm the request ....
+                // else i add the crypto address received.
+                WalletContactRecord walletContactRecord = this.getWalletContactByActorAndWalletPublicKey(
+                        request.getIdentityPublicKeyResponding(),
+                        request.getWalletPublicKey()
+                );
+
+                this.addCryptoAddressToWalletContact(
+                    walletContactRecord.getContactId(),
+                    request.getCryptoAddress()
+                );
+
+                System.out.println("----------------------------\n" +
+                        "ACTUALIZO ADDRESS PARA EL CONTACTO :" +  walletContactRecord.getContactId()
+                        + "\n-------------------------------------------------");
+
+                walletContactsMiddlewareDao.updateCompatibility(
+                        walletContactRecord.getContactId(),
+                        Compatibility.COMPATIBLE
+                );
+
+                cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
+
+            } catch (WalletContactNotFoundException e) {
+
+                // TODO IF I DON'T FIND A WALLET CONTACT, I DELETE THE REQUEST ???
+                cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
+            } catch (CantAddCryptoAddressException e) {
+
+                throw new CantHandleCryptoAddressReceivedActionException(e, "Can't add the crypto address to the existent wallet contact.");
+            } catch (CantGetWalletContactException e) {
+
+                throw new CantHandleCryptoAddressReceivedActionException(e, "Can't get wallet contact.");
+            }
+        } catch (PendingRequestNotFoundException e) {
+            // TODO what to do here?
+            throw new CantHandleCryptoAddressReceivedActionException(e, "Can't find the pending request when confirming.");
+        } catch (CantConfirmAddressExchangeRequestException e) {
+
+            throw new CantHandleCryptoAddressReceivedActionException(e, "Can't confirm address exchange request.");
+        } catch (CantUpdateWalletContactException e) {
+
+            throw new CantHandleCryptoAddressReceivedActionException(e, "Can't update wallet contact.");
+        }
+    }
+
+    public void handleCryptoAddressDeniedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressDeniedActionException {
 
         try {
             try {
@@ -344,31 +449,17 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                         request.getWalletPublicKey()
                 );
 
-                if (request.getState().equals(AddressExchangeRequestState.DENIED_FOR_INCOMPATIBILITY)) {
-
-                    if (walletContactRecord.getCryptoAddresses().isEmpty()) {
-                        walletContactsMiddlewareDao.updateCompatibility(
-                                walletContactRecord.getContactId(),
-                                Compatibility.INCOMPATIBLE
-                        );
-                    }
-
-                    cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
-
-                } else if (request.getState().equals(AddressExchangeRequestState.RESPONDED)) {
-
-                    this.addCryptoAddressToWalletContact(
+                this.addCryptoAddressToWalletContact(
                         walletContactRecord.getContactId(),
-                        request.getCryptoAddressFromResponse()
-                    );
+                        request.getCryptoAddress()
+                );
 
-                    walletContactsMiddlewareDao.updateCompatibility(
+                walletContactsMiddlewareDao.updateCompatibility(
                         walletContactRecord.getContactId(),
-                        Compatibility.COMPATIBLE
-                    );
+                        Compatibility.INCOMPATIBLE
+                );
 
-                    cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
-                }
+                cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
 
             } catch (WalletContactNotFoundException e) {
 
@@ -376,20 +467,20 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                 cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
             } catch (CantAddCryptoAddressException e) {
 
-                throw new CantHandleCryptoAddressReceivedEventException(e, "Can't add the crypto address to the existent wallet contact.");
+                throw new CantHandleCryptoAddressDeniedActionException(e, "Can't add the crypto address to the existent wallet contact.");
             } catch (CantGetWalletContactException e) {
 
-                throw new CantHandleCryptoAddressReceivedEventException(e, "Can't get wallet contact.");
+                throw new CantHandleCryptoAddressDeniedActionException(e, "Can't get wallet contact.");
             }
         } catch (PendingRequestNotFoundException e) {
             // TODO what to do here?
-            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't find the pending request when confirming.");
+            throw new CantHandleCryptoAddressDeniedActionException(e, "Can't find the pending request when confirming.");
         } catch (CantConfirmAddressExchangeRequestException e) {
 
-            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't confirm address exchange request.");
+            throw new CantHandleCryptoAddressDeniedActionException(e, "Can't confirm address exchange request.");
         } catch (CantUpdateWalletContactException e) {
 
-            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't update wallet contact.");
+            throw new CantHandleCryptoAddressDeniedActionException(e, "Can't update wallet contact.");
         }
     }
 }

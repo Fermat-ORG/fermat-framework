@@ -25,11 +25,10 @@ import java.io.Serializable;
 
  public interface PlatformDatabaseSystem extends Serializable {
 
-    public Database openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException;
+    Database openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException;
 
-    public Database createDatabase (String databaseName) throws CantCreateDatabaseException;
+    Database createDatabase (String databaseName) throws CantCreateDatabaseException;
 
-    public void deleteDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException;
+    void deleteDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException;
 
-    void setContext (Object context);
 }

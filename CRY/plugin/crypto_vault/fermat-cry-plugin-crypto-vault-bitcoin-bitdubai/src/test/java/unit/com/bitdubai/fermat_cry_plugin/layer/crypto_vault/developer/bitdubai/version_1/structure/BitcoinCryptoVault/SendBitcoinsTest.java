@@ -15,13 +15,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
 
@@ -74,7 +74,7 @@ public class SendBitcoinsTest {
     private UUID pluginId = UUID.randomUUID();
 
     @Test (expected = CouldNotSendMoneyException.class)
-    public void sendBitcoins_RaiseInsufficientFundsException() throws CantCreateCryptoWalletException, InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException, CantCreateFileException {
+    public void sendBitcoins_RaiseInsufficientFundsException() throws CantCreateCryptoWalletException, InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException, CantCreateFileException {
        BitcoinCryptoVault vault = new BitcoinCryptoVault(userPublicKey);
         List<DatabaseTableRecord> records = mock(ArrayList.class);
 
@@ -99,7 +99,7 @@ public class SendBitcoinsTest {
     }
 
     @Test (expected = InvalidSendToAddressException.class)
-    public void sendBitcoins_InvalidAddressException() throws CantCreateCryptoWalletException, InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException, CantCreateFileException {
+    public void sendBitcoins_InvalidAddressException() throws CantCreateCryptoWalletException, InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException, CantCreateFileException {
         BitcoinCryptoVault vault = new BitcoinCryptoVault(userPublicKey);
         List<DatabaseTableRecord> records = mock(ArrayList.class);
 

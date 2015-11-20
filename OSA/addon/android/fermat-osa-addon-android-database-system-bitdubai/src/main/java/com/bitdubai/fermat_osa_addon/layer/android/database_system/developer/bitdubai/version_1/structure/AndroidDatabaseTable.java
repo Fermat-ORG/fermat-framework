@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseTableOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -505,9 +504,10 @@ public class AndroidDatabaseTable implements DatabaseTable {
                                 .append(tableFilter.get(i).getValue())
                                 .append("'");
                         break;
-                    case GRATER_THAN:
-                        strFilter.append(" > ")
-                                .append(tableFilter.get(i).getValue());
+                    case GREATER_THAN:
+                        strFilter.append(" >'")
+                                .append(tableFilter.get(i).getValue())
+                                .append("'");;
                         break;
                     case LESS_THAN:
                         strFilter.append(" < ")
@@ -553,24 +553,30 @@ public class AndroidDatabaseTable implements DatabaseTable {
             strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
 
             int ix = 0;
-            for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
-                if (subGroup.getFilters().size() > 0 || ix > 0) {
-                    switch (databaseTableFilterGroup.getOperator()) {
-                        case AND:
-                            strFilter.append(" AND ");
-                            break;
-                        case OR:
-                            strFilter.append(" OR ");
-                            break;
-                        default:
-                            strFilter.append(" ");
+
+            if (databaseTableFilterGroup.getSubGroups() != null){
+
+                for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
+                    if (subGroup.getFilters().size() > 0 || ix > 0) {
+                        switch (databaseTableFilterGroup.getOperator()) {
+                            case AND:
+                                strFilter.append(" AND ");
+                                break;
+                            case OR:
+                                strFilter.append(" OR ");
+                                break;
+                            default:
+                                strFilter.append(" ");
+                        }
                     }
+                    strFilter.append("(");
+                    strFilter.append(makeGroupFilters(subGroup));
+                    strFilter.append(")");
+                    ix++;
                 }
-                strFilter.append("(");
-                strFilter.append(makeGroupFilters(subGroup));
-                strFilter.append(")");
-                ix++;
+
             }
+
             strFilter.append(")");
         }
 
@@ -747,7 +753,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
                         .append(filter.getValue())
                         .append("'");
                 break;
-            case GRATER_THAN:
+            case GREATER_THAN:
                 strFilter.append(" > ")
                         .append(filter.getValue());
                 break;

@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerIdentityImpl;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
@@ -17,7 +17,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /**
  * Created by jorge on 28-09-2015.
  */
-@RunWith(MockitoJUnitRunner.class)
 public class EqualsAndHashTest {
 
     private static final String TEST_PRIVATE_KEY = "18E14A7B6A307F426A94F8114701E7C8E774E7F9A47E2C2035DB29A206321725";
@@ -26,35 +25,33 @@ public class EqualsAndHashTest {
     private String testAlias = "TEST";
     private KeyPair testKeyPair;
     private byte[] testProfileImage = new byte[0];
-
-    @Mock
-    private PluginFileSystem mockPluginFileSystem;
+    private boolean testPublished = false;
 
     private CryptoBrokerIdentity testIdentity1, testIdentity2;
 
     @Before
     public void setUpIdentity(){
-        testKeyPair = AsymmectricCryptography.createKeyPair(TEST_PRIVATE_KEY);
-        testIdentity1 = new CryptoBrokerIdentityImpl(testAlias, testKeyPair, testProfileImage, mockPluginFileSystem);
+        testKeyPair = AsymmetricCryptography.createKeyPair(TEST_PRIVATE_KEY);
+        testIdentity1 = new CryptoBrokerIdentityImpl(testAlias, testKeyPair, testProfileImage, testPublished);
     }
 
     @Test
     public void Equals_SameValues_True(){
-        testIdentity2 = new CryptoBrokerIdentityImpl(testAlias, testKeyPair, testProfileImage, mockPluginFileSystem);
+        testIdentity2 = new CryptoBrokerIdentityImpl(testAlias, testKeyPair, testProfileImage, testPublished);
         assertThat(testIdentity1).isEqualTo(testIdentity2);
         assertThat(testIdentity1.hashCode()).isEqualTo(testIdentity2.hashCode());
     }
 
     @Test
     public void Equals_DifferentAlias_False(){
-        testIdentity2 = new CryptoBrokerIdentityImpl("OTHER_TEST", testKeyPair, testProfileImage, mockPluginFileSystem);
+        testIdentity2 = new CryptoBrokerIdentityImpl("OTHER_TEST", testKeyPair, testProfileImage, testPublished);
         assertThat(testIdentity1).isNotEqualTo(testIdentity2);
         assertThat(testIdentity1.hashCode()).isNotEqualTo(testIdentity2.hashCode());
     }
 
     @Test
     public void Equals_DifferentKeyPair_False(){
-        testIdentity2 = new CryptoBrokerIdentityImpl(testAlias, AsymmectricCryptography.generateECCKeyPair(), testProfileImage, mockPluginFileSystem);
+        testIdentity2 = new CryptoBrokerIdentityImpl(testAlias, AsymmetricCryptography.generateECCKeyPair(), testProfileImage, testPublished);
         assertThat(testIdentity1).isNotEqualTo(testIdentity2);
         assertThat(testIdentity1.hashCode()).isNotEqualTo(testIdentity2.hashCode());
     }

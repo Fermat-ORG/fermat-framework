@@ -14,6 +14,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 // TODO add a little description of the class here
@@ -35,18 +36,12 @@ public class HTTPJson {
         JSONObject jsonObject = null;
         try {
             inputStream = getInputStream(url);
+            bufferedReader = getBufferedReader(inputStream);
+            jsonObject = getJsonObject(bufferedReader);
         } catch (CantGetInputStreamException cantGetInputStreamException) {
             cantGetInputStreamException.printStackTrace();
-        }
-        try {
-            bufferedReader = getBufferedReader(inputStream);
         } catch (CantGetBufferedReaderException cantGetBufferedReaderException) {
             cantGetBufferedReaderException.printStackTrace();
-        }
-        try {
-            jsonObject = getJsonObject(bufferedReader);
-        } catch (CantGetJsonObjectException cantGetJsonObjectException) {
-            cantGetJsonObjectException.printStackTrace();
         }
         return jsonObject;
     }
@@ -62,7 +57,7 @@ public class HTTPJson {
             HttpEntity httpEntity = httpResponse.getEntity();
             return httpEntity.getContent();
         } catch (IOException e) {
-            throw new CantGetInputStreamException(CantGetInputStreamException.DEFAULT_MESSAGE, e, "Probably the url is invalid", null);
+            throw new CantGetInputStreamException(CantGetInputStreamException.DEFAULT_MESSAGE, e, "IOException HTTPJson", "Possible failures in internet connections");
         }
     }
 
@@ -73,14 +68,30 @@ public class HTTPJson {
         try {
             return new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
         } catch (UnsupportedEncodingException e) {
-            throw new CantGetBufferedReaderException(CantGetBufferedReaderException.DEFAULT_MESSAGE, e, "Probably the InputStream parameter is not correct", null);
+            throw new CantGetBufferedReaderException(CantGetBufferedReaderException.DEFAULT_MESSAGE, e, "HTTPJson Cant Get Buffered Reader Exception", "Probably the InputStream parameter is not correct");
         }
     }
 
     /**
      * En este método se espera el ingreso de un parámetro del tipo BufferedReader para que el mismo sea leído, colocado en formato json y guardado como un JsonObject
      */
-    public JSONObject getJsonObject(BufferedReader reader) throws CantGetJsonObjectException {
+    public JSONObject getJsonObject(BufferedReader reader) {
+        String json = null;
+        try {
+            json = JsonToString(reader);
+        } catch (CantGetJsonObjectException e) {
+            new CantGetJsonObjectException(CantGetJsonObjectException.DEFAULT_MESSAGE, e, "HTTPJson Cant Get JsonObject Exception", "Probably the Json object obtained not correct or is not within the expected format");
+        }
+        return new JSONObject(json);
+    }
+
+    /**
+     *
+     * @param reader
+     * @return
+     * @throws CantGetJsonObjectException
+     */
+    public String JsonToString(BufferedReader reader) throws CantGetJsonObjectException {
         StringBuilder stringBuilder = new StringBuilder();
         String line;
         try {
@@ -88,10 +99,34 @@ public class HTTPJson {
                 stringBuilder.append(line);
                 stringBuilder.append("\n");
             }
-            String json = stringBuilder.toString();
-            return new JSONObject(json);
         } catch (IOException e) {
-            throw new CantGetJsonObjectException(CantGetJsonObjectException.DEFAULT_MESSAGE, e, "Probably the Json object obtained not correct or is not within the expected format", null);
+            throw new CantGetJsonObjectException(CantGetJsonObjectException.DEFAULT_MESSAGE, e, "IOException HTTPJson", "Possible failures in internet connections");
         }
+        return stringBuilder.toString();
+    }
+        /**
+     *
+     * @param url
+     * @return
+     */
+    public JSONArray GetJsonArray(String url){
+        BufferedReader bufferedReader = null;
+        InputStream inputStream = null;
+        JSONArray jsonArray = null;
+
+        try {
+            inputStream = getInputStream(url);
+            bufferedReader = getBufferedReader(inputStream);
+            String json=JsonToString(bufferedReader);
+           jsonArray=new JSONArray(json);
+            return jsonArray;
+        } catch (CantGetInputStreamException cantGetInputStreamException) {
+            cantGetInputStreamException.printStackTrace();
+        } catch (CantGetBufferedReaderException cantGetBufferedReaderException) {
+            new CantGetJsonObjectException(CantGetJsonObjectException.DEFAULT_MESSAGE, cantGetBufferedReaderException, "HTTPJson Cant Get JsonObject Exception", "Probably the Json object obtained not correct or is not within the expected format");
+        } catch (CantGetJsonObjectException cantGetJsonObjectException) {
+            new CantGetJsonObjectException(CantGetJsonObjectException.DEFAULT_MESSAGE, cantGetJsonObjectException, "IOException HTTPJson", "Possible failures in internet connections");
+        }
+        return jsonArray;
     }
 }

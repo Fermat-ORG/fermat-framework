@@ -1,7 +1,8 @@
 apply plugin: 'java'
 
 sourceCompatibility = 1.7
+version = '1.0'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':fermat-pip-api')
 }

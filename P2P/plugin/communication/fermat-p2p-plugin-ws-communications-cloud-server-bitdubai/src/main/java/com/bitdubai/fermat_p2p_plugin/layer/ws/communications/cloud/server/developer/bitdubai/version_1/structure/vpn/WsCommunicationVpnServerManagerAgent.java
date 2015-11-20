@@ -7,7 +7,9 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn;
 
 
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -67,10 +69,10 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
      *
      * @param participants
      */
-    public WsCommunicationVPNServer createNewWsCommunicationVPNServer(List<PlatformComponentProfile> participants) {
+    public WsCommunicationVPNServer createNewWsCommunicationVPNServer(List<PlatformComponentProfile> participants, WsCommunicationCloudServer wsCommunicationCloudServer, NetworkServiceType networkServiceTypeApplicant) {
 
         InetSocketAddress inetSocketAddress = new InetSocketAddress(hostIp, (lastPortAssigned+=1));
-        WsCommunicationVPNServer vpnServer = new WsCommunicationVPNServer(inetSocketAddress, participants);
+        WsCommunicationVPNServer vpnServer = new WsCommunicationVPNServer(inetSocketAddress, participants, wsCommunicationCloudServer, networkServiceTypeApplicant);
         vpnServersActivesCache.add(vpnServer);
         vpnServer.start();
 
@@ -94,21 +96,37 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
                 if (vpnServersActivesCache.isEmpty()){
                     //Auto stop
                     isRunning = Boolean.FALSE;
+                    this.interrupt();
                 }
 
                 for (WsCommunicationVPNServer wsCommunicationVPNServer : vpnServersActivesCache) {
 
-                    //Verified is this vpn is active
-                    if (!wsCommunicationVPNServer.isActive()){
+                    try {
 
-                        //If no active stop it
+                        //Validate if pending pong message
+                        if (!wsCommunicationVPNServer.getPendingPongMessageByConnection().isEmpty()){
+                            throw new RuntimeException("Some Connection maybe not active");
+                        }
+
+                        /*
+                         * Send the ping message to this participant
+                         */
+                        wsCommunicationVPNServer.sendPingMessage();
+
+                    }catch (Exception ex){
+
+                        System.out.println(" WsCommunicationVpnServerManagerAgent - Some Connection of the participant maybe not active");
+                        //Close all connection and stop the vpn server
+                        wsCommunicationVPNServer.closeAllConnections();
                         wsCommunicationVPNServer.stop();
                         vpnServersActivesCache.remove(wsCommunicationVPNServer);
-
                     }
+
                 }
 
-                sleep(WsCommunicationVpnServerManagerAgent.SLEEP_TIME);
+                if (!isInterrupted()){
+                    sleep(WsCommunicationVpnServerManagerAgent.SLEEP_TIME);
+                }
 
             }
 

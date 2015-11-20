@@ -1,9 +1,0 @@
-== FERMAT for developers
-=== FERMAT CORE 
-=== FERMAT P2P
-=== FERMAT BCH
-
-
-
-
-

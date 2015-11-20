@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginTop="16dp"
+    >
+
+    <FrameLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:id="@+id/image_container"
+        android:layout_marginLeft="16dp">
+
+        <ImageView
+            android:id="@+id/intra_user_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="2dp"
+            android:contentDescription="identity image"
+            tools:src="@drawable/deniz_profile_picture" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+             />
+
+    </FrameLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/intra_user_alias"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:singleLine="true"
+        android:paddingTop="16dp"
+        android:textColor="@color/green"
+        android:layout_toRightOf="@+id/image_container"
+        tools:text="Mati was here" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_contact_new_added"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+
+
+        />
+</RelativeLayout>

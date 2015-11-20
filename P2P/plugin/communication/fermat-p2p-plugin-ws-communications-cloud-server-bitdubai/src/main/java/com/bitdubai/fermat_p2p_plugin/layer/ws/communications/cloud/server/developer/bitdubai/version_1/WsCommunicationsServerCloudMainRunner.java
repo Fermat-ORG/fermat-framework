@@ -38,7 +38,7 @@ public class WsCommunicationsServerCloudMainRunner {
              * By default the server is configure to be disable (NOT START),
              * then set to enable to start
              */
-            wsCommunicationsServerCloudPluginRoot.setDisableServerFlag(wsCommunicationsServerCloudPluginRoot.ENABLE_SERVER);
+            wsCommunicationsServerCloudPluginRoot.setDisableServerFlag(WsCommunicationsServerCloudPluginRoot.ENABLE_SERVER);
 
             /*
              * Start the process

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="20dp"
+        android:paddingTop="15dp"
+        >
+
+
+        <TextView
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:id="@+id/txt_color_type"
+            android:background="#6563a4"/>
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="#cbcbcb">
+
+            <ImageView android:id="@+id/profile_Image"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/kid_3"
+                android:scaleType="centerCrop"
+                android:layout_margin="3dip"
+                />
+
+        </FrameLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="12dp"
+            android:paddingLeft="20dp"
+            android:orientation="vertical">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_amount"
+                android:text="1.4 BTC"
+                android:textSize="18dp"
+                android:textColor="#1d1d26"
+                android:fontFamily="roboto"
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_contactName"
+                android:text="Matias Furszyfer"
+                android:textColor="#6e6e71"
+                android:fontFamily="roboto"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="12dp"
+            android:paddingRight="15dp"
+            android:orientation="vertical"
+            android:gravity="end"
+            android:layout_weight="1"
+            >
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_notes"
+                android:text="Conference ticket"
+                android:textSize="12dp"
+                android:textColor="#1173aa"
+                android:fontFamily="roboto"
+
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_time"
+                android:text="03 Feb 2014"
+                android:textSize="10dp"
+                android:textColor="#6e6e71"
+                android:fontFamily="roboto"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#bbccc7"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingRight="15dp"
+        android:background="#e3fff7"
+        >
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_total_balance"
+            android:text="15 BTC"
+            android:textSize="12dp"
+            android:textColor="#1d1d26"
+            android:fontFamily="roboto"
+            android:layout_marginRight="10dp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_total_number_transactions"
+            android:text="5 Records"
+            android:textSize="12dp"
+            android:textColor="#1173aa"
+            android:fontFamily="roboto"
+            android:layout_marginRight="10dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ImageView_see_all_transactions"
+            android:src="@drawable/ic_home_arrow_down"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#bbccc7"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent">
+
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/listView_transactions"
+            android:visibility="gone"></ListView>
+
+
+    </FrameLayout>
+
+
+</LinearLayout>

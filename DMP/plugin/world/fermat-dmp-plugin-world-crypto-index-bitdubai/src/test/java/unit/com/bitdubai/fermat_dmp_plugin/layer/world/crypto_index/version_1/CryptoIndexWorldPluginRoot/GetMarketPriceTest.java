@@ -8,17 +8,22 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.CryptoIndexWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDao;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDatabaseFactory;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.fest.assertions.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
@@ -28,50 +33,81 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GetMarketPriceTest {
+
+    /**
+     * DealsWithEvents Interface member variables.
+     */
     @Mock
-    private PluginDatabaseSystem mockPluginDatabaseSystem;
+    private EventManager mockEventManager;
+
+    /**
+     * DealsWithErrors interface Mocked
+     */
     @Mock
-    private Database mockDatabase;
+    private ErrorManager mockErrorManager;
+
     @Mock
-    private DatabaseFactory mockDatabaseFactory;
+    private LogManager mocklogManager;
+
+    /**
+     * PluginDatabaseSystem Interface member variables.
+     */
+
     @Mock
-    private DatabaseTable mockTable;
+    private PluginDatabaseSystem mockPluginDatabaseSystem= Mockito.mock(PluginDatabaseSystem.class);
+
     @Mock
-    private DatabaseTableFactory mockCryptoIndexTableFactory;
+    private CryptoIndexDatabaseFactory mockCryptoIndexDatabaseFactory= Mockito.mock(CryptoIndexDatabaseFactory.class);;
+
     @Mock
-    private DatabaseTableRecord mockTableRecord;
-    private UUID testOwnerId;
+    DatabaseFactory mockDatabaseFactory = Mockito.mock(DatabaseFactory.class);;
     @Mock
-    private CryptoIndexDatabaseFactory cryptoIndexDatabaseFactory;
-    @Mock
-    private List<DatabaseTableRecord> mockRecords;
+    private DatabaseTableFactory mockDatabaseTableFactory = Mockito.mock(DatabaseTableFactory.class);
     @Mock
     private CryptoIndexDao cryptoIndexDao;
-    @Mock
+
     private CryptoCurrency cryptoCurrency;
-    @Mock
+
     private FiatCurrency fiatCurrency;
-    private void setUpIds() {
-        testOwnerId = UUID.randomUUID();
-    }
-    private void setUpMockitoGeneralRules() throws Exception {
-        when(mockPluginDatabaseSystem.createDatabase(testOwnerId, CryptoIndexDatabaseConstants.CRYPTO_INDEX_DATABASE_NAME)).thenReturn(mockDatabase);
-        when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
-        when(mockDatabaseFactory.newTableFactory(testOwnerId, CryptoIndexDatabaseConstants.CRYPTO_INDEX_TABLE_NAME)).thenReturn(mockCryptoIndexTableFactory);
-        when(mockDatabase.getTable(CryptoIndexDatabaseConstants.CRYPTO_INDEX_TABLE_NAME)).thenReturn(mockTable);
-        when(mockTable.getEmptyRecord()).thenReturn(mockTableRecord);
-        when(mockTable.getRecords()).thenReturn(mockRecords);
-    }
+
+    private long time;
+
+    DatabaseTable mockDatabaseTable = Mockito.mock(DatabaseTable.class);
+    DatabaseTableRecord mockDatabaseTableRecord = Mockito.mock(DatabaseTableRecord.class);
+    Database mockDatabase = Mockito.mock(Database.class);
+
+
+    private CryptoIndexWorldPluginRoot cryptoIndexWorldPluginRoot;
+
+    UUID pluginId;
+
     @Before
     public void setUp() throws Exception {
-        setUpIds();
-        when(mockPluginDatabaseSystem.openDatabase(testOwnerId, CryptoIndexDatabaseConstants.CRYPTO_INDEX_DATABASE_NAME)).thenReturn(mockDatabase);
-        cryptoIndexDao = new CryptoIndexDao(mockPluginDatabaseSystem, testOwnerId);
+
+        pluginId = UUID.randomUUID();
+        cryptoIndexWorldPluginRoot = new CryptoIndexWorldPluginRoot();
+        cryptoIndexWorldPluginRoot.setErrorManager(mockErrorManager);
+        cryptoIndexWorldPluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        cryptoIndexWorldPluginRoot.setId(pluginId);
+        setUpMockitoRules();
         cryptoIndexDao.initializeDatabase();
-        setUpMockitoGeneralRules();
+        cryptoIndexWorldPluginRoot.start();
     }
 
-    public void TestGetMarketPrice(){
-
+    public void setUpMockitoRules() throws Exception {
+        when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
+        when(mockDatabaseTable.getEmptyRecord()).thenReturn(mockDatabaseTableRecord);
+        when(mockDatabase.getTable(CryptoIndexDatabaseConstants.CRYPTO_INDEX_TABLE_NAME)).thenReturn(mockDatabaseTable);
+        when(mockPluginDatabaseSystem.openDatabase(pluginId, CryptoIndexDatabaseConstants.CRYPTO_INDEX_DATABASE_NAME)).thenReturn(mockDatabase);
+        when(mockCryptoIndexDatabaseFactory.createDatabase(pluginId, CryptoIndexDatabaseConstants.CRYPTO_INDEX_DATABASE_NAME)).thenReturn(mockDatabase);
+        cryptoIndexDao = new CryptoIndexDao(mockPluginDatabaseSystem, pluginId);
+    }
+    @Test
+    public void TestGetMarketPrice()throws Exception{
+        cryptoCurrency= CryptoCurrency.getByCode("BTC");
+        fiatCurrency= FiatCurrency.getByCode("USD");
+        double price;
+        price=cryptoIndexWorldPluginRoot.getMarketPrice(fiatCurrency,cryptoCurrency,0);
+        Assertions.assertThat(price).isNotNull();
     }
 }

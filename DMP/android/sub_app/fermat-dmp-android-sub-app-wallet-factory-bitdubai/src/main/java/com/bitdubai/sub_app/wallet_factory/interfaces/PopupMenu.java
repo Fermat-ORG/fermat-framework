@@ -2,8 +2,6 @@ package com.bitdubai.sub_app.wallet_factory.interfaces;
 
 import android.view.View;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
-
 /**
  * Popup menu interface for menu in recycler per item.
  *
@@ -12,6 +10,6 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
  */
 public interface PopupMenu {
 
-    void onMenuItemClickListener(View menuView, WalletFactoryProject project, int position);
+    void onMenuItemClickListener(View menuView, Object project, int position);
 
 }

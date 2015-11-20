@@ -2,7 +2,7 @@ package unit.com.bitdubai.desktop.sub_app_manager.SubAppDesktopFragment;
 
 import com.bitdubai.desktop.sub_app_manager.util.CbpSubAppListGenerator;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 
 import org.junit.Before;
 import org.junit.Test;

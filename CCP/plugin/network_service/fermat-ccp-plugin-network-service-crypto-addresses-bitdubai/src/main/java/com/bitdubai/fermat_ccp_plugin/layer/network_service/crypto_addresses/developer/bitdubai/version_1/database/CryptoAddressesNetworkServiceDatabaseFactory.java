@@ -46,21 +46,23 @@ public class CryptoAddressesNetworkServiceDatabaseFactory  {
             /**
              * Create Crypto Address Request table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME                    , DatabaseDataType.STRING,  40, Boolean.TRUE );
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME             , DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_TYPE_REQUESTING_COLUMN_NAME      , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_TYPE_ACCEPTING_COLUMN_NAME       , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_PUBLIC_KEY_REQUESTING_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_PUBLIC_KEY_ACCEPTING_COLUMN_NAME , DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_FROM_REQUEST_COLUMN_NAME   , DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_FROM_RESPONSE_COLUMN_NAME  , DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME               , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME       , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_STATE_COLUMN_NAME                         , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME                            , DatabaseDataType.STRING,  40, Boolean.TRUE );
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME             , DatabaseDataType.STRING, 130, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_TYPE_REQUESTING_COLUMN_NAME      , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_TYPE_RESPONDING_COLUMN_NAME      , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_PUBLIC_KEY_REQUESTING_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_PUBLIC_KEY_RESPONDING_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME               , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME                , DatabaseDataType.STRING, 130, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME                         , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TYPE_COLUMN_NAME                          , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME                        , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_DEALER_COLUMN_NAME                        , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME       , DatabaseDataType.STRING,  10, Boolean.FALSE);
 
-            table.addIndex(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_FIRST_KEY_COLUMN);
+            table.addIndex(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_FIRST_KEY_COLUMN);
 
             try {
 

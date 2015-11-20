@@ -119,14 +119,14 @@ public class CustomersMiddlewareDeveloperDatabaseFactory implements DealsWithPlu
          */
         List<String> walletIdentityColumns = new ArrayList<String>();
 
-        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_RELATIONSHIP_ID_COLUMN_NAME);
-        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
-        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_CUSTOMER_TYPE_COLUMN_NAME);
+        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.CUSTOMERS_RELATIONSHIP_ID_COLUMN_NAME);
+        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CUSTOMER_TYPE_COLUMN_NAME);
         /**
          * Table Wallet Identity addition.
          */
-        DeveloperDatabaseTable walletIdentityTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_TABLE_NAME, walletIdentityColumns);
+        DeveloperDatabaseTable walletIdentityTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomersMiddlewareDatabaseConstants.CUSTOMERS_TABLE_NAME, walletIdentityColumns);
         tables.add(walletIdentityTable);
 
 
@@ -140,43 +140,43 @@ public class CustomersMiddlewareDeveloperDatabaseFactory implements DealsWithPlu
          * Will get the records for the given table
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
-
-
         /**
          * I load the passed table name from the SQLite database.
          */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+            for (DatabaseTableRecord row: records){
+                List<String> developerRow = new ArrayList<String>();
+                /**
+                 * for each row in the table list
+                 */
+                for (DatabaseRecord field : row.getValues()){
+                    /**
+                     * I get each row and save them into a List<String>
+                     */
+                    developerRow.add(field.getValue());
+                }
+                /**
+                 * I create the Developer Database record
+                 */
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            }
+            /**
+             * return the list of DeveloperRecords for the passed table.
+             */
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
+            return returnedRecords;
+        } catch (Exception e){
+            database.closeDatabase();
             return returnedRecords;
         }
-
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
-        for (DatabaseTableRecord row : records) {
-            /**
-             * for each row in the table list
-             */
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue().toString());
-            }
-            /**
-             * I create the Developer Database record
-             */
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-        }
-
-
-        /**
-         * return the list of DeveloperRecords for the passed table.
-         */
+        database.closeDatabase();
         return returnedRecords;
     }
 

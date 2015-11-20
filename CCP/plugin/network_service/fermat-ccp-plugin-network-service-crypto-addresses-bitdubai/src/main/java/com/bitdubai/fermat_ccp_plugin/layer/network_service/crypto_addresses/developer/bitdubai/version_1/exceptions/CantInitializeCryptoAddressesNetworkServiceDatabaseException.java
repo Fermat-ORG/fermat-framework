@@ -2,7 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 
 import com.bitdubai.fermat_api.FermatException;
 /**
- * The Class <code>package com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantInitializeCryptoAddressesNetworkServiceDatabaseException</code>
+ * The Class <code>package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantInitializeCryptoAddressesNetworkServiceDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
  *
@@ -21,6 +21,10 @@ public class CantInitializeCryptoAddressesNetworkServiceDatabaseException extend
 
     public CantInitializeCryptoAddressesNetworkServiceDatabaseException(final String message, final Exception cause) {
         this(message, cause, "", "");
+    }
+
+    public CantInitializeCryptoAddressesNetworkServiceDatabaseException(final Exception cause) {
+        this(null, cause);
     }
 
     public CantInitializeCryptoAddressesNetworkServiceDatabaseException(final String message) {

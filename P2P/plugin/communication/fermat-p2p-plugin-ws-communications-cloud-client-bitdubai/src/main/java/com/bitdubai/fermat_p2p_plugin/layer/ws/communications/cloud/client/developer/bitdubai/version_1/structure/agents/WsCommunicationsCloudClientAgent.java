@@ -58,11 +58,11 @@ public class WsCommunicationsCloudClientAgent extends Thread {
          */
       //  while (!isConnected){
 
-            System.out.println(" WsCommunicationsCloudClientAgent - !wsCommunicationsCloudClientChannel.getConnection().isOpen() = "+!wsCommunicationsCloudClientChannel.getConnection().isOpen());
-            System.out.println(" WsCommunicationsCloudClientAgent - !wsCommunicationsCloudClientChannel.getConnection().isConnecting() = "+!wsCommunicationsCloudClientChannel.getConnection().isConnecting());
-            System.out.println(" WsCommunicationsCloudClientAgent - !wsCommunicationsCloudClientChannel.getConnection().isClosing() = "+!wsCommunicationsCloudClientChannel.getConnection().isClosing());
-            System.out.println(" WsCommunicationsCloudClientAgent -  wsCommunicationsCloudClientChannel.getConnection().getReadyState() = "+wsCommunicationsCloudClientChannel.getConnection().getReadyState());
-            System.out.println(" WsCommunicationsCloudClientAgent -  wsCommunicationsCloudClientChannel.getConnection().isFlushAndClose() = " + wsCommunicationsCloudClientChannel.getConnection().isFlushAndClose());
+           // System.out.println(" WsCommunicationsCloudClientAgent - !wsCommunicationsCloudClientChannel.getConnection().isOpen() = "+!wsCommunicationsCloudClientChannel.getConnection().isOpen());
+           // System.out.println(" WsCommunicationsCloudClientAgent - !wsCommunicationsCloudClientChannel.getConnection().isConnecting() = "+!wsCommunicationsCloudClientChannel.getConnection().isConnecting());
+           // System.out.println(" WsCommunicationsCloudClientAgent - !wsCommunicationsCloudClientChannel.getConnection().isClosing() = "+!wsCommunicationsCloudClientChannel.getConnection().isClosing());
+           // System.out.println(" WsCommunicationsCloudClientAgent -  wsCommunicationsCloudClientChannel.getConnection().getReadyState() = "+wsCommunicationsCloudClientChannel.getConnection().getReadyState());
+           // System.out.println(" WsCommunicationsCloudClientAgent -  wsCommunicationsCloudClientChannel.getConnection().isFlushAndClose() = " + wsCommunicationsCloudClientChannel.getConnection().isFlushAndClose());
             /*
              * If the connection is not open and not connecting and not closing and is closed
              */
@@ -79,17 +79,19 @@ public class WsCommunicationsCloudClientAgent extends Thread {
                     wsCommunicationsCloudClientChannel.connect();
                     isConnected = wsCommunicationsCloudClientChannel.getConnection().isOpen();
 
+                    System.out.println(" WsCommunicationsCloudClientAgent - isConnected = "+isConnected);
+
                     /*
                      * If is not connected sleep for a while
                      */
                     if (!isConnected){
 
-                        System.out.println(" WsCommunicationsCloudClientAgent - sleep for = "+WsCommunicationsCloudClientAgent.SLEEP_TIME);
+                       System.out.println(" WsCommunicationsCloudClientAgent - sleep for = "+WsCommunicationsCloudClientAgent.SLEEP_TIME);
 
                         /**
                          * Sleep for the next try connection
                          */
-                        sleep(WsCommunicationsCloudClientAgent.SLEEP_TIME);
+                       // sleep(WsCommunicationsCloudClientAgent.SLEEP_TIME);
 
                     }
 

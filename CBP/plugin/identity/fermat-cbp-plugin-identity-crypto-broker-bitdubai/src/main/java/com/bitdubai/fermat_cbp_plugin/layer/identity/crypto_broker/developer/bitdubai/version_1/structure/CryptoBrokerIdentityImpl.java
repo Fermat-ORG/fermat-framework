@@ -1,17 +1,18 @@
 package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.IdentityPublished;
 
 /**
  * Created by jorge on 28-09-2015.
+ * Modified by Yordin Alayn 10.09.15
  */
-public class CryptoBrokerIdentityImpl implements DealsWithPluginFileSystem, CryptoBrokerIdentity {
+public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 7681;
     private static final int HASH_PRIME_NUMBER_ADD = 3581;
@@ -19,50 +20,47 @@ public class CryptoBrokerIdentityImpl implements DealsWithPluginFileSystem, Cryp
     private final String alias;
     private final KeyPair keyPair;
     private byte[] profileImage;
-    private final PluginFileSystem pluginFileSystem;
+    private boolean published;
 
-    public CryptoBrokerIdentityImpl(final String alias, final KeyPair keyPair, final byte[] profileImage, final PluginFileSystem pluginFileSystem){
+    public CryptoBrokerIdentityImpl(final String alias, final KeyPair keyPair, final byte[] profileImage, final boolean published){
         this.alias = alias;
         this.keyPair = keyPair;
         this.profileImage = profileImage;
-        this.pluginFileSystem = pluginFileSystem;
+        this.published = published;
     }
 
     @Override
     public String getAlias() {
-        return alias;
+        return this.alias;
     }
 
     @Override
     public String getPublicKey() {
-        return keyPair.getPublicKey();
+        return this.keyPair.getPublicKey();
     }
 
     @Override
     public byte[] getProfileImage() {
-        return profileImage;
+        return this.profileImage;
     }
 
     @Override
     public void setNewProfileImage(byte[] imageBytes) {
-
+        this.profileImage = imageBytes;
     }
+
+    @Override
+    public boolean isPublished(){ return this.published; }
 
     @Override
     public String createMessageSignature(String message) throws CantCreateMessageSignatureException{
         try{
-            return AsymmectricCryptography.createMessageSignature(message, keyPair.getPrivateKey());
+            return AsymmetricCryptography.createMessageSignature(message, this.keyPair.getPrivateKey());
         } catch(Exception ex){
             throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, "Message: "+ message, "The message could be invalid");
         }
     }
 
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-
-    }
-
-    @Override
     public boolean equals(Object o){
         if(!(o instanceof CryptoBrokerIdentity))
             return false;
@@ -77,4 +75,5 @@ public class CryptoBrokerIdentityImpl implements DealsWithPluginFileSystem, Cryp
         c += keyPair.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
+
 }

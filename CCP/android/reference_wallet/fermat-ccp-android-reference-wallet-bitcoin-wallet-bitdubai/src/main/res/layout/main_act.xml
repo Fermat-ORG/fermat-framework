@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/fragment_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <LinearLayout
+        android:id="@+id/fragment_container2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1173aa"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_contact_search"
+            android:paddingTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp" />
+
+        <EditText
+
+            android:id="@+id/search_view"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_margin="6dp"
+            android:layout_toLeftOf="@+id/clear_search_image_button"
+            android:layout_toStartOf="@+id/clear_search_image_button"
+            android:hint="@string/search_hint"
+            android:textColorHint="#fff"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:singleLine="true"
+            />
+
+        <ImageButton
+
+            android:id="@+id/clear_search_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/search_view"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/search_view"
+            android:src="@drawable/ic_action_cancel_grey"
+            android:contentDescription="@string/clear_text_button"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:visibility="visible"
+        >
+
+
+        <include layout="@layout/loading_empty_view"/>
+
+        <com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView
+            android:id="@+id/list_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollingCache="false" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/empty_view"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img_contact_empty"
+            />
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:padding="15dp"
+            app:typeface="ROBOTO_REGULAR"
+            android:text="You don´t have\nany contact"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/color_black_light"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

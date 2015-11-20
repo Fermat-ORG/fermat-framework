@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,6 +55,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     Map<WizardTypes, Wizard> wizards;
 
     Activities backActivity;
+
+    Header header;
 
     public Activity() {
     }
@@ -148,6 +152,16 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         return this.backActivity;
     }
 
+    @Override
+    public FermatHeader getHeader() {
+        return header;
+    }
+
+    @Override
+    public void changeBackActivity(String activityCode) throws InvalidParameterException {
+        this.backActivity = Activities.getValueFromString(activityCode);
+    }
+
     // TODO VER COMO HACER ESTO
     @Override
     public Map<String, Fragment> getFragments() {
@@ -204,6 +218,10 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setActivityType(String activityType) {
         this.activityType = activityType;
+    }
+
+    public void setHeader(Header header) {
+        this.header = header;
     }
 }
 

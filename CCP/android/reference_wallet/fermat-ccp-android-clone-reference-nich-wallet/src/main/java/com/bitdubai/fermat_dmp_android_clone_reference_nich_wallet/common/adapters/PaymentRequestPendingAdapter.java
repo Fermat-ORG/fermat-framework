@@ -5,7 +5,8 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
+
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.R;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.common.holders.PaymentRequestItemViewHolder;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession;
@@ -47,7 +48,7 @@ public class PaymentRequestPendingAdapter extends FermatAdapterNew<PaymentReques
     @Override
     protected void bindHolder(final PaymentRequestItemViewHolder holder, final PaymentRequest data, final int position) {
 
-        holder.getContactIcon().setImageResource(R.drawable.mati_profile);
+        holder.getContactIcon().setImageResource(R.drawable.juan_profile_picture);
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
 

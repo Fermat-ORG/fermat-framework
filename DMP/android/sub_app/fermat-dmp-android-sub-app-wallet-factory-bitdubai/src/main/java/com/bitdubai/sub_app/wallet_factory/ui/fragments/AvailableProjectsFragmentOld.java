@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
@@ -25,9 +24,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.sub_app.wallet_factory.R;
-import com.bitdubai.sub_app.wallet_factory.models.Wallet;
 
 import java.util.ArrayList;
 
@@ -38,7 +37,7 @@ import java.util.ArrayList;
  * @author Matias Furszy
  * @version 1.0
  */
-public class AvailableProjectsFragmentOld extends FermatFragment {
+public class AvailableProjectsFragmentOld extends FermatFragment implements FermatCallback{
 
     /**
      * Views
@@ -55,6 +54,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*
         wallets = new ArrayList<>();
         Wallet wallet = new Wallet();
         wallet.setNavigation(startWalletNavigationStructure());
@@ -66,6 +66,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
         wallets.add(wallet);
         wallets.add(wallet);
         wallets.add(wallet);
+        */
     }
 
     @Nullable
@@ -97,7 +98,8 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
                 //TODO: tenes que conseguir el skin desde el tu module o desde algún lado
                 //o[2] = (Object)
 
-                //TODO: tenes que pasarme el callBack class
+
+                o[3] = this;
                 changeActivity(Activities.CWP_WALLET_FACTORY_EDIT_WALLET.getCode(), o);
             }
         });
@@ -370,5 +372,15 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
 
 
         return runtimeWalletNavigationStructure;
+    }
+
+    @Override
+    public void onTouchView(Object v) {
+
+    }
+
+    @Override
+    public int getCallBackId() {
+        return 0;
     }
 }

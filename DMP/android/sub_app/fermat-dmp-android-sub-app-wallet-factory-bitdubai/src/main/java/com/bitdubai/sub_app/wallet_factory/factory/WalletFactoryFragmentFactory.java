@@ -33,7 +33,7 @@ public class WalletFactoryFragmentFactory extends FermatSubAppFragmentFactory<Wa
                 currentFragment = MainFragment.newInstance();
                 break;
             case CWP_WALLET_FACTORY_AVAILABLE_PROJECTS:
-                currentFragment = AvailableProjectsFragmentOld.newInstance();
+                currentFragment = AvailableProjectsFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");

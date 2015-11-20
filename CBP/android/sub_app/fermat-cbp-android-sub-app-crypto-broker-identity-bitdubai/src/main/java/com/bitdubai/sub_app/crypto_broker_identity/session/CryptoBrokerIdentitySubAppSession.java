@@ -2,9 +2,8 @@ package com.bitdubai.sub_app.crypto_broker_identity.session;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +12,7 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 public class CryptoBrokerIdentitySubAppSession implements SubAppsSession {
+    public static final String IDENTITY_INFO = "CRYPTO_IDENTITY_INFO";
 
     /**
      * SubApps type
@@ -56,6 +56,7 @@ public class CryptoBrokerIdentitySubAppSession implements SubAppsSession {
      */
     public CryptoBrokerIdentitySubAppSession(SubApps subApps) {
         this.subApps = subApps;
+        data = new HashMap<String, Object>();
     }
 
 

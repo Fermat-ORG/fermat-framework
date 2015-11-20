@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,23 +20,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetLogToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
@@ -149,14 +148,14 @@ public class LogToolsFragment extends FermatFragment {
             // Get ListView object from xml
             gridView = (GridView) rootView.findViewById(R.id.gridView);
 
-            List<Plugins> plugins = logTool.getAvailablePluginList();
-            List<Addons> addons = logTool.getAvailableAddonList();
+            List<PluginVersionReference> plugins = logTool.getAvailablePluginList();
+            List<AddonVersionReference> addons = logTool.getAvailableAddonList();
 
             List<String> list = new ArrayList<>();
 
-            for (Plugins plugin : plugins) {
+            for (PluginVersionReference plugin : plugins) {
 
-                list.add(plugin.getKey()); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
+                list.add(plugin.toKey()); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
                 /**
                  * I will get the list of the available classes on the plug in
                  */
@@ -174,14 +173,14 @@ public class LogToolsFragment extends FermatFragment {
                     log.type = Loggers.TYPE_PLUGIN;
                     log.classHierarchyLevels = classes;
                     log.picture = "plugin";
-                    log.pluginKey = plugin.getKey();
+                    log.pluginKey = plugin.toKey();
                     //log.logLevel=classes.
                     lstLoggers.add(log);
                 }
 
             }
 
-            for (Addons addon : addons) {
+            for (AddonVersionReference addon : addons) {
 
                 //list.add(plugin.getKey()); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
                 /**
@@ -196,7 +195,7 @@ public class LogToolsFragment extends FermatFragment {
                     Loggers log = new Loggers();
                     log.type = Loggers.TYPE_ADDON;
                     log.picture = "addon";
-                    log.pluginKey = addon.getCode();
+                    log.pluginKey = addon.toKey();
                     log.classHierarchyLevels = classes;
                     lstLoggers.add(log);
                 }
@@ -274,11 +273,10 @@ public class LogToolsFragment extends FermatFragment {
                         ArrayListLoggers lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_0);
 
                         //set the next fragment and params
-                        Object[] params = new Object[1];
 
-                        params[0] = lst;
+                        developerSubAppSession.setData("list",lst);
 
-                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), params);
+                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(),R.id.logContainer, null);
 
 
                     }

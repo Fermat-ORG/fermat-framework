@@ -2,7 +2,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 
 import java.util.UUID;
 

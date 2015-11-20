@@ -31,7 +31,7 @@ public class ConstructionTest {
     private AndroidPluginBinaryFile testBinaryFile;
 
     private UUID testId;
-    private Context testContext;
+    private String testContext;
     private String testDirectory;
     private String testFileName;
     private FilePrivacy testPrivacyLevel;
@@ -41,7 +41,7 @@ public class ConstructionTest {
     public void setUpValues(){
         testId = UUID.randomUUID();
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
-        testContext = shadowOf(mockActivity).getApplicationContext();
+        testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
         testDirectory = "ROBOLECTRICTEST";
         testFileName = "TESTFILE.dat";
         testPrivacyLevel = FilePrivacy.PUBLIC;
@@ -58,7 +58,6 @@ public class ConstructionTest {
     public void Constructor_ValidValues_ValuesCanBeGet() {
         testBinaryFile = new AndroidPluginBinaryFile(testId, testContext, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(testBinaryFile.getOwnerId()).isEqualTo(testId);
-        assertThat(testBinaryFile.getContext()).isEqualTo(testContext);
         assertThat(testBinaryFile.getDirectoryName()).isEqualTo(testDirectory);
         assertThat(testBinaryFile.getFileName()).isEqualTo(testFileName);
         assertThat(testBinaryFile.getPrivacyLevel()).isEqualTo(testPrivacyLevel);

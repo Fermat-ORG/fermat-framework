@@ -17,8 +17,12 @@ public class PluginNotRecognizedException extends FermatException {
 		this(message, cause, "", "");
 	}
 
+	public PluginNotRecognizedException(final String context, final String possibleReason) {
+		this(DEFAULT_MESSAGE, null, context, possibleReason);
+	}
+
 	public PluginNotRecognizedException(final String message) {
-		this(message, null);
+		this(message, null, null, null);
 	}
 
 	public PluginNotRecognizedException(final Exception exception) {

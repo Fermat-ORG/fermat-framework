@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.DAPException;
  * Created by Manuel Perez on 22/09/2015
  */
 public class AssetIssuingTransactionMonitorAgentMaxIterationsReachedException extends DAPException {
-    public static final String DEFAULT_MESSAGE = "There was an error getting a Digital Asset from local storage.";
+    public static final String DEFAULT_MESSAGE = "The maximum number of interactions has been reached.";
 
     public AssetIssuingTransactionMonitorAgentMaxIterationsReachedException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);

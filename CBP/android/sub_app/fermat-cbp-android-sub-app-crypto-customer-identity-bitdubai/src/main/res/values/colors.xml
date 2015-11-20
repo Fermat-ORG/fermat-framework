@@ -2,6 +2,18 @@
 <resources>
 
     <color name="background_tab_pressed">#6633B5E5</color>
-
+    <color name="identity_list_fragment_background">#FFFFFF</color>
+    <color name="create_identity_fragment_background">#FFFFFF</color>
+    <color name="add_customer_identity_button_normal">#5677fc</color>
+    <color name="create_customer_identity_button">#5677fc</color>
+    <color name="update_customer_identity_button">#497dff</color>
+    <color name="customer_name_text_color">#3b97ff</color>
+    <color name="sub_app_background">#d4ffd3</color>
+    <color name="crypto_customer_identity_list_divider">#FFFFFF</color>
+    <color name="circle_border">#3c4ab4</color>
+    <color name="no_identities_text_color">#999999</color>
+    <color name="spanned_text">#666666</color>
+    <color name="crypto_customer_identity_name_item">#3b97ff</color>
+    <color name="create_button_text">#FFFFFF</color>
 
 </resources>

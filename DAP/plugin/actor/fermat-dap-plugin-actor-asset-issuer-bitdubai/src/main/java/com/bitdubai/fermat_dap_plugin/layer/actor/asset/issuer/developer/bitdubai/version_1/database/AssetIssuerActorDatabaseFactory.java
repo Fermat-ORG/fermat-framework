@@ -53,12 +53,20 @@ public class AssetIssuerActorDatabaseFactory implements DealsWithPluginDatabaseS
              */
             table = databaseFactory.newTableFactory(ownerId, AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME);
 
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_PRIVATE_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            /* Asset Issuer Table primary key.*/
+
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LAST_CONNECTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_EXTENDED_COLUMN_NAME, DatabaseDataType.STRING, 512, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LATITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
 
             table.addIndex(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_FIRST_KEY_COLUMN);
 
@@ -69,57 +77,84 @@ public class AssetIssuerActorDatabaseFactory implements DealsWithPluginDatabaseS
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
+            table = databaseFactory.newTableFactory(ownerId, AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME);
+
+            /* Asset Issuer Table primary key.*/
+
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME, DatabaseDataType.STRING, 512, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+
+            table.addIndex(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_FIRST_KEY_COLUMN);
+
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the registered table.");
+            }
+
             /**
              * Create Asset Issuer relation Redeem Point Associate table.
              */
-            table = databaseFactory.newTableFactory(ownerId, AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_TABLE_NAME);
-
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_ASSETS_COUNT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_REGISTRATION_DATE_ISSUER_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-
-            table.addIndex(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-
-            /**
-             * Create Asset Issuer relation Asset User table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_TABLE_NAME);
-
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_RESOURCES_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_EXPIRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-
-            table.addIndex(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
+//            table = databaseFactory.newTableFactory(ownerId, AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_TABLE_NAME);
+//
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_ASSETS_COUNT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_REGISTRATION_DATE_ISSUER_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//
+//            table.addIndex(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_REDEEM_POINT_FIRST_KEY_COLUMN);
+//
+//            try {
+//                //Create the table
+//                databaseFactory.createTable(ownerId, table);
+//            } catch (CantCreateTableException cantCreateTableException) {
+//                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+//            }
+//
+//            /**
+//             * Create Asset Issuer relation Asset User table.
+//             */
+//            table = databaseFactory.newTableFactory(ownerId, AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_TABLE_NAME);
+//
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_RESOURCES_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_ASSET_EXPIRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//
+//            table.addIndex(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_RELATION_USER_FIRST_KEY_COLUMN);
+//
+//            try {
+//                //Create the table
+//                databaseFactory.createTable(ownerId, table);
+//            } catch (CantCreateTableException cantCreateTableException) {
+//                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+//            }
 
         } catch (InvalidOwnerIdException exception) {
             /**

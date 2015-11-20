@@ -7,27 +7,27 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDeviceLocation;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.java_websocket.WebSocketImpl;
 
@@ -36,8 +36,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
 import java.util.regex.Pattern;
 
 
@@ -46,29 +44,29 @@ import java.util.regex.Pattern;
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
- * Created by loui on 26/04/15.
- * Update by Jorge Gonzales
- * Update by Roberto Requena - (rart3001@gmail.com) on 03/06/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 03/09/15.
  *
  * @version 1.0
  */
-public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWithEvents, DealsWithLogger, DealsWithDeviceLocation, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin, WsCommunicationsCloudClientManager {
+public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implements
+        LogManagerForDevelopers,
+        WsCommunicationsCloudClientManager {
+
 
     /**
-     * Represent the WS_PROTOCOL
+     * Addons References definition...
      */
-    private static final String WS_PROTOCOL = "ws://";
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
 
-    /**
-     * Represent the DEFAULT_PORT
-     */
-    private static final int DEFAULT_PORT = 9090;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
-    /**
-     * Represent the SERVER_IP
-     */
-    //private static final String SERVER_IP = "52.11.156.16"; //AWS
-    private static final String SERVER_IP = "192.168.42.5";
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
 
     /**
      * Represents the value of DISABLE_CLIENT
@@ -81,29 +79,30 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     public static final Boolean ENABLE_CLIENT = Boolean.FALSE;
 
     /**
-     * Represent the status of this service
+     * Represent the WS_PROTOCOL
      */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    public static final String WS_PROTOCOL = "ws://";
 
     /**
-     * Represent the errorManager
+     * Represent the HTTP_PROTOCOL
      */
-    private ErrorManager errorManager;
+    public static final String HTTP_PROTOCOL = "http://";
 
     /**
-     * Represent the eventManager
+     * Represent the SERVER_IP
      */
-    private EventManager eventManager;
-    
-    /**
-     * Represent the logManager
-     */
-    private LogManager logManager;
+    public static final String SERVER_IP = "52.34.94.176"; //AWS
+    //public static final String SERVER_IP = "52.11.156.16";
 
     /**
-     * Represent the locationManager
+     * Represent the DEFAULT_PORT
      */
-    private LocationManager locationManager;
+    public static final int DEFAULT_PORT = 9090;
+
+    /**
+     * Represent the WEB_SERVICE_PORT
+     */
+    public static final int WEB_SERVICE_PORT = 8080;
 
     /**
      * Represent the newLoggingLevel
@@ -114,11 +113,6 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      * Hold the list of event listeners
      */
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
-
-    /**
-     * DealsWithPluginIdentity Interface member variables.
-     */
-    private UUID pluginId;
 
     /**
      * Represent the disableClientFlag
@@ -134,10 +128,32 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      * Constructor
      */
     public WsCommunicationsCloudClientPluginRoot(){
-        super();
-        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
+        super(new PluginVersionReference(new Version()));
+        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
+//        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
     }
 
+    /**
+     * Static method to get the logging level from any class under root.
+     *
+     * @param className
+     * @return
+     */
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return WsCommunicationsCloudClientPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e) {
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
 
     /**
      * This method validate is all required resource are injected into
@@ -222,26 +238,6 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * (non-Javadoc)
      *
-     * @see Service#pause()
-     */
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see Service#resume()
-     */
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
      * @see Service#stop()
      */
     @Override
@@ -264,27 +260,6 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
          */
         this.serviceStatus = ServiceStatus.STOPPED;
 
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see Service#getStatus()
-     */
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see DealsWithLogger#setLogManager(LogManager)
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
     }
 
     /**
@@ -328,69 +303,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     }
 
     /**
-     * Static method to get the logging level from any class under root.
-     * @param className
-     * @return
-     */
-    public static LogLevel getLogLevelByClass(String className){
-        try{
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return WsCommunicationsCloudClientPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see DealsWithPluginFileSystem#setPluginFileSystem(PluginFileSystem)
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-    	//this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see DealsWithEvents#setEventManager(EventManager)
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see DealsWithErrors#setErrorManager(ErrorManager)
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see Plugin#setId(UUID)
-     */
-    @Override
-    public void setId(UUID pluginId) {
-       this.pluginId = pluginId;
-    }
-
-    /**
-     * Get the disable server flag
-     *
+     * Get the DisableClientFlag
      * @return Boolean
      */
     public Boolean getDisableClientFlag() {
@@ -412,17 +325,17 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      * @see WsCommunicationsCloudClientManager#getCommunicationsCloudClientConnection()
      */
     @Override
-    public CommunicationsCloudClientConnection getCommunicationsCloudClientConnection() {
+    public CommunicationsClientConnection getCommunicationsCloudClientConnection() {
         return wsCommunicationsCloudClientConnection;
     }
 
     /**
      * (non-Javadoc)
      *
-     * @see DealsWithDeviceLocation#setLocationManager(LocationManager)
+     * @see WsCommunicationsCloudClientManager#isDisable()
      */
     @Override
-    public void setLocationManager(LocationManager locationManager) {
-        this.locationManager = locationManager;
+    public Boolean isDisable() {
+        return getDisableClientFlag();
     }
 }

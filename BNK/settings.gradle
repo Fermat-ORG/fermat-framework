@@ -1,0 +1,40 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+
+include ':fermat-bnk-api'
+project(':fermat-bnk-api').projectDir = new File('BNK/library/api/fermat-bnk-api')
+
+//Desktop
+include ':fermat-bnk-android-desktop-wallet-manager-bitdubai'
+project(':fermat-bnk-android-desktop-wallet-manager-bitdubai').projectDir = new File('BNK/android/desktop/fermat-bnk-android-desktop-wallet-manager-bitdubai')
+
+//Reference Wallet
+include ':fermat-bnk-android-reference-wallet-bank-money-bitdubai'
+project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai').projectDir = new File('BNK/android/reference_wallet/fermat-bnk-android-reference-wallet-bank-money-bitdubai')
+
+//Bank Money Transaction
+include ':fermat-bnk-plugin-bank-money-transaction-make-offline-bank-transfer-bitdubai'
+project(':fermat-bnk-plugin-bank-money-transaction-make-offline-bank-transfer-bitdubai').projectDir = new File('BNK/plugin/bank_money_transaction/fermat-bnk-plugin-bank-money-transaction-make-offline-bank-transfer-bitdubai')
+include ':fermat-bnk-plugin-bank-money-transaction-receive-offline-bank-transfer-bitdubai'
+project(':fermat-bnk-plugin-bank-money-transaction-receive-offline-bank-transfer-bitdubai').projectDir = new File('BNK/plugin/bank_money_transaction/fermat-bnk-plugin-bank-money-transaction-receive-offline-bank-transfer-bitdubai')
+
+include ':fermat-bnk-plugin-bank-money-transaction-hold-bitdubai'
+project(':fermat-bnk-plugin-bank-money-transaction-hold-bitdubai').projectDir = new File('BNK/plugin/bank_money_transaction/fermat-bnk-plugin-bank-money-transaction-hold-bitdubai')
+
+include ':fermat-bnk-plugin-bank-money-transaction-unhold-bitdubai'
+project(':fermat-bnk-plugin-bank-money-transaction-unhold-bitdubai').projectDir = new File('BNK/plugin/bank_money_transaction/fermat-bnk-plugin-bank-money-transaction-unhold-bitdubai')
+
+include ':fermat-bnk-plugin-bank-money-transaction-deposit-bitdubai'
+project(':fermat-bnk-plugin-bank-money-transaction-deposit-bitdubai').projectDir = new File('BNK/plugin/bank_money_transaction/fermat-bnk-plugin-bank-money-transaction-deposit-bitdubai')
+
+include ':fermat-bnk-plugin-bank-money-transaction-withdraw-bitdubai'
+project(':fermat-bnk-plugin-bank-money-transaction-withdraw-bitdubai').projectDir = new File('BNK/plugin/bank_money_transaction/fermat-bnk-plugin-bank-money-transaction-withdraw-bitdubai')
+
+
+//Wallet
+include ':fermat-bnk-plugin-wallet-bank-money-bitdubai'
+project(':fermat-bnk-plugin-wallet-bank-money-bitdubai').projectDir = new File('BNK/plugin/wallet/fermat-bnk-plugin-wallet-bank-money-bitdubai')

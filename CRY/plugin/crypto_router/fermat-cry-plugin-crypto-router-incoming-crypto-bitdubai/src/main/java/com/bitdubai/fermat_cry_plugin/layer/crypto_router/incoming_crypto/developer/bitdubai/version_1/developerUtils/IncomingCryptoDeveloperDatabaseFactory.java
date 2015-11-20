@@ -13,8 +13,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoDataBaseConstants;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,8 +119,6 @@ public class IncomingCryptoDeveloperDatabaseFactory {
          * Modified by Franklin Marcano, 03/08/2015
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
-
-
         /**
          * I load the passed table name from the SQLite database.
          */
@@ -129,10 +127,10 @@ public class IncomingCryptoDeveloperDatabaseFactory {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
             for (DatabaseTableRecord row: records){
+                List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                List<String> developerRow = new ArrayList<String>();
                 for (DatabaseRecord field : row.getValues()){
                     /**
                      * I get each row and save them into a List<String>
@@ -143,7 +141,6 @@ public class IncomingCryptoDeveloperDatabaseFactory {
                  * I create the Developer Database record
                  */
                 returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-
             }
             /**
              * return the list of DeveloperRecords for the passed table.
@@ -161,5 +158,4 @@ public class IncomingCryptoDeveloperDatabaseFactory {
         database.closeDatabase();
         return returnedRecords;
     }
-
 }

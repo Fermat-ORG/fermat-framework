@@ -1,0 +1,20 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+/*
+include ':fermat-ccm-api'
+project(':fermat-ccm-api').projectDir = new File('CCM/library/api/fermat-ccm-api')
+
+include ':fermat-ccm-plugin-actor-intra-wallet-user-bitdubai'
+project(':fermat-ccm-plugin-actor-intra-wallet-user-bitdubai').projectDir = new File('CCM/plugin/actor/fermat-ccm-plugin-actor-intra-wallet-user-bitdubai')
+
+
+include ':fermat-ccm-plugin-network-service-money-request-bitdubai'
+project(':fermat-ccm-plugin-network-service-money-request-bitdubai').projectDir = new File('CCM/plugin/network_service/fermat-ccm-plugin-network-service-money-request-bitdubai')
+
+include ':fermat-ccm-plugin-network-service-money-transmission-bitdubai'
+project(':fermat-ccm-plugin-network-service-money-transmission-bitdubai').projectDir = new File('CCM/plugin/network_service/fermat-ccm-plugin-network-service-money-transmission-bitdubai')
+*/

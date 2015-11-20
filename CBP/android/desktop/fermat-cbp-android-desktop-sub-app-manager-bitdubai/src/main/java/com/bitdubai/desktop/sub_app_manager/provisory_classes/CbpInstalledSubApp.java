@@ -2,8 +2,9 @@ package com.bitdubai.desktop.sub_app_manager.provisory_classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.08.19..
  */
 
-public class CbpInstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp{
+public class CbpInstalledSubApp implements InstalledSubApp {
 
     private SubApps subApps;
     private List<InstalledSkin> skinsId;

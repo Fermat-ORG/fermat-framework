@@ -8,11 +8,25 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 //import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionBankMoneyException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionSummaryBankMoneyException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoney;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalance;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalanceRecord;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransaction;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionSummary;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.database.BankMoneyWalletDao;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.ImplementBankMoney;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,14 +38,39 @@ import java.util.regex.Pattern;
  * Created by Yordin Alayn on 21.09.15.
  */
 
-public class WalletBankMoneyPluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class WalletBankMoneyPluginRoot implements  DealsWithErrors,
+        DealsWithLogger,
+        LogManagerForDevelopers,
+        Service,
+        Plugin,
+        BankMoney,
+        BankMoneyBalance {
 
+    /**
+     *
+     */
     ErrorManager errorManager;
-
+    /**
+     *
+     */
     UUID pluginId;
 
     LogManager logManager;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+    /**
+     *
+     */
+    private PluginDatabaseSystem pluginDatabaseSystem;
+    /**
+     *
+     */
+    private BankMoneyWalletDao bankMoneyWalletDao;
+
+    /**
+     *
+     * @return
+     */
+    ImplementBankMoney implementBankMoney = new ImplementBankMoney();
 
 
     @Override
@@ -73,6 +112,8 @@ public class WalletBankMoneyPluginRoot implements  DealsWithErrors, DealsWithLog
     @Override
     public void start() throws CantStartPluginException {
         try {
+            this.bankMoneyWalletDao = new BankMoneyWalletDao(pluginDatabaseSystem);
+            bankMoneyWalletDao.initializeDatabase(pluginId);
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -115,4 +156,38 @@ public class WalletBankMoneyPluginRoot implements  DealsWithErrors, DealsWithLog
     }
 
 
+    @Override
+    public BankMoneyBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
+        return null;
+    }
+
+    @Override
+    public BankMoneyBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
+        return null;
+    }
+
+    @Override
+    public List<BankMoneyTransaction> getTransactions(BalanceType balanceType, int max, int offset) throws CantTransactionBankMoneyException {
+        return implementBankMoney.getTransactions(balanceType, max, offset);
+    }
+
+    @Override
+    public BankMoneyTransactionSummary getBrokerTransactionSummary(BalanceType balanceType) throws CantTransactionSummaryBankMoneyException {
+        return null;
+    }
+
+    @Override
+    public double getBalance() throws CantCalculateBalanceException {
+        return implementBankMoney.getBalance();
+    }
+
+    @Override
+    public void debit(BankMoneyBalanceRecord BankMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException {
+            implementBankMoney.debit(BankMoneyBalanceRecord,balanceType);
+    }
+
+    @Override
+    public void credit(BankMoneyBalanceRecord BankMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterCreditException {
+        implementBankMoney.credit(BankMoneyBalanceRecord,balanceType);
+    }
 }

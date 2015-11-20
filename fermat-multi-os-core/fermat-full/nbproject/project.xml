@@ -300,23 +300,23 @@
                 <package>com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fiat_over_crypto_wallet.developer.bitdubai.version_1</package>
                 <package>com.bitdubai.fermat_ccp_plugin.layer.wallet_module.multi_account_wallet.developer.bitdubai</package>
                 <package>com.bitdubai.fermat_ccp_plugin.layer.wallet_module.multi_account_wallet.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_device_user.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_device_user.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_device_user.developer.bitdubai.version_1.Event_handlers</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.inter_wallet.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.inter_wallet.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_device_user.developer.bitsubai</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_device_user.developer.bitsubai.version_1</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_device_user.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_device_user.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_device_user.developer.bitdubai.version_1.Event_handlers</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.event_handlers</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.inter_wallet.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.inter_wallet.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_device_user.developer.bitsubai</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_device_user.developer.bitsubai.version_1</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_user.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_user.developer.bitdubai.version_1</package>
                 <package>com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai</package>
                 <package>com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1</package>
                 <package>com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.exceptions</package>
@@ -375,11 +375,11 @@
                 <package>com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure</package>
                 <package>com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer</package>
                 <package>com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_subsystem.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_subsystem.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_subsystem.developer.bitdubai.version_1.exception</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_subsystem.developer.bitdubai.version_1.interfaces</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_subsystem.developer.bitdubai.version_1.structure</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.exception</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.interfaces</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.structure</package>
                 <package>com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai</package>
                 <package>com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1</package>
                 <package>com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.structure</package>

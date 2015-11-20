@@ -9,11 +9,18 @@ repositories {
 }
 
 dependencies {
+    compile 'org.bouncycastle:bcprov-jdk15on:1.52'
+    compile('com.thoughtworks.xstream:xstream:1.4.7') {
+        exclude group: 'xmlpull', module: 'xmlpull'
+    }
+    compile 'org.kohsuke:github-api:1.69'
+    testCompile 'com.thoughtworks.xstream:xstream:1.4.7'
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
+    compile project(':fermat-wpd-api')
 }
 
 def jacocoHtmlReport = ""

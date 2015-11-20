@@ -3,9 +3,8 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantIdentifyEventSourceException;
 
 /**
@@ -17,19 +16,24 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
  * returning the MonitorAgent the TransactionSender that corresponds to the event source
  * that notifies new transactions
  */
-public class SourceAdministrator implements DealsWithCryptoVault {
+public class SourceAdministrator {
 
-  private CryptoVaultManager cryptoVaultManager;
+  private final BitcoinNetworkManager bitcoinNetworkManager;
+  private final CryptoVaultManager    cryptoVaultManager   ;
 
-  @Override
-  public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-    this.cryptoVaultManager = cryptoVaultManager;
+  public SourceAdministrator(BitcoinNetworkManager bitcoinNetworkManager,
+                             CryptoVaultManager    cryptoVaultManager   ) {
+
+    this.bitcoinNetworkManager = bitcoinNetworkManager;
+    this.cryptoVaultManager    = cryptoVaultManager   ;
   }
 
   public TransactionProtocolManager<CryptoTransaction> getSourceAdministrator(EventSource eventSource) throws CantIdentifyEventSourceException {
         // This method will select the correct sender according to the specified source,
         switch (eventSource) {
           case CRYPTO_VAULT: return cryptoVaultManager.getTransactionManager();
+
+          case CRYPTO_NETWORK_BITCOIN_PLUGIN: return bitcoinNetworkManager.getTransactionManager();
           default:
             throw new CantIdentifyEventSourceException("I could not determine the transaction manager of this source",null,"Source: " +eventSource.name()+"with code: "+eventSource.getCode(),"Source not considered in switch statement");
         }

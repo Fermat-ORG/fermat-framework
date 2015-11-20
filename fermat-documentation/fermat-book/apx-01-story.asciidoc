@@ -1,5 +1,0 @@
-[colophon]
-= Colophon
-
-
-The cover image is from . The cover fonts are ___________. The text font is _______________; the heading font is ______________; and the code font is ___________________.

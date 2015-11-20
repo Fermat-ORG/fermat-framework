@@ -4,40 +4,40 @@ import static org.fest.assertions.api.Assertions.*;
 
 import org.junit.Test;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 
 public class CreateMessageSignatureTest extends AsymmetricCryptographyUnitTest {
 
 	@Test
 	public void CreateMessageSignature_ValidParameters_NotNull() {
-		assertThat(AsymmectricCryptography.createMessageSignature(testEncryptedMessage, testPrivateKey)).isNotNull();
+		assertThat(AsymmetricCryptography.createMessageSignature(testEncryptedMessage, testPrivateKey)).isNotNull();
 	}
 	
 	@Test
 	public void CreateMessageSignature_ConsecutiveSignatures_NotEquals() {
-		String signature1 = AsymmectricCryptography.createMessageSignature(testEncryptedMessage, testPrivateKey);
-		String signature2 = AsymmectricCryptography.createMessageSignature(testEncryptedMessage, testPrivateKey);
+		String signature1 = AsymmetricCryptography.createMessageSignature(testEncryptedMessage, testPrivateKey);
+		String signature2 = AsymmetricCryptography.createMessageSignature(testEncryptedMessage, testPrivateKey);
 		assertThat(signature1).isNotEqualTo(signature2);		
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void CreateMessageSignature_NullMessage_ThrowIllegalArgumentException() {
-		AsymmectricCryptography.createMessageSignature(null, testPrivateKey);
+		AsymmetricCryptography.createMessageSignature(null, testPrivateKey);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void CreateMessageSignature_EmptyMessage_ThrowIllegalArgumentException() {
-		AsymmectricCryptography.createMessageSignature(null, testPrivateKey);
+		AsymmetricCryptography.createMessageSignature(null, testPrivateKey);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void CreateMessageSignature_NullPrivateKey_ThrowIllegalArgumentException() {
-		AsymmectricCryptography.createMessageSignature(testEncryptedMessage, null);
+		AsymmetricCryptography.createMessageSignature(testEncryptedMessage, null);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void CreateMessageSignature_EmptyPrivateKey_ThrowIllegalArgumentException() {
-		AsymmectricCryptography.createMessageSignature(testEncryptedMessage, "");
+		AsymmetricCryptography.createMessageSignature(testEncryptedMessage, "");
 	}
 	
 }

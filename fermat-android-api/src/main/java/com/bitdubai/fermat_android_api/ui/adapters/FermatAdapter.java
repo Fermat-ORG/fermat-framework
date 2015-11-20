@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
@@ -41,26 +42,34 @@ public abstract class FermatAdapter<M, H extends FermatViewHolder> extends Recyc
 
     @Override
     public void onBindViewHolder(H holder, final int position) {
-        // setting up custom listeners
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (eventListeners != null) {
-                    eventListeners.onItemClickListener(getItem(position), position);
+        try
+        {
+            // setting up custom listeners
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (eventListeners != null) {
+                        eventListeners.onItemClickListener(getItem(position), position);
+                    }
                 }
-            }
-        });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (eventListeners != null) {
-                    eventListeners.onLongItemClickListener(getItem(position), position);
-                    return true;
+            });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (eventListeners != null) {
+                        eventListeners.onLongItemClickListener(getItem(position), position);
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
-        bindHolder(holder, getItem(position), position);
+            });
+            bindHolder(holder, getItem(position), position);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -129,7 +138,6 @@ public abstract class FermatAdapter<M, H extends FermatViewHolder> extends Recyc
      * @param position position to render
      */
     protected abstract void bindHolder(H holder, M data, int position);
-
 
 
 }

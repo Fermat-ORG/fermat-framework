@@ -28,8 +28,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 
 
@@ -74,7 +74,7 @@ public class WalletDesktopFragment extends Fragment {
                 new ArrayList<InstalledLanguage>(),
                 "crypto_broker",
                 "crypto broker",
-                "crypto_broker",
+                "crypto_broker_wallet",
                 "wallet_crypto_broker_platform_identifier",
                 new Version(1,0,0));
         lstInstalledWallet.add(installedWallet);
@@ -85,7 +85,7 @@ public class WalletDesktopFragment extends Fragment {
                 new ArrayList<InstalledLanguage>(),
                 "crypto_customer",
                 "crypto customer",
-                "crypto_customer",
+                "crypto_customer_wallet",
                 "wallet_crypto_customer_platform_identifier",
                 new Version(1,0,0));
         lstInstalledWallet.add(installedWallet);
@@ -173,17 +173,17 @@ public class WalletDesktopFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(installedWallet.getWalletName());
+            holder.companyTextView.setText(installedWallet.getName());
             holder.companyTextView.setTypeface(tf, Typeface.BOLD);
 
 
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.wallet_3);
 
             //Hardcodeado hasta que esté el wallet resources
-            switch (installedWallet.getWalletIcon()) {
+            switch (installedWallet.getIcon()) {
 
                 case "crypto_broker":
-                    holder.imageView.setImageResource(R.drawable.wallet_1);
+                    holder.imageView.setImageResource(R.drawable.crypto_broker_wallet_icon);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     linearLayout.setTag("WalletBitcoinActivity|4");
 
@@ -209,7 +209,7 @@ public class WalletDesktopFragment extends Fragment {
 
                     break;
                 case "crypto_customer":
-                    holder.imageView.setImageResource(R.drawable.wallet_2);
+                    holder.imageView.setImageResource(R.drawable.crypto_customer_wallet_icon);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     linearLayout.setTag("WalletBitcoinActivity|4");
 

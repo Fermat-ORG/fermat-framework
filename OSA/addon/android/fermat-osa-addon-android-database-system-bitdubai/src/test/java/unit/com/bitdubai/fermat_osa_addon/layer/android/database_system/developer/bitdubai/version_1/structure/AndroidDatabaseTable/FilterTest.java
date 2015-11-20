@@ -2,7 +2,6 @@ package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.develop
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -97,7 +96,7 @@ public class FilterTest {
 
         testDatabaseTable.setStringFilter("testColumn2", "valor 1", DatabaseFilterType.LIKE);
         testDatabaseTable.setStringFilter("testColumn2", "valor 1", DatabaseFilterType.EQUAL);
-        testDatabaseTable.setStringFilter("testColumn1", "0", DatabaseFilterType.GRATER_THAN);
+        testDatabaseTable.setStringFilter("testColumn1", "0", DatabaseFilterType.GREATER_THAN);
         testDatabaseTable.setStringFilter("testColumn1", "2", DatabaseFilterType.LESS_THAN);
 
     }

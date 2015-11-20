@@ -30,11 +30,16 @@ pmd {
 }
 
 dependencies {
+    compile 'org.kohsuke:github-api:1.69'
+    compile 'com.carrotsearch:java-sizeof:0.0.5'
     compile 'org.bouncycastle:bcprov-jdk15on:1.52'
+    compile('org.bitcoinj:bitcoinj-core:0.13.2') {
+        exclude module: 'scrypt'
+    }
     compile('com.thoughtworks.xstream:xstream:1.4.7') {
         exclude group: 'xmlpull', module: 'xmlpull'
     }
-    compile 'org.kohsuke:github-api:1.69'
+    compile 'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5'
     testCompile 'com.thoughtworks.xstream:xstream:1.4.7'
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'

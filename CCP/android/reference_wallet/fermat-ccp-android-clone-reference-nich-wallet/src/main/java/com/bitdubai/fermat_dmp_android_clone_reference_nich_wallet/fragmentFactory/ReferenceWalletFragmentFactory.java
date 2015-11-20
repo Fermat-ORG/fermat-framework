@@ -3,7 +3,7 @@ package com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragmentFact
 import com.bitdubai.fermat_android_api.engine.FermatWalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragments.wallet_v2.ContactsFragment;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragments.wallet_v2.ReceiveFragment;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragments.wallet_v2.SendFragment;

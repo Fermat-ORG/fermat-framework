@@ -33,7 +33,7 @@ La emisión de un Digital Asset va a tener un enum con los siguientes estados:
 * PendingFinal: cuando el issuer solicita que se arme la transacción bitcoin y se cierre el asset.
 * Final: cuando se generó el hash del DA y el Asset ya no se puede modificar.
 
-== Assset Issuing
+== Asset Issuing
 
 Una vez completadas estas propiedades por parte del Issuer, la Asset Issuer subApp, inicia una Digital Asset Transaction de Asset Issuing en la que lo siguiente ocurre:
 

@@ -81,25 +81,27 @@ public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
         /**
          * Table Crypto Address Request columns.
          */
-        List<String> cryptoAddressRequestColumns = new ArrayList<String>();
+        List<String> cryptoAddressRequestColumns = new ArrayList<>();
 
-        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME                    );
-        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME             );
-        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_TYPE_REQUESTING_COLUMN_NAME      );
-        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_TYPE_ACCEPTING_COLUMN_NAME       );
-        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_PUBLIC_KEY_REQUESTING_COLUMN_NAME);
-        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_PUBLIC_KEY_ACCEPTING_COLUMN_NAME );
-        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_FROM_REQUEST_COLUMN_NAME   );
-        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_FROM_RESPONSE_COLUMN_NAME  );
-        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME               );
-        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME       );
-        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_STATE_COLUMN_NAME                         );
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME                            );
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME             );
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_TYPE_REQUESTING_COLUMN_NAME      );
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_TYPE_RESPONDING_COLUMN_NAME      );
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_PUBLIC_KEY_REQUESTING_COLUMN_NAME);
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_PUBLIC_KEY_RESPONDING_COLUMN_NAME);
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME               );
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME                );
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME                         );
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TYPE_COLUMN_NAME                          );
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME                        );
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_DEALER_COLUMN_NAME                        );
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME       );
 
         /**
          * Table Crypto Address Request addition.
          */
         DeveloperDatabaseTable cryptoAddressRequestTable = developerObjectFactory.getNewDeveloperDatabaseTable(
-            CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TABLE_NAME,
+            CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME,
             cryptoAddressRequestColumns
         );
 
@@ -110,29 +112,38 @@ public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
 
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
 
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
-
-        DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
-
         try {
+            initializeDatabase();
 
-            selectedTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
 
+            DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
+
+            try {
+
+                selectedTable.loadToMemory();
+            } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+                return returnedRecords;
+            }
+
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+
+            List<String> developerRow;
+
+            for (DatabaseTableRecord row : records) {
+
+                developerRow = new ArrayList<>();
+
+                for (DatabaseRecord field : row.getValues())
+                    developerRow.add(field.getValue());
+
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            }
             return returnedRecords;
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ArrayList<>();
         }
-
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-
-        List<String> developerRow = new ArrayList<>();
-
-        for (DatabaseTableRecord row : records) {
-
-            for (DatabaseRecord field : row.getValues())
-                developerRow.add(field.getValue());
-
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-        }
-        return returnedRecords;
     }
 }

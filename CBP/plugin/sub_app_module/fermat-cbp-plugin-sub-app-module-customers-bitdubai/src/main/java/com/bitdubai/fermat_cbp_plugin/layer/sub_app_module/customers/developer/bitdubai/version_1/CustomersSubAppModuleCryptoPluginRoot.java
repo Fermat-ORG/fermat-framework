@@ -5,14 +5,12 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,19 +19,15 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * Created by natalia on 16.09.15.
+ * Created by Angel 16/10/2015
  */
 
-/**
-
- */
-
-public class CustomersSubAppModuleCryptoPluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
-
+public class CustomersSubAppModuleCryptoPluginRoot implements DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
     /**
      * DealsWithErrors interface member variables
      */
+
     ErrorManager errorManager;
 
     /**
@@ -77,7 +71,7 @@ public class CustomersSubAppModuleCryptoPluginRoot implements  DealsWithErrors, 
                 }
             }
         } catch (Exception exception) {
-           // this.errorManager.reportUnexpectedPluginException(Plugins., UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            // this.errorManager.reportUnexpectedPluginException(Plugins., UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
 
@@ -102,7 +96,6 @@ public class CustomersSubAppModuleCryptoPluginRoot implements  DealsWithErrors, 
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
     }
-
 
 
     /**
@@ -149,7 +142,6 @@ public class CustomersSubAppModuleCryptoPluginRoot implements  DealsWithErrors, 
     }
 
 
-
     public static LogLevel getLogLevelByClass(String className) {
         try {
             /**
@@ -166,6 +158,4 @@ public class CustomersSubAppModuleCryptoPluginRoot implements  DealsWithErrors, 
             return DEFAULT_LOG_LEVEL;
         }
     }
-
-
 }

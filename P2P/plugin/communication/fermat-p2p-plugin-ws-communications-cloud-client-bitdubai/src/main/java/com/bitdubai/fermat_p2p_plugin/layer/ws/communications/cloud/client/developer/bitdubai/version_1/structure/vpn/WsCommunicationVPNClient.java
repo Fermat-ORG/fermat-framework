@@ -6,27 +6,29 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 
+import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
+import org.java_websocket.framing.Framedata;
+import org.java_websocket.framing.FramedataImpl1;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClient</code>
@@ -49,9 +51,14 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     private ECCKeyPair vpnClientIdentity;
 
     /**
-     * Represent the participant of the vpn
+     * Represent the remoteParticipant of the vpn
      */
-    private PlatformComponentProfile participant;
+    private PlatformComponentProfile remoteParticipant;
+
+    /**
+     * Represent the remoteParticipantNetworkService of the vpn
+     */
+    private PlatformComponentProfile remoteParticipantNetworkService;
 
     /**
      * Represent the vpnServerIdentity
@@ -61,7 +68,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     /**
      * Represent the pending incoming messages cache
      */
-    private Set<FermatMessage> pendingIncomingMessages;
+    private List<FermatMessage> pendingIncomingMessages;
 
     /**
      * Represent the isActive
@@ -69,15 +76,59 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     private boolean isActive;
 
     /**
+     * Represent is the PongMessagePending
+     */
+    private boolean isPongMessagePending;
+
+    /**
+     * Represent the wsCommunicationVPNClientManagerAgent
+     */
+    private WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent;
+
+    /**
      * Constructor with parameters
      * @param serverURI
      */
-    public WsCommunicationVPNClient(ECCKeyPair vpnClientIdentity, URI serverURI, PlatformComponentProfile participant, String vpnServerIdentity, Map<String, String> headers) {
+    public WsCommunicationVPNClient(WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent, ECCKeyPair vpnClientIdentity, URI serverURI, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService, String vpnServerIdentity, Map<String, String> headers) {
         super(serverURI , new Draft_17(), headers , WsCommunicationVPNClient.DEFAULT_CONNECTION_TIMEOUT);
+        this.wsCommunicationVPNClientManagerAgent = wsCommunicationVPNClientManagerAgent;
         this.vpnClientIdentity = vpnClientIdentity;
-        this.participant       = participant;
+        this.remoteParticipant = remoteParticipant;
+        this.remoteParticipantNetworkService = remoteParticipantNetworkService;
         this.vpnServerIdentity = vpnServerIdentity;
-        this.pendingIncomingMessages = new ConcurrentSkipListSet<>();
+        this.pendingIncomingMessages = new ArrayList<>();
+        this.isPongMessagePending = Boolean.FALSE;
+    }
+
+
+    /**
+     * Send ping message to the remote node, to verify is connection
+     * alive
+     */
+    public void sendPingMessage(){
+
+        System.out.println(" WsCommunicationVPNClient - Sending ping message to remote node ("+getConnection().getRemoteSocketAddress()+")");
+        FramedataImpl1 frame = new FramedataImpl1(Framedata.Opcode.PING);
+        frame.setFin(true);
+        getConnection().sendFrame(frame);
+        this.isPongMessagePending = Boolean.TRUE;
+    }
+
+    /**
+     * Receive pong message from the remote node, to verify is connection
+     * alive
+     *
+     * @param conn
+     * @param f
+     */
+    @Override
+    public void onWebsocketPong(WebSocket conn, Framedata f) {
+
+        if (f.getOpcode() == Framedata.Opcode.PONG){
+            System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node ("+conn.getRemoteSocketAddress()+") connection is alive");
+            this.isPongMessagePending = Boolean.FALSE;
+        }
+
     }
 
     /**
@@ -94,7 +145,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
 
     /**
      * (non-javadoc)
-     * @see WebSocketClient#onClose(int, String, boolean)
+     * @see WebSocketClient#onMessage(String)
      */
     @Override
     public void onMessage(String fermatPacketEncode) {
@@ -114,24 +165,32 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
          */
         validateFermatPacketSignature(fermatPacketReceive);
 
-        /*
-         * Get the platformComponentProfile from the message content and decrypt
-         */
-        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(fermatPacketReceive.getMessageContent(), vpnClientIdentity.getPrivateKey());
+        if (fermatPacketReceive.getFermatPacketType() == FermatPacketType.MESSAGE_TRANSMIT){
 
-        System.out.println("MessageTransmitPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+            /*
+             * Get the platformComponentProfile from the message content and decrypt
+             */
+            String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(fermatPacketReceive.getMessageContent(), vpnClientIdentity.getPrivateKey());
 
-        /*
-         * Get the message object
-         */
-        FermatMessage fermatMessage = new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
+            System.out.println("WsCommunicationVPNClient - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
-        System.out.println("MessageTransmitPacketProcessor - fermatMessage = "+fermatMessage);
+            /*
+             * Get the message object
+             */
+            FermatMessage fermatMessage = new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
 
-        /*
-         * Add to the list
-         */
-        pendingIncomingMessages.add(fermatMessage);
+            System.out.println("WsCommunicationVPNClient - fermatMessage = "+fermatMessage);
+
+            /*
+             * Add to the list
+             */
+            pendingIncomingMessages.add(fermatMessage);
+
+            System.out.println("WsCommunicationVPNClient - pendingIncomingMessages.size() = " + pendingIncomingMessages.size());
+
+        }else {
+            System.out.println("WsCommunicationVPNClient - Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
+        }
 
     }
 
@@ -146,6 +205,13 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
         System.out.println(" WsCommunicationVPNClient - Starting method onClose");
         System.out.println(" WsCommunicationVPNClient -  code   = " + code + " reason = " + reason + " remote = " + remote);
         isActive = Boolean.FALSE;
+
+        try {
+            wsCommunicationVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -168,14 +234,14 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
      */
     private void validateFermatPacketSignature(FermatPacket fermatPacketReceive){
 
-        System.out.println(" WsCommunicationsCloudClientChannel - validateFermatPacketSignature");
+        System.out.println(" WsCommunicationVPNClient - validateFermatPacketSignature");
 
          /*
          * Validate the signature
          */
-        boolean isValid = AsymmectricCryptography.verifyMessageSignature(fermatPacketReceive.getSignature(), fermatPacketReceive.getMessageContent(), vpnServerIdentity);
+        boolean isValid = AsymmetricCryptography.verifyMessageSignature(fermatPacketReceive.getSignature(), fermatPacketReceive.getMessageContent(), vpnServerIdentity);
 
-        System.out.println(" WsCommunicationsCloudClientChannel - isValid = " + isValid);
+        System.out.println(" WsCommunicationVPNClient - isValid = " + isValid);
 
         /*
          * if not valid signature
@@ -193,7 +259,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     @Override
     public void sendMessage(FermatMessage fermatMessage){
 
-        System.out.println("WsCommunicationsCloudClientChannel - sendMessage");
+        System.out.println("WsCommunicationVPNClient - sendMessage");
 
         /*
          * Validate parameter
@@ -290,8 +356,9 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     }
 
     /**
-     * Get the isActive
-     * @return boolean
+     * (non-Javadoc)
+     *
+     * @see CommunicationsVPNConnection#isActive()
      */
     @Override
     public boolean isActive() {
@@ -304,5 +371,31 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
      */
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see CommunicationsVPNConnection#getRemoteParticipant()
+     */
+    public PlatformComponentProfile getRemoteParticipant() {
+        return remoteParticipant;
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see CommunicationsVPNConnection#getRemoteParticipantNetworkService()
+     */
+    public PlatformComponentProfile getRemoteParticipantNetworkService() {
+        return remoteParticipantNetworkService;
+    }
+
+    /**
+     * Is Pong Message Pending
+     * @return boolean
+     */
+    public boolean isPongMessagePending() {
+        return isPongMessagePending;
     }
 }

@@ -4,11 +4,13 @@ import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.sub_app.crypto_customer_identity.fragments.MainFragment;
+import com.bitdubai.sub_app.crypto_customer_identity.fragments.CreateCryptoCustomerIdentityFragment;
+import com.bitdubai.sub_app.crypto_customer_identity.fragments.CryptoCustomerIdentityListFragment;
+import com.bitdubai.sub_app.crypto_customer_identity.fragments.EditCryptoCustomerIdentityFragment;
 import com.bitdubai.sub_app.crypto_customer_identity.preference_settings.CryptoCustomerIdentityPreferenceSettings;
 import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 
-import static com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.CryptoCustomerIdentityFragmentsEnumType.MAIN_FRAGMET;
+import static com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.CryptoCustomerIdentityFragmentsEnumType.*;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
@@ -19,9 +21,14 @@ public class CryptoCustomerIdentityFragmentFactory extends FermatSubAppFragmentF
     @Override
     public FermatFragment getFermatFragment(CryptoCustomerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
 
-        if (fragments == MAIN_FRAGMET) {
-            return MainFragment.newInstance();
-        }
+        if (fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT)
+            return CryptoCustomerIdentityListFragment.newInstance();
+
+        if (fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT)
+            return CreateCryptoCustomerIdentityFragment.newInstance();
+
+        if (fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT)
+            return EditCryptoCustomerIdentityFragment.newInstance();
 
         throw createFragmentNotFoundException(fragments);
     }
@@ -30,7 +37,6 @@ public class CryptoCustomerIdentityFragmentFactory extends FermatSubAppFragmentF
     public CryptoCustomerIdentityFragmentsEnumType getFermatFragmentEnumType(String key) {
         return CryptoCustomerIdentityFragmentsEnumType.getValue(key);
     }
-
 
     private FragmentNotFoundException createFragmentNotFoundException(FermatFragmentsEnumType fragments) {
         String possibleReason, context;

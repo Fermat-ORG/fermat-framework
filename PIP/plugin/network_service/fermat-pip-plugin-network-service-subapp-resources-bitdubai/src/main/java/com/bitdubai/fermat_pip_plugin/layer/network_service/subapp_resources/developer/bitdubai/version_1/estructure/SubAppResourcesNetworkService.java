@@ -26,7 +26,7 @@ import java.util.UUID;
 /**
  * Created by natalia on 28/07/15.
  */
-public class SubAppResourcesNetworkService implements SubAppResources {
+public class SubAppResourcesNetworkService {
 
     String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/";
     private UUID resourcesId;
@@ -49,82 +49,82 @@ public class SubAppResourcesNetworkService implements SubAppResources {
      *
      * @return the Id of resources being represented
      */
-    @Override
-    public UUID getResourcesId() {
-        return this.resourcesId;
-    }
-
-    /**
-     * This method gives us the manifest file of the resources
-     *
-     * @return string that contains the resources manifest (a file describing the resources)
-     * @throws CantGetManifestException
-     */
-
-    @Override
-    public String getManifest() throws CantGetManifestException {
-        return "Method: getManifest - NO TIENE valor ASIGNADO para RETURN";
-    }
-
-    /**
-     * This method let us get an skin file referenced by its name
-     *
-     * @param fileName the name of the Skin file (without the path structure).
-     * @return The content of the file
-     * @throws CantGetSkinFileException
-     */
-
-    @Override
-    public String getSkinFile(String fileName) throws CantGetSkinFileException {
-        return "Method: getSkinFile - NO TIENE valor ASIGNADO para RETURN";
-    }
-
-    /**
-     * This method let us get a language file referenced by a name
-     *
-     * @param fileName the name of the Language file (without the path structure).
-     * @return The content of the file
-     * @throws CantGetLanguageFileException
-     */
-
-    @Override
-    public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
-        return "Method: getLanguageFile - NO TIENE valor ASIGNADO para RETURN";
-    }
-
-    /**
-     * This method let us get an image referenced by a name
-     *
-     * @param imageName the name of the image resource found in the skin file
-     * @return the image represented as a byte array
-     * @throws CantGetResourcesException
-     */
-
-
-    @Override
-    public byte[] getImageResource(String imageName) throws CantGetResourcesException {
-        return new byte[0];
-    }
-
-    @Override
-    public byte[] getVideoResource(String videoName) throws CantGetResourcesException {
-        return new byte[0];
-    }
-
-    @Override
-    public byte[] getSoundResource(String soundName) throws CantGetResourcesException {
-        return new byte[0];
-    }
-
-    @Override
-    public String getFontStyle(String styleName) {
-        return "Method: getFontStyle - NO TIENE valor ASIGNADO para RETURN";
-    }
-
-    @Override
-    public String getLayoutResource(String layoutName) throws CantGetResourcesException {
-        return "Method: getLayoutResource - NO TIENE valor ASIGNADO para RETURN";
-    }
+//    @Override
+//    public UUID getResourcesId() {
+//        return this.resourcesId;
+//    }
+//
+//    /**
+//     * This method gives us the manifest file of the resources
+//     *
+//     * @return string that contains the resources manifest (a file describing the resources)
+//     * @throws CantGetManifestException
+//     */
+//
+//    @Override
+//    public String getManifest() throws CantGetManifestException {
+//        return "Method: getManifest - NO TIENE valor ASIGNADO para RETURN";
+//    }
+//
+//    /**
+//     * This method let us get an skin file referenced by its name
+//     *
+//     * @param fileName the name of the Skin file (without the path structure).
+//     * @return The content of the file
+//     * @throws CantGetSkinFileException
+//     */
+//
+//    @Override
+//    public String getSkinFile(String fileName) throws CantGetSkinFileException {
+//        return "Method: getSkinFile - NO TIENE valor ASIGNADO para RETURN";
+//    }
+//
+//    /**
+//     * This method let us get a language file referenced by a name
+//     *
+//     * @param fileName the name of the Language file (without the path structure).
+//     * @return The content of the file
+//     * @throws CantGetLanguageFileException
+//     */
+//
+//    @Override
+//    public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
+//        return "Method: getLanguageFile - NO TIENE valor ASIGNADO para RETURN";
+//    }
+//
+//    /**
+//     * This method let us get an image referenced by a name
+//     *
+//     * @param imageName the name of the image resource found in the skin file
+//     * @return the image represented as a byte array
+//     * @throws CantGetResourcesException
+//     */
+//
+//
+//    @Override
+//    public byte[] getImageResource(String imageName) throws CantGetResourcesException {
+//        return new byte[0];
+//    }
+//
+//    @Override
+//    public byte[] getVideoResource(String videoName) throws CantGetResourcesException {
+//        return new byte[0];
+//    }
+//
+//    @Override
+//    public byte[] getSoundResource(String soundName) throws CantGetResourcesException {
+//        return new byte[0];
+//    }
+//
+//    @Override
+//    public String getFontStyle(String styleName) {
+//        return "Method: getFontStyle - NO TIENE valor ASIGNADO para RETURN";
+//    }
+//
+//    @Override
+//    public String getLayoutResource(String layoutName) throws CantGetResourcesException {
+//        return "Method: getLayoutResource - NO TIENE valor ASIGNADO para RETURN";
+//    }
 
 
 

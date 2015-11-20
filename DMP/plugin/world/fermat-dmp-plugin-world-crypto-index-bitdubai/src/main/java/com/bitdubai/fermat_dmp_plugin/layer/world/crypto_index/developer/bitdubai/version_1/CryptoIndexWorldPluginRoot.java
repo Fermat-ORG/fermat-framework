@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.CryptoIndexManager;
 import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.exceptions.CryptoCurrencyNotSupportedException;
@@ -16,16 +17,18 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDao;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantGetHistoricalExchangeRateException;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantGetMarketPriceException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantInitializeCryptoIndexDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantSaveLastRateExchangeException;
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndexInterface;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.HistoricalExchangeRateNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.MarketPriceInterface;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.MarketPrice;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -126,12 +129,14 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
             String c = cryptoCurrency.getCode();
             String f = fiatCurrency.getCode();
             cryptoIndexDao.saveLastRateExchange(c, f, price);
-        } catch (CantSaveLastRateExchangeException e) {
+        } catch (CantSaveLastRateExchangeException cantSaveLastRateExchangeException) {
             // TODO manage exceptions
-            // TODO add exception CantGetMarketPriceException
-            // TODO use errorManager to report unexpected exceptions
-            // TODO use generic exceptions for other unexpected exceptions
-            e.printStackTrace();
+            // ok TODO add exception CantGetMarketPriceException
+            // ok TODO use errorManager to report unexpected exceptions
+            // ok TODO use generic exceptions for other unexpected exceptions
+          new CantGetMarketPriceException(CantGetMarketPriceException.DEFAULT_MESSAGE,cantSaveLastRateExchangeException,"CryptoIndex WorldPluginRoot GetMarketPrice","Cant Save Last Rate Exchange Exception");
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_INDEX, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
         }
         return price;
     }
@@ -140,8 +145,7 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
      * DealWithErrors Interface implementation.
      */
     @Override
-    public void setErrorManager(ErrorManager errorManager) {
-    }
+    public void setErrorManager(ErrorManager errorManager) {this.errorManager = errorManager;}
 
     /**
      * DealsWithPluginIdentity methods implementation.
@@ -162,7 +166,7 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
     }
 
     /**
-     * mplement the interface MarketPriceInterface
+     * implement the interface MarketPriceInterface
      *
      * @param cryptoCurrency
      * @param fiatCurrency
@@ -171,22 +175,44 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
      */
     @Override
     public double getHistoricalExchangeRate(CryptoCurrency cryptoCurrency, FiatCurrency fiatCurrency, long time) {
+        double marketExchangeRate = 0;
+        try {
+            marketExchangeRate=marketPrice.getHistoricalExchangeRate(cryptoCurrency,fiatCurrency,time);
+        } catch (CantGetHistoricalExchangeRateException cantGetHistoricalExchangeRateException) {
+            new CantGetHistoricalExchangeRateException(CantGetHistoricalExchangeRateException.DEFAULT_MESSAGE,cantGetHistoricalExchangeRateException,"CryptoIndex WorldPluginRoot GetMarketPrice","Cant Get Historical Exchange Rate ");
+        } catch (HistoricalExchangeRateNotFoundException e) {
+            new HistoricalExchangeRateNotFoundException(HistoricalExchangeRateNotFoundException.DEFAULT_MESSAGE,e,"CryptoIndex WorldPluginRoot GetMarketPrice","Historical Exchange Rate Not Found Exception");
+        }catch (Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_INDEX, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
+        }
+
+        return marketExchangeRate;
+    }
+
+    //@Override
+    public double getHistoricalExchangeRateFromDatabase(CryptoCurrency cryptoCurrency, FiatCurrency fiatCurrency, long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException, CantGetHistoricalExchangeRateException, HistoricalExchangeRateNotFoundException {
         /**
          * get market price from database, filtering by time
          */
-        double marketExchangeRate;
-        List<CryptoIndexInterface> list;
-        String crypto = cryptoCurrency.getCode();
-        String fiat = fiatCurrency.getCode();
-        cryptoIndexDao = new CryptoIndexDao(pluginDatabaseSystem, pluginId);
-        list = cryptoIndexDao.getHistoricalExchangeRateList(crypto, fiat, time);
-        marketExchangeRate = Double.valueOf(list.get(0).toString());
-        return marketExchangeRate;
+        double marketExchangeRate = 0;
+        try {
+            marketExchangeRate =marketPrice.getHistoricalExchangeRateFromDatabase(cryptoCurrency, fiatCurrency, time);
+            return marketExchangeRate;
+        } catch (CantGetHistoricalExchangeRateException cantGetHistoricalExchangeRateException) {
+            new CantGetHistoricalExchangeRateException(CantGetHistoricalExchangeRateException.DEFAULT_MESSAGE,cantGetHistoricalExchangeRateException,"CryptoIndex WorldPluginRoot GetMarketPrice","Cant Get Historical Exchange Rate ");
+        }catch (HistoricalExchangeRateNotFoundException historicalExchangeRateNotFoundException){
+            new HistoricalExchangeRateNotFoundException(HistoricalExchangeRateNotFoundException.DEFAULT_MESSAGE,null,"CryptoIndex WorldPluginRoot GetMarketPrice","Historical Exchange Rate Not Found Exception");
+        }
+        catch (Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_INDEX, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
+        }
         // TODO manage exceptions
-        // TODO add exception CantGetHistoricalExchangeRateException
+        // ok TODO add exception CantGetHistoricalExchangeRateException
         // TODO maybe there's no record for the currencies pair: HistoricalExchangeRateNotFoundException
-        // TODO use errorManager to report unexpected exceptions
-        // TODO use generic exceptions for other unexpected exceptions
+        // ok TODO use errorManager to report unexpected exceptions
+        // ok TODO use generic exceptions for other unexpected exceptions
+
+        return marketExchangeRate;
     }
 
 

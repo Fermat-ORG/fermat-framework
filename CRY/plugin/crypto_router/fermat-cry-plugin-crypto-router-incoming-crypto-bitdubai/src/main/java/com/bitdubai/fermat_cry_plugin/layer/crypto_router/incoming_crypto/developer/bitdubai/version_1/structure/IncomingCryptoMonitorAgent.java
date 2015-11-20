@@ -15,18 +15,16 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantIdentifyEventSourceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantReadEvent;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SourceAdministrator;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,19 +45,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 
 
-public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsWithErrors, DealsWithRegistry, TransactionAgent {
+public class IncomingCryptoMonitorAgent implements DealsWithRegistry, TransactionAgent {
 
+    private final BitcoinNetworkManager bitcoinNetworkManager;
+    private final CryptoVaultManager    cryptoVaultManager   ;
+    private final ErrorManager          errorManager         ;
 
-    /**
-     * DealsWithCryptoVault Interface member variables.
-     */
-    private CryptoVaultManager cryptoVaultManager;
+    public IncomingCryptoMonitorAgent(final BitcoinNetworkManager bitcoinNetworkManager,
+                                      final CryptoVaultManager    cryptoVaultManager   ,
+                                      final ErrorManager          errorManager         ) {
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    ErrorManager errorManager;
-
+        this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.cryptoVaultManager    = cryptoVaultManager   ;
+        this.errorManager          = errorManager         ;
+    }
 
     /**
      * DealsWithRegistry Interface member variables.
@@ -72,24 +71,6 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
      */
     private Thread agentThread;
     private MonitorAgent monitorAgent;
-
-
-
-    /**
-     *DealsWithCryptoVault Interface implementation.
-     */
-    @Override
-    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-        this.cryptoVaultManager = cryptoVaultManager;
-    }
-
-    /**
-     *DealsWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
 
     /**
      *DealsWithRegistry Interface implementation.
@@ -108,11 +89,9 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
 
 
 
-        this.monitorAgent = new MonitorAgent ();
+        this.monitorAgent = new MonitorAgent (bitcoinNetworkManager, cryptoVaultManager, errorManager);
         try {
-            this.monitorAgent.setErrorManager(this.errorManager);
             this.monitorAgent.setRegistry(this.registry);
-            this.monitorAgent.setCryptoVaultManager(this.cryptoVaultManager);
             this.monitorAgent.initialize();
 
             this.agentThread = new Thread(this.monitorAgent);
@@ -135,7 +114,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
         return this.monitorAgent.isRunning();
     }
 
-    private static class MonitorAgent implements DealsWithCryptoVault, DealsWithErrors, DealsWithRegistry, Runnable  {
+    private static class MonitorAgent implements DealsWithRegistry, Runnable  {
 
         private AtomicBoolean running = new AtomicBoolean(false);
         /**
@@ -148,14 +127,6 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
         public boolean isRunning(){
             return running.get();
         }
-
-        private CryptoVaultManager cryptoVaultManager;
-
-        /**
-         * DealsWithErrors Interface member variables.
-         */
-        private ErrorManager errorManager;
-
 
         /**
          * DealsWithRegistry Interface member variables.
@@ -172,20 +143,17 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
 
         private static final int SLEEP_TIME = 5000;
 
-        /**
-         *DealsWithCryptoVault Interface implementation.
-         */
-        @Override
-        public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-            this.cryptoVaultManager = cryptoVaultManager;
-        }
+        private final BitcoinNetworkManager bitcoinNetworkManager;
+        private final CryptoVaultManager    cryptoVaultManager   ;
+        private final ErrorManager          errorManager         ;
 
-        /**
-         *DealsWithErrors Interface implementation.
-         */
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
+        public MonitorAgent(final BitcoinNetworkManager bitcoinNetworkManager,
+                                          final CryptoVaultManager    cryptoVaultManager   ,
+                                          final ErrorManager          errorManager         ) {
+
+            this.bitcoinNetworkManager = bitcoinNetworkManager;
+            this.cryptoVaultManager    = cryptoVaultManager   ;
+            this.errorManager          = errorManager         ;
         }
 
         /**
@@ -200,8 +168,10 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
          * MonitorAgent methods.
          */
         private void initialize () {
-            this.sourceAdministrator = new SourceAdministrator();
-            this.sourceAdministrator.setCryptoVaultManager(this.cryptoVaultManager);
+            this.sourceAdministrator = new SourceAdministrator(
+                    this.bitcoinNetworkManager,
+                    this.cryptoVaultManager
+            );
         }
 
         /**
@@ -330,7 +300,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
             // After finishing all the steps we mark the event as seen.
             try {
                 this.registry.disableEvent(eventWrapper.eventId);
-                System.out.println("TTF - INCOMING CRYPTO MONITR: EVENT DISABLED");
+                System.out.println("TTF - INCOMING CRYPTO MONITOR: EVENT DISABLED");
 
             } catch (Exception e) { // There are two exceptions and we react in the same way to both
                 // We will inform the exception and try again in the next round

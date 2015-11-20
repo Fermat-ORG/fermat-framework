@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Preference_Category">Preference_Category
+        <item name="android:color">@color/color_black</item>
+        <item name="android:background">@color/color_gray_light</item>
+    </style>
+
+
+
+
+</resources>

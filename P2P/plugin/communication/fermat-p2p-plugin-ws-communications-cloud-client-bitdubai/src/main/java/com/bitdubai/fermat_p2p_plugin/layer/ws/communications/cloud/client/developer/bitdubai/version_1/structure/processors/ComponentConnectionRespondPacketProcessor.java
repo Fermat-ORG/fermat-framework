@@ -6,18 +6,20 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.StringTokenizer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondPacketProcessor</code> implement
@@ -39,15 +41,15 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
 
 
         System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
+        System.out.println("ComponentConnectionRespondPacketProcessor - Starting processingPackage");
 
         /*
-         * Get the filters from the message content and decrypt
+         * Get the message content and decrypt
          */
-        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getServerIdentity());
+        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        System.out.println("ComponentConnectionRespondPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -59,29 +61,46 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
         try {
 
             //Get all values
-            URI vpnServerUri = new URI(respond.get(AttNamesConstants.JSON_ATT_NAME_VPN_URI).getAsString());
-            String vpnServerIdentity = respond.get(AttNamesConstants.JSON_ATT_NAME_VPN_SERVER_IDENTITY).getAsString();
-            String remotePlatformComponentProfileIdentity = respond.get(AttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_IDENTITY_VPN).getAsString();
-            NetworkServiceType networkServiceType = gson.fromJson(respond.get(AttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE), NetworkServiceType.class) ;
+            URI vpnServerUri = new URI(respond.get(JsonAttNamesConstants.VPN_URI).getAsString());
+            String vpnServerIdentity = respond.get(JsonAttNamesConstants.VPN_SERVER_IDENTITY).getAsString();
+            String participantIdentity = respond.get(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
+            PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
+            PlatformComponentProfile remoteNsPlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfileCommunication.class);
+
+            /*
+             * TEMPORAL:
+             * Reconstruct the uri, for the configuration of the AWS. The internal ip is different to the public ip,
+             * when return the vpnServerUri the cloud server only know the internal ip and send this in the respond.
+             * Need to fix this situation in the future
+             */
+            StringTokenizer stringTokenizer = new StringTokenizer(vpnServerUri.toString(), ":");
+            stringTokenizer.nextElement();
+            stringTokenizer.nextElement();
+            String port = (String) stringTokenizer.nextElement();
+            vpnServerUri = new URI("ws://" + WsCommunicationsCloudClientPluginRoot.SERVER_IP  + ":" + port);
+
+            System.out.println("ComponentConnectionRespondPacketProcessor - reconstruct vpnServerUri = "+vpnServerUri);
 
             /*
              * Get the  wsCommunicationVPNClientManagerAgent
              */
             WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent = getWsCommunicationsCloudClientChannel().getWsCommunicationsCloudClientConnection().getWsCommunicationVPNClientManagerAgent();
 
-            /**
+            /*
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNServer(vpnServerUri, networkServiceType, vpnServerIdentity, remotePlatformComponentProfileIdentity);
+            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile, remoteNsPlatformComponentProfile, getWsCommunicationsCloudClientChannel().getEventManager());
 
             /*
              * Is not running
              */
-            if (!wsCommunicationVPNClientManagerAgent.isRunning()){
+            if (!wsCommunicationVPNClientManagerAgent.isRunning() &&
+                    wsCommunicationVPNClientManagerAgent.getState() == Thread.State.NEW){
+
                 wsCommunicationVPNClientManagerAgent.start();
             }
 
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
            throw new RuntimeException(e);
         }
 

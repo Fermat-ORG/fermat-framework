@@ -3,185 +3,222 @@ package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.GetNewCryptoAddressException;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetVaultCryptoVaultDao;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InconsistentDatabaseResultException;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidChainNumberException;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.VaultKeyHierarchyException;
-import com.google.common.collect.ImmutableList;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 
-import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicHierarchy;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
-import org.bitcoinj.crypto.MnemonicException;
-import org.bitcoinj.wallet.DeterministicSeed;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by rodrigo on 9/20/15.
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.VaultKeyHierarchy</code>
+ * Defines the internal Hierarchy object used on the Crypto Vault. The hierarchy is created from a root key each time the platform
+ * is initiated. The Hierarchy is in charge of generating new bitcoin addresses when request from the public Keys derived for each account.
+ * <p/>
+ *
+ * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 06/10/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
-class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
-    DeterministicSeed seed;
-    DeterministicKey rootKey;
-    DeterministicHierarchy masterHierarchy;
+class VaultKeyHierarchy extends DeterministicHierarchy {
 
+    /**
+     * Holds the list of Accounts and master keys of the hierarchy
+     */
+    private Map<Integer, DeterministicKey> accountsMasterKeys;
+
+    /**
+     * Holds the DAO object to access the database
+     */
+    AssetsOverBitcoinCryptoVaultDao dao;
+
+    /**
+     * Platform variables
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
 
     /**
-     * DealsWithPluginDatabaseSystem interface variables and implementation
+     * Constructor
+     * @param rootKey (m) key
      */
-    PluginDatabaseSystem pluginDatabaseSystem;
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * Constructor. Creates the vault key Hierarchy following these steps:
-     * Receives the seed that was created or stored for this vault.
-     * Uses the seed to generate a Master Key.
-     * Create the Hierarchy with the master Key
-     * Generates the Chain number 0 which is the ones used by the vault (m/AccountNumber/ChainNumber)
-     * New RedeemPoints will be m/0/0, m/0/1,..., m/0/n
-     * @param seed the seed used to create the master key and the hierarchy.
-     */
-    public VaultKeyHierarchy(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) throws VaultKeyHierarchyException {
-        this.seed = seed;
+    public VaultKeyHierarchy(DeterministicKey rootKey, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+        super(rootKey);
+        accountsMasterKeys = new HashMap<>();
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
-
-        try {
-            /**
-             * I validate the seed is correct.
-             */
-            seed.check();
-            /**
-             * Create the master node, which is m
-             */
-            createMasterNode();
-        } catch (MnemonicException e) {
-            throw new VaultKeyHierarchyException(VaultKeyHierarchyException.DEFAULT_MESSAGE, e, "The mnemonic code used to generate the hierarchy, is not valid.", "re generate the seed if vault balance is zero.");
-        }
     }
 
     /**
-     * this will create the master hierarchy using the saved seed.
+     * Generates a master Deterministic Key for the given account on the account path
+     * These are the m/n paths...for example m/0 , m/1, ... m m/n
+     * @param account
      */
-    private void createMasterNode(){
-        rootKey = HDKeyDerivation.createMasterPrivateKey(seed.getSeedBytes());
-        masterHierarchy = new DeterministicHierarchy(rootKey);
-    }
-
-    public void addNewRedeemPoint(){
-
+    public void addVaultAccount(HierarchyAccount account){
+        DeterministicKey accountMasterKey = this.deriveChild(account.getAccountPath(), false, true, ChildNumber.ZERO);
+        accountsMasterKeys.put(account.getId(), accountMasterKey);
     }
 
     /**
-     * Generates a new CryptoAddress from the passed chain number by deriving a new key from the hierarchy.
-     * @param chainNumber
-     * @return
-     * @throws InvalidChainNumberException
+     * Returns the master private key for the specified account
+     * @param hierarchyAccount
+     * @return the fist key of the path m/HierarchyAccount/0. Example: m/0/0
      */
-    public CryptoAddress getNewCryptoAddressFromChain(BlockchainNetworkType blockchainNetworkType,int chainNumber) throws GetNewCryptoAddressException {
+    private DeterministicKey getAddressKeyFromAccount(HierarchyAccount hierarchyAccount){
         /**
-         * I validate that I have this Chain number registered.
+         * gets the masterKey for this account
          */
-        int accountNumber = BitcoinNetworkSelector.getNetworkAccountNumber(blockchainNetworkType);
+        DeterministicKey masterKey = accountsMasterKeys.get(hierarchyAccount.getId());
+
+        /**
+         * Serialize the pubkey of the master key
+         */
+        byte[] privateKeyBytes = masterKey.getPrivKeyBytes();
+        byte[] chainCode = masterKey.getChainCode();
+
+        return HDKeyDerivation.createMasterPrivKeyFromBytes(privateKeyBytes, chainCode);
+    }
+
+    /**
+     * Generates a new hierarchy on the path m/account/0 with keys
+     * @param hierarchyAccount
+     * @return a new hierarchy used to generate bitcoin addresses
+     */
+    public DeterministicHierarchy getKeyHierarchyFromAccount(HierarchyAccount hierarchyAccount){
+        DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(getAddressKeyFromAccount(hierarchyAccount));
+        return deterministicHierarchy;
+    }
+
+    /**
+     * Generates a Bitcoin Address from the specified networkType and Account.
+     * It wil use the next available publicKey from the hierarchy for that account.
+     * @param blockchainNetworkType
+     * @return the crypto address
+     */
+    public CryptoAddress getBitcoinAddress(BlockchainNetworkType blockchainNetworkType, HierarchyAccount hierarchyAccount) throws GetNewCryptoAddressException {
+        /**
+         * I get the next available key for this account
+         */
+        ECKey ecKey = null;
         try {
-            if (!isValidChainNumber(accountNumber, chainNumber))
-                throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, null, "Chain Number: " + chainNumber, "invalid account number.");
+            ecKey = getNextAvailableKey(hierarchyAccount);
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new GetNewCryptoAddressException (GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "error trying to get a result from database." , null);
+            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "There was an error getting the actual unused Key depth to derive a new key.", "database problem.");
         }
+        /**
+         * I will create the CryptoAddress with the key I just got
+         */
+        String address = ecKey.toAddress(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
+        CryptoAddress cryptoAddress = new CryptoAddress(address, CryptoCurrency.BITCOIN);
 
         /**
-         * I create the path that I will used to retrieve the key.
-         * Depending on the crypto network, I will get the key from different branches.
-         * m/0 Production
-         * m/1 Test
-         * m/2 RegTest
+         * I need to make the network that I used to generate the address active, if it is different than the default network.
+         * BlockchainNetworkType has MainNet, RegTest and TestNet. The default value is the one used for the platform.
+         * If the address generated is for a network different than default, I need to update the database so we start monitoring this network
          */
-        List<ChildNumber> path = null;
-        try {
-            path = ImmutableList.of(new ChildNumber(accountNumber, true), new ChildNumber(chainNumber, true), new ChildNumber(getAvailablePositionFromChain(accountNumber, chainNumber), true));
-        } catch (InconsistentDatabaseResultException | CantExecuteDatabaseOperationException e) {
-            throw new GetNewCryptoAddressException (GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "couldn't form the path of the hierarchy chain. There was a problem in the database.", null);
+        if (BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType) != BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT)){
+            setActiveNetwork(blockchainNetworkType);
         }
-        DeterministicKey keyAtPosition = masterHierarchy.deriveChild(path, false, true, ChildNumber.ZERO);
-
-        /**
-         * Depending on the BlockchainNetworkType specified, I form the correct Address
-         */
-        NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
-        CryptoAddress cryptoAddress = new CryptoAddress(keyAtPosition.toAddress(networkParameters).toString(), CryptoCurrency.BITCOIN);
-
-        /**
-         * I update the next available position in the path
-         */
-        try {
-            setNextAvailablePositionForChain(accountNumber, chainNumber);
-        } catch (InconsistentDatabaseResultException e) {
-            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "The specified Account and Chain numbers doesn't exists.", "data inconsistency.");
-        } catch (CantExecuteDatabaseOperationException e) {
-            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "this was a database problem.", "DB plugin issue.");
-        }
-
 
         return cryptoAddress;
     }
 
-
     /**
-     * Validates if the account and chain combination is valid
-     * @param accountNumber
-     * @param chainNumber
+     * gets the next available key from the specified account
+     * @param account
      * @return
-     * @throws CantExecuteDatabaseOperationException
      */
-    private boolean isValidChainNumber(int accountNumber, int chainNumber) throws CantExecuteDatabaseOperationException {
-        return getAssetVaultCryptoVaultDao().isValidChainNumber(accountNumber, chainNumber);
+    public ECKey getNextAvailableKey(HierarchyAccount account) throws CantExecuteDatabaseOperationException {
+        /**
+         * I get from database the next available key depth
+         */
+        int keyDepth = 0;
+        keyDepth = getNextAvailableKeyDepth(account);
+
+        /**
+         * I will derive a new Key from this account
+         */
+        DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
+        DeterministicKey ecKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(keyDepth, false));
+
+        return ecKey;
     }
 
     /**
-     * Will get the position available to use to get a new key
-     * @param accountNumber
-     * @param chainNumber
-     * @return
-     * @throws InconsistentDatabaseResultException
-     * @throws CantExecuteDatabaseOperationException
+     * Updates the database to active a new network
+     * @param blockchainNetworkType
      */
-     private int getAvailablePositionFromChain (int accountNumber, int chainNumber) throws InconsistentDatabaseResultException, CantExecuteDatabaseOperationException {
-        return getAssetVaultCryptoVaultDao().getAvailableKeyPosition(accountNumber, chainNumber);
+    private void setActiveNetwork(BlockchainNetworkType blockchainNetworkType) {
+        try {
+            getDao().setActiveNetworkType(blockchainNetworkType);
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * Will increase by 1 the next available position to get a new key
-     * @param accountNumber
-     * @param chainNumber
-     * @throws InconsistentDatabaseResultException
-     * @throws CantExecuteDatabaseOperationException
+     * Get the net keyDepth that is available to generate a new key.
+     * It sets this value in the database.
+     * @param hierarchyAccount
+     * @return
      */
-    private void setNextAvailablePositionForChain(int accountNumber, int chainNumber) throws InconsistentDatabaseResultException, CantExecuteDatabaseOperationException {
-            getAssetVaultCryptoVaultDao().setNewAvailableKeyPosition(accountNumber, chainNumber);
+    private int getNextAvailableKeyDepth(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
+        int returnValue = 0;
+        int currentUsedKey = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
+        /**
+         * I set the new value of the key depth
+         */
+        returnValue = currentUsedKey +1;
+
+        /**
+         * and Update this value in the database
+         */
+        getDao().setNewCurrentUsedKeyValue(hierarchyAccount.getId(), returnValue);
+
+        return returnValue;
     }
 
     /**
-     * gets the DAO object to access the database methods.
+     * gets the dao instance to access database operations
      * @return
      */
-    private AssetVaultCryptoVaultDao getAssetVaultCryptoVaultDao() {
-        AssetVaultCryptoVaultDao assetVaultCryptoVaultDao = new AssetVaultCryptoVaultDao(this.pluginId, this.pluginDatabaseSystem);
-        return assetVaultCryptoVaultDao;
+    private AssetsOverBitcoinCryptoVaultDao getDao(){
+        if (dao == null){
+            try {
+                dao = new AssetsOverBitcoinCryptoVaultDao(pluginDatabaseSystem, pluginId);
+            } catch (CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return dao;
+    }
+
+    public List<ECKey> getDerivedKeys(HierarchyAccount account){
+        DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
+        List<ECKey> childKeys = new ArrayList<>();
+
+        //todo I need to get the value of generated keys from the database
+        for (int i = 0; i < 101; i++) {
+            // I derive the key at position i
+            DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
+            // I add this key to the ECKey list
+            childKeys.add(ECKey.fromPrivate(derivedKey.getPrivKey()));
+        }
+
+        return childKeys;
     }
 }
-
-
