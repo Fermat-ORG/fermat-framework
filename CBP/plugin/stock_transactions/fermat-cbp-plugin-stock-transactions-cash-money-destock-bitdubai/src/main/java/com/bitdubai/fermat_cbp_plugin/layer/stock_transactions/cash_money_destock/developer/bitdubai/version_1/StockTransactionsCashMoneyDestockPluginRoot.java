@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.world.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -26,8 +26,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
-import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.bank_money_restock.interfaces.BankMoneyRestockManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.database.StockTransactionsCashMoneyDestockDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.database.StockTransactionsCashMoneyDestockDatabaseFactory;
@@ -51,7 +51,7 @@ import java.util.UUID;
  */
 public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin  implements
         //TODO: Implementar DealsWiths de los modulos BNK y la Wallet CBP
-        BankMoneyRestockManager,
+        CashMoneyDestockManager,
         DatabaseManagerForDevelopers {
 
     public StockTransactionsCashMoneyDestockPluginRoot() {
@@ -140,7 +140,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
     }
 
     @Override
-    public void createTransactionRestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, float amount, String memo) throws CantCreateBankMoneyRestockException {
+    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, float amount, String memo) throws CantCreateCashMoneyDestockException {
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         CashMoneyDestockTransactionImpl cashMoneyRestockTransaction = new CashMoneyDestockTransactionImpl(
@@ -182,4 +182,5 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
             stockTransactionsCashMoneyDestockMonitorAgent.start();
         }else stockTransactionsCashMoneyDestockMonitorAgent.start();
     }
+
 }
