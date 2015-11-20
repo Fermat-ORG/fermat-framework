@@ -9,14 +9,14 @@ import java.util.UUID;
 /**
  * Created by angel on 21/10/15.
  */
+
 public class CustomerBrokerPurchaseClause implements Clause{
 
     private final UUID clauseId;
     private final ClauseType type;
     private final String value;
-    private final ClauseStatus status;
     private final String proposedBy;
-    private final short indexOrder;
+    private ClauseStatus status;
 
 
     public CustomerBrokerPurchaseClause(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder){
@@ -25,7 +25,6 @@ public class CustomerBrokerPurchaseClause implements Clause{
         this.value = value;
         this.status = status;
         this.proposedBy = proposedBy;
-        this.indexOrder = indexOrder;
     }
 
     @Override
@@ -53,8 +52,4 @@ public class CustomerBrokerPurchaseClause implements Clause{
         return this.proposedBy;
     }
 
-    @Override
-    public short getIndexOrder() {
-        return this.indexOrder;
-    }
 }

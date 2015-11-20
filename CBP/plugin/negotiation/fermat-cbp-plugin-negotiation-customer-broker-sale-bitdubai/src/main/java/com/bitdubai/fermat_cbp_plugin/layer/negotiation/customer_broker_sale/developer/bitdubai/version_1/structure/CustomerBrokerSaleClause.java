@@ -16,16 +16,14 @@ public class CustomerBrokerSaleClause implements Clause{
     private final String value;
     private final ClauseStatus status;
     private final String proposedBy;
-    private final short indexOrder;
 
 
-    public CustomerBrokerSaleClause(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder){
+    public CustomerBrokerSaleClause(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy){
         this.clauseId = clauseId;
         this.type = type;
         this.value = value;
         this.status = status;
         this.proposedBy = proposedBy;
-        this.indexOrder = indexOrder;
     }
 
     @Override
@@ -51,10 +49,5 @@ public class CustomerBrokerSaleClause implements Clause{
     @Override
     public String getProposedBy() {
         return this.proposedBy;
-    }
-
-    @Override
-    public short getIndexOrder() {
-        return this.indexOrder;
     }
 }
