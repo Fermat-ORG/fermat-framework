@@ -92,7 +92,7 @@ public class SubAppDesktopFragment extends Fragment {
         mlist.add(installedSubApp);
         installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_ISSUER, null, null, "sub-app-asset-community-issuer", "Asset Community Issuer", "public_key_dap_issuer_community", "sub-app-asset-community-issuer", new Version(1, 0, 0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_USER, null, null, "sub-app-asset-community-user", "public_key_dapi_user_community", "sub-app-asset-community-user", "sub-app-asset-community-user", new Version(1, 0, 0));
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_USER, null, null, "sub-app-asset-community-user", "Asset Community User", "public_key_dapi_user_community", "sub-app-asset-community-user", new Version(1, 0, 0));
         mlist.add(installedSubApp);
         installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Asset Community Redeem Point", "sub-app-asset-community-redeem-point", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
         mlist.add(installedSubApp);
