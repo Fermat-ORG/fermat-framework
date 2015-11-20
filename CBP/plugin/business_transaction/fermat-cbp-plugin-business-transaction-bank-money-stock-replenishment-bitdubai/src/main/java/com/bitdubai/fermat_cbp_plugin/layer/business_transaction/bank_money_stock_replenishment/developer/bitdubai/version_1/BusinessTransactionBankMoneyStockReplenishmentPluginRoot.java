@@ -196,7 +196,7 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
                 }
             }
         } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
 
