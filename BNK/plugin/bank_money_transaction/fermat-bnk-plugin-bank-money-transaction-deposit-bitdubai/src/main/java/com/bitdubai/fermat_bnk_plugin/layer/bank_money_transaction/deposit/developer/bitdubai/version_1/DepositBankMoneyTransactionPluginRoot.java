@@ -23,6 +23,7 @@ import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.devel
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.database.DepositBankMoneyTransactionDatabaseFactory;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.structure.DepositBankMoneyTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 /**
@@ -46,21 +47,30 @@ public class DepositBankMoneyTransactionPluginRoot extends AbstractPlugin implem
 
     public DepositBankMoneyTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
-        this.depositBankMoneyTransactionManager = new DepositBankMoneyTransactionManager();
+
     }
 
     @Override
     public void start() throws CantStartPluginException {
         try{
             this.depositTransactionDatabase = this.pluginDatabaseSystem.openDatabase(this.pluginId, DepositBankMoneyTransactionDatabaseConstants.DATABASE_NAME);
+
         }catch (DatabaseNotFoundException | CantOpenDatabaseException exception) {
 
             try {
                 createDepositBankMoneyTransactionDatabase();
             } catch (CantCreateDatabaseException innerException) {
-                throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset Issuing plugin - "+this.pluginId, "Cannot open or create the plugin database");
+                throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Deposit Bank Transaction plugin - "+this.pluginId, "Cannot open or create the plugin database");
             }
         }
+        try {
+            this.depositBankMoneyTransactionDao = new DepositBankMoneyTransactionDao(pluginId,pluginDatabaseSystem);
+            this.depositBankMoneyTransactionManager = new DepositBankMoneyTransactionManager(pluginId,pluginDatabaseSystem);
+            this.depositBankMoneyTransactionManager.setDepositBankMoneyTransactionDao(depositBankMoneyTransactionDao);
+        }catch (CantExecuteDatabaseOperationException innerException){
+            throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Deposit Bank Transaction  plugin - "+this.pluginId, "Cannot open or create the plugin database");
+        }
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
