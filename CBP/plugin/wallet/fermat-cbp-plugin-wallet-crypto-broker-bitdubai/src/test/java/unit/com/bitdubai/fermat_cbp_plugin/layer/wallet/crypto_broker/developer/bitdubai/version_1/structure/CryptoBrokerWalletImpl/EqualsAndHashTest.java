@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerStockTransactionRecordImpl;
 
 import org.junit.Before;

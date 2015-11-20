@@ -1,8 +1,11 @@
 package com.bitdubai.sub_app.intra_user_community.session;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -11,7 +14,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class IntraUserSubAppSession implements SubAppsSession{
+public class IntraUserSubAppSession extends AbstractFermatSession<InstalledSubApp,IntraUserModuleManager,SubAppResourcesProviderManager> implements SubAppsSession{
     public static final String BASIC_DATA = "catalog item";
     public static final String PREVIEW_IMGS = "preview images";
     public static final String DEVELOPER_NAME = "developer name";
@@ -41,24 +44,16 @@ public class IntraUserSubAppSession implements SubAppsSession{
     /**
      * Create a session for the Wallet Store SubApp
      *
-     * @param subApps                  the SubApp type
+
      * @param errorManager             the error manager
      * @param intraUserModuleManager the module of this SubApp
      */
-    public IntraUserSubAppSession(SubApps subApps, ErrorManager errorManager, IntraUserModuleManager intraUserModuleManager) {
+    public IntraUserSubAppSession(InstalledSubApp subApp, ErrorManager errorManager, IntraUserModuleManager intraUserModuleManager) {
+        super(subApp.getAppPublicKey(),subApp,errorManager,intraUserModuleManager,null);
         this.subApps = subApps;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
         this.intraUserModuleManager = intraUserModuleManager;
-    }
-
-    /**
-     * Create a session for the Wallet Store SubApp
-     *
-     * @param subApps the SubApp type
-     */
-    public IntraUserSubAppSession(SubApps subApps) {
-        this.subApps = subApps;
     }
 
 
@@ -68,8 +63,8 @@ public class IntraUserSubAppSession implements SubAppsSession{
      * @return SubApps instance indicating the type
      */
     @Override
-    public SubApps getSubAppSessionType() {
-        return subApps;
+    public InstalledSubApp getSubAppSessionType() {
+        return getFermatApp();
     }
 
     /**

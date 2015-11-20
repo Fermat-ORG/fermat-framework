@@ -14,7 +14,7 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
  */
-public interface ActorConnection {
+public interface ActorConnection<T extends ActorIdentity> {
 
     /**
      * @return an UUID instance representing the ID of the connection.
@@ -24,7 +24,7 @@ public interface ActorConnection {
     /**
      * @return an ActorIdentity instance representing the identity which is connected with the other actor.
      */
-    ActorIdentity getLinkedIdentity();
+    T getLinkedIdentity();
 
     /**
      * @return a string representing the public key.

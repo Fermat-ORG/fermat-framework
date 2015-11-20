@@ -74,7 +74,7 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
 
         super.onCreate(savedInstanceState);
         try {
-            cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
+            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
             lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 

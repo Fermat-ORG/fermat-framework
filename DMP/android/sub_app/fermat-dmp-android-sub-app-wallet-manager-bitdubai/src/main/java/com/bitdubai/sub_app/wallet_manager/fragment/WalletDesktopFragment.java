@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -51,7 +52,7 @@ import java.util.List;
  */
 
 
-public class WalletDesktopFragment extends Fragment implements Thread.UncaughtExceptionHandler, DialogInterface.OnDismissListener {
+public class WalletDesktopFragment extends FermatFragment implements Thread.UncaughtExceptionHandler, DialogInterface.OnDismissListener {
 
     private static final String ARG_POSITION = "position";
     private static final String CWP_WALLET_BASIC_ALL_MAIN = Activities.CWP_WALLET_BASIC_ALL_MAIN.getCode();
@@ -101,10 +102,10 @@ public class WalletDesktopFragment extends Fragment implements Thread.UncaughtEx
             list.add(new Item(installedWallet));
         }
 
-        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","intra_user_identity_sub_app","intra_user_identity_sub_app",new Version(1,0,0));
+        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
         list.add(new Item(installedSubApp));
 
-        installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","intra_user_community_sub_app","intra_user_community_sub_app",new Version(1,0,0));
+        installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
         list.add(new Item(installedSubApp));
 
         AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, list);

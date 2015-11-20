@@ -14,4 +14,6 @@ public interface FermatMenuItem  extends Serializable {
     String getIcon() ;
 
     Activities getLinkToActivity() ;
+
+    String getAppLinkPublicKey();
 }

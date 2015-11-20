@@ -28,5 +28,5 @@ public interface FermatSession{
     public ErrorManager getErrorManager();
 
 
-
+    String getAppPublicKey();
 }

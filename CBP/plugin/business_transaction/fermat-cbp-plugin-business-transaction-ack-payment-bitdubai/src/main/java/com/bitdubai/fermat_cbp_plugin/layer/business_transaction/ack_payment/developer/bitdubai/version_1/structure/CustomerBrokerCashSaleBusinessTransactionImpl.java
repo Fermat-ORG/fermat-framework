@@ -1,11 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_cash_sale.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BusinessTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.customer_broke_cash_sale.interfaces.CustomerBrokerCashSale;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_broke_cash_sale.interfaces.CustomerBrokerCashSale;
 
 import java.util.UUID;
 
