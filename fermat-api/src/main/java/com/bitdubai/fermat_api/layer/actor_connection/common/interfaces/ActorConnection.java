@@ -55,7 +55,9 @@ public abstract class ActorConnection<T extends ActorIdentity> {
         this.image           = image          ;
         this.connectionState = connectionState;
         this.creationTime    = creationTime   ;
-        this.updateTime      = updateTime     ;
+
+        // if the update time is 0 we'll assign like last update time the creation time.
+        this.updateTime = updateTime != 0 ? updateTime : creationTime;
     }
 
     /**
