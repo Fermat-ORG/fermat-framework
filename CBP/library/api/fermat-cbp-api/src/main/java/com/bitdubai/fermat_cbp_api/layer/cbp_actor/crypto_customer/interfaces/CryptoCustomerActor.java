@@ -34,6 +34,8 @@ public interface CryptoCustomerActor extends Actor {
     //CONNECTED BROKERS
     Collection<ActorIdentity> getConnectedBrokers();
 
+    // TODO OUR IDENTITY IS NOT AN ACTOR. PLEASE CHECK IF THIS IS OK
+
     //RELATIONSHIP IDENTIDAD-WALLET
     CustomerIdentityWalletRelationship createCustomerIdentityWalletRelationship(String WalletPublicKey, String identityPublicKey) throws CantCreateCustomerIdentiyWalletRelationshipException;
     CustomerIdentityWalletRelationship updateCustomerIdentityWalletRelationship(UUID RelationshipId, String WalletPublicKey, String identityPublicKey) throws CantUpdateCustomerIdentiyWalletRelationshipException;
@@ -42,24 +44,5 @@ public interface CryptoCustomerActor extends Actor {
     CustomerIdentityWalletRelationship getAllCustomerIdentityWalletRelationships(UUID RelationshipId) throws CantGetCustomerIdentiyWalletRelationshipException;
     CustomerIdentityWalletRelationship getAllCustomerIdentityWalletRelationshipsByIdentity(String identityPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException;
     CustomerIdentityWalletRelationship getAllCustomerIdentityWalletRelationshipsByWallet(String WalletPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException;
-
-    //NEGOTIATION
-    CustomerBrokerNegotiation createNegotiationPurchase(ActorIdentity cryptoBroker,Collection<Clause> clauses) throws CantCreatePurchaseNegotiationException;
-    CustomerBrokerNegotiation updateNegotiationPurchase(CustomerBrokerNegotiation negotiation) throws CantUpdatePurchaseNegotiationException;
-    CustomerBrokerNegotiation closeNegotiationPurchase(UUID negotiationId) throws CantClosePurchaseNegotiationException;
-    CustomerBrokerNegotiation getNegotiationPurchase(UUID negotiationId) throws CantGetPurchaseNegotiationException;
-    Collection<CustomerBrokerNegotiation> getNegotiationPurchases() throws CantGetPurchaseNegotiationException;
-    Collection<CustomerBrokerNegotiation> getNegotiationPurchases(NegotiationStatus status) throws CantGetPurchaseNegotiationException;
-    void sendActorNetworkServiceNegotiationPurchases(CustomerBrokerNegotiation negotiation) throws CantSendActorNetworkServiceException;
-    void receiveActorNetworkServiceNegotiationPurchases(CustomerBrokerNegotiation negotiation) throws CantReceiveActorNetworkServiceException;
-
-    //CONTRACT
-    CustomerBrokerContractPurchase createContractPurchase(ActorIdentity cryptoBroker,Collection<Clause> clauses) throws CantCreatePurchaseContractException;
-    CustomerBrokerContractPurchase updateContractPurchase(UUID contractId) throws CantUpdateStatusPurchaseContractException;
-    CustomerBrokerContractPurchase getContractPurchase(UUID negotiationId) throws CantGetPurchaseContractException;
-    Collection<CustomerBrokerContractPurchase> getContractPurchases() throws CantGetPurchaseContractException;
-    Collection<CustomerBrokerContractPurchase> getContractPurchases(ContractStatus status) throws CantGetPurchaseContractException;
-    void sendActorNetworkServiceContractPurchases(CustomerBrokerContractPurchase contract) throws CantSendActorNetworkServiceException;
-    void receiveActorNetworkServiceContractPurchases(CustomerBrokerContractPurchase contract) throws CantReceiveActorNetworkServiceException;
 
 }

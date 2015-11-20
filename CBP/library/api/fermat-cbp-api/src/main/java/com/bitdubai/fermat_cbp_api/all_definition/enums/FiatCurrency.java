@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_cbp_api.all_definition.world.Currency;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 
 /**
  * Created by Alex on 11/2/2015.

@@ -284,10 +284,10 @@ public final class FermatSystem {
                     dealsWithLogManagersAddons.put(addon.getKey(), addon.getValue());
 
             } catch (final CantStartAddonException e) {
-                System.out.println(e.toString());
+                System.err.println(e.toString());
                 // throw new CantStartAllRegisteredPlatformsException(e, "", "Error starting add-ons or plug-ins during the start of all platforms.");
             } catch (Exception e) {
-                System.out.println(e.toString());
+                System.err.println(e.toString());
                 //throw new CantStartAllRegisteredPlatformsException(e, "", "Unhandled Error.");
             }
         }
