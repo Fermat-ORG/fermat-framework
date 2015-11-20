@@ -28,10 +28,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 /**
  * Created by memo on 19/11/15.
  */
-public class DepositBankMoneyTransactionPluginRoot extends AbstractPlugin implements DepositManager{
+public class DepositBankMoneyTransactionPluginRoot /*extends AbstractPlugin implements DepositManager*/{
 
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    /*@NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -72,6 +72,6 @@ public class DepositBankMoneyTransactionPluginRoot extends AbstractPlugin implem
     @Override
     public BankTransaction makeDeposit(BankTransactionParameters parameters) throws CantMakeDepositTransactionException {
         return null;
-    }
+    }*/
 }
 
