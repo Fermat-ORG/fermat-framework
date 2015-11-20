@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1;
+package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  * Created by Yordin Alayn on 16.09.15.
  */
 
-public class CustomerOnlinePaymentPluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class BrokerSubmitOfflineMerchandisePluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
     ErrorManager errorManager;
 
@@ -36,24 +36,24 @@ public class CustomerOnlinePaymentPluginRoot implements  DealsWithErrors, DealsW
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.CustomerOnlinePaymentPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.BrokerSubmitOfflineMerchandisePluginRoot");
         return returnedClasses;
     }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        try {
+        /*try {
             for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-                if (CustomerOnlinePaymentPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    CustomerOnlinePaymentPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    CustomerOnlinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                if (com.bitdubai.fermat_cbp_plugin.layer.business_transaction.crypto_money_stock_replenishment.developer.bitdubai.version_1.BrokerSubmitOfflineMerchandisePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    com.bitdubai.fermat_cbp_plugin.layer.business_transaction.crypto_money_stock_replenishment.developer.bitdubai.version_1.BrokerSubmitOfflineMerchandisePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    com.bitdubai.fermat_cbp_plugin.layer.business_transaction.crypto_money_stock_replenishment.developer.bitdubai.version_1.BrokerSubmitOfflineMerchandisePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 } else {
-                    CustomerOnlinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                    com.bitdubai.fermat_cbp_plugin.layer.business_transaction.crypto_money_stock_replenishment.developer.bitdubai.version_1.BrokerSubmitOfflineMerchandisePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
         } catch (Exception exception) {
             // this.errorManager.reportUnexpectedPluginException(Plugins., UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-        }
+        }*/
     }
 
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
@@ -102,15 +102,15 @@ public class CustomerOnlinePaymentPluginRoot implements  DealsWithErrors, DealsW
         this.pluginId = uuid;
     }
 
-    public static LogLevel getLogLevelByClass(String className) {
+    /*public static LogLevel getLogLevelByClass(String className) {
         try {
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return CustomerOnlinePaymentPluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return com.bitdubai.fermat_cbp_plugin.layer.business_transaction.crypto_money_stock_replenishment.developer.bitdubai.version_1.BrokerSubmitOfflineMerchandisePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
             System.err.println("CantGetLogLevelByClass: " + e.getMessage());
             return DEFAULT_LOG_LEVEL;
         }
-    }
+    }*/
 
 
 }

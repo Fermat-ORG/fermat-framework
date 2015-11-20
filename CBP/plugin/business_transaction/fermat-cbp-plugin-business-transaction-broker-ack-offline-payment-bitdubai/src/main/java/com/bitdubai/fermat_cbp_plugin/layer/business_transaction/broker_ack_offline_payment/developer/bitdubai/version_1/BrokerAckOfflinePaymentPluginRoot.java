@@ -1,8 +1,4 @@
-<<<<<<< HEAD:CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-ack-payment-bitdubai/src/main/java/com/bitdubai/fermat_cbp_plugin/layer/business_transaction/ack_payment/developer/bitdubai/version_1/BusinessTransactionCustomerAckPaymentPluginRoot.java
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.ack_payment.developer.bitdubai.version_1;
-=======
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1;
->>>>>>> 7875b05aa57a6363a48d3097d1c6f69bda9f1d37:CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-broker-ack-offline-payment-bitdubai/src/main/java/com/bitdubai/fermat_cbp_plugin/layer/business_transaction/broker_ack_offline_payment/developer/bitdubai/version_1/BrokerAckOfflinePaymentPluginRoot.java
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
