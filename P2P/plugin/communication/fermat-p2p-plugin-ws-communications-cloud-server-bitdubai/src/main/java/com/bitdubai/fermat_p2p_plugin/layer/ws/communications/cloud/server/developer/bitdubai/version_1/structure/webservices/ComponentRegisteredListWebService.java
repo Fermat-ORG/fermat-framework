@@ -62,7 +62,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
     }
 
     @Post("application/json")
-    public Representation getList(Representation entity){
+    public String getList(Representation entity){
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("ComponentRegisteredListWebService - Starting getList");
@@ -125,7 +125,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
         System.out.println("ComponentRegisteredListWebService - jsonString.length() = "+jsonString.length());
         System.out.println("ComponentRegisteredListWebService - jsonRepresentationRespond.getSize() = "+jsonRepresentationRespond.getSize());
 
-        return  jsonRepresentationRespond;
+        return  jsonString;
     }
 
     /**

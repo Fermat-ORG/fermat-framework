@@ -10,6 +10,14 @@ group = "com.bitdubai.fermat.p2p"
 sourceCompatibility = 1.7
 version = '1.6.1'
 
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
 configurations {
     deployerJars
 }

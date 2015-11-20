@@ -1057,24 +1057,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     null
             );                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
+           List<PlatformComponentProfile> list = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
 
-            //List<PlatformComponentProfile> list = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
-
-            List<PlatformComponentProfile> list = new ArrayList<>();
-
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfilePluginRoot, discoveryQueryParameters);
-
-           /* for (PlatformComponentProfile platformComponentProfile : list) {
+           for (PlatformComponentProfile platformComponentProfile : list) {
 
                 byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
                 lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias()));
-            } */
+            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
         }
-
 
         return lstIntraUser;
     }
@@ -1279,13 +1273,20 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                                                                                                                                             NetworkServiceType.UNDEFINED,
                                                                                                                                             PlatformComponentType.ACTOR_INTRA_USER,
                                                                                                                                             imageString);
-                if (!actorsToRegisterCache.contains(platformComponentProfile)) {
+
+
+                for (int i = 0; i < 35; i++) {
+                    communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
+                }
+
+
+               /* if (!actorsToRegisterCache.contains(platformComponentProfile)) {
                     actorsToRegisterCache.add(platformComponentProfile);
 
                     if (register) {
                         communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
                     }
-                }
+                } */
 
             } catch (CantRegisterComponentException e) {
                 e.printStackTrace();
