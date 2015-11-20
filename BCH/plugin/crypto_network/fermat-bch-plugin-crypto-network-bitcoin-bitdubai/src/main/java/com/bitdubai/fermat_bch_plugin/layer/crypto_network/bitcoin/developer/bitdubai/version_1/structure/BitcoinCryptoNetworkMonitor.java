@@ -70,16 +70,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
     @Override
     public void start() throws CantStartAgentException {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    doTheMainTask();
-                } catch (BlockchainException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        try {
+            doTheMainTask();
+        } catch (BlockchainException e) {
+            e.printStackTrace();
+            throw new CantStartAgentException();
+        }
+
     }
 
     @Override
@@ -159,15 +156,15 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         peerGroup.start();
         peerGroup.startBlockChainDownload(events);
 
-        while (true){
-            try {
-                Thread.sleep(60000);
-                System.out.println("*****CryptoNetwork isRunning: " + peerGroup.isRunning());
-                System.out.println("****CryptoNetwork: connected peers " + peerGroup.getConnectedPeers().size());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        while (true){
+//            try {
+//                Thread.sleep(60000);
+//                System.out.println("*****CryptoNetwork isRunning: " + peerGroup.isRunning());
+//                System.out.println("****CryptoNetwork: connected peers " + peerGroup.getConnectedPeers().size());
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     /**

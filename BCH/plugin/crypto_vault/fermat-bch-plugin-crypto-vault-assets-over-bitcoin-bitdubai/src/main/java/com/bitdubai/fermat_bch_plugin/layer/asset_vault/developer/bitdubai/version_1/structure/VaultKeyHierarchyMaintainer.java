@@ -254,7 +254,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         private List<ECKey> deriveChildKeys(HierarchyAccount hierarchyAccount, int amount) {
             DeterministicHierarchy keyHierarchy = vaultKeyHierarchy.getKeyHierarchyFromAccount(hierarchyAccount);
             List<ECKey> childKeys = new ArrayList<>();
-            for (int i = 0; i < amount; i++) {
+            for (int i = 1; i < amount; i++) {
                 // I derive the key at position i
                 DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
                 // I add this key to the ECKey list
