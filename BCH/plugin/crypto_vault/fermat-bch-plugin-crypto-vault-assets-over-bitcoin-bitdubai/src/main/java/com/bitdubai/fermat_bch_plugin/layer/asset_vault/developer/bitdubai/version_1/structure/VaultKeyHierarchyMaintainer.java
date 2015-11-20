@@ -168,6 +168,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                      * and update the detail key maintenance with all the keys derive from this account
                      */
                     updateDetailMaintainerStats(hierarchyAccount.getId(), keys, currentGeneratedKeys);
+
                 } else {
                     /**
                      * There is no need to generate new keys, so I will re generate the ones I previously generated
