@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai
 
 import java.io.*;
 import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
-import com.bitdubai.fermat_api.layer.world.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.interfaces.IndexProvider;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure.FiatIndexImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure.HttpReader;
