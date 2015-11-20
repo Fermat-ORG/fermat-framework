@@ -1044,7 +1044,8 @@ public abstract class FermatActivity extends AppCompatActivity
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
             }
 
-            if (getIntent().getBooleanExtra("flag",false)) {
+            //if (getIntent().getBooleanExtra("flag",false)) {
+            if(true){
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
                 activePlatforms.add(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
                 activePlatforms.add(Platforms.DIGITAL_ASSET_PLATFORM);
