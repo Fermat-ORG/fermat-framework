@@ -28,6 +28,7 @@ public enum Layers implements FermatEnum {
     HARDWARE                   ("HAR"),
     IDENTITY                   ("IDT"),
     MIDDLEWARE                 ("MID"),
+    NEGOTIATION                ("NEG"),
     NETWORK_SERVICE            ("NTS"),
     PLATFORM_SERVICE           ("PMS"),
     REQUEST                    ("REQ"),
@@ -66,6 +67,7 @@ public enum Layers implements FermatEnum {
             case "HAR":  return HARDWARE;
             case "IDT":  return IDENTITY;
             case "MID":  return MIDDLEWARE;
+            case "NEG":  return NEGOTIATION;
             case "NTS":  return NETWORK_SERVICE;
             case "PMS":  return PLATFORM_SERVICE;
             case "REQ":  return REQUEST;

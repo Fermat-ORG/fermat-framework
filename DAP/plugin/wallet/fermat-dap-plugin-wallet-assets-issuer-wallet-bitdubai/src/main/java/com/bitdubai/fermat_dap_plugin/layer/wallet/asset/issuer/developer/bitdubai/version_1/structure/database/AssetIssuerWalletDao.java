@@ -302,6 +302,8 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             DatabaseTable databaseTableAssuerIssuerWallet = getAssetIssuerWalletTable();
             databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
 
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME, BalanceType.AVAILABLE.getCode(), DatabaseFilterType.EQUAL);
+
             databaseTableAssuerIssuerWallet.loadToMemory();
             return createTransactionList(databaseTableAssuerIssuerWallet.getRecords());
         }
@@ -362,7 +364,7 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             if (databaseTable.getRecords().isEmpty()){
                 transaction.addRecordToInsert(databaseTable, assetBalanceRecord);
                 String digitalAssetInnerXML = assetIssuerWalletTransactionRecord.getDigitalAsset().toString();
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey(), PATH_DIRECTORY, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.setContent(digitalAssetInnerXML);
                 pluginTextFile.persistToMedia();
             }else{

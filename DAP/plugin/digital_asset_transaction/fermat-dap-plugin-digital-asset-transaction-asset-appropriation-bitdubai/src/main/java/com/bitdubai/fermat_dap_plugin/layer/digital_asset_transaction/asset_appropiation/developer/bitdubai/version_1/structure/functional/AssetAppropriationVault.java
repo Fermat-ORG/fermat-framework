@@ -62,7 +62,6 @@ public class AssetAppropriationVault {
         try {
 
             PluginTextFile digitalAssetFile = pluginFileSystem.getTextFile(pluginId, STORAGE_PATH, createFilename(assetPublicKey), FILE_PRIVACY, FILE_LIFE_SPAN);
-            System.out.println(digitalAssetFile.getContent());
             return (DigitalAsset) XMLParser.parseXML(digitalAssetFile.getContent(), new DigitalAsset());
         } catch (FileNotFoundException e) {
             throw new CantGetDigitalAssetFromLocalStorageException(e, "Getting Digital Asset file from local storage", "Unexpected exception getting '" + STORAGE_PATH + createFilename(assetPublicKey) + "' file");

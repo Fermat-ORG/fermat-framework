@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.develop
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Index;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.IndexInfoSummary;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

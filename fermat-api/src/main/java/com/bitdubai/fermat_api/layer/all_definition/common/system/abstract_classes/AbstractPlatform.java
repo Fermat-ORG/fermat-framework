@@ -184,24 +184,16 @@ public abstract class AbstractPlatform {
         }
     }
 
-    public final ConcurrentHashMap<AddonVersionReference, AbstractAddon> listAddonVersions() {
-
-        final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions = new ConcurrentHashMap<>();
+    public final void fillAddonVersions(final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions) {
 
         for(ConcurrentHashMap.Entry<LayerReference, AbstractLayer> layer : layers.entrySet())
-            versions.putAll(layer.getValue().listAddonVersions());
-
-        return versions;
+            layer.getValue().fillAddonVersions(versions);
     }
 
-    public final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> listPluginVersions() {
-
-        final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions = new ConcurrentHashMap<>();
+    public final void fillPluginVersions(final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions) {
 
         for(ConcurrentHashMap.Entry<LayerReference, AbstractLayer> layer : layers.entrySet())
-            versions.putAll(layer.getValue().listPluginVersions());
-
-        return versions;
+            layer.getValue().fillPluginVersions(versions);
     }
 
     public final PlatformReference getPlatformReference() {

@@ -91,8 +91,8 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
        return fermatSession.getErrorManager();
     }
 
-    protected void changeApp(Engine emgine){
-        getFermatScreenSwapper().connectWithOtherApp(emgine);
+    protected void changeApp(Engine emgine,Object[] objects){
+        getFermatScreenSwapper().connectWithOtherApp(emgine,objects);
     }
     protected FermatScreenSwapper getFermatScreenSwapper(){
         return (FermatScreenSwapper) getOwnerActivity();
