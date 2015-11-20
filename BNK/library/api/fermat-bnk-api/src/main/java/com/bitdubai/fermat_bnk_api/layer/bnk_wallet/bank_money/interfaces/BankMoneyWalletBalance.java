@@ -10,7 +10,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRe
  * Created by Yordin Alayn on 30.09.15.
  */
 
-public interface BankMoneyBalance {
+public interface BankMoneyWalletBalance {
 
     //change to BankMoneyWalletBalance
 

@@ -18,8 +18,8 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRe
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionBankMoneyException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionSummaryBankMoneyException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoney;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalance;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletBalance;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalanceRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransaction;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionSummary;
@@ -43,8 +43,8 @@ public class WalletBankMoneyPluginRoot implements  DealsWithErrors,
         LogManagerForDevelopers,
         Service,
         Plugin,
-        BankMoney,
-        BankMoneyBalance {
+        BankMoneyWallet,
+        BankMoneyWalletBalance {
 
     /**
      *
@@ -157,12 +157,12 @@ public class WalletBankMoneyPluginRoot implements  DealsWithErrors,
 
 
     @Override
-    public BankMoneyBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
+    public BankMoneyWalletBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
         return null;
     }
 
     @Override
-    public BankMoneyBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
+    public BankMoneyWalletBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
         return null;
     }
 
