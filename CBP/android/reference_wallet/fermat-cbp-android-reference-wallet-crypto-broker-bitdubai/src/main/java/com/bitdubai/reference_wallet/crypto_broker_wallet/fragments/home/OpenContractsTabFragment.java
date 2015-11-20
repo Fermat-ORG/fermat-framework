@@ -2,9 +2,14 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
 
 
 import android.app.Fragment;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,6 +18,7 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerA
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForCustomerException;
@@ -70,8 +76,15 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+    }
+
+    @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+
+        configureToolbar();
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
@@ -81,6 +94,18 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
             View emptyListViewsContainer = layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     @Override
@@ -131,16 +156,16 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
                 CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
                 GrouperItem<ContractBasicInformation> grouper;
 
-                grouperText = getActivity().getString(R.string.waiting_for_you);
-                List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
-                waitingForBroker.addAll(cryptoBrokerWallet.getContractsWaitingForBroker(10, 0));
-                grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-                data.add(grouper);
-
                 grouperText = getActivity().getString(R.string.waiting_for_the_customer);
                 List<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
                 waitingForCustomer.addAll(cryptoBrokerWallet.getContractsWaitingForCustomer(10, 0));
                 grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+                data.add(grouper);
+
+                grouperText = getActivity().getString(R.string.waiting_for_you);
+                List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
+                waitingForBroker.addAll(cryptoBrokerWallet.getContractsWaitingForBroker(10, 0));
+                grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
                 data.add(grouper);
 
             } catch (CantGetContractsWaitingForCustomerException | CantGetContractsWaitingForBrokerException | CantGetCryptoBrokerWalletException ex) {
@@ -166,7 +191,8 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
-        //TODO abrir actividad de detalle de contrato abierto
+        walletSession.setData("contract_data", data);
+        //changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS);
     }
 
     @Override

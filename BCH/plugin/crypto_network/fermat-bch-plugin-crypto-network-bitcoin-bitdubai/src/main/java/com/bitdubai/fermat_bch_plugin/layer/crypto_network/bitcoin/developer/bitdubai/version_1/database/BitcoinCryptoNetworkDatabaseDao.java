@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -30,13 +29,13 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by rodrigo on 10/9/15.
@@ -249,7 +248,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @return
      */
     private long getCurrentDateTime(){
-        return  System.currentTimeMillis() % 1000;
+        return  System.currentTimeMillis();
     }
 
     /**
@@ -304,13 +303,14 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param txHash
      * @return
      */
-    public CryptoStatus getStoredTransactionCryptoStatus(TransactionTypes transactionType, String txHash) throws CantExecuteDatabaseOperationException {
+    public CryptoStatus getStoredTransactionCryptoStatus(@Nullable TransactionTypes transactionType, String txHash) throws CantExecuteDatabaseOperationException {
         /**
          * I will define the outgoing or incoming table, the filter and the sort order
          */
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
         databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
-        databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+        if (transactionType != null )
+            databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
         databaseTable.setFilterOrder(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
         /**
@@ -737,7 +737,42 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @throws CantExecuteDatabaseOperationException
      */
     public void setTransactionProtocolStatus(UUID transactionId, ProtocolStatus protocolStatus) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
+        databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
 
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        /**
+         * If I didn't get the expected result, I will raise an error.
+         */
+        if (databaseTable.getRecords().size() != 1) {
+            StringBuilder output = new StringBuilder("There was an unexpected result executing the query.");
+            output.append(System.lineSeparator());
+            output.append("Records returned: " + databaseTable.getRecords().size());
+            output.append(System.lineSeparator());
+            output.append("Transaction id: " + transactionId.toString());
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
+
+        /**
+         * I will get the record and Update the protocol status to the passed value
+         */
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, protocolStatus.getCode() );
+        try {
+            databaseTable.updateRecord(record);
+        } catch (CantUpdateRecordException e) {
+            StringBuilder output = new StringBuilder("There was an error updating the protocol status value.");
+            output.append(System.lineSeparator());
+            output.append("Record returned: " + XMLParser.parseObject(record));
+            output.append(System.lineSeparator());
+            output.append("Protocol Status: " + protocolStatus.getCode());
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
     }
 
     /**

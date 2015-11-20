@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum Layers implements FermatEnum {
     /**
-     * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * In order to do make code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     ACTOR                      ("ACT"),
     ACTOR_NETWORK_SERVICE      ("ANS"),
@@ -28,6 +28,7 @@ public enum Layers implements FermatEnum {
     HARDWARE                   ("HAR"),
     IDENTITY                   ("IDT"),
     MIDDLEWARE                 ("MID"),
+    NEGOTIATION                ("NEG"),
     NETWORK_SERVICE            ("NTS"),
     PLATFORM_SERVICE           ("PMS"),
     REQUEST                    ("REQ"),
@@ -66,6 +67,7 @@ public enum Layers implements FermatEnum {
             case "HAR":  return HARDWARE;
             case "IDT":  return IDENTITY;
             case "MID":  return MIDDLEWARE;
+            case "NEG":  return NEGOTIATION;
             case "NTS":  return NETWORK_SERVICE;
             case "PMS":  return PLATFORM_SERVICE;
             case "REQ":  return REQUEST;

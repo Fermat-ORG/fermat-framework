@@ -98,7 +98,7 @@ public class DigitalAssetMetaDataTransactionDao {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            incomingMessageTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TRANSACTION_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -499,7 +499,7 @@ public class DigitalAssetMetaDataTransactionDao {
             digitalAssetMetadataTransactionImpl.setSenderType(PlatformComponentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_SENDER_TYPE_COLUMN_NAME)));
             digitalAssetMetadataTransactionImpl.setReceiverId(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_RECEIVER_ID_COLUMN_NAME));
             digitalAssetMetadataTransactionImpl.setReceiverType(PlatformComponentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_RECEIVER_TYPE_COLUMN_NAME)));
-            digitalAssetMetadataTransactionImpl.setDigitalAssetMetadata((DigitalAssetMetadata) XMLParser.parseXML(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_META_DATA_XML_COLUMN_NAME), DigitalAssetMetadata.class));
+            digitalAssetMetadataTransactionImpl.setDigitalAssetMetadata((DigitalAssetMetadata) XMLParser.parseXML(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_META_DATA_XML_COLUMN_NAME), new DigitalAssetMetadata()));
             digitalAssetMetadataTransactionImpl.setType(DigitalAssetMetadataTransactionType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TYPE_COLUMN_NAME)));
             digitalAssetMetadataTransactionImpl.setDistributionStatus(DistributionStatus.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_DISTRIBUTION_STATUS_COLUMN_NAME)));
             digitalAssetMetadataTransactionImpl.setTimestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TIMESTAMP_COLUMN_NAME));
@@ -540,7 +540,7 @@ public class DigitalAssetMetaDataTransactionDao {
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_META_DATA_XML_COLUMN_NAME,       digitalAssetMetadataTransactionImpl.getDigitalAssetMetadata().toString());
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TYPE_COLUMN_NAME,                digitalAssetMetadataTransactionImpl.getType().getCode());
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_DISTRIBUTION_STATUS_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getDistributionStatus().getCode());
-        entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TIMESTAMP_COLUMN_NAME,             digitalAssetMetadataTransactionImpl.getTimestamp());
+        entityRecord.setLongValue(  CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TIMESTAMP_COLUMN_NAME,           digitalAssetMetadataTransactionImpl.getTimestamp());
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_PROCESSED_COLUMN_NAME,           digitalAssetMetadataTransactionImpl.getProcessed());
 
         /*

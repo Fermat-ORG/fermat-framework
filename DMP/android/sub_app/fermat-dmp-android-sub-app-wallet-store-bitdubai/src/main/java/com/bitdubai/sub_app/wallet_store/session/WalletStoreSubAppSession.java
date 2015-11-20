@@ -1,7 +1,12 @@
 package com.bitdubai.sub_app.wallet_store.session;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
@@ -11,7 +16,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class WalletStoreSubAppSession implements SubAppsSession {
+public class WalletStoreSubAppSession extends AbstractFermatSession<InstalledSubApp,WalletStoreModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
     public static final String BASIC_DATA = "catalog item";
     public static final String PREVIEW_IMGS = "preview images";
     public static final String DEVELOPER_NAME = "developer name";
@@ -43,25 +48,17 @@ public class WalletStoreSubAppSession implements SubAppsSession {
     /**
      * Create a session for the Wallet Store SubApp
      *
-     * @param subApps                  the SubApp type
      * @param errorManager             the error manager
      * @param walletStoreModuleManager the module of this SubApp
      */
-    public WalletStoreSubAppSession(SubApps subApps, ErrorManager errorManager, WalletStoreModuleManager walletStoreModuleManager) {
+    public WalletStoreSubAppSession(InstalledSubApp subApp, ErrorManager errorManager, WalletStoreModuleManager walletStoreModuleManager) {
+        super(subApp.getAppPublicKey(),subApp,errorManager,walletStoreModuleManager,null);
         this.subApps = subApps;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
         this.walletStoreModuleManager = walletStoreModuleManager;
     }
 
-    /**
-     * Create a session for the Wallet Store SubApp
-     *
-     * @param subApps the SubApp type
-     */
-    public WalletStoreSubAppSession(SubApps subApps) {
-        this.subApps = subApps;
-    }
 
 
     /**
@@ -70,8 +67,8 @@ public class WalletStoreSubAppSession implements SubAppsSession {
      * @return SubApps instance indicating the type
      */
     @Override
-    public SubApps getSubAppSessionType() {
-        return subApps;
+    public InstalledSubApp getSubAppSessionType() {
+        return getFermatApp();
     }
 
     /**

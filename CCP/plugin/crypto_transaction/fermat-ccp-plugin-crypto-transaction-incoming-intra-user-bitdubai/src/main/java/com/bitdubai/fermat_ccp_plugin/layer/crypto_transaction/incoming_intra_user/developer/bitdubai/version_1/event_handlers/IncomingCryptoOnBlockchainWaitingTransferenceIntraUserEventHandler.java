@@ -20,8 +20,10 @@ public class IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEventHandler 
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if (this.incomingIntraUserEventRecorderService.getServiceStatus().equals(ServiceStatus.STARTED))
+        if (this.incomingIntraUserEventRecorderService.getServiceStatus().equals(ServiceStatus.STARTED)) {
+            System.out.println("INCOMING INTRA ACTOR ON BLOCKCHAIN, RECEIVE EVENT");
             this.incomingIntraUserEventRecorderService.saveEvent(fermatEvent);
+        }
         else
             throw new TransactionServiceNotStartedException();
     }

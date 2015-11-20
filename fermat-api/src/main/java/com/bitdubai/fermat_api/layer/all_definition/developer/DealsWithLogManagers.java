@@ -2,10 +2,9 @@ package com.bitdubai.fermat_api.layer.all_definition.developer;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,6 +12,6 @@ import java.util.Map;
  */
 public interface DealsWithLogManagers {
 
-    public void setLogManagers (Map<Plugins,Plugin> logManagersOnPlugins,Map<Addons,Addon> logManagersOnAddons);
+    void setLogManagers (Map<PluginVersionReference,Plugin> logManagersOnPlugins,Map<AddonVersionReference, Addon> logManagersOnAddons);
 
 }

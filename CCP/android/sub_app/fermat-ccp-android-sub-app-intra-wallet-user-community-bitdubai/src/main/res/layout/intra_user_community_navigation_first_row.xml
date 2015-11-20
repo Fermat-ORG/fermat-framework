@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/nav_drawer_color">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="20dp">
+
+        <ImageView
+            android:id="@+id/image_view_profile"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:background="#33ffffff"
+            android:src="@drawable/tessa_profile_picture"
+            tools:ignore="ContentDescription" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/txt_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#33ffffff"
+                android:paddingBottom="14dip"
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                android:paddingTop="14dip"
+                android:text="Unknown"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                app:typeface="ROBOTO_REGULAR"
+                />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:tint="#ffffff"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/imageView_change_user"
+                android:src="@drawable/ic_nav_arrow_down"
+                android:layout_marginBottom="4dp"
+                tools:ignore="ContentDescription,RtlHardcoded" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

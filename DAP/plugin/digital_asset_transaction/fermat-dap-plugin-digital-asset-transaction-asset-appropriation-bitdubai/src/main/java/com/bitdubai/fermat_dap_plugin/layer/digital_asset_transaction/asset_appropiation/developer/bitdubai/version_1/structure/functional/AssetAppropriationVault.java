@@ -50,18 +50,6 @@ public class AssetAppropriationVault {
         }
     }
 
-    public DigitalAsset getDigitalAssetFromLocalStorage(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
-        try {
-
-            PluginTextFile digitalAssetFile = pluginFileSystem.getTextFile(pluginId, STORAGE_PATH, createFilename(assetPublicKey), FILE_PRIVACY, FILE_LIFE_SPAN);
-            System.out.println(digitalAssetFile.getContent());
-            return (DigitalAsset) XMLParser.parseXML(digitalAssetFile.getContent(), new DigitalAsset());
-        } catch (FileNotFoundException e) {
-            throw new CantGetDigitalAssetFromLocalStorageException(e, "Getting Digital Asset file from local storage", "Unexpected exception getting '" + STORAGE_PATH + createFilename(assetPublicKey) + "' file");
-        } catch (CantCreateFileException e) {
-            throw new CantGetDigitalAssetFromLocalStorageException(e, "Getting Digital Asset file from local storage", "Unexpected exception creating '" + STORAGE_PATH + createFilename(assetPublicKey) + "' file");
-        }
-    }
     //PRIVATE METHODS
 
     private String createFilename(String digitalAssetPublicKey) {
@@ -69,6 +57,18 @@ public class AssetAppropriationVault {
     }
 
     //GETTER AND SETTERS
+
+    public DigitalAsset getDigitalAssetFromLocalStorage(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
+        try {
+
+            PluginTextFile digitalAssetFile = pluginFileSystem.getTextFile(pluginId, STORAGE_PATH, createFilename(assetPublicKey), FILE_PRIVACY, FILE_LIFE_SPAN);
+            return (DigitalAsset) XMLParser.parseXML(digitalAssetFile.getContent(), new DigitalAsset());
+        } catch (FileNotFoundException e) {
+            throw new CantGetDigitalAssetFromLocalStorageException(e, "Getting Digital Asset file from local storage", "Unexpected exception getting '" + STORAGE_PATH + createFilename(assetPublicKey) + "' file");
+        } catch (CantCreateFileException e) {
+            throw new CantGetDigitalAssetFromLocalStorageException(e, "Getting Digital Asset file from local storage", "Unexpected exception creating '" + STORAGE_PATH + createFilename(assetPublicKey) + "' file");
+        }
+    }
 
     //INNER CLASSES
 }

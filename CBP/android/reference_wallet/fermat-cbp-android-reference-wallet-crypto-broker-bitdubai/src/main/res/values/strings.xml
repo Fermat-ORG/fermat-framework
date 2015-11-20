@@ -6,10 +6,12 @@
     <string name="action_settings">Settings</string>
     <string name="no_new_open_negotiations">No New\nOpen Negotiations</string>
     <string name="no_new_open_contracts">No New\nOpen Contracts</string>
+    <string name="no_contracts">No Contracts</string>
     <string name="identity_img" translatable="false">person_img</string>
     <string name="arrow" translatable="false">arrow</string>
     <string name="at">\@</string>
     <string name="cbw_unit_number">1</string>
+    <string name="cbw_no_market_exchange_rates_to_show">No Market Exchange Rates to Show</string>
     <string name="buy">Buying</string>
     <string name="unit_number" translatable="false">1</string>
     <string name="waiting_for_you">Waiting for you</string>
@@ -20,4 +22,14 @@
     <string name="contract_cancelled">Cancelled</string>
     <string name="receiving">Receiving</string>
     <string name="sending">Sending</string>
+    <string name="sold">Sold</string>
+    <string name="selling">Selling</string>
+    <string name="sell_text_and_price">Sell: %1$s</string>
+    <string name="buy_text_and_price">Buy: %1$s</string>
+    <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
+    <string name="cbw_exchange_rate_amount_and_currency">1 %1$s @ %2$s %3$s</string>
+    <string name="cbw_sold_quantity_and_currency">%1$s %2$s %3$s</string>
+    <string name="cbw_contract_history_action_no_filter_text">No filter</string>
+    <string name="cbw_contract_history_action_filter_succeed_text">Succeed</string>
+    <string name="cbw_contract_history_action_filter_cancel_text">Cancel</string>
 </resources>

@@ -130,6 +130,7 @@ public enum Activities {
 
     // CCP Comunity
     CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST("CCPSAIUCR"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL("CCPSAIUCCD"),
     // CCP Identity
     CCP_SUB_APP_INTRA_USER_IDENTITY("CCPSAISI"),
     CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY("CCPSAIICI"),
@@ -144,6 +145,9 @@ public enum Activities {
     DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY("DAPSARPICI"),
     // end of dap identities
     DEVELOP_MODE("develop_mode"),
+
+    //CONNECTIONS ACTIVITY
+    BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY("BWCIUC"),
 
 
     WPD_DESKTOP("WPD"), ;
@@ -369,6 +373,10 @@ public enum Activities {
                 return CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY;
             case "CCPBWACA":
                 return CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY;
+            case "BWCIUC":
+                return BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY;
+            case "CCPSAIUCCD":
+                return CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

@@ -72,7 +72,7 @@ public class UserRedemptionDao {
             eventRecord.setUUIDValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventRecordID);
             eventRecord.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
             eventRecord.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
-            eventRecord.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.toString());
+            eventRecord.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
             eventRecord.setLongValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
             databaseTable.insertRecord(eventRecord);
             LOG.info("record:" + eventRecord.getStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME));
@@ -277,7 +277,7 @@ public class UserRedemptionDao {
             } else {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
-            databaseTableRecord.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.NOTIFIED.toString());
+            databaseTableRecord.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.NOTIFIED.getCode());
             databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
@@ -306,7 +306,7 @@ public class UserRedemptionDao {
             this.database=openDatabase();
             List<String> eventIdList=new ArrayList<>();
             DatabaseTable databaseTable = getDatabaseTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setFilterOrder(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
@@ -465,7 +465,7 @@ public class UserRedemptionDao {
             this.database=openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             this.database.closeDatabase();

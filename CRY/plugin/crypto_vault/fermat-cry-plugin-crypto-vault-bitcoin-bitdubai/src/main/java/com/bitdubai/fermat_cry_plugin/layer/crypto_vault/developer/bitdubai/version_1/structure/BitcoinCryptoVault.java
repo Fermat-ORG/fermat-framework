@@ -40,8 +40,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import org.bitcoinj.core.AbstractPeerEventListener;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.FilteredBlock;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Peer;
@@ -305,12 +307,21 @@ public class BitcoinCryptoVault implements
                 peerGroup.addPeerDiscovery(new DnsDiscovery(this.networkParameters));
             }
 
-            peerGroup.startAsync();
+            peerGroup.start();
             peerGroup.startBlockChainDownload(new AbstractPeerEventListener(){
+                @Override
+                public void onPeerConnected(Peer peer, int peerCount) {
+                    System.out.println("Connected to Peer from Crypto Vault: " + peer.toString());
+                }
+
+                @Override
+                public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
+                    //System.out.println("Block downloaded. Block left: " + blocksLeft);
+                }
+
                 @Override
                 public void onTransaction(Peer peer, Transaction t) {
                     System.out.println("Transaction from Peer: " + t.toString());
-
                 }
             });
 
@@ -418,6 +429,9 @@ public class BitcoinCryptoVault implements
             /**
              * complete the transaction and commit it.
              */
+            Transaction transaction = request.tx;
+            System.out.println("Timelocked " + transaction.isTimeLocked());
+            System.out.println("locktime: " + transaction.getLockTime());
             vault.completeTx(request);
             vault.commitTx(request.tx);
             /**

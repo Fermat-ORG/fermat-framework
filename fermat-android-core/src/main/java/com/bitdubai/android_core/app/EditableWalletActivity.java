@@ -17,6 +17,15 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetResourcesManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ResourcesManagerNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -26,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
@@ -206,16 +216,17 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
 
         } else if (activity != null && activity.getBackActivity() != null) {
-            changeActivity(activity.getBackActivity().getCode());
+            //todo: hacer esto
+            //changeActivity(activity.getBackActivity().getCode());
         } else {
-            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
-            getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
-            resetThisActivity();
-            Intent intent = new Intent(this, SubAppActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            finish();
-            startActivity(intent);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
+//            getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+//            resetThisActivity();
+//            Intent intent = new Intent(this, SubAppActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            finish();
+//            startActivity(intent);
+//            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         }
 
@@ -236,10 +247,6 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 //        }
     }
 
-    @Override
-    public void onNavigationDrawerItemSelected(int position, String activityCode) {
-
-    }
 
     @Override
     protected List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> getNavigationMenu() {
@@ -326,8 +333,32 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         return walletSession;
     }
 
+
     public CryptoWalletManager getCryptoWalletManager() {
-        return (CryptoWalletManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
+
+        try {
+            return (CryptoWalletManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
+                    new PluginVersionReference(
+                            Platforms.CRYPTO_CURRENCY_PLATFORM,
+                            Layers.WALLET_MODULE,
+                            Plugins.CRYPTO_WALLET,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+        } catch (ModuleManagerNotFoundException |
+                CantGetModuleManagerException e) {
+
+            System.out.println(e.getMessage());
+            System.out.println(e.toString());
+
+            return null;
+        } catch (Exception e) {
+
+            System.out.println(e.toString());
+
+            return null;
+        }
     }
 
     /**
@@ -335,12 +366,34 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
      */
 
     public WalletResourcesProviderManager getWalletResourcesProviderManager() {
-        return (WalletResourcesProviderManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE);
+        try {
+            return (WalletResourcesProviderManager) ((ApplicationSession) getApplication()).getFermatSystem().getResourcesManager(
+                    new PluginVersionReference(
+                            Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
+                            Layers.NETWORK_SERVICE,
+                            Plugins.WALLET_RESOURCES,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+        } catch (ResourcesManagerNotFoundException |
+                CantGetResourcesManagerException e) {
 
+            System.out.println(e.getMessage());
+            System.out.println(e.toString());
+
+            return null;
+        } catch (Exception e) {
+
+            System.out.println(e.toString());
+
+            return null;
+        }
     }
 
+
     @Override
-    public void changeActivity(String activityName, Object... objects) {
+    public void changeActivity(String activityName,String appPublicKey, Object... objects) {
 //        Method m = null;
 //        try {
 //            m = StrictMode.class.getMethod("incrementExpectedActivityCount", Class.class);
@@ -449,6 +502,16 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
     }
 
+    @Override
+    public void connectWithOtherApp(Engine emgine, Object[] objectses) {
+
+    }
+
+    @Override
+    public Object[] connectBetweenAppsData() {
+        return new Object[0];
+    }
+
 
     private void loadFragment(String fragmentType) {
 
@@ -463,6 +526,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     public void selectWallet(InstalledWallet installedWallet) {
 
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
@@ -495,13 +559,9 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
     }
 
+
     @Override
-    public void changeActivityBack(String activityCode){
-        try {
-            getWalletRuntimeManager().getLastWallet().getLastActivity().changeBackActivity(activityCode);
-        } catch (InvalidParameterException e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivityBack"));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
-        }
+    public void changeActivityBack(String appBackPublicKey, String activityCode) {
+
     }
 }

@@ -807,6 +807,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         actorNetworkServiceRecord.getActorSenderPublicKey(),
                         actorNetworkServiceRecord.getActorDestinationPublicKey(),
                         actorNetworkServiceRecord.toJson());
+
+
     }
 
     private void changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord) {
@@ -1062,7 +1064,14 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 JsonObject jsonObject = new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
                 //Se desencripta la imagen para luego ser agregada a la lista.
-                String encoded = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString();
+                String encoded = "";
+
+                try {
+                    encoded = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString();
+                }catch (Exception e){
+                    encoded = "";
+                    e.printStackTrace();
+                }
                 byte[] image = null;
                 try {
                     image = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
@@ -1071,9 +1080,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 }
                 lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), image, platformComponentProfile.getAlias()));
             }
-
-
-            //requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

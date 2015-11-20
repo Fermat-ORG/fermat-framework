@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
@@ -153,6 +154,10 @@ public class AssetAppropriationDAO implements AutoCloseable {
         updateStatus(AppropriationStatus.CRYPTOADDRESS_OBTAINED, transactionId);
     }
 
+    public void updateTransactionStatusCryptoAddressRegistered(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        updateStatus(AppropriationStatus.CRYPTOADDRESS_REGISTERED, transactionId);
+    }
+
     public void updateTransactionStatusBitcoinsSent(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
         updateStatus(AppropriationStatus.BITCOINS_SENT, transactionId);
     }
@@ -227,9 +232,12 @@ public class AssetAppropriationDAO implements AutoCloseable {
             }
             for (DatabaseTableRecord record : eventRecordedTable.getRecords()) {
                 record.setStringValue(columnName, value);
+                eventRecordedTable.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantLoadAssetAppropriationEventListException(exception, context, "Cannot load table to memory.");
+        } catch (CantUpdateRecordException exception) {
+            throw new CantLoadAssetAppropriationEventListException(exception, context, "Cannot update record.");
         }
     }
 
@@ -415,7 +423,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             String context = "Status: " + status;
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
             if (databaseTable.getRecords().isEmpty()) {
@@ -474,8 +482,8 @@ public class AssetAppropriationDAO implements AutoCloseable {
         String context = "Column Name: " + columnName + " - Id: " + id;
         try {
             DatabaseTable transactionTable;
-            transactionTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
-            transactionTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            transactionTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
+            transactionTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             transactionTable.loadToMemory();
 
             if (transactionTable.getRecords().isEmpty()) {
@@ -484,9 +492,12 @@ public class AssetAppropriationDAO implements AutoCloseable {
 
             for (DatabaseTableRecord record : transactionTable.getRecords()) {
                 record.setStringValue(columnName, value);
+                transactionTable.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantLoadAssetAppropriationTransactionListException(exception, context, "Cannot load table to memory.");
+        } catch (CantUpdateRecordException exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(exception, context, "Cannot update record.");
         }
     }
 
@@ -506,9 +517,12 @@ public class AssetAppropriationDAO implements AutoCloseable {
             for (DatabaseTableRecord record : transactionTable.getRecords()) {
                 record.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode());
                 record.setLongValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, System.currentTimeMillis());
+                transactionTable.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantLoadAssetAppropriationTransactionListException(exception, context, "Cannot load table to memory.");
+        } catch (CantUpdateRecordException exception) {
+            throw new CantLoadAssetAppropriationTransactionListException(exception, context, "Cannot update record.");
         }
     }
 
@@ -608,6 +622,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
         List<AssetAppropriationTransactionRecord> uncompleted = new ArrayList<>();
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.APPROPRIATION_STARTED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_OBTAINED));
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_REGISTERED));
         return uncompleted;
     }
 

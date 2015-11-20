@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * */
 public enum DatabaseFilterType {
     EQUAL("EQ"),
-    GRATER_THAN("GT"),
+    GREATER_THAN("GT"),
     LESS_THAN("LT"),
     LIKE("LIKE");
 
@@ -38,7 +38,7 @@ public enum DatabaseFilterType {
             case "EQ":
                 return DatabaseFilterType.EQUAL;
             case "GT":
-                return DatabaseFilterType.GRATER_THAN;
+                return DatabaseFilterType.GREATER_THAN;
             case "LT":
                 return DatabaseFilterType.LESS_THAN;
             case "LIKE":

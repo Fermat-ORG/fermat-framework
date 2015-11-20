@@ -2,7 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_manager;
 
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
@@ -12,7 +13,9 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.08.19..
  */
 
-public interface InstalledSubApp extends Serializable{
+public interface InstalledSubApp extends Serializable,FermatApp{
+
+
 
     /**
      * This method gives us the list of all the languages installed for this subApp
@@ -51,13 +54,6 @@ public interface InstalledSubApp extends Serializable{
      */
     public String getSubAppIcon();
 
-    /**
-     * This method gives us the public key of the wallet in this device. It is used as identifier of
-     * the wallet
-     *
-     * @return the public key represented as a string
-     */
-    public String getSubAppPublicKey();
 
     /**
      * This method gives us the subApp name

@@ -31,4 +31,5 @@ public interface PaintActivtyFeactures {
     public RelativeLayout getToolbarHeader();
 
     public void invalidate();
+
 }

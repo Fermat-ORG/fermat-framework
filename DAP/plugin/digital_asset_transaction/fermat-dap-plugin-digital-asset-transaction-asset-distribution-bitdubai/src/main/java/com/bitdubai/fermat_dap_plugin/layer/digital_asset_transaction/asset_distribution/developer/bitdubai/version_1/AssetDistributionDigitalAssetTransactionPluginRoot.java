@@ -184,7 +184,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
                 //This plugin must be stopped if this happens.
                 this.serviceStatus = ServiceStatus.STOPPED;
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantStartPluginException("Asset reception Event Recorded could not be started", exception, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION.getKey(), "The plugin event recorder is not started");
+                throw new CantStartPluginException("Asset reception Event Recorded could not be started", exception, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION.getCode(), "The plugin event recorder is not started");
             }
 
             //distributeAssets(null, null);
@@ -237,22 +237,6 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
 
     @Override
     public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantDistributeDigitalAssetsException {
-        //I will hardcode the hashmap and wallet public key for testing, TODO: please change this in production
-        printSomething("The hashmap to distribute is hardcoded");
-
-
-        ActorAssetUser registeredActorAssetUser = null;
-        for (ActorAssetUser actorAssetUser: digitalAssetsToDistribute.values() ){
-            registeredActorAssetUser = actorAssetUser;
-        }
-        //Commented by Luis Campo
-        //Test not runnig
-        //digitalAssetsToDistribute=getDistributionHashMapForTesting();
-
-        for (DigitalAssetMetadata digitalAssetMetadata: digitalAssetsToDistribute.keySet()){
-            digitalAssetsToDistribute.put(digitalAssetMetadata, registeredActorAssetUser);
-        }
-
         printSomething("The Wallet public key is hardcoded");
         walletPublicKey = "walletPublicKeyTest";
         try{

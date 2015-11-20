@@ -267,7 +267,7 @@ public class AssetReceptionDao {
             this.database=openDatabase();
             List<String> eventIdList=new ArrayList<>();
             DatabaseTable databaseTable = getDatabaseTable(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setFilterOrder(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
@@ -295,9 +295,10 @@ public class AssetReceptionDao {
             this.database=openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
+
             this.database.closeDatabase();
             return !databaseTable.getRecords().isEmpty();
         } catch (CantLoadTableToMemoryException exception) {
@@ -449,7 +450,7 @@ public class AssetReceptionDao {
             } else {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
-            databaseTableRecord.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.NOTIFIED.toString());
+            databaseTableRecord.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.NOTIFIED.getCode());
             databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {

@@ -8,7 +8,7 @@ import com.bitdubai.fermat_pip_core.layer.user.device_user.DeviceUserSubsystem;
 
 /**
  * The class <code>com.bitdubai.fermat_pip_core.layer.platform_service.UserLayer</code>
- * haves all the necessary business logic to start the User Layer of the PIP Platform.
+ * contains all the necessary business logic to start the User Layer of the PIP Platform.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 05/11/2015.
  */
