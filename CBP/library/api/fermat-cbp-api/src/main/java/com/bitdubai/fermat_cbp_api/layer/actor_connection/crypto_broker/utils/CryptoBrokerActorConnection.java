@@ -1,14 +1,13 @@
-package com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces;
+package com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorConnection;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorIdentity;
 
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnection</code>
+ * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection</code>
  * represents an actor connection for the crypto broker actor.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.

@@ -8,6 +8,6 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorCon
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
  */
-public interface CryptoBrokerActorConnectionSearch extends ActorConnectionSearch<CryptoBrokerActorConnection> {
+public interface CryptoBrokerActorConnectionSearch extends ActorConnectionSearch<com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection> {
 
 }
