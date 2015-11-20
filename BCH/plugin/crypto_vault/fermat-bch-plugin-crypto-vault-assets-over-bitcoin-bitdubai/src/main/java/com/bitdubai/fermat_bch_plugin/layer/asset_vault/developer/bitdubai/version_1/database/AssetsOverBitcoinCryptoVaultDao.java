@@ -582,26 +582,28 @@ public class AssetsOverBitcoinCryptoVaultDao {
      */
     public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws CantExecuteDatabaseOperationException{
         /**
-         * If we are allowed to save detailed information then we proceed.
+         * If we are not allowed to save detailed information then we will exit
          */
-        if (VaultKeyMaintenanceParameters.STORE_DETAILED_KEY_INFORMATION){
-            DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
-            databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, ecKey.getPublicKeyAsHex(), DatabaseFilterType.EQUAL);
+        if (!VaultKeyMaintenanceParameters.STORE_DETAILED_KEY_INFORMATION)
+            return;
 
-            try {
-                databaseTable.loadToMemory();
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error loading into memory table " + databaseTable.getTableName(), null);
-            }
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
+        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, ecKey.getPublicKeyAsHex(), DatabaseFilterType.EQUAL);
 
-            DatabaseTableRecord record = databaseTable.getRecords().get(0);
-            record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
-            try {
-                databaseTable.updateRecord(record);
-            } catch (CantUpdateRecordException e) {
-                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error updating record", "database issue");
-            }
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error loading into memory table " + databaseTable.getTableName(), null);
+        }
+
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+        record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+        try {
+            databaseTable.updateRecord(record);
+        } catch (CantUpdateRecordException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error updating record", "database issue");
         }
     }
+
 }
