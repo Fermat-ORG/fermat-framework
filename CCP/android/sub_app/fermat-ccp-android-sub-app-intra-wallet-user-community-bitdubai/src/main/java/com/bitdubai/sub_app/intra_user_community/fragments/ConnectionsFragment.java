@@ -285,14 +285,14 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
             // Esto podria ser un enum de item menu que correspondan a otro menu
             if(itemTitle.equals("New Identity")){
-                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode());
+                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode(),subAppsSession.getAppPublicKey());
 
             }
 //            if(id == R.id.action_connection_request){
 //                Toast.makeText(getActivity(),"Intra user request",Toast.LENGTH_SHORT).show();
 //            }
             if (item.getItemId() == R.id.action_notifications) {
-                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode());
+                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode(),subAppsSession.getAppPublicKey());
                 return true;
             }
 

@@ -50,6 +50,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_a
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceFragmentsEnumType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.squareup.picasso.Picasso;
 
@@ -107,7 +108,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         referenceWalletSession = (ReferenceWalletSession) walletSession;
         intraUserModuleManager = referenceWalletSession.getIntraUserModuleManager();
         try {
-            cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
+            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         } catch (CantGetCryptoWalletException e) {
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -165,7 +166,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                     //You can use own requirement here also.
 
                     if (!connectionDialogIsShow) {
-                        ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), referenceWalletSession, referenceWalletSession.getWalletResourcesProviderManager());
+                        ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity() ,referenceWalletSession, referenceWalletSession.getResourceProviderManager());
                         connectionWithCommunityDialog.show();
                         connectionWithCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -249,14 +250,14 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                 //add connection like a wallet contact
                 try {
                     if(walletContact.isConnection)
-                        referenceWalletSession.getCryptoWalletManager().getCryptoWallet().convertConnectionToContact(
+                        referenceWalletSession.getModuleManager().getCryptoWallet().convertConnectionToContact(
                                 walletContact.name,
                                 Actors.INTRA_USER,
                                 walletContact.actorPublicKey,
                                 walletContact.profileImage,
                                 Actors.INTRA_USER,
                                 referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),
-                                referenceWalletSession.getWalletSessionType().getWalletPublicKey() ,
+                                referenceWalletSession.getAppPublicKey() ,
                                 CryptoCurrency.BITCOIN,
                                 BlockchainNetworkType.TEST);
 
@@ -350,7 +351,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                             Long.parseLong(amount.getText().toString()),
                             validAddress,
                             notes,
-                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                            referenceWalletSession.getAppPublicKey(),
                             intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
                             Actors.INTRA_USER,
                             cryptoWalletWalletContact.getActorPublicKey(),
@@ -383,7 +384,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         List<WalletContact> contacts = new ArrayList<>();
         try
         {
-            List<CryptoWalletWalletContact> walletContactRecords = referenceWalletSession.getCryptoWalletManager().getCryptoWallet().listAllActorContactsAndConnections(referenceWalletSession.getWalletSessionType().getWalletPublicKey(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
+            List<CryptoWalletWalletContact> walletContactRecords = referenceWalletSession.getModuleManager().getCryptoWallet().listAllActorContactsAndConnections(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
 
                 String contactAddress = "";

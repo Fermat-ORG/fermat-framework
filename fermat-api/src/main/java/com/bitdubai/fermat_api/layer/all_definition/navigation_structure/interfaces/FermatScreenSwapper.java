@@ -16,7 +16,7 @@ public interface FermatScreenSwapper {
 
     public void selectWallet(InstalledWallet installedWallet);
 
-    public void changeActivity(String activity,Object... objects);
+    public void changeActivity(String activityName,String appBackPublicKey, Object... objects);
 
     public void selectSubApp(InstalledSubApp installedSubApp);
 

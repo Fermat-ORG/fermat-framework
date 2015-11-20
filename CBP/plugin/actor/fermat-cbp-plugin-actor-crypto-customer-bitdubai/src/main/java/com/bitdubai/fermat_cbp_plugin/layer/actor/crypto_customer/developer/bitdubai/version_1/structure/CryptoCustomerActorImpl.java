@@ -99,7 +99,7 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
     }
 
     //NEGOTIATION
-    @Override
+    /*@Override
     public CustomerBrokerNegotiation createNegotiationPurchase(final ActorIdentity cryptoBroker,final Collection<Clause> clauses) throws CantCreatePurchaseNegotiationException {
         try {
             return negotiationManager.createCustomerBrokerPurchaseNegotiation(identity.getPublicKey(), cryptoBroker.getPublicKey());
@@ -200,7 +200,7 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
     @Override
     public void receiveActorNetworkServiceContractPurchases(CustomerBrokerContractPurchase contract) throws CantReceiveActorNetworkServiceException{
 
-    }
+    }*/
 
     //OTHERS
     @Override

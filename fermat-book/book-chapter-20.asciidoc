@@ -9,7 +9,7 @@ Marketer :: responsible of elaborating marketing strategies in marketing areas o
 
 === New Components
 Transactions :: incoming and outgoing assets types.
-Wallet Branding :: a special *Wallet Editor* to re-brand a niche wallet into a new one by changing their _navigation structure_ and _GUI components (skins..) with an ituitive interface *without* programming but *reutilizing* the funtionalities provided by Fermat wallets.
+Wallet Branding :: a special *Wallet Editor* to re-brand a niche wallet into a new one by changing their _navigation structure_ and _GUI components (skins..) with an intuitive interface *without* programming but *re-utilizing* the functionalities provided by Fermat wallets.
 Wallets :: to store and manage Vouchers, Coupon, Discounts...
 
 ////
@@ -51,7 +51,7 @@ Coupon Wallet ::
 Discount Wallet :: +
 ////
 image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
-==== Continue Reading
+==== _Continue Reading ..._
 
 link:book-chapter-21.asciidoc[Next Chapter]
 

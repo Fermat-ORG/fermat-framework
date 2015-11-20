@@ -25,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
+                app:title=""
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
 

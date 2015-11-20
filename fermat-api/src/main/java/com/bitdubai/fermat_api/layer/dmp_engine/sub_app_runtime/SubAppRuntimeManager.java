@@ -25,7 +25,7 @@ public interface SubAppRuntimeManager extends RuntimeManager {
      * @return  The installed SubApps
      */
 
-    public SubApp getSubApp(SubApps subApps);
+    //public SubApp getSubApp(SubApps subApps);
 
     /**
      *  Search HomeScreen SubApp
@@ -33,7 +33,7 @@ public interface SubAppRuntimeManager extends RuntimeManager {
      * @return SubApp HomeScreen
      */
 
-    public SubApp getHomeScreen();
+    public SubApp getSubAppByPublicKey(String subAppPublicKey);
 
 
 

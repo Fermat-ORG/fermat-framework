@@ -204,7 +204,7 @@ public class CreateContactFragmentDialog extends Dialog implements
     private void saveContact() {
         try {
 
-            CryptoWallet cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
+            CryptoWallet cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
             CryptoAddress validAddress = validateAddress(txt_address.getText().toString(), cryptoWallet);
 
@@ -223,7 +223,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                             null,
                             null,
                             Actors.EXTRA_USER,
-                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                            referenceWalletSession.getAppPublicKey(),
                             toByteArray(contactImageBitmap)
                     );
                 }
@@ -235,7 +235,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                             null,
                             null,
                             Actors.EXTRA_USER,
-                            referenceWalletSession.getWalletSessionType().getWalletPublicKey()
+                            referenceWalletSession.getAppPublicKey()
                     );
                 }
 
@@ -274,7 +274,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                 mPasteItem.setEnabled(true);
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
                 EditText editText = (EditText) findViewById(R.id.txt_address);
-                CryptoAddress validAddress = validateAddress(item.getText().toString(), referenceWalletSession.getCryptoWalletManager().getCryptoWallet());
+                CryptoAddress validAddress = validateAddress(item.getText().toString(), referenceWalletSession.getModuleManager().getCryptoWallet());
                 if (validAddress != null) {
                     editText.setText(validAddress.getAddress());
                 } else {

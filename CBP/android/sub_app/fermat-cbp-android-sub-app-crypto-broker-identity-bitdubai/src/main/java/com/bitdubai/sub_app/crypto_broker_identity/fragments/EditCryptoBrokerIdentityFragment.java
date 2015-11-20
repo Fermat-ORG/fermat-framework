@@ -214,7 +214,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
         int resultCode = executor.execute();
 
         if (resultCode == SUCCESS || resultCode == DATA_NOT_CHANGED) {
-            changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
+            //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(),re);
 
         } else if (resultCode == EXCEPTION_THROWN) {
             Toast.makeText(getActivity(), "No se pudieron editar los datos", Toast.LENGTH_LONG).show();

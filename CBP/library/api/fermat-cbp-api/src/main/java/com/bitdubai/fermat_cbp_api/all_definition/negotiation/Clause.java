@@ -14,5 +14,4 @@ public interface Clause {
     String getValue();
     ClauseStatus getStatus();
     String getProposedBy();
-    short getIndexOrder();
 }

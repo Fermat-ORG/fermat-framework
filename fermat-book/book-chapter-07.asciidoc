@@ -1,5 +1,5 @@
 :numbered!:
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/logo_fermat_3.png[FermatLogo]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/logo_fermat_3.png[FermatLogo3]
 
 [[layersExplanation]]
 == Chapter 7: Fermat layers explanation
@@ -12,34 +12,34 @@ Now, let us explore the next *_layers_* following on top, which are almost prese
 :numbered: [start=5]
 
 === _Platform Services layer_
-The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsability from one component to another and specially the management of exceptions and track of all system's *events*.
+The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsibility from one component to another and specially the management of exceptions and track of all system's *events*.
 
 ////
 === _Hardware layer_
 As Fermat runs distributed in different devices, this layer has the modules necessary to identify each of this devices _independently_ of the user that is logged in, and also to provide all the device's information that is needed for the system to run.+
 
 === _Users layer_
-Fermat is a multiuser and multidevice system. Therefore, depending on how the user interacts with Fermat, users are divided into certain _users categories_ which allow to properly handle the user's activity within Fermat. +
-=== _Plugin layer_
+Fermat is a multiuser and multi-device system. Therefore, depending on how the user interacts with Fermat, users are divided into certain _users categories_ which allow to properly handle the user's activity within Fermat. +
+=== _Plug-in layer_
 === _License layer_
-Fermat system ensures a _microlicense_ system to let the developer of a certain plug-in or certain wallet or any other module to charge a *fee* for the use of the component, and the revenue is enforced programmatically by Fermat to reach the license owner.    
-Plugin :: +
+Fermat system ensures a _micro-license_ system to let the developer of a certain plug-in or certain wallet or any other module to charge a *fee* for the use of the component, and the revenue is enforced programmatically by Fermat to reach the license owner.    
+Plug-in :: +
 ////
 
 === _Network Service layer_
 Each time that a certain system function must perform any operation *outside* the device where Fermat is running, a _network service_ is required to follow the execution in other devices until is completed. +
-Network services' modules need to have a *communication channel* stablished and maintained between the parties involved, what is done by the *Fermat network*  +
-Each *network service module* running on a _local device_ stablishes communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. +
+Network services' modules need to have a *communication channel* established and maintained between the parties involved, what is done by the *Fermat network*  +
+Each *network service module* running on a _local device_ establishes communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. +
 The module handles a table of request and responses to communicate with the counterpart and so perform the required task. +
 
 === _Actor Network Service layer_
 This layer provides specific *network services* to interconnect the *actors identity* of an actor of a specific Fermat platform to the *user identity* on which it depends. + 
 
 === _Identity layer_
-Plug-ins in this layer manage the necessary information about the end user's *identity* within Fermat. Every *identity* in Fermat is a pair of privat/public key that acts like a credential to access to certain functionalities for specific to the * identity's owner For example, it allows the *end user* to have access to his own *wallets*. +
+Plug-ins in this layer manage the necessary information about the end user's *identity* within Fermat. Every *identity* in Fermat is a pair of private/public key that acts like a credential to access to certain functionalities for specific to the * identity's owner For example, it allows the *end user* to have access to his own *wallets*. +
 
 === _World layer_
-In this layer the components consult certain specific information from the world "outside"of Fermat, usually checking indexes on webpages, or gathering any kind of information offered in the web, to make this available to Fermats plugins to consume the collected data.
+In this layer the components consult certain specific information from the world "outside"of Fermat, usually checking indexes on web-pages, or gathering any kind of information offered in the web, to make this available to Fermat plugins to consume the collected data.
 
 === _Wallet layer_
 The components in this layer do all the *accountancy operations* related to the wallets.
@@ -48,9 +48,9 @@ The components in this layer do all the *accountancy operations* related to the 
 [horizontal]
 Transaction :: a transaction is basically any operation that includes *money*. 
 
-A transaction is dependent on the _atomicity_ of the changes of status in the operations involved, so each _transaction plugin_ should aknowledge wether the operation was succesfully ACCEPTED or at the contrary, it was REFUSED.
-Each plugin deals with a certain _transaction type_ defined by different criteria, mostly of the time, according to the *actors* involved and the *direction* (incoming / outgoing). +
-In Fermat the *transport of value* goes on a parallel path to the *transport of information (metadata)* of the transaction, so both transports are managed by the _transaction plugins_.
+A transaction is dependent on the _atomicity_ of the changes of status in the operations involved, so each _transaction plug-in_ should acknowledge whether the operation was successfully ACCEPTED or at the contrary, it was REFUSED.
+Each plug-in deals with a certain _transaction type_ defined by different criteria, mostly of the time, according to the *actors* involved and the *direction* (incoming / outgoing). +
+In Fermat the *transport of value* goes on a parallel path to the *transport of information (meta-data)* of the transaction, so both transports are managed by the _transaction plugins_.
 
 :numbered!:
 ==== _Digital Money Transaction layer_
@@ -67,10 +67,10 @@ This type of transaction layer deals with *digital money transaction*
 More complex plugins that deal with multiple transactions that occur at the same time to reflect a desired *business transaction* 
 
 === _Request layer_
-Plugins in this layer gather the differents _requests_ than have been triggered in the system and deliver them to the appropiated plugin to manage and fullfill the request.
+Plugins in this layer gather the different _requests_ than have been triggered in the system and deliver them to the appropriated plug-in to manage and fulfill the request.
 
 === _Middleware layer_
-Every plugin that cover any other functionality required and that is not included in the other layers.
+Every plug-in that cover any other functionality required and that is not included in the other layers.
 
 [[actorLayer]]
 === _Actor layer_
@@ -111,7 +111,7 @@ In this layer live the part of the *wallet* responsible of the GUI (Graphic User
 :numbered!:
 image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
   
-==== Continue Reading
+==== _Continue Reading ..._
 link:book-chapter-08.asciidoc[Next Chapter]
 
 link:book-chapter-06.asciidoc[Previous Chapter]

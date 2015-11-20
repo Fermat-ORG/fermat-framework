@@ -18,6 +18,7 @@ public class MenuItem implements FermatMenuItem {
     String icon;
 
     Activities linkToActivity;
+    private String appLinkPublicKey;
 
     /**
      * SideMenu class constructors
@@ -25,10 +26,11 @@ public class MenuItem implements FermatMenuItem {
     public MenuItem() {
     }
 
-    public MenuItem(String label, String icon, Activities linkToActivity) {
+    public MenuItem(String label, String icon, Activities linkToActivity,String appLinkPublicKey) {
         this.label = label;
         this.icon = icon;
         this.linkToActivity = linkToActivity;
+        this.appLinkPublicKey = appLinkPublicKey;
     }
 
     /**
@@ -61,5 +63,14 @@ public class MenuItem implements FermatMenuItem {
     @Override
     public Activities getLinkToActivity() {
         return linkToActivity;
+    }
+
+    @Override
+    public String getAppLinkPublicKey() {
+        return appLinkPublicKey;
+    }
+
+    public void setAppLinkPublicKey(String appLinkPublicKey) {
+        this.appLinkPublicKey = appLinkPublicKey;
     }
 }
