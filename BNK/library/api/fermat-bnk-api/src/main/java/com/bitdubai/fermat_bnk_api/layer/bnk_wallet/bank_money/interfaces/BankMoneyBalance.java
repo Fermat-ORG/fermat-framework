@@ -12,6 +12,8 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRe
 
 public interface BankMoneyBalance {
 
+    //change to BankMoneyWalletBalance
+
     double getBalance()  throws CantCalculateBalanceException;
 
     void debit(BankMoneyBalanceRecord BankMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException;

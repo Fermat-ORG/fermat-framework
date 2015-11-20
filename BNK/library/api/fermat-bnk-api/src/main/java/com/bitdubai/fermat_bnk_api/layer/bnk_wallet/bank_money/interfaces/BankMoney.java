@@ -12,6 +12,8 @@ import java.util.List;
  */
 public interface BankMoney {
 
+    //change to BankMoneyWallet
+
     BankMoneyBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException;
 
     BankMoneyBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException;
