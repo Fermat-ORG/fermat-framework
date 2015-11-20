@@ -107,7 +107,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 e.printStackTrace();
             }
 
-            testWallet();
+            //testWallet();
             System.out.println("Start Plugin AssetWalletIssuer");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(CantStartPluginException exception){
@@ -177,7 +177,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
         try {
 
             loadWalletIssuerMap();
-            walletId = walletIssuer.get(this.pluginId.toString());
+            walletId = walletIssuer.get("walletPublicKeyTest");
             Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
             databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
             database.closeDatabase();
