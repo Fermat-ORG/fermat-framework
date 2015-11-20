@@ -66,7 +66,7 @@ public class IdentityListFragment extends FermatListFragment<IdentityAssetUser>
             newIdentityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    changeActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
+                    changeActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode(),subAppsSession.getAppPublicKey());
                 }
             });
 
