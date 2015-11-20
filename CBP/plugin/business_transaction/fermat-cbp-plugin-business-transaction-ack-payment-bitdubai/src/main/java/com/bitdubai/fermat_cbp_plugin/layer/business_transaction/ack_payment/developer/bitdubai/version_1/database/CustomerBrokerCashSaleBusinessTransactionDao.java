@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_cash_sale.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.ack_payment.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -48,7 +48,7 @@ public class CustomerBrokerCashSaleBusinessTransactionDao {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
         } catch (DatabaseNotFoundException e) {
             try {
-                CustomerBrokerCashSaleBusinessTransactionDatabaseFactory databaseFactory = new CustomerBrokerCashSaleBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
+                com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_cash_sale.developer.bitdubai.version_1.database.CustomerBrokerCashSaleBusinessTransactionDatabaseFactory databaseFactory = new CustomerBrokerCashSaleBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeCustomerBrokerCashSaleBusinessTransactionDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
