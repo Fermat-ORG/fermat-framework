@@ -107,7 +107,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 e.printStackTrace();
             }
 
-            testWallet();
+            //testWallet();
             System.out.println("Start Plugin AssetWalletIssuer");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(CantStartPluginException exception){
