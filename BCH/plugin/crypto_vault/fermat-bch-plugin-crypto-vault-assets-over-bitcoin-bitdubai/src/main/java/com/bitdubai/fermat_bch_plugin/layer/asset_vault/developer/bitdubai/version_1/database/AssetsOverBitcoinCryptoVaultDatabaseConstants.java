@@ -42,7 +42,6 @@ public class AssetsOverBitcoinCryptoVaultDatabaseConstants {
     static final String KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME = "account_id";
     static final String KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME = "public_key";
     static final String KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME = "address";
-    static final String KEY_MAINTENANCE_DETAIL_USED_COLUMN_NAME = "used";
 
     static final String KEY_MAINTENANCE_DETAIL_FIRST_KEY_COLUMN = "account_id";
 

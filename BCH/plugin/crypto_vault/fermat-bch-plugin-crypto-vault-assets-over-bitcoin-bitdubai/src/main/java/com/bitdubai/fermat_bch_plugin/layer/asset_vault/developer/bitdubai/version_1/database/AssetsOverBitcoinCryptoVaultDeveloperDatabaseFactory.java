@@ -160,7 +160,7 @@ public class AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory implements Dea
         key_Maintenance_DetailColumns.add(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME);
         key_Maintenance_DetailColumns.add(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME);
         key_Maintenance_DetailColumns.add(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME);
-        key_Maintenance_DetailColumns.add(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_USED_COLUMN_NAME);
+
         /**
          * Table key_Maintenance_Detail addition.
          */
