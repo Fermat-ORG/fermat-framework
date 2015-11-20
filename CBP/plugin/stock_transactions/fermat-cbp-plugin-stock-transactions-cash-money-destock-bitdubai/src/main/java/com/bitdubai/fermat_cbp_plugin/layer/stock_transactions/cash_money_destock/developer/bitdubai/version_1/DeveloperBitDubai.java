@@ -1,7 +1,5 @@
-package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai;
+package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
@@ -10,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.BusinessTransactionBankMoneyDestockPluginRoot;
 
 /**
  * Created by franklin on 15/11/15.
@@ -24,7 +21,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     @Override
     public void start() throws CantStartPluginDeveloperException {
         try {
-            registerVersion(new BusinessTransactionBankMoneyDestockPluginRoot());
+            registerVersion(new StockTransactionsCashMoneyDestockPluginRoot());
         }
         catch (CantRegisterVersionException e) {
             throw new CantStartPluginDeveloperException(e,
