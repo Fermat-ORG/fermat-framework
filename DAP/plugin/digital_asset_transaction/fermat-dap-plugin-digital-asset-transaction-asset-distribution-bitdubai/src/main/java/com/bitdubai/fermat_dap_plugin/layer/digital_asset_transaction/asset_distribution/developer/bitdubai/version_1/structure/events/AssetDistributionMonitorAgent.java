@@ -260,7 +260,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                             System.out.println("ASSET DISTRIBUTION Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
                             DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = digitalAssetMetadataTransaction.getType();
                             System.out.println("ASSET DISTRIBUTION Digital Asset Metadata Transaction Type: " + digitalAssetMetadataTransactionType);
-                            if (digitalAssetMetadataTransactionType.getCode().equals(DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE.getCode())) {
+                            if (digitalAssetMetadataTransactionType == DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE) {
                                 String userId = digitalAssetMetadataTransaction.getSenderId();
                                 System.out.println("ASSET DISTRIBUTION User Id: " + userId);
                                 String genesisTransaction = digitalAssetMetadataTransaction.getGenesisTransaction();
@@ -274,8 +274,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                                 if (!registeredUserActorId.equals(userId)) {
                                     throw new CantDistributeDigitalAssetsException("User id from Asset distribution: " + userId + "\nRegistered publicKey: " + registeredUserActorId + "They are not equals");
                                 }
-                                DistributionStatus distributionStatus = digitalAssetMetadataTransaction.getDistributionStatus();
-                                assetDistributionDao.updateDistributionStatusByGenesisTransaction(distributionStatus, genesisTransaction);
+                                assetDistributionDao.updateDistributionStatusByGenesisTransaction(digitalAssetMetadataTransaction.getDistributionStatus(), genesisTransaction);
                                 assetTransmissionManager.confirmReception(transaction.getTransactionID());
                                 assetDistributionDao.updateEventStatus(assetDistributionDao.getPendingNetworkLayerEvents().get(0));
                             }
@@ -291,8 +290,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                         System.out.println("ASSET DISTRIBUTION cryptoAddressTo: " + cryptoAddressTo);
                         updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
 
-                        //todo I need to get the GenesisAmount to send it
-                        sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, 1000);
+                        sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, digitalAssetDistributionVault.getDigitalAssetMetadataFromLocalStorage(assetAcceptedGenesisTransaction).getDigitalAsset().getGenesisAmount());
 
                         assetDistributionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
                     }
