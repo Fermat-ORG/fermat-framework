@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.Ac
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
+import org.apache.commons.lang.Validate;
+
 import java.util.UUID;
 
 /**
@@ -35,6 +37,15 @@ public abstract class ActorConnection<T extends ActorIdentity> {
                            final ConnectionState connectionState,
                            final long            creationTime   ,
                            final long            updateTime     ) {
+
+        Validate.notNull(connectionId   , "The Connection ID can't be null."   );
+        Validate.notNull(linkedIdentity , "The Linked Identity can't be null." );
+        Validate.notNull(publicKey      , "The Public Key can't be null."      );
+        Validate.notNull(actorType      , "The Actor Type can't be null."      );
+        Validate.notNull(alias          , "The Alias can't be null."           );
+        Validate.notNull(image          , "The Image can't be null."           );
+        Validate.notNull(connectionState, "The Connection State can't be null.");
+        Validate.notNull(creationTime   , "The Creation Time can't be null."   );
 
         this.connectionId    = connectionId   ;
         this.linkedIdentity  = linkedIdentity ;
