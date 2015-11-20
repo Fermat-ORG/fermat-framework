@@ -67,7 +67,7 @@ public class PluginVersionReference {
 
         final Platforms platform = Platforms.getByCode(platformString);
         final Layers layer = Layers.getByCode(layerString);
-        final Plugins pluginEnum = Plugins.getByKey(pluginEnumString);
+        final Plugins pluginEnum = Plugins.getByCode(pluginEnumString);
         final Developers developer = Developers.getByCode(developerString);
         final Version version = new Version(versionString);
 
