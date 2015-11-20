@@ -3,10 +3,12 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -62,7 +64,7 @@ public class SettingsActivityFragment extends FermatWalletFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        configureActionBar();
+        configureToolbar();
 
         Activity activity = getActivity();
         LayoutInflater layoutInflater = activity.getLayoutInflater();
@@ -77,12 +79,15 @@ public class SettingsActivityFragment extends FermatWalletFragment {
         return rootView;
     }
 
-    private void configureActionBar() {
+    private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
 
