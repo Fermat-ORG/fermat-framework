@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CryptoCurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.crypto_money_stock_replenishment.interfaces.CryptoMoneyStockReplenishment;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.crypto_money_stock_replenishment.developer.bitdubai.version_1.structure.CryptoMoneyStockReplenishmentBusinessTransactionImpl;

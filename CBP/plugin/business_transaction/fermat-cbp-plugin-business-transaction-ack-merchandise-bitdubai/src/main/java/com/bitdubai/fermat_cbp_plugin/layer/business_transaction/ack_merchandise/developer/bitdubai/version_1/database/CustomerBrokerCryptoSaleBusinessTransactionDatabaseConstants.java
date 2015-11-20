@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_crypto_sale.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.ack_merchandise.developer.bitdubai.version_1.database;
 
 /**
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_crypto_sale.developer.bitdubai.version_1.database.CustomerBrokerCryptoSaleBusinessTransactionDatabaseConstants</code>

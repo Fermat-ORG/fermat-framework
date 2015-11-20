@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_crypto_sale.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.ack_merchandise.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BusinessTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;

@@ -15,13 +15,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_broke_cash_sale.interfaces.CustomerBrokerCashSale;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_cash_sale.developer.bitdubai.version_1.structure.CustomerBrokerCashSaleBusinessTransactionImpl;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_cash_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerCashSaleBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_cash_sale.developer.bitdubai.version_1.exceptions.CantInsertRecordCustomerBrokerCashSaleBusinessTransactionException;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_cash_sale.developer.bitdubai.version_1.exceptions.CantUpdateStatusCustomerBrokerCashSaleBusinessTransactionException;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_cash_sale.developer.bitdubai.version_1.exceptions.CustomerBrokerCashSaleBusinessTransactionInconsistentTableStateException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.ack_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerCashSaleBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.ack_payment.developer.bitdubai.version_1.exceptions.CantInsertRecordCustomerBrokerCashSaleBusinessTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.ack_payment.developer.bitdubai.version_1.exceptions.CantUpdateStatusCustomerBrokerCashSaleBusinessTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.ack_payment.developer.bitdubai.version_1.exceptions.CustomerBrokerCashSaleBusinessTransactionInconsistentTableStateException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.ack_payment.developer.bitdubai.version_1.structure.CustomerBrokerCashSaleBusinessTransactionImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class CustomerBrokerCashSaleBusinessTransactionDao {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
         } catch (DatabaseNotFoundException e) {
             try {
-                com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_cash_sale.developer.bitdubai.version_1.database.CustomerBrokerCashSaleBusinessTransactionDatabaseFactory databaseFactory = new CustomerBrokerCashSaleBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
+                CustomerBrokerCashSaleBusinessTransactionDatabaseFactory databaseFactory = new CustomerBrokerCashSaleBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeCustomerBrokerCashSaleBusinessTransactionDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
