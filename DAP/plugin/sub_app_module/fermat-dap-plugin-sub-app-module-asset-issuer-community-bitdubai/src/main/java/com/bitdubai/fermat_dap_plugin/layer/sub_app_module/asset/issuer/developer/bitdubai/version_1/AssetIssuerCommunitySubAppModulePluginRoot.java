@@ -19,6 +19,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,6 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     ErrorManager errorManager;
 
-    // TODO ADDED ERROR MANAGER REFERENCE, PLEASE MAKE USE OF THE ERROR MANAGER.
 
     public AssetIssuerCommunitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -53,7 +53,8 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
         try {
             return actorAssetIssuerManager.getAllAssetIssuerActorInTableRegistered();
         } catch (CantGetAssetIssuerActorsException e) {
-            e.printStackTrace(); // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            e.printStackTrace();
         }
         return new ArrayList<>();
     }
@@ -69,7 +70,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
             actorAssetIssuerManager.connectToActorAssetIssuer(actorAssetRedeemPoint, actorAssetIssuers);
 
         } catch (CantGetAssetRedeemPointActorsException e) {
-            // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConnectToAssetIssuerException(CantConnectToAssetIssuerException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
         }
     }
