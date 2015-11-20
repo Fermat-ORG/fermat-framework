@@ -29,7 +29,8 @@
 #CHANGELOG	
 ######
 #	1.0.2: 	- Fixes the issue publication in repositories that not owned by the developer
-#		- The developer message for a team leader is not longer print if the githubLogin is equal to teamLeaderGithubUser 
+#		- The developer message for a team leader is not longer print if the githubLogin is equal to teamLeaderGithubUser
+#   1.0.3:	- If you are a Team Leader you can do an autoassignment.
  
 from pygithub3 import Github
 
@@ -83,7 +84,7 @@ for rootIssue in rootIssues:
 	bodyGenerated=rootIssueSep[1]+"\n"+teamLeaderMessage
     	print titleGenerated+"\n"+bodyGenerated
     	print "------------------------------------------\n"
-	issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
+	issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 
 #Public interfaces issues
 for publicInterface in publicInterfaces:
@@ -91,7 +92,7 @@ for publicInterface in publicInterfaces:
 	bodyGenerated="This issue is closed when the "+publicInterface+" is written."+"\n"+teamLeaderMessage
     	print titleGenerated+"\n"+bodyGenerated
     	print "------------------------------------------\n"
-	issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
+	issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 
 #Internal structure issues
 for internalStructureClass in internalStructureClasses:
@@ -99,7 +100,7 @@ for internalStructureClass in internalStructureClasses:
 	bodyGenerated="This issue is closed when the "+internalStructureClass+" is written."+"\n"+teamLeaderMessage
     	print titleGenerated+"\n"+bodyGenerated
     	print "------------------------------------------\n"
-	issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
+	issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 
 #Event handling issues
 for eventHandler in eventHandlers:
@@ -107,22 +108,22 @@ for eventHandler in eventHandlers:
 	bodyGenerated="This issue is closed when the "+eventHandler+" is written."+"\n"+teamLeaderMessage
     	print titleGenerated+"\n"+bodyGenerated
     	print "------------------------------------------\n"
-	issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
+	issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 
 #Testing issues
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - Testing - Unit Testing"
 bodyGenerated="It is closed whenever all testing is done."
-issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
+issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - Testing - Integration Testing"
 bodyGenerated="It is closed whenever all testing is done."
-issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
+issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 
 #QA issue
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - QA"
 bodyGenerated="It is closed whenever QA tests are passed."
-issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
+issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
 
 #Production issue
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - Production"
 bodyGenerated="It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed."
-issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
+issues.create(dict(title=titleGenerated,body=bodyGenerated,assignee=githubLogin),user=repositoryUser,repo=repository)
