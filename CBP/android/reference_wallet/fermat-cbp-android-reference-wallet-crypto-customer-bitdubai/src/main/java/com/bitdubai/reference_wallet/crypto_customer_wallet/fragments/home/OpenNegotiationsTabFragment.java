@@ -174,7 +174,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_start_negotiation) {
-            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST);
+            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST,walletSession.getAppPublicKey());
         }
 
         return true;
@@ -280,7 +280,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     @Override
     public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
         walletSession.setData("negotiation_data", data);
-        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS);
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS,walletSession.getAppPublicKey());
     }
 
     @Override

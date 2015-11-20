@@ -105,7 +105,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         try {
             referenceWalletSession = (ReferenceWalletSession) walletSession;
-            moduleManager = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
+            moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
             errorManager = walletSession.getErrorManager();
         } catch (Exception ex) {
             if (errorManager != null)
@@ -157,7 +157,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
             int id = item.getItemId();
 
             if (id == BitcoinWalletConstants.IC_ACTION_SEND) {
-                    changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY);
+                    changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,walletSession.getAppPublicKey());
                     return true;
                 }
 
@@ -229,20 +229,20 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
             String intraUserPk = referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey();
 
-            List<CryptoWalletTransaction> list =moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(),intraUserPk, MAX_TRANSACTIONS, available_offset);
+            List<CryptoWalletTransaction> list =moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(),intraUserPk, MAX_TRANSACTIONS, available_offset);
 
             lstCryptoWalletTransactionsAvailable.addAll(list);
 
             available_offset = lstCryptoWalletTransactionsAvailable.size();
 
-            lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(),intraUserPk, MAX_TRANSACTIONS, book_offset));
+            lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(),intraUserPk, MAX_TRANSACTIONS, book_offset));
 
             book_offset = lstCryptoWalletTransactionsBook.size();
 
 
             for(CryptoWalletTransaction cryptoWalletTransaction : list){
                 List<CryptoWalletTransaction> lst = new ArrayList<>();
-                lst = moduleManager.getTransactions(intraUserPk,BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, 0);
+                lst = moduleManager.getTransactions(intraUserPk,BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), MAX_TRANSACTIONS, 0);
                 GrouperItem<CryptoWalletTransaction,CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction,CryptoWalletTransaction>(lst,false,cryptoWalletTransaction);
                 data.add(grouperItem);
             }

@@ -115,7 +115,7 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
             ActorTransactionSummary actorTransactionSummary = null;
 
             try{
-                actorTransactionSummary = cryptoWallet.getActorTransactionHistory(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getWalletSessionType().getWalletPublicKey(), data.getInvolvedActor().getActorPublicKey());
+                actorTransactionSummary = cryptoWallet.getActorTransactionHistory(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getAppPublicKey(), data.getInvolvedActor().getActorPublicKey());
 
             } catch (CantGetActorTransactionHistoryException e) {
                 e.printStackTrace();
@@ -141,7 +141,7 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
                         try {
                             lstCryptoTransactions = cryptoWallet.listTransactionsByActor(
                                     BalanceType.valueOf(referenceWalletSession.getBalanceTypeSelected()),
-                                    referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                                    referenceWalletSession.getAppPublicKey(),
                                     data.getInvolvedActor().getActorPublicKey(),
                                     referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),
                                     50, 0

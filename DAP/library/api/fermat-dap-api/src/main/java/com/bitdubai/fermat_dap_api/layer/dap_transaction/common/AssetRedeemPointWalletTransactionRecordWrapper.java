@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_transaction.common;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
@@ -27,7 +28,18 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
     private final Actors actorToType;
     private final long amount;
     private final long timeStamp;
+
+    {
+        this.timeStamp = System.currentTimeMillis();
+    }
+
     private final String memo;
+
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        this.memo = "Digital Asset Redeemed at:  " + sdf.format(new Date(timeStamp));
+    }
+
     private final String digitalAssetMetadataHash;
     private final String transactionId;
 
@@ -43,8 +55,6 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
         this.actorFromType = actorFromType;
         this.actorToType = actorToType;
         this.amount = amount;
-        this.timeStamp = timeStamp;
-        this.memo = memo;
         this.digitalAssetMetadataHash = digitalAssetMetadataHash;
         this.transactionId = transactionId;
     }
@@ -64,9 +74,6 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
         this.actorFromType = Actors.DAP_ASSET_USER;
         this.actorToType = Actors.DAP_ASSET_REDEEM_POINT;
         this.amount = asset.getGenesisAmount();
-        this.timeStamp = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        this.memo = "Digital Asset Redeemed at:  " + sdf.format(new Date(timeStamp));
         this.digitalAssetMetadataHash = assetMetadataTransaction.getDigitalAssetMetadata().getDigitalAssetHash();
     }
 
@@ -89,9 +96,26 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
         this.actorFromType = Actors.DAP_ASSET_USER;
         this.actorToType = Actors.DAP_ASSET_REDEEM_POINT;
         this.amount = asset.getGenesisAmount();
-        this.timeStamp = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        this.memo = "Digital Asset Redeemed at:  " + sdf.format(new Date(timeStamp));
+        this.digitalAssetMetadataHash = assetMetadata.getDigitalAssetHash();
+    }
+
+
+    public AssetRedeemPointWalletTransactionRecordWrapper(DigitalAssetMetadata assetMetadata,
+                                                          CryptoTransaction cryptoTransaction,
+                                                          String actorFromPublicKey,
+                                                          String actorToPublicKey) {
+        DigitalAsset asset = assetMetadata.getDigitalAsset();
+        this.digitalAsset = asset;
+        this.name = asset.getName();
+        this.description = asset.getDescription();
+        this.addressFrom = cryptoTransaction.getAddressFrom();
+        this.addressTo = cryptoTransaction.getAddressTo();
+        this.actorFromPublicKey = actorFromPublicKey;
+        this.actorToPublicKey = actorToPublicKey;
+        this.transactionId = cryptoTransaction.getTransactionHash();
+        this.actorFromType = Actors.DAP_ASSET_USER;
+        this.actorToType = Actors.DAP_ASSET_REDEEM_POINT;
+        this.amount = asset.getGenesisAmount();
         this.digitalAssetMetadataHash = assetMetadata.getDigitalAssetHash();
     }
     //PUBLIC METHODS
