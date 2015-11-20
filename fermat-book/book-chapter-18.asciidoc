@@ -1,7 +1,7 @@
 image::https://github.com/bitDubai/media-kit/blob/master/Coins/CDN.jpg[FermatCDN]
 == Chapter 18: Fermat Crypto Distribution Network 
 === Developing Regional Crypto Ecosystems
-In the actual stage of development of the crypto currency industry, there is still a very restraint availability of crypto currency due to the reduced circulation regarding the transaction volume and the number of actors involved in the business. Fermat implementation brings to the market a lot of tools and products to facilitate the exchange of crypto currencies in various ways. A key point in building a crypto distribution network is the role of the cryptobrokers whose business logic is straightforward the constant selling of crypto and fiat money. However, to extend the cryptobroker activities to a larger network of interactions that can build a *local* circulation of crypto currencies, the functionalities covered by the previous _Crypto Brokers Platform_ are not sufficient. This new platform adds what is necesary to achieve this goal. +
+In the actual stage of development of the crypto currency industry, there is still a very restraint availability of crypto currency due to the reduced circulation regarding the transaction volume and the number of actors involved in the business. Fermat implementation brings to the market a lot of tools and products to facilitate the exchange of crypto currencies in various ways. A key point in building a crypto distribution network is the role of the cryptobrokers whose business logic is straightforward the constant selling of crypto and fiat money. However, to extend the cryptobroker activities to a larger network of interactions that can build a *local* circulation of crypto currencies, the functionalities covered by the previous _Crypto Brokers Platform_ are not sufficient. This new platform adds what is necessary to achieve this goal. +
 There is a new set of circuits where the crypto and fiat money flow, and several complexities to be taken into account. The new components not only serve to deal with this new interactions but also motivates the adoption of new roles for the different actors stimulating a web of interconnections where value is always being transmitted within a local environment of end users. Thus, a regional crypto ecosystem is created!
 
 
@@ -28,7 +28,7 @@ Wallets :: Crypto Wholesaler Wallet , Crypto Distributor Wallet, top Up Point Wa
 
 
 image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
-===== Continue reading ...
+===== _Continue reading ..._
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]
 ////
