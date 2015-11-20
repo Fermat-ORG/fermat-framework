@@ -6,10 +6,10 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
@@ -44,16 +44,11 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.drafts.Draft_17;
-
-import org.restlet.Client;
-import org.restlet.Context;
-import org.restlet.data.Protocol;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -102,11 +97,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     private LocationManager locationManager;
 
     /**
-     * Represent the client
-     */
-    private Client client;
-
-    /**
      * Constructor whit parameters
      *
      * @param uri
@@ -119,7 +109,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         this.wsCommunicationsCloudClientPingAgent = new WsCommunicationsCloudClientPingAgent(wsCommunicationsCloudClientChannel);
         this.wsCommunicationVPNClientManagerAgent = new WsCommunicationVPNClientManagerAgent();
         this.locationManager                      = locationManager;
-        this.client = new Client(new Context(), Protocol.HTTP);
     }
 
     /**
@@ -386,8 +375,8 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
              */
             Gson gson = new Gson();
             JsonObject jsonObject = new JsonObject();
-            //jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsCloudClientChannel.getIdentityPublicKey());
-            jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, "09A3B707D154r3B12C7CC626BCD7CF19EA8813B1B56A1B75E1C27335F8086C7ED588A7A06BCA67A289B73097FF67F5B1A0844FF2D550A6FCEFB66277EFDEB13A1");
+            jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsCloudClientChannel.getIdentityPublicKey());
+            //jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, "09A3B707D154r3B12C7CC626BCD7CF19EA8813B1B56A1B75E1C27335F8086C7ED588A7A06BCA67A289B73097FF67F5B1A0844FF2D550A6FCEFB66277EFDEB13A1");
             jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
 
             // Create a new RestTemplate instance
