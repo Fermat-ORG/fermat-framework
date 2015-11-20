@@ -108,7 +108,7 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
         return table.getRecords();
     }
 
-    private CryptoMoneyTransaction getCryptoMoneyRestockTransaction(final DatabaseTableRecord bankMoneyRestockTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException, com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException {
+    private CryptoMoneyTransaction getCryptoMoneyRestockTransaction(final DatabaseTableRecord bankMoneyRestockTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
 
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = new CryptoMoneyDestockTransactionImpl();
 
