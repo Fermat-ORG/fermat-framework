@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
@@ -144,7 +145,7 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
 
         private void listByActorAssetIssuerNetworkService() throws CantCreateActorAssetIssuerException {
             try {
-                if (assetIssuerActorNetworkServiceManager != null) {
+                if (assetIssuerActorNetworkServiceManager != null && assetIssuerActorDao.getActorAssetIssuer() != null) {
                     List<ActorAssetIssuer> list = assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered();
                     if (list.isEmpty()) {
                         System.out.println("Actor Asset Issuer - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
@@ -163,6 +164,8 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
             } catch (CantRequestListActorAssetIssuerRegisteredException e) {
                 throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             } catch (CantAddPendingAssetIssuerException e) {
+                e.printStackTrace();
+            } catch (CantGetAssetIssuerActorsException e) {
                 e.printStackTrace();
             }
         }
