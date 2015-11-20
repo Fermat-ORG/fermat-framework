@@ -265,6 +265,46 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
+    /**
+     * RedeemPoint Incoming Crypto Events
+     */
+    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT("IAOCNWTRP") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetOnCryptoNetworkWaitingTransferenceRedeemPointEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceRedeemPointEvent();
+        }
+    },
+    INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT("IAOBCWTRP") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetOnBlockchainWaitingTransferenceRedeemPointEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnBlockchainWaitingTransferenceRedeemPointEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT("IAROCNWTRP") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetReversedOnCryptoNetworkWaitingTransferenceRedeemPointEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceRedeemPointEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT("IAROBCWTRP") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetReversedOnBlockchainWaitingTransferenceRedeemPointEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceRedeemPointEvent();
+        }
+    },
+
     INCOMING_CRYPTO_RECEIVED("ICR") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingCryptoReceivedEventListener(this, fermatEventMonitor);
