@@ -153,7 +153,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * starts the monitoring
          */
         peerGroup.start();
-        peerGroup.startBlockChainDownload(null);
+        peerGroup.startBlockChainDownload(events);
 
         while (true){
             try {

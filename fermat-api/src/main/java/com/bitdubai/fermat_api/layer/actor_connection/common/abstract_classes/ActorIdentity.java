@@ -2,6 +2,8 @@ package com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
+import org.apache.commons.lang.Validate;
+
 /**
  * The abstract class <code>com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorIdentity</code>
  * represents an actor identity.
@@ -18,6 +20,9 @@ public abstract class ActorIdentity {
 
     public ActorIdentity(final String publicKey,
                          final Actors actorType) {
+
+        Validate.notNull(publicKey, "The Public Key can't be null.");
+        Validate.notNull(actorType, "The Actor Type can't be null.");
 
         this.publicKey = publicKey;
         this.actorType = actorType;

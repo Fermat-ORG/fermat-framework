@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.ContractBasicInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ContractExpandableListViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.GrouperViewHolder;
