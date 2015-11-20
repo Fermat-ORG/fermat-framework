@@ -118,6 +118,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          */
         for (BlockchainNetworkType blockchainNetworkType : blockchainNetworkTypes){
             /**
+             * I will update the detailed stats table with the keys information for each network type and vault
+             */
+            updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, keyList);
+
+            /**
              * load (if any) existing wallet.
              */
             Wallet wallet = getWallet(blockchainNetworkType, keyList);
@@ -167,11 +172,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
                 bitcoinCryptoNetworkMonitor.start();
             }
-
-            /**
-             * I will update the detailed stats table with the keys information for each network type and vault
-             */
-            updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, keyList);
         }
     }
 
