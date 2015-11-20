@@ -11,10 +11,10 @@ public enum BankCurrencyType {
     EURO("EUR"),
     DOLARAUSTRALIANO("AUD"),
     DOLARCANADIENCE("CAD"),
-    FRANCOSUIZP("CHF"),
+    FRANCOSUIZO("CHF"),
     LIBRAESTERLINA("GBP"),
     YENJAPONES("JPY"),
-    BOLIVARES("BS");
+    BOLIVARES("VEF");
 
     private String code;
 
@@ -32,10 +32,10 @@ public enum BankCurrencyType {
             case "EUR": return BankCurrencyType.EURO;
             case "AUD": return BankCurrencyType.DOLARAUSTRALIANO;
             case "CAD": return BankCurrencyType.DOLARCANADIENCE;
-            case "CHF": return BankCurrencyType.FRANCOSUIZP;
+            case "CHF": return BankCurrencyType.FRANCOSUIZO;
             case "GBP": return BankCurrencyType.LIBRAESTERLINA;
             case "JPY": return BankCurrencyType.YENJAPONES;
-            case "BS": return BankCurrencyType.BOLIVARES;
+            case "VEF": return BankCurrencyType.BOLIVARES;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BankCurrencyType enum");
         }
     }
