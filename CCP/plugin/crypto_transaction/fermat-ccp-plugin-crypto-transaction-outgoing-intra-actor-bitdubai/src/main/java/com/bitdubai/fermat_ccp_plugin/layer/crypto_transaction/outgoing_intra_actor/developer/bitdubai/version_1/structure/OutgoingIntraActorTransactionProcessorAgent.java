@@ -217,6 +217,14 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         transaction.setTransactionHash(hash);
                         dao.setToSTCV(transaction);
 
+                        this.cryptoTransmissionManager.sendCrypto(transaction.getTransactionId(),
+                                transaction.getAddressTo().getCryptoCurrency(),
+                                transaction.getAmount(),
+                                transaction.getActorFromPublicKey(),
+                                transaction.getActorToPublicKey(),
+                                transaction.getTransactionHash(),
+                                transaction.getMemo());
+
                     } catch (InsufficientCryptoFundsException e) {
                         // TODO: Raise informative event
                         try {
@@ -241,6 +249,9 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         reportUnexpectedException(e);
                         // TODO: Verify what to do when the transaction has already been sent.
                     }
+                    catch (CouldNotTransmitCryptoException | OutgoingIntraActorCantSetTranactionHashException | OutgoingIntraActorCantCancelTransactionException e) {
+                    reportUnexpectedException(e);
+                }
                 }
 
 
