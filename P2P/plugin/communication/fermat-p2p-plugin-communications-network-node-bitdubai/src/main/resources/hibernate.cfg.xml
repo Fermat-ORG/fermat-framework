@@ -16,7 +16,6 @@
         <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.ActorsCatalog"/>
         <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.ActorsCatalogTransaction"/>
         <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.ActorsCatalogTransactionsPendingForPropagation"/>
-        <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.ActorsCatalogTransactionsPendingForPropagationPK"/>
         <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.CallsLog"/>
         <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.CheckedActorsHistory"/>
         <mapping class="com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities.CheckedClientsHistory"/>

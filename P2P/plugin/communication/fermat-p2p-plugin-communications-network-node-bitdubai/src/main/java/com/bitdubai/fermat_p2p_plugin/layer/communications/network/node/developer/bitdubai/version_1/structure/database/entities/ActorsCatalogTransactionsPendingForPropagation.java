@@ -1,8 +1,15 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.sql.Timestamp;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 
 /**
@@ -15,8 +22,13 @@ import java.sql.Timestamp;
 public class ActorsCatalogTransactionsPendingForPropagation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	private ActorsCatalogTransactionsPendingForPropagationPK id;
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="\"HASH_ID\"", unique=true, nullable=false, length=100)
+	private String hashId;
+
+	@Column(name="\"PHOTO\"", unique=true, nullable=false)
+	private String photo;
 
 	@Column(name="\"ACTOR_TYPE\"", nullable=false, length=50)
 	private String actorType;
@@ -51,12 +63,20 @@ public class ActorsCatalogTransactionsPendingForPropagation implements Serializa
 	public ActorsCatalogTransactionsPendingForPropagation() {
 	}
 
-	public ActorsCatalogTransactionsPendingForPropagationPK getId() {
-		return this.id;
+	public String getHashId() {
+		return hashId;
 	}
 
-	public void setId(ActorsCatalogTransactionsPendingForPropagationPK id) {
-		this.id = id;
+	public void setHashId(String hashId) {
+		this.hashId = hashId;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 
 	public String getActorType() {

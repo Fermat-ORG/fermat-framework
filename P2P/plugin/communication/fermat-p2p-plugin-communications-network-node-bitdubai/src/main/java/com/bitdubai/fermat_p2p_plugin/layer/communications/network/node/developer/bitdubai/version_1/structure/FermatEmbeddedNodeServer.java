@@ -74,20 +74,13 @@ public class FermatEmbeddedNodeServer {
     private final ServletContainer servletContainer;
 
     /**
-     * Represent the deploymentManager instance
-     */
-    private DeploymentManager deploymentManager;
-
-    /**
      * Represent the pathHandler instance
      */
     private PathHandler pathHandler;
 
     /**
-     * Represent the undertowServer instance
+     * Represent the UndertowJaxrsServer instance
      */
-    private Undertow undertowServer;
-
     private final UndertowJaxrsServer server;
 
     /**
@@ -100,15 +93,6 @@ public class FermatEmbeddedNodeServer {
        this.servletContainer = Servlets.defaultContainer();
     }
 
-
-    private Undertow configure(DeploymentInfo deploymentInfo) throws ServletException {
-        DeploymentManager manager = servletContainer.addDeployment(deploymentInfo);
-        manager.deploy();
-        pathHandler = Handlers.path().addPrefixPath(APP_NAME, manager.start());
-        serverBuilder.setHandler(pathHandler);
-        return serverBuilder.build();
-    }
-
     private DeploymentInfo createDeploymentInfo(){
 
         /*
@@ -119,6 +103,9 @@ public class FermatEmbeddedNodeServer {
         appWebSocketDeploymentInfo.addEndpoint(WebSocketNodeChannelServerEndpoint.class);
         appWebSocketDeploymentInfo.addEndpoint(WebSocketClientChannelServerEndpoint.class);
 
+        /*
+         * Create the App ResteasyDeployment and configure
+         */
         ResteasyDeployment deployment = new ResteasyDeployment();
         deployment.setApplicationClass(JaxRsActivator.class.getName());
         deployment.setInjectorFactoryClass("org.jboss.resteasy.cdi.CdiInjectorFactory");

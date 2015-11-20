@@ -16,6 +16,8 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
 
         exclude 'lib/x86_64/darwin/libscrypt.dylib'
         exclude 'lib/x86_64/freebsd/libscrypt.so'
@@ -78,12 +80,12 @@ dependencies {
     compile project(':fermat-osa-android-core')
 
     // DMP Projects (Wallets)
-    compile project(':fermat-ccp-android-reference-bitcoin-wallet-bitdubai')
+    compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-ccp-android-clone-reference-nich-wallet')
 
     // DMP Projects (Sub APPs)
-    compile project(':fermat-ccp-android-sub-app-intra-user-identity-bitdubai')
-    compile project(':fermat-ccp-android-sub-app-intra-user-community-bitdubai')
+    compile project(':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai')
+    compile project(':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-factory-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
