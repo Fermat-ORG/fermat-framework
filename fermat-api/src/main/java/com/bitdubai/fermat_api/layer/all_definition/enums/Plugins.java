@@ -205,6 +205,7 @@ public enum Plugins implements FermatEnum {
     WALLET_STATISTICS           ("WSTA"),
     WALLET_STORE                ("WST"),
     WS_CLOUD_CLIENT             ("WCL"),
+    BITDUBAI_CBP_STOCK_TRANSACTIONS_BANK_MONEY_RESTOCK ("BCBPSTBMR"),
 
     // End  new Plugins
 
