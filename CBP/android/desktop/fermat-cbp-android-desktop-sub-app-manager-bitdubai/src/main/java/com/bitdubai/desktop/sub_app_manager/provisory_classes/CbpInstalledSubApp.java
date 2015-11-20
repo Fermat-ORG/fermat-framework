@@ -92,10 +92,6 @@ public class CbpInstalledSubApp implements InstalledSubApp {
      *
      * @return the public key represented as a string
      */
-    @Override
-    public String getSubAppPublicKey() {
-        return publicKey;
-    }
 
     /**
      * This method gives us the subApp name
@@ -118,5 +114,8 @@ public class CbpInstalledSubApp implements InstalledSubApp {
     }
 
 
-
+    @Override
+    public String getAppPublicKey() {
+        return publicKey;
+    }
 }

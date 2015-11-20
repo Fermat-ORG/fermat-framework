@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
@@ -20,13 +22,15 @@ import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 /**
  * Created by Matias Furszyfer on 2015.26.21..
  */
-public class FermatWalletFragment extends Fragment implements FermatFragments {
+public class FermatWalletFragment<M extends ModuleManager> extends Fragment implements FermatFragments {
 
     /**
      * FLAGS
@@ -94,8 +98,8 @@ public class FermatWalletFragment extends Fragment implements FermatFragments {
     /**
      * Change activity
      */
-    protected final void changeActivity(Activities activity) {
-        getFermatScreenSwapper().changeActivity(activity.getCode());
+    protected final void changeActivity(Activities activity,String appPublicKey) {
+        getFermatScreenSwapper().changeActivity(activity.getCode(),appPublicKey);
     }
 
     /**

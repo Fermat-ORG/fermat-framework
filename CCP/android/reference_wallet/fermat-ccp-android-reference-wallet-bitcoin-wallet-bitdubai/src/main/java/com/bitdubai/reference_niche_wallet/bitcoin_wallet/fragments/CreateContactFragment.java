@@ -132,7 +132,7 @@ public class CreateContactFragment extends FermatWalletFragment {
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
         errorManager = walletSession.getErrorManager();
         try {
-            cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
+            cryptoWalletManager = referenceWalletSession.getModuleManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
 
         } catch (CantGetCryptoWalletException e) {
@@ -276,7 +276,7 @@ public class CreateContactFragment extends FermatWalletFragment {
                         null,
                         null,
                         Actors.EXTRA_USER,
-                        walletSession.getWalletSessionType().getWalletPublicKey()
+                        walletSession.getAppPublicKey()
                 );
 
                 Toast.makeText(getActivity().getApplicationContext(), "Contact saved!", Toast.LENGTH_SHORT).show();
