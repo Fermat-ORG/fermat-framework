@@ -10,7 +10,7 @@ Welcome to Fermat's  official book !
 
 This is the repository version of Fermat's book.
 To begin reading the book please clic on the following link:
-[fermat-book](https://github.com/bitDubai/fermat/blob/master/fermat-book/book-chapter-00(intro).asciidoc)
+[Fermat Book](https://github.com/bitDubai/fermat/blob/master/fermat-book/book-chapter-00(intro).asciidoc)
 
 For a technical and academic description of the project, please refer to: 
 [Fermat White Paper](https://github.com/bitDubai/fermat/tree/master/fermat/FERMAT-WHITE-PAPER.md)
@@ -29,4 +29,4 @@ Gustavo Corradi.
 
 Fermat Book Team 
 
-( book@fermat.org ) 
+(book@fermat.org) 
