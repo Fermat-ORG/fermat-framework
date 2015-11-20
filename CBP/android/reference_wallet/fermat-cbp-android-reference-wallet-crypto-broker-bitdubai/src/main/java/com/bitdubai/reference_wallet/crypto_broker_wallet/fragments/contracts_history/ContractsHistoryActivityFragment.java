@@ -92,6 +92,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         super.initViews(layout);
 
         configureToolbar();
+
         configureNavigationDrawer();
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
