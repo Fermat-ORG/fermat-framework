@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_cash_purchase.developer.bitdubai.version_1;
+package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  * Created by Yordin Alayn on 16.09.15.
  */
 
-public class BusinessTransactionCustomerPaymentPluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class CustomerOnlinePaymentPluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
     ErrorManager errorManager;
 
@@ -36,7 +36,7 @@ public class BusinessTransactionCustomerPaymentPluginRoot implements  DealsWithE
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.BusinessTransactionCustomerPaymentPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.CustomerOnlinePaymentPluginRoot");
         return returnedClasses;
     }
 
@@ -44,11 +44,11 @@ public class BusinessTransactionCustomerPaymentPluginRoot implements  DealsWithE
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         try {
             for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-                if (BusinessTransactionCustomerPaymentPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    BusinessTransactionCustomerPaymentPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    BusinessTransactionCustomerPaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                if (CustomerOnlinePaymentPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    CustomerOnlinePaymentPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    CustomerOnlinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 } else {
-                    BusinessTransactionCustomerPaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                    CustomerOnlinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
         } catch (Exception exception) {
@@ -105,7 +105,7 @@ public class BusinessTransactionCustomerPaymentPluginRoot implements  DealsWithE
     public static LogLevel getLogLevelByClass(String className) {
         try {
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return BusinessTransactionCustomerPaymentPluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return CustomerOnlinePaymentPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
             System.err.println("CantGetLogLevelByClass: " + e.getMessage());
             return DEFAULT_LOG_LEVEL;

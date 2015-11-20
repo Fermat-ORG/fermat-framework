@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_cash_purchase.developer.bitdubai;
+package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_cash_purchase.developer.bitdubai.version_1.BusinessTransactionCustomerPaymentPluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.CustomerOnlinePaymentPluginRoot;
 
 /**
  * Created by Yordin Alayn on 16.09.15.
@@ -21,7 +21,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
     }
 
     public DeveloperBitDubai () {
-        plugin = new BusinessTransactionCustomerPaymentPluginRoot();
+        plugin = new CustomerOnlinePaymentPluginRoot();
     }
 
     @Override
