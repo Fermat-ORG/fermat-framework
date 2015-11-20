@@ -9,6 +9,6 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.Cr
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
  */
-public interface CryptoBrokerActorConnectionManager extends ActorConnectionManager<CryptoBrokerActorIdentity, com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection, CryptoBrokerActorConnectionSearch> {
+public interface CryptoBrokerActorConnectionManager extends ActorConnectionManager<CryptoBrokerActorIdentity, CryptoBrokerActorConnection, CryptoBrokerActorConnectionSearch> {
 
 }
