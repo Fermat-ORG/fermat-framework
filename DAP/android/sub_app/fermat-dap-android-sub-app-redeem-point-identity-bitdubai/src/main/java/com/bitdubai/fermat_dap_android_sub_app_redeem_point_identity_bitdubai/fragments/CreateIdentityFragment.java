@@ -116,7 +116,7 @@ public class CreateIdentityFragment extends FermatFragment {
                 int resultKey = createNewIdentity();
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
-                        changeActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY.getCode());
+                        changeActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY.getCode(),subAppsSession.getAppPublicKey());
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
                         Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();

@@ -1,9 +1,8 @@
 package unit.com.bitdubai.sub_app.crypto_broker_identity.util;
 
 import android.app.Activity;
-import android.widget.Filter;
 
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.sub_app.crypto_broker_identity.BuildConfig;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CryptoBrokerIdentityListFilter;

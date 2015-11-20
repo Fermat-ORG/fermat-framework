@@ -1,9 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_identity.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.IdentityPublished;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 
 /**
  * Created by angel on 15/10/15.
