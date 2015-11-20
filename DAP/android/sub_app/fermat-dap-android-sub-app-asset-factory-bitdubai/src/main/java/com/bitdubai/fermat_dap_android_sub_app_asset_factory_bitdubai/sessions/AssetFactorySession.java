@@ -1,9 +1,16 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +21,7 @@ import java.util.Map;
  * @author Francisco Vasquez
  * @version 1.0
  */
-public class AssetFactorySession implements SubAppsSession {
+public class AssetFactorySession extends AbstractFermatSession<InstalledSubApp,AssetFactoryModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
 
     /**
      * Issuer Manager
@@ -38,11 +45,11 @@ public class AssetFactorySession implements SubAppsSession {
     /**
      * Constructor
      *
-     * @param subApps      SubApp Type
      * @param errorManager Error Manager
      * @param manager      AssetIssuerWallet Manager
      */
-    public AssetFactorySession(SubApps subApps, ErrorManager errorManager, AssetFactoryModuleManager manager) {
+    public AssetFactorySession(InstalledSubApp subApp, ErrorManager errorManager, AssetFactoryModuleManager manager) {
+        super(subApp.getAppPublicKey(),subApp,errorManager,manager,null);
         this.subApps = subApps;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
@@ -51,8 +58,8 @@ public class AssetFactorySession implements SubAppsSession {
 
 
     @Override
-    public SubApps getSubAppSessionType() {
-        return subApps;
+    public InstalledSubApp getSubAppSessionType() {
+        return getFermatApp();
     }
 
     @Override

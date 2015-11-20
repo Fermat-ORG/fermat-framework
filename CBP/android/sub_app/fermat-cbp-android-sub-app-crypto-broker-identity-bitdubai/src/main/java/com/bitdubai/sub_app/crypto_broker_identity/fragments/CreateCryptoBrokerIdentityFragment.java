@@ -177,7 +177,7 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
 
         switch (resultKey) {
             case SUCCESS:
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
+                //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
                 break;
             case EXCEPTION_THROWN:
                 Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();

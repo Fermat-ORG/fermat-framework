@@ -130,4 +130,8 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     }
 
 
+    @Override
+    public String getAppPublicKey() {
+        return publicKey;
+    }
 }

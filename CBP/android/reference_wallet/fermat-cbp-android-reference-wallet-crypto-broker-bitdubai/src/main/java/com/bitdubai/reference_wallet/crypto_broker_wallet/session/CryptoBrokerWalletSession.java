@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.session;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
@@ -11,7 +12,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.preference_settings.Cr
 import java.util.HashMap;
 import java.util.Map;
 
-public class CryptoBrokerWalletSession implements WalletSession {
+public class CryptoBrokerWalletSession extends AbstractFermatSession<InstalledWallet,CryptoBrokerWalletModuleManager,WalletResourcesProviderManager> implements WalletSession {
 
     /**
      * SubApps type
@@ -47,6 +48,7 @@ public class CryptoBrokerWalletSession implements WalletSession {
      * @param moduleManager the module of this SubApp
      */
     public CryptoBrokerWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletResourcesProviderManager resourcesProviderManager, CryptoBrokerWalletModuleManager moduleManager) {
+        super(wallet.getWalletPublicKey(),wallet,errorManager,moduleManager,resourcesProviderManager);
         this.wallet = wallet;
         data = new HashMap<>();
         this.resourcesProviderManager = resourcesProviderManager;
@@ -55,10 +57,6 @@ public class CryptoBrokerWalletSession implements WalletSession {
     }
 
 
-    @Override
-    public InstalledWallet getWalletSessionType() {
-        return wallet;
-    }
 
     /**
      * Store any data you need to hold between the fragments of the sub app
@@ -93,10 +91,6 @@ public class CryptoBrokerWalletSession implements WalletSession {
         return errorManager;
     }
 
-    @Override
-    public WalletResourcesProviderManager getWalletResourcesProviderManager() {
-        return resourcesProviderManager;
-    }
 
     @Override
     public WalletSettings getWalletSettings() {

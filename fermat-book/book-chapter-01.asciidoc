@@ -1,17 +1,17 @@
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Logotype/logo_fermat_3.png[FermatLogo]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/logo_fermat_3.png[FermatLogo3]
 
 == Chapter 1: Fermat Master Plan
 
 As a Master Plan, Fermat has it's own vision of how a collaborative project should be carried out. The main concept is to define a large master plan far into the future, and start building it phase by phase adjusting the target when needed. It is designed in this way to absorb the efforts of thousands of contributors over the years into a unified architectural vision. +
 
 After the pioneer step of Nakamoto who gave rise to *Bitcoin* and its revolutionary blockchain technology, in the last years, there has been a lot of fin tech investment money given to a myriad of startup initiating in this industry. This fostered the next evolutionary step, *"cryptocurrency 2.0"* but it has still not reached the level of adoption expected. There seems to exist an unbalance between the considerable investment of funds and effort needed to master this technology and the results they are bringing up. What is more, isolated projects trying to build something useful starting form zero point have it difficult to obtain the necessary support and the persistent endurance needed to succeed... + 
-Precisely aknowledging this weak points in the industry, and choosing *collaboration* within a *master plan* as starting point, it is how the Fermat Community believes to succeed in solving the challenges set in their mission and purpose by building a complete new framework that solves the problem in an efficient, inclusive and attractive way.
+Precisely acknowledging this weak points in the industry, and choosing *collaboration* within a *master plan* as starting point, it is how the Fermat Community believes to succeed in solving the challenges set in their mission and purpose by building a complete new framework that solves the problem in an efficient, inclusive and attractive way.
 
 === Phase I: Foundations 
 The goal is to have a framework for developing financial applications in a trust-less environment. What are the services that had to be granted at the lower levels to enable this?
 
 The basic infrastructure ::  
-the _Fermat Core Platform_ is the part of the system which initilizes the entire set of components, starting every plugin and putting them to run. This creates the interconection that let all the services to be offered as being integral part of one unified system.
+the _Fermat Core Platform_ is the part of the system which initializes the entire set of components, starting every plug-in and putting them to run. This creates the interconnection that let all the services to be offered as being integral part of one unified system.
 The basic services ::
 ** connection to the different Operating Systems that will run Fermat on a chosen device.
 ** interconnectivity to cryptonetworks and blockchain services providers to enable the *transport of value*.
@@ -23,7 +23,7 @@ NOTE: At this stage of development, Fermat already offers a wide scope of REUSAB
 
 
 === Phase II: First constructs
-The foundations have been layed out, but to reach the end user oriented applications, it is necessary to create several functionalities. In order to make a visible structure available for further developments and also to provide certain focus to related functionalities, these are wrapped in substructures of Fermat system called *platforms* and *superlayers*. Each of them groups a subset of functionalities that offer the following services : 
+The foundations have been laid out, but to reach the end user oriented applications, it is necessary to create several functionalities. In order to make a visible structure available for further developments and also to provide certain focus to related functionalities, these are wrapped in substructures of Fermat system called *platforms* and *superlayers*. Each of them groups a subset of functionalities that offer the following services : 
 
 * a decentralized Wallet Production Line
 * a Crypto Currency platform to manage the transference of value trough crypto transactions
