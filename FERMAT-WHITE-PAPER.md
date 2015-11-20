@@ -1,10 +1,18 @@
-# Draft
+##### -- draft --
 
-## Fermat: A Peer-to-Peer Financial Application Framework
+# Fermat 
 
-Luis Fernando Molina
+## A Peer-to-Peer Financial Application Framework
 
-luis.molina@bitDubai.com
+**Contributors** : Luis Fernando Molina
+
+**Advisors** : 
+
+**Reviewers** : 
+
+Noviembre 2014
+
+_www.fermat.org_
 
 <br>
 ### Abstract
@@ -22,7 +30,7 @@ We propose a framework to replace the standalone wallet application. This framew
 
 Standalone bitcoin wallets were the first generation of financial applications since they didn't require to trust any third party, inheriting this property from the bitcoin network itself. As the ecosystem evolved, trusted third parties were introduced again and they took over the wallet space because of technical capabilities that are easier to build in a centralized way: communication between wallets, synchronization between devices, interfacing the legacy financial system, etc., and they consistently took the biggest share of funding, leaving standalone wallets far behind and at the same time trashing the benefit of bitcoin of not relying on trust, one of its key features. Applications trying to use the blockchain to transport meta-data were considered spammers and standalone wallets were effectively left behind.
 
-What is needed on top of all existing protocols is a layer that faces the end user and that finishes the job bitcoin started. Using crypto networks for transporting value or as a registry for digital assets and the Fermat Network for transporting the required meta-data at a network client level, allows financial apps to run any user-level interconnected-functionality without ever going through a trusted third party.
+What is needed on top of all existing protocols is a layer that faces the end user and that finishes the job bitcoin started respecting its core principles of openness, decentralization and privacy. Using crypto networks for transporting value or as a registry for digital assets and the Fermat Network for transporting the required meta-data at a network client level, allows financial apps to run any user-level interconnected-functionality without ever going through a trusted third party.
 
 By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define micro-use-licensing-scheme as the mechanism for plug-in developers to monetize their work. The Framework itself enforces these micro-use-licenses and guarantees developers a revenue stream. 
 
@@ -51,17 +59,17 @@ Wallets are higher level abstractions and have their own set of Plug-ins to keep
 
 The network is intended for two main reasons: 
 
-a. For clients to find other clients.
+a. For network clients to find other network clients.
 
-b. For clients to call other clients.  
+b. For network clients to call other network clients.  
 
-Every Node has a copy of a distributed geo-localized inventory of all network nodes. They run a protocol that allows them to keep their copy synchronized. 
+Every network node has a copy of a distributed geo-localized inventory of all network nodes. They run a protocol that allows them to keep their copy synchronized. 
 
 An **actor** is a type of role an end user might play and in this context represents one of the end users identities.
  
 To be able to be found, a network client checks itself and its actors in with the geographically closest node. We call this the _Home Node_. When an actor needs to find another actor, it follows a protocol that requires the approximate location of the actor it's looking to connect to. This is possible because the system deals with end users and usually people know the city, state or country where the people they know live. In this way we avoid using phone numbers, emails or any other possible personal identifier that could compromise privacy.
 
-For scalability reasons, we moved the responsibility of finding actors within the network, from the network itself to the network clients. Each node has a distributed catalog of Actors and is responsible for keeping it updated. Instead of every node having the full catalog, only a set of nodes nearby the _Home Node_ of an actor knows that actor and which node is its home. This allows any actor who knows the approximate location of the actor it is searching for to easily find, trace and follow it to the current _Home Node_ where its friend are checked in, allowing them to stablish a connection between themselves. 
+For scalability reasons, we moved the responsibility of finding actors within the network, from the network itself to the network clients. Each node has a distributed catalog of Actors and is responsible for keeping it updated. Instead of every node having the full catalog, only a set of nodes nearby the _Home Node_ of an actor knows that actor and which node is its home. This allows any actors who know the approximate location of the actors they are searching for to easily find, trace and follow them to their current _Home Node_ where they are checked in, allowing them to stablish a connection between themselves. 
 
 <br>
 ### Incentive

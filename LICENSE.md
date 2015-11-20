@@ -62,7 +62,7 @@ Plugins are middleware components. Anybody can write _Plug-ins_ for Fermat and t
 
 #### GUI Components
 
-GUI Components provides an interface for end users. Anybody can write _GUI Components_ for Fermat and their authors hold all the rights over them. Please find at the root folder of each _GUI Component_ their LICENSE.md file.
+GUI Components provide an interface for end users. Anybody can write _GUI Components_ for Fermat and their authors hold all the rights over them. Please find at the root folder of each _GUI Component_ their LICENSE.md file.
 
 #### Skins
 
