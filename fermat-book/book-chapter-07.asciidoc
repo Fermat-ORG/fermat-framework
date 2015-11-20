@@ -1,5 +1,5 @@
 :numbered!:
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/logo_fermat_3.png[FermatLogo3]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
 
 [[layersExplanation]]
 == Chapter 7: Fermat layers explanation
