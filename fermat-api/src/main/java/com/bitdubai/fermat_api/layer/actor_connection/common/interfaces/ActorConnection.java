@@ -99,14 +99,14 @@ public abstract class ActorConnection<T extends ActorIdentity> {
     /**
      * @return a long indicating the creation time of the connection.
      */
-    public long getCreationTime() {
+    public final long getCreationTime() {
         return creationTime;
     }
 
     /**
      * @return a long indicating the last update time of the connection.
      */
-    public long getUpdateTime() {
+    public final long getUpdateTime() {
         return updateTime;
     }
 }
