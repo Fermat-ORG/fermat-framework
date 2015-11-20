@@ -231,10 +231,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             if (frgBackType != null) {
 
                 Activity activities = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity();
-
                 com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = activities.getFragment(frgBackType); //set back fragment to actual fragment to run
-
-
                 //TODO: ver como hacer para obtener el id del container
                 if(fragmentBack.getType().equals("CSADDTD") || fragmentBack.getType().equals("CSADDTT") || fragmentBack.getType().equals("CSADDTR")  || fragmentBack.getType().equals("CSADDT")){
                     this.loadFragment(subAppRuntimeManager.getLastSubApp().getType(), R.id.logContainer,frgBackType);
