@@ -12,7 +12,7 @@ import java.util.List;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
  */
-public interface ActorConnectionSearch {
+public interface ActorConnectionSearch<T extends ActorConnection> {
 
     /**
      * Through the method <code>addAlias</code> we can add an alias of actor to search.
@@ -44,7 +44,7 @@ public interface ActorConnectionSearch {
      *
      * @throws CantListActorConnectionsException  if something goes wrong.
      */
-    List<ActorConnection> getResult() throws CantListActorConnectionsException;
+    List<T> getResult() throws CantListActorConnectionsException;
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
@@ -59,8 +59,8 @@ public interface ActorConnectionSearch {
      *
      * @throws CantListActorConnectionsException  if something goes wrong.
      */
-    List<ActorConnection> getResult(final Integer max   ,
-                                    final Integer offset) throws CantListActorConnectionsException;
+    List<T> getResult(final Integer max   ,
+                      final Integer offset) throws CantListActorConnectionsException;
 
     /**
      * Through the method <code>resetFilters</code> you can reset the filters set,
