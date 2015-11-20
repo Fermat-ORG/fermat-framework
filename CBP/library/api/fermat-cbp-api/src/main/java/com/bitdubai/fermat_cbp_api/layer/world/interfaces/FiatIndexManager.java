@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.world.interfaces;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.world.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.world.interfaces.IndexManager;
 
 

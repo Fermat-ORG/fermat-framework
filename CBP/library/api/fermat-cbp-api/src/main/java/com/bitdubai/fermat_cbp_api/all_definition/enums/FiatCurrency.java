@@ -9,6 +9,9 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 
 public enum FiatCurrency implements Currency {
 
+    //NOTA: NO USAR ESTE FiatCurrency, esta en proceso de ser borrado (Alejandro), usar este: com.bitdubai.fermat_api.layer.world.enums.FiatCurrency;
+    //TODO: Cuando se deje de usar este enum lo borrare.
+
     VENEZUELAN_BOLIVAR("VEF"),
     ARGENTINE_PESO("ARS"),
     BRAZILIAN_REAL("BRL"),
