@@ -19,7 +19,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantAddNewClausesException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
@@ -73,7 +73,8 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
         public CustomerBrokerPurchaseNegotiation createCustomerBrokerPurchaseNegotiation(
                 String publicKeyCustomer,
-                String publicKeyBroker
+                String publicKeyBroker,
+                Collection<Clause> clauses
         ) throws CantCreateCustomerBrokerPurchaseNegotiationException {
 
             try {
@@ -93,7 +94,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
                 PurchaseNegotiationTable.insertRecord(recordToInsert);
 
-                return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, NegotiationStatus.WAITING_FOR_BROKER);
+                return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, NegotiationStatus.WAITING_FOR_BROKER, clauses);
 
             } catch (CantInsertRecordException e) {
                 throw new CantCreateCustomerBrokerPurchaseNegotiationException(CantCreateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
@@ -101,7 +102,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
         }
 
-        public void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+        public void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             try {
                 DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate   = PurchaseNegotiationTable.getEmptyRecord();
@@ -112,11 +113,11 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
                 PurchaseNegotiationTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException e) {
-                new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+        public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             try {
                 DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate   = PurchaseNegotiationTable.getEmptyRecord();
@@ -127,11 +128,11 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
                 PurchaseNegotiationTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException e) {
-                new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public CustomerBrokerPurchaseNegotiation sendToBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+        public CustomerBrokerPurchaseNegotiation sendToBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             try {
                 DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate = PurchaseNegotiationTable.getEmptyRecord();
@@ -145,15 +146,17 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
                 return getNegotiationsById(negotiation.getNegotiationId());
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
+            } catch (CantGetListClauseException e) {
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public void sendToBrokerUpdateStatusClause(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+        public void sendToBrokerUpdateStatusClause(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             try {
                 DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate = PurchaseClauseTable.getEmptyRecord();
@@ -165,11 +168,11 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_STATUS_COLUMN_NAME, ClauseStatus.SENT_TO_BROKER.getCode());
                 PurchaseClauseTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public CustomerBrokerPurchaseNegotiation waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+        public CustomerBrokerPurchaseNegotiation waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             try {
                 DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate = PurchaseNegotiationTable.getEmptyRecord();
@@ -184,15 +187,17 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 return getNegotiationsById(negotiation.getNegotiationId());
 
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
+            } catch (CantGetListClauseException e) {
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public void waitForBrokerUpdateStatusClause(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+        public void waitForBrokerUpdateStatusClause(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             try {
                 DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate = PurchaseClauseTable.getEmptyRecord();
@@ -204,11 +209,11 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_STATUS_COLUMN_NAME, ClauseStatus.SENT_TO_BROKER.getCode());
                 PurchaseClauseTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantLoadTableToMemoryException, InvalidParameterException {
+        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantLoadTableToMemoryException, InvalidParameterException, CantGetListClauseException {
             DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
             PurchaseNegotiationTable.loadToMemory();
 
@@ -224,7 +229,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
             return resultados;
         }
 
-        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations(NegotiationStatus status) throws CantLoadTableToMemoryException, InvalidParameterException {
+        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations(NegotiationStatus status) throws CantLoadTableToMemoryException, InvalidParameterException, CantGetListClauseException {
             DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
 
             PurchaseNegotiationTable.setStringFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
@@ -243,7 +248,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
             return resultados;
         }
 
-        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsByCustomer(ActorIdentity customer) throws CantLoadTableToMemoryException, InvalidParameterException {
+        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsByCustomer(ActorIdentity customer) throws CantLoadTableToMemoryException, InvalidParameterException, CantGetListClauseException {
             DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
 
             PurchaseNegotiationTable.setStringFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customer.getPublicKey(), DatabaseFilterType.EQUAL);
@@ -262,7 +267,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
             return resultados;
         }
 
-        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsByBroker(ActorIdentity broker) throws CantLoadTableToMemoryException, InvalidParameterException {
+        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsByBroker(ActorIdentity broker) throws CantLoadTableToMemoryException, InvalidParameterException, CantGetListClauseException {
             DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
 
             PurchaseNegotiationTable.setStringFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, broker.getPublicKey(), DatabaseFilterType.EQUAL);
@@ -281,7 +286,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
             return resultados;
         }
 
-        public CustomerBrokerPurchaseNegotiation getNegotiationsById(UUID negotiationId) throws CantLoadTableToMemoryException, InvalidParameterException {
+        public CustomerBrokerPurchaseNegotiation getNegotiationsById(UUID negotiationId) throws CantLoadTableToMemoryException, InvalidParameterException, CantGetListClauseException {
             DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
 
             PurchaseNegotiationTable.setUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
@@ -323,16 +328,38 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 }
             }
 
-            public Clause addNewClause(UUID negotiationId, ClauseType type, String value, String proposedBy) throws CantAddNewClausesException {
+            public Clause getClausesByClauseId(UUID clauseId) throws CantGetListClauseException{
+
+                try {
+                    DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
+                    PurchaseClauseTable.setUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_CLAUSE_ID_COLUMN_NAME, clauseId, DatabaseFilterType.EQUAL);
+
+                    PurchaseClauseTable.loadToMemory();
+                    List<DatabaseTableRecord> records = PurchaseClauseTable.getRecords();
+                    PurchaseClauseTable.clearAllFilters();
+
+                    for (DatabaseTableRecord record : records) {
+                        return constructCustomerBrokerPurchaseClauseFromRecord(record);
+                    }
+
+                    return null;
+                } catch (CantLoadTableToMemoryException e) {
+                    throw new CantGetListClauseException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
+                } catch (InvalidParameterException e) {
+                    throw new CantGetListClauseException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
+                }
+            }
+
+            public Clause addNewClause(UUID negotiationId, Clause clause) throws CantAddNewClausesException {
                 try {
                     DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
                     DatabaseTableRecord recordToInsert = PurchaseClauseTable.getEmptyRecord();
                     loadRecordAsNewClause(
                             recordToInsert,
                             negotiationId,
-                            type,
-                            value,
-                            proposedBy
+                            clause.getType(),
+                            clause.getValue(),
+                            clause.getProposedBy()
                     );
                     PurchaseClauseTable.insertRecord(recordToInsert);
                     return constructCustomerBrokerPurchaseClauseFromRecord(recordToInsert);
@@ -440,17 +467,24 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, NegotiationStatus.WAITING_FOR_BROKER.getCode());
             }
 
+            private void loadRecordAsUpdate(
+                    DatabaseTableRecord databaseTableRecord
+            ) {
+                databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_STATUS_COLUMN_NAME, NegotiationStatus.WAITING_FOR_BROKER.getCode());
+            }
+
             private CustomerBrokerPurchaseNegotiation newCustomerBrokerPurchaseNegotiation(
                     UUID   negotiationId,
                     String publicKeyCustomer,
                     String publicKeyBroker,
                     long startDateTime,
-                    NegotiationStatus statusNegotiation
+                    NegotiationStatus statusNegotiation,
+                    Collection<Clause> clauses
             ){
-                return new CustomerBrokerPurchaseNegotiationInformation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, statusNegotiation, this);
+                return new CustomerBrokerPurchaseNegotiationInformation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, statusNegotiation, clauses);
             }
 
-            private CustomerBrokerPurchaseNegotiation constructCustomerBrokerPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
+            private CustomerBrokerPurchaseNegotiation constructCustomerBrokerPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException, CantGetListClauseException {
 
                 UUID    negotiationId     = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME);
                 String  publicKeyCustomer = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
@@ -458,7 +492,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 long    startDataTime     = record.getLongValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME);
                 NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
 
-                return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation);
+                return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation, getClauses(negotiationId));
             }
 
         /*
@@ -507,5 +541,49 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
                 return newCustomerBrokerPurchaseClause(clauseId, type, value, status, proposedBy, (short) indexOrder);
             }
+
+
+
+
+    public CustomerBrokerPurchaseNegotiation updateCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        try {
+
+            DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
+            PurchaseNegotiationTable.setUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId(), DatabaseFilterType.EQUAL);
+            DatabaseTableRecord recordToUpdate = PurchaseNegotiationTable.getEmptyRecord();
+            loadRecordAsUpdate(recordToUpdate);
+            PurchaseNegotiationTable.updateRecord(recordToUpdate);
+
+            for(Clause _clause : negotiation.getClauses()) {
+                updateCustomerBrokerPurchaseNegotiationClause(_clause);
+            }
+
+            return getNegotiationsById(negotiation.getNegotiationId());
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
+        } catch (InvalidParameterException e) {
+            throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
+        } catch (CantGetListClauseException e) {
+            throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
+        }
+    }
+
+
+    public Clause updateCustomerBrokerPurchaseNegotiationClause(Clause clause) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+
+
+        return null;
+
+    }
+
+
+    private void loadRecordAsUpdateClause(
+            DatabaseTableRecord databaseTableRecord
+    ) {
+        databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_STATUS_COLUMN_NAME, NegotiationStatus.WAITING_FOR_BROKER.getCode());
+    }
 
 }

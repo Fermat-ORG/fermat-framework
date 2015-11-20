@@ -493,7 +493,7 @@ public class CustomerBrokerSaleNegotiationDao {
                     String          proposedBy,
                     short           indexOrder
             ){
-                return new CustomerBrokerSaleClause(clauseId, type, value, status, proposedBy, indexOrder);
+                return new CustomerBrokerSaleClause(clauseId, type, value, status, proposedBy);
             }
 
 
