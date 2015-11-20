@@ -16,7 +16,7 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
  */
-public interface ActorConnectionManager<T extends ActorIdentity, Z extends ActorConnection<T>, M extends ActorConnectionSearch> {
+public interface ActorConnectionManager<T extends ActorIdentity, Z extends ActorConnection<T>, M extends ActorConnectionSearch<Z>> {
 
     /**
      * Through the method <code>getSearch</code> we can get a new instance of Actor Connection Search.

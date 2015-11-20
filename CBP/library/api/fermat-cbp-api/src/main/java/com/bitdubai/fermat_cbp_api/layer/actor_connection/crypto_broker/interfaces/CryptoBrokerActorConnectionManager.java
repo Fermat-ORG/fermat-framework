@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfa
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager</code>
