@@ -12,6 +12,7 @@ public enum Specialist {
     EXTRA_USER_SPECIALIST ("EXU"),
     DEVICE_USER_SPECIALIST ("DVU"),
     INTRA_USER_SPECIALIST ("INU"),
+    REDEEM_POINT_SPECIALIST("REP"),
     UNKNOWN_SPECIALIST ("UNK");
 
     private final String code;
@@ -31,6 +32,7 @@ public enum Specialist {
             case "EXU": return Specialist.EXTRA_USER_SPECIALIST;
             case "DVU": return Specialist.DEVICE_USER_SPECIALIST;
             case "INU": return Specialist.INTRA_USER_SPECIALIST;
+            case "REP": return Specialist.REDEEM_POINT_SPECIALIST;
             case "UNK": return Specialist.UNKNOWN_SPECIALIST;
             //Modified by Manuel Perez on 04/08/2015
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Specialist enum");

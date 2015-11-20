@@ -322,9 +322,9 @@ public class AssetIssuingTransactionDao {
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
-            if (databaseTableRecords.size() > 1) {
+            if (databaseTableRecords.size() == 0) {
                 this.database.closeDatabase();
-                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", indexColumn + ":" + value);
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. No values returned.", indexColumn + ":" + value);
             } else {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
@@ -757,7 +757,7 @@ public class AssetIssuingTransactionDao {
             databaseTable.loadToMemory();
             this.database.closeDatabase();
             Logger LOG = Logger.getGlobal();
-            LOG.info("ISSUING DAO - Events pending " + databaseTable.getRecords().size());
+            //LOG.info("ISSUING DAO - Events pending " + databaseTable.getRecords().size());
             return !databaseTable.getRecords().isEmpty();
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();

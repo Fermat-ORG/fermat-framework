@@ -242,7 +242,7 @@ public final class FermatSystemContext {
         final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions = new ConcurrentHashMap<>();
 
         for(ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
-            versions.putAll(platform.getValue().listAddonVersions());
+            platform.getValue().fillAddonVersions(versions);
 
         return versions;
     }
@@ -252,7 +252,7 @@ public final class FermatSystemContext {
         final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions = new ConcurrentHashMap<>();
 
         for(ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
-            versions.putAll(platform.getValue().listPluginVersions());
+            platform.getValue().fillPluginVersions(versions);
 
         return versions;
     }

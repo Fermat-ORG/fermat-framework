@@ -121,8 +121,15 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
     /**
      * Change activity
      */
+    protected final void changeActivity(String activityCode,String appPublicKey, Object... objectses) {
+        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, appPublicKey,objectses);
+    }
+    /**
+     * Change activity
+     */
+    @Deprecated
     protected final void changeActivity(String activityCode, Object... objectses) {
-        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, objectses);
+        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, null);
     }
 
     /**
@@ -144,9 +151,6 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
         getPaintActivtyFeactures().changeNavigationDrawerAdapter(adapter);
     }
 
-    protected void setNavigationBackgroundColor(int color){
-        getPaintActivtyFeactures().setNavigationBackgroundColor(color);
-    }
 
     protected void addNavigationHeader(View view){
         getPaintActivtyFeactures().addNavigationViewHeader(view);

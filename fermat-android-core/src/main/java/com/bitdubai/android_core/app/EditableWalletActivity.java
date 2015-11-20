@@ -216,16 +216,17 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
 
         } else if (activity != null && activity.getBackActivity() != null) {
-            changeActivity(activity.getBackActivity().getCode());
+            //todo: hacer esto
+            //changeActivity(activity.getBackActivity().getCode());
         } else {
-            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
-            getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
-            resetThisActivity();
-            Intent intent = new Intent(this, SubAppActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            finish();
-            startActivity(intent);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
+//            getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+//            resetThisActivity();
+//            Intent intent = new Intent(this, SubAppActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            finish();
+//            startActivity(intent);
+//            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         }
 
@@ -246,10 +247,6 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 //        }
     }
 
-    @Override
-    public void onNavigationDrawerItemSelected(int position, String activityCode) {
-
-    }
 
     @Override
     protected List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> getNavigationMenu() {
@@ -396,7 +393,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
 
     @Override
-    public void changeActivity(String activityName, Object... objects) {
+    public void changeActivity(String activityName,String appPublicKey, Object... objects) {
 //        Method m = null;
 //        try {
 //            m = StrictMode.class.getMethod("incrementExpectedActivityCount", Class.class);
@@ -530,6 +527,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
     }
 
+
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
 
@@ -561,13 +559,9 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
     }
 
+
     @Override
-    public void changeActivityBack(String activityCode){
-        try {
-            getWalletRuntimeManager().getLastWallet().getLastActivity().changeBackActivity(activityCode);
-        } catch (InvalidParameterException e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivityBack"));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
-        }
+    public void changeActivityBack(String appBackPublicKey, String activityCode) {
+
     }
 }

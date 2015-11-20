@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.exceptions.CantLoginCustomerException;
@@ -19,7 +20,7 @@ import java.util.List;
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerModuleManager</code>
  * provides the methods for the Crypto Customer Community sub app, to Identity Management Customers and the relationship with other Customers.
  */
-public interface CryptoCustomerCommunityModuleManager {
+public interface CryptoCustomerCommunityModuleManager extends ModuleManager{
 
 
 
