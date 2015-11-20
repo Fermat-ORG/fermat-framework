@@ -20,6 +20,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +40,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
     ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
-    // TODO ADDED ERROR MANAGER REFERENCE, PLEASE MAKE USE OF THE ERROR MANAGER.
-
+    ErrorManager errorManager;
 
     public RedeemPointCommunitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -54,9 +52,9 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
         try {
             return actorAssetRedeemPointManager.getAllAssetRedeemPointActorInTableRegistered();
         } catch (CantGetAssetRedeemPointActorsException e) {
-            e.printStackTrace(); // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            e.printStackTrace();
         }
-
         return new ArrayList<>();
     }
 
@@ -71,7 +69,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
             actorAssetRedeemPointManager.connectToActorAssetRedeemPoint(actorAssetUser, actorAssetRedeemPoints);
 
         } catch (CantGetAssetUserActorsException e) {
-            // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConnectToActorAssetRedeemPointException(CantConnectToActorAssetRedeemPointException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
         }
     }
