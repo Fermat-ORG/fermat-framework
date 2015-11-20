@@ -60,9 +60,13 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
      */
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-    Map<SubApps, SubApp> listSubApp = new HashMap<>();
+    /**
+     * Map connect sub app public key - sub app
+     */
 
-    SubApps lastSubapp;
+    Map<String, SubApp> listSubApp = new HashMap<>();
+
+    String lastSubapPublicKey;
 
     RuntimeSubApp homeScreen;
 
@@ -123,40 +127,24 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
      */
     @Override
     public SubApp getLastSubApp() {
-        if (lastSubapp != null) {
-            return listSubApp.get(lastSubapp);
+        if (lastSubapPublicKey != null) {
+            return listSubApp.get(lastSubapPublicKey);
         }
         return homeScreen;
     }
 
+
     @Override
-    public SubApp getSubApp(SubApps subApps) {
-        SubApp subApp = listSubApp.get(subApps);
+    public SubApp getSubAppByPublicKey(String subAppPublicKey) {
+        SubApp subApp = listSubApp.get(subAppPublicKey);
         if (subApp != null) {
-            lastSubapp = subApps;
+            lastSubapPublicKey = subApp.getPublicKey();
             return subApp;
         }
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
-
-//        Iterator<Map.Entry<SubApps, SubApp>> eSubApp = listSubApp.entrySet().iterator();
-//        while (eSubApp.hasNext()) {
-//            Map.Entry<SubApps, SubApp> walletEntry = eSubApp.next();
-//            SubApp subApp = (SubApp) walletEntry.getValue();
-//            if (subApp.getType().equals(subApps)) {
-//                lastSubapp = subApps;
-//                return subApp;
-//            }
-//        }
-
     }
 
-    @Override
-    public SubApp getHomeScreen() {
-        lastSubapp = SubApps.CWP_WALLET_MANAGER;
-        homeScreen.getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
-        return homeScreen;
-    }
 
     /**
      * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the
@@ -164,16 +152,15 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
      */
     private void factoryReset() throws com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException {
 
-        loadHomeScreen();
-
         try {
             com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.structure.RuntimeApp runtimeApp = new com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.structure.RuntimeApp();
             runtimeApp.setType(Apps.CRYPTO_WALLET_PLATFORM);
 
             RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setPublicKey("public_key_shell");
             runtimeSubApp.setType(SubApps.CWP_SHELL);
             runtimeApp.addSubApp(runtimeSubApp);
-            listSubApp.put(SubApps.CWP_SHELL, runtimeSubApp);
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             Activity runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_SHELL_LOGIN);
@@ -206,8 +193,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //wallet factory app
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_FACTORY);
+            runtimeSubApp.setPublicKey("public_key_factory");
             runtimeApp.addSubApp(runtimeSubApp);
-            listSubApp.put(SubApps.CWP_WALLET_FACTORY, runtimeSubApp);
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_MAIN);
@@ -318,8 +306,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //wallet Publisher app
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_PUBLISHER);
+            runtimeSubApp.setPublicKey("public_key_publisher");
             runtimeApp.addSubApp(runtimeSubApp);
-            listSubApp.put(SubApps.CWP_WALLET_PUBLISHER, runtimeSubApp);
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_PUBLISHER_MAIN);
@@ -392,8 +381,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_MANAGER);
+            runtimeSubApp.setPublicKey("public_key_wallet_manager");
             runtimeApp.addSubApp(runtimeSubApp);
-            listSubApp.put(SubApps.CWP_WALLET_MANAGER, runtimeSubApp);
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             //TODO: testing
             //lastSubapp = SubApps.CWP_WALLET_MANAGER;
@@ -416,7 +406,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_RUNTIME);
             runtimeApp.addSubApp(runtimeSubApp);
-            listSubApp.put(SubApps.CWP_WALLET_RUNTIME, runtimeSubApp);
+            runtimeSubApp.setPublicKey("public_key_runtime");
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
 //            runtimeSubApp = new RuntimeSubApp();
@@ -519,7 +510,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_STORE);
-            listSubApp.put(SubApps.CWP_WALLET_STORE, runtimeSubApp);
+            runtimeSubApp.setPublicKey("public_key_store");
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             //Activity 1
             runtimeActivity = new Activity();
@@ -587,7 +579,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             RuntimeSubApp subAppIntraUser = new RuntimeSubApp();
             subAppIntraUser.setType(SubApps.CCP_INTRA_USER_COMMUNITY);
-            listSubApp.put(SubApps.CCP_INTRA_USER_COMMUNITY, subAppIntraUser);
+            String communityPublicKey = "public_key_intra_user_commmunity";
+            subAppIntraUser.setPublicKey(communityPublicKey);
+            listSubApp.put( subAppIntraUser.getPublicKey(),subAppIntraUser);
+
 
 
             //Activity 1
@@ -641,21 +636,26 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Explore");
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+            runtimeMenuItem.setLinkToActivity(Activities.CWP_INTRA_USER_ACTIVITY);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Your conections");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Notifications");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Settings");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
@@ -709,27 +709,29 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("");
+            runtimeMenuItem.setLabel("Explore");
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+            runtimeMenuItem.setLinkToActivity(Activities.CWP_INTRA_USER_ACTIVITY);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Connections");
+            runtimeMenuItem.setLabel("Your conections");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("World");
+            runtimeMenuItem.setLabel("Notifications");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Pending request");
+            runtimeMenuItem.setLabel("Settings");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-            runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Exit");
-            runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
@@ -759,27 +761,33 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeSideMenu = new SideMenu();
 
+
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Connections");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLabel("Explore");
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+            runtimeMenuItem.setLinkToActivity(Activities.CWP_INTRA_USER_ACTIVITY);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("World");
+            runtimeMenuItem.setLabel("Your conections");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Pending request");
+            runtimeMenuItem.setLabel("Notifications");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Exit");
+            runtimeMenuItem.setLabel("Settings");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
 
             runtimeActivity.setSideMenu(runtimeSideMenu);
-
             subAppIntraUser.addActivity(runtimeActivity);
 
             // Activity: Connection detail
@@ -806,24 +814,31 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeSideMenu = new SideMenu();
 
+
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Connections");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLabel("Explore");
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+            runtimeMenuItem.setLinkToActivity(Activities.CWP_INTRA_USER_ACTIVITY);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("World");
+            runtimeMenuItem.setLabel("Your conections");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Pending request");
+            runtimeMenuItem.setLabel("Notifications");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Exit");
+            runtimeMenuItem.setLabel("Settings");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
 
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
@@ -837,6 +852,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             RuntimeSubApp dapFactory = new RuntimeSubApp();
             dapFactory.setType(SubApps.DAP_ASSETS_FACTORY);
             dapFactory.setStartActivity(Activities.DAP_MAIN);
+            dapFactory.setPublicKey("public_key_dap_factory");
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.DAP_MAIN);
@@ -872,13 +888,15 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             dapFactory.addActivity(runtimeActivity);
 
-            listSubApp.put(SubApps.DAP_ASSETS_FACTORY, dapFactory);
+            listSubApp.put(dapFactory.getPublicKey(), dapFactory);
+
 
             /**
              * Dap Asset Issuer Community
              */
             RuntimeSubApp dapAssetIssuerCommunity = new RuntimeSubApp();
             dapAssetIssuerCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_ISSUER);
+            dapAssetIssuerCommunity.setPublicKey("public_key_dap_issuer_community");
             dapAssetIssuerCommunity.setStartActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
 
             runtimeActivity = new Activity();
@@ -897,13 +915,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
 
             dapAssetIssuerCommunity.addActivity(runtimeActivity);
-            listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_ISSUER, dapAssetIssuerCommunity);
+            listSubApp.put(dapAssetIssuerCommunity.getPublicKey(), dapAssetIssuerCommunity);
 
             /**
              * Dap Asset User Community
              */
             RuntimeSubApp dapAssetUserCommunity = new RuntimeSubApp();
             dapAssetUserCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_USER);
+            dapAssetUserCommunity.setPublicKey("public_key_dap_user_community");
             dapAssetUserCommunity.setStartActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
 
             runtimeActivity = new Activity();
@@ -922,13 +941,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
 
             dapAssetUserCommunity.addActivity(runtimeActivity);
-            listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_USER, dapAssetUserCommunity);
+            listSubApp.put(dapAssetUserCommunity.getPublicKey(), dapAssetUserCommunity);
 
             /**
              * Dap Asset Redeem Point Community
              */
             RuntimeSubApp dapAssetRedeemPointCommunity = new RuntimeSubApp();
             dapAssetRedeemPointCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT);
+            dapAssetRedeemPointCommunity.setPublicKey("public_key_dap_reedem_point_community");
             dapAssetRedeemPointCommunity.setStartActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
 
             runtimeActivity = new Activity();
@@ -947,7 +967,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
 
             dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
-            listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, dapAssetRedeemPointCommunity);
+            listSubApp.put(dapAssetRedeemPointCommunity.getPublicKey(), dapAssetRedeemPointCommunity);
 
             /**
              * End of DAP
@@ -968,6 +988,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_INTRA_USER_IDENTITY);
+            String intraUserIdentityPublicKey ="public_key_ccp_intra_user_identity";
+            runtimeSubApp.setPublicKey(intraUserIdentityPublicKey);
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -1016,7 +1038,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            listSubApp.put(SubApps.CWP_INTRA_USER_IDENTITY, runtimeSubApp);
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             /**
              * DAP IDENTITIES
@@ -1027,6 +1049,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.DAP_ASSETS_IDENTITY_ISSUER);
+            runtimeSubApp.setPublicKey("public_key_dap_asset_issuer_identity");
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -1075,7 +1098,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            listSubApp.put(SubApps.DAP_ASSETS_IDENTITY_ISSUER,runtimeSubApp);
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
             /**
@@ -1083,6 +1106,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.DAP_ASSETS_IDENTITY_USER);
+            runtimeSubApp.setPublicKey("public_key_dap_assets_user_identity");
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -1131,13 +1155,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            listSubApp.put(SubApps.DAP_ASSETS_IDENTITY_USER, runtimeSubApp);
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             /**
              * REDEEM POINT IDENTITY
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.DAP_REDEEM_POINT_IDENTITY);
+            runtimeSubApp.setPublicKey("public_key_dap_redeem_point_identity");
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -1186,7 +1211,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            listSubApp.put(SubApps.DAP_REDEEM_POINT_IDENTITY, runtimeSubApp);
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
         } catch (Exception e) {
@@ -1209,6 +1234,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY);
+        runtimeSubApp.setPublicKey("public_key_cbp_customer_identity");
 
         // Activity: List of identities
         runtimeActivity = new Activity();
@@ -1279,7 +1305,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
 
-        listSubApp.put(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY, runtimeSubApp);
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
 
     private void createCryptoBrokerIdentitySubAppNavigationStructure() {
@@ -1291,6 +1317,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CBP_CRYPTO_BROKER_IDENTITY);
+        runtimeSubApp.setPublicKey("public_key_cbp_broker_identity");
 
         // Activity: List of identities
         runtimeActivity = new Activity();
@@ -1361,7 +1388,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
 
-        listSubApp.put(SubApps.CBP_CRYPTO_BROKER_IDENTITY, runtimeSubApp);
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
 
     private void createDeveloperSubAppNavigationStructure() {
@@ -1375,6 +1402,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_DEVELOPER_APP);
+        runtimeSubApp.setPublicKey("public_key_pip_developer_sub_app");
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_SUB_APP_ALL_DEVELOPER);
@@ -1444,45 +1472,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), runtimeFragment);
 
-        listSubApp.put(SubApps.CWP_DEVELOPER_APP, runtimeSubApp);
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
 
-
-    /**
-     * Load home screen subApp
-     */
-    private void loadHomeScreen() {
-
-        homeScreen = new RuntimeSubApp();
-        homeScreen.setType(SubApps.CWP_WALLET_MANAGER);
-        listSubApp.put(SubApps.CWP_WALLET_MANAGER, homeScreen);
-
-        Activity activity = new Activity();
-        /**
-         * set type home
-         */
-        activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
-        Fragment fragment = new Fragment();
-
-        /**
-         * Add WalletManager fragment
-         */
-        fragment = new Fragment();
-        fragment.setType(Fragments.CWP_WALLET_MANAGER_MAIN.getKey());
-        activity.addFragment(Fragments.CWP_WALLET_MANAGER_MAIN.getKey(), fragment);
-
-        /**
-         * Add developer subApp fragment
-         */
-        fragment = new Fragment();
-        fragment.setType(Fragments.CWP_SUB_APP_DEVELOPER.getKey());
-        activity.addFragment(Fragments.CWP_SUB_APP_DEVELOPER.getKey(), fragment);
-
-
-        homeScreen.setStartActivity(activity.getType());
-        homeScreen.addActivity(activity);
-
-
-    }
 
 }

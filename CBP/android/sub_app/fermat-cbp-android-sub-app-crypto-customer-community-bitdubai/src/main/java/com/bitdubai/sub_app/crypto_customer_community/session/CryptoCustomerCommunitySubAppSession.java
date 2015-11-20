@@ -1,8 +1,12 @@
 package com.bitdubai.sub_app.crypto_customer_community.session;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityModuleManager;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -11,7 +15,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class CryptoCustomerCommunitySubAppSession implements SubAppsSession {
+public class CryptoCustomerCommunitySubAppSession extends AbstractFermatSession<SubApp,CryptoCustomerCommunityModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
 
     /**
      * SubApps type
@@ -37,25 +41,16 @@ public class CryptoCustomerCommunitySubAppSession implements SubAppsSession {
     /**
      * Create a session for the Wallet Store SubApp
      *
-     * @param subApps                  the SubApp type
      * @param errorManager             the error manager
      * @param moduleManager the module of this SubApp
      */
-    public CryptoCustomerCommunitySubAppSession(SubApps subApps, ErrorManager errorManager, CryptoCustomerCommunityModuleManager moduleManager) {
-        this.subApps = subApps;
+    public CryptoCustomerCommunitySubAppSession(SubApp subApp, ErrorManager errorManager, CryptoCustomerCommunityModuleManager moduleManager) {
+        super(subApp.getPublicKey(), subApp, errorManager, moduleManager, null);
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
         this.moduleManager = moduleManager;
     }
 
-    /**
-     * Create a session for the Wallet Store SubApp
-     *
-     * @param subApps the SubApp type
-     */
-    public CryptoCustomerCommunitySubAppSession(SubApps subApps) {
-        this.subApps = subApps;
-    }
 
 
     /**
@@ -64,8 +59,8 @@ public class CryptoCustomerCommunitySubAppSession implements SubAppsSession {
      * @return SubApps instance indicating the type
      */
     @Override
-    public SubApps getSubAppSessionType() {
-        return subApps;
+    public SubApp getSubAppSessionType() {
+        return getFermatApp();
     }
 
     /**
