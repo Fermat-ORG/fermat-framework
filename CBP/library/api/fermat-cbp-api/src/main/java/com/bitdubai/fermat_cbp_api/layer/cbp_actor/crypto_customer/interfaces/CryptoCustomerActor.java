@@ -34,6 +34,8 @@ public interface CryptoCustomerActor extends Actor {
     //CONNECTED BROKERS
     Collection<ActorIdentity> getConnectedBrokers();
 
+    // TODO OUR IDENTITY IS NOT AN ACTOR. PLEASE CHECK IF THIS IS OK
+
     //RELATIONSHIP IDENTIDAD-WALLET
     CustomerIdentityWalletRelationship createCustomerIdentityWalletRelationship(String WalletPublicKey, String identityPublicKey) throws CantCreateCustomerIdentiyWalletRelationshipException;
     CustomerIdentityWalletRelationship updateCustomerIdentityWalletRelationship(UUID RelationshipId, String WalletPublicKey, String identityPublicKey) throws CantUpdateCustomerIdentiyWalletRelationshipException;

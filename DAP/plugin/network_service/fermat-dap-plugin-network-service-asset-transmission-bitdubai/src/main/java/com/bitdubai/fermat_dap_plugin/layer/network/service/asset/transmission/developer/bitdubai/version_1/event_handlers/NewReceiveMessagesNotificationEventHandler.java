@@ -78,7 +78,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
         if (platformEvent.getSource() == AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE) {
 
             System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
-            System.out.print("NOTIFICACION EVENTO MENSAJE RECIVIDO!!!!");
+            System.out.print("ASSET TRANSMISSION - NOTIFICACION EVENTO MENSAJE RECIBIDO!!!!");
 
             /*
              * Get the message receive

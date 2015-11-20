@@ -48,7 +48,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -507,7 +506,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     }
 
     @Override
-    public void connectWithOtherApp(Engine emgine, Objects... objectses) {
+    public void connectWithOtherApp(Engine emgine, Object[] objectses) {
 
     }
 

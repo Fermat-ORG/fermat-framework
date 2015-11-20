@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
@@ -243,11 +244,12 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
             }
             for (DatabaseTableRecord record : metadataTable.getRecords()) {
                 record.setStringValue(columnName, value);
+                metadataTable.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantLoadAssetRedemptionMetadataListException(exception, context, "Cannot load table to memory.");
-        } catch (Exception exception) {
-            throw new CantLoadAssetRedemptionMetadataListException(FermatException.wrapException(exception), context, "Unexpected exception");
+        } catch (CantUpdateRecordException exception) {
+            throw new CantLoadAssetRedemptionMetadataListException(exception, context, "Cannot update record.");
         }
     }
 
@@ -263,11 +265,12 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
             }
             for (DatabaseTableRecord record : eventRecordedTable.getRecords()) {
                 record.setStringValue(columnName, value);
+                eventRecordedTable.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantLoadAssetRedemptionEventListException(exception, context, "Cannot load table to memory.");
-        } catch (Exception exception) {
-            throw new CantLoadAssetRedemptionEventListException(FermatException.wrapException(exception), context, "Unexpected exception");
+        } catch (CantUpdateRecordException exception) {
+            throw new CantLoadAssetRedemptionEventListException(exception, context, "Cannot update record.");
         }
     }
 

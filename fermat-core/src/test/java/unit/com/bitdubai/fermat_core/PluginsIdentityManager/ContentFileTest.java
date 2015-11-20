@@ -19,7 +19,7 @@ public class ContentFileTest extends TestCase {
         String fileContent = "";
 
         for (Plugins plugin : Plugins.values())
-            fileContent = fileContent + plugin.getKey() + ";" + UUID.randomUUID() + "\\|";
+            fileContent = fileContent + plugin.getCode() + ";" + UUID.randomUUID() + "\\|";
 
         String[] stringPluginIdPairs = fileContent.split("\\|");
 
@@ -27,8 +27,8 @@ public class ContentFileTest extends TestCase {
         for (String stringPluginIdPair : stringPluginIdPairs) {
             if (!stringPluginIdPair.equals("")) {
                 String[] pluginIdPair = stringPluginIdPair.split(";");
-                pluginIdsMap.put(Plugins.getByKey(pluginIdPair[0]), UUID.fromString(pluginIdPair[1]));
-                System.out.println(Plugins.getByKey(pluginIdPair[0]));
+                pluginIdsMap.put(Plugins.getByCode(pluginIdPair[0]), UUID.fromString(pluginIdPair[1]));
+                System.out.println(Plugins.getByCode(pluginIdPair[0]));
 
                 System.out.println(UUID.fromString(pluginIdPair[1]));
 

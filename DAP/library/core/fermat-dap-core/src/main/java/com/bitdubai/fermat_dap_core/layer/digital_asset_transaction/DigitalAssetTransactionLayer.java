@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.appropriation_stats.AssetAppropriationStatsPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_appropriation.AssetAppropriationPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_distribution.AssetDistributionPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_issuing.AssetIssuingPluginSubsystem;
@@ -29,6 +30,7 @@ public class DigitalAssetTransactionLayer extends AbstractLayer {
         try {
 
             registerPlugin(new AssetAppropriationPluginSubsystem());
+            registerPlugin(new AssetAppropriationStatsPluginSubsystem());
             registerPlugin(new AssetDistributionPluginSubsystem());
             registerPlugin(new AssetIssuingPluginSubsystem());
             registerPlugin(new AssetReceptionPluginSubsystem());

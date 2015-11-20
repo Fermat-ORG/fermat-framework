@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -71,6 +74,11 @@ public class FermatWalletFragment extends Fragment implements FermatFragments {
         isAttached = false;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+    }
+
     public void setWalletSession(WalletSession walletSession) {
         this.walletSession = walletSession;
     }
@@ -122,8 +130,8 @@ public class FermatWalletFragment extends Fragment implements FermatFragments {
         return getPaintActivtyFeactures().getToolbar();
     }
 
-    protected void changeApp(Engine emgine){
-        getFermatScreenSwapper().connectWithOtherApp(emgine);
+    protected void changeApp(Engine emgine,Object[] objects){
+        getFermatScreenSwapper().connectWithOtherApp(emgine,objects);
     }
     protected FermatScreenSwapper getFermatScreenSwapper(){
         return (FermatScreenSwapper) getActivity();

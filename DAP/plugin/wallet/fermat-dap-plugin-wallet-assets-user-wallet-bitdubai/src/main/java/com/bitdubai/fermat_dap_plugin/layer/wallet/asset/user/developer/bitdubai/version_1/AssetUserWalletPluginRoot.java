@@ -140,11 +140,10 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         List<DeveloperDatabaseTableRecord> databaseTableRecords = new ArrayList<>();
-        UUID walletId = null;
+        UUID walletId = this.pluginId;
         try {
             loadWalletIssuerMap();
-            walletId = walletUser.get(this.pluginId.toString());
-            Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
+            Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
             databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
             database.closeDatabase();
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
