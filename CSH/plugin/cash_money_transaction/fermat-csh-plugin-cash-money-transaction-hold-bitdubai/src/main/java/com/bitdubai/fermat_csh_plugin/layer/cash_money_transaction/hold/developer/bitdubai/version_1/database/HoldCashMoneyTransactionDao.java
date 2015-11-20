@@ -22,6 +22,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.excepti
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionParameters;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantInitializeHoldCashMoneyTransactionDatabaseException;
+import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantUpdateHoldTransactionException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.exceptions.HoldCashMoneyTransactionInconsistentTableStateException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.structure.CashHoldTransactionImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -103,7 +104,7 @@ public class HoldCashMoneyTransactionDao {
         return cashHoldTransaction;
     }
 
-    public List<CashHoldTransaction> getCashHoldTransactionList(DatabaseTableFilter filter) throws CantGetHoldTransactionException, InvalidParameterException
+    public List<CashHoldTransaction> getCashHoldTransactionList(DatabaseTableFilter filter) throws CantGetHoldTransactionException
     {
         List<CashHoldTransaction> transactions = new ArrayList<>();
         try {
@@ -119,14 +120,48 @@ public class HoldCashMoneyTransactionDao {
         return transactions;
     }
 
+    public List<CashHoldTransaction> getAcknowledgedTransactionList() throws CantGetHoldTransactionException
+    {
+        DatabaseTableFilter filter = getEmptyHoldTableFilter();
+        filter.setColumn(HoldCashMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME);
+        filter.setValue(CashTransactionStatus.ACKNOWLEDGED.getCode());
+        filter.setType(DatabaseFilterType.EQUAL);
 
+        return getCashHoldTransactionList(filter);
+    }
+
+    public void updateCashHoldTransactionStatus(UUID transactionId, CashTransactionStatus status) throws CantUpdateHoldTransactionException
+    {
+        DatabaseTableRecord record;
+        try {
+            record = getRecordByPrimaryKey(transactionId);
+            record.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, status.getCode());
+            if(status == CashTransactionStatus.CONFIRMED || status == CashTransactionStatus.REJECTED)
+                record.setLongValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, (new Date().getTime() / 1000));
+
+            DatabaseTable table = database.getTable(pluginId.toString());
+            table.updateRecord(record);
+
+        } catch (CantUpdateRecordException e){
+            throw new CantUpdateHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant update cash hold transaction status. Cant update the record");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantUpdateHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant update cash hold transaction status. Cant load table into memory.");
+        } catch (HoldCashMoneyTransactionInconsistentTableStateException e) {
+            throw new CantUpdateHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant update cash hold transaction status. Inconsistent table state.");
+        }
+
+    }
+
+    private DatabaseTableFilter getEmptyHoldTableFilter() {
+        return this.database.getTable(HoldCashMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME).getEmptyTableFilter();
+    }
 
 
 
     /* INTERNAL HELPER FUNCTIONS */
     private DatabaseTableRecord getRecordByPrimaryKey(UUID transactionId) throws CantLoadTableToMemoryException, HoldCashMoneyTransactionInconsistentTableStateException {
-        DatabaseTable table = this.database.getTable(HoldCashMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
         List<DatabaseTableRecord> records;
+        DatabaseTable table = database.getTable(HoldCashMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
 
         table.setStringFilter(HoldCashMoneyTransactionDatabaseConstants.HOLD_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
         table.loadToMemory();

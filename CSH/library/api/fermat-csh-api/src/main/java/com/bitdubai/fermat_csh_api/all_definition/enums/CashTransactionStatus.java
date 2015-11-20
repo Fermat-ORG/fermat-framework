@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum CashTransactionStatus {
     ACKNOWLEDGED("ACK"),
     PENDING("PEN"),
-    COMPLETED("COM"),
+    CONFIRMED("CON"),
     REJECTED("REJ");
 
     private String code;
@@ -27,7 +27,7 @@ public enum CashTransactionStatus {
         switch (code) {
             case "NEG": return CashTransactionStatus.ACKNOWLEDGED;
             case "PEN": return CashTransactionStatus.PENDING;
-            case "COM": return CashTransactionStatus.COMPLETED;
+            case "CON": return CashTransactionStatus.CONFIRMED;
             case "CAN": return CashTransactionStatus.REJECTED;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This is an invalid CashTransactionStatus code");
         }

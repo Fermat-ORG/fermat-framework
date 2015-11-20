@@ -3,9 +3,11 @@ package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.develop
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_csh_api.all_definition.cash_money_transaction.CashTransaction;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantCreateHoldTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantGetHoldTransactionException;
@@ -13,7 +15,9 @@ import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfa
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionManager;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionParameters;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.database.HoldCashMoneyTransactionDao;
+import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.database.HoldCashMoneyTransactionDatabaseConstants;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantInitializeHoldCashMoneyTransactionDatabaseException;
+import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantUpdateHoldTransactionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
@@ -48,10 +52,22 @@ public class CashMoneyTransactionHoldManager implements CashHoldTransactionManag
 
 
 
-
-    public List<CashHoldTransaction> getCashHoldTransactionList(DatabaseTableFilter filter) throws CantGetHoldTransactionException, InvalidParameterException {
-        return dao.getCashHoldTransactionList(filter);
+    /*
+     * Methods to be used by the ProcessorAgent
+     */
+    public List<CashHoldTransaction> getAcknowledgedTransactionList() throws CantGetHoldTransactionException {
+        return dao.getAcknowledgedTransactionList();
     }
+    public void setTransactionStatusToPending(UUID transactionId) throws CantUpdateHoldTransactionException {
+        dao.updateCashHoldTransactionStatus(transactionId, CashTransactionStatus.PENDING);
+    }
+    public void setTransactionStatusToConfirmed(UUID transactionId) throws CantUpdateHoldTransactionException {
+        dao.updateCashHoldTransactionStatus(transactionId, CashTransactionStatus.CONFIRMED);
+    }
+    public void setTransactionStatusToRejected(UUID transactionId) throws CantUpdateHoldTransactionException {
+        dao.updateCashHoldTransactionStatus(transactionId, CashTransactionStatus.REJECTED);
+    }
+
 
 
     /*
