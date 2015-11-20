@@ -46,3 +46,8 @@ Please, configure your script to generate all the issues following the next step
     * If you are a Team Leader you can do an autoassignment.
 * 1.0.4:
 	* Added Public Interfaces, Internal Structure and Event Handler issue.
+* 1.2.0:
+	* Fixes the default repository user.
+  	* Add issues for Agents, Network Service, Network Service Messages and events.
+    * Add the labels list (only for team leaders use).
+    * Add the variable networkService.
