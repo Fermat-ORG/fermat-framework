@@ -49,6 +49,8 @@ import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
 import org.restlet.data.Protocol;
+import org.restlet.engine.Engine;
+import org.restlet.ext.json.JsonConverter;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
@@ -59,6 +61,8 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import sun.net.www.http.HttpClient;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection</code>
@@ -386,6 +390,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             /*
              * Construct the web service client
              */
+            Engine.getInstance().getRegisteredConverters().add(new JsonConverter());
             ClientResource clientResource = new ClientResource(WsCommunicationsCloudClientPluginRoot.HTTP_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.WEB_SERVICE_PORT + "/fermat/cloud-server/v1/components/registered/");
             clientResource.setNext(client);
             clientResource.setRequestEntityBuffering(true);
@@ -411,11 +416,11 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             while((line = bufferedReader.readLine()) != null) {
                 stringBuilder.append(line);
 
-               for (Character character:line.toCharArray()) {
+              /* for (Character character:line.toCharArray()) {
                     System.out.print(index + " -- character = " + character);
                     System.out.println("");
                     index++;
-                }
+                }*/
 
             }
 

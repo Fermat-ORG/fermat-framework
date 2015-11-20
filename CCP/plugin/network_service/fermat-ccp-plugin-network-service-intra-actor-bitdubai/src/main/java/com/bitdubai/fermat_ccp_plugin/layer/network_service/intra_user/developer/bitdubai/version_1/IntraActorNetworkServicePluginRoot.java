@@ -1058,13 +1058,17 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             );                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
 
-            List<PlatformComponentProfile> list = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            //List<PlatformComponentProfile> list = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
 
-            for (PlatformComponentProfile platformComponentProfile : list) {
+            List<PlatformComponentProfile> list = new ArrayList<>();
+
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfilePluginRoot, discoveryQueryParameters);
+
+           /* for (PlatformComponentProfile platformComponentProfile : list) {
 
                 byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
                 lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias()));
-            }
+            } */
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
