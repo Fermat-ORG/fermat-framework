@@ -257,6 +257,7 @@ public class OutgoingIntraActorDao {
 
         transactionTable.setStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
+
         List<DatabaseTableRecord> records = transactionTable.getRecords();
 
         if (records.size() != 1)

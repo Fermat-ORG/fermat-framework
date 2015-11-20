@@ -66,6 +66,7 @@ public class IncomingIntraUserTransactionHandler {
         incomingMoneyNotificationEvent.setCryptoCurrency(transaction.getInformation().getCryptoCurrency());
         incomingMoneyNotificationEvent.setWalletPublicKey(cryptoAddressBookRecord.getWalletPublicKey());
         incomingMoneyNotificationEvent.setIntraUserIdentityPublicKey(cryptoAddressBookRecord.getDeliveredByActorPublicKey());
+
         eventManager.raiseEvent(platformEvent);
     }
 }

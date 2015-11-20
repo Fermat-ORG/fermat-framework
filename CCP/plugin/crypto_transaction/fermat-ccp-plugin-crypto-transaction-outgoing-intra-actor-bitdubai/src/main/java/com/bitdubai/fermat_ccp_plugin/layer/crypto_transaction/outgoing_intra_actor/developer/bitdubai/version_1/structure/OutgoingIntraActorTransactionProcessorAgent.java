@@ -194,6 +194,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                          //reportUnexpectedException(e);
                         // Todo: Rodrigo, since the wallet cant be loaded at this time, I'm still putting the transacction in PIA
                         dao.setToPIA(transaction);
+
                     }
                 }
 
