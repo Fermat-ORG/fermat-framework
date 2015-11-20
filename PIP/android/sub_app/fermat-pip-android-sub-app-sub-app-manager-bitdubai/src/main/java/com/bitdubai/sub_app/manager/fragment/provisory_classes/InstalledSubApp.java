@@ -93,10 +93,6 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
      *
      * @return the public key represented as a string
      */
-    @Override
-    public String getSubAppPublicKey() {
-        return publicKey;
-    }
 
     /**
      * This method gives us the subApp name
@@ -132,5 +128,10 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     @Override
     public String getIcon() {
         return walletIcon;
+    }
+
+    @Override
+    public String getAppPublicKey() {
+        return publicKey;
     }
 }

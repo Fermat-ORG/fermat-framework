@@ -32,7 +32,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.TypedValue;
@@ -55,17 +54,15 @@ import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionMana
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
-import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory;
-import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
-import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
@@ -108,8 +105,8 @@ import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
@@ -155,7 +152,6 @@ public abstract class FermatActivity extends AppCompatActivity
         Observer,
         FermatNotificationListener,
         NavigationView.OnNavigationItemSelectedListener,
-        NavigationDrawerFragment.NavigationDrawerCallbacks,
         FermatRuntime,
         FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> {
 
@@ -181,7 +177,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     private ActivityType activityType;
 
-    ArrayList activePlatforms;
+    protected ArrayList activePlatforms;
 
     protected boolean developMode;
 
@@ -202,6 +198,7 @@ public abstract class FermatActivity extends AppCompatActivity
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ViewPager pagertabs;
     private CoordinatorLayout coordinatorLayout;
+    private boolean flag=false;
 
 
     /**
@@ -392,6 +389,10 @@ public abstract class FermatActivity extends AppCompatActivity
                 if (backgroundColor != null) {
                     navigationView.setBackgroundColor(Color.parseColor(backgroundColor));
                 }
+                if(sideMenu.getNavigationIconColor()!=null)
+                if(sideMenu.getNavigationIconColor().equals("#ffffff")){
+                    mToolbar.setNavigationIcon(R.drawable.ic_actionbar_menu);
+                }
             } else {
                 mToolbar.setNavigationIcon(R.drawable.ic_action_back);
                 mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -417,6 +418,8 @@ public abstract class FermatActivity extends AppCompatActivity
             activity = subApp.getLastActivity();
         } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
             //activity = getWalletRuntimeManager().getLasActivity();
+        } else if (ActivityType.ACTIVITY_TYPE_DESKTOP == activityType){
+            activity = getDesktopRuntimeManager().getLastDesktopObject().getLastActivity();
         }
         return activity;
     }
@@ -427,22 +430,36 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void paintTitleBar(TitleBar titleBar, Activity activity) {
         try {
             if (titleBar != null) {
+                Typeface typeface = null;
+                if(titleBar.getFont()!=null)
+                typeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/"+titleBar.getFont());
 
                 String title = titleBar.getLabel();
 
+                if(titleBar.isTitleTextStatic()){
+                    View toolabarContainer = getLayoutInflater().inflate(R.layout.text_view, null);
+                    FermatTextView txt_title = (FermatTextView) toolabarContainer.findViewById(R.id.txt_title);
+                    txt_title.setText(title);
+                    txt_title.setTypeface(typeface);
+                    txt_title.setTextSize(titleBar.getLabelSize());
+                    txt_title.setTextColor(Color.parseColor(titleBar.getTitleColor()));
+                    mToolbar.addView(toolabarContainer);
+                }else {
 
-                if (collapsingToolbarLayout != null) {
-                    collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
-                    collapsingToolbarLayout.setCollapsedTitleTypeface((Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf")));
-                    //if (titleBar.getLabelSize() != -1) {
-                    //collapsingToolbarLayout.setCollapsedTitleTex(titleBar.getLabelSize());
+                    if (collapsingToolbarLayout != null) {
+                        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
+                        collapsingToolbarLayout.setCollapsedTitleTypeface(typeface);
+                        //if (titleBar.getLabelSize() != -1) {
+                        //collapsingToolbarLayout.setCollapsedTitleTex(titleBar.getLabelSize());
 
-                    //}
-                    collapsingToolbarLayout.setTitle(title);
+                        //}
+                        collapsingToolbarLayout.setTitle(title);
 
 
-                } else {
-                    mToolbar.setTitle(title);
+                    } else {
+                        mToolbar.setTitle(title);
+
+                    }
                 }
 
                 if (titleBar.getColor() != null) {
@@ -456,9 +473,9 @@ public abstract class FermatActivity extends AppCompatActivity
                         appBarLayout.setBackgroundColor(Color.parseColor(titleBar.getColor()));
                         //  mutedColor = palette.getMutedColor(R.attr.colorPrimary);
                         //collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(R.color.gps_friends_green_main));
-                        if (titleBar.getTitleColor() != null) {
-                            collapsingToolbarLayout.setCollapsedTitleTextColor(Color.parseColor(titleBar.getTitleColor()));
-                        }
+//                        if (titleBar.getTitleColor() != null) {
+//                            collapsingToolbarLayout.setCollapsedTitleTextColor(Color.parseColor(titleBar.getTitleColor()));
+//                        }
                     } else {
                         mToolbar.setBackgroundColor(Color.parseColor(titleBar.getColor()));
                         appBarLayout.setBackgroundColor(Color.parseColor(titleBar.getColor()));
@@ -481,6 +498,8 @@ public abstract class FermatActivity extends AppCompatActivity
                     collapsingToolbarLayout.setVisibility(View.GONE);
 
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -507,13 +526,13 @@ public abstract class FermatActivity extends AppCompatActivity
         SpannableString s = new SpannableString(title);
 
 
-        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "Roboto-Regular.ttf"), 0, s.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        // Update the action bar title with the TypefaceSpan instance
-        if (collapsingToolbarLayout != null)
-            collapsingToolbarLayout.setTitle(s);
-        mToolbar.setTitle(s);
+//        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "Roboto-Regular.ttf"), 0, s.length(),
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//        // Update the action bar title with the TypefaceSpan instance
+//        if (collapsingToolbarLayout != null)
+//            collapsingToolbarLayout.setTitle(s);
+//        mToolbar.setTitle(s);
 
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -652,8 +671,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
             collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
-            if (collapsingToolbarLayout != null)
+            if (collapsingToolbarLayout != null) {
                 collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
+                collapsingToolbarLayout.setTitle("");
+                collapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
+            }
+
 
             appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
 
@@ -668,10 +691,10 @@ public abstract class FermatActivity extends AppCompatActivity
                             scrollRange = appBarLayout.getTotalScrollRange();
                         }
                         if (scrollRange + verticalOffset == 0) {
-                            //collapsingToolbarLayout.setTitle("Title");
+                            collapsingToolbarLayout.setTitle("");
                             isShow = true;
                         } else if (isShow) {
-                            //ollapsingToolbarLayout.setTitle("");
+                            collapsingToolbarLayout.setTitle("");
                             isShow = false;
                         }
                     }
@@ -707,6 +730,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     // select the correct nav menu item
                     //navigationView.getMenu().findItem(mNavItemId).setChecked(true);
 
+                    mToolbar.setNavigationIcon(R.drawable.ic_actionbar_menu);
                             /* setting up drawer layout */
                     mDrawerToggle = new ActionBarDrawerToggle(this,
                             mDrawerLayout,
@@ -738,11 +762,22 @@ public abstract class FermatActivity extends AppCompatActivity
                             //findViewById(R.id.content).setTranslationX(moveFactor);
                         }
                     };
+
                     mDrawerLayout.setDrawerListener(mDrawerToggle);
                     mDrawerLayout.post(new Runnable() {
                         @Override
                         public void run() {
                             mDrawerToggle.syncState();
+                        }
+                    });
+
+                    mDrawerToggle.setDrawerIndicatorEnabled(false);
+
+
+                    mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mDrawerLayout.openDrawer(GravityCompat.START);
                         }
                     });
 
@@ -1004,7 +1039,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
             }
 
-            if (true) {
+            if (getIntent().getBooleanExtra("flag",false)) {
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
                 activePlatforms.add(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
                 activePlatforms.add(Platforms.DIGITAL_ASSET_PLATFORM);
@@ -1816,10 +1851,6 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void setNavigationBackgroundColor(int color){
-        navigationView.setBackgroundColor(color);
-    }
 
 
     public RelativeLayout getToolbarHeader() {
@@ -1934,8 +1965,6 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Abstract methods
      */
-
-    public abstract void onNavigationDrawerItemSelected(int position, String activityCode);
 
     protected abstract List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> getNavigationMenu();
 

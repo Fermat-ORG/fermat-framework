@@ -1,8 +1,13 @@
 package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -11,7 +16,7 @@ import java.util.Map;
 /**
  * Created by Nerio on 21/10/15.
  */
-public class AssetRedeemPointCommunitySubAppSession implements SubAppsSession {
+public class AssetRedeemPointCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,RedeemPointCommunitySubAppModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
 
 
     private RedeemPointCommunitySubAppModuleManager manager;
@@ -21,16 +26,16 @@ public class AssetRedeemPointCommunitySubAppSession implements SubAppsSession {
     private Map<String, Object> data;
 
 
-    public AssetRedeemPointCommunitySubAppSession(SubApps subApps, ErrorManager errorManager, RedeemPointCommunitySubAppModuleManager manager) {
-        this.sessionType = subApps;
+    public AssetRedeemPointCommunitySubAppSession(InstalledSubApp subApp, ErrorManager errorManager, RedeemPointCommunitySubAppModuleManager manager) {
+        super(subApp.getAppPublicKey(),subApp,errorManager,manager,null);
         this.errorManager = errorManager;
         this.manager = manager;
     }
 
 
     @Override
-    public SubApps getSubAppSessionType() {
-        return sessionType;
+    public InstalledSubApp getSubAppSessionType() {
+        return getFermatApp();
     }
 
     @Override

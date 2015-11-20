@@ -109,7 +109,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
     @Override
     public DesktopObject getLastDesktopObject() {
         if (lastDesktopObject != null) {
-            //return mapDesktops.get(lastDesktopObject);
+            return lstDesktops.get(0);
         }
         return  null;
         //return mapDesktops.get(startDesktopObject);
@@ -165,7 +165,8 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
             runtimeDesktopObject = new RuntimeDesktopObject();
             runtimeDesktopObject.setType("DCCP");
-            lstDesktops.add(runtimeDesktopObject);
+            lastDesktopObject = runtimeDesktopObject.getType();
+
             runtimeDesktopObject.setStartActivity(Activities.CCP_DESKTOP);
 
             Activity activity = new Activity();
@@ -176,6 +177,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             //activity.setType(Activities.dmp_DESKTOP_HOME);
             activity.setActivityType("CCPDHA");
             Fragment fragment = new Fragment();
+            runtimeDesktopObject.addActivity(activity);
 
             /**
              * Add WalletManager fragment
@@ -184,6 +186,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             // dmp_WALLET_MANAGER_FRAGMENT
             fragment.setType("CCPWMF");
             activity.addFragment("CCPWMF",fragment);
+            runtimeDesktopObject.setStartActivity(activity.getType());
 
             /**
              * Add home subApps fragment
@@ -195,8 +198,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             activity.addFragment("CCPSAMF", fragment);
 
 
-
-
+            lstDesktops.add(runtimeDesktopObject);
             /**
              * End Desktop CCP
              */
@@ -218,7 +220,6 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
             //activity.setType(Activities.dmp_DESKTOP_HOME);
             activity.setActivityType("WPD");
-            fragment = new Fragment();
 
             /**
              * Add home subApps fragment
@@ -228,6 +229,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             // dmp_SUB_APP_MANAGER_FRAGMENT
             fragment.setType("CCPSAMF");
             activity.addFragment("CCPSAMF", fragment);
+            runtimeDesktopObject.addActivity(activity);
 
 
 
@@ -260,7 +262,8 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
             // dmp_WALLET_MANAGER_FRAGMENT
             fragment.setType("DAPWMF");
-            activity.addFragment("DAPWMF",fragment);
+            activity.addFragment("DAPWMF", fragment);
+            runtimeDesktopObject.addActivity(activity);
 
             /**
              * Add home subApps fragment
@@ -270,6 +273,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             // dmp_SUB_APP_MANAGER_FRAGMENT
             fragment.setType("DAPSAMF");
             activity.addFragment("DAPSAMF", fragment);
+            runtimeDesktopObject.addActivity(activity);
 
             /**
              * End Desktop DAP
@@ -292,6 +296,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             //activity.setType(Activities.dmp_DESKTOP_HOME);
             activity.setActivityType("CBPDHA");
             fragment = new Fragment();
+            runtimeDesktopObject.addActivity(activity);
 
             /**
              * Add WalletManager fragment
@@ -299,7 +304,8 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
             // dmp_WALLET_MANAGER_FRAGMENT
             fragment.setType("CBPWMF");
-            activity.addFragment("CBPWMF",fragment);
+            activity.addFragment("CBPWMF", fragment);
+            runtimeDesktopObject.addActivity(activity);
 
             /**
              * Add home subApps fragment
@@ -309,6 +315,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             // dmp_SUB_APP_MANAGER_FRAGMENT
             fragment.setType("CBPSAMF");
             activity.addFragment("CBPSAMF", fragment);
+            runtimeDesktopObject.addActivity(activity);
 
             /**
              * End Desktop CBP

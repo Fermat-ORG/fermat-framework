@@ -143,7 +143,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
         UUID walletId = null;
         try {
             loadWalletIssuerMap();
-            walletId = walletUser.get(this.pluginId.toString());
+            walletId = walletUser.get("walletPublicKeyTest");
             Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
             databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
             database.closeDatabase();

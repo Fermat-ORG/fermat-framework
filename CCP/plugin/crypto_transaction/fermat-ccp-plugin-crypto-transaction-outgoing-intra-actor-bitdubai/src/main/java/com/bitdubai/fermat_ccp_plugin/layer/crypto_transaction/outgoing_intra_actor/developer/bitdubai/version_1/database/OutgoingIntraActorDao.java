@@ -242,7 +242,10 @@ public class OutgoingIntraActorDao {
     private void setToState(OutgoingIntraActorTransactionWrapper bitcoinTransaction, TransactionState status) throws CantUpdateRecordException, OutgoingIntraActorInconsistentTableStateException, CantLoadTableToMemoryException {
         DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
         DatabaseTableRecord recordToUpdate   = getByPrimaryKey(bitcoinTransaction.getTransactionId());
+
         recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME, status.getCode());
+
+        transactionTable.setStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, bitcoinTransaction.getTransactionId().toString(), DatabaseFilterType.EQUAL);
         transactionTable.updateRecord(recordToUpdate);
     }
 

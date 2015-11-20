@@ -27,12 +27,12 @@ Receive Cash Delivery :: +
 Bank Money :: +
 
 ==== _Bank Money Transaction layer_
-Make Offline Bank Transfer ::
-Receive Offline Bank Transfer :: +
+Make Off-line Bank Transfer ::
+Receive Off-line Bank Transfer :: +
 ////
 
 image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
-==== Continue reading ...
+==== _Continue reading ..._
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]
 ////

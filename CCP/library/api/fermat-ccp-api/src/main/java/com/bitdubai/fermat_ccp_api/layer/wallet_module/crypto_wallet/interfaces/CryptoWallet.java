@@ -10,7 +10,9 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.*;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.*;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.InsufficientFundsException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -376,6 +378,27 @@ public interface CryptoWallet extends Serializable {
      * @return List of PaymentRequest object
      */
     List<PaymentRequest> listPaymentRequestDateOrder(String  walletPublicKey,int max,int offset) throws CantListPaymentRequestDateOrderException;
+
+
+    /**
+     * Throw the method <code>refuseRequest</code> you can refuse a request.
+     *
+     * @param requestId
+     * @throws CantRejectCryptoPaymentRequestException
+     * @throws CryptoPaymentRequestNotFoundException
+     */
+    void refuseRequest(UUID requestId) throws CantRefuseRequestPaymentException,PaymentRequestNotFoundException;
+
+
+    /**
+     * Throw the method <code>approveRequest</code> you can approve a request and send the specified crypto.
+     * @param requestId
+     * @throws CantApproveCryptoPaymentRequestException
+     * @throws CryptoPaymentRequestNotFoundException
+     * @throws com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException
+     */
+
+    void approveRequest(UUID requestId) throws CantApproveRequestPaymentException,PaymentRequestNotFoundException,RequestPaymentInsufficientFundsException;
 
     /**
      *

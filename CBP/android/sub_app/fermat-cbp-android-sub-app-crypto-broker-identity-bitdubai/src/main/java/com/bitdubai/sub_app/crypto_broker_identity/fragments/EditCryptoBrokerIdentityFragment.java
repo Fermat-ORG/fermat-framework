@@ -25,9 +25,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
@@ -214,7 +213,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
         int resultCode = executor.execute();
 
         if (resultCode == SUCCESS || resultCode == DATA_NOT_CHANGED) {
-            changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
+            //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(),re);
 
         } else if (resultCode == EXCEPTION_THROWN) {
             Toast.makeText(getActivity(), "No se pudieron editar los datos", Toast.LENGTH_LONG).show();

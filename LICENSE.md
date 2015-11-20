@@ -1,21 +1,73 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * This file incorporates work covered by the following copyright and
- * permission notice:
- *
- *   Copyright 2015 Fermat foundation
- *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
- */
+![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+
+# Fermat License
+
+Fermat is a system built with components. The main component types are:
+
+#### Libraries
+
+Most of the libraries in Fermat are part of Fermat Core or Fermat APIs. For these libraries the following license apply:
+
+>The MIT License (MIT)
+
+>Copyright (c) 2015 Fermat Foundation.
+
+>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+#### Addons
+
+Addons are low level components. For these components the following license apply:
+
+>The MIT License (MIT)
+
+>Copyright (c) 2015 Fermat Foundation.
+
+>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+#### Plug-ins
+
+Plugins are middleware components. Anybody can write _Plug-ins_ for Fermat and their authors hold all the rights over them. Please find at the root folder of each _Plug-in_ their LICENSE.md file.
+
+#### GUI Components
+
+GUI Components provide an interface for end users. Anybody can write _GUI Components_ for Fermat and their authors hold all the rights over them. Please find at the root folder of each _GUI Component_ their LICENSE.md file.
+
+#### Skins
+
+Skins are graphic resources to be used by GUI Components. Anybody can provide _Skins_ so their authors hold all the rights over them. Please find at the root folder of each _Skin_ their LICENSE.md file.
+
+#### Language Packages
+
+Language Packages are files with translations to be used by GUI Components. Anybody can provide _Language Packages_ so their authors holds all the rights over them. Please find at the root folder of each _Language Packages_ their LICENSE.md file.

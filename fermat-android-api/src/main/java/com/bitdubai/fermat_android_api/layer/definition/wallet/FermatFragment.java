@@ -3,6 +3,8 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -84,6 +86,11 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
         isAttached = false;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+    }
+
     /**
      * Setting up SubApp Session
      *
@@ -114,8 +121,15 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
     /**
      * Change activity
      */
+    protected final void changeActivity(String activityCode,String appPublicKey, Object... objectses) {
+        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, appPublicKey,objectses);
+    }
+    /**
+     * Change activity
+     */
+    @Deprecated
     protected final void changeActivity(String activityCode, Object... objectses) {
-        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, objectses);
+        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, null);
     }
 
     /**
@@ -137,16 +151,13 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
         getPaintActivtyFeactures().changeNavigationDrawerAdapter(adapter);
     }
 
-    protected void setNavigationBackgroundColor(int color){
-        getPaintActivtyFeactures().setNavigationBackgroundColor(color);
-    }
 
     protected void addNavigationHeader(View view){
         getPaintActivtyFeactures().addNavigationViewHeader(view);
     }
 
-    protected void changeApp(Engine emgine){
-        getFermatScreenSwapper().connectWithOtherApp(emgine);
+    protected void changeApp(Engine emgine,Object[] objects){
+        getFermatScreenSwapper().connectWithOtherApp(emgine,objects);
     }
 
     protected FermatScreenSwapper getFermatScreenSwapper(){

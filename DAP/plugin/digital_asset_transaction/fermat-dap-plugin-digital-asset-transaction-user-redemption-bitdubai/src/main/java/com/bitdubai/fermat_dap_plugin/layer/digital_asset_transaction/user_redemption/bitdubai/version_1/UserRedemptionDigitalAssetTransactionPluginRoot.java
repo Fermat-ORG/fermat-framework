@@ -230,7 +230,7 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
                 //This plugin must be stopped if this happens.
                 this.serviceStatus = ServiceStatus.STOPPED;
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantStartPluginException("User redemption Event Recorded could not be started", exception, Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION.getKey(), "The plugin event recorder is not started");
+                throw new CantStartPluginException("User redemption Event Recorded could not be started", exception, Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION.getCode(), "The plugin event recorder is not started");
             }
             this.userRedemptionManager=new UserRedemptionTransactionManager(this.assetVaultManager,
                     errorManager,

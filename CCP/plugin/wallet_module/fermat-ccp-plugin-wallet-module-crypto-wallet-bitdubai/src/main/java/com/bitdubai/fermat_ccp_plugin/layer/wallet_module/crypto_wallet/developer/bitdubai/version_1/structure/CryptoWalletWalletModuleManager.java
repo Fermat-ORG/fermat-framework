@@ -25,15 +25,22 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantApproveCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGenerateCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRegistryException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantRejectCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPayment;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantApproveRequestPaymentException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListPaymentRequestDateOrderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListReceivePaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListSentPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRefuseRequestPaymentException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantSendCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.PaymentRequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.RequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
@@ -680,233 +687,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
                 for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
-               }
+                }
             }
-            if(cryptoWalletTransactionList.isEmpty()){
-                cryptoWalletTransactionList.add(new CryptoWalletTransaction() {
-                    @Override
-                    public Actor getInvolvedActor() {
-                        return new Actor() {
-                            @Override
-                            public String getActorPublicKey() {
-                                return null;
-                            }
-
-                            @Override
-                            public String getName() {
-                                return "Matias furszy";
-                            }
-
-                            @Override
-                            public Actors getType() {
-                                return Actors.CCM_INTRA_WALLET_USER;
-                            }
-
-                            @Override
-                            public byte[] getPhoto() {
-                                return null;
-                            }
-
-                            @Override
-                            public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
-                                return null;
-                            }
-                        };
-                    }
-
-                    @Override
-                    public UUID getContactId() {
-                        return null;
-                    }
-
-                    @Override
-                    public UUID getTransactionId() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getTransactionHash() {
-                        return null;
-                    }
-
-                    @Override
-                    public CryptoAddress getAddressFrom() {
-                        return null;
-                    }
-
-                    @Override
-                    public CryptoAddress getAddressTo() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getActorToPublicKey() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getActorFromPublicKey() {
-                        return null;
-                    }
-
-                    @Override
-                    public Actors getActorToType() {
-                        return Actors.CCM_INTRA_WALLET_USER;
-                    }
-
-                    @Override
-                    public Actors getActorFromType() {
-                        return null;
-                    }
-
-                    @Override
-                    public BalanceType getBalanceType() {
-                        return BalanceType.AVAILABLE;
-                    }
-
-                    @Override
-                    public TransactionType getTransactionType() {
-                        return transactionType;
-                    }
-
-                    @Override
-                    public long getTimestamp() {
-                        return System.currentTimeMillis();
-                    }
-
-                    @Override
-                    public long getAmount() {
-                        return 1200000;
-                    }
-
-                    @Override
-                    public long getRunningBookBalance() {
-                        return 0;
-                    }
-
-                    @Override
-                    public long getRunningAvailableBalance() {
-                        return 0;
-                    }
-
-                    @Override
-                    public String getMemo() {
-                        return "Spicy Gyros with coke";
-                    }
-                });
-                cryptoWalletTransactionList.add(new CryptoWalletTransaction() {
-                    @Override
-                    public Actor getInvolvedActor() {
-                        return new Actor() {
-                            @Override
-                            public String getActorPublicKey() {
-                                return null;
-                            }
-
-                            @Override
-                            public String getName() {
-                                return "Juan carlos";
-                            }
-
-                            @Override
-                            public Actors getType() {
-                                return Actors.CCM_INTRA_WALLET_USER;
-                            }
-
-                            @Override
-                            public byte[] getPhoto() {
-                                return null;
-                            }
-
-                            @Override
-                            public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
-                                return null;
-                            }
-                        };
-                    }
-
-                    @Override
-                    public UUID getContactId() {
-                        return null;
-                    }
-
-                    @Override
-                    public UUID getTransactionId() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getTransactionHash() {
-                        return null;
-                    }
-
-                    @Override
-                    public CryptoAddress getAddressFrom() {
-                        return null;
-                    }
-
-                    @Override
-                    public CryptoAddress getAddressTo() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getActorToPublicKey() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getActorFromPublicKey() {
-                        return null;
-                    }
-
-                    @Override
-                    public Actors getActorToType() {
-                        return Actors.CCM_INTRA_WALLET_USER;
-                    }
-
-                    @Override
-                    public Actors getActorFromType() {
-                        return null;
-                    }
-
-                    @Override
-                    public BalanceType getBalanceType() {
-                        return BalanceType.AVAILABLE;
-                    }
-
-                    @Override
-                    public TransactionType getTransactionType() {
-                        return transactionType;
-                    }
-
-                    @Override
-                    public long getTimestamp() {
-                        return System.currentTimeMillis();
-                    }
-
-                    @Override
-                    public long getAmount() {
-                        return 1200000;
-                    }
-
-                    @Override
-                    public long getRunningBookBalance() {
-                        return 0;
-                    }
-
-                    @Override
-                    public long getRunningAvailableBalance() {
-                        return 0;
-                    }
-
-                    @Override
-                    public String getMemo() {
-                        return "Haciendo interfaces";
-                    }
-                });
-            }
-
             return cryptoWalletTransactionList;
         } catch(Exception e){
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
@@ -976,238 +758,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                 }
             }
-
-            if(cryptoWalletTransactionList.isEmpty()){
-                cryptoWalletTransactionList.add(new CryptoWalletTransaction() {
-                    @Override
-                    public Actor getInvolvedActor() {
-                        return new Actor() {
-                            @Override
-                            public String getActorPublicKey() {
-                                return null;
-                            }
-
-                            @Override
-                            public String getName() {
-                                return "Matias furszy";
-                            }
-
-                            @Override
-                            public Actors getType() {
-                                return Actors.CCM_INTRA_WALLET_USER;
-                            }
-
-                            @Override
-                            public byte[] getPhoto() {
-                                return null;
-                            }
-
-                            @Override
-                            public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
-                                return null;
-                            }
-                        };
-                    }
-
-                    @Override
-                    public UUID getContactId() {
-                        return null;
-                    }
-
-                    @Override
-                    public UUID getTransactionId() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getTransactionHash() {
-                        return null;
-                    }
-
-                    @Override
-                    public CryptoAddress getAddressFrom() {
-                        return null;
-                    }
-
-                    @Override
-                    public CryptoAddress getAddressTo() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getActorToPublicKey() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getActorFromPublicKey() {
-                        return null;
-                    }
-
-                    @Override
-                    public Actors getActorToType() {
-                        return Actors.CCM_INTRA_WALLET_USER;
-                    }
-
-                    @Override
-                    public Actors getActorFromType() {
-                        return null;
-                    }
-
-                    @Override
-                    public BalanceType getBalanceType() {
-                        return BalanceType.AVAILABLE;
-                    }
-
-                    @Override
-                    public TransactionType getTransactionType() {
-                        return transactionType;
-                    }
-
-                    @Override
-                    public long getTimestamp() {
-                        return System.currentTimeMillis();
-                    }
-
-                    @Override
-                    public long getAmount() {
-                        return 1200000;
-                    }
-
-                    @Override
-                    public long getRunningBookBalance() {
-                        return 0;
-                    }
-
-                    @Override
-                    public long getRunningAvailableBalance() {
-                        return 0;
-                    }
-
-                    @Override
-                    public String getMemo() {
-                        return "Spicy Gyros with coke";
-                    }
-                });
-                CryptoWalletTransaction cryptoWalletTransaction = new CryptoWalletTransaction() {
-                    @Override
-                    public Actor getInvolvedActor() {
-                        return new Actor() {
-                            @Override
-                            public String getActorPublicKey() {
-                                return null;
-                            }
-
-                            @Override
-                            public String getName() {
-                                return "Juan carlos";
-                            }
-
-                            @Override
-                            public Actors getType() {
-                                return Actors.CCM_INTRA_WALLET_USER;
-                            }
-
-                            @Override
-                            public byte[] getPhoto() {
-                                return null;
-                            }
-
-                            @Override
-                            public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
-                                return null;
-                            }
-                        };
-                    }
-
-                    @Override
-                    public UUID getContactId() {
-                        return null;
-                    }
-
-                    @Override
-                    public UUID getTransactionId() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getTransactionHash() {
-                        return null;
-                    }
-
-                    @Override
-                    public CryptoAddress getAddressFrom() {
-                        return null;
-                    }
-
-                    @Override
-                    public CryptoAddress getAddressTo() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getActorToPublicKey() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getActorFromPublicKey() {
-                        return null;
-                    }
-
-                    @Override
-                    public Actors getActorToType() {
-                        return Actors.CCM_INTRA_WALLET_USER;
-                    }
-
-                    @Override
-                    public Actors getActorFromType() {
-                        return null;
-                    }
-
-                    @Override
-                    public BalanceType getBalanceType() {
-                        return BalanceType.AVAILABLE;
-                    }
-
-                    @Override
-                    public TransactionType getTransactionType() {
-                        return transactionType;
-                    }
-
-                    @Override
-                    public long getTimestamp() {
-                        return System.currentTimeMillis();
-                    }
-
-                    @Override
-                    public long getAmount() {
-                        return 1200000;
-                    }
-
-                    @Override
-                    public long getRunningBookBalance() {
-                        return 0;
-                    }
-
-                    @Override
-                    public long getRunningAvailableBalance() {
-                        return 0;
-                    }
-
-                    @Override
-                    public String getMemo() {
-                        return "Interface design";
-                    }
-                };
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-                cryptoWalletTransactionList.add(cryptoWalletTransaction);
-
-
-            }
-
             return cryptoWalletTransactionList;
         } catch(Exception e){
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
@@ -1288,6 +838,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                     cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
 
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(
+                        paymentRecord.getRequestId(),
                         convertTime(paymentRecord.getStartTimeStamp()),
                         paymentRecord.getDescription(),
                         paymentRecord.getAmount(),
@@ -1300,9 +851,9 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
             //TODO: Harcoder
             if(lst.size() == 0){
-                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
                 lst.add(cryptoWalletPaymentRequest);
-                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
 
                 lst.add(cryptoWalletPaymentRequest);
             }
@@ -1331,15 +882,23 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                     offset
             )) {
 
-                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(
-                        paymentRecord.getActorPublicKey(),
-                        walletPublicKey
-                );
+                try
+                {
+                    WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(
+                            paymentRecord.getActorPublicKey(),
+                            walletPublicKey
+                    );
 
-                if (walletContactRecord != null)
-                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
+                    if (walletContactRecord != null)
+                        cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
 
+                }
+                catch(com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e)
+                {
+                    //not found contact, set contact null
+                }
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(
+                        paymentRecord.getRequestId(),
                         convertTime(paymentRecord.getStartTimeStamp()),
                         paymentRecord.getDescription(),
                         paymentRecord.getAmount(),
@@ -1347,14 +906,15 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         PaymentRequest.RECEIVE_PAYMENT,
                         paymentRecord.getState().name()
                 );
+
                 lst.add(cryptoWalletPaymentRequest);
             }
 
             //TODO: Harcoder
             if(lst.size() == 0) {
-                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago", "Starbucks coffe", 500000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"1 hour ago", "Starbucks coffe", 500000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
                 lst.add(cryptoWalletPaymentRequest);
-                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago", "Hamburguer from MC donald", 100000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
+                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"2 hour ago", "Hamburguer from MC donald", 100000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
 
                 lst.add(cryptoWalletPaymentRequest);
             }
@@ -1368,11 +928,70 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
 
-    private  String convertTime(long time){
-        Date date = new Date(time);
-        Format format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        return format.format(date);
+    /**
+     * Throw the method <code>refuseRequest</code> you can refuse a request.
+     *
+     * @param requestId
+     * @throws CantRejectCryptoPaymentRequestException
+     * @throws CryptoPaymentRequestNotFoundException
+     */
+    public void refuseRequest(UUID requestId) throws CantRefuseRequestPaymentException,PaymentRequestNotFoundException
+    {
+        try {
+            cryptoPaymentRegistry.refuseRequest(requestId);
+        }
+        catch(CantRejectCryptoPaymentRequestException e)
+        {
+            throw new CantRefuseRequestPaymentException(CantRefuseRequestPaymentException.DEFAULT_MESSAGE,e);
+        }
+        catch(CryptoPaymentRequestNotFoundException e)
+        {
+            throw new PaymentRequestNotFoundException(PaymentRequestNotFoundException.DEFAULT_MESSAGE,e);
+        }
+        catch(Exception e)
+        {
+            throw new CantRefuseRequestPaymentException(CantRefuseRequestPaymentException.DEFAULT_MESSAGE,FermatException.wrapException(e));
+        }
     }
+
+
+    /**
+     * Throw the method <code>approveRequest</code> you can approve a request and send the specified crypto.
+     * @param requestId
+     * @throws CantApproveCryptoPaymentRequestException
+     * @throws CryptoPaymentRequestNotFoundException
+     * @throws com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException
+     */
+
+    public void approveRequest(UUID requestId) throws CantApproveRequestPaymentException,
+                                                     PaymentRequestNotFoundException,
+                                                     RequestPaymentInsufficientFundsException
+    {
+        try {
+            cryptoPaymentRegistry.approveRequest(requestId);
+
+
+        }
+        catch(CantApproveCryptoPaymentRequestException e)
+        {
+            throw new CantApproveRequestPaymentException(CantApproveRequestPaymentException.DEFAULT_MESSAGE,e);
+        }
+        catch(CryptoPaymentRequestNotFoundException e)
+        {
+            throw new PaymentRequestNotFoundException(PaymentRequestNotFoundException.DEFAULT_MESSAGE,e);
+        }
+        catch(com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException e)
+        {
+            throw new RequestPaymentInsufficientFundsException(RequestPaymentInsufficientFundsException.DEFAULT_MESSAGE,e);
+        }
+        catch(Exception e)
+        {
+            throw new CantApproveRequestPaymentException(CantApproveRequestPaymentException.DEFAULT_MESSAGE,FermatException.wrapException(e));
+        }
+    }
+
+
+
 
     @Override
     public List<PaymentRequest> listPaymentRequestDateOrder(String walletPublicKey,int max,int offset) throws CantListPaymentRequestDateOrderException {
@@ -1597,5 +1216,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             throw new CantSendCryptoPaymentRequestException(e, "", "Unhandled error.");
         }
 
+    }
+
+    private  String convertTime(long time){
+        Date date = new Date(time);
+        Format format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return format.format(date);
     }
 }
