@@ -264,8 +264,6 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
             throw new CantConfirmTransactionException(CantExecuteQueryException.DEFAULT_MESSAGE, exception, "Confirming Reception", "Cannot execute query");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
             throw new CantConfirmTransactionException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Confirming Reception", "The database returns more than one valid result");
-        } catch(Exception exception){
-            throw new CantConfirmTransactionException(CantConfirmTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Confirming Reception", "Unexpected Exception");
         }
     }
 
