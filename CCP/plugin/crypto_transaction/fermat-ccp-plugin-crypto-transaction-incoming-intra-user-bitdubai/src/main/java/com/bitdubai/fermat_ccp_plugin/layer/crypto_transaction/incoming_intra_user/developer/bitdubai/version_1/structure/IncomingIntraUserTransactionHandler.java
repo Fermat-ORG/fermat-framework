@@ -61,7 +61,7 @@ public class IncomingIntraUserTransactionHandler {
         IncomingMoneyNotificationEvent incomingMoneyNotificationEvent = (IncomingMoneyNotificationEvent) platformEvent;
         incomingMoneyNotificationEvent.setSource(EventSource.INCOMING_INTRA_USER);
         incomingMoneyNotificationEvent.setActorId(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
-        incomingMoneyNotificationEvent.setActorType(Actors.getByCode(cryptoAddressBookRecord.getDeliveredToActorPublicKey()));
+        incomingMoneyNotificationEvent.setActorType(cryptoAddressBookRecord.getDeliveredToActorType());
         incomingMoneyNotificationEvent.setAmount(transaction.getInformation().getCryptoAmount());
         incomingMoneyNotificationEvent.setCryptoCurrency(transaction.getInformation().getCryptoCurrency());
         incomingMoneyNotificationEvent.setWalletPublicKey(cryptoAddressBookRecord.getWalletPublicKey());
