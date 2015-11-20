@@ -14,41 +14,99 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
  */
-public interface ActorConnection<T extends ActorIdentity> {
+public abstract class ActorConnection<T extends ActorIdentity> {
+
+    private final UUID            connectionId   ;
+    private final T               linkedIdentity ;
+    private final String          publicKey      ;
+    private final Actors          actorType      ;
+    private final String          alias          ;
+    private final byte[]          image          ;
+    private final ConnectionState connectionState;
+    private final long            creationTime   ;
+    private final long            updateTime     ;
+
+    public ActorConnection(final UUID            connectionId   ,
+                           final T               linkedIdentity ,
+                           final String          publicKey      ,
+                           final Actors          actorType      ,
+                           final String          alias          ,
+                           final byte[]          image          ,
+                           final ConnectionState connectionState,
+                           final long            creationTime   ,
+                           final long            updateTime     ) {
+
+        this.connectionId    = connectionId   ;
+        this.linkedIdentity  = linkedIdentity ;
+        this.publicKey       = publicKey      ;
+        this.actorType       = actorType      ;
+        this.alias           = alias          ;
+        this.image           = image          ;
+        this.connectionState = connectionState;
+        this.creationTime    = creationTime   ;
+        this.updateTime      = updateTime     ;
+    }
 
     /**
      * @return an UUID instance representing the ID of the connection.
      */
-    UUID getConnectionId();
+    public final UUID getConnectionId() {
+        return connectionId;
+    }
 
     /**
      * @return an ActorIdentity instance representing the identity which is connected with the other actor.
      */
-    T getLinkedIdentity();
+    public final T getLinkedIdentity() {
+        return linkedIdentity;
+    }
 
     /**
      * @return a string representing the public key.
      */
-    String getPublicKey();
+    public final String getPublicKey() {
+        return publicKey;
+    }
 
     /**
      * @return an element of Actors enum representing the type of the actor.
      */
-    Actors getActorType();
+    public final Actors getActorType() {
+        return actorType;
+    }
 
     /**
      * @return a string representing the alias exposed by the actor.
      */
-    String getAlias();
+    public final String getAlias() {
+        return alias;
+    }
 
     /**
      * @return an array of bytes with the image exposed by the actor.
      */
-    byte[] getImage();
+    public final byte[] getImage() {
+        return image;
+    }
 
     /**
      * @return an element of ConnectionState enum representing the state of the connection.
      */
-    ConnectionState getConnectionState();
+    public final ConnectionState getConnectionState() {
+        return connectionState;
+    }
 
+    /**
+     * @return a long indicating the creation time of the connection.
+     */
+    public long getCreationTime() {
+        return creationTime;
+    }
+
+    /**
+     * @return a long indicating the last update time of the connection.
+     */
+    public long getUpdateTime() {
+        return updateTime;
+    }
 }
