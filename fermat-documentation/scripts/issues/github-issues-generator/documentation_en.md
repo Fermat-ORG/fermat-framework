@@ -39,6 +39,10 @@ Please, configure your script to generate all the issues following the next step
 	10) Adjust the event handlers list: you can add any element according the plug-in structure.
 
 ### CHANGELOG
-* 1.0.1: 	
+* 1.0.2: 	
     * Fixes the issue publication in repositories that not owned by the developer.
-    * The developer message for a team leader is not longer print if the githubLogin is equal to teamLeaderGithubUser 
+    * The developer message for a team leader is not longer print if the githubLogin is equal to teamLeaderGithubUser
+* 1.0.3:
+    * If you are a Team Leader you can do an autoassignment.
+* 1.0.4:
+	* Added Public Interfaces, Internal Structure and Event Handler issue.
