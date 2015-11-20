@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 
 /**
  * The interface <code>IntraWalletUser</code>

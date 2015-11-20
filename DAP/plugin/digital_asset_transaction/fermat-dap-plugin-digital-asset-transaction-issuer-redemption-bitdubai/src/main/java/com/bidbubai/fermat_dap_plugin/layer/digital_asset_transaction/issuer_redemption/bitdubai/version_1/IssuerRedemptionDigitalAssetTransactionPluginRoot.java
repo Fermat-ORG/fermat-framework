@@ -180,7 +180,7 @@ public class IssuerRedemptionDigitalAssetTransactionPluginRoot extends AbstractP
                 //This plugin must be stopped if this happens.
                 this.serviceStatus = ServiceStatus.STOPPED;
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantStartPluginException("Event Recorded could not be started", exception, Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION.getKey(), "The plugin event recorder is not started");
+                throw new CantStartPluginException("Event Recorded could not be started", exception, Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION.getCode(), "The plugin event recorder is not started");
             }
         } catch (CantExecuteDatabaseOperationException exception) {
             this.serviceStatus=ServiceStatus.STOPPED;
