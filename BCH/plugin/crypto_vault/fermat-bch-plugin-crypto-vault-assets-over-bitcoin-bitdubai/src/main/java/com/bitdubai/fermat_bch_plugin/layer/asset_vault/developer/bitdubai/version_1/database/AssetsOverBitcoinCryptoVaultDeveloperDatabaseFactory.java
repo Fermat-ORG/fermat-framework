@@ -151,6 +151,22 @@ public class AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory implements Dea
         DeveloperDatabaseTable key_MaintenanceTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME, key_MaintenanceColumns);
         tables.add(key_MaintenanceTable);
 
+
+        /**
+         * Table key_Maintenance_detail columns.
+         */
+        List<String> key_Maintenance_DetailColumns = new ArrayList<String>();
+
+        key_Maintenance_DetailColumns.add(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME);
+        key_Maintenance_DetailColumns.add(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME);
+        key_Maintenance_DetailColumns.add(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME);
+        key_Maintenance_DetailColumns.add(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_USED_COLUMN_NAME);
+        /**
+         * Table key_Maintenance_Detail addition.
+         */
+        DeveloperDatabaseTable key_MaintenanceDetailTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME, key_Maintenance_DetailColumns);
+        tables.add(key_MaintenanceDetailTable);
+
         /**
          * Table key_Maintenance_Monitor columns.
          */
