@@ -237,22 +237,6 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
 
     @Override
     public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantDistributeDigitalAssetsException {
-        //I will hardcode the hashmap and wallet public key for testing, TODO: please change this in production
-        printSomething("The hashmap to distribute is hardcoded");
-
-
-        ActorAssetUser registeredActorAssetUser = null;
-        for (ActorAssetUser actorAssetUser: digitalAssetsToDistribute.values() ){
-            registeredActorAssetUser = actorAssetUser;
-        }
-        //Commented by Luis Campo
-        //Test not runnig
-        digitalAssetsToDistribute=getDistributionHashMapForTesting();
-
-        for (DigitalAssetMetadata digitalAssetMetadata: digitalAssetsToDistribute.keySet()){
-            digitalAssetsToDistribute.put(digitalAssetMetadata, registeredActorAssetUser);
-        }
-
         printSomething("The Wallet public key is hardcoded");
         walletPublicKey = "walletPublicKeyTest";
         try{

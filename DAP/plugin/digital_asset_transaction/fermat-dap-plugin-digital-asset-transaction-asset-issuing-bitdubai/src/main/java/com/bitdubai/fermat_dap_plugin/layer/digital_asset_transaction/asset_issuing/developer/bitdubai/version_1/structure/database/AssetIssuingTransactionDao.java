@@ -757,7 +757,7 @@ public class AssetIssuingTransactionDao {
             databaseTable.loadToMemory();
             this.database.closeDatabase();
             Logger LOG = Logger.getGlobal();
-            LOG.info("ISSUING DAO - Events pending " + databaseTable.getRecords().size());
+            //LOG.info("ISSUING DAO - Events pending " + databaseTable.getRecords().size());
             return !databaseTable.getRecords().isEmpty();
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
