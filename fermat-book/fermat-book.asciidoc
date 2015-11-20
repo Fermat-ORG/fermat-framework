@@ -3,7 +3,7 @@
 
 = FERMAT: expanding the cryptoworld
 Gustavo H. Corradi <book@fermat.org>
-v.1.0, october, 2015.
+v.1.0, november, 2015.
 
 include::book-chapter-00(intro).asciidoc[]
 

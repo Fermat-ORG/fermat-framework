@@ -1,6 +1,6 @@
 image::https://github.com/bitDubai/media-kit/blob/master/Coins/CBP.jpg[FermatCBP]
 == Chapter 17: Fermat Crypto Broker Platform
-In this platform the actors involved are the *crypto broker* and his customers (*crypto customers*). A *crypto broker* is a person or small organization whose business logic is to buy and sell cryptocurrency for fiat money in his local market, obtaining his profits from the difference in the buy/sell price. We distinguish also two usual levels of *crypto brokers*, those acting as *crypto brokers wholesalers* and those who deal with final customers. The key goal of this platform is to *facilitate* the most of the routine tasks to run the business and even provide the necesary functionalities to prevent _always_ the loss of money in every transaction.   
+In this platform the actors involved are the *crypto broker* and his customers (*crypto customers*). A *crypto broker* is a person or small organization whose business logic is to buy and sell cryptocurrency for fiat money in his local market, obtaining his profits from the difference in the buy/sell price. We distinguish also two usual levels of *crypto brokers*, those acting as *crypto brokers wholesalers* and those who deal with final customers. The key goal of this platform is to *facilitate* the most of the routine tasks to run the business and even provide the necessary functionalities to prevent _always_ the loss of money in every transaction.   
 
 === New components
 The new components added to the framework offer the following functionalities:
@@ -13,7 +13,7 @@ Wholesalers :: contact list of available crypto wholesalers.
 Crypto Broker Wallets :: Crypto Broker Wallet , Crypto Broker Customer Wallet +
 
 === Fermat Crypto Broker Wallet
-This Wallet is designed with the theoretical assumption that the broker always has available stock of cryptocurrency and fiat money and that his activity is to be constantly selling this two kind of products obtaining profit. The functionalities offered should help him to run the business in a simple way, taking the responsability of the basic management of the broker's fund (in cryptocurrency and fiat money, in cash and in bank accounts), the management of the contact list of his customers, and a balance of the profits generated. +
+This Wallet is designed with the theoretical assumption that the broker always has available stock of cryptocurrency and fiat money and that his activity is to be constantly selling this two kind of products obtaining profit. The functionalities offered should help him to run the business in a simple way, taking the responsibility of the basic management of the broker's fund (in cryptocurrency and fiat money, in cash and in bank accounts), the management of the contact list of his customers, and a balance of the profits generated. +
 Key functionalities are:
 
 * *Funds restock and destock*:

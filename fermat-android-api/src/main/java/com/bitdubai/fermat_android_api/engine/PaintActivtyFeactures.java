@@ -32,5 +32,4 @@ public interface PaintActivtyFeactures {
 
     public void invalidate();
 
-    void setNavigationBackgroundColor(int color);
 }

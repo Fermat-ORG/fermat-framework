@@ -124,14 +124,14 @@ public class PublisherIdentityPluginRoot extends AbstractPlugin implements
              * Catch the failure.
              * */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_PUBLISHER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException("Registry failed to start", e, Plugins.BITDUBAI_WPD_PUBLISHER_IDENTITY.getKey(), "");
+            throw new CantStartPluginException("Registry failed to start", e, Plugins.BITDUBAI_WPD_PUBLISHER_IDENTITY.getCode(), "");
 
         } catch (Exception e) {
         /*
          * Catch the failure.
          * */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_PUBLISHER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException("Registry failed to start", e, Plugins.BITDUBAI_WPD_PUBLISHER_IDENTITY.getKey(), "");
+            throw new CantStartPluginException("Registry failed to start", e, Plugins.BITDUBAI_WPD_PUBLISHER_IDENTITY.getCode(), "");
 
 
         } finally {

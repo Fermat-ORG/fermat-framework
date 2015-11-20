@@ -30,7 +30,7 @@ public class PaymentRequestPendingAdapter extends FermatAdapterNew<PaymentReques
     ReferenceWalletSession referenceWalletSession;
 
     public PaymentRequestPendingAdapter(Context context, List<PaymentRequest> dataSet,ViewInflater viewInflater,ReferenceWalletSession referenceWalletSession) {
-        super(context, dataSet,viewInflater,referenceWalletSession.getWalletResourcesProviderManager());
+        super(context, dataSet,viewInflater,referenceWalletSession.getResourceProviderManager());
         this.referenceWalletSession = referenceWalletSession;
         this.viewInflater = viewInflater;
     }

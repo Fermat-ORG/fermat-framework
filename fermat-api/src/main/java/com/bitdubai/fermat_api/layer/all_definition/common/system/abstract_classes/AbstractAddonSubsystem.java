@@ -77,14 +77,11 @@ public abstract class AbstractAddonSubsystem {
         return addonReference;
     }
 
-    public final ConcurrentHashMap<AddonVersionReference, AbstractAddon> listVersions() {
-
-        final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions = new ConcurrentHashMap<>();
+    public final void fillVersions(final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions) {
 
         for(ConcurrentHashMap.Entry<AddonDeveloperReference, AbstractAddonDeveloper> developer : developers.entrySet())
             versions.putAll(developer.getValue().listVersions());
 
-        return versions;
     }
 
     public abstract void start() throws CantStartSubsystemException;

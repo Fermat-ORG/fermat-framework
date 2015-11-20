@@ -16,7 +16,7 @@ public interface FermatScreenSwapper {
 
     public void selectWallet(InstalledWallet installedWallet);
 
-    public void changeActivity(String activity,Object... objects);
+    public void changeActivity(String activityName,String appBackPublicKey, Object... objects);
 
     public void selectSubApp(InstalledSubApp installedSubApp);
 
@@ -24,7 +24,7 @@ public interface FermatScreenSwapper {
 
     public void onCallbackViewObserver(FermatCallback fermatCallback);
 
-    void connectWithOtherApp(Engine emgine,Objects... objectses);
+    void connectWithOtherApp(Engine emgine,Object[] objectses);
 
     Object[] connectBetweenAppsData();
 }

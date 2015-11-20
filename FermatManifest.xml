@@ -3,7 +3,7 @@
 		<platform code="COR" name="Core And Api" logo="COR_logo.png" dependsOn="OSA">
 
 			<layer name="Core" language="java">
-				<libraries>
+				<libraries>	
 					<library
 						name="Fermat Core"
 						description=""
@@ -11,10 +11,11 @@
 						code-level="development"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="implementation" percentage="70"></author>
-							<author name="lnacosta" scope="implementation" percentage="30"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="70"></author>
+							<author name="lnacosta" scope="architecture" percentage="30"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="50"></author>
+							<author name="lnacosta" scope="design" percentage="50"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="lnacosta"></mantainer>
@@ -55,12 +56,14 @@
 					<library
 						name="OSA Core"
 						description=""
-						difficulty="0"
+						difficulty="3"
 						code-level="concept"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="60"></author>
+							<author name="lnacosta" scope="architecture" percentage="40"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -70,12 +73,14 @@
 					<library
 						name="BCH Core"
 						description=""
-						difficulty="0"
+						difficulty="3"
 						code-level="concept"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="60"></author>
+							<author name="lnacosta" scope="architecture" percentage="40"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -85,12 +90,14 @@
 					<library
 						name="P2P Core"
 						description=""
-						difficulty="0"
+						difficulty="3"
 						code-level="concept"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="60"></author>
+							<author name="lnacosta" scope="architecture" percentage="40"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -119,24 +126,11 @@
 						code-level="concept"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="60"></author>
+							<author name="lnacosta" scope="architecture" percentage="40"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>-
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</library>
-					<library
-						name="DMP Core"
-						description=""
-						difficulty="0"
-						code-level="concept"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
 						<mantainers>
 						</mantainers>
 						<certifications>
@@ -149,8 +143,10 @@
 						code-level="concept"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="60"></author>
+							<author name="lnacosta" scope="architecture" percentage="40"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -164,8 +160,10 @@
 						code-level="concept"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="60"></author>
+							<author name="lnacosta" scope="architecture" percentage="40"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -219,7 +217,10 @@
 			<layer name="Actor" language="java"></layer>
 			<layer name="Middleware" language="java"></layer>
 			<layer name="Request" language="java"></layer>
+			<layer name="User Level Business Transaction" language="java"></layer>
 			<layer name="Business Transaction" language="java"></layer>
+			<layer name="Negotiation Transaction" language="java"></layer>
+			<layer name="Stock Transaction" language="java"></layer>
 			<layer name="Digital Asset Transaction" language="java"></layer>
 			<layer name="Crypto Money Transaction" language="java"></layer>
 			<layer name="Cash Money Transaction" language="java"></layer>
@@ -1015,7 +1016,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Messanger"
+						name="Messenger"
 						description=""
 						difficulty="0"
 						code-level="concept"
@@ -1188,7 +1189,8 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="implementation" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="implementation" percentage="50"></author>
+							<author name="lnacosta" scope="implementation" percentage="50"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="lnacosta"></mantainer>
@@ -1665,7 +1667,7 @@
 						name="Bitcoin Wallet"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1704,7 +1706,7 @@
 			<layer name="Sub App">
 				<androids>
 					<android
-						name="Intra User identity"
+						name="Intra Wallet User identity"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -1721,7 +1723,7 @@
 						</certifications>
 					</android>
 					<android
-						name="Intra User Community"
+						name="Intra Wallet User Community"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -1747,18 +1749,19 @@
 						name="Crypto Wallet"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="lnacosta" scope="implementation" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="50"></author>
+							<author name="nattyco" scope="implementation" percentage="25"></author>
+							<author name="furszy" scope="implementation" percentage="25"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="lnacosta"></mantainer>
+							<mantainer name="nattyco"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification signed-by="lnacosta" type="implementation"></certification>
 						</certifications>
 					</plugin>
 				</plugins>
@@ -1770,7 +1773,7 @@
 						name="Intra User"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1792,6 +1795,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -1807,7 +1811,7 @@
 						name="Intra User"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1858,7 +1862,6 @@
 							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification signed-by="lnacosta" type="implementation"></certification>
 						</certifications>
 					</plugin>
 				</plugins>
@@ -1881,7 +1884,6 @@
 							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification signed-by="lnacosta" type="implementation"></certification>
 						</certifications>
 					</plugin>
 				</plugins>
@@ -3250,6 +3252,57 @@
 						<certifications>
 						</certifications>
 					</android>
+					<android
+						name="Asset Issuer Identity"
+						description=""
+						difficulty="3"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+						name="Asset User Identity"
+						description=""
+						difficulty="3"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+						name="RedeemPoint Identity"
+						description=""
+						difficulty="3"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
 				</androids>
 			</layer>
 
@@ -3296,7 +3349,7 @@
 						name="Asset Issuer"
 						description=""
 						difficulty="3"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3312,7 +3365,7 @@
 						name="Asset User"
 						description=""
 						difficulty="3"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3328,7 +3381,7 @@
 						name="Redeem Point"
 						description=""
 						difficulty="3"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3349,7 +3402,7 @@
 						name="Asset Factory"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3366,7 +3419,7 @@
 						name="Asset Issuer Community"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3383,7 +3436,7 @@
 						name="Asset User Community"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3400,7 +3453,7 @@
 						name="Redeem Point Community"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3459,7 +3512,7 @@
 						name="Asset Issuer"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3475,7 +3528,7 @@
 						name="Asset User"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3491,7 +3544,7 @@
 						name="Redeem Point"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3512,7 +3565,7 @@
 						name="Asset Factory"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3534,7 +3587,7 @@
 						name="Asset Distribution"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3550,7 +3603,7 @@
 						name="Asset Reception"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3566,7 +3619,7 @@
 						name="Asset Issuing"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3582,7 +3635,7 @@
 						name="Issuer Redemption"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3598,7 +3651,7 @@
 						name="User Redemption"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3614,7 +3667,7 @@
 						name="Redeem Point Redemption"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3630,7 +3683,7 @@
 						name="Asset Appropriation"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3667,7 +3720,7 @@
 						name="Assets Issuer Wallet"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3683,7 +3736,7 @@
 						name="Assets User Wallet"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3699,7 +3752,7 @@
 						name="Redeem Point Wallet"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3720,7 +3773,7 @@
 						name="Asset Issuer"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3736,7 +3789,7 @@
 						name="Asset User"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3752,7 +3805,7 @@
 						name="Redeem Point"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3773,7 +3826,7 @@
 						name="Asset Issuer"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3789,7 +3842,7 @@
 						name="Asset User"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3805,7 +3858,7 @@
 						name="Redeem Point"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3826,7 +3879,7 @@
 						name="Asset Transmission"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4550,10 +4603,9 @@
 
 		<platform code="CBP" name="Crypto Broker Platform" logo="CBP_logo.png" dependsOn="CCP, CSH, BNK">
 
-			<layer name="Reference Wallet">
+			<layer name="Reference Wallet" language="java-android">
 				<androids>
-					<android
-						name="Crypto Broker"
+					<android name="Crypto Broker"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -4568,9 +4620,7 @@
 						<certifications>
 						</certifications>
 					</android>
-
-					<android
-						name="Crypto Customer"
+					<android name="Crypto Customer"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -4590,8 +4640,7 @@
 
 			<layer name="Sub App" language="java-android">
 				<androids>
-					<android
-						name="Crypto Broker Identity"
+					<android name="Crypto Broker Identity"
 						description=""
 						difficulty="4"
 						code-level="qa"
@@ -4606,8 +4655,7 @@
 						<certifications>
 						</certifications>
 					</android>
-					<android
-						name="Crypto Broker Community"
+					<android name="Crypto Broker Community"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4623,8 +4671,7 @@
 						</certifications>
 					</android>
 
-					<android
-						name="Crypto Customer Identity"
+					<android name="Crypto Customer Identity"
 						description=""
 						difficulty="4"
 						code-level="qa"
@@ -4639,8 +4686,7 @@
 						<certifications>
 						</certifications>
 					</android>
-					<android
-						name="Crypto Customer Community"
+					<android name="Crypto Customer Community"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4655,8 +4701,7 @@
 						<certifications>
 						</certifications>
 					</android>
-					<android
-						name="Suppliers"
+					<android name="Suppliers"
 						description=""
 						difficulty="6"
 						code-level="concept"
@@ -4675,11 +4720,10 @@
 
 			<layer name="Desktop" language="java-android">
 				<androids>
-					<android
-						name="Sub App Manager"
-						description=""
-						difficulty="4"
-						code-level="qa"
+					<android name="Sub App Manager"
+						 description=""
+						 difficulty="4"
+						 code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4691,9 +4735,7 @@
 						<certifications>
 						</certifications>
 					</android>
-
-					<android
-						name="Wallet Manager"
+					<android name="Wallet Manager"
 						description=""
 						difficulty="4"
 						code-level="qa"
@@ -4713,8 +4755,7 @@
 
 			<layer name="Wallet Module" language="java">
 				<plugins>
-					<plugin
-						name="Crypto Broker"
+					<plugin	name="Crypto Broker"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4730,9 +4771,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
-					<plugin
-						name="Crypto Customer"
+					<plugin	name="Crypto Customer"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4784,7 +4823,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
 					<plugin name="Crypto Customer Identity"
 						description=""
 						difficulty="4"
@@ -4816,7 +4854,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
 					<plugin name="Suppliers"
 						description=""
 						difficulty="4"
@@ -4831,14 +4868,12 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
 				</plugins>
 			</layer>
 
 			<layer name="Desktop Module" language="java">
 				<plugins>
-					<plugin
-						name="Sub App Manager"
+					<plugin	name="Sub App Manager"
 						description=""
 						difficulty="4"
 						code-level="qa"
@@ -4853,8 +4888,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Wallet Manager"
+					<plugin	name="Wallet Manager"
 						description=""
 						difficulty="4"
 						code-level="qa"
@@ -4949,12 +4983,12 @@
 					<plugin name="Customer Broker Purchase"
 						description=""
 						difficulty="4"
-						code-level="qa"
+						code-level="development"
 						>
 						<authors>
 							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
 							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
-							<author name="vlzangel" scope="implementation" percentage="100"></author>
+							<author name="vlzangel" scope="implementation" percentage="70"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4964,12 +4998,12 @@
 					<plugin name="Customer Broker Sale"
 						description=""
 						difficulty="4"
-						code-level="qa"
+						code-level="development"
 						>
 						<authors>
 							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
 							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
-							<author name="vlzangel" scope="implementation" percentage="100"></author>
+							<author name="vlzangel" scope="implementation" percentage="70"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5044,7 +5078,282 @@
 				</plugins>
 			</layer>
 
+			<layer name="User Level Business Transaction" language="java">
+				<plugins>
+					<plugin	name="Customer Broker Sale"
+					description=""
+					difficulty="8"
+					code-level="development"
+					>
+					<authors>
+						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						<author name="yalayn" scope="implementation" percentage="10"></author>
+						<author name="darkestpriest" scope="implementation" percentage="15"></author>
+					</authors>
+					<mantainers>
+					</mantainers>
+					<certifications>
+					</certifications>
+				</plugin>
+					<plugin	name="Customer Broker Purchase"
+					description=""
+					difficulty="8"
+					code-level="development"
+					>
+					<authors>
+						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						<author name="yalayn" scope="implementation" percentage="10"></author>
+						<author name="darkestpriest" scope="implementation" percentage="15"></author>
+					</authors>
+					<mantainers>
+					</mantainers>
+					<certifications>
+					</certifications>
+				</plugin>
+				</plugins>
+			</layer>
+			
 			<layer name="Business Transaction" language="java">
+				<plugins>
+					<plugin	name="Customer Online Payment"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="darkestpriest" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Customer Offline Payment"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="darkestpriest" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Broker Ack Online Payment"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="darkestpriest" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Broker Ack Offline Payment"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="darkestpriest" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Broker Submit Online Merchandise"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="darkestpriest" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Broker Submit Offline Merchandise"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="darkestpriest" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Customer Ack Online Merchandise"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="darkestpriest" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Customer Ack Offline Merchandise"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="darkestpriest" scope="implementation" percentage="15"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Open Contract"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Close Contract"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Wholesaler Crypto Sale"
+						description=""
+						difficulty="0"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Wholesaler Fiat Sale"
+						description=""
+						difficulty="0"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			
+			<layer name="Negotiation Transaction" language="java">
+				<plugins>
+					<plugin	name="New"
+						description=""
+						difficulty="8"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Update"
+						description=""
+						difficulty="8"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Close"
+						description=""
+						difficulty="8"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			
+			<layer name="Stock Transaction" language="java">
 				<plugins>
 					<plugin	name="Crypto Money Restock"
 						description=""
@@ -5142,130 +5451,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Customer Broker Sale"
-						description=""
-						difficulty="8"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="darkestpriest" scope="implementation" percentage="15"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin	name="Customer Broker Purchase"
-						description=""
-						difficulty="8"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="darkestpriest" scope="implementation" percentage="15"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin	name="Customer Payment"
-						description=""
-						difficulty="8"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="darkestpriest" scope="implementation" percentage="15"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin	name="Ack Payment"
-						description=""
-						difficulty="8"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="darkestpriest" scope="implementation" percentage="15"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin	name="Submit Merchandise"
-						description=""
-						difficulty="8"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="darkestpriest" scope="implementation" percentage="15"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin	name="Ack Merchandise"
-						description=""
-						difficulty="8"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="darkestpriest" scope="implementation" percentage="15"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin	name="Wholesaler Crypto Sale"
-						description=""
-						difficulty="0"
-						code-level="concept"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin	name="Wholesaler Fiat Sale"
-						description=""
-						difficulty="0"
-						code-level="concept"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
 				</plugins>
 			</layer>
 
@@ -5350,12 +5535,10 @@
 
 			<layer name="Actor Network Service" language="java">
 				<plugins>
-					<plugin
-						name="Crypto Broker"
+					<plugin	name="Crypto Broker"
 						description=""
 						difficulty="8"
-						code-level="development"
-						>
+						code-level="development">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -5366,16 +5549,47 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Crypto Customer"
+					<plugin	name="Crypto Customer"
 						description=""
 						difficulty="8"
-						code-level="development"
-						>
+						code-level="development">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="lnacosta" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			
+			<layer name="Network Service" language="java">
+				<plugins>
+					<plugin	name="Transaction Transmission"
+						description=""
+						difficulty="8"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Negotiation Transmission"
+						description=""
+						difficulty="7"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -6680,7 +6894,7 @@
 						name="Assets Over Bitcoin"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -6764,7 +6978,7 @@
 						name="Bitcoin"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -7041,7 +7255,10 @@
 		<layer name="Actor" language="java"></layer>
 		<layer name="Middleware" language="java"></layer>
 		<layer name="Request" language="java"></layer>
+		<layer name="User Level Business Transaction" language="java"></layer>
 		<layer name="Business Transaction" language="java"></layer>
+		<layer name="Negotiation Transaction" language="java"></layer>
+		<layer name="Stock Transaction" language="java"></layer>
 		<layer name="Digital Asset Transaction" language="java"></layer>
 		<layer name="Crypto Transaction" language="java"></layer>
 		<layer name="Cash Money Transaction" language="java"></layer>

@@ -1,31 +1,45 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
+ *
+ * // TODO EXPLANATION OF THE ENUM.
+ *
  * Created by angel on 18/9/15.
  */
 public enum ReferenceCurrency implements FermatEnum {
-    DOLAR("DOL"),
+
+
+    // TODO, WHY A REFERENCE CURRENCY IF WE HAVE A CURRENCY ENUM THAT CAN INDICATES THE SAME? PLEASE DON'T BE REPEAT THINGS, IT MAKES IT DIFFICULT TO UNDERSTAND.
+    DOLLAR("DOL"),
     EURO("EUR");
 
-    private String code;
+    private final String code;
 
-    ReferenceCurrency(String code) {
+    ReferenceCurrency(final String code) {
         this.code = code;
     }
 
+
+    public static ReferenceCurrency getByCode(final String code) throws InvalidParameterException {
+
+        switch (code) {
+
+            case "DOL": return DOLLAR;
+            case "EUR": return EURO;
+
+            default: throw new InvalidParameterException(
+                    "Code Received: " + code,
+                    "This Code Is Not Valid for the ContactState enum"
+            );
+        }
+    }
+
     @Override
-    public String getCode() {
+    public final String getCode() {
         return this.code;
     }
 
-    public static ReferenceCurrency getByCode(String code) throws InvalidParameterException {
-        switch (code) {
-            case "DOL": return ReferenceCurrency.DOLAR;
-            case "EUR": return ReferenceCurrency.EURO;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
-        }
-    }
 }
