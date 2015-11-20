@@ -205,11 +205,14 @@ public enum Plugins implements FermatEnum {
     WALLET_STATISTICS           ("WSTA"),
     WALLET_STORE                ("WST"),
     WS_CLOUD_CLIENT             ("WCL"),
+
     //CBP
     BANK_MONEY_RESTOCK          ("BMRE"),
     BANK_MONEY_DESTOCK          ("BMDE"),
     CASH_MONEY_RESTOCK          ("CMRE"),
     CASH_MONEY_DESTOCK          ("CMRE"),
+    BITDUBAI_CBP_STOCK_TRANSACTIONS_BANK_MONEY_RESTOCK ("BCBPSTBMR"),
+
     // End  new Plugins
 
     ;
