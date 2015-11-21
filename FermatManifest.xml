@@ -1,6 +1,6 @@
 <fermat>
 	<platforms>
-		<platform code="COR" name="Core And Api" logo="COR_logo.png" dependsOn="OSA">
+		<platform code="COR" name="Core And Api" logo="COR_logo.png">
 
 			<layer name="Core" language="java">
 				<libraries>	
@@ -452,7 +452,7 @@
 
 		</platform>
 
-		<platform code="PIP" name="Plug-ins Platform" logo="PIP_logo.png" dependsOn="P2P, COR">
+		<platform code="PIP" name="Plug-ins Platform" logo="PIP_logo.png" dependsOn="P2P">
 
 			<dependencies>
 				<dependency code="COR"></dependency>
@@ -1658,7 +1658,7 @@
 
 		</platform>
 
-		<platform code="CCP" name="Crypto Currency Platform" logo="CCP_logo.png" dependsOn="WPD, P2P">
+		<platform code="CCP" name="Crypto Currency Platform" logo="CCP_logo.png" dependsOn="WPD, BCH">
 
 			<layer name="Reference Wallet">
 
@@ -2662,7 +2662,7 @@
 
 		</platform>
 
-		<platform code="SHP" name="Shopping Platform" logo="SHP_logo.png" dependsOn="WPD">
+		<platform code="SHP" name="Shopping Platform" logo="SHP_logo.png" dependsOn="CCM">
 
 			<layer name="Reference Wallet">
 				<androids>
@@ -3124,7 +3124,7 @@
 
 		</platform>
 
-		<platform code="DAP" name="Digital Asset Platform" logo="DAP_logo.png" dependsOn="WPD">
+		<platform code="DAP" name="Digital Asset Platform" logo="DAP_logo.png" dependsOn="WPD, BCH">
 
 			<layer name="Reference Wallet">
 				<androids>
@@ -3894,8 +3894,8 @@
 				</plugins>
 			</layer>
 
-		</platform>
-
+		</plBCHatform>
+ 
 		<platform code="MKT" name="Marketing Platform" logo="MKT_logo.png" dependsOn="DAP">
 
 			<layer name="Sub App" language="java-android">
@@ -7047,7 +7047,7 @@
 
 		</super_layer>
 
-		<super_layer code="OSA" name="Operating System API">
+		<super_layer code="OSA" name="Operating System API" dependsOn="COR">
 
 			<layer name="Multi OS" language="java">
 				<addons>
