@@ -30,13 +30,13 @@ public class ImplementBankMoney implements BankMoneyWallet, BankMoneyWalletBalan
 
 
     @Override
-    public BankMoneyWalletBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
-        return (BankMoneyWalletBalance) bankMoneyWalletDao.getBalanceType(balanceType.BOOK);
+    public BankMoneyWalletBalance getBookBalance() throws CantTransactionBankMoneyException {
+        return (BankMoneyWalletBalance) bankMoneyWalletDao.getBalanceType(BalanceType.BOOK);
     }
 
     @Override
-    public BankMoneyWalletBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
-        return (BankMoneyWalletBalance) bankMoneyWalletDao.getBalanceType(balanceType.AVAILABLE);
+    public BankMoneyWalletBalance getAvailableBalance() throws CantTransactionBankMoneyException {
+        return (BankMoneyWalletBalance) bankMoneyWalletDao.getBalanceType(BalanceType.AVAILABLE);
     }
 
     @Override

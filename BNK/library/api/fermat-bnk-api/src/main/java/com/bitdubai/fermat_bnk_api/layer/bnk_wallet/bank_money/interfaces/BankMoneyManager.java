@@ -32,7 +32,7 @@ public interface BankMoneyManager {
         ,final String getMemo
     ) throws CantCreateBankMoneyException;
 
-    BankMoneyWallet loadCashMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyException;
+    BankMoneyWallet loadBankMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyException;
 
     void createCashMoney (String walletPublicKey) throws CantCreateBankMoneyException;
 }

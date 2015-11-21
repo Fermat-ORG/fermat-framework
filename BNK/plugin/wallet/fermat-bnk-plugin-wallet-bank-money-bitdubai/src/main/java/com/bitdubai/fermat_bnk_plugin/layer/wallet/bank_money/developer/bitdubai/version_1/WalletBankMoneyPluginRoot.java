@@ -157,12 +157,12 @@ public class WalletBankMoneyPluginRoot implements  DealsWithErrors,
 
 
     @Override
-    public BankMoneyWalletBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
+    public BankMoneyWalletBalance getBookBalance() throws CantTransactionBankMoneyException {
         return null;
     }
 
     @Override
-    public BankMoneyWalletBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
+    public BankMoneyWalletBalance getAvailableBalance() throws CantTransactionBankMoneyException {
         return null;
     }
 

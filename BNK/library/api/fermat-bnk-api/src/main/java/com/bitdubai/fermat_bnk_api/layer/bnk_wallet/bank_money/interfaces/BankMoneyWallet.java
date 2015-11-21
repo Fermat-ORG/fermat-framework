@@ -14,9 +14,9 @@ public interface BankMoneyWallet {
 
     //change to BankMoneyWallet
 
-    BankMoneyWalletBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException;
+    BankMoneyWalletBalance getBookBalance() throws CantTransactionBankMoneyException;
 
-    BankMoneyWalletBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException;
+    BankMoneyWalletBalance getAvailableBalance() throws CantTransactionBankMoneyException;
 
     List<BankMoneyTransaction> getTransactions(BalanceType balanceType, int max, int offset)throws CantTransactionBankMoneyException;
 

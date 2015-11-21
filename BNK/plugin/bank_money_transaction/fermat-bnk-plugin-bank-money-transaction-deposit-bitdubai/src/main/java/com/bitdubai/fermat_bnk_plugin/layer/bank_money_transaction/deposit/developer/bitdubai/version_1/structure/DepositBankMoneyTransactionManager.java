@@ -3,8 +3,11 @@ package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.deve
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exceptions.CantMakeDepositTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionBankMoneyException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.database.DepositBankMoneyTransactionDao;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 
@@ -21,7 +24,7 @@ public class DepositBankMoneyTransactionManager implements DepositManager {
 
     DepositBankMoneyTransactionDao depositBankMoneyTransactionDao;
 
-
+    BankMoneyWallet bankMoneyWallet;
 
     public DepositBankMoneyTransactionManager(UUID pluginId,PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginId = pluginId;
@@ -34,7 +37,11 @@ public class DepositBankMoneyTransactionManager implements DepositManager {
     @Override
     public BankTransaction makeDeposit(BankTransactionParameters parameters) throws CantMakeDepositTransactionException {
         depositBankMoneyTransactionDao.registerDepositTransaction(parameters);
-        //con la wallet hacer el credito.
+        /*try {
+            //bankMoneyWallet.getAvailableBalance().credit();
+        }catch (CantTransactionBankMoneyException e){
+
+        }*/
         return null;
     }
 
@@ -42,4 +49,15 @@ public class DepositBankMoneyTransactionManager implements DepositManager {
         depositBankMoneyTransactionDao = dao;
     }
 
+    public DepositBankMoneyTransactionDao getDepositBankMoneyTransactionDao() {
+        return depositBankMoneyTransactionDao;
+    }
+
+    public BankMoneyWallet getBankMoneyWallet() {
+        return bankMoneyWallet;
+    }
+
+    public void setBankMoneyWallet(BankMoneyWallet bankMoneyWallet) {
+        this.bankMoneyWallet = bankMoneyWallet;
+    }
 }
