@@ -49,7 +49,7 @@ class BitcoinCryptoNetworkDatabaseConstants {
 
     static final String CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME = "crypto_vault";
     static final String CRYPTOVAULTS_DETAILED_STATS_NETWORK_COLUMN_NAME = "network";
-    static final String CRYPTOVAULTS_DETAILED_STATS_ORDER_COLUMN_NAME = "order";
+    static final String CRYPTOVAULTS_DETAILED_STATS_ORDER_COLUMN_NAME = "key_order";
     static final String CRYPTOVAULTS_DETAILED_STATS_MONITORED_PUBLICKEYS_COLUMN_NAME = "monitored_publickeys";
     static final String CRYPTOVAULTS_DETAILED_STATS_MONITORED_ADDRESSES_COLUMN_NAME = "monitored_addresses";
 
