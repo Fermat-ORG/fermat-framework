@@ -231,6 +231,7 @@
 			<layer name="Wallet" language="java"></layer>
 			<layer name="World" language="java"></layer>
 			<layer name="Identity" language="java"></layer>
+			<layer name="Actor Connection" language="java"></layer>C
 			<layer name="Actor Network Service" language="java"></layer>
 			<layer name="Network Service" language="java"></layer>
 			<layer name="empty layer 2"></layer>
@@ -5503,6 +5504,42 @@
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			
+				<layer name="Actor Connection" language="java">
+				<plugins>
+					<plugin
+						name="Crypto Broker"
+						description=""
+						difficulty="6"
+						code-level="qa"
+						>
+						<authors>
+							<author name="lnacosta" scope="architecture" percentage="100"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+
+					<plugin
+						name="Crypto Customer"
+						description=""
+						difficulty="6"
+						code-level="qa"
+						>
+						<authors>
+							<author name="lnacosta" scope="architecture" percentage="100"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
