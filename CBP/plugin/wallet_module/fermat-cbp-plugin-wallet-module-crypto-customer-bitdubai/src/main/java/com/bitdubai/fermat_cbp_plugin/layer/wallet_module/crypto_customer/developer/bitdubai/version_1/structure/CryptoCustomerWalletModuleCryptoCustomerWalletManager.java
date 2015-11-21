@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -46,17 +47,99 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     @Override
     public Collection<ContractBasicInformation> getContractsHistory(ContractStatus status, int max, int offset) throws CantGetContractHistoryException {
-        return null;
+        try {
+            ContractBasicInformation contract;
+            List<ContractBasicInformation> contractsHistory = new ArrayList<>();
+
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.CANCELLED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("Carlos Ruiz", "USD", "Bank Transfer", "Col $", ContractStatus.CANCELLED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.CANCELLED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("Carlos Ruiz", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT);
+            contractsHistory.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contractsHistory.add(contract);
+
+            if (status != null) {
+                List<ContractBasicInformation> filteredList = new ArrayList<>();
+                for (ContractBasicInformation item : contractsHistory) {
+                    if (item.getStatus() == status)
+                        filteredList.add(item);
+                }
+                contractsHistory = filteredList;
+            }
+
+            return contractsHistory;
+
+        } catch (Exception ex) {
+            throw new CantGetContractHistoryException(ex);
+        }
     }
 
     @Override
     public Collection<ContractBasicInformation> getContractsWaitingForBroker(int max, int offset) throws CantGetContractsWaitingForBrokerException {
-        return null;
+        try {
+            ContractBasicInformation contract;
+            Collection<ContractBasicInformation> waitingForBroker = new ArrayList<>();
+
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PAUSED);
+            waitingForBroker.add(contract);
+
+            return waitingForBroker;
+
+        } catch (Exception ex) {
+            throw new CantGetContractsWaitingForBrokerException("Cant get contracts waiting for the broker", ex);
+        }
     }
 
     @Override
     public Collection<ContractBasicInformation> getContractsWaitingForCustomer(int max, int offset) throws CantGetContractsWaitingForCustomerException {
-        return null;
+        try {
+            ContractBasicInformation contract;
+            Collection<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
+
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("yalayn", "BTC", "Bank Transfer", "USD", ContractStatus.PENDING_PAYMENT);
+            waitingForCustomer.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("vzlangel", "BsF", "Cash Delivery", "BsF", ContractStatus.PENDING_PAYMENT);
+            waitingForCustomer.add(contract);
+
+            return waitingForCustomer;
+
+        } catch (Exception ex) {
+            throw new CantGetContractsWaitingForCustomerException("Cant get contracts waiting for the customers", ex);
+        }
     }
 
     @Override
