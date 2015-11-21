@@ -6,7 +6,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.interfaces.IndexProvider;
 
 /**
- * Created by Alex on 11/2/2015.
+ * Created by Alejandro Bicelis on 11/2/2015.
  */
 public class IndexHelper {
 

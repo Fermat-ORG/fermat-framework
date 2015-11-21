@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai
 import java.util.List;
 
 /**
- * Created by Alex on 11/13/2015.
+ * Created by Alejandro Bicelis on 11/13/2015.
  */
 public class IndexMathHelper {
 

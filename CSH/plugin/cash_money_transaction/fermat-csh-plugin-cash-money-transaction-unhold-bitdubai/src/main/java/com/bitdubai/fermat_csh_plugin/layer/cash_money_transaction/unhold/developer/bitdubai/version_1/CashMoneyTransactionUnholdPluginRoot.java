@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * Created by Alex on 11/17/2015
+ * Created by Alejandro Bicelis on 11/17/2015
  */
 
 public class CashMoneyTransactionUnholdPluginRoot implements CashUnholdTransactionManager, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {

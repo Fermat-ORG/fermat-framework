@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Alex on 11/13/2015.
+ * Created by Alejandro Bicelis on 11/13/2015.
  */
 public class ARSIndexProvider implements IndexProvider {
 
