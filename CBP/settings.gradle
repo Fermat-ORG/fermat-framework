@@ -46,8 +46,6 @@ project(':fermat-cbp-plugin-actor-crypto-customer-bitdubai').projectDir = new Fi
 //Actor Network Service
 include ':fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai'
 project(':fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai').projectDir = new File('CBP/plugin/actor_network_service/fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai')
-include ':fermat-cbp-plugin-actor-network-service-crypto-customer-bitdubai'
-project(':fermat-cbp-plugin-actor-network-service-crypto-customer-bitdubai').projectDir = new File('CBP/plugin/actor_network_service/fermat-cbp-plugin-actor-network-service-crypto-customer-bitdubai')
 include ':fermat-cbp-plugin-actor-network-service-negotiation-transmission-bitdubai'
 project(':fermat-cbp-plugin-actor-network-service-negotiation-transmission-bitdubai').projectDir = new File('CBP/plugin/actor_network_service/fermat-cbp-plugin-actor-network-service-negotiation-transmission-bitdubai')
 
