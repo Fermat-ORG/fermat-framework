@@ -1198,10 +1198,13 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         Fragment runtimeFragment;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
+
+        final String cryptoBrokerWalletPublicKey = "crypto_broker_wallet";
+
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        runtimeWalletNavigationStructure.setPublicKey("crypto_broker_wallet");
+        runtimeWalletNavigationStructure.setPublicKey(cryptoBrokerWalletPublicKey);
 
 
         // Side Menu
@@ -1210,21 +1213,25 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
+        runtimeMenuItem.setAppLinkPublicKey(cryptoBrokerWalletPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Contracts History");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
+        runtimeMenuItem.setAppLinkPublicKey(cryptoBrokerWalletPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Earnings");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
+        runtimeMenuItem.setAppLinkPublicKey(cryptoBrokerWalletPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Settings");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
+        runtimeMenuItem.setAppLinkPublicKey(cryptoBrokerWalletPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
@@ -1467,10 +1474,13 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         Fragment runtimeFragment;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
+
+        final String cryptoCustomerWalletPublicKey = "crypto_customer_wallet";
+
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        runtimeWalletNavigationStructure.setPublicKey("crypto_customer_wallet");
+        runtimeWalletNavigationStructure.setPublicKey(cryptoCustomerWalletPublicKey);
 
 
         // Side Menu
@@ -1479,21 +1489,25 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
+        runtimeMenuItem.setAppLinkPublicKey(cryptoCustomerWalletPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Contracts History");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY);
+        runtimeMenuItem.setAppLinkPublicKey(cryptoCustomerWalletPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Broker List");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(cryptoCustomerWalletPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Settings");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS);
+        runtimeMenuItem.setAppLinkPublicKey(cryptoCustomerWalletPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
