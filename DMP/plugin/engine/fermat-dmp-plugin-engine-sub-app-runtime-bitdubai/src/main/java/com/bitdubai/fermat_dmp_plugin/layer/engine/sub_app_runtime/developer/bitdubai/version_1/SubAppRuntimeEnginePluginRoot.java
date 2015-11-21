@@ -193,13 +193,15 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //wallet factory app
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_FACTORY);
-            runtimeSubApp.setPublicKey("public_key_factory");
+            String factory_public_key = "public_key_factory";
+            runtimeSubApp.setPublicKey(factory_public_key);
             runtimeApp.addSubApp(runtimeSubApp);
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_MAIN);
             runtimeActivity.setColor("#b46a54");
+            runtimeActivity.setBackPublicKey(factory_public_key);
             runtimeSubApp.setStartActivity(Activities.CWP_WALLET_FACTORY_MAIN);
             //runtimeActivity.setStatusBarColor("");
 
@@ -259,7 +261,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_EDIT_WALLET);
             runtimeActivity.setColor("#b46a54");
-
+            runtimeActivity.setBackPublicKey(factory_public_key);
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
             statusBar.setColor("#b46a54");
 
@@ -288,7 +290,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeTabStrip.setDividerColor(0x72af9c);
             //runtimeTabStrip.setBackgroundColor("#72af9c");
             runtimeActivity.setTabStrip(runtimeTabStrip);
-
+            runtimeActivity.setBackPublicKey(factory_public_key);
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey(), runtimeFragment);

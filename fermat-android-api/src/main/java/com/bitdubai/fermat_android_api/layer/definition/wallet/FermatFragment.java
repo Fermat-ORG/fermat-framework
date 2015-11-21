@@ -27,7 +27,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.Su
  * @author Francisco Vasquez
  * @version 1.1
  */
-public abstract class FermatFragment extends Fragment implements FermatFragments {
+public abstract class FermatFragment extends AbstractFermatFragment implements FermatFragments {
 
     /**
      * FLAGS

@@ -242,6 +242,8 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
             loadBasicUI(activity);
 
+            hideBottonIcons();
+
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
             }
@@ -259,6 +261,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     private void setOneFragmentInScreen() {
+
         WalletNavigationStructure walletRuntime = getWalletRuntimeManager().getLastWallet();
         String walletPublicKey = walletRuntime.getPublicKey();
         String walletCategory = walletRuntime.getWalletCategory();

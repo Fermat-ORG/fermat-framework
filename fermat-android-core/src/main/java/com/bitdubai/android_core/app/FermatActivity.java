@@ -45,6 +45,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -124,6 +126,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.Wa
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
+import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
 import java.io.InputStream;
@@ -911,15 +914,16 @@ public abstract class FermatActivity extends AppCompatActivity
                     // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
+
                     // finally change the color
                     if (Build.VERSION.SDK_INT > 20)
                         window.setStatusBarColor(Color.TRANSPARENT);
 
                     gc();
-                    InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
+                    //InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
 
 
-                    window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
+                    //window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -939,6 +943,10 @@ public abstract class FermatActivity extends AppCompatActivity
 
                     // finally change the color
                     window.setStatusBarColor(Color.TRANSPARENT);
+
+                    requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                            WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
@@ -1058,8 +1066,9 @@ public abstract class FermatActivity extends AppCompatActivity
                         //por ahora va esto
                         if (activePlatforms.contains(Platforms.CRYPTO_CURRENCY_PLATFORM)) {
                             WalletManager manager = getWalletManager();
-                            WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
-                            fragments.add(walletDesktopFragment);
+                            //WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
+                            DesktopFragment desktopFragment = DesktopFragment.newInstance(manager);
+                            fragments.add(desktopFragment);
                         }
                         break;
                     case "WPD":
@@ -1102,6 +1111,37 @@ public abstract class FermatActivity extends AppCompatActivity
             //set default page to show
             pager.setCurrentItem(0);
 
+            final RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radiogroup);
+            radioGroup.setVisibility(View.VISIBLE);
+            pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    switch (position) {
+                        case 0:
+                            radioGroup.check(R.id.radioButton);
+                            break;
+                        case 1:
+                            radioGroup.check(R.id.radioButton2);
+                            break;
+                        case 2:
+                            radioGroup.check(R.id.radioButton3);
+                            break;
+                        case 3:
+                            radioGroup.check(R.id.radioButton4);
+                            break;
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
             pager.setAdapter(this.screenPagerAdapter);
 
             if (pager.getBackground() == null) {
@@ -1728,6 +1768,11 @@ public abstract class FermatActivity extends AppCompatActivity
 
         //navigationDrawerFragment.onDetach();
         resetThisActivity();
+    }
+
+    protected void hideBottonIcons(){
+        final LinearLayout linearLayout = (LinearLayout)findViewById(R.id.icons_container);
+        linearLayout.setVisibility(View.GONE);
     }
 
     @Override
