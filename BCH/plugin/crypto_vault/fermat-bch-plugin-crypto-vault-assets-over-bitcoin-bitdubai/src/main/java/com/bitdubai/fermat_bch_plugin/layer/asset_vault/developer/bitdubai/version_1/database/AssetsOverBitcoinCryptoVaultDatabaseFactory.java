@@ -84,7 +84,9 @@ public class AssetsOverBitcoinCryptoVaultDatabaseFactory implements DealsWithPlu
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create key_Maintenance table.
              */
             table = databaseFactory.newTableFactory(ownerId, AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
@@ -100,7 +102,28 @@ public class AssetsOverBitcoinCryptoVaultDatabaseFactory implements DealsWithPlu
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
+             * Create key_Maintenance_detail table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+
+            table.addColumn(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.TRUE);
+            table.addColumn(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+
+            table.addIndex(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+
+            /**
              * Create key_Maintenance_Monitor table.
              */
             table = databaseFactory.newTableFactory(ownerId, AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
@@ -119,7 +142,9 @@ public class AssetsOverBitcoinCryptoVaultDatabaseFactory implements DealsWithPlu
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create active_Networks table.
              */
             table = databaseFactory.newTableFactory(ownerId, AssetsOverBitcoinCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_TABLE_NAME);

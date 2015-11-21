@@ -20,6 +20,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +40,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     ActorAssetIssuerManager actorAssetIssuerManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
-    // TODO ADDED ERROR MANAGER REFERENCE, PLEASE MAKE USE OF THE ERROR MANAGER.
+    ErrorManager errorManager;
 
     public AssetUserCommunitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -59,7 +58,8 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             }
 
         } catch (CantGetAssetUserActorsException e) {
-            e.printStackTrace(); // TODO MAKE USER OF ERROR MANAGER
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            e.printStackTrace();
         }
         return assetUserActorRecords;
     }
@@ -75,7 +75,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers);
 
         } catch (CantGetAssetIssuerActorsException e) {
-            // TODO MAKE USER OF ERROR MANAGER
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConnectToAssetUserException(CantConnectToAssetUserException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
         }
     }

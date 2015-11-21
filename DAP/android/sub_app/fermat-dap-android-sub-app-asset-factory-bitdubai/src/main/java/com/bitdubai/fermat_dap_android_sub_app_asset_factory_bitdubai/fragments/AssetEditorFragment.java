@@ -281,7 +281,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
                 dialog.dismiss();
                 if (getActivity() != null) {
                     Toast.makeText(getActivity(), "Asset deleted successfully", Toast.LENGTH_SHORT).show();
-                    changeActivity(Activities.DAP_MAIN.getCode());
+                    changeActivity(Activities.DAP_MAIN.getCode(),subAppsSession.getAppPublicKey());
                 }
             }
 
@@ -344,7 +344,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
                 dialog.dismiss();
                 if (getActivity() != null) {
                     Toast.makeText(getActivity(), String.format("Asset %s has been created", asset.getName()), Toast.LENGTH_SHORT).show();
-                    changeActivity(Activities.DAP_MAIN.getCode());
+                    changeActivity(Activities.DAP_MAIN.getCode(),subAppsSession.getAppPublicKey());
                 }
             }
 

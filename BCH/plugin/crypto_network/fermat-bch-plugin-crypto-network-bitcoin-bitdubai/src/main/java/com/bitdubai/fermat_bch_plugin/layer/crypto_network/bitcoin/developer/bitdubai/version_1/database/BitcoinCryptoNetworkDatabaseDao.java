@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -23,11 +25,19 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
+
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -802,5 +812,63 @@ public class BitcoinCryptoNetworkDatabaseDao {
             return true;
         else
             return false;
+    }
+
+    /**
+     * Updates the detailed crypto stats with the passed information
+     * @param cryptoVault
+     * @param blockchainNetworkType
+     * @param keyList
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void updateDetailedCryptoStats(CryptoVaults cryptoVault, BlockchainNetworkType blockchainNetworkType, List<ECKey> keyList)  throws CantExecuteDatabaseOperationException {
+        /**
+         * If we are not allowed to save detailed information then we will exit
+         */
+        if (!VaultKeyMaintenanceParameters.STORE_DETAILED_KEY_INFORMATION)
+            return;
+
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME);
+        DatabaseTransaction transaction = database.newTransaction();
+
+        /**
+         * for each passed Key, I will insert a record
+         */
+        int order = 1;
+        for (ECKey key : keyList){
+            DatabaseTableRecord record = databaseTable.getEmptyRecord();
+            record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME, cryptoVault.getCode());
+            record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_NETWORK_COLUMN_NAME, blockchainNetworkType.getCode());
+            record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_ORDER_COLUMN_NAME, order);
+            order++;
+            record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_MONITORED_PUBLICKEYS_COLUMN_NAME, key.getPublicKeyAsHex());
+
+            /**
+             * I will form the address from the public key and the network so I can insert it.
+             */
+            NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+            Address address = null;
+            try {
+                address = new Address(networkParameters, key.toAddress(networkParameters).toString());
+            } catch (AddressFormatException e) {
+                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "coundl't form an address.", null);
+            }
+            record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_MONITORED_ADDRESSES_COLUMN_NAME, address.toString());
+
+            /**
+             * Add all the prepared records into a transaction
+             */
+            transaction.addRecordToInsert(databaseTable, record);
+        }
+
+        /**
+         * execute the transaction
+         */
+        try {
+            database.executeTransaction(transaction);
+        } catch (DatabaseTransactionFailedException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Cant insert records.", null);
+        }
+
     }
 }

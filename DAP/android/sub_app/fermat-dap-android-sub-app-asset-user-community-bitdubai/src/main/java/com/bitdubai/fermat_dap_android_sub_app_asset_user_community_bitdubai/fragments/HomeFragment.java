@@ -2,12 +2,14 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fr
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -68,6 +70,7 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.home_fragment, container, false);
+        configureToolbar();
         recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
@@ -89,8 +92,8 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.dap_community_user_home_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -103,6 +106,17 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
                     onRefresh();
                 }
             });
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getPaintActivtyFeactures().getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.dap_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.dap_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
     }
 
     @Override

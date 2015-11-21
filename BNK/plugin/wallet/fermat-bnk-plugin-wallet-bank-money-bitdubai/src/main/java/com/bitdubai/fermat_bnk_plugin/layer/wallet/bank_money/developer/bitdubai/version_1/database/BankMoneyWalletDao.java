@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionBankMoneyException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalance;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletBalance;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalanceRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransaction;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantAddBankMoneyException;
@@ -92,7 +92,7 @@ public class BankMoneyWalletDao {
                         CantInitializeBankMoneyWalletDatabaseException.DEFAULT_MESSAGE,
                         cantCreateDatabaseException,
                         "initializeDatabase",
-                        "Cant Initialize BankMoney WalletDatabase Exception - Cant Create Database Exception");
+                        "Cant Initialize BankMoneyWallet WalletDatabase Exception - Cant Create Database Exception");
             }
         }
     }
@@ -223,7 +223,7 @@ public class BankMoneyWalletDao {
             return Double.valueOf(getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME));
     }
 
-    public List<BankMoneyBalance> getBalanceType(BalanceType balanceType) throws CantTransactionBankMoneyException {
+    public List<BankMoneyWalletBalance> getBalanceType(BalanceType balanceType) throws CantTransactionBankMoneyException {
        try {
             DatabaseTable table = database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_TABLE_NAME);
             table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BALANCE_TYPE_COLUMN_NAME,balanceType.getCode(),DatabaseFilterType.EQUAL);
@@ -278,8 +278,8 @@ public class BankMoneyWalletDao {
 
         return list;
     }
-    private List<BankMoneyBalance> createBankMoneyBalanceList(Collection<DatabaseTableRecord> records){
-        List<BankMoneyBalance> list = new ArrayList<>();
+    private List<BankMoneyWalletBalance> createBankMoneyBalanceList(Collection<DatabaseTableRecord> records){
+        List<BankMoneyWalletBalance> list = new ArrayList<>();
 
         for(DatabaseTableRecord record : records)
             list.add(constructBankMoneyBalanceList(record));
@@ -326,7 +326,7 @@ public class BankMoneyWalletDao {
                 memo,
                 status);
     }
-    private BankMoneyBalance constructBankMoneyBalanceList(DatabaseTableRecord record){
+    private BankMoneyWalletBalance constructBankMoneyBalanceList(DatabaseTableRecord record){
 
         UUID bankTransactionId                   =record.getUUIDValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME);
         String publicKeyActorFrom                =record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
