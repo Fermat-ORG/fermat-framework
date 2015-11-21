@@ -69,7 +69,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param account
      */
     public void addVaultAccount(HierarchyAccount account){
-        DeterministicKey accountMasterKey = this.deriveChild(account.getAccountPath(), false, true, ChildNumber.ZERO);
+        DeterministicKey accountMasterKey = this.deriveChild(account.getAccountPath(), true, true, ChildNumber.ZERO);
         accountsMasterKeys.put(account.getId(), accountMasterKey);
     }
 
@@ -179,7 +179,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
          * I will derive a new Key from this account
          */
         DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
-        DeterministicKey deterministicKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(keyDepth, false));
+        DeterministicKey deterministicKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, false, new ChildNumber(keyDepth, false));
 
         /**
          * I convert from a HD key to a ECKey
@@ -250,7 +250,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         //todo I need to get the value of generated keys from the database
         for (int i = 0; i < 101; i++) {
             // I derive the key at position i
-            DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
+            DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, false, new ChildNumber(i, false));
             // I add this key to the ECKey list
             childKeys.add(ECKey.fromPrivate(derivedKey.getPrivKey()));
         }
