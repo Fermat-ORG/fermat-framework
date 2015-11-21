@@ -6,6 +6,7 @@ import com.bitdubai.fermat_csh_api.all_definition.exceptions.InvalidParameterExc
  * Created by Yordin Alayn on 24.09.15.
  */
 public enum TransactionType {
+    //TODO: Verify usefulness. Not needed for transactions (i think)
 
     DEBIT("DEBIT"),
     CREDIT("CREDIT");

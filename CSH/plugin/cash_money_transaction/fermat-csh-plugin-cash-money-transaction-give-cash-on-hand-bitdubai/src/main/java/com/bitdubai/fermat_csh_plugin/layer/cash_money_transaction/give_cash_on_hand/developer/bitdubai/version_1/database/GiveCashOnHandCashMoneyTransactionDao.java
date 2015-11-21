@@ -186,7 +186,8 @@ public class GiveCashOnHandCashMoneyTransactionDao {
         CashCurrencyType        cashCurrencyType    = CashCurrencyType.getByCode(record.getStringValue(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_CASH_CURRENCY_TYPE_COLUMN_NAME));
         long                    timeStamp           = record.getLongValue(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_TIMESTAMP_COLUMN_NAME);
         String                  cashReference       = record.getStringValue(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_CASH_REFERENCE_COLUMN_NAME);
-        CashTransactionStatus   transactionStatus   = CashTransactionStatus.getByCode(record.getStringValue(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_STATUS_COLUMN_NAME));
+        CashTransactionStatus   transactionStatus = CashTransactionStatus.ACKNOWLEDGED;
+        // CashTransactionStatus.getByCode(record.getStringValue(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_STATUS_COLUMN_NAME));
         return new GiveCashOnHandCashMoneyTransactionImpl(
                 cashTransactionId,
                 publicKeyActorTo,

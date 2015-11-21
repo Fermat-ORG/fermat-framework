@@ -188,7 +188,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         try {
 
             intraUserModuleManager = referenceWalletSession.getIntraUserModuleManager();
-            cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
+            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
             balanceAvailable = loadBalance(BalanceType.AVAILABLE);
             bookBalance = loadBalance(BalanceType.BOOK);
@@ -271,7 +271,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                                                                         walletContact.profileImage,
                                                                         Actors.INTRA_USER,
                                                                         intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
-                                                                        referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                                                                        referenceWalletSession.getAppPublicKey(),
                                                                         CryptoCurrency.BITCOIN,
                                                                         BlockchainNetworkType.TEST);
 
@@ -455,7 +455,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
 
         try {
-            long balance = cryptoWallet.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+            long balance = cryptoWallet.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getAppPublicKey());
             txt_balance_amount.setText(formatBalanceString(balance, referenceWalletSession.getTypeAmount()));
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
@@ -540,11 +540,11 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
                 try {
 
-                    lstCryptoWalletTransactionsAvailable.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(), MAX_TRANSACTIONS, available_offset));
+                    lstCryptoWalletTransactionsAvailable.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(), MAX_TRANSACTIONS, available_offset));
 
                     available_offset = lstCryptoWalletTransactionsAvailable.size();
 
-                    lstCryptoWalletTransactionsBook.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(), MAX_TRANSACTIONS, book_offset));
+                    lstCryptoWalletTransactionsBook.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(), MAX_TRANSACTIONS, book_offset));
 
                     book_offset = lstCryptoWalletTransactionsBook.size();
 
@@ -705,7 +705,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     private long loadBalance(BalanceType balanceType){
         long balance = 0;
         try {
-            balance = cryptoWallet.getBalance(balanceType,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+            balance = cryptoWallet.getBalance(balanceType,referenceWalletSession.getAppPublicKey());
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
         }

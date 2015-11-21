@@ -81,7 +81,7 @@ public abstract class FermatListFragmentNew<M> extends FermatWalletFragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        WalletResourcesProviderManager walletResourcesProviderManager = walletSession.getWalletResourcesProviderManager();
+       // WalletResourcesProviderManager walletResourcesProviderManager = (WalletResourcesProviderManager) walletSession.getResourceProviderManager();
         String layout = null;
 
         layout = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +

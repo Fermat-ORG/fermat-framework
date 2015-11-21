@@ -32,7 +32,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.TypedValue;
@@ -55,15 +54,11 @@ import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionMana
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
-import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory;
-import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
-import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
@@ -110,8 +105,8 @@ import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
@@ -157,7 +152,6 @@ public abstract class FermatActivity extends AppCompatActivity
         Observer,
         FermatNotificationListener,
         NavigationView.OnNavigationItemSelectedListener,
-        NavigationDrawerFragment.NavigationDrawerCallbacks,
         FermatRuntime,
         FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> {
 
@@ -183,7 +177,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     private ActivityType activityType;
 
-    ArrayList activePlatforms;
+    protected ArrayList activePlatforms;
 
     protected boolean developMode;
 
@@ -204,6 +198,7 @@ public abstract class FermatActivity extends AppCompatActivity
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ViewPager pagertabs;
     private CoordinatorLayout coordinatorLayout;
+    private boolean flag=false;
 
 
     /**
@@ -394,9 +389,9 @@ public abstract class FermatActivity extends AppCompatActivity
                 if (backgroundColor != null) {
                     navigationView.setBackgroundColor(Color.parseColor(backgroundColor));
                 }
+                if(sideMenu.getNavigationIconColor()!=null)
                 if(sideMenu.getNavigationIconColor().equals("#ffffff")){
                     mToolbar.setNavigationIcon(R.drawable.ic_actionbar_menu);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_actionbar_menu);
                 }
             } else {
                 mToolbar.setNavigationIcon(R.drawable.ic_action_back);
@@ -423,6 +418,8 @@ public abstract class FermatActivity extends AppCompatActivity
             activity = subApp.getLastActivity();
         } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
             //activity = getWalletRuntimeManager().getLasActivity();
+        } else if (ActivityType.ACTIVITY_TYPE_DESKTOP == activityType){
+            activity = getDesktopRuntimeManager().getLastDesktopObject().getLastActivity();
         }
         return activity;
     }
@@ -450,7 +447,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 }else {
 
                     if (collapsingToolbarLayout != null) {
-                        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
+                        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
                         collapsingToolbarLayout.setCollapsedTitleTypeface(typeface);
                         //if (titleBar.getLabelSize() != -1) {
                         //collapsingToolbarLayout.setCollapsedTitleTex(titleBar.getLabelSize());
@@ -476,9 +473,9 @@ public abstract class FermatActivity extends AppCompatActivity
                         appBarLayout.setBackgroundColor(Color.parseColor(titleBar.getColor()));
                         //  mutedColor = palette.getMutedColor(R.attr.colorPrimary);
                         //collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(R.color.gps_friends_green_main));
-                        if (titleBar.getTitleColor() != null) {
-                            collapsingToolbarLayout.setCollapsedTitleTextColor(Color.parseColor(titleBar.getTitleColor()));
-                        }
+//                        if (titleBar.getTitleColor() != null) {
+//                            collapsingToolbarLayout.setCollapsedTitleTextColor(Color.parseColor(titleBar.getTitleColor()));
+//                        }
                     } else {
                         mToolbar.setBackgroundColor(Color.parseColor(titleBar.getColor()));
                         appBarLayout.setBackgroundColor(Color.parseColor(titleBar.getColor()));
@@ -674,8 +671,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
             collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
-            if (collapsingToolbarLayout != null)
+            if (collapsingToolbarLayout != null) {
                 collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
+                collapsingToolbarLayout.setTitle("");
+                collapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
+            }
+
 
             appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
 
@@ -770,7 +771,15 @@ public abstract class FermatActivity extends AppCompatActivity
                         }
                     });
 
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_actionbar_menu);
+                    mDrawerToggle.setDrawerIndicatorEnabled(false);
+
+
+                    mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mDrawerLayout.openDrawer(GravityCompat.START);
+                        }
+                    });
 
                     navigate(mNavItemId);
                 }
@@ -1030,7 +1039,8 @@ public abstract class FermatActivity extends AppCompatActivity
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
             }
 
-            if (true) {
+            //if (getIntent().getBooleanExtra("flag",false)) {
+            if(true){
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
                 activePlatforms.add(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
                 activePlatforms.add(Platforms.DIGITAL_ASSET_PLATFORM);
@@ -1842,10 +1852,6 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void setNavigationBackgroundColor(int color){
-        navigationView.setBackgroundColor(color);
-    }
 
 
     public RelativeLayout getToolbarHeader() {
@@ -1960,8 +1966,6 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Abstract methods
      */
-
-    public abstract void onNavigationDrawerItemSelected(int position, String activityCode);
 
     protected abstract List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> getNavigationMenu();
 

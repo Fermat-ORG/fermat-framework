@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantBuildCryptoBrokerDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
@@ -15,7 +16,7 @@ import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager</code>
- * provide the methods to interact with the crypto broker actor network service.
+ * provides the methods to interact with the crypto broker actor network service.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/11/2015.
  */
@@ -23,7 +24,7 @@ public interface CryptoBrokerManager {
 
     /**
      * Through the method <code>buildCryptoBrokerData</code> we can construct a CryptoBrokerData Instance.
-     * Here we make all the necessary validations in the information to send.
+     * Here we'l make all the necessary validations in the information to send/expose.
      *
      * @param publicKey of the crypto broker.
      * @param alias     which represents to it.
@@ -69,11 +70,15 @@ public interface CryptoBrokerManager {
      * Through the method <code>disconnect</code> we can disconnect of a crypto broker.
      * If we don't want to negotiate anymore or the reason that you want with a broker, you can disconnect of him.
      *
-     * @param publicKey the public key of the Crypto Broker that we want to disconnect.
+     * @param actorIdentityPublicKey the public key of the actor identity who is trying to disconnect.
+     * @param actorIdentityActorType the actor type of the actor identity who is trying to disconnect.
+     * @param cryptoBrokerPublicKey  the public key of the crypto broker with who we're trying to disconnect.
      *
      * @throws CantDisconnectException if something goes wrong.
      */
-    void disconnect(final String publicKey) throws CantDisconnectException;
+    void disconnect(final String actorIdentityPublicKey,
+                    final Actors actorIdentityActorType,
+                    final String cryptoBrokerPublicKey ) throws CantDisconnectException;
 
     /**
      * Through the method <code>denyConnection</code> we can deny a connection request.
@@ -98,7 +103,7 @@ public interface CryptoBrokerManager {
     void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException, ConnectionRequestNotFoundException;
 
     /**
-     * Through the method <code>cancelConnection</code> we can cancel a connection request sent.
+     * Through the method <code>acceptConnection</code> we can accept a received connection request.
      * The Broker can accept a connection request. In the near future maybe, when a customer is connection we can send him offers.
      *
      * @param requestId  id of the connection request to accept.

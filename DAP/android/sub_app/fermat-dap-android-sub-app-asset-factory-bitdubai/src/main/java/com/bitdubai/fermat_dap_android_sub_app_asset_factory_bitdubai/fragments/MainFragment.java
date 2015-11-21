@@ -155,7 +155,8 @@ public class MainFragment extends FermatFragment implements
             public void onClick(View view) {
                 /* create new asset factory project */
                 selectedAsset = null;
-                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
+                //TODO: chamo para pasar info entre pantallas usa el map Data del session en vez de pasar parametros por acá
+                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(),subAppsSession.getAppPublicKey(), getAssetForEdit());
             }
         });
         create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));

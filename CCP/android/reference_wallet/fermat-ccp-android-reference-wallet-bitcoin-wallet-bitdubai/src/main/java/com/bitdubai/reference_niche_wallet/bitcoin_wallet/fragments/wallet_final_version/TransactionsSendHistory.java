@@ -84,7 +84,7 @@ public class TransactionsSendHistory extends FermatWalletListFragment<CryptoWall
 
             super.onCreate(savedInstanceState);
 
-            cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
+            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
             lstCryptoWalletTransactions = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
         } catch (Exception ex) {
@@ -168,7 +168,7 @@ public class TransactionsSendHistory extends FermatWalletListFragment<CryptoWall
     public List<CryptoWalletTransaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoWalletTransaction> lstTransactions  = null;
         try {
-            lstTransactions = cryptoWallet.getTransactions(referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),BalanceType.AVAILABLE,TransactionType.DEBIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, offset);
+            lstTransactions = cryptoWallet.getTransactions(referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),BalanceType.AVAILABLE,TransactionType.DEBIT,referenceWalletSession.getAppPublicKey(), MAX_TRANSACTIONS, offset);
             offset += MAX_TRANSACTIONS;
         } catch (Exception e) {
 //            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(e,

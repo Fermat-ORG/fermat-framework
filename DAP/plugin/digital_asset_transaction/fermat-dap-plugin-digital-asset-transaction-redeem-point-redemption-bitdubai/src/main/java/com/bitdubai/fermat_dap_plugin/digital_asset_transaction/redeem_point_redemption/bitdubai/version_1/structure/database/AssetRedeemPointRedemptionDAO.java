@@ -146,46 +146,6 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
         updateStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, status.getCode(), transactionId);
     }
 
-    public boolean isPendingSubmitTransactions() throws CantLoadAssetRedemptionMetadataListException {
-        return isPendingTransactionByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
-    }
-
-    public boolean isOnCryptoNetworkTransactions() throws CantLoadAssetRedemptionMetadataListException {
-        return isPendingTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
-    }
-
-    public boolean isOnBlockChainTransactions() throws CantLoadAssetRedemptionMetadataListException {
-        return isPendingTransactionByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
-    }
-
-    public String getSenderPublicKeyById(String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException {
-        return getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME, transactionId);
-    }
-
-    public String getReceiverPublicKeyById(String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException {
-        return getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_RECEIVER_KEY_COLUMN_NAME, transactionId);
-    }
-
-    public CryptoStatus getTransactionCryptoStatusById(String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException, InvalidParameterException {
-        return CryptoStatus.getByCode(getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, transactionId));
-    }
-
-    public DistributionStatus getTransactionStatusById(String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException, InvalidParameterException {
-        return DistributionStatus.getByCode(getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, transactionId));
-    }
-
-    public List<String> getPendingSubmitGenesisTransactions() throws CantLoadAssetRedemptionMetadataListException {
-        return getGenesisTransactionByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
-    }
-
-    public List<String> getOnCryptoNetworkGenesisTransactions() throws CantLoadAssetRedemptionMetadataListException {
-        return getGenesisTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
-    }
-
-    public List<String> getOnBlockChainGenesisTransactions() throws CantLoadAssetRedemptionMetadataListException {
-        return getGenesisTransactionByCryptoStatus(CryptoStatus.REVERSED_ON_BLOCKCHAIN);
-    }
-
     /**
      * Closes this resource, relinquishing any underlying resources.
      * This method is invoked automatically on objects managed by the
@@ -379,6 +339,46 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
 
     public Database getDatabase() {
         return database;
+    }
+
+    public boolean isPendingSubmitTransactions() throws CantLoadAssetRedemptionMetadataListException {
+        return isPendingTransactionByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
+    }
+
+    public boolean isOnCryptoNetworkTransactions() throws CantLoadAssetRedemptionMetadataListException {
+        return isPendingTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+    }
+
+    public boolean isOnBlockChainTransactions() throws CantLoadAssetRedemptionMetadataListException {
+        return isPendingTransactionByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+    }
+
+    public String getSenderPublicKeyById(String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException {
+        return getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME, transactionId);
+    }
+
+    public String getReceiverPublicKeyById(String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException {
+        return getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_RECEIVER_KEY_COLUMN_NAME, transactionId);
+    }
+
+    public CryptoStatus getTransactionCryptoStatusById(String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException, InvalidParameterException {
+        return CryptoStatus.getByCode(getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, transactionId));
+    }
+
+    public DistributionStatus getTransactionStatusById(String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException, InvalidParameterException {
+        return DistributionStatus.getByCode(getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, transactionId));
+    }
+
+    public List<String> getPendingSubmitGenesisTransactions() throws CantLoadAssetRedemptionMetadataListException {
+        return getGenesisTransactionByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
+    }
+
+    public List<String> getOnCryptoNetworkGenesisTransactions() throws CantLoadAssetRedemptionMetadataListException {
+        return getGenesisTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+    }
+
+    public List<String> getOnBlockChainGenesisTransactions() throws CantLoadAssetRedemptionMetadataListException {
+        return getGenesisTransactionByCryptoStatus(CryptoStatus.REVERSED_ON_BLOCKCHAIN);
     }
 
     //INNER CLASSES

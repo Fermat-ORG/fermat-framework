@@ -14,7 +14,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantS
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.AssetDistributionRecorderService;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.ReceivedNewDigitalAssetMetadataNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.ReceivedNewTransactionStatusNotificationEventHandler;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
@@ -66,11 +66,11 @@ public class ReceivedNewDigitalAssetMetadataNotificationHandleEventTest {
     @Mock
     private DatabaseTableRecord eventRecord;
     private AssetDistributionDao assetDistributionDao;
-    private ReceivedNewDigitalAssetMetadataNotificationEventHandler receivedNewDigitalAssetMetadataNotificationEventHandler;
+    private ReceivedNewTransactionStatusNotificationEventHandler receivedNewTransactionStatusNotificationEventHandler;
 
     @Before
     public void init() throws Exception {
-        receivedNewDigitalAssetMetadataNotificationEventHandler = new ReceivedNewDigitalAssetMetadataNotificationEventHandler();
+        receivedNewTransactionStatusNotificationEventHandler = new ReceivedNewTransactionStatusNotificationEventHandler();
         EventType eventType = EventType.getByCode(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS.getCode());
         fermatEvent = new ReceivedNewDigitalAssetMetadataNotificationEvent(eventType);
         EventSource eventSource = EventSource.getByCode(EventSource.ASSETS_OVER_BITCOIN_VAULT.getCode());
@@ -79,7 +79,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationHandleEventTest {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
         assetDistributionDao = new AssetDistributionDao(pluginDatabaseSystem, pluginId);
         assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
-        receivedNewDigitalAssetMetadataNotificationEventHandler.setAssetDistributionRecorderService(assetDistributionRecorderService);
+        receivedNewTransactionStatusNotificationEventHandler.setAssetDistributionRecorderService(assetDistributionRecorderService);
         setUpMockitoRules();
     }
     private void setUpMockitoRules() throws Exception {
@@ -95,14 +95,14 @@ public class ReceivedNewDigitalAssetMetadataNotificationHandleEventTest {
     @Test
     public void handleEventSucces () throws FermatException {
         assetDistributionRecorderService.start();
-        receivedNewDigitalAssetMetadataNotificationEventHandler.handleEvent(fermatEvent);
+        receivedNewTransactionStatusNotificationEventHandler.handleEvent(fermatEvent);
     }
 
     @Test
     public void handleEventThrowCantSaveEventException () throws FermatException {
         assetDistributionRecorderService.start();
         try {
-            receivedNewDigitalAssetMetadataNotificationEventHandler.handleEvent(null);
+            receivedNewTransactionStatusNotificationEventHandler.handleEvent(null);
             fail("The method didn't throw when I expected it to");
         }catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantSaveEventException);
@@ -114,7 +114,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationHandleEventTest {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new CantOpenDatabaseException());
         assetDistributionRecorderService.start();
         try {
-            receivedNewDigitalAssetMetadataNotificationEventHandler.handleEvent(fermatEvent);
+            receivedNewTransactionStatusNotificationEventHandler.handleEvent(fermatEvent);
             fail("The method didn't throw when I expected it to");
         }catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantSaveEventException);
@@ -127,7 +127,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationHandleEventTest {
         assetDistributionRecorderService.stop();
 
         try {
-            receivedNewDigitalAssetMetadataNotificationEventHandler.handleEvent(null);
+            receivedNewTransactionStatusNotificationEventHandler.handleEvent(null);
             fail("The method didn't throw when I expected it to");
         }catch (Exception ex) {
             Assert.assertTrue(ex instanceof TransactionServiceNotStartedException);

@@ -46,6 +46,8 @@ public interface FermatActivity extends Serializable{
 
     public FermatHeader getHeader();
 
-    public void changeBackActivity(String activityCode) throws InvalidParameterException;
+    public String getBackAppPublicKey();
+
+    public void changeBackActivity(String appPublicKeyback,String activityCode) throws InvalidParameterException;
 
 }
