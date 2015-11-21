@@ -170,7 +170,7 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent{
                                 //"pluginId");
                         cashUnHoldTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
                         CashTransactionStatus castTransactionStatus =  cashUnHoldTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
-                        if (castTransactionStatus.COMPLETED.getCode() == castTransactionStatus.getCode())
+                        if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode())
                         {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                             stockTransactionCashMoneyRestockManager.saveCashMoneyRestockTransactionData(cashMoneyTransaction);

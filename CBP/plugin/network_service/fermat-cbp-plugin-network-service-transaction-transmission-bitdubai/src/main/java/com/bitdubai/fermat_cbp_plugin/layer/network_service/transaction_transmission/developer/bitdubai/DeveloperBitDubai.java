@@ -1,31 +1,31 @@
-package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai;
-
+package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorPluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionPluginRoot;
 
 /**
- * Created by jorge on 30-10-2015.
+ * Created by Yordin Alayn on 16.09.15.
  */
-public class DeveloperBitdubai implements PluginDeveloper, PluginLicensor {
 
-    private final Plugin plugin;
+public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
-    public DeveloperBitdubai(){
-        plugin = new CryptoBrokerActorPluginRoot();
-    }
+    Plugin plugin;
 
     @Override
     public Plugin getPlugin() {
         return plugin;
     }
 
+    public DeveloperBitDubai () {
+        plugin = new TransactionTransmissionPluginRoot();
+    }
+
     @Override
     public int getAmountToPay() {
-        return 0;
+        return 100;
     }
 
     @Override
@@ -42,4 +42,5 @@ public class DeveloperBitdubai implements PluginDeveloper, PluginLicensor {
     public TimeFrequency getTimePeriod() {
         return TimeFrequency.MONTHLY;
     }
+
 }

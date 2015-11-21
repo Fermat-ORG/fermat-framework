@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_resto
 
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CashMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
-import com.bitdubai.fermat_api.layer.world.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 
 import java.sql.Timestamp;
 import java.util.UUID;

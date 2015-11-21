@@ -171,7 +171,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                                 //"pluginId");
                         cashHoldTransactionManager.createCashHoldTransaction(cashTransactionParametersWrapper);
                         CashTransactionStatus castTransactionStatus =  cashHoldTransactionManager.getCashHoldTransactionStatus(cashMoneyTransaction.getTransactionId());
-                        if (castTransactionStatus.COMPLETED.getCode() == castTransactionStatus.getCode())
+                        if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode())
                         {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
                             stockTransactionCashMoneyDestockManager.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
