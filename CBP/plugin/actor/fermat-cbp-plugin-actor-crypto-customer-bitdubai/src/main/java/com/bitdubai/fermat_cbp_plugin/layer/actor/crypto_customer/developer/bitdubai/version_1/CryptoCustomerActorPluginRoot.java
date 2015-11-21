@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -69,7 +70,26 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Cry
 
         // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG. LET'S THINK TOGETHER.
         // TODO MAKE USE OF THE ERROR MANAGER.
-        return new CryptoCustomerActorImpl(identity, purchaseNegotiationManager, databaseDao);
+//        return new CryptoCustomerActorImpl(identity, databaseDao);
+        /*ECCKeyPair keyPair = new ECCKeyPair();
+        String publicKey = keyPair.getPublicKey();
+        String privateKey = keyPair.getPrivateKey();
+        try {
+
+        }catch (CantCreateIntraWalletUserException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateIntraUserException(CantCreateIntraUserException.DEFAULT_MESSAGE, e, "Cannot create .", null);
+
+        }
+        catch (CantPersistPrivateKeyException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateIntraUserException(CantCreateIntraUserException.DEFAULT_MESSAGE, e, "Cannot persist private key file.", null);
+        }
+        catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateIntraUserException(CantCreateIntraUserException.DEFAULT_MESSAGE, FermatException.wrapException(e), "There is a problem I can't identify.", null);
+        }*/
+        return null;
     }
 
     @Override
@@ -77,6 +97,66 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Cry
 
         // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG. LET'S THINK TOGETHER.
         // TODO MAKE USE OF THE ERROR MANAGER.
-        return new CryptoCustomerActorImpl(identity, purchaseNegotiationManager, databaseDao);
+//        return new CryptoCustomerActorImpl(identity, databaseDao);
+        return null;
     }
+/*
+    @Override
+    public Actor createActor(String intraUserLoggedInPublicKey, String actorName, byte[] photo) throws CantCreateIntraUserException{
+
+        ECCKeyPair keyPair = new ECCKeyPair();
+        String publicKey = keyPair.getPublicKey();
+        String privateKey = keyPair.getPrivateKey();
+
+        try {
+
+            persistPrivateKey(privateKey, publicKey);
+
+            intraWalletUserActorDao.createActorIntraWalletUser(intraUserLoggedInPublicKey, actorName, publicKey, photo, ConnectionState.CONNECTED);
+        }
+        catch (CantCreateIntraWalletUserException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateIntraUserException(CantCreateIntraUserException.DEFAULT_MESSAGE, e, "Cannot create .", null);
+
+        }
+        catch (CantPersistPrivateKeyException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateIntraUserException(CantCreateIntraUserException.DEFAULT_MESSAGE, e, "Cannot persist private key file.", null);
+        }
+        catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateIntraUserException(CantCreateIntraUserException.DEFAULT_MESSAGE, FermatException.wrapException(e), "There is a problem I can't identify.", null);
+        }
+
+        return new IntraUserActorRecord(publicKey, privateKey, actorName);
+
+    }
+
+
+
+    @Override
+    public Actor getActorByPublicKey(String intraUserLoggedInPublicKey, String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException{
+
+        try
+        {
+            // String privateKey = getPrivateKey(actorPublicKey);
+
+            Actor actor = this.intraWalletUserActorDao.getIntraUserActorByPublicKey(intraUserLoggedInPublicKey,actorPublicKey);
+
+            //not found actor
+            if(actor == null)
+                throw new IntraUserNotFoundException("", null, ".","Intra User not found");
+
+            return new IntraUserActorRecord(actorPublicKey, "",actor.getName(), actor.getPhoto());
+        }
+        catch(CantGetIntraWalletUserActorException e)
+        {
+            throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", FermatException.wrapException(e), "", "unknown error");
+        }
+        catch(Exception e)
+        {
+            throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", e, "", "");
+        }
+
+    }*/
 }
