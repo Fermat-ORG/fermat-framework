@@ -10,11 +10,13 @@ import java.util.List;
 /**
  * Created by Yordin Alayn on 01,10,15.
  */
-public interface BankMoney {
+public interface BankMoneyWallet {
 
-    BankMoneyBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException;
+    //change to BankMoneyWallet
 
-    BankMoneyBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException;
+    BankMoneyWalletBalance getBookBalance() throws CantTransactionBankMoneyException;
+
+    BankMoneyWalletBalance getAvailableBalance() throws CantTransactionBankMoneyException;
 
     List<BankMoneyTransaction> getTransactions(BalanceType balanceType, int max, int offset)throws CantTransactionBankMoneyException;
 
