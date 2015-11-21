@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import java.util.Date;
 
 /**
- * Created by Alex on 11/2/2015.
+ * Created by Alejandro Bicelis on 11/2/2015.
  */
 public class VEFIndexProvider implements IndexProvider {
 
