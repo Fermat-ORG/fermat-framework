@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_api.layer.network_service.enums;
+package com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 

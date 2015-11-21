@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_cbp_api.layer.network_service.interfaces;
+package com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.layer.network_service.enums.BusinessTransactionTransactionType;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
