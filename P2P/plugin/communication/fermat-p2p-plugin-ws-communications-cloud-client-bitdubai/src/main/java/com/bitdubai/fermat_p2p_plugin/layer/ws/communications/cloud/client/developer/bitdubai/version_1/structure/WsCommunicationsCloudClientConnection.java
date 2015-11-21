@@ -389,7 +389,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             ResponseEntity<String> responseEntity = restTemplate.exchange(WEB_SERVICE_URL, HttpMethod.POST, requestEntity, String.class);
 
             String respond = responseEntity.getBody();
-            System.out.println("responseEntity = " + respond);
+            //System.out.println("responseEntity = " + respond);
 
             /*
              * if respond have the result list
