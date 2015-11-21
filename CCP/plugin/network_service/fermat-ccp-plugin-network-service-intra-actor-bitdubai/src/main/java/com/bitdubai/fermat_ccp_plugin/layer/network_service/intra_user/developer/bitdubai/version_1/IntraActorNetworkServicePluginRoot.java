@@ -1275,18 +1275,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                                                                                                                                             imageString);
 
 
-                for (int i = 0; i < 35; i++) {
+               /* for (int i = 0; i < 35; i++) {
                     communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
-                }
+                }*/
 
 
-               /* if (!actorsToRegisterCache.contains(platformComponentProfile)) {
+                if (!actorsToRegisterCache.contains(platformComponentProfile)) {
                     actorsToRegisterCache.add(platformComponentProfile);
 
                     if (register) {
                         communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
                     }
-                } */
+                }
 
             } catch (CantRegisterComponentException e) {
                 e.printStackTrace();
