@@ -117,10 +117,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          * For each network that is active to be monitored I will...
          */
         for (BlockchainNetworkType blockchainNetworkType : blockchainNetworkTypes){
-            /**
-             * I will update the detailed stats table with the keys information for each network type and vault
-             */
-            updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, keyList);
 
             /**
              * load (if any) existing wallet.
@@ -172,6 +168,12 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
                 bitcoinCryptoNetworkMonitor.start();
             }
+
+            /**
+             * I will update the detailed stats table with the keys that are imported in the wallet.
+             */
+            List<ECKey> importedKEys = wallet.getImportedKeys();
+            updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, importedKEys);
         }
     }
 
@@ -208,7 +210,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
              * If I couldn't load the wallet from file, I'm assuming is a new wallet and I will create it.
              * I'm creating it by importing the keys sent by the vault.
              */
-            wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
+            //wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
+
+            wallet = new Wallet(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
+            wallet.importKeys(keyList);
 
             /**
              * Will set the autosave information and save it.

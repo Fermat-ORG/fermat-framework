@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces;
 
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListCryptoBrokersException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface CryptoBrokerSearch {
      *
      * @throws CantListCryptoBrokersException  if something goes wrong.
      */
-    List<CryptoBrokerData> getResult() throws CantListCryptoBrokersException;
+    List<CryptoBrokerConnectionInformation> getResult() throws CantListCryptoBrokersException;
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
@@ -41,7 +42,7 @@ public interface CryptoBrokerSearch {
      *
      * @throws CantListCryptoBrokersException  if something goes wrong.
      */
-    List<CryptoBrokerData> getResult(final Integer max) throws CantListCryptoBrokersException;
+    List<CryptoBrokerConnectionInformation> getResult(final Integer max) throws CantListCryptoBrokersException;
 
     /**
      * Through the method <code>resetFilters</code> you can reset the filters set,

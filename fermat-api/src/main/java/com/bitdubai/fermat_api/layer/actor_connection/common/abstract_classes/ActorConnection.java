@@ -1,6 +1,5 @@
-package com.bitdubai.fermat_api.layer.actor_connection.common.interfaces;
+package com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes;
 
-import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
@@ -9,7 +8,7 @@ import org.apache.commons.lang.Validate;
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorConnection</code>
+ * The interface <code>com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorConnection</code>
  * represents a Connection with an Actor of the Fermat System.
  *
  * An Actor Connection contains all the basic information of the connection.

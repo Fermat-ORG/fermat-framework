@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantBuildCryptoBrokerDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
@@ -10,6 +10,8 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionNewsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,33 +22,17 @@ import java.util.UUID;
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/11/2015.
  */
-public interface CryptoBrokerManager {
-
-    /**
-     * Through the method <code>buildCryptoBrokerData</code> we can construct a CryptoBrokerData Instance.
-     * Here we'l make all the necessary validations in the information to send/expose.
-     *
-     * @param publicKey of the crypto broker.
-     * @param alias     which represents to it.
-     * @param image     of him or company logo, between others.
-     *
-     * @return an instance of CryptoBrokerData with the information of the Crypto Broker.
-     *
-     * @throws CantBuildCryptoBrokerDataException if something goes wrong.
-     */
-    CryptoBrokerData buildCryptoBrokerData(final String publicKey,
-                                           final String alias    ,
-                                           final byte[] image    ) throws CantBuildCryptoBrokerDataException;
+public interface CryptoBrokerManager extends FermatManager {
 
     /**
      * Through the method <code>exposeIdentity</code> we can expose the crypto identities created in the device.
      * The information given will be shown to all the crypto customers.
      *
-     * @param cryptoBrokerData  crypto broker exposing information.
+     * @param cryptoBrokerExposingData  crypto broker exposing information.
      *
      * @throws CantExposeIdentityException   if something goes wrong.
      */
-    void exposeIdentity(final CryptoBrokerData cryptoBrokerData) throws CantExposeIdentityException;
+    void exposeIdentity(final CryptoBrokerExposingData cryptoBrokerExposingData) throws CantExposeIdentityException;
 
     /**
      * Through the method <code>getSearch</code> we can get a new instance of Crypto Broker Search.
@@ -60,11 +46,11 @@ public interface CryptoBrokerManager {
      * Through the method <code>requestConnection</code> we can request to a crypto broker a connection.
      * When we're connected with a crypto broker, we're enabled to make negotiations with him.
      *
-     * @param cryptoBrokerData an instance of CryptoBrokerData with the information of the Crypto Broker.
+     * @param cryptoBrokerConnectionInformation an instance of CryptoBrokerConnectionInformation with the information of the Crypto Broker and the counterpart.
      *
      * @throws CantRequestConnectionException if something goes wrong.
      */
-    void requestConnection(final CryptoBrokerData cryptoBrokerData) throws CantRequestConnectionException;
+    void requestConnection(final CryptoBrokerConnectionInformation cryptoBrokerConnectionInformation) throws CantRequestConnectionException;
 
     /**
      * Through the method <code>disconnect</code> we can disconnect of a crypto broker.
