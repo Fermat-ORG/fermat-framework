@@ -42,6 +42,16 @@ public class Item<I extends FermatInterfaceObject> implements FermatInterfaceObj
         return object.getIconResource();
     }
 
+    @Override
+    public int getPosition() {
+        return object.getPosition();
+    }
+
+    @Override
+    public void setPosition(int position) {
+        object.setPosition(position);
+    }
+
     public I getInterfaceObject() {
         return object;
     }
