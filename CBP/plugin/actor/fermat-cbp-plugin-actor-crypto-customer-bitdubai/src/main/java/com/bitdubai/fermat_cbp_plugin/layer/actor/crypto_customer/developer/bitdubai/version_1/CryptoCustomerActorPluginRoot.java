@@ -113,7 +113,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Cry
             CryptoCustomerActor actor = this.databaseDao.getRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey);
             if(actor == null)
                 throw new CantGetCryptoCustomerActorException("", null, ".","Intra User not found");
-            return new CryptoCustomerActorRecordImpl(actorPublicKey, "",actor.getActorName, actor.getActorPhoto());
+            return new CryptoCustomerActorRecordImpl(actorPublicKey, "",CryptoCustomerActor., actor.getActorPhoto());
         } catch (CantRegisterCryptoCustomerActorException e){
             throw new CantGetCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET CRYPTO CUSTOMER ACTOR", "");
         } catch (Exception e){
