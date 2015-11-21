@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-<<<<<<< HEAD
+
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -13,9 +13,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-=======
+
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
->>>>>>> upstream_nelson/develop
+
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -83,8 +83,6 @@ public class FiatIndexPluginRoot extends AbstractPlugin implements DatabaseManag
 
 
 
-
-
     /*
      * Service interface implementation
      */
@@ -98,59 +96,6 @@ public class FiatIndexPluginRoot extends AbstractPlugin implements DatabaseManag
         }
         serviceStatus = ServiceStatus.STARTED;
     }
-
-
-<<<<<<< HEAD
-=======
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
-    /**
-     * Plugin interface implementation
-     *
-     * @param uuid
-     */
-    @Override
-    public void setId(UUID uuid) {
-        this.pluginId = uuid;
-    }
-
-    @Override
-    public FermatManager getManager() {
-        return null;
-    }
-
-
-    public static LogLevel getLogLevelByClass(String className) {
-        try {
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return FiatIndexPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e) {
-            System.err.println("CantGetLogLevelByClass: " + e.getMessage());
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
->>>>>>> upstream_nelson/develop
-
 
 
     @Override
