@@ -17,6 +17,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     private String              description             ;
     private String              publicKey               ;
     private long                registrationDate        ;
+    private long                lastConnectionDate      ;
     private DAPConnectionState  dapConnectionState      ;
     private Location            location                ;
     private Double              locationLatitude        ;
@@ -67,7 +68,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.publicKey          = publicKey                              ;
         this.profileImage       = profileImage.clone()                   ;
         this.registrationDate   = registrationDate                       ;
-        this.dapConnectionState = dapConnectionState.REGISTERED_ONLINE   ;
+        this.dapConnectionState = DAPConnectionState.REGISTERED_ONLINE   ;
     }
 
     public AssetIssuerActorRecord(String publicKey,
@@ -88,6 +89,28 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.profileImage           = profileImage.clone()  ;
         if(!description.isEmpty())
             this.description        = description           ;
+    }
+
+    public AssetIssuerActorRecord(final String publicKey,
+                                  final String name,
+                                  final DAPConnectionState dapConnectionState,
+                                  final Double locationLatitude,
+                                  final Double locationLongitude,
+                                  final Long registrationDate,
+                                  final Long lastConnectionDate,
+                                  final byte[] profileImage,
+                                  final String description) {
+
+        this.publicKey              =       publicKey               ;
+        this.name                   =       name                    ;
+        this.dapConnectionState     =       dapConnectionState      ;
+        this.locationLatitude       =       locationLatitude        ;
+        this.locationLongitude      =       locationLongitude       ;
+        this.registrationDate       =       registrationDate        ;
+        this.lastConnectionDate     =       lastConnectionDate      ;
+        this.profileImage           =       profileImage.clone()    ;
+        this.description            =       description             ;
+
     }
 
 
@@ -132,6 +155,20 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
     public void setRegistrationDate(long registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    /**
+     * The method <code>getLastConnectionDate</code> gives us the Las Connection Date of the represented Asset Issuer
+     *
+     * @return the Connection Date
+     */
+    @Override
+    public long getLastConnectionDate() {
+        return this.lastConnectionDate;
+    }
+
+    public void setLastConnectionDate(long lastConnectionDate) {
+        this.lastConnectionDate = lastConnectionDate;
     }
 
     /**
