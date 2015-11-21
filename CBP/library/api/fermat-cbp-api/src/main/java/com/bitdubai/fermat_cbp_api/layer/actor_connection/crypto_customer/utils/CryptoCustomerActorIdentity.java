@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils;
+package com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -9,9 +9,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
  */
-public final class CryptoBrokerActorIdentity extends ActorIdentity {
+public final class CryptoCustomerActorIdentity extends ActorIdentity {
 
-    public CryptoBrokerActorIdentity(final String publicKey) {
+    public CryptoCustomerActorIdentity(final String publicKey) {
         super(publicKey, Actors.CBP_CRYPTO_BROKER);
     }
 

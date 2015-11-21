@@ -1,6 +1,5 @@
-package com.bitdubai.fermat_api.layer.actor_connection.common.interfaces;
+package com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes;
 
-import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -9,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorConnectionSearch</code>
+ * The interface <code>com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorConnectionSearch</code>
  * contains all the methods to search an Actor Connection.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
