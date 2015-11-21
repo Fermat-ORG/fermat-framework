@@ -18,7 +18,6 @@ import java.util.List;
  */
 public class ActorAdapter extends FermatAdapter<Actor, ActorViewHolder> {
 
-
     private AdapterChangeListener<Actor> adapterChangeListener;
 
     public ActorAdapter(Context context) {
@@ -57,7 +56,6 @@ public class ActorAdapter extends FermatAdapter<Actor, ActorViewHolder> {
                 holder.thumbnail.setImageDrawable(new BitmapDrawable(context.getResources(),
                         BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length)));
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
