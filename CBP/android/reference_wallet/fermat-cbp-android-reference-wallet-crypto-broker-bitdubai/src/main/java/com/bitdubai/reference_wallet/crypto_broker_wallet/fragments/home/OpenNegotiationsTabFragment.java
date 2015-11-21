@@ -57,9 +57,6 @@ import java.util.List;
 public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
-    // Constants
-    private static final String WALLET_PUBLIC_KEY = "crypto_broker_wallet";
-
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -206,7 +203,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
+                CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(walletSession.getAppPublicKey());
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
                 List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
@@ -240,7 +237,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoBrokerWallet wallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
+                CryptoBrokerWallet wallet = moduleManager.getCryptoBrokerWallet(walletSession.getAppPublicKey());
                 data.addAll(wallet.getCurrentIndexSummaryForStockCurrencies());
 
             } catch (CantGetCryptoBrokerWalletException | CantGetCurrentIndexSummaryForStockCurrenciesException ex) {

@@ -18,6 +18,7 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerA
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForCustomerException;
@@ -41,9 +42,6 @@ import java.util.List;
  */
 public class OpenContractsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
         implements FermatListItemListeners<ContractBasicInformation> {
-
-    // Constants
-    private static final String WALLET_PUBLIC_KEY = "crypto_broker_wallet";
 
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
@@ -152,7 +150,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
         if (moduleManager != null) {
             try {
-                CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
+                CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(walletSession.getAppPublicKey());
                 GrouperItem<ContractBasicInformation> grouper;
 
                 grouperText = getActivity().getString(R.string.waiting_for_the_customer);
@@ -191,7 +189,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
         walletSession.setData("contract_data", data);
-        //changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS);
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS, walletSession.getAppPublicKey());
     }
 
     @Override
