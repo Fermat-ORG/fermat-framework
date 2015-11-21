@@ -106,7 +106,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.contract_history_menu, menu);
+        inflater.inflate(R.menu.cbw_contract_history_menu, menu);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_contracts_history_activity;
+        return R.layout.cbw_fragment_contracts_history_activity;
     }
 
     @Override

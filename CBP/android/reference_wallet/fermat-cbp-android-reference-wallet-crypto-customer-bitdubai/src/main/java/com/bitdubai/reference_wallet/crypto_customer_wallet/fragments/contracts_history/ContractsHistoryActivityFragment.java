@@ -79,7 +79,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
     }
@@ -103,7 +103,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.contract_history_menu, menu);
+        inflater.inflate(R.menu.ccw_contract_history_menu, menu);
     }
 
     @Override
@@ -210,7 +210,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
         walletSession.setData("contract_data", data);
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS, walletSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS, walletSession.getAppPublicKey());
     }
 
     @Override
@@ -230,7 +230,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
                     errorManager.reportUnexpectedWalletException(
-                            Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                             ex);
             }
