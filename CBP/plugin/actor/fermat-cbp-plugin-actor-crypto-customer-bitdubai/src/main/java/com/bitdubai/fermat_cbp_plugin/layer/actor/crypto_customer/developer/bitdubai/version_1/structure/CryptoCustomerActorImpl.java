@@ -35,7 +35,8 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
     //RELATIONSHIP IDENTIDAD-WALLET
     public CustomerIdentityWalletRelationship createCustomerIdentityWalletRelationship(String walletPublicKey, String identityPublicKey) throws CantCreateCustomerIdentiyWalletRelationshipException{
         try {
-            return databaseDao.createRegisterCustomerIdentityWalletRelationship(walletPublicKey,identityPublicKey);
+            UUID relationshipId = UUID.randomUUID();
+            return databaseDao.createRegisterCustomerIdentityWalletRelationship(relationshipId, walletPublicKey,identityPublicKey);
         } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
             throw new CantCreateCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
         } catch (Exception e){

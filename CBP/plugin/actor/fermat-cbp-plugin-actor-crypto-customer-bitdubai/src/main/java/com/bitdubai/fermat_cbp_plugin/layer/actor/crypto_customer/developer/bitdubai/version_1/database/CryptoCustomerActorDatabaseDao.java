@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -78,39 +79,39 @@ public class CryptoCustomerActorDatabaseDao {
     }
 
     //### ACTOR ###
-    /*public CryptoCustomerActor createRegisterCryptoCustomerActor(ActorIdentity identity) throws CantRegisterCryptoCustomerActorException{
-        try {
-            if (actorExists(identity.getPublicKey()))
-                throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException ("Cant create new Customer Identity Wallet Relationship, It exists.","Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, Relationship exists.");
+    public CryptoCustomerActor createRegisterCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey, String actorName, byte[] actorPhoto, ConnectionState connectionState) throws CantRegisterCryptoCustomerActorException{
+//        try {
+//            if (actorExists(identity.getPublicKey()))
+//                throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException ("Cant create new Customer Identity Wallet Relationship, It exists.","Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, Relationship exists.");
+//
+//            DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
+//            DatabaseTableRecord record = table.getEmptyRecord();
+//            record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_WALLET_COLUMN_NAME, walletPublicKey);
+//            record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_IDENTITY_COLUMN_NAME, identityPublicKey);
+//            table.insertRecord(record);
+//
+//            return new CryptoCustomerIdentityWalletRelationshipImpl(walletPublicKey, identityPublicKey);
+//        } catch (CantInsertRecordException e){
+//            throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException (e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, insert database problems.");
+//        } catch (Exception e) {
+//            throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, unknown failure.");
+//        }
+        return null;
+    }
 
-            DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
-            DatabaseTableRecord record = table.getEmptyRecord();
-            record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_WALLET_COLUMN_NAME, walletPublicKey);
-            record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_IDENTITY_COLUMN_NAME, identityPublicKey);
-            table.insertRecord(record);
-
-            return new CryptoCustomerIdentityWalletRelationshipImpl(walletPublicKey, identityPublicKey);
-        } catch (CantInsertRecordException e){
-            throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException (e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, insert database problems.");
-        } catch (Exception e) {
-            throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, unknown failure.");
-        }
-    }*/
-
-    public CryptoCustomerActor getRegisterCryptoCustomer(ActorIdentity identity) throws CantRegisterCryptoCustomerActorException {
+    public CryptoCustomerActor getRegisterCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey) throws CantRegisterCryptoCustomerActorException {
         return null;
     }
 
     //### RELATIONSHIP ###
     //CREATE RELATIONSHIP
-    public CustomerIdentityWalletRelationship createRegisterCustomerIdentityWalletRelationship(String walletPublicKey, String identityPublicKey) throws CantRegisterCryptoCustomerIdentityWalletRelationshipException {
+    public CustomerIdentityWalletRelationship createRegisterCustomerIdentityWalletRelationship(UUID relationshipId, String walletPublicKey, String identityPublicKey) throws CantRegisterCryptoCustomerIdentityWalletRelationshipException {
         try {
             if (relationshipExists(walletPublicKey, identityPublicKey))
                 throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException("Cant create new Customer Identity Wallet Relationship, It exists.", "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, Relationship exists.");
 
             DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
-            UUID relationshipId = UUID.randomUUID();
             record.setUUIDValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME, relationshipId);
             record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_WALLET_COLUMN_NAME, walletPublicKey);
             record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_IDENTITY_COLUMN_NAME, identityPublicKey);
