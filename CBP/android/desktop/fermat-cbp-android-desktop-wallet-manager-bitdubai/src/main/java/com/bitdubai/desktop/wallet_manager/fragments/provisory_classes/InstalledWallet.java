@@ -26,6 +26,7 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     private String publicKey;
     private String walletPlatformIdentifier;
     private Version version;
+    private int iconResource;
 
     public InstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.walletCategory = walletCategory;
@@ -89,6 +90,15 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     @Override
     public String getIcon() {
         return walletIcon;
+    }
+
+    @Override
+    public int getIconResource() {
+        return iconResource;
+    }
+
+    public void setIconResource(int iconResource) {
+        this.iconResource = iconResource;
     }
 
     /**

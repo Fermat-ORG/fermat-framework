@@ -428,6 +428,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             loadBasicUI(activity);
 
+            hideBottonIcons();
+
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
             }
