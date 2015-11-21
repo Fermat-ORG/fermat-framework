@@ -1246,8 +1246,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Crypto Broker Wallet");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1302,8 +1304,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Negotiation Details");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1325,8 +1329,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Negotiation Details");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1373,8 +1379,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Contract Details");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1397,8 +1405,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Contracts History");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1421,8 +1431,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Earnings");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1445,8 +1457,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Settings");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1522,8 +1536,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Crypto Customer Wallet");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1574,8 +1589,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Start a Negotiation");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1598,8 +1614,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Negotiation Details");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1621,8 +1638,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Negotiation Details");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1644,8 +1662,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Contract Details");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1668,8 +1687,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Contract Details");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1691,9 +1711,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Contracts History");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabel("Contract History");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1716,8 +1737,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Broker List");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
@@ -1740,8 +1762,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Settings");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
