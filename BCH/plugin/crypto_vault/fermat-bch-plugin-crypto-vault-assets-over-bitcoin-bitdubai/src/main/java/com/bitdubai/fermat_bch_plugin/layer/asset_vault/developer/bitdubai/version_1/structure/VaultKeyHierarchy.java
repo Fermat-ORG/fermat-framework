@@ -9,6 +9,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.Get
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.ChildNumber;
@@ -136,7 +137,11 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         /**
          * I will update the detailed key maintenance information by adding this generated address to the table.
          */
-        updateKeyDetailedStatsWithNewAddress(hierarchyAccount.getId(), ecKey, cryptoAddress);
+        try {
+            updateKeyDetailedStatsWithNewAddress(hierarchyAccount.getId(), ecKey, cryptoAddress);
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, null, null);
+        }
 
         return cryptoAddress;
     }
@@ -147,7 +152,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param ecKey
      * @param cryptoAddress
      */
-    private void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) {
+    private void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws UnexpectedResultReturnedFromDatabaseException {
         try {
             getDao().updateKeyDetailedStatsWithNewAddress(hierarchyAccountId, ecKey, cryptoAddress);
         } catch (CantExecuteDatabaseOperationException e) {
