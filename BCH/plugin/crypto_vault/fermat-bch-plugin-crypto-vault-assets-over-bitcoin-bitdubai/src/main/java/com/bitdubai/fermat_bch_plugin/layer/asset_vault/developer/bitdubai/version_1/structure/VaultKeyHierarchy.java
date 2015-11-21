@@ -174,8 +174,12 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
          * I will derive a new Key from this account
          */
         DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
-        DeterministicKey ecKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(keyDepth, false));
+        DeterministicKey deterministicKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(keyDepth, false));
 
+        /**
+         * I convert from a HD key to a ECKey
+         */
+        ECKey ecKey = ECKey.fromPrivate(deterministicKey.getPrivKey());
         return ecKey;
     }
 
