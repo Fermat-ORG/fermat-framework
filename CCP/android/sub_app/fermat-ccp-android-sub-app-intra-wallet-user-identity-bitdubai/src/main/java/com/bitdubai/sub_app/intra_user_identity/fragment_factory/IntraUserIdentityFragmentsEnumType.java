@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.intra_user_identity.fragmentFactory;
+package com.bitdubai.sub_app.intra_user_identity.fragment_factory;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 

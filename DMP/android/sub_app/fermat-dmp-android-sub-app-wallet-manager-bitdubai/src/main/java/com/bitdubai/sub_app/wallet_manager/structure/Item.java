@@ -12,6 +12,7 @@ public class Item<I extends FermatInterfaceObject> implements FermatInterfaceObj
     I object;
 
 
+
     public Item(I object) {
         this.object = object;
     }
@@ -29,6 +30,16 @@ public class Item<I extends FermatInterfaceObject> implements FermatInterfaceObj
     @Override
     public String getIcon() {
         return object.getIcon();
+    }
+
+    @Override
+    public void setIconResource(int bitcoin_wallet) {
+        object.setIconResource(bitcoin_wallet);
+    }
+
+    @Override
+    public int getIconResource() {
+        return object.getIconResource();
     }
 
     public I getInterfaceObject() {
