@@ -5,8 +5,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.ClauseInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -24,7 +24,7 @@ import java.util.Random;
  * @version 1.0
  * @since 05/11/15.
  */
-public class CryptoBrokerWalletModuleCustomerBrokerNegotationInformation implements CustomerBrokerNegotiationInformation {
+public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implements CustomerBrokerNegotiationInformation {
 
     // -- for test purposes
     private static final Random random = new Random(321515131);
@@ -40,7 +40,7 @@ public class CryptoBrokerWalletModuleCustomerBrokerNegotationInformation impleme
     private long date;
 
 
-    public CryptoBrokerWalletModuleCustomerBrokerNegotationInformation(String customerAlias, String merchandise, String paymentMethod, String paymentCurrency, NegotiationStatus status) {
+    public CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation(String customerAlias, String merchandise, String paymentMethod, String paymentCurrency, NegotiationStatus status) {
 
         this.customerIdentity = new ActorIdentityImpl(customerAlias, new byte[0]);
         this.brokerIdentity = new ActorIdentityImpl("BrokerAlias", new byte[0]);

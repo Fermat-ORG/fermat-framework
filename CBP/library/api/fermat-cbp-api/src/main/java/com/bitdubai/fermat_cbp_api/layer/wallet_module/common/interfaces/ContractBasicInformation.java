@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces;
+package com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 
