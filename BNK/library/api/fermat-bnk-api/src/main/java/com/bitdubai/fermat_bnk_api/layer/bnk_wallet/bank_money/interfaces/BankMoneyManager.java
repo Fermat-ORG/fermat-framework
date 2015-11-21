@@ -11,9 +11,9 @@ import java.util.List;
  */
 public interface BankMoneyManager {
 
-    List<BankMoney> getTransactionsBankMoney() throws CantTransactionBankMoneyException;
+    List<BankMoneyWallet> getTransactionsBankMoney() throws CantTransactionBankMoneyException;
 
-    BankMoney registerBankMoney(
+    BankMoneyWallet registerBankMoney(
          final String bankTransactionId
         ,final String publicKeyActorFrom
         ,final String publicKeyActorTo
@@ -32,7 +32,7 @@ public interface BankMoneyManager {
         ,final String getMemo
     ) throws CantCreateBankMoneyException;
 
-    BankMoney loadCashMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyException;
+    BankMoneyWallet loadBankMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyException;
 
     void createCashMoney (String walletPublicKey) throws CantCreateBankMoneyException;
 }
