@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection</code>
+ * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoCustomerActorConnection</code>
  * represents an actor connection for the crypto broker actor.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
