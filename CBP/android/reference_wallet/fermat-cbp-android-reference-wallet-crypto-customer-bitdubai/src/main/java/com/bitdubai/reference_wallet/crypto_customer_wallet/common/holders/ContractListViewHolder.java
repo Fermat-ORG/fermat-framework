@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
+package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -12,7 +12,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -43,11 +43,11 @@ public class ContractListViewHolder extends FermatViewHolder {
         this.itemView = itemView;
         res = itemView.getResources();
 
-        customerImage = (ImageView) itemView.findViewById(R.id.cbw_customer_image);
-        customerName = (FermatTextView) itemView.findViewById(R.id.cbw_customer_name);
-        soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_sold_quantity_and_currency);
-        exchangeRateAmountAndCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_amount_and_currency);
-        lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.cbw_last_update_date);
+        customerImage = (ImageView) itemView.findViewById(R.id.ccw_customer_image);
+        customerName = (FermatTextView) itemView.findViewById(R.id.ccw_customer_name);
+        soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_sold_quantity_and_currency);
+        exchangeRateAmountAndCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_exchange_rate_amount_and_currency);
+        lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.ccw_last_update_date);
     }
 
     public void bind(ContractBasicInformation itemInfo) {
@@ -73,7 +73,7 @@ public class ContractListViewHolder extends FermatViewHolder {
         String amount = decimalFormat.format(itemInfo.getAmount());
         String merchandise = itemInfo.getMerchandise();
 
-        return res.getString(R.string.cbw_sold_quantity_and_currency, sellingOrSoldText, amount, merchandise);
+        return res.getString(R.string.ccw_contract_history_sold_quantity_and_currency, sellingOrSoldText, amount, merchandise);
     }
 
     @NonNull
@@ -82,7 +82,7 @@ public class ContractListViewHolder extends FermatViewHolder {
         String exchangeAmount = decimalFormat.format(itemInfo.getExchangeRateAmount());
         String paymentCurrency = itemInfo.getPaymentCurrency();
 
-        return res.getString(R.string.cbw_exchange_rate_amount_and_currency, merchandise, exchangeAmount, paymentCurrency);
+        return res.getString(R.string.ccw_contract_history_exchange_rate_amount_and_currency, merchandise, exchangeAmount, paymentCurrency);
     }
 
     private int getStatusBackgroundColor(ContractStatus status) {

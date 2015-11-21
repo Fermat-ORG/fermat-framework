@@ -10,14 +10,14 @@
         app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/action_no_filter"
-                android:title="@string/cbw_contract_history_action_no_filter_text"/>
+                android:id="@+id/ccw_action_no_filter"
+                android:title="@string/ccw_contract_history_action_no_filter_text"/>
             <item
-                android:id="@+id/action_filter_succeed"
-                android:title="@string/cbw_contract_history_action_filter_succeed_text"/>
+                android:id="@+id/ccw_action_filter_succeed"
+                android:title="@string/ccw_contract_history_action_filter_succeed_text"/>
             <item
-                android:id="@+id/action_filter_cancel"
-                android:title="@string/cbw_contract_history_action_filter_canceled_text"/>
+                android:id="@+id/ccw_action_filter_canceled"
+                android:title="@string/ccw_contract_history_action_filter_canceled_text"/>
         </menu>
 
     </item>
