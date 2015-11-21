@@ -34,7 +34,7 @@ public class DepositBankMoneyTransactionDao {
     public void registerDepositTransaction(BankTransactionParameters bankTransactionParameters){
         DatabaseTable table = database.getTable(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_TABLE_NAME);
         DatabaseTableRecord record = table.getEmptyRecord();
-        record.setLongValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_AMOUNT_COLUMN_NAME, bankTransactionParameters.getAccountNumber());
+        //record.setLongValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_AMOUNT_COLUMN_NAME, bankTransactionParameters.getAmount());
         record.setStringValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_ID_COLUMN_NAME,bankTransactionParameters.getTransactionId().toString());
     }
 }
