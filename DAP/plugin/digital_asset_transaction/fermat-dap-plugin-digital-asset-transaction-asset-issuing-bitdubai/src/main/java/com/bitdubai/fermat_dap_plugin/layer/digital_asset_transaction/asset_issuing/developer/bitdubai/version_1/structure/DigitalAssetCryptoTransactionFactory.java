@@ -286,12 +286,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             if(this.assetIssuingTransactionDao.isPublicKeyUsed(publicKey)){
                 throw new CantIssueDigitalAssetException("The public key "+publicKey+" is already registered in database");
             }
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new CantIssueDigitalAssetException(exception, "Checking the asset publicKey in database", "Unexpected results");
         } catch (CantCheckAssetIssuingProgressException exception) {
             throw new CantIssueDigitalAssetException(exception, "Checking the asset publicKey in database", "Cannot check the publicKey in database");
         }
-
     }
 
     /**
@@ -505,9 +502,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         }*/ catch (CantSetObjectException exception) {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(),IssuingStatus.WALLET_EXCEPTION);
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets","The wallet public key is probably null");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(),IssuingStatus.DATABASE_EXCEPTION);
-            throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets - Asset number "+counter,"Unexpected results in database");
         } catch (CantCheckAssetIssuingProgressException exception) {
             //ALREADY UPDATED STATUS IN THE ROOT OF THIS EXCEPTION.
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets - Asset number "+counter,"Cannot check the asset issuing progress");

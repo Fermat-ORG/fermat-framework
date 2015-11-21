@@ -9,6 +9,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -163,6 +164,10 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
 
     }
 
+    @Override
+    public FermatManager getManager() {
+        return null;
+    }
 
     /**
      * (non-Javadoc)
