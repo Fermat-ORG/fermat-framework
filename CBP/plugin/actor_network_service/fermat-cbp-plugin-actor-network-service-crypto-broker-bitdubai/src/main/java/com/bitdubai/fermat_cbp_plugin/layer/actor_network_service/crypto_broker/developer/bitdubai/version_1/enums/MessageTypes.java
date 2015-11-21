@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.network_service.crypto_broker.developer.bitdubai.version_1.enums;
+package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;

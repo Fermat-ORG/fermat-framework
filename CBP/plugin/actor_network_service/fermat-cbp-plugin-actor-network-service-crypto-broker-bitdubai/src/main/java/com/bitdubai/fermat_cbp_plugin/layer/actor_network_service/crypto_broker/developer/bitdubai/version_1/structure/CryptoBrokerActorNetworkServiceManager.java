@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.network_service.crypto_broker.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
