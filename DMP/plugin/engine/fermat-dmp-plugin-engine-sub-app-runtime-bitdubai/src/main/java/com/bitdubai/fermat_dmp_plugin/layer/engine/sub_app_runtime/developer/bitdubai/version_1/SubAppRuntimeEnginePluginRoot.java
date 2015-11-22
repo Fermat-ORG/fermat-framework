@@ -1106,7 +1106,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.DAP_ASSETS_IDENTITY_USER);
-            runtimeSubApp.setPublicKey("public_key_dap_assets_user_identity");
+            runtimeSubApp.setPublicKey("public_key_dap_asset_user_identity");
 
             // Activity: List of identities
             runtimeActivity = new Activity();
