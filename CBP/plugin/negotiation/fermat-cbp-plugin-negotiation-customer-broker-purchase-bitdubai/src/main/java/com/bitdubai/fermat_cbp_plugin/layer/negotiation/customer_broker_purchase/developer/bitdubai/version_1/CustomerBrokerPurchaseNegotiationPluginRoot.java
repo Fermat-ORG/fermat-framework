@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchas
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -54,6 +55,11 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    @Override
+    public FermatManager getManager() {
+        return null;
     }
 
     @Override

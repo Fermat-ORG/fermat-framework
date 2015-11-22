@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offli
 
 
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 
 import java.util.UUID;
 
@@ -227,4 +228,9 @@ public class CustomerOfflinePaymentPluginRoot implements
     public ServiceStatus getStatus() {
         return serviceStatus;
     }*/
+
+    @Override
+    public FermatManager getManager() {
+        return null;
+    }
 }

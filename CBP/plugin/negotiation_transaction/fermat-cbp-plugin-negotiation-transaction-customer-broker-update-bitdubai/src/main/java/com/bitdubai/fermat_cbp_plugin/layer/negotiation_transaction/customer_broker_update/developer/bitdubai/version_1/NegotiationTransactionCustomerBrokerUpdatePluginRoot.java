@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-//import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -36,7 +36,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot implements  De
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.update.developer.bitdubai.version_1.NegotiationTransactionUpdatePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.create.developer.bitdubai.version_1.NegotiationTransactionCreatePluginRoot");
         return returnedClasses;
     }
 
@@ -100,6 +100,11 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot implements  De
     @Override
     public void setId(UUID uuid) {
         this.pluginId = uuid;
+    }
+
+    @Override
+    public FermatManager getManager() {
+        return null;
     }
 
     public static LogLevel getLogLevelByClass(String className) {

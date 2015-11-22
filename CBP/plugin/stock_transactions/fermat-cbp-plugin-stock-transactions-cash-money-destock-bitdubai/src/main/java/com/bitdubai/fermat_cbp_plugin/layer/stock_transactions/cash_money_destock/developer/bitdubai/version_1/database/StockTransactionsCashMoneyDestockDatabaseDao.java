@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.layer.world.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -114,7 +114,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
 
         cashMoneyRestockTransaction.setTransactionId(cashMoneyRestockTransactionRecord.getUUIDValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TRANSACTION_ID_COLUMN_NAME));
         cashMoneyRestockTransaction.setActorPublicKey(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME));
-        cashMoneyRestockTransaction.setFiatCurrency(FiatCurrency.getFiatCurrencyTypeByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_FIAT_CURRENCY_COLUMN_NAME)));
+        cashMoneyRestockTransaction.setFiatCurrency(FiatCurrency.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_FIAT_CURRENCY_COLUMN_NAME)));
         cashMoneyRestockTransaction.setCbpWalletPublicKey(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME));
         cashMoneyRestockTransaction.setCashWalletPublicKey(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CSH_WALLET_PUBLIC_KEY_COLUMN_NAME));
         cashMoneyRestockTransaction.setCashReference(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CASH_REFERENCE_COLUMN_NAME));

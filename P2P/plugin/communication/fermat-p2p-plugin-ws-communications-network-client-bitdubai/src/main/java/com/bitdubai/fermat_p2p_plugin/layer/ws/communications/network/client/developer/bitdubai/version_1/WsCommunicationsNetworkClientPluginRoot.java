@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.network.client.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 
 import java.util.UUID;
 
@@ -31,6 +32,10 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin {
         this.pluginId=pluginId;
     }
 
+    @Override
+    public FermatManager getManager() {
+        return null;
+    }
 
 
 }
