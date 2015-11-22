@@ -134,8 +134,10 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             long availableRunningBalance = calculateAvailableRunningBalanceByAsset(-availableAmount, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
             long bookRunningBalance = calculateBookRunningBalanceByAsset(-bookAmount, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
-            long quantityAvailableRunningBalance = calculateQuantityAvailableRunningBalanceByAsset(-1, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
-            long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(-1, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
+            long quantityAvailableAmount = balanceType.equals(BalanceType.AVAILABLE) ? 1 : 0L;
+            long quantityBookAmount = balanceType.equals(BalanceType.BOOK) ? 1 : 0L;
+            long quantityAvailableRunningBalance = calculateQuantityAvailableRunningBalanceByAsset(-quantityAvailableAmount, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
+            long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(-quantityBookAmount, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
             executeTransaction(assetIssuerWalletTransactionRecord,TransactionType.DEBIT ,balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
         }catch(CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteAssetIssuerTransactionException exception){
@@ -160,8 +162,10 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             long availableRunningBalance = calculateAvailableRunningBalanceByAsset(availableAmount, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
             long bookRunningBalance = calculateBookRunningBalanceByAsset(bookAmount, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
-            long quantityAvailableRunningBalance = calculateQuantityAvailableRunningBalanceByAsset(1, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
-            long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(1, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
+            long quantityAvailableAmount = balanceType.equals(BalanceType.AVAILABLE) ? 1 : 0L;
+            long quantityBookAmount = balanceType.equals(BalanceType.BOOK) ? 1 : 0L;
+            long quantityAvailableRunningBalance = calculateQuantityAvailableRunningBalanceByAsset(quantityAvailableAmount, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
+            long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(quantityBookAmount, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
             executeTransaction(assetIssuerWalletTransactionRecord, TransactionType.CREDIT, balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
         }catch(CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteAssetIssuerTransactionException exception){

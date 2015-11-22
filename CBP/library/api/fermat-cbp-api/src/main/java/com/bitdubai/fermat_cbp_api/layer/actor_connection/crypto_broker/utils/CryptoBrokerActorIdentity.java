@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.Ac
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 /**
- * The class <code>com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorIdentity</code>
+ * The class <code>com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoCustomerActorIdentity</code>
  * represents a crypto broker actor identity.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.

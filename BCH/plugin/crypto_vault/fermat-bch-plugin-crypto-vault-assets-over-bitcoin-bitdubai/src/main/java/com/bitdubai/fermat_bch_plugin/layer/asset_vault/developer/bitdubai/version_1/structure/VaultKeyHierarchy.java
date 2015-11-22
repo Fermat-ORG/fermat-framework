@@ -133,7 +133,29 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
             setActiveNetwork(blockchainNetworkType);
         }
 
+        /**
+         * I will update the detailed key maintenance information by adding this generated address to the table.
+         */
+        updateKeyDetailedStatsWithNewAddress(hierarchyAccount.getId(), ecKey, cryptoAddress);
+
         return cryptoAddress;
+    }
+
+    /**
+     * Updates the Detailed Key maintenance table by marking the passed key as used with the passed cryptoAddress
+     * @param hierarchyAccountId
+     * @param ecKey
+     * @param cryptoAddress
+     */
+    private void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) {
+        try {
+            getDao().updateKeyDetailedStatsWithNewAddress(hierarchyAccountId, ecKey, cryptoAddress);
+        } catch (CantExecuteDatabaseOperationException e) {
+            /**
+             * will continue because this is not critical.
+             */
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -152,8 +174,12 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
          * I will derive a new Key from this account
          */
         DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
-        DeterministicKey ecKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(keyDepth, false));
+        DeterministicKey deterministicKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(keyDepth, false));
 
+        /**
+         * I convert from a HD key to a ECKey
+         */
+        ECKey ecKey = ECKey.fromPrivate(deterministicKey.getPrivKey());
         return ecKey;
     }
 
@@ -207,6 +233,11 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         return dao;
     }
 
+    /**
+     * Gets all the already derived keys from the hierarchy on this account.
+     * @param account
+     * @return
+     */
     public List<ECKey> getDerivedKeys(HierarchyAccount account){
         DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
         List<ECKey> childKeys = new ArrayList<>();

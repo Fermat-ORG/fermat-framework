@@ -168,6 +168,8 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
             monitorAgent.start();
         } catch (Exception e) {
             throw new CantStartPluginException(FermatException.wrapException(e), context, e.getMessage());
+        } finally {
+            this.serviceStatus = ServiceStatus.STOPPED;
         }
 
 
@@ -178,14 +180,14 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 //            e.printStackTrace();
 //        }
 
-        this.serviceStatus = ServiceStatus.STARTED;
+        super.start();
     }
 
     @Override
     public void stop() {
         monitorAgent.stop();
         recorderService.stop();
-        this.serviceStatus = ServiceStatus.STOPPED;
+        super.stop();
     }
 
     //TODO DELETE THIS METHOD AND ALL ITS USAGES.
