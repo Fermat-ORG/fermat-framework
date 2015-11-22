@@ -1,7 +1,7 @@
 Readme
 ========= 
 
-![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20book%20logotype/FermatBookLogotype3D/PNG_fermat_book_logo_3D_Low_800x813.png "Fermat Book Logo")
+![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20book%20logotype/FermatBookLogotype3D/PNG_fermat_book_logo_3D_Low_800x813.png "Fermat Book Logo")
 
 =======
 

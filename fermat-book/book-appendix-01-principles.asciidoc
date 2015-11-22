@@ -96,8 +96,8 @@ Here is an in depth analysis of Fermat's principles.
 * Crypto Distribution Network concept.
 * Crypto Brokers concept.
 
-image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
-=== _Continue Reading ..._
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+==== _Continue Reading ..._
 
 link:book-chapter-00(intro).asciidoc[Back to Intro]
 

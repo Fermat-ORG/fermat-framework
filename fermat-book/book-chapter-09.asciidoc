@@ -1,6 +1,6 @@
 :numbered!: 
 
-image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/WPD.jpg[FermatWPD]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Coins/WPD.jpg[FermatWPD]
 == Chapter 9: Fermat Wallet Production & Distribution Line
 
 Fermat builds the necessary services to run a wallet application at a user level collecting different functionalities available. Each functionality has its own work-flow, i.e the thread connecting the plug-ins from different layers to complete the task. +
@@ -45,7 +45,7 @@ Internally, the Wallet Store  keeps the identity of the wallet, of its developer
 
 Let's explore the different niches covered by Fermat in the platforms described in next chapters.
 
-image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 ==== _Continue Reading ..._
 link:book-chapter-10.asciidoc[Next Chapter]
 

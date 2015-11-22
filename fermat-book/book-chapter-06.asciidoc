@@ -1,5 +1,5 @@
 :numbered!:
-image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Coins/P2P.jpg[FermatP2P]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Coins/P2P.jpg[FermatP2P]
 == Chapter 6: Fermat Network and Communication Superlayer
 This superlayer provides connectivity between *devices* by establishing a _communication channel_ between a plug-in running on a *local device* which requires to consume certain service from its _counterpart_ (i.e. the plug-in with the same task) running on a *remote device*. +
 This superlayer takes the entire responsibility of maintaining the communication channel "alive" as long as it is required, providing this *service* as a whole, i.e. offering this channel to the external layers and plug-ins in a *transparent* way for them, regardless of the *communication technology* that the layer uses to build this channel *_dynamically_*. + 
@@ -26,7 +26,7 @@ WiFi :: Fermat
 Mesh :: Fermat+
 ////
 :numbered!:
-image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
   
 ==== _Continue Reading ..._
 link:book-chapter-07.asciidoc[Next Chapter]

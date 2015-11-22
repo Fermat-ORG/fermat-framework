@@ -1,5 +1,5 @@
 :numbered!: 
-image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
 == Chapter 10: Fermat Money Management
 
 Monetary transactions in Fermat are handled separating the *transport of value* (that follows an specific _work-flow_) from the accountancy of the money, and this all is separated from the transmission of the additional information of the transaction ( the meta data ). +
@@ -7,11 +7,11 @@ Usually transactions start in specialized plug-ins of one of the transaction lay
 The rest of the information of the transacting not related to the value, is transmitted through the different _network services_ through the Fermat Network which allow this *meta data* reach the GUI components and be displayed to the end user in a comprehensive way. +
 This starts in the originating device and then both flows - value and meta data - meet at the recipients device activating the counterpart plug-ins to record everything accordingly and validate the transaction.
 
+===
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 
-:numbered!:
-image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
   
-=== _Continue Reading ..._
+==== _Continue Reading ..._
 link:book-chapter-12.asciidoc[Crypto Currency Platform]
 
 link:book-chapter-11.asciidoc[Next Chapter]

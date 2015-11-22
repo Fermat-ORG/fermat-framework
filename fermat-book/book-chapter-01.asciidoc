@@ -43,7 +43,7 @@ Follow next chapters to get a more detailed description of each one.
 
 :numbered!:
 
-image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
   
 ==== _Continue Reading ..._
 
