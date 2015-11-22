@@ -185,6 +185,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      */
     private void updateDetailedCryptoStats(CryptoVaults cryptoVault, BlockchainNetworkType blockchainNetworkType, List<ECKey> keyList) {
         try {
+            getDao().deleteDetailedCryptoStats(cryptoVault, blockchainNetworkType);
             getDao().updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, keyList);
         } catch (CantExecuteDatabaseOperationException e) {
             /**

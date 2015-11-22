@@ -169,15 +169,15 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         peerGroup.start();
         peerGroup.downloadBlockChain();
 
-        while (true){
-            try {
-                Thread.sleep(60000);
-                System.out.println("*****CryptoNetwork isRunning: " + peerGroup.isRunning());
-                System.out.println("****CryptoNetwork: connected peers " + peerGroup.getConnectedPeers().size());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        while (true){
+//            try {
+//                Thread.sleep(60000);
+//                System.out.println("*****CryptoNetwork isRunning: " + peerGroup.isRunning());
+//                System.out.println("****CryptoNetwork: connected peers " + peerGroup.getConnectedPeers().size());
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     /**
