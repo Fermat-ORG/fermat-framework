@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 //import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -18,8 +19,8 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRe
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionBankMoneyException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionSummaryBankMoneyException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoney;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalance;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletBalance;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalanceRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransaction;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionSummary;
@@ -43,8 +44,8 @@ public class WalletBankMoneyPluginRoot implements  DealsWithErrors,
         LogManagerForDevelopers,
         Service,
         Plugin,
-        BankMoney,
-        BankMoneyBalance {
+        BankMoneyWallet,
+        BankMoneyWalletBalance {
 
     /**
      *
@@ -145,6 +146,11 @@ public class WalletBankMoneyPluginRoot implements  DealsWithErrors,
         this.pluginId = uuid;
     }
 
+    @Override
+    public FermatManager getManager() {
+        return null;
+    }
+
     public static LogLevel getLogLevelByClass(String className) {
         try {
             String[] correctedClass = className.split((Pattern.quote("$")));
@@ -157,12 +163,12 @@ public class WalletBankMoneyPluginRoot implements  DealsWithErrors,
 
 
     @Override
-    public BankMoneyBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
+    public BankMoneyWalletBalance getBookBalance() throws CantTransactionBankMoneyException {
         return null;
     }
 
     @Override
-    public BankMoneyBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
+    public BankMoneyWalletBalance getAvailableBalance() throws CantTransactionBankMoneyException {
         return null;
     }
 

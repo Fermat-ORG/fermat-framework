@@ -7,8 +7,8 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRe
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionBankMoneyException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionSummaryBankMoneyException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoney;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalance;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletBalance;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalanceRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransaction;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionSummary;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by francisco on 04/11/15.
  */
-public class ImplementBankMoney implements BankMoney, BankMoneyBalance {
+public class ImplementBankMoney implements BankMoneyWallet, BankMoneyWalletBalance {
 
     PluginDatabaseSystem databaseSystem;
     BankMoneyWalletDao bankMoneyWalletDao= new BankMoneyWalletDao(databaseSystem);
@@ -30,13 +30,13 @@ public class ImplementBankMoney implements BankMoney, BankMoneyBalance {
 
 
     @Override
-    public BankMoneyBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
-        return (BankMoneyBalance) bankMoneyWalletDao.getBalanceType(balanceType.BOOK);
+    public BankMoneyWalletBalance getBookBalance() throws CantTransactionBankMoneyException {
+        return (BankMoneyWalletBalance) bankMoneyWalletDao.getBalanceType(BalanceType.BOOK);
     }
 
     @Override
-    public BankMoneyBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException {
-        return (BankMoneyBalance) bankMoneyWalletDao.getBalanceType(balanceType.AVAILABLE);
+    public BankMoneyWalletBalance getAvailableBalance() throws CantTransactionBankMoneyException {
+        return (BankMoneyWalletBalance) bankMoneyWalletDao.getBalanceType(BalanceType.AVAILABLE);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ImplementBankMoney implements BankMoney, BankMoneyBalance {
           throw new CantTransactionBankMoneyException(
                   CantTransactionBankMoneyException.DEFAULT_MESSAGE,
                   e,
-                  "Cant Transaction BankMoney Exception",
+                  "Cant Transaction BankMoneyWallet Exception",
                   "Cant Get Transactions Exception"
           );
         }

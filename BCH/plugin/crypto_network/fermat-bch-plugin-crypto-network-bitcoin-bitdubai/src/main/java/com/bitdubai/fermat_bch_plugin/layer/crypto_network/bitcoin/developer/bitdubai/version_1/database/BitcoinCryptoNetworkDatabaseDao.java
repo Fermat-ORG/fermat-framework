@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -870,5 +871,36 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Cant insert records.", null);
         }
 
+    }
+
+    /**
+     * deletes all existing stats for this crypto vault and network type.
+     * @param cryptoVault
+     * @param blockchainNetworkType
+     */
+    public void deleteDetailedCryptoStats(CryptoVaults cryptoVault, BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException {
+        /**
+         * If we are not allowed to save detailed information then we will exit
+         */
+        if (!VaultKeyMaintenanceParameters.STORE_DETAILED_KEY_INFORMATION)
+            return;
+
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        /**
+         * delete all records. DB should offer a better way to do this.
+         */
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            try {
+                databaseTable.deleteRecord(record);
+            } catch (CantDeleteRecordException e) {
+                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to delete statst record.", "database issue");
+            }
+        }
     }
 }

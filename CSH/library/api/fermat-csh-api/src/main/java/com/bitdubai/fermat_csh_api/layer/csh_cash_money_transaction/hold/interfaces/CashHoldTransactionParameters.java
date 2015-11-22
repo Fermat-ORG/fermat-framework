@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces;
 
-import com.bitdubai.fermat_api.layer.world.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 
 import java.util.UUID;
 

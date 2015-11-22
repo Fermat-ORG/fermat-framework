@@ -11,6 +11,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.wifi.developer.bitdub
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.wifi.CommunicationWifiInit;
@@ -502,7 +503,12 @@ public class WifiCommunicationPluginRoot implements CommunicationWifiInit, Plugi
 			this.pluginId = pluginId;
 		}
 
-		public UUID getPluginId() {
+	@Override
+	public FermatManager getManager() {
+		return null;
+	}
+
+	public UUID getPluginId() {
 			return pluginId;
 		}
 
