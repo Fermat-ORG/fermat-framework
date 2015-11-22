@@ -51,10 +51,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             ContractBasicInformation contract;
             List<ContractBasicInformation> contractsHistory = new ArrayList<>();
 
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
-            contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.COMPLETED);
-            contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED);
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.CANCELLED);
@@ -116,6 +112,12 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PAUSED);
             waitingForBroker.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PAUSED);
+            waitingForBroker.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PAUSED);
+            waitingForBroker.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PAUSED);
+            waitingForBroker.add(contract);
 
             return waitingForBroker;
 
@@ -131,6 +133,10 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             Collection<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
 
             contract = new CryptoBrokerWalletModuleContractBasicInformation("yalayn", "BTC", "Bank Transfer", "USD", ContractStatus.PENDING_PAYMENT);
+            waitingForCustomer.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("vzlangel", "BsF", "Cash Delivery", "BsF", ContractStatus.PENDING_PAYMENT);
+            waitingForCustomer.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("vzlangel", "BsF", "Cash Delivery", "BsF", ContractStatus.PENDING_PAYMENT);
             waitingForCustomer.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("vzlangel", "BsF", "Cash Delivery", "BsF", ContractStatus.PENDING_PAYMENT);
             waitingForCustomer.add(contract);

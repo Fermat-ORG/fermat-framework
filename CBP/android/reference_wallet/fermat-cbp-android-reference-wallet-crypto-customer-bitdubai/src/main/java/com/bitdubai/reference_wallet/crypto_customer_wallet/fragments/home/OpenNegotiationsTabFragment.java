@@ -102,7 +102,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         Activity activity = getActivity();
         LayoutInflater layoutInflater = activity.getLayoutInflater();
         configureActivityHeader(layoutInflater);
-        configureActionBar();
+        configureToolbar();
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.ccw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
@@ -122,9 +122,9 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
     }
 
-    private void configureActionBar() {
-
+    private void configureToolbar() {
         Toolbar toolbar = getToolbar();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
         else

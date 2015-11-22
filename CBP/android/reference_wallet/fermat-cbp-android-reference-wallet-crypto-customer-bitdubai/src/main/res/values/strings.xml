@@ -29,4 +29,6 @@
     <string name="ccw_contract_history_sold_quantity_and_currency">%1$s %2$s %3$s</string>
     <string name="no_contracts">No Contracts</string>
     <string name="sold">Sold</string>
+    <string name="sending">Sending</string>
+    <string name="receiving">Receiving</string>
 </resources>
