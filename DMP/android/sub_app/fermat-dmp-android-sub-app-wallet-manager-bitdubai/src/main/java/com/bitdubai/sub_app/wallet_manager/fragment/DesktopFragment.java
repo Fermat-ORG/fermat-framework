@@ -1,16 +1,12 @@
 package com.bitdubai.sub_app.wallet_manager.fragment;
 
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -44,13 +40,13 @@ import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.OnStartDragListener;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.SimpleItemTouchHelperCallback;
+import com.bitdubai.sub_app.wallet_manager.holder.DesktopHolderClickCallback;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
 import com.bitdubai.sub_app.wallet_manager.structure.Item;
 import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -65,7 +61,8 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<Item>,
-        OnStartDragListener {
+        OnStartDragListener,
+        DesktopHolderClickCallback<Item> {
 
     private ItemTouchHelper mItemTouchHelper;
 
@@ -396,6 +393,11 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
+    }
+
+    @Override
+    public void onHolderItemClickListener(Item data, int position) {
+        Toast.makeText(getActivity(),"soy capo",Toast.LENGTH_SHORT).show();
     }
 }
 

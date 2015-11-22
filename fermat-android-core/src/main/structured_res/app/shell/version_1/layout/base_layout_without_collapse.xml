@@ -108,18 +108,27 @@
             <ImageView
                 android:layout_width="65dp"
                 android:layout_height="65dp"
+                android:id="@+id/image_view_icon_4"
+                android:layout_weight="1"
+                android:padding="7dp"
+                android:src="@drawable/ic_004" />
+
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="65dp"
                 android:id="@+id/image_view_icon_3"
                 android:layout_weight="1"
                 android:padding="7dp"
                 android:src="@drawable/ic_003" />
 
+
             <ImageView
                 android:layout_width="65dp"
                 android:layout_height="65dp"
-                android:id="@+id/image_view_icon_4"
+                android:id="@+id/image_view_icon_5"
                 android:layout_weight="1"
                 android:padding="7dp"
-                android:src="@drawable/ic_004" />
+                android:src="@drawable/ic_005" />
 
         </LinearLayout>
 

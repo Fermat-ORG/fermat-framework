@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.ItemTouchHelperAdapter;
+import com.bitdubai.sub_app.wallet_manager.holder.DesktopHolderClickCallback;
 import com.bitdubai.sub_app.wallet_manager.holder.FermatAppHolder;
 import com.bitdubai.sub_app.wallet_manager.structure.Item;
 
@@ -19,7 +20,8 @@ import java.util.List;
 public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> implements ItemTouchHelperAdapter {
 
 
-        public DesktopAdapter(Context context) {
+
+    public DesktopAdapter(Context context) {
             super(context);
         }
 
@@ -29,7 +31,8 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
 
         @Override
         protected FermatAppHolder createHolder(View itemView, int type) {
-            return new FermatAppHolder(itemView);
+            FermatAppHolder fermatAppHolder = new FermatAppHolder(itemView);
+            return fermatAppHolder;
         }
 
         @Override
@@ -70,4 +73,5 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
         dataSet.remove(position);
         notifyItemRemoved(position);
     }
+
 }

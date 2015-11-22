@@ -13,7 +13,7 @@ import com.bitdubai.sub_app.wallet_manager.commons.helpers.ItemTouchHelperViewHo
 /**
  * Created by mati on 2015.10.18..
  */
-public class FermatAppHolder extends FermatViewHolder implements ItemTouchHelperViewHolder{
+public class FermatAppHolder extends FermatViewHolder implements ItemTouchHelperViewHolder,View.OnClickListener{
 
     public ImageView thumbnail;
     public FermatTextView name;
@@ -24,6 +24,7 @@ public class FermatAppHolder extends FermatViewHolder implements ItemTouchHelper
      */
     public FermatAppHolder(View itemView) {
         super(itemView);
+        itemView.setOnClickListener(this);
         thumbnail = (ImageView) itemView.findViewById(R.id.image_view);
         name = (FermatTextView) itemView.findViewById(R.id.company_text_view);
     }
@@ -35,6 +36,11 @@ public class FermatAppHolder extends FermatViewHolder implements ItemTouchHelper
 
     @Override
     public void onItemClear() {
+
+    }
+
+    @Override
+    public void onClick(View view) {
 
     }
 }
