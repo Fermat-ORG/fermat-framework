@@ -152,13 +152,16 @@ public class HoldCashMoneyTransactionDao {
 
     }
 
+
+
+
+
+    /* INTERNAL HELPER FUNCTIONS */
     private DatabaseTableFilter getEmptyHoldTableFilter() {
         return this.database.getTable(HoldCashMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME).getEmptyTableFilter();
     }
 
 
-
-    /* INTERNAL HELPER FUNCTIONS */
     private DatabaseTableRecord getRecordByPrimaryKey(UUID transactionId) throws CantLoadTableToMemoryException, HoldCashMoneyTransactionInconsistentTableStateException {
         List<DatabaseTableRecord> records;
         DatabaseTable table = database.getTable(HoldCashMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
@@ -191,7 +194,7 @@ public class HoldCashMoneyTransactionDao {
         newRecord.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_WALLET_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyWallet());
         newRecord.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyActor());
         newRecord.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyPlugin());
-        newRecord.setFloatValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME, holdParameters.getAmount());
+        newRecord.setDoubleValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME, holdParameters.getAmount());
         newRecord.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_CURRENCY_COLUMN_NAME, holdParameters.getCurrency().getCode());
         newRecord.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_MEMO_COLUMN_NAME, holdParameters.getMemo());
         newRecord.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, CashTransactionStatus.ACKNOWLEDGED.getCode());

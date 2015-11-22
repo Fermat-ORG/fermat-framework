@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import java.util.Date;
 
 /**
- * Created by Alex on 11/2/2015.
+ * Created by Alejandro Bicelis on 11/2/2015.
  */
 public class VEFIndexProvider implements IndexProvider {
 
@@ -32,7 +32,7 @@ public class VEFIndexProvider implements IndexProvider {
             new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE,e,"Fiat Index VEFIndexProvider","Cant Get VEF Index Exception");
         }
 
-        FiatIndexImpl index = new FiatIndexImpl(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, purchasePrice, salePrice, (new Date().getTime() / 1000));
+        FiatIndexImpl index = new FiatIndexImpl(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, purchasePrice, salePrice, (new Date().getTime() / 1000), "DolarToday");
         return index;
     }
 }

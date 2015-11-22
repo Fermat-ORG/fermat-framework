@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatAgent;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantGetHoldTransactionException;
@@ -22,11 +20,11 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
     private Thread agentThread;
 
     private final ErrorManager errorManager;
-    private final CashMoneyTransactionHoldManager holdManager;
+    private final CashMoneyTransactionHoldManager holdTransactionManager;
 
     public CashMoneyTransactionHoldProcessorAgent(final ErrorManager errorManager, final CashMoneyTransactionHoldManager holdManager) {
         this.errorManager = errorManager;
-        this.holdManager = holdManager;
+        this.holdTransactionManager = holdManager;
 
         this.agentThread = new Thread(new Runnable() {
             @Override
@@ -55,14 +53,9 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
     }
 
     public void process() {
-        /**
-         * Infinite loop.
-         */
+
         while (isRunning()) {
 
-            /**
-             * Sleep for a while.
-             */
             try {
                 Thread.sleep(SLEEP);
             } catch (InterruptedException interruptedException) {
@@ -70,14 +63,8 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
                 return;
             }
 
-            /**
-             * Now I do the main task.
-             */
             doTheMainTask();
 
-            /**
-             * Check if I have been Interrupted.
-             */
             if (agentThread.isInterrupted()) {
                 cleanResources();
                 return;
@@ -90,7 +77,7 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
         List<CashHoldTransaction> transactionList;
 
         try {
-            transactionList = holdManager.getAcknowledgedTransactionList();
+            transactionList = holdTransactionManager.getAcknowledgedTransactionList();
         } catch (CantGetHoldTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return;
@@ -104,12 +91,27 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
           * If not: Changes transaction status to Rejected.
          */
 
+        //TODO: try to get the CSH wallet manager, using transaction's wallet public key, and then try to get its available balance!!
+
         long availableBalance;
         for(CashHoldTransaction transaction : transactionList) {
 
-            //TODO: try to get the CSH wallet manager, accoording to the transactions wallet public key, and then try to get its available balance!!
+            //TODO: Kill this next mock line
             availableBalance = 500;
+            try {
+                if(availableBalance >= transaction.getAmount()) {
+                    //TODO: wallet.debit(transaction.getAmount());
+                    holdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
+                }
+                else {
+                    holdTransactionManager.setTransactionStatusToRejected(transaction.getTransactionId());
+                }
+            } catch (Exception e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                return;
+            }
 
+            //TODO: Lanzar un evento al plugin que envio la transaccion para avisarle que se updateo el status de su transaccion.
 
         }
 

@@ -47,7 +47,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/10/15.
  */
-public abstract class AbstractDigitalAssetVault implements DigitalAssetVault{
+public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
 
     //public String LOCAL_STORAGE_PATH="digital-asset-metadata/";
     public AssetUserWalletManager assetUserWalletManager;

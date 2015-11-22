@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Index;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 
 /**
- * Created by Alex on 11/12/2015.
+ * Created by Alejandro Bicelis on 11/12/2015.
  */
 public interface FiatIndex extends Index<FiatCurrency> {
     /*

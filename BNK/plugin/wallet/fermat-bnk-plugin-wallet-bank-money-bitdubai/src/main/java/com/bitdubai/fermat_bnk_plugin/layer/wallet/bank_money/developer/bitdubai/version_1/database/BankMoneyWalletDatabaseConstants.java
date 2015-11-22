@@ -15,7 +15,7 @@ public class BankMoneyWalletDatabaseConstants {
     /**
      * Database name
      */
-    static final String DATABASE_NAME = "BankMoney";
+    static final String DATABASE_NAME = "BankMoneyWallet";
 
     /**
      * Bank Money database table definition.

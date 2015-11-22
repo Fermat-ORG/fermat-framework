@@ -33,11 +33,6 @@ import java.util.concurrent.TimeoutException;
  */
 public class BitcoinCryptoNetworkMonitor implements Agent {
     /**
-     * agent execution flag
-     */
-    private boolean isSupposedToBeRunning = false;
-
-    /**
      * class variables
      */
     Wallet wallet;
@@ -75,24 +70,27 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
     @Override
     public void start() throws CantStartAgentException {
-        isSupposedToBeRunning = true;
-        try {
-            doTheMainTask();
-        } catch (BlockchainException e) {
-            e.printStackTrace();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    doTheMainTask();
+                } catch (BlockchainException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
     public void stop() {
-        isSupposedToBeRunning = false;
         /**
          * will wait until the peer agent stops.
          */
+        peerGroup.stop();
         while(getPeerGroup().isRunning()){
 
         }
-
     }
 
     /**
@@ -113,16 +111,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * creates the blockchain object for the specified network.
          */
-        //BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS);
-        //BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
-        BlockStore blockStore = new MemoryBlockStore(this.NETWORK_PARAMETERS);
-        BlockChain blockChain = null;
-        try {
-            blockChain = new BlockChain(this.NETWORK_PARAMETERS, this.wallet, blockStore);
-        } catch (BlockStoreException e) {
-            e.printStackTrace();
-        }
-        //blockChain.addWallet(this.wallet);
+        BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS);
+        BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
+        blockChain.addWallet(this.wallet);
 
         /**
          * creates the peerGroup object
@@ -166,7 +157,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * starts the monitoring
          */
         peerGroup.start();
-        peerGroup.startBlockChainDownload(null);
+        peerGroup.startBlockChainDownload(events);
 
         while (true){
             try {

@@ -24,7 +24,7 @@ import java.io.Serializable;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class BitcoinCryptoNetworkBlockChain implements Serializable{
+public class BitcoinCryptoNetworkBlockChain implements Serializable{
 
     /**
      * Classes variables

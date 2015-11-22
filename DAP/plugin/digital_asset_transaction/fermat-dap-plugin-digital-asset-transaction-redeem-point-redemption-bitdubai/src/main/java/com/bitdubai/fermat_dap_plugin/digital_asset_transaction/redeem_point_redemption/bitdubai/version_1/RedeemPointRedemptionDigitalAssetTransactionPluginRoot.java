@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
@@ -57,13 +58,13 @@ import java.util.regex.Pattern;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 18/10/15.
  */
-public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlugin implements 
+public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
         RedeemPointRedemptionManager,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    protected PluginFileSystem pluginFileSystem        ;
+    protected PluginFileSystem pluginFileSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -71,10 +72,10 @@ public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends Abst
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
@@ -88,6 +89,10 @@ public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends Abst
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     private ActorAssetUserManager actorAssetUserManager;
+
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
+    private BitcoinNetworkManager bitcoinNetworkManager;
 
     RedeemPointRedemptionMonitorAgent monitorAgent;
     RedeemPointRedemptionRecorderService recorderService;
@@ -108,8 +113,6 @@ public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends Abst
     //PUBLIC METHODS
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("VAMM: PLUGIN REDEEMPOINT REDEMPTION INICIADO!!");
-
         String context = "pluginId : " + pluginId + "\n" +
                 "ErrorManager : " + errorManager + "\n" +
                 "pluginDatabaseSystem : " + pluginDatabaseSystem + "\n" +
@@ -117,6 +120,7 @@ public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends Abst
                 "actorAssetRedeemPointManager : " + actorAssetRedeemPointManager + "\n" +
                 "assetRedeemPointWalletManager : " + assetRedeemPointWalletManager + "\n" +
                 "assetTransmissionNetworkServiceManager : " + assetTransmissionNetworkServiceManager + "\n" +
+                "bitcoinNetworkManager : " + bitcoinNetworkManager + "\n" +
                 "logManager : " + logManager + "\n" +
                 "eventManager : " + eventManager + "\n" +
                 "monitorAgent : " + monitorAgent + "\n" +
@@ -142,22 +146,22 @@ public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends Abst
         } catch (Exception e) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), context, "");
         } finally {
-            this.serviceStatus= ServiceStatus.STOPPED;
+            this.serviceStatus = ServiceStatus.STOPPED;
         }
-        this.serviceStatus= ServiceStatus.STARTED;
+        super.start();
     }
-    
+
     @Override
     public void stop() {
         monitorAgent.stop();
         recorderService.stop();
-        this.serviceStatus= ServiceStatus.STOPPED;
+        super.stop();
     }
 
     //PRIVATE METHODS
 
     private RedeemPointRedemptionMonitorAgent createNewMonitorAgent() throws CantSetObjectException {
-        RedeemPointRedemptionMonitorAgent monitorAgent = new RedeemPointRedemptionMonitorAgent(errorManager,
+        return new RedeemPointRedemptionMonitorAgent(errorManager,
                 logManager,
                 assetTransmissionNetworkServiceManager,
                 pluginDatabaseSystem,
@@ -165,13 +169,12 @@ public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends Abst
                 pluginId,
                 actorAssetRedeemPointManager,
                 assetRedeemPointWalletManager,
-                actorAssetUserManager);
-        return monitorAgent;
+                actorAssetUserManager,
+                bitcoinNetworkManager);
     }
 
     private RedeemPointRedemptionRecorderService createNewRecorderService() throws CantSetObjectException {
-        RedeemPointRedemptionRecorderService recorderService = new RedeemPointRedemptionRecorderService(eventManager, pluginDatabaseSystem, pluginId);
-        return recorderService;
+        return new RedeemPointRedemptionRecorderService(eventManager, pluginDatabaseSystem, pluginId);
     }
 
     private void test() {

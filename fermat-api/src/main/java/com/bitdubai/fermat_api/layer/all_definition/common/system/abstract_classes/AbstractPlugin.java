@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -83,6 +84,11 @@ public abstract class AbstractPlugin implements Plugin, Service {
     }
 
     public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
+    }
+
+    @Override
+    public FermatManager getManager() {
         return null;
     }
 
@@ -288,6 +294,46 @@ public abstract class AbstractPlugin implements Plugin, Service {
             throw new CantAssignReferenceException(
                     e,
                     "Working plugin: "+this.getPluginVersionReference().toString3()+ " +++++ Reference to assign: "+ pvr.toString3(),
+                    "Error assigning references for the plugin."
+            );
+        }
+    }
+
+    public final void assignPluginReference(final PluginVersionReference pluginVersion,
+                                            final FermatManager          fermatManager) throws CantAssignReferenceException   ,
+                                                                                               IncompatibleReferenceException {
+
+        try {
+
+            final Field field = this.pluginNeededReferences.get(pluginVersion);
+
+            if (field == null) {
+                throw new CantAssignReferenceException(
+                        "Plugin receiving: " + this.pluginVersionReference + " ---- Given plugin: " + pluginVersion.toString3(),
+                        "The plugin doesn't need the given reference."
+                );
+            }
+            final Class<?> refManager = field.getType();
+
+            if(refManager.isAssignableFrom(fermatManager.getClass())) {
+                field.setAccessible(true);
+                field.set(this, refManager.cast(fermatManager));
+
+                this.pluginNeededReferences.remove(pluginVersion);
+
+            } else {
+                throw new IncompatibleReferenceException(
+                        "Working plugin: "+this.getPluginVersionReference().toString3()+
+                                " ------------ classExpected: "+refManager.getName() + " --- classReceived: " + fermatManager.getClass().getName(),
+                        "Field is not assignable by the given reference (bad definition, different type expected). Check the expected plugin and the defined type."
+                );
+            }
+
+        } catch (final IllegalAccessException e) {
+
+            throw new CantAssignReferenceException(
+                    e,
+                    "Working plugin: "+this.getPluginVersionReference().toString3()+ " +++++ Reference to assign: "+ pluginVersion.toString3(),
                     "Error assigning references for the plugin."
             );
         }
