@@ -1,4 +1,4 @@
-image::https://github.com/bitDubai/media-kit/blob/master/Coins/CBP.jpg[FermatCBP]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Coins/CBP.jpg[FermatCBP]
 == Chapter 17: Fermat Crypto Broker Platform
 In this platform the actors involved are the *crypto broker* and his customers (*crypto customers*). A *crypto broker* is a person or small organization whose business logic is to buy and sell cryptocurrency for fiat money in his local market, obtaining his profits from the difference in the buy/sell price. We distinguish also two usual levels of *crypto brokers*, those acting as *crypto brokers wholesalers* and those who deal with final customers. The key goal of this platform is to *facilitate* the most of the routine tasks to run the business and even provide the necessary functionalities to prevent _always_ the loss of money in every transaction.   
 
@@ -121,7 +121,7 @@ Crypto Broker ::
 Crypto Customer :: +
 
 ////
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 ==== _Continue reading ..._
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]

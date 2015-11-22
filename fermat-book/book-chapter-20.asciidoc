@@ -1,4 +1,4 @@
-image::https://github.com/bitDubai/media-kit/blob/master/Coins/MKT.jpg[FermatMKT]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Coins/MKT.jpg[FermatMKT]
 == Chapter 20: Fermat Marketing Platform
 === Marketing with Digital Assets 
 The first implementation for Digital Assets aims to provide the Marketing Sector with a valuable tool for medium to large size enterprises 
@@ -50,7 +50,7 @@ Voucher Wallet ::
 Coupon Wallet ::
 Discount Wallet :: +
 ////
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 ==== _Continue Reading ..._
 
 link:book-chapter-21.asciidoc[Next Chapter]

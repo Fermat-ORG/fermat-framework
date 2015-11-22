@@ -1,11 +1,11 @@
-image::https://github.com/bitDubai/media-kit/blob/master/Coins/DPN.jpg[FermatDPN]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Coins/DPN.jpg[FermatDPN]
 == Chapter 21: Fermat Digital Private Network 
 === Securing your funds 
 
 
 
 
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 
 ==== _Continue Reading ..._
 

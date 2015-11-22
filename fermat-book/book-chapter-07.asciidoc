@@ -1,5 +1,5 @@
 :numbered!:
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
 
 [[layersExplanation]]
 == Chapter 7: Fermat layers explanation
@@ -109,7 +109,7 @@ In this layer live the part of the *sub app* responsible of the GUI (Graphic Use
 In this layer live the part of the *wallet* responsible of the GUI (Graphic User Interface) and which manages the *wallets resources* (multimedia) and the *wallet navigation structure*. This also has a  *one-on-one* relationship to the component of the same name  in the _Wallet Module Layer_
 
 :numbered!:
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
   
 ==== _Continue Reading ..._
 link:book-chapter-08.asciidoc[Next Chapter]

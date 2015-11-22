@@ -1,4 +1,4 @@
-image::https://github.com/bitDubai/media-kit/blob/master/Coins/SHP.jpg[FermatSHP]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Coins/SHP.jpg[FermatSHP]
 == Chapter 15: Fermat Shoping Platform: 
 
 This platform is designed to allow the interaction between the actors of traditional consumer market of products and services. +
@@ -81,7 +81,7 @@ Brand Wallet ::
 Retailer Wallet :: +
 
 ////
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 ==== _Continue reading ..._
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]

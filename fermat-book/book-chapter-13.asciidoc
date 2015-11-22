@@ -1,4 +1,4 @@
-image::https://github.com/bitDubai/media-kit/blob/master/Coins/CCM.jpg[FermatCCM]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Coins/CCM.jpg[FermatCCM]
 == Chapter 13: Fermat Crypto Commodity Money
 This platform introduces the first abstraction on crypto currency: as its value is exclusively determined by the market, it can be taken as any other available *commodities* to establish a correlation between the crypto value and the value of any set of Fiat Money that the end user is used to operate with. By means of this, the value is held in cryptocurrency but the transactions and the general wallet functions are displayed in Fiat Currency to make it easier for the end user to run his business in a way he is more familiar with. +
 
@@ -44,7 +44,7 @@ Money Request :: +
 Discount Wallet :: +
 ////
 
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 ==== _Continue Reading ..._
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]

@@ -1,5 +1,5 @@
 :numbered!:
-image::https://github.com/bitDubai/media-kit/blob/master/Coins/CSH.jpg[FermatCSH]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Coins/CSH.jpg[FermatCSH]
 == Chapter 16: Fermat Cash & Fermat Bank Platforms 
 These two platforms form the basic infrastructure to interact with the legacy financial system. +
 
@@ -31,7 +31,7 @@ Make Off-line Bank Transfer ::
 Receive Off-line Bank Transfer :: +
 ////
 
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 ==== _Continue reading ..._
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]
