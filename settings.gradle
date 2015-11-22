@@ -14,7 +14,7 @@ apply from: 'P2P/settings.gradle'
 apply from: 'PIP/settings.gradle'
 apply from: 'WPD/settings.gradle'
 
-include ':fermat-android-api'
+include ':fermat-android-api', ':fermat-cbp-plugin-network-service-transaction-transmission-bitdubai'
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'

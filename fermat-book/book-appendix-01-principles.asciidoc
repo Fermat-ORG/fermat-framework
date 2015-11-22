@@ -1,5 +1,4 @@
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/logo_Fermat_2.png[FermatLogo2]
-
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
 == Appendix 01 - Fermat's Principles in Detail
 
 Here is an in depth analysis of Fermat's principles.

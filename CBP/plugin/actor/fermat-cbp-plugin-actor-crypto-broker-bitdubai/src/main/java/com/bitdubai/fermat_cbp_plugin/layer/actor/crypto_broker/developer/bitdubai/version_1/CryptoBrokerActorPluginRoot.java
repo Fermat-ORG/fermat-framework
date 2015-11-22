@@ -54,63 +54,73 @@ public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements Crypt
         super(new PluginVersionReference(new Version()));
     }
 
+        /*
+            Plugin Interface implementation.
+        */
 
-    @Override
-    public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException {
-        return null;
-    }
+            @Override
+            public void start() throws CantStartPluginException {
 
-    @Override
-    public Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetListBrokerIdentityWalletRelationshipException {
-        return null;
-    }
+                try {
+                    this.customerBrokerPurchaseNegotiationDao = new CryptoBrokerActorDao(pluginDatabaseSystem, pluginId);
+                    this.customerBrokerPurchaseNegotiationDao.initializeDatabase();
+                    this.serviceStatus = ServiceStatus.STARTED;
+                } catch (CantInitializeCryptoBrokerActorDatabaseException cantInitializeExtraUserRegistryException) {
+                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
+                    throw new CantStartPluginException(cantInitializeExtraUserRegistryException, this.getPluginVersionReference());
+                }
+            }
 
-    @Override
-    public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException {
-        return null;
-    }
+        /*
+            CryptoBrokerIdentityManager Interface implementation.
+        */
 
-    @Override
-    public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException {
-        return null;
-    }
 
-    @Override
-    public void start() throws CantStartPluginException {
+            @Override
+            public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException {
+                return this.customerBrokerPurchaseNegotiationDao.createNewBrokerIdentityWalletRelationship(identity, wallet);
+            }
 
-        try {
-            this.customerBrokerPurchaseNegotiationDao = new CryptoBrokerActorDao(pluginDatabaseSystem, pluginId);
-            this.customerBrokerPurchaseNegotiationDao.initializeDatabase();
-            this.serviceStatus = ServiceStatus.STARTED;
-        } catch (CantInitializeCryptoBrokerActorDatabaseException cantInitializeExtraUserRegistryException) {
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
-            throw new CantStartPluginException(cantInitializeExtraUserRegistryException, this.getPluginVersionReference());
-        }
-    }
+            @Override
+            public Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetListBrokerIdentityWalletRelationshipException {
+                return this.customerBrokerPurchaseNegotiationDao.getAllBrokerIdentityWalletRelationship();
+            }
 
-        /*CryptoBrokerIdentityManager Interface implementation.*/
+            @Override
+            public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException {
+                return this.customerBrokerPurchaseNegotiationDao.getBrokerIdentityWalletRelationshipByIdentity(identity);
+            }
 
-    @Override
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        CryptoBrokerActorDeveloperDatabaseFactory dbFactory = new CryptoBrokerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-        return dbFactory.getDatabaseList(developerObjectFactory);
-    }
+            @Override
+            public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException {
+                return this.customerBrokerPurchaseNegotiationDao.getBrokerIdentityWalletRelationshipByWallet(wallet);
+            }
 
-    @Override
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        CryptoBrokerActorDeveloperDatabaseFactory dbFactory = new CryptoBrokerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-        return dbFactory.getDatabaseTableList(developerObjectFactory);
-    }
+        /*
+            DatabaseManagerForDevelopers Interface implementation.
+        */
 
-    @Override
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        try {
-            CryptoBrokerActorDeveloperDatabaseFactory dbFactory = new CryptoBrokerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-            dbFactory.initializeDatabase();
-            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeCryptoBrokerActorDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
-        return new ArrayList<>();
-    }
+            @Override
+            public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+                CryptoBrokerActorDeveloperDatabaseFactory dbFactory = new CryptoBrokerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+                return dbFactory.getDatabaseList(developerObjectFactory);
+            }
+
+            @Override
+            public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+                CryptoBrokerActorDeveloperDatabaseFactory dbFactory = new CryptoBrokerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+                return dbFactory.getDatabaseTableList(developerObjectFactory);
+            }
+
+            @Override
+            public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+                try {
+                    CryptoBrokerActorDeveloperDatabaseFactory dbFactory = new CryptoBrokerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+                    dbFactory.initializeDatabase();
+                    return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+                } catch (CantInitializeCryptoBrokerActorDatabaseException e) {
+                    this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                }
+                return new ArrayList<>();
+            }
 }
