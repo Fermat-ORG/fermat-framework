@@ -330,13 +330,13 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
             lstInstalledWallet = moduleManager.getUserWallets();
             List<Item> lstItemsWithIcon = new ArrayList<>();
-            Item[] arrItemsWithoutIcon = new Item[16];
+            Item[] arrItemsWithoutIcon = new Item[20];
 
 
             for(InstalledWallet installedWallet: lstInstalledWallet) {
                 Item item = new Item(installedWallet);
                 item.setIconResource(R.drawable.bitcoin_wallet);
-                item.setPosition(12);
+                item.setPosition(16);
                 lstItemsWithIcon.add(item);
             }
 
@@ -354,7 +354,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             lstItemsWithIcon.add(item1);
 
 
-            for(int i=0;i<16;i++){
+            for(int i=0;i<20;i++){
                 Item emptyItem = new Item(new EmptyItem(0,i));
                 arrItemsWithoutIcon[i] = emptyItem;
             }
