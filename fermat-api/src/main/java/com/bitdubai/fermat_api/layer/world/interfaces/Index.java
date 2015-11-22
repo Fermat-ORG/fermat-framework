@@ -12,4 +12,5 @@ public interface Index<C extends Currency> {
     double getSalePrice();
     double getPurchasePrice();
     long getTimestamp();
+    String getProviderDescription();
 }

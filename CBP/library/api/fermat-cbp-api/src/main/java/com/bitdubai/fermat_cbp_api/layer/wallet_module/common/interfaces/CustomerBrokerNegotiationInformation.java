@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_api.layer.wallet_module.common;
+package com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces;
 
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 

@@ -40,7 +40,7 @@ import java.util.UUID;
 
 
 /**
- * Created by Alex on 11/17/2015
+ * Created by Alejandro Bicelis on 11/17/2015
  */
 
 public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CashHoldTransactionManager {
@@ -113,10 +113,6 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
         processorAgent.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
     }
-
-
-
-
 
     /*
      * DatabaseManagerForDevelopers interface implementation
