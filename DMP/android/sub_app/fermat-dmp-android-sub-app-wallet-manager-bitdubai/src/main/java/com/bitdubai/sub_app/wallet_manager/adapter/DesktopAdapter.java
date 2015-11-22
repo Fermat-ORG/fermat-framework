@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.ui.adapters.AdapterChangeListener;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -20,13 +21,16 @@ import java.util.List;
 public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> implements ItemTouchHelperAdapter {
 
 
+    private DesktopHolderClickCallback desktopHolderClickCallback;
+    private AdapterChangeListener adapterChangeListener;
 
     public DesktopAdapter(Context context) {
             super(context);
         }
 
-        public DesktopAdapter(Context context, List<Item> dataSet) {
+        public DesktopAdapter(Context context, List<Item> dataSet,DesktopHolderClickCallback desktopHolderClickCallback) {
             super(context, dataSet);
+            this.desktopHolderClickCallback = desktopHolderClickCallback;
         }
 
         @Override
@@ -41,7 +45,7 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
         }
 
         @Override
-        protected void bindHolder(FermatAppHolder holder, Item data, int position) {
+        protected void bindHolder(FermatAppHolder holder, Item data, final int position) {
 
             holder.name.setText(data.getName());
 //            byte[] profileImage = data.getIcon();
@@ -51,6 +55,19 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
 //            }
             if(data.getIconResource()!=0)
             holder.thumbnail.setImageResource(data.getIconResource());
+
+            holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dataSet.get(position).selected = !dataSet.get(position).selected;
+                    Item item = dataSet.get(position);
+                    notifyItemChanged(position);
+                    desktopHolderClickCallback.onHolderItemClickListener(item, position);
+                    if (adapterChangeListener != null)
+                        adapterChangeListener.onDataSetChanged(dataSet);
+                }
+            });
+
         }
 
     @Override
@@ -74,4 +91,8 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
         notifyItemRemoved(position);
     }
 
+
+    public void setAdapterChangeListener(AdapterChangeListener adapterChangeListener) {
+        this.adapterChangeListener = adapterChangeListener;
+    }
 }

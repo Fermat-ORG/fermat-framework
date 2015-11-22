@@ -28,6 +28,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetUserWalletException;
@@ -60,7 +61,6 @@ import static android.widget.Toast.makeText;
 public class DesktopFragment extends FermatFragment implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
-        FermatListItemListeners<Item>,
         OnStartDragListener,
         DesktopHolderClickCallback<Item> {
 
@@ -157,9 +157,9 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 4, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-            adapter = new DesktopAdapter(getActivity(), lstItems);
+            adapter = new DesktopAdapter(getActivity(), lstItems,this);
             recyclerView.setAdapter(adapter);
-            adapter.setFermatListEventListener(this);
+
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
@@ -170,8 +170,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
             mItemTouchHelper = new ItemTouchHelper(callback);
             mItemTouchHelper.attachToRecyclerView(recyclerView);
-
-            onRefresh();
+            //adapter.setFermatListEventListener(this);
 
         } catch(Exception ex) {
 //            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -185,6 +184,12 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        onRefresh();
     }
 
     private void setUpData() {
@@ -356,6 +361,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
             for(int i=0;i<20;i++){
                 Item emptyItem = new Item(new EmptyItem(0,i));
+                emptyItem.setIconResource(0);
                 arrItemsWithoutIcon[i] = emptyItem;
             }
 
@@ -374,16 +380,6 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
         return dataSet;
     }
 
-    @Override
-    public void onItemClickListener(Item data, int position) {
-        Toast.makeText(getActivity(),"me tocaste",Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
-    public void onLongItemClickListener(Item data, int position) {
-        Toast.makeText(getActivity(),"me tocaste",Toast.LENGTH_SHORT).show();
-    }
 
 
     public void setModuleManager(WalletManager moduleManager) {
@@ -397,7 +393,18 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
     @Override
     public void onHolderItemClickListener(Item data, int position) {
-        Toast.makeText(getActivity(),"soy capo",Toast.LENGTH_SHORT).show();
+        switch (data.getType()){
+            case SUB_APP:
+                selectSubApp((InstalledSubApp) data.getInterfaceObject());
+                break;
+            case WALLET:
+                selectWallet((InstalledWallet) data.getInterfaceObject());
+                break;
+            case EMPTY:
+                break;
+            default:
+                break;
+        }
     }
 }
 
