@@ -1851,7 +1851,7 @@
 						name="Wallet Contacts"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1873,7 +1873,7 @@
 						name="Crypto Payment"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1910,7 +1910,7 @@
 						name="Incoming Extra Actor"
 						description=""
 						difficulty="10"
-						code-level="production"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1928,7 +1928,7 @@
 						name="Incoming Intra User"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1994,7 +1994,7 @@
 						name="Outgoing Intra Actor"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -2176,7 +2176,7 @@
 						name="Intra User"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -2201,7 +2201,7 @@
 						name="Crypto Addresses"
 						description="Enables the underground exchange of crypto addresses"
 						difficulty="5"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -2218,7 +2218,7 @@
 						name="Crypto Payment Request"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -2236,7 +2236,7 @@
 						name="Crypto Transmission"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -2253,7 +2253,7 @@
 						name="Intra Actor"
 						description="Enables searching for Intra Users and conecting one to the other"
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>

@@ -101,6 +101,12 @@ public class FermatWalletFragment<M extends ModuleManager> extends Fragment impl
     protected final void changeActivity(Activities activity,String appPublicKey) {
         getFermatScreenSwapper().changeActivity(activity.getCode(),appPublicKey);
     }
+    /**
+     * Change activity
+     */
+    protected final void changeActivity(Activities activity) {
+        getFermatScreenSwapper().changeActivity(activity.getCode(),walletSession.getAppPublicKey());
+    }
 
     /**
      * Change activity
