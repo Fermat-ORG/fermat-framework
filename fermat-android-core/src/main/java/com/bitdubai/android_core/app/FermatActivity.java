@@ -357,7 +357,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             setMainLayout(sideMenu, activity.getHeader());
 
-            setScreen(activity);
+
 
             setMainMenu(mainMenu);
 
@@ -368,6 +368,8 @@ public abstract class FermatActivity extends AppCompatActivity
             paintTitleBar(titleBar, activity);
 
             paintSideMenu(sideMenu);
+
+            setScreen(activity);
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
@@ -2023,13 +2025,15 @@ public abstract class FermatActivity extends AppCompatActivity
     protected abstract void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position);
 
     public void setScreen(Activity activity) {
-        if(activity.isFullScreen()) {
-            // finally change the color
+        try {
+            if (activity.isFullScreen()) {
+                // finally change the color
+                requestWindowFeature(Window.FEATURE_NO_TITLE);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            }
+        }catch (Exception e){
 
-
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
     }
 }
