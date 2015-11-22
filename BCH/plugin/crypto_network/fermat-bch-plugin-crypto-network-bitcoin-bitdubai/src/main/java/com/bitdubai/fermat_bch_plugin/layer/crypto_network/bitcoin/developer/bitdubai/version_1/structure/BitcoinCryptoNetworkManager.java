@@ -430,7 +430,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             /**
              * instantiates a blockchain that will load it from file.
              */
-            BitcoinCryptoNetworkBlockChain blockChain = new BitcoinCryptoNetworkBlockChain(BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter));
+            BitcoinCryptoNetworkBlockChain blockChain = new BitcoinCryptoNetworkBlockChain(BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter), null);
             /**
              * get its height.
              */
