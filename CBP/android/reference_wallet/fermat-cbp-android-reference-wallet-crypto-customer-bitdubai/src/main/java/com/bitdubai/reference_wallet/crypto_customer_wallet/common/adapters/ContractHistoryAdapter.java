@@ -1,17 +1,17 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters;
+package com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters;
 
 import android.content.Context;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ContractListViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.ContractListViewHolder;
 
 import java.util.List;
 
 /**
- * Created by nelson on 18/11/15.
+ * Created by nelson on 21/11/15.
  */
 public class ContractHistoryAdapter extends FermatAdapter<ContractBasicInformation, ContractListViewHolder> {
 
@@ -26,7 +26,7 @@ public class ContractHistoryAdapter extends FermatAdapter<ContractBasicInformati
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.cbw_contract_history_list_item;
+        return R.layout.ccw_contract_history_list_item;
     }
 
     @Override

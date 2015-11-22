@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
+package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -12,7 +12,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -42,12 +42,12 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         this.itemView = itemView;
         res = itemView.getResources();
 
-        customerImage = (ImageView) itemView.findViewById(R.id.cbw_customer_image);
-        customerName = (FermatTextView) itemView.findViewById(R.id.cbw_customer_name);
-        contractAction = (FermatTextView) itemView.findViewById(R.id.cbw_receiving_or_sending);
-        typeOfPayment = (FermatTextView) itemView.findViewById(R.id.cbw_type_of_payment);
-        lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.cbw_update_date);
-        status = (FermatTextView) itemView.findViewById(R.id.cbw_contract_status);
+        customerImage = (ImageView) itemView.findViewById(R.id.ccw_customer_image);
+        customerName = (FermatTextView) itemView.findViewById(R.id.ccw_customer_name);
+        contractAction = (FermatTextView) itemView.findViewById(R.id.ccw_receiving_or_sending);
+        typeOfPayment = (FermatTextView) itemView.findViewById(R.id.ccw_type_of_payment);
+        lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.ccw_update_date);
+        status = (FermatTextView) itemView.findViewById(R.id.ccw_contract_status);
     }
 
     public void bind(ContractBasicInformation itemInfo) {
@@ -94,9 +94,9 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
             return R.string.contract_cancelled;
 
         if (status == ContractStatus.PENDING_PAYMENT)
-            return R.string.waiting_for_the_customer;
+            return R.string.waiting_for_you;
 
-        return R.string.waiting_for_you;
+        return R.string.waiting_for_broker;
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {
