@@ -113,15 +113,15 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * creates the blockchain object for the specified network.
          */
-        BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS, wallet);
-        BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
-//        BlockStore blockStore = new MemoryBlockStore(NETWORK_PARAMETERS);
-//        BlockChain blockChain = null;
-//        try {
-//            blockChain = new BlockChain(NETWORK_PARAMETERS, wallet, blockStore);
-//        } catch (BlockStoreException e) {
-//            e.printStackTrace();
-//        }
+//        BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS, wallet);
+//        BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
+        BlockStore blockStore = new MemoryBlockStore(NETWORK_PARAMETERS);
+        BlockChain blockChain = null;
+        try {
+            blockChain = new BlockChain(NETWORK_PARAMETERS, wallet, blockStore);
+        } catch (BlockStoreException e) {
+            e.printStackTrace();
+        }
 
 
         /**
