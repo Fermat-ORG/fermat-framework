@@ -33,7 +33,6 @@
                 android:textSize="13sp"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
-                android:src="@drawable/wallet_1"
                 android:layout_alignParentTop="true"
                 android:layout_column="2"
                 android:clickable="true"

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -27,7 +28,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * Created by Alex on 11/17/2015
+ * Created by Alejandro Bicelis on 11/17/2015
  */
 
 public class CashMoneyTransactionUnholdPluginRoot implements CashUnholdTransactionManager, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
@@ -108,6 +109,11 @@ public class CashMoneyTransactionUnholdPluginRoot implements CashUnholdTransacti
     @Override
     public void setId(UUID uuid) {
         this.pluginId = uuid;
+    }
+
+    @Override
+    public FermatManager getManager() {
+        return null;
     }
 
     public static LogLevel getLogLevelByClass(String className) {

@@ -16,7 +16,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 
 import java.sql.Timestamp;
@@ -37,24 +36,22 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
     public AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
     public CryptoTransaction cryptoTransaction;
 
-    public AbstractDigitalAssetSwap(/*AssetVaultManager assetVaultManager,*/
-                                    UUID pluginId,
-                                    PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
-        //this.assetVaultManager=assetVaultManager;
-        this.pluginFileSystem=pluginFileSystem;
-        this.pluginId=pluginId;
+    public AbstractDigitalAssetSwap(UUID pluginId,
+                                    PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
-    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager){
-        this.assetTransmissionNetworkServiceManager=assetTransmissionNetworkServiceManager;
+    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) {
+        this.assetTransmissionNetworkServiceManager = assetTransmissionNetworkServiceManager;
     }
 
-    public void setBitcoinCryptoNetworkManager(BitcoinNetworkManager bitcoinNetworkManager){
-        this.bitcoinNetworkManager=bitcoinNetworkManager;
+    public void setBitcoinCryptoNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
+        this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
 
-    public void setAssetVaultManager(AssetVaultManager assetVaultManager){
-        this.assetVaultManager=assetVaultManager;
+    public void setAssetVaultManager(AssetVaultManager assetVaultManager) {
+        this.assetVaultManager = assetVaultManager;
     }
 
     public abstract void checkDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata) throws DAPException;
@@ -69,28 +66,28 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
         System.out.println("ASSET DISTRIBUTION OR RECEPTION Check contract is hardcoded");
         //return true;
         //This cryptoTransaction is hardcoded and is the same inside the digital AssetMetadata
-        CryptoAddress addressTo=new CryptoAddress("mrSEwcjFZFiouvqNVRhG6RZPgeL1zd6E5p", CryptoCurrency.BITCOIN);
-        this.cryptoTransaction=new CryptoTransaction(digitalAssetMetadata.getGenesisTransaction(),
+        CryptoAddress addressTo = new CryptoAddress("mrSEwcjFZFiouvqNVRhG6RZPgeL1zd6E5p", CryptoCurrency.BITCOIN);
+        this.cryptoTransaction = new CryptoTransaction(digitalAssetMetadata.getGenesisTransaction(),
                 digitalAssetMetadata.getDigitalAsset().getGenesisAddress(),
-                addressTo,CryptoCurrency.BITCOIN, 100000,CryptoStatus.ON_BLOCKCHAIN);
+                addressTo, CryptoCurrency.BITCOIN, 100000, CryptoStatus.ON_BLOCKCHAIN);
         this.cryptoTransaction.setOp_Return(digitalAssetMetadata.getDigitalAssetHash());
-        String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
-        System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Hash:"+digitalAssetMetadataHash);
-        String digitalAssetGenesisTransaction=digitalAssetMetadata.getGenesisTransaction();
-        System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Genesis Transaction:"+digitalAssetGenesisTransaction);
+        String digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
+        System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Hash:" + digitalAssetMetadataHash);
+        String digitalAssetGenesisTransaction = digitalAssetMetadata.getGenesisTransaction();
+        System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Genesis Transaction:" + digitalAssetGenesisTransaction);
         //CryptoTransaction cryptoTransaction=getCryptoTransactionFromCryptoNetwork(digitalAssetGenesisTransaction);
-        System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Crypto Transaction from CryptoNetwork:"+cryptoTransaction);
-        String hashFromCryptoTransaction=cryptoTransaction.getOp_Return();
-        System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Crypto Transaction OP_return:"+hashFromCryptoTransaction);
+        System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Crypto Transaction from CryptoNetwork:" + cryptoTransaction);
+        String hashFromCryptoTransaction = cryptoTransaction.getOp_Return();
+        System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Crypto Transaction OP_return:" + hashFromCryptoTransaction);
         return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
 
     }
 
     private CryptoTransaction getCryptoTransactionFromCryptoNetwork(String genesisTransaction) throws DAPException {
         //Todo: get the list from BitcoinCryptoNetwork
-        List<CryptoTransaction> cryptoTransactionList=new ArrayList<>();
-        for(CryptoTransaction cryptoTransaction : cryptoTransactionList){
-            if(cryptoTransaction.getTransactionHash().equals(genesisTransaction)){
+        List<CryptoTransaction> cryptoTransactionList = new ArrayList<>();
+        for (CryptoTransaction cryptoTransaction : cryptoTransactionList) {
+            if (cryptoTransaction.getTransactionHash().equals(genesisTransaction)) {
                 return cryptoTransaction;
             }
         }
@@ -101,7 +98,7 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
 
     public abstract void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException;
 
-    public boolean isAvailableBalanceInAssetVault(long genesisAmount, String genesisTransaction){
+    public boolean isAvailableBalanceInAssetVault(long genesisAmount, String genesisTransaction) {
         //I will hardcode this control for testing
         System.out.println("ASSET DISTRIBUTION OR RECEPTION Check available balance is hardcoded");
         return true;
@@ -109,14 +106,14 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
         return availableBalanceForTransaction<genesisAmount;*/
     }
 
-    public boolean isValidContract(DigitalAssetContract digitalAssetContract){
+    public boolean isValidContract(DigitalAssetContract digitalAssetContract) {
         //For now, we going to check, only, the expiration date
-        ContractProperty contractProperty=digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE);
-        Timestamp expirationDate= (Timestamp) contractProperty.getValue();
-        System.out.println("ASSET DISTRIBUTION OR RECEPTION Contract expiration date timestamp:"+expirationDate);
-        Date date= new Date();
-        Timestamp actualDate=new Timestamp(date.getTime());
-        System.out.println("ASSET DISTRIBUTION OR RECEPTION Actual timestamp:"+actualDate);
+        ContractProperty contractProperty = digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE);
+        Timestamp expirationDate = (Timestamp) contractProperty.getValue();
+        System.out.println("ASSET DISTRIBUTION OR RECEPTION Contract expiration date timestamp:" + expirationDate);
+        Date date = new Date();
+        Timestamp actualDate = new Timestamp(date.getTime());
+        System.out.println("ASSET DISTRIBUTION OR RECEPTION Actual timestamp:" + actualDate);
         return expirationDate.after(actualDate);
     }
 

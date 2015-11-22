@@ -163,12 +163,18 @@ class VaultKeyHierarchyMaintainer implements Agent {
                      * I will generate the list of keys from zero to the new value
                      */
                     keys = deriveChildKeys(hierarchyAccount, newGeneratedKeys);
+
+                    /**
+                     * and update the detail key maintenance with all the keys derive from this account
+                     */
+                    updateDetailMaintainerStats(hierarchyAccount.getId(), keys, currentGeneratedKeys);
+
                 } else {
                     /**
                      * There is no need to generate new keys, so I will re generate the ones I previously generated
                      * to control them.
                      */
-                    keys = deriveChildKeys(hierarchyAccount, currentGeneratedKeys);
+                    keys = deriveChildKeys(hierarchyAccount,  currentGeneratedKeys);
                 }
 
                 /**
@@ -179,6 +185,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                         currentGeneratedKeys,
                         currentUsedKeys,
                         currentThreshold);
+
 
                 /**
                  * At this point I have the list of keys for each account, so I will put them all together at allAccountsKeyList
@@ -197,6 +204,22 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 e.printStackTrace();
             }
 
+        }
+
+        /**
+         * Inserts new or updates the current list of public keys for this account in the Detailed Maintenance table
+         * @param accountId
+         * @param keys
+         */
+        private void updateDetailMaintainerStats(int accountId, List<ECKey> keys, int currentGeneratedKeys) {
+            try {
+                getDao().updateDetailMaintainerStats(accountId, keys, currentGeneratedKeys);
+            } catch (CantExecuteDatabaseOperationException e) {
+                /**
+                 * will continue if there was an error
+                 */
+                e.printStackTrace();
+            }
         }
 
         /**
@@ -231,7 +254,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         private List<ECKey> deriveChildKeys(HierarchyAccount hierarchyAccount, int amount) {
             DeterministicHierarchy keyHierarchy = vaultKeyHierarchy.getKeyHierarchyFromAccount(hierarchyAccount);
             List<ECKey> childKeys = new ArrayList<>();
-            for (int i = 0; i < amount; i++) {
+            for (int i = 1; i < amount; i++) {
                 // I derive the key at position i
                 DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
                 // I add this key to the ECKey list

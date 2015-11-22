@@ -53,6 +53,7 @@ public class ActorAdapter extends FermatAdapter<Actor, ActorViewHolder> {
                         adapterChangeListener.onDataSetChanged(dataSet);
                 }
             });
+            //TODO: chamo esto te va a tirar error si es nula la imagen :p, el leght no lo va a poder sacar
             if (data.getProfileImage() != null && data.getProfileImage().length > 0) {
                 holder.thumbnail.setImageDrawable(new BitmapDrawable(context.getResources(),
                         BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length)));

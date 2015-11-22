@@ -60,6 +60,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     Activities backActivity;
 
     Header header;
+    private boolean fullScreen;
 
     public Activity() {
     }
@@ -116,6 +117,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     public void setBackPublicKey(String backPublicKey) {
         this.backPublicKey = backPublicKey;
     }
+
 
     /**
      * Activity  interface implementation.
@@ -235,6 +237,14 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setHeader(Header header) {
         this.header = header;
+    }
+
+    public boolean isFullScreen() {
+        return fullScreen;
+    }
+
+    public void setFullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
     }
 }
 

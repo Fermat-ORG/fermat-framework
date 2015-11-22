@@ -9,8 +9,10 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 
+import org.bitcoinj.core.AbstractBlockChain;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Block;
+import org.bitcoinj.core.BlockChainListener;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.FilteredBlock;
@@ -19,9 +21,13 @@ import org.bitcoinj.core.Message;
 import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerEventListener;
+import org.bitcoinj.core.ScriptException;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.VerificationException;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.core.WalletEventListener;
 import org.bitcoinj.script.Script;
@@ -39,7 +45,7 @@ import javax.annotation.Nullable;
 /**
  * Created by rodrigo on 10/4/15.
  */
-public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListener {
+public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListener, BlockChainListener {
     /**
      * Class variables
      */
@@ -69,7 +75,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
-        //System.out.println("*****CryptoNetwork Blockdownloaded. Pending blocks: " + blocksLeft);
+        System.out.println("*****CryptoNetwork Blockdownloaded. Pending blocks: " + blocksLeft);
         //System.out.println("*****CryptoNetwork " + filteredBlock.toString());
     }
 
@@ -98,7 +104,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onTransaction(Peer peer, Transaction t) {
-        //System.out.println("Transaction on Crypto Network 2:" + t.toString());
+        System.out.println("Transaction on Crypto Network 2:" + t.toString());
     }
 
     @Nullable
@@ -637,6 +643,37 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         }
 
 
+    }
+
+
+    /**
+     * Blockchain events
+     * @param block
+     * @throws VerificationException
+     */
+    @Override
+    public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
+
+    }
+
+    @Override
+    public void reorganize(StoredBlock splitPoint, List<StoredBlock> oldBlocks, List<StoredBlock> newBlocks) throws VerificationException {
+
+    }
+
+    @Override
+    public boolean isTransactionRelevant(Transaction tx) throws ScriptException {
+        return true;
+    }
+
+    @Override
+    public void receiveFromBlock(Transaction tx, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
+        System.out.println("received from block " + tx.toString());
+    }
+
+    @Override
+    public boolean notifyTransactionIsInBlock(Sha256Hash txHash, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
+        return true;
     }
 }
 

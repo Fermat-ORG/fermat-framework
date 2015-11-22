@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_cbp_core.layer.actor_connection.ActorConnectionLayer;
 import com.bitdubai.fermat_cbp_core.layer.identity.IdentityLayer;
 import com.bitdubai.fermat_cbp_core.layer.sub_app_module.SubAppModuleLayer;
 import com.bitdubai.fermat_cbp_core.layer.wallet_module.WalletModuleLayer;
@@ -26,15 +27,16 @@ public class CBPPlatform extends AbstractPlatform {
 
         try {
 
-            registerLayer(new IdentityLayer() );
-            registerLayer(new SubAppModuleLayer() );
-            registerLayer(new WalletModuleLayer() );
+            registerLayer(new ActorConnectionLayer());
+            registerLayer(new IdentityLayer()       );
+            registerLayer(new SubAppModuleLayer()   );
+            registerLayer(new WalletModuleLayer()   );
 
         } catch (CantRegisterLayerException e) {
 
             throw new CantStartPlatformException(
                     e,
-                    "",
+                    "CBP Platform.",
                     "Problem trying to register a layer."
             );
         }

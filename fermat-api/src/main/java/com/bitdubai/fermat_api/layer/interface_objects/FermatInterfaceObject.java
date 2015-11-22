@@ -15,4 +15,8 @@ public interface FermatInterfaceObject{
 
     int getIconResource();
 
+    int getPosition();
+
+    void setPosition(int position);
+
 }

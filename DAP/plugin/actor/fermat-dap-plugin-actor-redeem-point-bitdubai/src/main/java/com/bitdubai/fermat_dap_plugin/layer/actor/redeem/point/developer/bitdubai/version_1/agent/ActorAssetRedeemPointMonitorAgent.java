@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRequestListActorAssetRedeemPointRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
@@ -135,37 +136,37 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
 
         private void doTheMainTask() throws CantCreateActorRedeemPointException {
             try {
-//                test_RegisterActorNetworkService();
-
                 listByActorAssetRedeemPointNetworkService();
 
             } catch (CantCreateActorRedeemPointException e) {
-                throw new CantCreateActorRedeemPointException("CAN'T ADD NEW ACTOR ASSET ISSUER IN ACTOR NETWORK SERVICE", e, "", "");
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCreateActorRedeemPointException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET REDEEM POINT IN ACTOR NETWORK SERVICE", e, "", "");
             }
         }
 
         private void listByActorAssetRedeemPointNetworkService() throws CantCreateActorRedeemPointException {
             try {
-                if (assetRedeemPointActorNetworkServiceManager != null) {
+                if (assetRedeemPointActorNetworkServiceManager != null && redeemPointActorDao.getActorAssetRedeemPoint() != null) {
                     List<ActorAssetRedeemPoint> list = assetRedeemPointActorNetworkServiceManager.getListActorAssetRedeemPointRegistered();
                     if (list.isEmpty()) {
                         System.out.println("Actor Asset Redeem Point - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
-                        //TODO List Empty State = DISCONNECTED_REMOTELY
                         System.out.println("Actor Asset Redeem Point - Se procede actualizar Lista en TABLA (si) Existiera algun Registro");
                         redeemPointActorDao.createNewAssetRedeemPointRegisterInNetworkServiceByList(list);
                     } else {
                         System.out.println("Actor Asset Redeem Point - Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
-                        //TODO new Actors State = PENDING_LOCALLY_ACCEPTANCE
                         int recordInsert = redeemPointActorDao.createNewAssetRedeemPointRegisterInNetworkServiceByList(list);
                         System.out.println("Actor Asset Redeem Point - Se Registro en tabla REGISTER Lista de: " + recordInsert + " Actors desde Actor Network Service");
                     }
-                } else {
-                    System.out.println("Actor Asset assetRedeemPointActorNetworkServiceManager: " + assetRedeemPointActorNetworkServiceManager);
                 }
             } catch (CantRequestListActorAssetRedeemPointRegisteredException e) {
-                throw new CantCreateActorRedeemPointException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCreateActorRedeemPointException("CAN'T REQUEST LIST ACTOR ASSET REDEEM POINT NETWORK SERVICE, POSSIBLE NULL", e, "", "POSSIBLE REASON: " + assetRedeemPointActorNetworkServiceManager);
             } catch (CantAddPendingRedeemPointException e) {
-                e.printStackTrace();
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCreateActorRedeemPointException("CAN'T ADD LIST ACTOR ASSET REDEEM POINT IN BD ACTORS ", e, "", "");
+            } catch (CantGetAssetRedeemPointActorsException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCreateActorRedeemPointException("CAN'T GET ASSET ACTOR ASSET REDEEM POINT", e, "", "");
             }
         }
     }
