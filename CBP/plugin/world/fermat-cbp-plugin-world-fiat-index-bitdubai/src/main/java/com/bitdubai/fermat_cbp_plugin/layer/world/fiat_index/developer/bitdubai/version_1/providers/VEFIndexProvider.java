@@ -18,14 +18,12 @@ public class VEFIndexProvider implements IndexProvider {
     @Override
     public FiatIndexImpl getCurrentIndex(FiatCurrency currency) throws CantGetIndexException {
 
-        //ALEX_TODO: Quiza sea mejor not to rely on bitcoinvenezuela, e implementar directamente lo que hace DolarToday.php.
-
-        JSONObject json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/DolarToday.php?json=yes"));
-        //System.out.println("String JSON:" + json.toString());
-
         double purchasePrice = 0;
         double salePrice = 0;
         try{
+            JSONObject json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/DolarToday.php?json=yes"));
+            //System.out.println("String JSON:" + json.toString());
+
             purchasePrice = (double) json.getJSONObject("USD").get("transferencia");
             salePrice = (double) json.getJSONObject("USD").get("transferencia");
         }catch (JSONException e) {
