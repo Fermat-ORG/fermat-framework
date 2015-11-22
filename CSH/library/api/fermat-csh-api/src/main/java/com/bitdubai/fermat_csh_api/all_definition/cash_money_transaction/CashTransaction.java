@@ -1,10 +1,6 @@
 package com.bitdubai.fermat_csh_api.all_definition.cash_money_transaction;
 
-import com.bitdubai.fermat_api.layer.world.enums.FiatCurrency;
-import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_csh_api.all_definition.enums.CashCurrencyType;
-import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
-import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 
 import java.util.UUID;
 

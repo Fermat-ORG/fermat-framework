@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -11,7 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.world.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantCreateHoldTransactionException;
@@ -19,8 +22,11 @@ import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.excepti
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionParameters;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantInitializeHoldCashMoneyTransactionDatabaseException;
+import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantUpdateHoldTransactionException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.exceptions.HoldCashMoneyTransactionInconsistentTableStateException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.structure.CashHoldTransactionImpl;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.Date;
 import java.util.UUID;
@@ -32,31 +38,42 @@ import java.util.List;
  */
 public class HoldCashMoneyTransactionDao {
 
-    private Database database;
-    private PluginDatabaseSystem pluginDatabaseSystem;
-    private UUID pluginId;
+    private final ErrorManager errorManager;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final UUID pluginId;
 
-    public HoldCashMoneyTransactionDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    private Database database;
+
+    public HoldCashMoneyTransactionDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
+        this.errorManager = errorManager;
     }
 
-    public void initializeDatabase() throws CantInitializeHoldCashMoneyTransactionDatabaseException {
+    public void initialize() throws CantInitializeHoldCashMoneyTransactionDatabaseException {
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            throw new CantInitializeHoldCashMoneyTransactionDatabaseException(cantOpenDatabaseException.getMessage());
         } catch (DatabaseNotFoundException e) {
             HoldCashMoneyTransactionDatabaseFactory databaseFactory = new HoldCashMoneyTransactionDatabaseFactory(pluginDatabaseSystem);
             try {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                throw new CantInitializeHoldCashMoneyTransactionDatabaseException(cantCreateDatabaseException.getMessage());
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                throw new CantInitializeHoldCashMoneyTransactionDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + pluginId.toString(), "");
             }
+        }catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeHoldCashMoneyTransactionDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + pluginId.toString(), "");
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantInitializeHoldCashMoneyTransactionDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + pluginId.toString(), "");
         }
     }
 
-    CashHoldTransaction createCashHoldTransaction(CashHoldTransactionParameters holdParameters) throws CantCreateHoldTransactionException {
+
+
+
+    public CashHoldTransaction createCashHoldTransaction(CashHoldTransactionParameters holdParameters) throws CantCreateHoldTransactionException {
 
         DatabaseTable transactionTable = this.database.getTable(HoldCashMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
         DatabaseTableRecord newRecord = transactionTable.getEmptyRecord();
@@ -70,38 +87,88 @@ public class HoldCashMoneyTransactionDao {
         return constructHoldTransactionFromRecord(newRecord);
     }
 
-
-    CashTransactionStatus getCashHoldTransactionStatus(UUID transactionId) throws CantGetHoldTransactionException {
+    public CashHoldTransaction getCashHoldTransaction(UUID transactionId) throws CantGetHoldTransactionException {
         DatabaseTableRecord record;
-        CashTransactionStatus transactionStatus;
-
-        try{
+        CashHoldTransaction cashHoldTransaction;
+        try {
             record = getRecordByPrimaryKey(transactionId);
-            transactionStatus = CashTransactionStatus.getByCode(record.getStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME));
-
+            cashHoldTransaction = constructHoldTransactionFromRecord(record);
         } catch (CantLoadTableToMemoryException e){
             throw new CantGetHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Cannot load table into memory");
         } catch (HoldCashMoneyTransactionInconsistentTableStateException e) {
             throw new CantGetHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Inconsistent number of fetched records, should be between 0 and 1.");
-        } catch (InvalidParameterException e) {
-            throw new CantGetHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Invalid CashTransactionStatus value stored in table.");
+        } catch (CantCreateHoldTransactionException e) {
+            throw new CantGetHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Failed while constructing transaction from record.");
         }
 
-        return transactionStatus;
+        return cashHoldTransaction;
     }
 
-    
+    public List<CashHoldTransaction> getCashHoldTransactionList(DatabaseTableFilter filter) throws CantGetHoldTransactionException
+    {
+        List<CashHoldTransaction> transactions = new ArrayList<>();
+        try {
+            for (DatabaseTableRecord record : getRecordsByFilter(filter)) {
+                CashHoldTransaction transaction = constructHoldTransactionFromRecord(record);
+                transactions.add(transaction);
+            }
+        } catch (CantCreateHoldTransactionException e) {
+            throw new CantGetHoldTransactionException(CantGetHoldTransactionException.DEFAULT_MESSAGE, e, "Failed to get Cash Hold Transaction list. Filter: " + filter.toString(), "");
+        }catch (CantLoadTableToMemoryException e) {
+            throw new CantGetHoldTransactionException(CantGetHoldTransactionException.DEFAULT_MESSAGE, e, "Failed to get Cash Hold Transaction list. Filter: " + filter.toString(), "");
+        }
+        return transactions;
+    }
+
+    public List<CashHoldTransaction> getAcknowledgedTransactionList() throws CantGetHoldTransactionException
+    {
+        DatabaseTableFilter filter = getEmptyHoldTableFilter();
+        filter.setColumn(HoldCashMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME);
+        filter.setValue(CashTransactionStatus.ACKNOWLEDGED.getCode());
+        filter.setType(DatabaseFilterType.EQUAL);
+
+        return getCashHoldTransactionList(filter);
+    }
+
+    public void updateCashHoldTransactionStatus(UUID transactionId, CashTransactionStatus status) throws CantUpdateHoldTransactionException
+    {
+        DatabaseTableRecord record;
+        try {
+            record = getRecordByPrimaryKey(transactionId);
+            record.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, status.getCode());
+            if(status == CashTransactionStatus.CONFIRMED || status == CashTransactionStatus.REJECTED)
+                record.setLongValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, (new Date().getTime() / 1000));
+
+            DatabaseTable table = database.getTable(pluginId.toString());
+            table.updateRecord(record);
+
+        } catch (CantUpdateRecordException e){
+            throw new CantUpdateHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant update cash hold transaction status. Cant update the record");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantUpdateHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant update cash hold transaction status. Cant load table into memory.");
+        } catch (HoldCashMoneyTransactionInconsistentTableStateException e) {
+            throw new CantUpdateHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant update cash hold transaction status. Inconsistent table state.");
+        }
+
+    }
+
+
 
 
 
     /* INTERNAL HELPER FUNCTIONS */
-    private DatabaseTableRecord getRecordByPrimaryKey(UUID transactionId) throws CantLoadTableToMemoryException, HoldCashMoneyTransactionInconsistentTableStateException {
-        DatabaseTable transactionTable = this.database.getTable(HoldCashMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
-        List<DatabaseTableRecord> records;
+    private DatabaseTableFilter getEmptyHoldTableFilter() {
+        return this.database.getTable(HoldCashMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME).getEmptyTableFilter();
+    }
 
-        transactionTable.setStringFilter(HoldCashMoneyTransactionDatabaseConstants.HOLD_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
-        transactionTable.loadToMemory();
-        records = transactionTable.getRecords();
+
+    private DatabaseTableRecord getRecordByPrimaryKey(UUID transactionId) throws CantLoadTableToMemoryException, HoldCashMoneyTransactionInconsistentTableStateException {
+        List<DatabaseTableRecord> records;
+        DatabaseTable table = database.getTable(HoldCashMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
+
+        table.setStringFilter(HoldCashMoneyTransactionDatabaseConstants.HOLD_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
+        table.loadToMemory();
+        records = table.getRecords();
 
         if (records.size() != 1)
             throw new HoldCashMoneyTransactionInconsistentTableStateException("Inconsistent ("+ records.size() +") number of fetched records, should be between 0 and 1.", null, "The id is: " + transactionId.toString(), "");
@@ -110,6 +177,15 @@ public class HoldCashMoneyTransactionDao {
     }
 
 
+    private List<DatabaseTableRecord> getRecordsByFilter(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
+        DatabaseTable table = this.database.getTable(HoldCashMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
+
+        if (filter != null)
+            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+
+        table.loadToMemory();
+        return table.getRecords();
+    }
 
 
     private void newHoldTransactionRecord(DatabaseTableRecord newRecord, CashHoldTransactionParameters holdParameters) {
@@ -118,7 +194,7 @@ public class HoldCashMoneyTransactionDao {
         newRecord.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_WALLET_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyWallet());
         newRecord.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyActor());
         newRecord.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyPlugin());
-        newRecord.setFloatValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME, holdParameters.getAmount());
+        newRecord.setDoubleValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME, holdParameters.getAmount());
         newRecord.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_CURRENCY_COLUMN_NAME, holdParameters.getCurrency().getCode());
         newRecord.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_MEMO_COLUMN_NAME, holdParameters.getMemo());
         newRecord.setStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, CashTransactionStatus.ACKNOWLEDGED.getCode());
@@ -139,7 +215,7 @@ public class HoldCashMoneyTransactionDao {
 
         FiatCurrency currency;
         try {
-            currency = FiatCurrency.getFiatCurrencyTypeByCode(record.getStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_CURRENCY_COLUMN_NAME));
+            currency = FiatCurrency.getByCode(record.getStringValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_CURRENCY_COLUMN_NAME));
         } catch (InvalidParameterException e) {
             throw new CantCreateHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Invalid FiatCurrency value stored in table"
                     + HoldCashMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME + " for id " + transactionId);

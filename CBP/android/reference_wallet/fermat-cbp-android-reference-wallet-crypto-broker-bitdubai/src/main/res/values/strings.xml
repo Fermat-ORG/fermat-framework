@@ -31,5 +31,5 @@
     <string name="cbw_sold_quantity_and_currency">%1$s %2$s %3$s</string>
     <string name="cbw_contract_history_action_no_filter_text">No filter</string>
     <string name="cbw_contract_history_action_filter_succeed_text">Succeed</string>
-    <string name="cbw_contract_history_action_filter_cancel_text">Cancel</string>
+    <string name="cbw_contract_history_action_filter_canceled_text">Canceled</string>
 </resources>

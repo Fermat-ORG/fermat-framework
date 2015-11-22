@@ -1,4 +1,4 @@
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/logo_fermat_2.png[FermatLogo2]
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
 
 
 == Appendix 02: Fermat's History

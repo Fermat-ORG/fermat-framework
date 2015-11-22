@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.sub_app_manager.develope
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -48,6 +49,11 @@ public class subAppManagerPluginRoot implements  DealsWithErrors, DealsWithLogge
     @Override
     public void setId(UUID pluginId) {
 
+    }
+
+    @Override
+    public FermatManager getManager() {
+        return null;
     }
 
     @Override
