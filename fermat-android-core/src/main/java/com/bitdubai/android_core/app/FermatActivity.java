@@ -357,6 +357,8 @@ public abstract class FermatActivity extends AppCompatActivity
 
             setMainLayout(sideMenu, activity.getHeader());
 
+            setScreen(activity);
+
             setMainMenu(mainMenu);
 
             paintTabs(tabs, activity);
@@ -404,6 +406,7 @@ public abstract class FermatActivity extends AppCompatActivity
                         onBackPressed();
                     }
                 });
+                mDrawerLayout.setEnabled(false);
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
@@ -611,7 +614,7 @@ public abstract class FermatActivity extends AppCompatActivity
         //comment by luis campo
         //PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        System.out.println("tabLayout: "+ tabLayout);
+        System.out.println("tabLayout: " + tabLayout);
         tabLayout.setVisibility(View.VISIBLE);
 
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
@@ -940,13 +943,8 @@ public abstract class FermatActivity extends AppCompatActivity
 
                     // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-                    // finally change the color
                     window.setStatusBarColor(Color.TRANSPARENT);
 
-                    requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                            WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
@@ -1772,6 +1770,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
     protected void hideBottonIcons(){
         final LinearLayout linearLayout = (LinearLayout)findViewById(R.id.icons_container);
+        if(linearLayout!=null)
         linearLayout.setVisibility(View.GONE);
     }
 
@@ -2023,4 +2022,14 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     protected abstract void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position);
 
+    public void setScreen(Activity activity) {
+        if(activity.isFullScreen()) {
+            // finally change the color
+
+
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+    }
 }
