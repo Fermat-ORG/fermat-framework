@@ -8,6 +8,7 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.ui.adapters.AdapterChangeListener;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
+import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.ItemTouchHelperAdapter;
@@ -54,7 +55,8 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
 //                holder.thumbnail.setImageBitmap(bitmap);
 //            }
             if(data.getIconResource()!=0)
-            holder.thumbnail.setImageResource(data.getIconResource());
+                if(data.getType()!= InterfaceType.EMPTY)
+                    holder.thumbnail.setImageResource(data.getIconResource());
 
             holder.thumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
