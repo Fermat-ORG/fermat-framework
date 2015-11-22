@@ -24,8 +24,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateCryptoCustomerActorException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCryptoCustomerActorException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActor;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActorManager;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActorRecord;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException;
@@ -58,6 +58,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Cry
 
     private CryptoCustomerActorDatabaseDao databaseDao;
 
+    public static final String ACTOR_CRYPTO_CUSTOMER_PROFILE_IMAGE_DIRECTORY_NAME = "actorCryptoCustomerProfileImage";
     public static final String ACTOR_CRYPTO_CUSTOMER_PRIVATE_KEYS_DIRECTORY_NAME = "actorCryptoCustomerPrivateKeys";
 
     public CryptoCustomerActorPluginRoot(){
@@ -66,23 +67,18 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Cry
 
     @Override
     public void start() throws CantStartPluginException {
-
         try {
-
-            databaseDao = new CryptoCustomerActorDatabaseDao(pluginDatabaseSystem, pluginId);
+            databaseDao = new CryptoCustomerActorDatabaseDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
             databaseDao.initialize();
-
             this.serviceStatus = ServiceStatus.STARTED;
-
         } catch (final CantInitializeCryptoCustomerActorDatabaseException e) {
-
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, "pluginDatabaseSystem=" + pluginDatabaseSystem + "pluginId=" + pluginId, "Cannot initialize Crypto Customer Actor Database.");
         }
     }
 
     @Override
-    public CryptoCustomerActor createNewCryptoCustomerActor(String actorLoggedInPublicKey, String actorName, byte[] actorPhoto) throws CantCreateCryptoCustomerActorException {
+    public CryptoCustomerActorRecord createNewCryptoCustomerActor(String actorLoggedInPublicKey, String actorName, byte[] actorPhoto) throws CantCreateCryptoCustomerActorException {
 
         // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG. LET'S THINK TOGETHER.
         // TODO MAKE USE OF THE ERROR MANAGER.
@@ -91,8 +87,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Cry
         String actorPrivateKey = keyPair.getPrivateKey();
         try {
             persistPrivateKey(actorPrivateKey, actorPublicKey);
-            //TODO verificar parametro
-            return databaseDao.createRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey, actorName, actorPhoto, ConnectionState.CONNECTED);
+            databaseDao.createRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey, actorName, actorPhoto, ConnectionState.CONNECTED);
         } catch (CantRegisterCryptoCustomerActorException e){
             throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
         } catch (CantPersistPrivateKeyException e){
@@ -100,26 +95,24 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Cry
         } catch (Exception e){
             throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
         }
-        //TODO retorna instancia actor
-//        return null;
+        return new CryptoCustomerActorRecordImpl(actorPublicKey, actorPrivateKey, actorName);
     }
 
     @Override
-    public CryptoCustomerActor getCryptoCustomer(String actorLoggedInPublicKey, String actorPublicKey) throws CantGetCryptoCustomerActorException {
+    public CryptoCustomerActorRecord getCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey) throws CantGetCryptoCustomerActorException {
 
         // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG. LET'S THINK TOGETHER.
         // TODO MAKE USE OF THE ERROR MANAGER.
         try {
-            CryptoCustomerActor actor = this.databaseDao.getRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey);
+            CryptoCustomerActorRecord actor = this.databaseDao.getRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey);
             if(actor == null)
                 throw new CantGetCryptoCustomerActorException("", null, ".","Intra User not found");
-            return new CryptoCustomerActorRecordImpl(actorPublicKey, "",CryptoCustomerActor., actor.getActorPhoto());
+            return new CryptoCustomerActorRecordImpl(actorPublicKey, "",actor.getActorName(), actor.getActorPhoto());
         } catch (CantRegisterCryptoCustomerActorException e){
             throw new CantGetCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET CRYPTO CUSTOMER ACTOR", "");
         } catch (Exception e){
             throw new CantGetCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET CRYPTO CUSTOMER ACTOR", "");
         }
-        return null;
     }
 
     private void persistPrivateKey(String privateKey, String publicKey) throws CantPersistPrivateKeyException {

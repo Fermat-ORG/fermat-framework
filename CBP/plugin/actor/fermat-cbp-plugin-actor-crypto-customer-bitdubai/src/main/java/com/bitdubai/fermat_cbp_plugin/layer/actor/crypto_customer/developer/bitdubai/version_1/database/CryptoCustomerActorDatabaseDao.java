@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -13,6 +14,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -30,14 +39,20 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGe
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdatePurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateStatusPurchaseContractException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActor;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActorRecord;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.CryptoCustomerActorPluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetCryptoCustomerActorProfileImageException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantUpdateConnectionRegisterCryptoCustomerActorException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorRecordImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerIdentityWalletRelationshipImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantRegisterCryptoCustomerActorException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantRegisterCryptoCustomerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.Image;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,10 +66,13 @@ import java.util.UUID;
 public class CryptoCustomerActorDatabaseDao {
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+    private PluginFileSystem pluginFileSystem;
+
     private UUID pluginId;
 
-    public CryptoCustomerActorDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public CryptoCustomerActorDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
     }
 
@@ -103,6 +121,8 @@ public class CryptoCustomerActorDatabaseDao {
                 record.setLongValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TIMESTAMP_COLUMN_NAME, timestamp);
 
                 table.insertRecord(record);
+
+                if(actorPhoto!=null) persistNewCryptoCustomerActorProfileImage(actorPublicKey, actorPhoto);
             }
         } catch (CantInsertRecordException e){
             throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, insert database problems.");
@@ -113,34 +133,40 @@ public class CryptoCustomerActorDatabaseDao {
         }
     }
 
-    //INSERT ACTOR
-
-
-    //UPDATE ACTOR
-    private void updateRegisterCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey, ConnectionState connectionState, long timestamp) throws CantUpdateConnectionRegisterCryptoCustomerActorException{
+    //GET ACTOR.
+    public CryptoCustomerActorRecord getRegisterCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey) throws CantRegisterCryptoCustomerActorException {
         try {
-            DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TABLE_NAME);
-            if (table == null)
-                throw new CantGetUserDeveloperIdentitiesException("Cant get crypto customer actor, table not found.", "Crypto Customer Actor", "");
-
+            DatabaseTable table;
+            List<DatabaseTableRecord> record;
+            CryptoCustomerActorRecord getActor = null;
+            table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TABLE_NAME);
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if Actor table exists", "Crypto Customer Actor", "");
+            }
             table.setStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_ACTOR_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
             table.setStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_IDENTITY_COLUMN_NAME, actorLoggedInPublicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
+            record = table.getRecords();
+            if (record.size() == 0)
+                throw new CantRegisterCryptoCustomerActorException("The number of records with a primary key is different thatn one ", null, "The id is: " + actorPublicKey.toString(), "");
 
-            for (DatabaseTableRecord record : table.getRecords()) {
-                record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
-                record.setLongValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TIMESTAMP_COLUMN_NAME, timestamp);
-                table.updateRecord(record);
+            for (DatabaseTableRecord records : record) {
+                byte[] image;
+                try {
+                    image = getIntraUserProfileImagePrivateKey(records.getStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_ACTOR_COLUMN_NAME));
+                } catch(FileNotFoundException e) {
+                    image = new  byte[0];
+                }
+                String actoyPublicKey   = records.getStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_ACTOR_COLUMN_NAME);
+                String actorName        = records.getStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_NAME_ACTOR_COLUMN_NAME);
+                getActor = new CryptoCustomerActorRecordImpl(actoyPublicKey,"",actorName, image);
             }
-        } catch (CantUpdateRecordException e){
-            throw new CantUpdateConnectionRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, insert database problems.");
+            return getActor;
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantRegisterCryptoCustomerActorException(em.getMessage(), em, "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "Cant load " + CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantUpdateConnectionRegisterCryptoCustomerActorException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, unknown failure.");
+            throw new CantRegisterCryptoCustomerActorException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "unknown failure.");
         }
-    }
-
-    public CryptoCustomerActor getRegisterCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey) throws CantRegisterCryptoCustomerActorException {
-        return null;
     }
 
     //### RELATIONSHIP ###
@@ -317,6 +343,28 @@ public class CryptoCustomerActorDatabaseDao {
     }
 
     //OTHERS
+    private void updateRegisterCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey, ConnectionState connectionState, long timestamp) throws CantUpdateConnectionRegisterCryptoCustomerActorException{
+        try {
+            DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TABLE_NAME);
+            if (table == null)
+                throw new CantGetUserDeveloperIdentitiesException("Cant get crypto customer actor, table not found.", "Crypto Customer Actor", "");
+
+            table.setStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_ACTOR_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_IDENTITY_COLUMN_NAME, actorLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+                record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
+                record.setLongValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TIMESTAMP_COLUMN_NAME, timestamp);
+                table.updateRecord(record);
+            }
+        } catch (CantUpdateRecordException e){
+            throw new CantUpdateConnectionRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, insert database problems.");
+        } catch (Exception e) {
+            throw new CantUpdateConnectionRegisterCryptoCustomerActorException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, unknown failure.");
+        }
+    }
+
     private boolean relationshipExists(String walletPublicKey, String identityPublicKey) throws CantRegisterCryptoCustomerIdentityWalletRelationshipException {
         try {
             DatabaseTable table;
@@ -367,6 +415,46 @@ public class CryptoCustomerActorDatabaseDao {
         } catch (Exception e) {
             throw new CantRegisterCryptoCustomerActorException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor It Already Exists", "unknown failure.");
         }
+    }
+
+    private void  persistNewCryptoCustomerActorProfileImage(String publicKey,byte[] profileImage) throws CantPersistProfileImageException {
+        try {
+            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
+                DeviceDirectory.LOCAL_USERS.getName(),
+                CryptoCustomerActorPluginRoot.ACTOR_CRYPTO_CUSTOMER_PROFILE_IMAGE_DIRECTORY_NAME + "_" + publicKey,
+                FilePrivacy.PRIVATE,
+                FileLifeSpan.PERMANENT
+            );
+            file.setContent(profileImage);
+            file.persistToMedia();
+        } catch (CantPersistFileException e) {
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
+        } catch (CantCreateFileException e) {
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
+        } catch (Exception e) {
+            throw  new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ",FermatException.wrapException(e),"", "");
+        }
+    }
+
+    private byte[] getIntraUserProfileImagePrivateKey(final String publicKey) throws CantGetCryptoCustomerActorProfileImageException,FileNotFoundException {
+        byte[] profileImage;
+        try {
+            PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
+                DeviceDirectory.LOCAL_USERS.getName(),
+                CryptoCustomerActorPluginRoot.ACTOR_CRYPTO_CUSTOMER_PROFILE_IMAGE_DIRECTORY_NAME + "_" + publicKey,
+                FilePrivacy.PRIVATE,
+                FileLifeSpan.PERMANENT
+            );
+            file.loadFromMedia();
+            profileImage = file.getContent();
+        } catch (CantLoadFileException e) {
+            throw new CantGetCryptoCustomerActorProfileImageException("CAN'T GET PROFILE IMAGE ", e, "Error persist file.", null);
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            throw new FileNotFoundException(e, "", null);
+        } catch (Exception e) {
+            throw new CantGetCryptoCustomerActorProfileImageException("CAN'T GET PROFILE IMAGE ",FermatException.wrapException(e),"", "");
+        }
+        return profileImage;
     }
 
     private CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipFromRecord(DatabaseTableRecord record){

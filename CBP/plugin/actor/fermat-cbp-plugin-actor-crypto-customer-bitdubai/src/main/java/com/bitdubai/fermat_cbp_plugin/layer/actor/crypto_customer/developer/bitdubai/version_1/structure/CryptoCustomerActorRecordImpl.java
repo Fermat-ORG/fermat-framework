@@ -24,10 +24,10 @@ public class CryptoCustomerActorRecordImpl implements CryptoCustomerActorRecord 
 
     }
 
-    public CryptoCustomerActorRecordImpl(String actorPublicKey, String actorprivateKey, String actorName) {
+    public CryptoCustomerActorRecordImpl(String actorPublicKey, String actorPrivateKey, String actorName) {
 
         this.actorPublicKey     = actorPublicKey;
-        this.actorPrivateKey    = actorprivateKey;
+        this.actorPrivateKey    = actorPrivateKey;
         this.actorName          = actorName;
         this.actorPhoto         = new byte[0];
 
