@@ -10,7 +10,7 @@ import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.develope
 
 
 /**
- * Created by Alex on 11/17/2015
+ * Created by Alejandro Bicelis on 11/17/2015
  */
 
 public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
