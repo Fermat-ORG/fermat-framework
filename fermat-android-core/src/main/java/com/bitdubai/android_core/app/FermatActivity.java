@@ -1105,7 +1105,7 @@ public abstract class FermatActivity extends AppCompatActivity
              */
             screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
-            ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
+            final ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
             pager.setVisibility(View.VISIBLE);
 
             //set default page to show
@@ -1143,6 +1143,16 @@ public abstract class FermatActivity extends AppCompatActivity
                 }
             });
             pager.setAdapter(this.screenPagerAdapter);
+
+            for(int childPos = 0 ; childPos < radioGroup.getChildCount();childPos++){
+                final int finalChildPos = childPos;
+                radioGroup.getChildAt(childPos).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pager.setCurrentItem(finalChildPos, true);
+                    }
+                });
+            }
 
             if (pager.getBackground() == null) {
                 //Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);

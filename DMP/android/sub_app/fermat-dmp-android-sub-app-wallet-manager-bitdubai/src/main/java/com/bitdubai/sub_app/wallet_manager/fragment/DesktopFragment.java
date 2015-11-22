@@ -84,10 +84,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
     //private ActorAdapter adapter;
-    private SwipeRefreshLayout swipeRefresh;
 
-    // flags
-    private boolean isRefreshing = false;
     private View rootView;
 
     private String searchName;
@@ -159,13 +156,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             recyclerView.setLayoutManager(layoutManager);
             adapter = new DesktopAdapter(getActivity(), lstItems,this);
             recyclerView.setAdapter(adapter);
-
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-            swipeRefresh.setOnRefreshListener(this);
-            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-
             rootView.setBackgroundColor(Color.TRANSPARENT);
-
 
             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
             mItemTouchHelper = new ItemTouchHelper(callback);
@@ -220,8 +211,6 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
     @Override
     public void onRefresh() {
-        if (!isRefreshing) {
-            isRefreshing = true;
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -233,9 +222,6 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                    isRefreshing = false;
-                    if (swipeRefresh != null)
-                        swipeRefresh.setRefreshing(false);
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
@@ -247,16 +233,13 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    isRefreshing = false;
-                    if (swipeRefresh != null)
-                        swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
                     ex.printStackTrace();
                 }
             });
             worker.execute();
-        }
+
     }
 
 
@@ -331,7 +314,6 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
         try {
             lstItems = new ArrayList<>();
-            dataSet = new ArrayList<>();
 
             lstInstalledWallet = moduleManager.getUserWallets();
             List<Item> lstItemsWithIcon = new ArrayList<>();
@@ -361,7 +343,6 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
             for(int i=0;i<20;i++){
                 Item emptyItem = new Item(new EmptyItem(0,i));
-                emptyItem.setIconResource(0);
                 arrItemsWithoutIcon[i] = emptyItem;
             }
 
@@ -393,17 +374,21 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
     @Override
     public void onHolderItemClickListener(Item data, int position) {
-        switch (data.getType()){
-            case SUB_APP:
-                selectSubApp((InstalledSubApp) data.getInterfaceObject());
-                break;
-            case WALLET:
-                selectWallet((InstalledWallet) data.getInterfaceObject());
-                break;
-            case EMPTY:
-                break;
-            default:
-                break;
+        try {
+            switch (data.getType()) {
+                case SUB_APP:
+                    selectSubApp((InstalledSubApp) data.getInterfaceObject());
+                    break;
+                case WALLET:
+                    selectWallet((InstalledWallet) data.getInterfaceObject());
+                    break;
+                case EMPTY:
+                    break;
+                default:
+                    break;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 public class Item<I extends FermatInterfaceObject> implements FermatInterfaceObject {
 
     I object;
-    public boolean selected;
+    public boolean selected=false;
 
 
     public Item(I object) {
