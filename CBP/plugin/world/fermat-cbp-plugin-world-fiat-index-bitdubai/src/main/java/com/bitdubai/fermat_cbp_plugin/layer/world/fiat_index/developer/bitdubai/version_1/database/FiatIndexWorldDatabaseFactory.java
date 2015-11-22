@@ -76,9 +76,9 @@ public class FiatIndexWorldDatabaseFactory implements DealsWithPluginDatabaseSys
 
             table.addColumn(FiatIndexWorldDatabaseConstants.FIAT_INDEX_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(FiatIndexWorldDatabaseConstants.FIAT_INDEX_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(FiatIndexWorldDatabaseConstants.FIAT_INDEX_SALE_PRICE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
-            table.addColumn(FiatIndexWorldDatabaseConstants.FIAT_INDEX_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
-            table.addColumn(FiatIndexWorldDatabaseConstants.FIAT_INDEX_PROVIDER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(FiatIndexWorldDatabaseConstants.FIAT_INDEX_SALE_PRICE_COLUMN_NAME, DatabaseDataType.REAL, 100, Boolean.FALSE);
+            table.addColumn(FiatIndexWorldDatabaseConstants.FIAT_INDEX_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.REAL, 100, Boolean.FALSE);
+            table.addColumn(FiatIndexWorldDatabaseConstants.FIAT_INDEX_PROVIDER_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(FiatIndexWorldDatabaseConstants.FIAT_INDEX_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
             table.addIndex(FiatIndexWorldDatabaseConstants.FIAT_INDEX_FIRST_KEY_COLUMN);
