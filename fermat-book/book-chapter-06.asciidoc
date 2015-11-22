@@ -1,0 +1,35 @@
+:numbered!:
+image::https://github.com/bitDubai/media-kit/blob/master/Coins/P2P.jpg[FermatP2P]
+== Chapter 6: Fermat Network and Communication Superlayer
+This superlayer provides connectivity between *devices* by establishing a _communication channel_ between a plug-in running on a *local device* which requires to consume certain service from its _counterpart_ (i.e. the plug-in with the same task) running on a *remote device*. +
+This superlayer takes the entire responsibility of maintaining the communication channel "alive" as long as it is required, providing this *service* as a whole, i.e. offering this channel to the external layers and plug-ins in a *transparent* way for them, regardless of the *communication technology* that the layer uses to build this channel *_dynamically_*. + 
+The upper layers should not be aware of the technology in use (wi-fi, NFC, p2p, bluetooth, etc.) and problems related to a connection should be solved by the communication layer without disturbing the clients. +
+This ensures a safe way to offer *network services* built on top of this layer, not only for Fermat developers but also to third party. +
+
+
+[[communicationLayer]]
+=== _Communication Layer_
+This is the only layer in this superlayer which provides the communication services as a whole, i.e. components that need to be communicated interact with the *layer interface* and not directly to any plug-in inside. Each one of them implements the communication protocols and interfaces for one of the different *communication technologies* available.
+
+Cloud Client :: 
+This plug-in manages the requirement of a *client* plug-in to establish a connection to a _counterpart_ plug-in running on another device. It transmit the call to the _cloud server_ which "switches on" the communication channel to the destination party.
+
+Cloud Server :: 
+For certain basic communications demand, a cloud server is a reasonable good option. At initialization of Fermat, the cloud server manager receives the initial "log in" signal of each service that is starting, and keeps record of their "on-line"status. Then, when a _local_ *network service* needs to contact its _counterpart_ , the cloud server has the necessary information to establish the  *communication channel* requested.
+
+
+////
+P2P :: Fermat
+Geo-fenced :: Fermat
+Near Field Communication :: Fermat
+WiFi :: Fermat
+Mesh :: Fermat+
+////
+:numbered!:
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+  
+==== _Continue Reading ..._
+link:book-chapter-07.asciidoc[Next Chapter]
+
+link:book-chapter-05.asciidoc[Previous Chapter]
+

@@ -30,7 +30,7 @@ public class PaymentRequestPendingAdapter extends FermatAdapterNew<PaymentReques
     ReferenceWalletSession referenceWalletSession;
 
     public PaymentRequestPendingAdapter(Context context, List<PaymentRequest> dataSet,ViewInflater viewInflater,ReferenceWalletSession referenceWalletSession) {
-        super(context, dataSet,viewInflater,referenceWalletSession.getWalletResourcesProviderManager());
+        super(context, dataSet,viewInflater,referenceWalletSession.getResourceProviderManager());
         this.referenceWalletSession = referenceWalletSession;
         this.viewInflater = viewInflater;
     }
@@ -48,7 +48,7 @@ public class PaymentRequestPendingAdapter extends FermatAdapterNew<PaymentReques
     @Override
     protected void bindHolder(final PaymentRequestItemViewHolder holder, final PaymentRequest data, final int position) {
 
-        holder.getContactIcon().setImageResource(R.drawable.mati_profile);
+        holder.getContactIcon().setImageResource(R.drawable.juan_profile_picture);
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
 

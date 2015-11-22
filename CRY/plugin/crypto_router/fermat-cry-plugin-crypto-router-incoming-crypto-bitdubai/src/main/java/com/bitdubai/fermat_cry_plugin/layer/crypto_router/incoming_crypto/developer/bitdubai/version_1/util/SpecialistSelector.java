@@ -7,7 +7,6 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.excep
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CryptoAddressBookRecordNotFoundException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSelectSpecialistException;
 
 /**
@@ -16,24 +15,19 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
  * The purpose of this class is to indicate the correct
  * destination for a given transaction
  */
-public class SpecialistSelector implements DealsWithCryptoAddressBook {
+public class SpecialistSelector {
 
-    /*
-     * DealsWithCryptoAddressBook Interface member variables
-     */
-    private CryptoAddressBookManager cryptoAddressBookManager;
+    private final CryptoAddressBookManager cryptoAddressBookManager;
 
-    /*
-     * DealsWithActorAddressBook Interface method implementation
-     */
-    @Override
-    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
+    public SpecialistSelector(final CryptoAddressBookManager cryptoAddressBookManager) {
+
         this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
 
     public Specialist getSpecialist(CryptoTransaction cryptoTransaction) throws CantSelectSpecialistException {
 
         CryptoAddress cryptoAddress = new CryptoAddress();
+        //todo si la direccion del to es vacia, poner la del from
         cryptoAddress.setAddress(cryptoTransaction.getAddressTo().getAddress());
         cryptoAddress.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
 

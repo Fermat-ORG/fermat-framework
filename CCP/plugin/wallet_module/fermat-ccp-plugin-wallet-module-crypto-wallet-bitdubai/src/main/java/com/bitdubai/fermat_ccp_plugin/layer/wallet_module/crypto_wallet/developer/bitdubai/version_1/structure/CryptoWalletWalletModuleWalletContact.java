@@ -4,8 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +30,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
     private final List<CryptoAddress> receivedCryptoAddress;
     private final byte[]              profilePicture       ;
     private final String              walletPublicKey      ;
+    private boolean                   isConnection  ;
 
     public CryptoWalletWalletModuleWalletContact(final WalletContactRecord walletContactRecord,
                                                  final byte[]              profilePicture     ) {
@@ -40,7 +43,23 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
         this.actorName             = walletContactRecord.getActorAlias()                   ;
         this.profilePicture        = profilePicture != null ? profilePicture.clone() : null;
         this.compatibility         = walletContactRecord.getCompatibility()                ;
+        this.isConnection          = false;
     }
+
+
+    public CryptoWalletWalletModuleWalletContact(final CryptoWalletIntraUserActor intraUserConnection, String walletPublicKey) {
+
+        this.contactId             =  UUID.randomUUID()                  ;
+        this.walletPublicKey       =  walletPublicKey              ;
+        this.actorType             = Actors.CCM_INTRA_WALLET_USER                   ;
+        this.receivedCryptoAddress = new ArrayList<CryptoAddress>();
+        this.actorPublicKey        = intraUserConnection.getPublicKey()               ;
+        this.actorName             = intraUserConnection.getAlias()                   ;
+        this.profilePicture        = new byte[0];
+        this.compatibility         = Compatibility.NONE                ;
+        this.isConnection          = true;
+    }
+
 
     public CryptoWalletWalletModuleWalletContact(WalletContactRecord walletContactRecord) {
         this(walletContactRecord, null);
@@ -73,7 +92,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
 
     @Override
     public byte[] getProfilePicture() {
-        return profilePicture != null ? profilePicture.clone() : null;
+        return profilePicture != null ? profilePicture.clone() : new byte[0];
     }
 
     @Override
@@ -91,5 +110,10 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
         return "CryptoWalletWalletModuleWalletContact{" +
                 "actorName='" + actorName + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean isConnection(){
+        return this.isConnection;
     }
 }

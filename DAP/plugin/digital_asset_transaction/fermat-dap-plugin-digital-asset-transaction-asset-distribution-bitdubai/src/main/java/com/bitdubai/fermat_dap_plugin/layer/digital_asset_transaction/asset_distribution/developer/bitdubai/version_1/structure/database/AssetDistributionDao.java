@@ -20,6 +20,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantCheckAssetDistributionProgressException;
@@ -135,17 +136,17 @@ public class AssetDistributionDao {
             eventRecord.setUUIDValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventRecordID);
             eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
             eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
-            eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.toString());
+            eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
             eventRecord.setLongValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
             databaseTable.insertRecord(eventRecord);
             LOG.info("record:" + eventRecord.getStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_ID_COLUMN_NAME));
             this.database.closeDatabase();
         }  catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot open or find the Asset Issuing database");
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot open or find the Asset Distribution database");
         } catch (CantInsertRecordException exception) {
             this.database.closeDatabase();
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Issuing database");
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
         } catch(Exception exception){
             this.database.closeDatabase();
             throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
@@ -156,8 +157,8 @@ public class AssetDistributionDao {
         return isPendingEventsBySource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
     }
 
-    public boolean isPendingAssetVaultEvents() throws CantExecuteQueryException {
-        return isPendingEventsBySource(EventSource.ASSETS_OVER_BITCOIN_VAULT);
+    public boolean isPendingIncomingCryptoEvents() throws CantExecuteQueryException {
+        return isPendingEventsBySource(EventSource.CRYPTO_ROUTER);
     }
 
     private boolean isPendingEventsBySource(EventSource eventSource) throws CantExecuteQueryException {
@@ -165,7 +166,7 @@ public class AssetDistributionDao {
             this.database=openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             this.database.closeDatabase();
@@ -183,8 +184,37 @@ public class AssetDistributionDao {
         return getPendingEventsBySource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
     }
 
-    public List<String> getPendingAssetVaultEvents() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+    public List<String> getPendingCryptoRouterEvents() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
         return getPendingEventsBySource(EventSource.ASSETS_OVER_BITCOIN_VAULT);
+    }
+
+    public String getEventTypeById(String eventId) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME);
+            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            DatabaseTableRecord databaseTableRecord;
+            if (databaseTableRecords.size() > 1){
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Event Id" + eventId);
+            } else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            this.database.closeDatabase();
+            return databaseTableRecord.getStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_EVENT_COLUMN_NAME);
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetDistributionProgressException(exception, "Trying to get pending events","Cannot find or open the database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetDistributionProgressException(exception, "Trying to get pending events","Cannot load the database into memory");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetDistributionProgressException(FermatException.wrapException(exception), "Trying to get pending events.", "Unexpected exception");
+        }
     }
 
     private List<String> getPendingEventsBySource(EventSource eventSource) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
@@ -193,7 +223,7 @@ public class AssetDistributionDao {
             this.database=openDatabase();
             List<String> eventIdList=new ArrayList<>();
             DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setFilterOrder(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
@@ -220,30 +250,73 @@ public class AssetDistributionDao {
         return getGenesisTransactionByDistributionStatus(DistributionStatus.ASSET_ACCEPTED);
     }
 
+    public List<String> getGenesisTransactionByAssetRejectedByContractStatus() throws CantCheckAssetDistributionProgressException {
+        return getGenesisTransactionByDistributionStatus(DistributionStatus.ASSET_REJECTED_BY_CONTRACT);
+    }
+
+    public List<String> getGenesisTransactionByAssetRejectedByHashStatus() throws CantCheckAssetDistributionProgressException {
+        return getGenesisTransactionByDistributionStatus(DistributionStatus.ASSET_REJECTED_BY_HASH);
+    }
+
     private List<String> getGenesisTransactionByDistributionStatus(DistributionStatus distributionStatus)throws CantCheckAssetDistributionProgressException{
+        return getValueListFromTableByColumn(distributionStatus.getCode(),
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
+    public List<String> getGenesisTransactionListByCryptoStatus(CryptoStatus cryptoStatus) throws CantCheckAssetDistributionProgressException {
+        return getValueListFromTableByColumn(cryptoStatus.getCode(),
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
+    private List<String> getValueListFromTableByColumn(String referenceValue, String table, String referenceColumn, String returningColumn)throws CantCheckAssetDistributionProgressException{
 
         try{
             this.database=openDatabase();
             DatabaseTable databaseTable;
-            List<String> genesisTransactionList=new ArrayList<>();
-            databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME, distributionStatus.getCode(), DatabaseFilterType.EQUAL);
+            List<String> returningList=new ArrayList<>();
+            databaseTable = database.getTable(table);
+            databaseTable.setStringFilter(referenceColumn, referenceValue, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             for (DatabaseTableRecord record : databaseTable.getRecords()){
-                genesisTransactionList.add(record.getStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME));
+                returningList.add(record.getStringValue(returningColumn));
             }
             this.database.closeDatabase();
-            return genesisTransactionList;
+            return returningList;
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetDistributionProgressException(exception, "Getting transactions hash.", "Cannot load table to memory");
+            throw new CantCheckAssetDistributionProgressException(exception, "Getting "+referenceColumn+" list", "Cannot load table to memory");
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetDistributionProgressException(exception, "Getting transactions hash.", "Cannot open or find the Asset Issuing database");
+            throw new CantCheckAssetDistributionProgressException(exception, "Getting "+referenceColumn+" list", "Cannot open or find the Asset Distribution database");
         } catch(Exception exception){
             this.database.closeDatabase();
-            throw new CantCheckAssetDistributionProgressException(FermatException.wrapException(exception), "Getting transactions hash.", "Unexpected exception");
+            throw new CantCheckAssetDistributionProgressException(FermatException.wrapException(exception), "Getting "+referenceColumn+" list", "Unexpected exception");
         }
+    }
+
+    public String getActorUserPublicKeyByGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringValueFromSelectedTableTableByFieldCode(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME,
+                genesisTransaction,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
+    public String getPublicKeyByGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringValueFromSelectedTableTableByFieldCode(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME,
+                genesisTransaction,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_ID_COLUMN_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
+    public String getTransactionIdByGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringValueFromSelectedTableTableByFieldCode(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME,
+                genesisTransaction,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_ID_COLUMN_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME);
     }
 
     public String getActorUserCryptoAddressByGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
@@ -308,7 +381,7 @@ public class AssetDistributionDao {
         }
     }
 
-    public List<String> getTransactionsHashByCryptoStatus(CryptoStatus cryptoStatus)throws CantCheckAssetDistributionProgressException{
+    /*public List<String> getTransactionsHashByCryptoStatus(CryptoStatus cryptoStatus)throws CantCheckAssetDistributionProgressException{
 
         try{
             this.database=openDatabase();
@@ -333,9 +406,39 @@ public class AssetDistributionDao {
             this.database.closeDatabase();
             throw new CantCheckAssetDistributionProgressException(FermatException.wrapException(exception), "Getting transactions hash.", "Unexpected exception");
         }
+    }*/
+
+    public void updateDigitalAssetCryptoStatusByGenesisTransaction(String genesisTransaction, CryptoStatus cryptoStatus) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        try{
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
+            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            DatabaseTableRecord databaseTableRecord;
+            if (databaseTableRecords.size() > 1){
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Genesis Transaction:" + genesisTransaction);
+            } else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
+            databaseTable.updateRecord(databaseTableRecord);
+            this.database.closeDatabase();
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetDistributionProgressException(exception, "Updating Crypto Status.", "Cannot open or find the Asset Issuing database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetDistributionProgressException(exception, "Updating Crypto Status ", "Cannot load the table into memory");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetDistributionProgressException(FermatException.wrapException(exception), "Updating Crypto Status.", "Unexpected exception - Transaction hash:" + genesisTransaction);
+        }
     }
 
-    public void updateDigitalAssetCryptoStatusByTransactionHash(String transactionHash, CryptoStatus cryptoStatus) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+    /*public void updateDigitalAssetCryptoStatusByTransactionHash(String transactionHash, CryptoStatus cryptoStatus) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
         try{
             this.database=openDatabase();
             DatabaseTable databaseTable;
@@ -363,7 +466,7 @@ public class AssetDistributionDao {
             this.database.closeDatabase();
             throw new CantCheckAssetDistributionProgressException(FermatException.wrapException(exception), "Updating Crypto Status.", "Unexpected exception - Transaction hash:" + transactionHash);
         }
-    }
+    }*/
 
     public void updateEventStatus(String eventId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         try{
@@ -379,7 +482,7 @@ public class AssetDistributionDao {
             } else {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
-            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.NOTIFIED.toString());
+            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.NOTIFIED.getCode());
             databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
@@ -391,6 +494,51 @@ public class AssetDistributionDao {
         } catch (Exception exception){
             this.database.closeDatabase();
             throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"Trying to update "+AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME,"Check the cause");
+        }
+    }
+
+    public void persistDistributionId(String genesisTransaction, UUID distributionId) throws CantPersistsTransactionUUIDException {
+        try {
+            this.database = openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
+            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            DatabaseTableRecord databaseTableRecord;
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            if (databaseTableRecords.size() > 1){
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "GenesisTransaction:" + genesisTransaction+ " OutgoingId:" + distributionId);
+            } else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_ID_COLUMN_NAME, distributionId.toString());
+            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME, TransactionStatus.TO_DELIVER.getCode());
+            databaseTable.updateRecord(databaseTableRecord);
+            this.database.closeDatabase();
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantPersistsTransactionUUIDException(exception, "Persisting distributionId in database", "Cannot open or find the database");
+        } catch (Exception exception) {
+            this.database.closeDatabase();
+            throw new CantPersistsTransactionUUIDException(FermatException.wrapException(exception), "Persisting distributionId in database", "Unexpected exception");
+        }
+    }
+
+    public boolean isGenesisTransactionRegistered(String genesisTransaction) throws CantExecuteQueryException {
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
+            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            this.database.closeDatabase();
+            return !databaseTable.getRecords().isEmpty();
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException("Error executing query in DB.", exception, "Checking if genesis transaction exists in database.", "Cannot load table to memory.");
+        }catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Checking if genesis transaction exits in database.", "Unexpected exception");
         }
     }
 

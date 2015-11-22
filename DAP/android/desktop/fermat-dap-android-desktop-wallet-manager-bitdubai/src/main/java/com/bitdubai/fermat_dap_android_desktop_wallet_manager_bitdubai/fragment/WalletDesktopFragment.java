@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
@@ -31,6 +30,12 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.R;
 import com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 
 
 import java.util.ArrayList;
@@ -48,11 +53,22 @@ public class WalletDesktopFragment extends Fragment {
     Typeface tf;
 
     private WalletManager walletManager;
+    private IdentityAssetIssuerManager identityAssetIssuerManager;
+    private IdentityAssetUserManager identityAssetUserManager;
+    private RedeemPointIdentityManager redeemPointIdentityManager;
 
     private List<InstalledWallet> lstInstalledWallet;
 
-    public static WalletDesktopFragment newInstance(int position) {
+    public static WalletDesktopFragment newInstance(
+            int position,
+            IdentityAssetIssuerManager identityAssetIssuerManager,
+            IdentityAssetUserManager identityAssetUserManager,
+            RedeemPointIdentityManager redeemPointIdentityManager) {
+
         WalletDesktopFragment f = new WalletDesktopFragment();
+        f.setIdentityAssetIssuerManager(identityAssetIssuerManager);
+        f.setIdentityAssetUserManager(identityAssetUserManager);
+        f.setRedeemPointIdentityManager(redeemPointIdentityManager);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -89,7 +105,7 @@ public class WalletDesktopFragment extends Fragment {
                 new Version(1,0,0));
         lstInstalledWallet.add(installedWallet);
 
-        installedWallet= new com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+        installedWallet= new InstalledWallet(WalletCategory.REFERENCE_WALLET,
                 WalletType.REFERENCE,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
@@ -120,8 +136,8 @@ public class WalletDesktopFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(getActivity(),"mati",Toast.LENGTH_SHORT).show();
-                return ;
+                Toast.makeText(getActivity(), "mati", Toast.LENGTH_SHORT).show();
+                return;
             }
         });
 
@@ -158,6 +174,22 @@ public class WalletDesktopFragment extends Fragment {
         this.walletManager = walletManager;
     }
 
+    /**
+     * Set IdentityAssetIssuerManager identityAssetIssuerManager plugin
+     *
+     * @param identityAssetIssuerManager
+     */
+    public void setIdentityAssetIssuerManager(IdentityAssetIssuerManager identityAssetIssuerManager) {
+        this.identityAssetIssuerManager = identityAssetIssuerManager;
+    }
+
+    public void setIdentityAssetUserManager(IdentityAssetUserManager identityAssetUserManager){
+        this.identityAssetUserManager = identityAssetUserManager;
+    }
+
+    public void setRedeemPointIdentityManager(RedeemPointIdentityManager redeemPointIdentityManager){
+        this.redeemPointIdentityManager = redeemPointIdentityManager;
+    }
 
     public class AppListAdapter extends ArrayAdapter<InstalledWallet> {
 
@@ -187,14 +219,14 @@ public class WalletDesktopFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(installedWallet.getWalletName());
+            holder.companyTextView.setText(installedWallet.getName());
             holder.companyTextView.setTypeface(tf, Typeface.BOLD);
 
 
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.wallet_3);
 
             //Hardcodeado hasta que esté el wallet resources
-            switch (installedWallet.getWalletIcon()) {
+            switch (installedWallet.getIcon()) {
 
                 case "asset_issuer":
                     holder.imageView.setImageResource(R.drawable.wallet_1);
@@ -206,8 +238,15 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                            try {
+                                if(identityAssetIssuerManager.hasIntraIssuerIdentity())
+                                    ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                else
+                                    Toast.makeText(getActivity(), "Need Issuer Identity", Toast.LENGTH_SHORT).show();
 
+                            } catch (CantListAssetIssuersException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
@@ -216,8 +255,15 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet( installedWallet);
+                            try {
+                                if(identityAssetIssuerManager.hasIntraIssuerIdentity())
+                                    ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                else
+                                    Toast.makeText(getActivity(), "Need Issuer Identity", Toast.LENGTH_SHORT).show();
 
+                            } catch (CantListAssetIssuersException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
@@ -232,8 +278,15 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                            try {
+                                if(identityAssetUserManager.hasAssetUserIdentity())
+                                    ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                else
+                                    Toast.makeText(getActivity(), "Need User Identity", Toast.LENGTH_SHORT).show();
 
+                            } catch (CantListAssetUsersException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
@@ -242,8 +295,15 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet( installedWallet);
+                            try {
+                                if(identityAssetUserManager.hasAssetUserIdentity())
+                                    ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                else
+                                    Toast.makeText(getActivity(), "Need User Identity", Toast.LENGTH_SHORT).show();
 
+                            } catch (CantListAssetUsersException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
@@ -258,8 +318,15 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                            try {
+                                if(redeemPointIdentityManager.hasRedeemPointIdentity())
+                                    ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                else
+                                    Toast.makeText(getActivity(), "Need Redeem Point Identity", Toast.LENGTH_SHORT).show();
 
+                            } catch (CantListAssetRedeemPointException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
@@ -268,8 +335,15 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet( installedWallet);
+                            try {
+                                if(redeemPointIdentityManager.hasRedeemPointIdentity())
+                                    ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                else
+                                    Toast.makeText(getActivity(), "Need Redeem Point Identity", Toast.LENGTH_SHORT).show();
 
+                            } catch (CantListAssetRedeemPointException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 

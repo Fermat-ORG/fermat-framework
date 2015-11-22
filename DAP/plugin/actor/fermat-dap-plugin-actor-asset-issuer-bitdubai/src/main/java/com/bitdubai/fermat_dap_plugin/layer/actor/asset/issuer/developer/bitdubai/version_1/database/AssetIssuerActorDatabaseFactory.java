@@ -53,20 +53,20 @@ public class AssetIssuerActorDatabaseFactory implements DealsWithPluginDatabaseS
              */
             table = databaseFactory.newTableFactory(ownerId, AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME);
 
-
             /* Asset Issuer Table primary key.*/
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
 
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOCATION_LATITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LAST_CONNECTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_EXTENDED_COLUMN_NAME, DatabaseDataType.STRING, 512, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LATITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
 
             table.addIndex(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_FIRST_KEY_COLUMN);
 
@@ -79,20 +79,20 @@ public class AssetIssuerActorDatabaseFactory implements DealsWithPluginDatabaseS
 
             table = databaseFactory.newTableFactory(ownerId, AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME);
 
-
             /* Asset Issuer Table primary key.*/
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
 
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_LOCATION_LATITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME, DatabaseDataType.STRING, 512, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+//            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
 
             table.addIndex(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_FIRST_KEY_COLUMN);
 

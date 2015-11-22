@@ -8,8 +8,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesNetworkServicePluginRoot;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,26 +45,26 @@ public class SetLoggingLevelPerClassTest {
     @Mock
     private ErrorManager errorManager;
 
-    private SubAppResourcesInstallationNetworkServicePluginRoot subAppResourcesInstallationNetworkServicePluginRoot;
+    private SubAppResourcesNetworkServicePluginRoot subAppResourcesNetworkServicePluginRoot;
 //
     @Test
     public void setLoggingLevelPerClassTest() throws CantOpenDatabaseException, DatabaseNotFoundException {
         UUID testOwnerId = UUID.randomUUID();
 
-        subAppResourcesInstallationNetworkServicePluginRoot = new SubAppResourcesInstallationNetworkServicePluginRoot();
+        subAppResourcesNetworkServicePluginRoot = new SubAppResourcesNetworkServicePluginRoot();
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
 
-        subAppResourcesInstallationNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
-        subAppResourcesInstallationNetworkServicePluginRoot.setPluginFileSystem(mockPluginFileSystem);
-        subAppResourcesInstallationNetworkServicePluginRoot.setId(testOwnerId);
-        subAppResourcesInstallationNetworkServicePluginRoot.setErrorManager(errorManager);
+        subAppResourcesNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        subAppResourcesNetworkServicePluginRoot.setPluginFileSystem(mockPluginFileSystem);
+        subAppResourcesNetworkServicePluginRoot.setId(testOwnerId);
+        subAppResourcesNetworkServicePluginRoot.setErrorManager(errorManager);
 
         ECCKeyPair eccKeyPair = new ECCKeyPair();
         Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
         newLoggingLevel.put(eccKeyPair.getPrivateKey(), LogLevel.AGGRESSIVE_LOGGING);
 
-        subAppResourcesInstallationNetworkServicePluginRoot.setLoggingLevelPerClass(newLoggingLevel);
+        subAppResourcesNetworkServicePluginRoot.setLoggingLevelPerClass(newLoggingLevel);
 
 
 

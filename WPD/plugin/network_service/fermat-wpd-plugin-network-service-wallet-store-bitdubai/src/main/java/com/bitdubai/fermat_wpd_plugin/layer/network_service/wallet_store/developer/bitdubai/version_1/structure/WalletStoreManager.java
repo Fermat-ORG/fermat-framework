@@ -3,6 +3,18 @@ package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.develo
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetDeveloperException;
@@ -16,20 +28,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.except
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantPublishItemInCatalogException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItemImpl;
@@ -43,8 +41,6 @@ import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.develop
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.common.DatabaseOperations;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseConstants;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseDao;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +50,7 @@ import java.util.UUID;
  * Created by rodrigo on 7/21/15.
  */
 
-public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class WalletStoreManager {
     /**
      * WalletStoreManager member variables
      */
@@ -95,38 +91,6 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
-    }
-
-    /**
-     * DealsWithErrors interface implementation
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithlogger interface implementation
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * DealsWithPluginFileSystem interface implementation
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 
     private WalletStoreCatalogDatabaseDao getDatabaseDAO() throws CantExecuteDatabaseOperationException {

@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDao;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -38,9 +39,11 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+*/
 /**
  * Created by natalia on 11/09/15.
- */
+ *//*
+
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CryptoCurrency.class,Actors.class})
@@ -141,3 +144,4 @@ public class ListWalletContactRecordsTest {
 
 
 }
+*/

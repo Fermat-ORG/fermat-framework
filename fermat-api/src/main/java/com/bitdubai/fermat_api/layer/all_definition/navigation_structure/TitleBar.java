@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
+import java.awt.Color;
+
 /**
  * Created by Matias Furszyfer on 2015.09.1..
  */
@@ -20,6 +22,14 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
 
     private RuntimeFernatComboBox comboBox;
     private int labelSize=-1;
+    private String titleColor;
+    private byte[] toggleIcon;
+    private boolean isTitleTextStatic;
+    private String font;
+
+    public void setFont(String font) {
+        this.font = font;
+    }
 
     /**
      * Class Constructors
@@ -99,5 +109,37 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setLabelSize(int labelSize) {
         this.labelSize = labelSize;
+    }
+
+    public String getTitleColor() {
+        return titleColor;
+    }
+
+    public void setTitleColor(String titleColor) {
+        this.titleColor = titleColor;
+    }
+
+    public void setToggleIcon(byte[] toggleIcon) {
+        this.toggleIcon = toggleIcon;
+    }
+
+    public byte[] getNavigationIcon() {
+        return toggleIcon;
+    }
+
+    public byte[] getToggleIcon() {
+        return toggleIcon;
+    }
+
+    public void setIsTitleTextStatic(boolean isTitleTextStatic) {
+        this.isTitleTextStatic = isTitleTextStatic;
+    }
+
+    public boolean isTitleTextStatic(){
+        return isTitleTextStatic;
+    }
+
+    public String getFont() {
+        return font;
     }
 }

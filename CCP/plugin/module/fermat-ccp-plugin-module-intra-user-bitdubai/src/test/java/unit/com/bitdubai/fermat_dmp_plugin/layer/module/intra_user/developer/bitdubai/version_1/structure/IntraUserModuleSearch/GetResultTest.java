@@ -1,6 +1,6 @@
 //package unit.com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleSearch;
 //
-//import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
 //import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
 //<<<<<<< HEAD:DMP/plugin/module/fermat-dmp-plugin-module-intra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/module/intra_user/developer/bitdubai/version_1/structure/IntraUserModuleSearch/GetResultTest.java
 //import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUserSearchResult;
@@ -13,7 +13,7 @@
 //>>>>>>> 193a4ce563d3916b505332563ad81fe262f074f2:CCP/plugin/module/fermat-ccp-plugin-module-intra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/module/intra_user/developer/bitdubai/version_1/structure/IntraUserModuleSearch/GetResultTest.java
 //import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 //import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleSearch;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+//import ErrorManager;
 //import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 //
 //import junit.framework.TestCase;
@@ -68,7 +68,7 @@
 //     * DealWithActorIntraUserManager Interface member variables.
 //     */
 //    @Mock
-//    private IntraWalletUserManager mockIntraWalletUserManager;
+//    private IntraWalletUserIdentityManager mockIntraWalletUserManager;
 //
 //
 //    /**

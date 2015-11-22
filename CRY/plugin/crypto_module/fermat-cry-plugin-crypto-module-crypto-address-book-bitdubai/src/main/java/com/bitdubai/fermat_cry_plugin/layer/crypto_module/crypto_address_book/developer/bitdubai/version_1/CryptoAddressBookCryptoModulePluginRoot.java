@@ -2,8 +2,9 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.d
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -11,13 +12,15 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -33,9 +36,9 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.de
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDao;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.exceptions.InvalidCryptoAddressBookRecordParametersException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.structure.CryptoAddressBookCryptoModuleRecord;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.Crypto;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 
@@ -43,7 +46,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -57,33 +59,27 @@ import java.util.regex.Pattern;
  * Created by Leon Acosta (laion.cj91@gmail.com) on 02/09/2015.
  */
 
-public class CryptoAddressBookCryptoModulePluginRoot implements Crypto, CryptoAddressBookManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service {
+public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin implements
+        Crypto,
+        CryptoAddressBookManager,
+        DatabaseManagerForDevelopers,
+        LogManagerForDevelopers {
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    /**
-     * Plugin Interface member variables.
-     */
-    private UUID pluginId;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
-    /**
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-
-    /**
-     * DealWitlLog interface implementation
-     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER           )
     private LogManager logManager;
+
+
+    public CryptoAddressBookCryptoModulePluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
+
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     /**
@@ -219,25 +215,11 @@ public class CryptoAddressBookCryptoModulePluginRoot implements Crypto, CryptoAd
     }
 
     @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
     public void stop() {
         cryptoAddressBookCryptoModuleDao = null;
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
 
     /**
      * DatabaseManagerForDevelopers interface implementation
@@ -334,37 +316,5 @@ public class CryptoAddressBookCryptoModulePluginRoot implements Crypto, CryptoAd
         } catch (Exception e) {
             return DEFAULT_LOG_LEVEL;
         }
-    }
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithLogger interface implementation
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * Plugin methods implementation.
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 }

@@ -35,7 +35,7 @@ public class CreateTextFileTest {
     private PluginTextFile testFile;
 
     private UUID testId;
-    private Context testContext;
+    private String testContext;
     private String testDirectory;
     private String testFileName;
     private FilePrivacy testPrivacyLevel;
@@ -45,7 +45,8 @@ public class CreateTextFileTest {
     public void setUpValues(){
         testId = UUID.randomUUID();
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
-        testContext = shadowOf(mockActivity).getApplicationContext();
+        testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
+
         testDirectory = "ROBOLECTRICTEST";
         testFileName = "TESTFILE.txt";
         testPrivacyLevel = FilePrivacy.PUBLIC;
@@ -54,8 +55,7 @@ public class CreateTextFileTest {
 
     @Test
     public void CreateTextFile_ValidFileValues_FileCreated() throws Exception{
-        testFileSystem = new AndroidPluginFileSystem();
-        testFileSystem.setContext(testContext);
+        testFileSystem = new AndroidPluginFileSystem(testContext);
         testFile = testFileSystem.createTextFile(testId,testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(testFile).isNotNull();
         System.out.println(testFile.toString());
@@ -63,7 +63,7 @@ public class CreateTextFileTest {
 
     @Test
     public void CreateTextFile_NoContext_ThrowsException() throws Exception{
-        testFileSystem = new AndroidPluginFileSystem();
+        testFileSystem = new AndroidPluginFileSystem(testContext);
         catchException(testFileSystem).createTextFile(testId,testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(caughtException()).isNotNull();
         caughtException().printStackTrace();

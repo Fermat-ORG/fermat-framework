@@ -22,8 +22,8 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
@@ -85,11 +85,11 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
         inflater.inflate(R.menu.crypto_broker_identity_menu, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-        SearchView mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setOnCloseListener(this);
+//        MenuItem searchItem = menu.findItem(R.id.action_search);
+//        MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        SearchView mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+//        mSearchView.setOnQueryTextListener(this);
+//        mSearchView.setOnCloseListener(this);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         newIdentityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
+                //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
             }
         });
 
@@ -147,7 +147,6 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         return R.layout.fragment_crypto_broker_identity_list;
     }
 
-
     @Override
     protected int getRecyclerLayoutId() {
         return R.id.crypto_broker_identity_recycler_view;
@@ -157,8 +156,6 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     protected int getSwipeRefreshLayoutId() {
         return R.id.swipe_refresh;
     }
-
-
 
     @Override
     public List<CryptoBrokerIdentityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
@@ -184,7 +181,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     @Override
     public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {
         subAppsSession.setData(IDENTITY_INFO, data);
-        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode());
+        //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode());
     }
 
     @Override

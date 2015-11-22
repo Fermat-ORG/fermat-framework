@@ -68,6 +68,8 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - Starting processingPackage");
 
         String packetContentJsonStringRepresentation = null;
+        PlatformComponentProfile networkServiceApplicant = null;
+        PlatformComponentProfile remoteParticipant = null;
 
         try {
 
@@ -86,7 +88,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             /*
              * Get the applicant network service
              */
-            PlatformComponentProfile networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString());
+            networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString());
             System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant.toJson());
 
             /*
@@ -106,7 +108,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             /*
              * Get the component profile to connect as remote participant
              */
-            PlatformComponentProfile remoteParticipant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString());
+            remoteParticipant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString());
             List<PlatformComponentProfile> remoteParticipantList = searchProfile(remoteParticipant.getPlatformComponentType(), remoteParticipant.getNetworkServiceType(), remoteParticipant.getIdentityPublicKey());
             remoteParticipant = remoteParticipantList.get(0);
             System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - remoteParticipant "+remoteParticipant.toJson());
@@ -128,7 +130,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - participantsList.size() = "+participantsList.size());
 
             //Create a new vpn
-            WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer());
+            WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer(), networkServiceApplicant.getNetworkServiceType());
 
             /*
              * Notify to the participants of the vpn
@@ -146,7 +148,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         }catch (Exception e){
 
             System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - requested connection is no possible ");
-            e.printStackTrace();
+            //e.printStackTrace();
 
             /*
              * Get the client connection destination
@@ -157,6 +159,8 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
              * Construct the json object
              */
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, networkServiceApplicant.toJson());
+            packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
             packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in component connection: "+e.getMessage());
 
             /*
@@ -236,7 +240,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         /*
          * Prepare the list
          */
-        List<PlatformComponentProfile> temporalList = null;
+        List<PlatformComponentProfile> temporalList = new ArrayList<>();
         List<PlatformComponentProfile>  finalFilteredList = new ArrayList<>();
 
          /*
@@ -245,24 +249,31 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().isEmpty()){
+                    temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                }
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()){
+                    temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                }
                 break;
 
             case NETWORK_SERVICE :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                if(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
+                    temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                }
                 break;
 
             //Others
             default :
-                temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                if (getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()){
+                    temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                }
                 break;
 
         }
-
 
         /*
          * Find the component that match with the identity
@@ -294,7 +305,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         /*
          * Prepare the list
          */
-        List<PlatformComponentProfile> temporalList = null;
+        List<PlatformComponentProfile> temporalList =  new ArrayList<>();
         List<PlatformComponentProfile>  finalFilteredList = new ArrayList<>();
 
          /*
@@ -303,22 +314,29 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().isEmpty()) {
+                    temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                }
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()){
+                    temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                }
                 break;
 
             case NETWORK_SERVICE :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                if(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
+                    temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                }
                 break;
 
             //Others
             default :
-                temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                if (getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
+                    temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                }
                 break;
-
         }
 
         /*

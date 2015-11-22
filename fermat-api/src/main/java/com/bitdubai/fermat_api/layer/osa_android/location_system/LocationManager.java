@@ -8,15 +8,20 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
  *     that define the methods to get the geolocation of the device.
  *
  *
- *  @author  Natalia
+ *  Created by nattyco on 30/04/2015.
+ *  Modified by lnacosta (laion.cj91@gmail.com) on 27/10/2015.
  *  @version 1.0.0
- *  @since   30/04/15.
  * */
 public interface LocationManager {
 
-    public Location getLocation() throws CantGetDeviceLocationException;
-
-    public void setContext (Object context);
-
+    /**
+     * Throw the method <code>getLocation</code> you can get the must updated gps coordinates
+     * of the device in which you're working.
+     *
+     * @return an instance of location with the gps coordinates.
+     *
+     * @throws CantGetDeviceLocationException  if something goes wrong.
+     */
+    Location getLocation() throws CantGetDeviceLocationException;
 
 }

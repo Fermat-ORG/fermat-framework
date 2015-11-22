@@ -119,12 +119,28 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     }
 
     /**
+     * Set the IdentityPublicKey
+     * @param identityPublicKey
+     */
+    public void setIdentityPublicKey(String identityPublicKey) {
+        this.identityPublicKey = identityPublicKey;
+    }
+
+    /**
      * (non-javadoc)
      * @see PlatformComponentProfile#getAlias()
      */
     @Override
     public String getAlias() {
         return alias;
+    }
+
+    /**
+     * Set the Alias
+     * @param alias
+     */
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     /**
@@ -137,12 +153,28 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     }
 
     /**
+     * Set the Name
+     * @param name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
      * (non-javadoc)
      * @see PlatformComponentProfile#getLocation()
      */
     @Override
     public Location getLocation() {
         return location;
+    }
+
+    /**
+     * Set the Location
+     * @param location
+     */
+    public void setLocation(DeviceLocation location) {
+        this.location = location;
     }
 
     /**
@@ -155,12 +187,28 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     }
 
     /**
+     * Set the PlatformComponentType
+     * @param platformComponentType
+     */
+    public void setPlatformComponentType(PlatformComponentType platformComponentType) {
+        this.platformComponentType = platformComponentType;
+    }
+
+    /**
      * (non-javadoc)
      * @see PlatformComponentProfile#getNetworkServiceType()
      */
     @Override
     public NetworkServiceType getNetworkServiceType() {
         return networkServiceType;
+    }
+
+    /**
+     * Set the NetworkServiceType
+     * @param networkServiceType
+     */
+    public void setNetworkServiceType(NetworkServiceType networkServiceType) {
+        this.networkServiceType = networkServiceType;
     }
 
     /**
@@ -179,6 +227,14 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     @Override
     public String getExtraData() {
         return extraData;
+    }
+
+    /**
+     * Set the ExtraData
+     * @param extraData
+     */
+    public void setExtraData(String extraData) {
+        this.extraData = extraData;
     }
 
     /**

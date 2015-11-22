@@ -28,9 +28,9 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     private static final long MAX_SLEEP_TIME = 20000;
 
     /**
-     * Represent the cryptoTransmissionNetworkServicePluginRoot
+     * Represent the networkService
      */
-    private CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
+    private CryptoTransmissionNetworkServicePluginRoot networkService;
 
     /**
      * Represent the communicationsClientConnection
@@ -44,11 +44,11 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * Constructor with parameters
-     * @param cryptoTransmissionNetworkServicePluginRoot
+     * @param networkService
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
-        this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionNetworkServicePluginRoot;
+    public CommunicationRegistrationProcessNetworkServiceAgent(CryptoTransmissionNetworkServicePluginRoot networkService, CommunicationsClientConnection communicationsClientConnection) {
+        this.networkService = networkService;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
     }
@@ -61,42 +61,46 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     public void run() {
 
         while (active){
+            try{
 
-            try {
-
-                if (communicationsClientConnection.isRegister() && !cryptoTransmissionNetworkServicePluginRoot.isRegister()){
+                if (communicationsClientConnection.isRegister() && !networkService.isRegister()){
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(cryptoTransmissionNetworkServicePluginRoot.getIdentityPublicKey(),
-                                                                                                                                                (cryptoTransmissionNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+cryptoTransmissionNetworkServicePluginRoot.getId().toString()),
-                                                                                                                                                (cryptoTransmissionNetworkServicePluginRoot.getName()+" ("+cryptoTransmissionNetworkServicePluginRoot.getId()+")"),
-                                                                                                                                                 cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceType(),
-                                                                                                                                                 cryptoTransmissionNetworkServicePluginRoot.getPlatformComponentType(),
-                                                                                                                                                 cryptoTransmissionNetworkServicePluginRoot.getExtraData());
+
+
+                    System.out.print("CRYPTO TRANSMISSION - Construct my profile and register me ----------------------- ");
+
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
+                                                                                                                                                 networkService.getAlias().toLowerCase(),
+                                                                                                                                                 networkService.getName(),
+
+                    networkService.getNetworkServiceType(),
+                                                                                                                                                 networkService.getPlatformComponentType(),
+                                                                                                                                                 networkService.getExtraData());
 
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(networkService.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile
                      */
-                    cryptoTransmissionNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    networkService.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager
                      */
-                    cryptoTransmissionNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                    networkService.initializeCommunicationNetworkServiceConnectionManager();
 
                     /*
                      * Stop the agent
                      */
                     active = Boolean.FALSE;
 
-                }else if (!cryptoTransmissionNetworkServicePluginRoot.isRegister()){
+                }else if (!networkService.isRegister()){
 
                     try {
                         sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
@@ -105,7 +109,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                         active = Boolean.FALSE;
                     }
 
-                }else if (!cryptoTransmissionNetworkServicePluginRoot.isRegister()){
+                }else if (!networkService.isRegister()){
                     active = Boolean.FALSE;
                 }
 
@@ -118,7 +122,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     active = Boolean.FALSE;
                 }
             }
-
         }
     }
 

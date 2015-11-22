@@ -1,57 +1,52 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.session;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.preference_settings.CryptoCustomerWalletPreferenceSettings;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CryptoCustomerWalletSession implements WalletSession {
+public class CryptoCustomerWalletSession extends AbstractFermatSession<InstalledWallet,CryptoCustomerWalletModuleManager,WalletResourcesProviderManager> implements WalletSession {
 
+    private final WalletResourcesProviderManager providerManager;
     /**
      * SubApps type
      */
-    InstalledWallet wallet;
+    private final InstalledWallet wallet;
 
     /**
      * Active objects in wallet session
      */
-    Map<String, Object> data;
+    private final Map<String, Object> data;
 
     /**
      * Error manager
      */
-    private ErrorManager errorManager;
+    private final ErrorManager errorManager;
 
     /**
-     * Wallet Store Module
+     * Crypto Customer Wallet Module
      */
-    private WalletStoreModuleManager moduleManager;
+    private final CryptoCustomerWalletModuleManager moduleManager;
 
 
-    /**
-     * Create a session for the Wallet Store SubApp
-     *
-     * @param wallet                  the SubApp type
-     * @param errorManager             the error manager
-     * @param moduleManager the module of this SubApp
-     */
-    public CryptoCustomerWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletStoreModuleManager moduleManager) {
+
+    public CryptoCustomerWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletResourcesProviderManager providerManager, CryptoCustomerWalletModuleManager moduleManager) {
+        super(wallet.getWalletPublicKey(), wallet, errorManager, moduleManager, providerManager);
         this.wallet = wallet;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
         this.moduleManager = moduleManager;
+        this.providerManager = providerManager;
     }
 
 
-    @Override
-    public InstalledWallet getWalletSessionType() {
-        return null;
-    }
 
     /**
      * Store any data you need to hold between the fragments of the sub app
@@ -85,14 +80,10 @@ public class CryptoCustomerWalletSession implements WalletSession {
         return errorManager;
     }
 
-    @Override
-    public WalletResourcesProviderManager getWalletResourcesProviderManager() {
-        return null;
-    }
 
     @Override
     public WalletSettings getWalletSettings() {
-        return null;
+        return new CryptoCustomerWalletPreferenceSettings();
     }
 
     /**
@@ -100,7 +91,7 @@ public class CryptoCustomerWalletSession implements WalletSession {
      *
      * @return reference to the Wallet Store Module
      */
-    public WalletStoreModuleManager getModuleManager() {
+    public CryptoCustomerWalletModuleManager getModuleManager() {
         return moduleManager;
     }
 

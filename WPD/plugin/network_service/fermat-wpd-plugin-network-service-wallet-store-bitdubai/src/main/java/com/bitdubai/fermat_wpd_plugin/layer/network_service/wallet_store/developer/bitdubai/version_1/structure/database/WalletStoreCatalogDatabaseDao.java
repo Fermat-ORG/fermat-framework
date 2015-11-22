@@ -36,9 +36,9 @@ import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.develop
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.common.DatabaseOperations;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 
 import java.net.MalformedURLException;
@@ -320,7 +320,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME, language.getLanguageId());
         if (language.getLanguageName() != null)
-            record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME, language.getLanguageName().value());
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME, language.getLanguageName().getCode());
         if (language.getLanguageLabel() != null)
             record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME, language.getLanguageLabel());
         if (language.getVersion() != null)

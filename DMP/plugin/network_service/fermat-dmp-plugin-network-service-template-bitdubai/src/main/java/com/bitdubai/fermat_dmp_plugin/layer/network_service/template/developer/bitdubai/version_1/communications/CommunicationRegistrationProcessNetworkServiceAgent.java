@@ -22,8 +22,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread {
 
     /*
-     * Represent the sleep time for the read or send (5000 milliseconds)
-     */
+    * Represent the sleep time for the read or send (5000 milliseconds)
+    */
     private static final long SLEEP_TIME = 5000;
     private static final long MAX_SLEEP_TIME = 20000;
 
@@ -61,8 +61,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     public void run() {
 
         while (active){
-
-            try {
+            try{
 
                 if (communicationsClientConnection.isRegister() && !templateNetworkServicePluginRoot.isRegister()){
 
@@ -70,21 +69,21 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                      * Construct my profile and register me
                      */
                     PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(),
-                                                                                                                                                (templateNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+templateNetworkServicePluginRoot.getId().toString()),
-                                                                                                                                                (templateNetworkServicePluginRoot.getName()+" ("+templateNetworkServicePluginRoot.getId()+")"),
-                                                                                                                                                 templateNetworkServicePluginRoot.getNetworkServiceType(),
-                                                                                                                                                 templateNetworkServicePluginRoot.getPlatformComponentType(),
-                                                                                                                                                 templateNetworkServicePluginRoot.getExtraData());
+                            templateNetworkServicePluginRoot.getAlias().toLowerCase(),
+                            templateNetworkServicePluginRoot.getName(),
+                            templateNetworkServicePluginRoot.getNetworkServiceType(),
+                            templateNetworkServicePluginRoot.getPlatformComponentType(),
+                            templateNetworkServicePluginRoot.getExtraData());
 
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(templateNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile
                      */
-                    templateNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    templateNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager
@@ -118,7 +117,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     active = Boolean.FALSE;
                 }
             }
-
         }
     }
 

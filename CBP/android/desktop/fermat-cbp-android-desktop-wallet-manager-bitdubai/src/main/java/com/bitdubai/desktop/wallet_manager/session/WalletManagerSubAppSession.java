@@ -1,9 +1,11 @@
 package com.bitdubai.desktop.wallet_manager.session;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manager.interfaces.CryptoDesktopSubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +16,10 @@ import java.util.Map;
 public class WalletManagerSubAppSession implements SubAppsSession {
 
     /**
-     * SubApps type
+     * SubApp
      */
-    SubApps subApps;
+    SubApp subApp;
+
 
     /**
      * Active objects in wallet session
@@ -37,12 +40,12 @@ public class WalletManagerSubAppSession implements SubAppsSession {
     /**
      * Create a session for the Wallet Store SubApp
      *
-     * @param subApps                  the SubApp type
+     * @param subApp                  the SubApp type
      * @param errorManager             the error manager
      * @param moduleManager the module of this SubApp
      */
-    public WalletManagerSubAppSession(SubApps subApps, ErrorManager errorManager, CryptoDesktopSubAppModuleManager moduleManager) {
-        this.subApps = subApps;
+    public WalletManagerSubAppSession(SubApp subApp, ErrorManager errorManager, CryptoDesktopSubAppModuleManager moduleManager) {
+        this.subApp = subApp;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
         this.moduleManager = moduleManager;
@@ -51,22 +54,14 @@ public class WalletManagerSubAppSession implements SubAppsSession {
     /**
      * Create a session for the Wallet Store SubApp
      *
-     * @param subApps the SubApp type
+     * @param subApp the SubApp type
      */
-    public WalletManagerSubAppSession(SubApps subApps) {
-        this.subApps = subApps;
+    public WalletManagerSubAppSession(SubApp subApp) {
+        this.subApp = subApp;
     }
 
 
-    /**
-     * Return the SubApp type
-     *
-     * @return SubApps instance indicating the type
-     */
-    @Override
-    public SubApps getSubAppSessionType() {
-        return subApps;
-    }
+
 
     /**
      * Store any data you need to hold between the fragments of the sub app
@@ -100,6 +95,11 @@ public class WalletManagerSubAppSession implements SubAppsSession {
         return errorManager;
     }
 
+    @Override
+    public String getAppPublicKey() {
+        return null;
+    }
+
     /**
      * Return the Wallet Store Module
      *
@@ -116,12 +116,17 @@ public class WalletManagerSubAppSession implements SubAppsSession {
 
         WalletManagerSubAppSession that = (WalletManagerSubAppSession) o;
 
-        return subApps == that.subApps;
+        return subApp == that.subApp;
 
     }
 
     @Override
     public int hashCode() {
-        return subApps.hashCode();
+        return subApp.hashCode();
+    }
+
+    @Override
+    public InstalledSubApp getSubAppSessionType() {
+        return null;
     }
 }

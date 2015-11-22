@@ -9,13 +9,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.UUID;
 
 /**
  * Created by Nerio on 17/09/15.
+ * Modified by Franklin 02/11/2015
  */
 public class AssetIssuerIdentityDatabaseFactory implements DealsWithErrors, DealsWithPluginDatabaseSystem {
 
@@ -41,7 +42,7 @@ public class AssetIssuerIdentityDatabaseFactory implements DealsWithErrors, Deal
     public Database createDatabase(UUID pluginId) throws CantCreateDatabaseException {
         Database database;
         /**
-         * I will create the database where I am going to store the information of this User.
+         * I will create the database where I am going to store the information of this Issuer.
          */
         try {
             database = this.pluginDatabaseSystem.createDatabase(pluginId, AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DB_NAME);
@@ -56,11 +57,9 @@ public class AssetIssuerIdentityDatabaseFactory implements DealsWithErrors, Deal
 
             table = databaseFactory.newTableFactory(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME);
 
-            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, true);
-            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PRIVATE_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
-            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
-            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
-            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
+            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, true);
+            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
 
             table.addIndex(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FIRST_KEY_COLUMN);
 

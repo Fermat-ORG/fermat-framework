@@ -94,6 +94,7 @@ public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
         cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME                         );
         cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TYPE_COLUMN_NAME                          );
         cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME                        );
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_DEALER_COLUMN_NAME                        );
         cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME       );
 
         /**
@@ -109,31 +110,44 @@ public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
         return tables;
     }
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
-
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
-
-        DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                      final DeveloperDatabaseTable developerDatabaseTable) {
 
         try {
 
-            selectedTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            initializeDatabase();
 
+            final List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
+
+            final DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
+
+            try {
+
+                selectedTable.loadToMemory();
+            } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+                return returnedRecords;
+            }
+
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+
+            List<String> developerRow;
+
+            for (DatabaseTableRecord row : records) {
+
+                developerRow = new ArrayList<>();
+
+                for (DatabaseRecord field : row.getValues())
+                    developerRow.add(field.getValue());
+
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            }
             return returnedRecords;
+
+        } catch (Exception e) {
+
+            System.err.println(e);
+            return new ArrayList<>();
         }
-
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-
-        List<String> developerRow = new ArrayList<>();
-
-        for (DatabaseTableRecord row : records) {
-
-            for (DatabaseRecord field : row.getValues())
-                developerRow.add(field.getValue());
-
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-        }
-        return returnedRecords;
     }
 }

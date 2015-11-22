@@ -1,9 +1,8 @@
 package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
@@ -16,10 +15,11 @@ public class Actor implements ActorAssetRedeemPoint {
     private String name;
     private long contactRegistrationDate;
     private byte[] profileImage;
+    private Location location;
     private Double latitude;
     private Double longitude;
     private Address address;
-    private ConnectionState state;
+    private DAPConnectionState state;
     private CryptoAddress cryptoAddress;
     private String contactInformation;
     private String hoursOfOperation;
@@ -61,7 +61,7 @@ public class Actor implements ActorAssetRedeemPoint {
     }
 
     @Override
-    public long getContactRegistrationDate() {
+    public long getRegistrationDate() {
         return contactRegistrationDate;
     }
 
@@ -79,8 +79,20 @@ public class Actor implements ActorAssetRedeemPoint {
     }
 
     @Override
-    public ConnectionState getConnectionState() {
+    public DAPConnectionState getDapConnectionState() {
         return state;
+    }
+
+    /**
+     * Metodo {@code getLocation()}:
+     * devuelve la ubicacion geografica del RedeemPoint.
+     *
+     * @return un objeto {@link Location}
+     * que contiene las coordenadas y demas valores para ubicar al RedeemPoint en el mapa.
+     */
+    @Override
+    public Location getLocation() {
+        return location;
     }
 
     @Override
@@ -88,14 +100,26 @@ public class Actor implements ActorAssetRedeemPoint {
         return this.address;
     }
 
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     @Override
     public String getContactInformation() {
         return this.contactInformation;
     }
 
+    public void setContactInformation(String contactInformation) {
+        this.contactInformation = contactInformation;
+    }
+
     @Override
     public String getHoursOfOperation() {
         return this.hoursOfOperation;
+    }
+
+    public void setHoursOfOperation(String hoursOfOperation) {
+        this.hoursOfOperation = hoursOfOperation;
     }
 
     @Override
@@ -125,20 +149,8 @@ public class Actor implements ActorAssetRedeemPoint {
         this.longitude = longitude;
     }
 
-    public void setState(ConnectionState state) {
+    public void setState(DAPConnectionState state) {
         this.state = state;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public void setContactInformation(String contactInformation) {
-        this.contactInformation = contactInformation;
-    }
-
-    public void setHoursOfOperation(String hoursOfOperation) {
-        this.hoursOfOperation = hoursOfOperation;
     }
 
 }

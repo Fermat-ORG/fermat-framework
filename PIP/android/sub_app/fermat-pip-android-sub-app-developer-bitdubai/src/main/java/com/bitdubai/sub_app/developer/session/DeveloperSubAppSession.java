@@ -1,8 +1,13 @@
 package com.bitdubai.sub_app.developer.session;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_factory.interfaces.WalletFactoryManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +15,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class DeveloperSubAppSession implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession{
+public class DeveloperSubAppSession extends AbstractFermatSession<InstalledSubApp,ToolManager,SubAppResourcesProviderManager> implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession{
 
 
     /**
@@ -28,20 +33,18 @@ public class DeveloperSubAppSession implements com.bitdubai.fermat_android_api.l
     private ToolManager toolManager;
 
 
-    public DeveloperSubAppSession(final SubApps subApps, final ErrorManager errorManager, final ToolManager toolManager){
+    public DeveloperSubAppSession(final InstalledSubApp subApp, final ErrorManager errorManager, final ToolManager toolManager){
+        super(subApp.getAppPublicKey(),subApp,errorManager,toolManager,null);
         this.subApps=subApps;
         data= new HashMap<>();
         this.errorManager=errorManager;
         this.toolManager=toolManager;
     }
 
-    public DeveloperSubAppSession(SubApps subApps) {
-        this.subApps = subApps;
-    }
 
     @Override
-    public SubApps getSubAppSessionType() {
-        return subApps;
+    public InstalledSubApp getSubAppSessionType() {
+        return getFermatApp();
     }
 
     @Override

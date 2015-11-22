@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/settings_container">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:paddingLeft="7dip"
+        android:paddingRight="7dip"
+        android:id="@+id/linear_layout_setting_container"
+        >
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_view_notification_title"
+            android:text="Notifications"
+            android:background="#f3f3f4"
+            android:textColor="#12aca1"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:paddingLeft="20dp"
+            app:typeface="ROBOTO_REGULAR"
+            android:layout_marginTop="30dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="24dp">
+
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_view_notification_item"
+                android:text="Phone notifications"
+                android:textColor="#4f4f4f"
+                app:typeface="ROBOTO_REGULAR"
+                android:layout_marginLeft="20dp"/>
+
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch_notifications"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="30dp"
+                />
+
+
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

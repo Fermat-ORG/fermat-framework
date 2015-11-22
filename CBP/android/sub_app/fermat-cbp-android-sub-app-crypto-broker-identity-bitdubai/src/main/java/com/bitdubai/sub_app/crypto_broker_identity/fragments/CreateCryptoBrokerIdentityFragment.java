@@ -25,8 +25,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
@@ -177,7 +177,7 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
 
         switch (resultKey) {
             case SUCCESS:
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
+                //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
                 break;
             case EXCEPTION_THROWN:
                 Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();

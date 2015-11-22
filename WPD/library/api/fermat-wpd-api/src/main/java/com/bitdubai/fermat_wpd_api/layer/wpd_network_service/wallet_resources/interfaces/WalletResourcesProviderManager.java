@@ -25,7 +25,7 @@ import java.util.UUID;
  *  @version 1.0.0
  *  @since   18/02/15.
  * */
-public interface WalletResourcesProviderManager extends ResourceProviderManager{
+public interface WalletResourcesProviderManager extends ResourceProviderManager {
 
 
     /**

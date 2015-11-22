@@ -1,0 +1,133 @@
+image::https://github.com/bitDubai/media-kit/blob/master/Coins/CBP.jpg[FermatCBP]
+== Chapter 17: Fermat Crypto Broker Platform
+In this platform the actors involved are the *crypto broker* and his customers (*crypto customers*). A *crypto broker* is a person or small organization whose business logic is to buy and sell cryptocurrency for fiat money in his local market, obtaining his profits from the difference in the buy/sell price. We distinguish also two usual levels of *crypto brokers*, those acting as *crypto brokers wholesalers* and those who deal with final customers. The key goal of this platform is to *facilitate* the most of the routine tasks to run the business and even provide the necessary functionalities to prevent _always_ the loss of money in every transaction.   
+
+=== New components
+The new components added to the framework offer the following functionalities:
+[horizontal]
+Fiat Index :: to check the exchange rate of fiat currencies.
+Business transactions :: to handle more complex transactions that include negotiation, contracts (agreements), sale and purchase of crypto and fiat money.
+Crypto Broker Platform Wallet Manager :: to manage different wallets according to multiple actor identities in the three actor types ( as crypto broker, cryptocustomer, crypto wholesaler).
+Community Components  :: to keep track of relationships between Crypto Brokers and Crypto customers by defining communities.
+Wholesalers :: contact list of available crypto wholesalers.
+Crypto Broker Wallets :: Crypto Broker Wallet , Crypto Broker Customer Wallet +
+
+=== Fermat Crypto Broker Wallet
+This Wallet is designed with the theoretical assumption that the broker always has available stock of cryptocurrency and fiat money and that his activity is to be constantly selling this two kind of products obtaining profit. The functionalities offered should help him to run the business in a simple way, taking the responsibility of the basic management of the broker's fund (in cryptocurrency and fiat money, in cash and in bank accounts), the management of the contact list of his customers, and a balance of the profits generated. +
+Key functionalities are:
+
+* *Funds restock and destock*:
+** Crypto Currency 
+** Cash Money (Fiat money in cash)
+** Bank Money (Fiat money in a bank account)
+* *Incoming/Outgoing money*: 
+** Cash on Hand 
+** Delivered Cash
+** Money Bank Deposit 
+* *Special functions* for _associated Crypto Brokers network_ (*agreement* between colleagues to be able to manage joint operations when needed) :
+** keep track of *Broker-to-Broker contract*
+
+
+
+=== Fermat Crypto Customer Wallet
+It has the complementary functionalities of the transactions involved in dealing with a Crypto Broker, keeping track of the details how each exchange was actually made.
+
+////
+=== _Actor Network Service layer_
+Crypto Broker :: 
+Crypto Customer :: +
+
+=== _Identity layer_
+Crypto Broker :: 
+Crypto Customer :: +
+
+=== _World layer_
+Fiat Index :: +
+
+=== _Wallet layer_
+Crypto Broker :: +
+
+=== _Contract layer_
+Customer Broker Crypto Money Purchase ::
+Customer Broker Cash Money Purchase ::
+Customer Broker Bank Money Purchase ::
+Customer Broker Crypto Money Sale ::
+Customer Broker Cash Money Sale ::
+Customer Broker Bank Money Sale ::
+Broker to Broker ::
+Broker to Wholesaler :: +
+
+=== _Business Transaction layer_
+Crypto Money Stock Replenishment ::
+Cash Money Stock Replenishment ::
+Bank Money Stock Replenishment ::
+Customer Broker Crypto Sale ::
+Customer Broker Cash Sale ::
+Customer Broker Bank Sale ::
+Customer Broker Crypto Purchase ::
+Customer Broker Cash Purchase ::
+Customer Broker Bank Purchase ::
+Wholesaler Crypto Sale ::
+Wholesaler Fiat Sale :: +
+
+=== _Request layer_
+Customer Broker Purchase ::
+Customer Broker Sale :: +
+
+=== _Middleware layer_
+Customers ::
+Wholesalers ::
+Crypto Broker Wallet Identity ::
+Wallet Manager ::
+Sub App Manager :: +
+
+=== _Actor layer_
+Crypto Broker :: 
+Crypto Customer :: +
+
+=== _Agent layer_
+Crypto Broker :: +
+
+=== _Desktop Module layer_
+Sub App Manager :: 
+Wallet Manager :: +
+
+=== _Subapp Module layer_
+Crypto Broker Identity ::
+Crypto Broker Community :: 
+Crypto customer Identity ::
+Crypto customer Community :: 
+Customers ::
+Suppliers :: +
+
+=== _Wallet Module layer_
+Crypto Broker :: 
+Crypto Customer :: +
+
+=== _Desktop layer_
+Sub App Manager :: 
+Wallet Manager :: +
+
+=== _Sub App layer_
+Crypto Broker Identity ::
+Crypto Broker Community :: 
+Crypto customer Identity ::
+Crypto customer Community :: 
+Customers ::
+Suppliers :: +
+
+=== _Reference Wallet layer_
+Crypto Broker :: 
+Crypto Customer :: +
+
+////
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+==== _Continue reading ..._
+////
+link:book-chapter-19.asciidoc[Digital Assets Platform]
+////
+
+link:book-chapter-18.asciidoc[Next Chapter]
+
+link:book-chapter-16.asciidoc[Previous Chapter]
+

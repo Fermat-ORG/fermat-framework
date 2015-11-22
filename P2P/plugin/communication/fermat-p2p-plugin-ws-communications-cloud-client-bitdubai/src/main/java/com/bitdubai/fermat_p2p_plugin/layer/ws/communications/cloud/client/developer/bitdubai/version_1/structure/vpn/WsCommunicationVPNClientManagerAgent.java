@@ -9,8 +9,13 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.JsonObject;
 
 import java.net.URI;
@@ -34,14 +39,14 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     private static long SLEEP_TIME = 60000;
 
     /**
-     * Represent the requestedVpnConnections
-     */
-    private Map<NetworkServiceType, Map<String, PlatformComponentProfile>> requestedVpnConnections;
-
-    /**
      * Represent the vpnClientActiveCache;
      */
     private Map<NetworkServiceType, Map<String, WsCommunicationVPNClient>> vpnClientActiveCache;
+
+    /**
+     * Represent the eventManager
+     */
+    private EventManager eventManager;
 
     /**
      * Represent the isRunning
@@ -52,7 +57,6 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      * Constructor
      */
     public WsCommunicationVPNClientManagerAgent(){
-       this.requestedVpnConnections = new ConcurrentHashMap<>();
        this.vpnClientActiveCache = new ConcurrentHashMap<>();
        this.isRunning = Boolean.FALSE;
     }
@@ -64,7 +68,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      * @param vpnServerIdentity
      * @param remotePlatformComponentProfile
      */
-    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, String participantIdentity, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService) {
+    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, String participantIdentity, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService, EventManager eventManager) {
 
         /*
          * Create the identity
@@ -91,8 +95,12 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         /*
          * Construct the vpn client
          */
-        WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(vpnClientIdentity, serverURI, remotePlatformComponentProfile, remoteParticipantNetworkService, vpnServerIdentity, headers);
+        WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(this, vpnClientIdentity, serverURI, remotePlatformComponentProfile, remoteParticipantNetworkService, vpnServerIdentity, headers);
 
+        /*
+         * Configure the event manager
+         */
+        this.eventManager = eventManager;
 
         System.out.println("GUARDANDO LA CONEXION EN CACHE CON NS = " + remoteParticipantNetworkService.getNetworkServiceType());
         System.out.println("GUARDANDO LA CONEXION EN CACHE CON PK = " + remotePlatformComponentProfile.getIdentityPublicKey());
@@ -106,7 +114,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
         }else {
 
-            Map<String, WsCommunicationVPNClient> newMap = new HashMap<>();
+            Map<String, WsCommunicationVPNClient> newMap = new ConcurrentHashMap<>();
             newMap.put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
             vpnClientActiveCache.put(remoteParticipantNetworkService.getNetworkServiceType(), newMap);
         }
@@ -133,31 +141,59 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
                 //If empty
                 if (vpnClientActiveCache.isEmpty()){
+                    System.out.println(" WsCommunicationVPNClientManagerAgent - Auto stop ");
                     //Auto stop
                     isRunning = Boolean.FALSE;
+                    this.interrupt();
                 }
 
                 for (NetworkServiceType networkServiceType : vpnClientActiveCache.keySet()) {
 
                     for (String remote : vpnClientActiveCache.get(networkServiceType).keySet()) {
 
-                        System.out.println(" WsCommunicationVPNClientManagerAgent - networkServiceType.size() "+vpnClientActiveCache.get(networkServiceType).size());
+                       System.out.println(" WsCommunicationVPNClientManagerAgent - vpnClientActiveCache.get("+networkServiceType+").size() = "+vpnClientActiveCache.get(networkServiceType).size());
 
-                       /* WsCommunicationVPNClient wsCommunicationVPNServer = vpnClientActiveCache.get(networkServiceType).get(remote);
+                       WsCommunicationVPNClient wsCommunicationVPNClient = vpnClientActiveCache.get(networkServiceType).get(remote);
 
-                        //Verified is this vpn is active
-                        if (!wsCommunicationVPNServer.isActive()){
+                        //Verified if this vpn connection is open
+                        if (!wsCommunicationVPNClient.getConnection().isOpen()){
 
-                            wsCommunicationVPNServer.getConnection().close();
-                            vpnClientActiveCache.remove(wsCommunicationVPNServer);
+                            try {
 
-                        } */
+                                /*
+                                 * Verified if a pong message respond pending
+                                 */
+                                if (wsCommunicationVPNClient.isPongMessagePending()){
+                                    throw new RuntimeException("Connection maybe not active");
+                                }
 
+                                wsCommunicationVPNClient.sendPingMessage();
+
+                            }catch (Exception e){
+                                System.out.println(" WsCommunicationVPNClientManagerAgent - Error occurred sending ping to the vpn node, closing the connection to remote node");
+                                wsCommunicationVPNClient.close();
+                                vpnClientActiveCache.get(networkServiceType).remove(remote);
+                                riseVpnConnectionCloseNotificationEvent(wsCommunicationVPNClient.getRemoteParticipantNetworkService().getNetworkServiceType(), wsCommunicationVPNClient.getRemoteParticipant());
+                            }
+
+                        }else{
+                            //If the connection is no open
+                            wsCommunicationVPNClient.close();
+                            vpnClientActiveCache.get(networkServiceType).remove(remote);
+                        }
+
+                    }
+
+                    //Validate if the cache list is empty
+                    if (vpnClientActiveCache.get(networkServiceType).isEmpty()){
+                        vpnClientActiveCache.remove(networkServiceType);
                     }
 
                 }
 
-                sleep(WsCommunicationVPNClientManagerAgent.SLEEP_TIME);
+                if (!this.isInterrupted()){
+                    sleep(WsCommunicationVPNClientManagerAgent.SLEEP_TIME);
+                }
 
             }
 
@@ -165,6 +201,20 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Notify when cloud client component es registered,
+     * this event is raise to show the message in a popup of the UI
+     */
+    public void riseVpnConnectionCloseNotificationEvent(NetworkServiceType networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.VPN_CONNECTION_CLOSE);
+        VPNConnectionCloseNotificationEvent event =  (VPNConnectionCloseNotificationEvent) platformEvent;
+        event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
+        event.setNetworkServiceApplicant(networkServiceApplicant);
+        event.setRemoteParticipant(remoteParticipant);
+        eventManager.raiseEvent(platformEvent);
     }
 
     /**

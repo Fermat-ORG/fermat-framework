@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 
 /**
  * Created by Matias Furszyfer on 2015.10.18..
@@ -87,5 +89,12 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
      */
     public ErrorManager getErrorManager(){
        return fermatSession.getErrorManager();
+    }
+
+    protected void changeApp(Engine emgine,Object[] objects){
+        getFermatScreenSwapper().connectWithOtherApp(emgine,objects);
+    }
+    protected FermatScreenSwapper getFermatScreenSwapper(){
+        return (FermatScreenSwapper) getOwnerActivity();
     }
 }

@@ -2,7 +2,9 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_iss
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -11,11 +13,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
@@ -25,9 +29,9 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events.AssetIssuingTransactionMonitorAgent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
 import java.util.UUID;
@@ -54,6 +58,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     DigitalAssetIssuingVault digitalAssetIssuingVault;
     LogManager logManager;
     BitcoinNetworkManager bitcoinNetworkManager;
+    //ActorAssetIssuerManager actorAssetIssuerManager;
 
     public AssetIssuingTransactionManager(UUID pluginId,
                                           CryptoVaultManager cryptoVaultManager,
@@ -112,6 +117,28 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         }
         this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
+
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException{
+        if(actorAssetIssuerManager==null){
+            throw new CantSetObjectException("actorAssetIssuerManager is null");
+        }
+        this.digitalAssetCryptoTransactionFactory.setActorAssetIssuerManager(actorAssetIssuerManager);
+    }
+
+    public void setIntraWalletUserActorManager(IntraWalletUserActorManager intraWalletUserActorManager) throws CantSetObjectException{
+        if(intraWalletUserActorManager==null){
+            throw new CantSetObjectException("intraWalletUserActorManager is null");
+        }
+        this.digitalAssetCryptoTransactionFactory.setIntraWalletUserActorManager(intraWalletUserActorManager);
+    }
+
+    public void setIntraWalletUserIdentityManager(IntraWalletUserIdentityManager intraWalletUserIdentityManager) throws CantSetObjectException{
+        if(intraWalletUserIdentityManager==null){
+            throw new CantSetObjectException("intraWalletUserIdentityManager is null");
+        }
+        this.digitalAssetCryptoTransactionFactory.setIntraWalletUserIdentityManager(intraWalletUserIdentityManager);
+    }
+
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the asset issuing plugin
      * @throws CantGetLoggedInDeviceUserException
@@ -130,7 +157,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
                     this.outgoingIntraActorManager);
             this.assetIssuingTransactionMonitorAgent.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
-            this.setBitcoinNetworkManager(bitcoinNetworkManager);
+            this.assetIssuingTransactionMonitorAgent.setBitcoinNetworkManager(bitcoinNetworkManager);
             this.assetIssuingTransactionMonitorAgent.start();
         }else{
             this.assetIssuingTransactionMonitorAgent.start();
@@ -249,5 +276,18 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         } catch (CantCheckAssetIssuingProgressException exception) {
             throw new CantExecuteDatabaseOperationException(exception, "Getting the number of issued assets","Cannot check the asset issuing progress");
         }
+    }
+
+    @Override
+    public IssuingStatus getIssuingStatus(String assetPublicKey) throws CantExecuteDatabaseOperationException {
+        try {
+            String issuingStatusCode=this.assetIssuingTransactionDao.getIssuingStatusByPublicKey(assetPublicKey);
+            return IssuingStatus.getByCode(issuingStatusCode);
+        } catch (CantCheckAssetIssuingProgressException exception) {
+            throw new CantExecuteDatabaseOperationException(exception,"Getting the Issuing status","Cannot check the Asset Issuing progress");
+        } catch (InvalidParameterException exception) {
+            throw new CantExecuteDatabaseOperationException(exception,"Getting the Issuing status","Cannot invalid parameter in IssuingStatus enum");
+        }
+
     }
 }

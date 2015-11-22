@@ -1,7 +1,7 @@
 package unit.com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
+import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -17,10 +17,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesInstallationNetworkServiceDAO;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.Repository;
@@ -84,7 +84,7 @@ public class UninstallLanguageForSubAppTest {
     private Repository repository;
 
     @Mock
-    private GithubConnection githubConnection;
+    private GitHubConnection gitHubConnection;
 
     @Mock
     private XMLParser mockXMLParser;
@@ -120,19 +120,19 @@ public class UninstallLanguageForSubAppTest {
 
     String repoManifest = "<skin ></skin >";
 
-    SubAppResourcesInstallationNetworkServicePluginRoot subAppResourcesInstallationNetworkServicePluginRoot;
+    SubAppResourcesNetworkServicePluginRoot subAppResourcesNetworkServicePluginRoot;
     private SubAppResourcesInstallationNetworkServiceDAO subAppResourcesDAO;
 
     @Before
     public void setUp() throws Exception {
-        subAppResourcesInstallationNetworkServicePluginRoot = new SubAppResourcesInstallationNetworkServicePluginRoot();
-        subAppResourcesInstallationNetworkServicePluginRoot.setPluginFileSystem(pluginFileSystem);
-        subAppResourcesInstallationNetworkServicePluginRoot.setEventManager(mockEventManager);
-        subAppResourcesInstallationNetworkServicePluginRoot.setErrorManager(errorManager);
-        subAppResourcesInstallationNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        subAppResourcesNetworkServicePluginRoot = new SubAppResourcesNetworkServicePluginRoot();
+        subAppResourcesNetworkServicePluginRoot.setPluginFileSystem(pluginFileSystem);
+        subAppResourcesNetworkServicePluginRoot.setEventManager(mockEventManager);
+        subAppResourcesNetworkServicePluginRoot.setErrorManager(errorManager);
+        subAppResourcesNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
-        when(githubConnection.getFile(anyString())).thenReturn(repoManifest);
+        when(gitHubConnection.getFile(anyString())).thenReturn(repoManifest);
         when(pluginFileSystem.createTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(layoutFile);
         when(pluginFileSystem.createBinaryFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(imageFile);
 
@@ -167,14 +167,14 @@ public class UninstallLanguageForSubAppTest {
     }
     @Test
     public void testUninstallLanguageForSubApp_FileFound() throws Exception{
-        subAppResourcesInstallationNetworkServicePluginRoot.start();
-        catchException(subAppResourcesInstallationNetworkServicePluginRoot).uninstallLanguageForSubApp(UUID.randomUUID(), "en", "subAppPublicKey");
+        subAppResourcesNetworkServicePluginRoot.start();
+        catchException(subAppResourcesNetworkServicePluginRoot).uninstallLanguageForSubApp(UUID.randomUUID(), "en", "subAppPublicKey");
         assertThat(caughtException()).isNull();
     }
     @Test
         public void testUninstallLanguageForSubApp_FileNotFoundException() throws Exception{
-            subAppResourcesInstallationNetworkServicePluginRoot.start();
-            catchException(subAppResourcesInstallationNetworkServicePluginRoot).uninstallLanguageForSubApp(null, "en", "subAppPublicKey");
+            subAppResourcesNetworkServicePluginRoot.start();
+            catchException(subAppResourcesNetworkServicePluginRoot).uninstallLanguageForSubApp(null, "en", "subAppPublicKey");
             assertThat(caughtException()).isNotNull();
         }
 }

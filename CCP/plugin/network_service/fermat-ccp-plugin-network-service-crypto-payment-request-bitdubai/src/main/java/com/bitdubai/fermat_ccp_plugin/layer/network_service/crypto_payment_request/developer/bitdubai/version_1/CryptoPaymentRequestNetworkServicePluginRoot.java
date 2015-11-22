@@ -2,26 +2,36 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -43,18 +53,14 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestManager;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.CommunicationLayerNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.CommunicationLayerNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDao;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantCreateCryptoPaymentRequestException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantTakeActionException;
@@ -62,75 +68,56 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.CryptoPaymentRequestExecutorAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * TODO This plugin do.
  *
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.
  */
-public class CryptoPaymentRequestNetworkServicePluginRoot implements
+public final class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractNetworkService implements
         CryptoPaymentRequestManager,
-        DealsWithWsCommunicationsCloudClientManager,
-        DealsWithErrors,
-        DealsWithEvents,
-        DealsWithPluginDatabaseSystem,
-        NetworkService,
-        Plugin,
-        Service {
+        DatabaseManagerForDevelopers {
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    /**
-     * DealsWithEvents Interface member variables
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
-    private List<FermatEventListener> listenersAdded;
-    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST;
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    /**
-     * Plugin Interface member variables.
-     */
-    private UUID pluginId;
-
-    /**
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-    /**
-     * Represent the wsCommunicationsCloudClientManager
-     */
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
+
+
+
+    private List<FermatEventListener> listenersAdded;
 
     /**
      *  Represent the remoteNetworkServicesRegisteredList
      */
-    private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
+    private CopyOnWriteArrayList<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
     /**
      * Represent the cryptoPaymentRequestNetworkServiceConnectionManager
@@ -143,30 +130,6 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     private Database dataBase;
 
     /**
-     * Represent the identity
-     */
-    private ECCKeyPair identity;
-
-    /**
-     * Represent the platformComponentProfile
-     */
-    private PlatformComponentProfile platformComponentProfile;
-
-    /**
-     * Crypto Payment Request Network Service details.
-     */
-    private final PlatformComponentType platformComponentType;
-    private final NetworkServiceType networkServiceType;
-    private final String name;
-    private final String alias;
-    private final String extraData;
-
-    /**
-     * Represent the register
-     */
-    private boolean register;
-
-    /**
      * Represent the registrationProcessNetworkServiceAgent
      */
     private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
@@ -176,21 +139,21 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
 
     /**
-     *  Active connectionss
-     */
-    private Map<String,PlatformComponentProfile> cacheConnections;
-
-    /**
      * Constructor
      */
     public CryptoPaymentRequestNetworkServicePluginRoot() {
-        super();
+        super(
+                new PluginVersionReference(new Version()),
+                PlatformComponentType.NETWORK_SERVICE,
+                NetworkServiceType.CRYPTO_PAYMENT_REQUEST,
+                "Crypto Payment Request Network Service",
+                "CryptoPaymentRequestNetworkService",
+                null,
+                EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST
+        );
+
+        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
         this.listenersAdded = new ArrayList<>();
-        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
-        this.networkServiceType    = NetworkServiceType.CRYPTO_PAYMENT_REQUEST;
-        this.name                  = "Crypto Payment Request Network Service";
-        this.alias                 = "CryptoPaymentRequestNetworkService";
-        this.extraData             = null;
     }
 
     /**
@@ -200,16 +163,18 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      * - Type          : SENT.
      */
     @Override
-    public void sendCryptoPaymentRequest(UUID                  requestId        ,
-                                         String                identityPublicKey,
-                                         Actors                identityType     ,
-                                         String                actorPublicKey   ,
-                                         Actors                actorType        ,
-                                         CryptoAddress         cryptoAddress    ,
-                                         String                description      ,
-                                         long                  amount           ,
-                                         long                  startTimeStamp   ,
-                                         BlockchainNetworkType networkType      ) throws CantSendRequestException {
+    public final void sendCryptoPaymentRequest(final UUID                  requestId        ,
+                                               final String                identityPublicKey,
+                                               final Actors                identityType     ,
+                                               final String                actorPublicKey   ,
+                                               final Actors                actorType        ,
+                                               final CryptoAddress         cryptoAddress    ,
+                                               final String                description      ,
+                                               final long                  amount           ,
+                                               final long                  startTimeStamp   ,
+                                               final BlockchainNetworkType networkType      ) throws CantSendRequestException {
+
+        System.out.println("********** Crypto Payment Request NS -> sending request. PROCESSING_SEND - REQUEST - SENT.");
 
         try {
 
@@ -218,20 +183,22 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             RequestType          direction     = RequestType         .SENT           ;
 
             cryptoPaymentRequestNetworkServiceDao.createCryptoPaymentRequest(
-                    requestId        ,
+                    requestId,
                     identityPublicKey,
-                    identityType     ,
-                    actorPublicKey   ,
-                    actorType        ,
-                    cryptoAddress    ,
-                    description      ,
-                    amount           ,
-                    startTimeStamp   ,
-                    direction        ,
-                    action           ,
-                    protocolState    ,
+                    identityType,
+                    actorPublicKey,
+                    actorType,
+                    cryptoAddress,
+                    description,
+                    amount,
+                    startTimeStamp,
+                    direction,
+                    action,
+                    protocolState,
                     networkType
             );
+
+            System.out.println("********** Crypto Payment Request NS -> sending request. PROCESSING_SEND - REQUEST - SENT - OK.");
 
         } catch(CantCreateCryptoPaymentRequestException e) {
             // i inform to error manager the error.
@@ -450,10 +417,21 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     @Override
     public void start() throws CantStartPluginException {
 
+        System.out.println("********* Crypto Payment Request: Starting. ");
+
+        try {
+            loadKeyPair(pluginFileSystem);
+        } catch (CantLoadKeyPairException e) {
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, "", "Problem trying to load the key pair of the plugin.");
+        }
+
         /*
          * Validate required resources
          */
         validateInjectedResources();
+
 
         // initialize crypto payment request dao
 
@@ -465,22 +443,23 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
         } catch(CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException e) {
 
-            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request network service dao.");
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
         try {
 
             /*
-             * Create a new key pair for this execution
-             */
-            identity = new ECCKeyPair();
-
-            /*
              * Initialize the data base
              */
             initializeCommunicationDb();
+
+            /*
+             * Initialize listeners
+             */
+            initializeListener();
+
 
             /*
              * Verify if the communication cloud client is active
@@ -494,40 +473,30 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
-            // adding communication network service common events listeners
-            addCryptoPaymentRequestListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION           , new CompleteComponentRegistrationNotificationEventHandler(this));
-            addCryptoPaymentRequestListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION, new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
-            addCryptoPaymentRequestListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION     , new CompleteComponentConnectionRequestNotificationEventHandler(this));
+            remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
 
-
-            addCryptoPaymentRequestListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION          , new NewReceiveMessagesNotificationEventHandler(null));
-
+            /*
+             * Its all ok, set the new status
+            */
             this.serviceStatus = ServiceStatus.STARTED;
 
         } catch (CantInitializeNetworkServiceDatabaseException exception) {
 
-            String context =
-                        "Plugin ID:     " + pluginId + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
-                        "Database Name: " + CommunicationLayerNetworkServiceDatabaseConstants.DATA_BASE_NAME;
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
+            String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
+        System.out.println("********* Crypto Payment Request: Successful start. ");
 
-
-    }
-
-    private void addCryptoPaymentRequestListener(final FermatEventEnum fermatEventEnum,
-                                                 final FermatEventHandler fermatEventHandler) {
-
-        FermatEventListener fermatEventListener = eventManager.getNewListener(fermatEventEnum);
-        fermatEventListener.setEventHandler(fermatEventHandler);
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
     }
 
     /**
@@ -539,24 +508,24 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
         try {
 
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationLayerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
 
         } catch (DatabaseNotFoundException e) {
 
-            CommunicationLayerNetworkServiceDatabaseFactory communicationLayerNetworkServiceDatabaseFactory = new CommunicationLayerNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            CommunicationNetworkServiceDatabaseFactory communicationLayerNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
-                this.dataBase = communicationLayerNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationLayerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = communicationLayerNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeNetworkServiceDatabaseException(cantCreateDatabaseException);
 
             }
@@ -591,11 +560,55 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
 
         }
 
+    }
+
+    private void initializeListener(){
+
+         /*
+         * Listen and handle Complete Component Registration Notification Event
+         */
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+         /*
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /**
+         *  failure connection
+         */
+
+        fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /**
+         * new message
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     @Override
@@ -628,6 +641,12 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         // close all connections.
         communicationNetworkServiceConnectionManager.closeAllConnection();
 
+        // interrupt the registration agent execution
+        communicationRegistrationProcessNetworkServiceAgent.stop();
+
+        // interrupt the executor agent execution
+        cryptoPaymentRequestExecutorAgent.stop();
+
         // set to not registered.
         register = Boolean.FALSE;
 
@@ -635,17 +654,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     }
 
     @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see NetworkService#getId()
-     */
-    @Override
-    public UUID getId() {
-        return this.pluginId;
+    public String getIdentityPublicKey() {
+        return this.identity.getPublicKey();
     }
 
     /**
@@ -657,39 +667,19 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         return remoteNetworkServicesRegisteredList;
     }
 
-    /**
-     * (non-javadoc)
-     * @see NetworkService#requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters)
-     */
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters){
 
-        System.out.println("CryptoPaymentNetworkServicePluginRoot - requestRemoteNetworkServicesRegisteredList");
-
+         /*
+         * Request the list of component registers
+         */
         try {
 
-            /*
-             * Request the list of component registers
-             */
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(this.getPlatformComponentProfilePluginRoot(), discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Plugin was not registered";
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
         }
 
@@ -723,16 +713,16 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
                                                                          final NetworkServiceType       fromOtherNetworkServiceType   ) {
 
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
-                platformComponentType         ,
-                networkServiceType            ,
-                alias                         ,
-                identityPublicKey             ,
-                location                      ,
-                distance                      ,
-                name                          ,
-                extraData                     ,
-                firstRecord                   ,
-                numRegister                   ,
+                platformComponentType,
+                networkServiceType,
+                alias,
+                identityPublicKey,
+                location,
+                distance,
+                name,
+                extraData,
+                firstRecord,
+                numRegister,
                 fromOtherPlatformComponentType,
                 fromOtherNetworkServiceType
         );
@@ -743,65 +733,23 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      * IMPORTANT: Call this method only in the RegistrationProcessNetworkServiceAgent, when execute the registration process
      * because at this moment, is create the platformComponentProfile for this component
      */
-    public void initializeCommunicationNetworkServiceConnectionManager(){
+    @Override
+    public void initializeCommunicationNetworkServiceConnectionManager() {
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
-                platformComponentProfile,
+                this.getPlatformComponentProfilePluginRoot(),
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
                 dataBase,
                 errorManager,
-                eventManager
+                eventManager,
+                this.getEventSource(),
+                getPluginVersionReference()
         );
     }
-
-    public String getIdentityPublicKey(){
-        return this.identity.getPublicKey();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public String getExtraData() {
-        return extraData;
-    }
-
-    public PlatformComponentProfile getPlatformComponentProfile() {
-        return platformComponentProfile;
-    }
-
-    @Override
-    public PlatformComponentType getPlatformComponentType() {
-        return platformComponentType;
-    }
-
-    @Override
-    public NetworkServiceType getNetworkServiceType() {
-        return networkServiceType;
-    }
-
-    public void setPlatformComponentProfile(final PlatformComponentProfile platformComponentProfile) {
-        this.platformComponentProfile = platformComponentProfile;
-    }
-
-    /**
-     * Get is Register
-     * @return boolean
-     */
-    public boolean isRegister() {
-        return register;
-    }
-
     /**
      * Handles the events CompleteComponentRegistrationNotification
      */
     public void handleCompleteComponentRegistrationNotificationEvent(final PlatformComponentProfile platformComponentProfileRegistered) {
-
-        System.out.println(" Crypto Payment Request Network Service - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
         /*
          * If the component registered have my profile and my identity public key
@@ -814,56 +762,43 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
              * Mark as register
              */
             this.register = Boolean.TRUE;
-            System.out.println(" Crypto Payment Request Network Service is now registered.");
 
             try {
 
                 cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
-                        communicationNetworkServiceConnectionManager,
                         this,
                         errorManager,
                         eventManager,
-                        pluginDatabaseSystem,
-                        pluginId,
-                        null
+                        cryptoPaymentRequestNetworkServiceDao,
+                        wsCommunicationsCloudClientManager,
+                        getPluginVersionReference()
                 );
 
                 cryptoPaymentRequestExecutorAgent.start();
 
-                addCryptoPaymentRequestListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION, new NewReceiveMessagesNotificationEventHandler(this));
-
-                System.out.println(" Crypto Payment Request Network Service Executor Agent is now running and listening New Receive Messages Notification Events.");
-
             } catch(CantStartAgentException e) {
 
                 CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             }
 
         }
     }
 
-    @Override
-    public void handleFailureComponentRegistrationNotificationEvent(final PlatformComponentProfile networkServiceApplicant,
-                                                                    final PlatformComponentProfile remoteParticipant      ) {
+// posta
 
+    @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+        System.out.println("----------------------------------\n" +
+                "FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
+                "--------------------------------------------------------");
         cryptoPaymentRequestExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
-    }
-
-    @Override
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
-
-        System.out.println(" Crypto Payment Request Network Service - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
-
-        System.out.print(" CPR NS - SUCCESSFUL CONNECTION: : " + getName());
-
-        remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
 
     }
 
-    @Override
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile){
 
+        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
     }
 
     /**
@@ -871,44 +806,41 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      */
     public void handleCompleteComponentConnectionRequestNotificationEvent(final PlatformComponentProfile remoteComponentProfile) {
 
-
-        System.out.println(" Crypto Payment Request Network Service - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
-
         /*
          * Tell the manager to handler the new connection established
          */
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
-
+        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty())
             remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
-
-            System.out.print(" CPR NS - INCOMING CONNECTION ADDED: " + remoteComponentProfile.getAlias());
-        }
-
     }
 
+    @Override
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
-    public void handleNewMessages(FermatMessage fermatMessage) throws CantHandleNewMessagesException {
+        remoteNetworkServicesRegisteredList.addAllAbsent(platformComponentProfileRegisteredList);
+    }
+
+    public final void handleNewMessages(final FermatMessage fermatMessage) {
 
         try {
 
-            Gson gson = new Gson();
+            final Gson gson = new Gson();
 
-            String jsonMessage = fermatMessage.getContent();
+            final String jsonMessage = fermatMessage.getContent();
 
-            NetworkServiceMessage networkServiceMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
+            final NetworkServiceMessage networkServiceMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
 
             switch (networkServiceMessage.getMessageType()) {
                 case INFORMATION:
                     // update the request to processing receive state with the given action.
-                    InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
+                    final InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
                     receiveInformationMessage(informationMessage);
                     System.out.println(" CPR NS - Information Message Received: "+informationMessage.toString());
                     break;
                 case REQUEST:
                     // create the request in processing receive state.
-                    RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
+                    final RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
                     receiveCryptoPaymentRequest(requestMessage);
                     System.out.println(" CPR NS - Request Message Received: " + requestMessage.toString());
                     break;
@@ -917,7 +849,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            reportUnexpectedException(e);
         }
     }
 
@@ -929,23 +861,23 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     private void receiveCryptoPaymentRequest(RequestMessage requestMessage) throws CantReceiveRequestException {
         try {
 
-            RequestProtocolState protocolState = RequestProtocolState.PROCESSING_RECEIVE;
+            RequestProtocolState protocolState = RequestProtocolState.PENDING_ACTION;
             RequestAction        action        = RequestAction       .REQUEST           ;
             RequestType          direction     = RequestType         .RECEIVED          ;
 
             cryptoPaymentRequestNetworkServiceDao.createCryptoPaymentRequest(
-                    requestMessage.getRequestId()        ,
-                    requestMessage.getActorPublicKey()   , // the actor receiving, is the identity now.
-                    requestMessage.getActorType()        , // the actor receiving, is the identity now.
+                    requestMessage.getRequestId(),
+                    requestMessage.getActorPublicKey(), // the actor receiving, is the identity now.
+                    requestMessage.getActorType(), // the actor receiving, is the identity now.
                     requestMessage.getIdentityPublicKey(), // the identity who sent the request, is the actor now.
-                    requestMessage.getIdentityType()     , // the identity who sent the request, is the actor now.
-                    requestMessage.getCryptoAddress()    ,
-                    requestMessage.getDescription()      ,
-                    requestMessage.getAmount()           ,
-                    requestMessage.getStartTimeStamp()   ,
-                    direction                            ,
-                    action                               ,
-                    protocolState                        ,
+                    requestMessage.getIdentityType(), // the identity who sent the request, is the actor now.
+                    requestMessage.getCryptoAddress(),
+                    requestMessage.getDescription(),
+                    requestMessage.getAmount(),
+                    requestMessage.getStartTimeStamp(),
+                    direction,
+                    action,
+                    protocolState,
                     requestMessage.getNetworkType()
             );
 
@@ -966,7 +898,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             cryptoPaymentRequestNetworkServiceDao.takeAction(
                     informationMessage.getRequestId(),
                     informationMessage.getAction(),
-                    RequestProtocolState.PROCESSING_RECEIVE
+                    RequestProtocolState.PENDING_ACTION
             );
 
         } catch(CantTakeActionException  |
@@ -982,32 +914,28 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     }
 
     private void reportUnexpectedException(final Exception e) {
-        this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
     }
 
     @Override
-    public void setWsCommunicationsCloudClientConnectionManager(final WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
-        this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+
     }
 
     @Override
-    public void setErrorManager(final ErrorManager errorManager) {
-        this.errorManager = errorManager;
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
-    public void setEventManager(final EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystemManager) {
-        this.pluginDatabaseSystem = pluginDatabaseSystemManager;
-    }
-
-    @Override
-    public void setId(final UUID pluginId) {
-        this.pluginId = pluginId;
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        try {
+            return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ArrayList<>();
+        }
     }
 
 }

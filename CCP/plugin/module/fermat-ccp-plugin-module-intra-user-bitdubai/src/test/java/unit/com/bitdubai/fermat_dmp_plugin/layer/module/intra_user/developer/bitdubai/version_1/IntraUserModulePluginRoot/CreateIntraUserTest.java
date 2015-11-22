@@ -2,7 +2,7 @@
 //
 //import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 //import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-//import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
 //
 //<<<<<<< HEAD:DMP/plugin/module/fermat-dmp-plugin-module-intra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/module/intra_user/developer/bitdubai/version_1/IntraUserModulePluginRoot/CreateIntraUserTest.java
 //import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CouldNotCreateIntraUserException;
@@ -19,7 +19,7 @@
 //import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 //import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
 //import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraWalletUserModulePluginRoot;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+//import ErrorManager;
 //
 //import junit.framework.TestCase;
 //
@@ -63,14 +63,14 @@
 //     * DealWithIntraUserIdentityManager Interface member variables.
 //     */
 //    @Mock
-//    private com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager mockIntraUserIdentityManager;
+//    private IntraWalletUserIdentityManager mockIntraUserIdentityManager;
 //
 //
 //    /**
 //     * DealWithActorIntraUserManager Interface member variables.
 //     */
 //    @Mock
-//    private IntraWalletUserManager mockIntraWalletUserManager;
+//    private IntraWalletUserIdentityManager mockIntraWalletUserManager;
 //
 //
 //    /**
@@ -111,7 +111,7 @@
 //        testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
 //        testIntraUserModulePluginRoot.setIntraUserManager(mockIntraUserIdentityManager);
 //
-//        testIntraUserModulePluginRoot.setIntraWalletUserManager(mockIntraWalletUserManager);
+//        testIntraUserModulePluginRoot.setIntraWalletUserIdentityManager(mockIntraWalletUserManager);
 //        testIntraUserModulePluginRoot.setIntraUserNetworkServiceManager(mockIntraUserNetworkServiceManager);
 //
 //        setUpMockitoRules();

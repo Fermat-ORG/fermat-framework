@@ -1,7 +1,24 @@
 <resources>
     <string name="app_name">Crypto Customer Wallet</string>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action_settings">Settings</string>
+    <string name="action_start_negotiation">Start Negotiation</string>
+    <string name="arrow" translatable="false">arrow</string>
+    <string name="at">\@</string>
+    <string name="selling">Selling</string>
+    <string name="contract_closed">Close</string>
+    <string name="contract_cancelled">Cancelled</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="identity_img" translatable="false">person_img</string>
+    <string name="negotiation_closed">Close</string>
+    <string name="negotiation_cancelled">Cancelled</string>
+    <string name="no_new_open_negotiations">No New\nOpen Negotiations</string>
+    <string name="no_new_open_contracts">No New\nOpen Contracts</string>
+    <string name="unit_number" translatable="false">1</string>
+    <string name="waiting_for_you">Waiting for you</string>
+    <string name="waiting_for_broker">Waiting for the Broker</string>
+    <string name="ccw_unit_number">1</string>
+    <string name="sell_text_and_price">Sell: %1$s</string>
+    <string name="buy_text_and_price">Buy: %1$s</string>
+    <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
+    <string name="ccw_no_market_exchange_rates_to_show">No Market Exchange Rates to Show</string>
 </resources>

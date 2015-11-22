@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
@@ -15,19 +14,12 @@ import java.util.UUID;
 /**
  * Created by franklin on 08/09/15.
  */
-public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSystem {
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
+public class AssetFactoryMiddlewareDatabaseFactory {
 
-    /**
-     * Constructor with parameters to instantiate class
-     * .
-     *
-     * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
-     */
-    public AssetFactoryMiddlewareDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+
+    public AssetFactoryMiddlewareDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem) {
+
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -79,7 +71,10 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE, DatabaseDataType.STRING, 5, Boolean.FALSE);
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY, DatabaseDataType.STRING, 255, Boolean.FALSE);
+
 
             table.addIndex(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FIRST_KEY_COLUMN);
 
@@ -158,13 +153,5 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "Asset Factory", "There is a problem with the ownerId of the database.");
         }
         return database;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }

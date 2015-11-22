@@ -103,6 +103,9 @@ public class FermatException extends Exception {
 		builder.append("---------------------------------------------------------------------------------\n");
 		builder.append(getFormattedTrace());
 		builder.append("---------------------------------------------------------------------------------\n");
+		if(cause != null)
+			builder.append(cause.toString());
+
 		return builder.toString();
 	}
 }

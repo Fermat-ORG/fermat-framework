@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_iss
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
@@ -16,12 +17,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetSendCryptoTransactionHashException;
-import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetSendCryptoTransactionHashException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -30,18 +31,19 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantD
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetIssuingVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -188,7 +190,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
         public void run() {
 
             threadWorking=true;
-            logManager.log(AssetIssuingTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuing Transaction Protocol Notification Agent: running...", null, null);
+            logManager.log(AssetIssuingDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuing Transaction Protocol Notification Agent: running...", null, null);
             while(threadWorking){
                 /**
                  * Increase the iteration counter
@@ -205,7 +207,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                  */
                 try {
 
-                    logManager.log(AssetIssuingTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(AssetIssuingDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CantDeliverDigitalAssetToAssetWalletException | CantCheckAssetIssuingProgressException | CantExecuteQueryException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -238,8 +240,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
         private void doTheMainTask() throws CantCheckAssetIssuingProgressException, CantExecuteQueryException, CantDeliverDigitalAssetToAssetWalletException {
 
-            Logger LOG = Logger.getGlobal();
-            //LOG.info("Asset Issuing monitor agent DoTheMainTask");
             try {
                 assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 //
@@ -272,14 +272,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
                 setGenesisTransactionFromOutgoingIntraActor();
                 checkTransactionsUnfinished();
-                /**
-                 * The following lines will be used in the future. Please, delete the previous lines
-                 * when the next lines will be ready to be used.
 
-                checkTransactionListByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
-                checkTransactionsCryptoStatus();
-                checkTransactionListByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
-                checkTransactionsCryptoStatus();*/
 
                 if (isReceivedDigitalAssets()){
                     List<String> genesisTransactionsFromAssetsReceived=getGenesisTransactionsFromDigitalAssetsReceived();
@@ -313,7 +306,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Exception in OutgoingIntraActor plugin");
             }*/ catch (UnexpectedResultReturnedFromDatabaseException exception) {
                 throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Unexpected result in database query");
-            } catch (CantGetGenesisTransactionException exception){
+            } catch (CantGetCryptoTransactionException exception){
                 throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Cannot get genesis transaction from asset vault");
             } catch (CantDeleteDigitalAssetFromLocalStorageException exception) {
                 this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
@@ -335,9 +328,9 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
          * @throws CantExecuteQueryException
          * @throws CantCheckAssetIssuingProgressException
          * @throws UnexpectedResultReturnedFromDatabaseException
-         * @throws CantGetGenesisTransactionException
+         * @throws CantGetCryptoTransactionException
          */
-        private void checkTransactions(CryptoStatus cryptoStatus) throws CantExecuteQueryException, CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetGenesisTransactionException {
+        /*private void checkTransactions(CryptoStatus cryptoStatus) throws CantExecuteQueryException, CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetCryptoTransactionException {
 
             List<String> genesisTransactionList;
             if (isTransactionToBeNotified(CryptoStatus.PENDING_SUBMIT)){
@@ -358,81 +351,94 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     }
                 }
             }
-        }
+        }*/
 
         /**
          * This method checks the current transaction CryptoStatus based on events handled. Also, take actions based on the  transaction crypto status
          * @throws CantExecuteQueryException
          * @throws CantCheckAssetIssuingProgressException
          * @throws UnexpectedResultReturnedFromDatabaseException
-         * @throws CantGetGenesisTransactionException
+         * @throws CantGetCryptoTransactionException
          * @throws CantDeliverDigitalAssetToAssetWalletException
          */
-        private void checkTransactionsUnfinished()throws CantExecuteQueryException,
+        private void checkTransactionsUnfinished() throws CantExecuteQueryException,
                 CantCheckAssetIssuingProgressException,
                 UnexpectedResultReturnedFromDatabaseException,
-                CantGetGenesisTransactionException,
-                CantDeliverDigitalAssetToAssetWalletException{
+                CantGetCryptoTransactionException,
+                InvalidParameterException {
 
             if(isPendingEvents()){
-                System.out.println("AID: is pending event");
+                System.out.println("ASSET ISSUING: is pending event");
                 List<String> eventIdList=getPendingEvents();
                 String eventType;
                 List<String> genesisTransactionList;
                 for(String eventId : eventIdList){
                     eventType=assetIssuingTransactionDao.getEventTypeById(eventId);
-                    switch (eventType){
-                        //case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER:
-                        case "IAOCNWTAI":
-                            if (isTransactionToBeNotified(CryptoStatus.PENDING_SUBMIT)){
-                                genesisTransactionList=assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
-                                for(String genesisTransaction: genesisTransactionList){
-                                    System.out.println("CN genesis transaction: "+genesisTransaction);
-                                    CryptoTransaction cryptoGenesisTransaction=getCryptoTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK, genesisTransaction);
-                                    if(cryptoGenesisTransaction==null){
-                                        //throw new CantCheckAssetIssuingProgressException("Cannot get the crypto status from crypto network");
-                                        continue;
-                                    }
-                                    String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
-                                    digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK);
-                                    assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
-
+                    System.out.println("ASSET ISSUING event type "+EventType.getByCode(eventType));
+                    System.out.println("ASSET ISSUING event id "+eventId);
+                    if(eventType.equals(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER.getCode())){
+                        if (isTransactionToBeNotified(CryptoStatus.PENDING_SUBMIT)){
+                            genesisTransactionList=assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
+                            System.out.println("ASSET ISSUING found " + genesisTransactionList.size() + " genesis transactions in pending submit");
+                            for(String genesisTransaction: genesisTransactionList){
+                                System.out.println("ASSET ISSUING checking status On Crypto Network genesis transaction: "+genesisTransaction);
+                                CryptoTransaction cryptoGenesisTransaction=getCryptoTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK, genesisTransaction);
+                                if(cryptoGenesisTransaction==null){
+                                    System.out.println("ASSET ISSUING The genesis transaction "+genesisTransaction+" in crypto network is null");
+                                    continue;
                                 }
-                                assetIssuingTransactionDao.updateEventStatus(eventId);
-                            }
-                            break;
-                        //case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER:
-                        case "IAOBCWTAI":
-                            if (isTransactionToBeNotified(CryptoStatus.ON_CRYPTO_NETWORK)){
-                                genesisTransactionList=assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
-                                for(String genesisTransaction: genesisTransactionList){
-                                    System.out.println("BCH Transaction Hash: " + genesisTransaction);
-                                    CryptoTransaction cryptoGenesisTransaction=getCryptoTransactionByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN, genesisTransaction);
-                                    if(cryptoGenesisTransaction==null){
-                                        //throw new CantCheckAssetIssuingProgressException("Cannot get the crypto status from crypto network");
-                                        continue;
-                                    }
-
-                                    assetIssuingTransactionDao.updateDigitalAssetTransactionStatusByGenesisTransaction(genesisTransaction, TransactionStatus.DELIVERING);
-                                    String publicKey=this.assetIssuingTransactionDao.getPublicKeyByGenesisTransaction(genesisTransaction);
-                                    this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(publicKey);
-                                    String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
+                                System.out.println("ASSET ISSUING crypto transaction on crypto network "+cryptoGenesisTransaction.getTransactionHash());
+                                String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
+                                System.out.println("ASSET ISSUING internal id "+transactionInternalId);
+                                try {
                                     digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK);
-                                    assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
-
+                                } catch (CantDeliverDigitalAssetToAssetWalletException e) {
+                                    e.printStackTrace();
+                                    continue;
                                 }
-                                assetIssuingTransactionDao.updateEventStatus(eventId);
-                            }
-                            break;
-                        //case INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER:
-                        case "IAROBCWTAI":
-                            //TODO: to handle
-                            break;
-                        //case INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER:
-                        case "IAROCNWTAI":
-                            //TODO: to handle
-                            break;
+                                assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
 
+                            }
+
+                            assetIssuingTransactionDao.updateEventStatus(eventId);
+
+                        }
+                    }
+                    if(eventType.equals(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER.getCode())){
+                        if (isTransactionToBeNotified(CryptoStatus.ON_CRYPTO_NETWORK)){
+                            genesisTransactionList=assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+                            System.out.println("ASSET ISSUING found "+genesisTransactionList.size()+" genesis transactions on crypto network");
+                            for(String genesisTransaction: genesisTransactionList){
+                                System.out.println("ASSET ISSUING checking status On Blockchain genesis transaction: " + genesisTransaction);
+                                CryptoTransaction cryptoGenesisTransaction=getCryptoTransactionByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN, genesisTransaction);
+                                if(cryptoGenesisTransaction==null){
+                                    //throw new CantCheckAssetIssuingProgressException("Cannot get the crypto status from crypto network");
+                                    System.out.println("ASSET ISSUING The genesis transaction "+genesisTransaction+" in crypto network is null");
+                                    continue;
+                                }
+                                System.out.println("ASSET ISSUING crypto transaction on crypto network "+cryptoGenesisTransaction.getTransactionHash());
+                                assetIssuingTransactionDao.updateDigitalAssetTransactionStatusByGenesisTransaction(genesisTransaction, TransactionStatus.DELIVERING);
+                                String publicKey=this.assetIssuingTransactionDao.getPublicKeyByGenesisTransaction(genesisTransaction);
+                                this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(publicKey);
+                                String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
+                                System.out.println("ASSET ISSUING internal id "+transactionInternalId);
+                                try {
+                                    digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE);
+                                } catch (CantDeliverDigitalAssetToAssetWalletException e) {
+                                    e.printStackTrace();
+                                    continue;
+                                }
+                                assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
+
+                            }
+                            assetIssuingTransactionDao.updateEventStatus(eventId);
+                        }
+                    }
+                    if(eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER)){
+                        //TODO: to handle
+                    }
+                    if(eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER)){
+                        //TODO: to handle
                     }
                 }
             }
@@ -443,11 +449,11 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
          * This method checks the transaction CryptoStatus registered in database and take actions according of the status.
          * @throws CantExecuteQueryException
          * @throws CantCheckAssetIssuingProgressException
-         * @throws CantGetGenesisTransactionException
+         * @throws CantGetCryptoTransactionException
          * @throws UnexpectedResultReturnedFromDatabaseException
          * @throws CantDeliverDigitalAssetToAssetWalletException
          */
-//        private void checkTransactionsCryptoStatus(CryptoTransaction cryptoTransaction) throws CantExecuteQueryException, CantCheckAssetIssuingProgressException, CantGetGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException, CantDeliverDigitalAssetToAssetWalletException {
+//        private void checkTransactionsCryptoStatus(CryptoTransaction cryptoTransaction) throws CantExecuteQueryException, CantCheckAssetIssuingProgressException, CantGetCryptoTransactionException, UnexpectedResultReturnedFromDatabaseException, CantDeliverDigitalAssetToAssetWalletException {
 //            List<String> genesisTransactionList;
 //            CryptoStatus transactionCryptoStatus;
 //            if (isTransactionToBeNotified(CryptoStatus.ON_CRYPTO_NETWORK)){
@@ -515,11 +521,24 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             }
             //End testing
             for(String outgoingId : outgoingIdList){
+                System.out.println("ASSET ISSUING looking for "+outgoingId+" in outgoing intra actor");
                 UUID transactionUUID=UUID.fromString(outgoingId);
                 String genesisTransaction=outgoingIntraActorManager.getTransactionManager().getSendCryptoTransactionHash(transactionUUID);
+                System.out.println("ASSET ISSUING Outgoing returns "+genesisTransaction);
                 if(genesisTransaction==null){
+                    System.out.println("ASSET ISSUING is null - continue asking");
                     continue;
                 }
+                if(genesisTransaction.isEmpty()){
+                    System.out.println("ASSET ISSUING is empty - continue asking");
+                    continue;
+                }
+                if(genesisTransaction.equals("UNKNOWN YET")){
+                    System.out.println("ASSET ISSUING is unknown yet - continue asking");
+                    continue;
+                }
+                System.out.println("ASSET ISSUING Persisting in database Outgoing Id: "+outgoingId);
+                System.out.println("ASSET ISSUING Persisting in database genesis transaction: "+genesisTransaction);
                 assetIssuingTransactionDao.persistGenesisTransaction(outgoingId, genesisTransaction);
                 String internalId=assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                 digitalAssetIssuingVault.setGenesisTransaction(internalId, genesisTransaction);
@@ -577,13 +596,13 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
         /*private CryptoStatus getCryptoStatusFromOutgoingIntraActorPlugin(String transactionHash) throws OutgoingIntraActorCantGetCryptoStatusException {
             return outgoingIntraActorManager.getTransactionStatus(transactionHash);
         }*/
-        /*private CryptoStatus getCryptoStatusFromAssetVault(String transactionHash) throws CantGetGenesisTransactionException {
+        /*private CryptoStatus getCryptoStatusFromAssetVault(String transactionHash) throws CantGetCryptoTransactionException {
             CryptoTransaction cryptoTransaction=assetVaultManager.getGenesisTransaction(transactionHash);
             return cryptoTransaction.getCryptoStatus();
         }*/
 
         //I left working this method for testing porpoises
-        private CryptoTransaction getGenesisTransactionFromAssetVault(String transactionHash) throws CantGetGenesisTransactionException {
+        private CryptoTransaction getGenesisTransactionFromAssetVault(String transactionHash) throws CantGetCryptoTransactionException {
             //CryptoTransaction cryptoTransaction=assetVaultManager.getGenesisTransaction(transactionHash);
             //This mock is for testing porpoises
             CryptoTransaction mockCryptoTransaction=new CryptoTransaction();
@@ -592,7 +611,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             return mockCryptoTransaction;
         }
 
-        private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetGenesisTransactionException {
+        private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetCryptoTransactionException {
             //List<CryptoTransaction> transactionList=new ArrayList<>();
             /**
              * Mock for testing
@@ -606,28 +625,27 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
              * End of mocking
              */
             //TODO: change this line when is implemented in crypto network
-            List<CryptoTransaction> transactionListFromCryptoNetwork=bitcoinNetworkManager.getGenesisTransaction(genesisTransaction);
+            List<CryptoTransaction> transactionListFromCryptoNetwork=bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
             if(transactionListFromCryptoNetwork==null){
-                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE,null,
-                        "Getting the cryptoStatus from CryptoNetwork",
-                        "The crypto status from genesis transaction "+genesisTransaction+" return null");
+                System.out.println("ASSET ISSUING transaction List From Crypto Network for "+genesisTransaction+" is null");
+                return null;
             }
             if(transactionListFromCryptoNetwork.isEmpty()){
-                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE,null,
-                        "Getting the cryptoStatus from CryptoNetwork",
-                        "The genesis transaction "+genesisTransaction+" cannot be found in crypto network");
+                System.out.println("ASSET ISSUING transaction List From Crypto Network for "+genesisTransaction+" is empty");
+                return null;
             }
-            System.out.println("I found "+transactionListFromCryptoNetwork.size()+" from genesis transaction:\n"+genesisTransaction);
+            System.out.println("ASSET ISSUING I found "+transactionListFromCryptoNetwork.size()+" in Crypto network from genesis transaction:\n"+genesisTransaction);
 
-            System.out.println("Now, I'm looking for this crypto status "+cryptoStatus);
+            System.out.println("ASSET ISSUING Now, I'm looking for this crypto status "+cryptoStatus);
             for(CryptoTransaction cryptoTransaction : transactionListFromCryptoNetwork){
-                System.out.println("CryptoStatus from CN:"+cryptoTransaction.getCryptoStatus());
+                System.out.println("ASSET ISSUING CryptoStatus from Crypto Network:"+cryptoTransaction.getCryptoStatus());
                 if(cryptoTransaction.getCryptoStatus()==cryptoStatus){
                     //transactionList.add(cryptoTransaction);
-                    System.out.println("I found it!");
+                    System.out.println("ASSET ISSUING I found it!");
                     return cryptoTransaction;
                 }
             }
+            System.out.println("ASSET ISSUING there was an undetected error looking the crypto status by crypto status.");
             return null;
             //return transactionList;
         }

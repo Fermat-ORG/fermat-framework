@@ -10,12 +10,15 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 
+import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicHierarchy;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -70,11 +73,11 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
     }
 
     /**
-     * Returns a public Key only from the specified account used to generate bitcoin addresses     *
+     * Returns the master private key for the specified account
      * @param hierarchyAccount
      * @return the fist key of the path m/HierarchyAccount/0. Example: m/0/0
      */
-    private DeterministicKey getAddressPublicKeyFromAccount(HierarchyAccount hierarchyAccount){
+    private DeterministicKey getAddressKeyFromAccount(HierarchyAccount hierarchyAccount){
         /**
          * gets the masterKey for this account
          */
@@ -83,19 +86,19 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         /**
          * Serialize the pubkey of the master key
          */
-        byte[] pubKeyBytes = masterKey.getPubKey();
+        byte[] privateKeyBytes = masterKey.getPrivKeyBytes();
         byte[] chainCode = masterKey.getChainCode();
 
-        return HDKeyDerivation.createMasterPubKeyFromBytes(pubKeyBytes, chainCode);
+        return HDKeyDerivation.createMasterPrivKeyFromBytes(privateKeyBytes, chainCode);
     }
 
     /**
-     * Generates a new hierarchy on the path m/account/0 with only public keys
+     * Generates a new hierarchy on the path m/account/0 with keys
      * @param hierarchyAccount
      * @return a new hierarchy used to generate bitcoin addresses
      */
-    public DeterministicHierarchy getAddressPublicHierarchyFromAccount(HierarchyAccount hierarchyAccount){
-        DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(getAddressPublicKeyFromAccount(hierarchyAccount));
+    public DeterministicHierarchy getKeyHierarchyFromAccount(HierarchyAccount hierarchyAccount){
+        DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(getAddressKeyFromAccount(hierarchyAccount));
         return deterministicHierarchy;
     }
 
@@ -107,25 +110,18 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      */
     public CryptoAddress getBitcoinAddress(BlockchainNetworkType blockchainNetworkType, HierarchyAccount hierarchyAccount) throws GetNewCryptoAddressException {
         /**
-         * The depth of the next available public key for this account
+         * I get the next available key for this account
          */
-        int pubKeyDepth = 0;
+        ECKey ecKey = null;
         try {
-            pubKeyDepth = getNextAvailablePublicKeyDepth(hierarchyAccount);
+            ecKey = getNextAvailableKey(hierarchyAccount);
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "there was a problem getting the key depth from the database.", "database issue");
+            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "There was an error getting the actual unused Key depth to derive a new key.", "database problem.");
         }
-
         /**
-         * I will derive a new public Key from this account
+         * I will create the CryptoAddress with the key I just got
          */
-        DeterministicHierarchy pubKeyHierarchy = getAddressPublicHierarchyFromAccount(hierarchyAccount);
-        DeterministicKey pubKey = pubKeyHierarchy.deriveChild(pubKeyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(pubKeyDepth, false));
-
-        /**
-         * I will create the CryptoAddress
-         */
-        String address = pubKey.toAddress(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
+        String address = ecKey.toAddress(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
         CryptoAddress cryptoAddress = new CryptoAddress(address, CryptoCurrency.BITCOIN);
 
         /**
@@ -133,7 +129,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
          * BlockchainNetworkType has MainNet, RegTest and TestNet. The default value is the one used for the platform.
          * If the address generated is for a network different than default, I need to update the database so we start monitoring this network
          */
-        if (blockchainNetworkType != BlockchainNetworkType.DEFAULT){
+        if (BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType) != BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT)){
             setActiveNetwork(blockchainNetworkType);
         }
 
@@ -141,11 +137,36 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
     }
 
     /**
+     * gets the next available key from the specified account
+     * @param account
+     * @return
+     */
+    public ECKey getNextAvailableKey(HierarchyAccount account) throws CantExecuteDatabaseOperationException {
+        /**
+         * I get from database the next available key depth
+         */
+        int keyDepth = 0;
+        keyDepth = getNextAvailableKeyDepth(account);
+
+        /**
+         * I will derive a new Key from this account
+         */
+        DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
+        DeterministicKey ecKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(keyDepth, false));
+
+        return ecKey;
+    }
+
+    /**
      * Updates the database to active a new network
      * @param blockchainNetworkType
      */
-    public void setActiveNetwork(BlockchainNetworkType blockchainNetworkType) {
-        //todo update table active_Networks and add (if missing) this blockchainNetworkType
+    private void setActiveNetwork(BlockchainNetworkType blockchainNetworkType) {
+        try {
+            getDao().setActiveNetworkType(blockchainNetworkType);
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -154,7 +175,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param hierarchyAccount
      * @return
      */
-    private int getNextAvailablePublicKeyDepth(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
+    private int getNextAvailableKeyDepth(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
         int returnValue = 0;
         int currentUsedKey = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
         /**
@@ -184,5 +205,20 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         }
 
         return dao;
+    }
+
+    public List<ECKey> getDerivedKeys(HierarchyAccount account){
+        DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
+        List<ECKey> childKeys = new ArrayList<>();
+
+        //todo I need to get the value of generated keys from the database
+        for (int i = 0; i < 101; i++) {
+            // I derive the key at position i
+            DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
+            // I add this key to the ECKey list
+            childKeys.add(ECKey.fromPrivate(derivedKey.getPrivKey()));
+        }
+
+        return childKeys;
     }
 }

@@ -95,5 +95,15 @@ public class JsonAttNamesConstants {
      */
     public static final String FAILURE_VPN_MSJ = "f-vpn-m";
 
+    /**
+     * Represent the value of FAILURE
+     */
+    public static final String FAILURE = "f";
+
+    /**
+     * Represent the value of PROFILE_TO_REGISTER
+     */
+    public static final String PROFILE_TO_REGISTER = "pr";
+
 
 }

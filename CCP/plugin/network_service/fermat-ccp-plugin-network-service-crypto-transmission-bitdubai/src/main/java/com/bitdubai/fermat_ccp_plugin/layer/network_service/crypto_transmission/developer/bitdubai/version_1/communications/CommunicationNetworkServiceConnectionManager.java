@@ -1,12 +1,5 @@
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications;/*
- * @#TemplateNetworkServiceConnectionManager.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications;
 
-
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -16,10 +9,10 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +55,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     /**
      * Holds all references to the communication network service remote agents
      */
-    private Map<String, CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
+    private Map<String,CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
 
     /**
      * Represent the incomingMessageDao
@@ -126,20 +119,17 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * @see NetworkServiceConnectionManager#connectTo(PlatformComponentProfile, PlatformComponentProfile, PlatformComponentProfile)
      */
     @Override
-    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) {
-
-        try {
+    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) throws CantEstablishConnectionException {
 
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
             communicationsClientConnection.requestDiscoveryVpnConnection(applicantParticipant, applicantNetworkService, remoteParticipant);
 
-
-        } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
-        }
     }
+
+
+    //TODO: COPIAR ESTO A TODOS LOS OTROS NETWORK SERVICES;  XXOO. te quiero robert xD
 
     /**
      * (non-javadoc)
@@ -147,9 +137,9 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      */
     @Override
     public void closeConnection(String remoteNetworkServicePublicKey) {
-
         //Remove the instance and stop his threads
-        communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
+        if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey))
+            communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
 
     }
 
@@ -190,7 +180,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                  /*
                  * Instantiate the local reference
                  */
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao);
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType());
 
                 /*
                  * Instantiate the remote reference

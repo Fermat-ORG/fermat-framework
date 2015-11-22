@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_ccp_core.layer.actor.extra_wallet_user;
 
-import com.bitdubai.fermat_api.PluginDeveloper;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginSubsystem;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.DeveloperBitDubai;
 
 /**
@@ -16,14 +15,13 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.
 public class ExtraWalletUserPluginSubsystem extends AbstractPluginSubsystem {
 
     public ExtraWalletUserPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_EXTRA_WALLET_USER_ACTOR));
+        super(new PluginReference(Plugins.EXTRA_WALLET_USER));
     }
 
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-            PluginDeveloper developer = new DeveloperBitDubai();
-            plugin = developer.getPlugin();
+            registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

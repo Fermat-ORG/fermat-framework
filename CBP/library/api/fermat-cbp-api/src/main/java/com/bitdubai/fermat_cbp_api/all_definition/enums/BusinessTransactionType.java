@@ -1,12 +1,13 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by Yordin Alayn on 23.09.15.
  */
  
-public enum BusinessTransactionType {
+public enum BusinessTransactionType  implements FermatEnum {
     STOCK("STO"),
     SALE("SAL"),
     PURCHASE("PUR");
@@ -17,6 +18,7 @@ public enum BusinessTransactionType {
         this.code = code;
     }
 
+    @Override
     public String getCode() {
         return this.code;
     }

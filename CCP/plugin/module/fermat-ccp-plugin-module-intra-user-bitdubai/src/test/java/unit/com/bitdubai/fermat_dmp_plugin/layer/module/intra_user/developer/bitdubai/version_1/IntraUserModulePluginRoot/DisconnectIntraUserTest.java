@@ -2,7 +2,7 @@
 //
 //import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 //import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-//import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
 //import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
 //<<<<<<< HEAD:DMP/plugin/module/fermat-dmp-plugin-module-intra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/module/intra_user/developer/bitdubai/version_1/IntraUserModulePluginRoot/DisconnectIntraUserTest.java
 //import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserDisconnectingFailedException;
@@ -16,7 +16,7 @@
 //import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 //import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 //import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraWalletUserModulePluginRoot;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+//import ErrorManager;
 //
 //import junit.framework.TestCase;
 //
@@ -57,7 +57,7 @@
 //     * DealWithActorIntraUserManager Interface member variables.
 //     */
 //    @Mock
-//    private IntraWalletUserManager mockIntraWalletUserManager;
+//    private IntraWalletUserIdentityManager mockIntraWalletUserManager;
 //
 //
 //    /**
@@ -93,7 +93,7 @@
 //        testIntraUserModulePluginRoot = new IntraWalletUserModulePluginRoot();
 //        testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
 //        testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
-//        testIntraUserModulePluginRoot.setIntraWalletUserManager(mockIntraWalletUserManager);
+//        testIntraUserModulePluginRoot.setIntraWalletUserIdentityManager(mockIntraWalletUserManager);
 //        testIntraUserModulePluginRoot.setIntraUserNetworkServiceManager(mockIntraUserNetworkServiceManager);
 //
 //        setUpMockitoRules();

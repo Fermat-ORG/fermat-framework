@@ -1,24 +1,25 @@
-/*
- * @#WalletPublisherMiddlewarePluginRoot.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
@@ -27,38 +28,31 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Sc
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.enums.FactoryProjectType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFactoryProjectState;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProject;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewarePlugin;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.InformationPublishedComponent;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.enums.FactoryProjectType;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewarePlugin;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.InformationPublishedComponent;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDatabaseFactory;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantInitializeWalletPublisherMiddlewareDatabaseException;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.WalletPublisherMiddlewareManagerImpl;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.net.URL;
 import java.sql.Timestamp;
@@ -79,52 +73,31 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileSystem, DealsWithWalletFactory, DealsWithWalletStoreNetworkService, DealsWithErrors,DealsWithLogger, LogManagerForDevelopers, Plugin, Service, WalletPublisherMiddlewarePlugin, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers {
+public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implements
+        LogManagerForDevelopers,
+        WalletPublisherMiddlewarePlugin,
+        DatabaseManagerForDevelopers {
 
-    /**
-     * Represent the logManager
-     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER    )
     private LogManager logManager;
 
-    /**
-     * Represent the newLoggingLevel
-     */
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
-
-    /**
-     * Represent the errorManager
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    /**
-     * Represent the pluginDatabaseSystem
-     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    /**
-     * Represent the walletFactoryProjectManager
-     */
+    @NeededPluginReference(platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_FACTORY)
     private WalletFactoryProjectManager walletFactoryProjectManager;
 
-    /**
-     * Represent the walletStoreManager
-     */
+    @NeededPluginReference(platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION, layer = Layers.NETWORK_SERVICE, plugin = Plugins.WALLET_STORE)
     private WalletStoreManager walletStoreManager;
 
-    /**
-     * Represent the pluginFileSystem
-     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM    )
     private PluginFileSystem pluginFileSystem;
 
-    /**
-     * Represent the plugin id
-     */
-    private UUID pluginId;
 
-    /**
-     * Represent the status of the service
-     */
-    private ServiceStatus serviceStatus;
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     /**
      * Represent the walletPublisherMiddlewareManagerImpl
@@ -145,8 +118,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
      * Constructor
      */
     public WalletPublisherMiddlewarePluginRoot(){
-        super();
-        serviceStatus = ServiceStatus.CREATED;
+        super(new PluginVersionReference(new Version()));
     }
 
     /**
@@ -305,69 +277,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
     /**
      * (non-Javadoc)
-     * @see Service#pause()
-     */
-    @Override
-    public void pause(){
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see Service#resume()
-     */
-    @Override
-    public void resume(){
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see Service#stop()
-     */
-    @Override
-    public void stop(){
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see Service#getStatus()
-     */
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithErrors#setErrorManager(ErrorManager)
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see Plugin#setId(UUID)
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithLogger#setLogManager(LogManager)
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * (non-Javadoc)
      * @see LogManagerForDevelopers#getClassesFullPath()
      */
     @Override
@@ -404,33 +313,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
     /**
      * (non-Javadoc)
-     * @see DealsWithWalletFactory#setWalletFactoryProjectManager(WalletFactoryProjectManager)
-     */
-    @Override
-    public void setWalletFactoryProjectManager(WalletFactoryProjectManager walletFactoryProjectManager) {
-        this.walletFactoryProjectManager = walletFactoryProjectManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithWalletStoreNetworkService#setWalletStoreManager(WalletStoreManager)
-     */
-    @Override
-    public void setWalletStoreManager(WalletStoreManager walletStoreManager) {
-        this.walletStoreManager = walletStoreManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithPluginDatabaseSystem#setPluginDatabaseSystem(PluginDatabaseSystem)
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * (non-Javadoc)
      * @see DatabaseManagerForDevelopers#getDatabaseList(DeveloperObjectFactory)
      */
     @Override
@@ -454,15 +336,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         return walletPublisherMiddlewareDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithPluginFileSystem#setPluginFileSystem(PluginFileSystem)
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**

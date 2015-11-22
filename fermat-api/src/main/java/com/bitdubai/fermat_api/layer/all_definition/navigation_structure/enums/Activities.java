@@ -20,12 +20,20 @@ public enum Activities {
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST("CWRWBWBV1PR"),
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS("CWRWBWBV1C"),
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_SETTINGS("CWRWBWBV1S"),
+
+    CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY("CCPBWSFA"),
+    CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY("CCPBWRFA"),
+    CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY("CCPBWCDA"),
+    CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY("CCPBWSA"),
+    CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY("CCPBWACA"),
+
     /**
      * Intra user
      */
     CWP_INTRA_USER_ACTIVITY("CIUA"),
     CWP_INTRA_USER_CREATE_ACTIVITY("CIUCA"),
     CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY("CIUCRA"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS("CSAIUCC"),
 
     //Wallet store
     CWP_WALLET_STORE_MAIN_ACTIVITY("CWPWSMA"),
@@ -98,6 +106,18 @@ public enum Activities {
     CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS("CBPCBWOCD"),
     CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS("CBPCBWCCD"),
 
+    // Crypto Customer Wallet
+    CBP_CRYPTO_CUSTOMER_WALLET_HOME("CBPCCWH"),
+    CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY("CBPCCWCH"),
+    CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST("CBPCCWBL"),
+    CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS("CBPCCWS"),
+    CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION("CBPCCWSN"),
+    CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS("CBPCCWOND"),
+    CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS("CBPCCWCND"),
+    CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS("CBPCCWOCD"),
+    CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS("CBPCCWCCD"),
+
+
     // Crypto Broker Identity
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY("CBPSACBI"),
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY("CBPSACBICI"),
@@ -110,9 +130,27 @@ public enum Activities {
 
     // CCP Comunity
     CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST("CCPSAIUCR"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL("CCPSAIUCCD"),
     // CCP Identity
     CCP_SUB_APP_INTRA_USER_IDENTITY("CCPSAISI"),
-    CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY("CCPSAIICI");
+    CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY("CCPSAIICI"),
+    // DAP ISSUER IDENTITY
+    DAP_SUB_APP_ASSET_ISSUER_IDENTITY("DAPSAAII"),
+    DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY("DAPSAAIICI"),
+    // DAP USER IDENTITY
+    DAP_SUB_APP_ASSET_USER_IDENTITY("DAPSAAUI"),
+    DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY("DAPSAAUICI"),
+    // DAP REDEEM POINT IDENTITY
+    DAP_SUB_APP_REDEEM_POINT_IDENTITY("DAPSARPI"),
+    DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY("DAPSARPICI"),
+    // end of dap identities
+    DEVELOP_MODE("develop_mode"),
+
+    //CONNECTIONS ACTIVITY
+    BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY("BWCIUC"),
+
+
+    WPD_DESKTOP("WPD"), ;
 
     private String code;
 
@@ -127,7 +165,18 @@ public enum Activities {
         //    }
         //}
         switch (code) {
-
+            case "DAPSARPI":
+                return Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY;
+            case "DAPSARPICI":
+                return Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY;
+            case "DAPSAAUI":
+                return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY;
+            case "DAPSAAUICI":
+                return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY;
+            case "DAPSAAII":
+                return Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY;
+            case "DAPSAAIICI":
+                return Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY;
             case "CSL":
                 return Activities.CWP_SHELL_LOGIN;
             case "CSMM":
@@ -264,7 +313,26 @@ public enum Activities {
                 return CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS;
             case "CBPCBWCCD":
                 return CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS;
+            case "CBPCCWH":
+                return CBP_CRYPTO_CUSTOMER_WALLET_HOME;
+            case "CBPCCWCH":
+                return CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY;
+            case "CBPCCWBL":
+                return CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST;
+            case "CBPCCWS":
+                return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS;
+            case "CBPCCWSN":
+                return CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION;
+            case "CBPCCWOND":
+                return CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS;
+            case "CBPCCWCND":
+                return CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS;
+            case "CBPCCWOCD":
+                return CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS;
+            case "CBPCCWCCD":
+                return CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS;
             case "DAICAM":
+                return null; //TODO dejaron este case por fuera
             case "DAPAUCAM":
                 return Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN;
             case "DAPAICAM":
@@ -289,6 +357,26 @@ public enum Activities {
                 return Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY;
             case "CCPSAIUCR":
                 return Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST;
+            case "CSAIUCC":
+                return CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS;
+            case "develop_mode":
+                return DEVELOP_MODE;
+            case "WPD":
+                return WPD_DESKTOP;
+            case "CCPBWSFA":
+                return CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY;
+            case "CCPBWCDA":
+                return CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY;
+            case "CCPBWRFA":
+                return CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY;
+            case "CCPBWSA":
+                return CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY;
+            case "CCPBWACA":
+                return CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY;
+            case "BWCIUC":
+                return BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY;
+            case "CCPSAIUCCD":
+                return CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

@@ -26,7 +26,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.R;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.common.custom_anim.Fx;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 
 
 public  class SendFragment extends FermatWalletFragment {
@@ -489,13 +489,13 @@ public  class SendFragment extends FermatWalletFragment {
                             profile_picture.setImageResource(R.drawable.brant_profile_picture);
                             break;
                         case 2:
-                            profile_picture.setImageResource(R.drawable.mati_profile);
+                            profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
                             break;
                         case 3:
-                            profile_picture.setImageResource(R.drawable.mati_profile);
+                            profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
                             break;
                         default:
-                            profile_picture.setImageResource(R.drawable.mati_profile);
+                            profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
                     }
 
 

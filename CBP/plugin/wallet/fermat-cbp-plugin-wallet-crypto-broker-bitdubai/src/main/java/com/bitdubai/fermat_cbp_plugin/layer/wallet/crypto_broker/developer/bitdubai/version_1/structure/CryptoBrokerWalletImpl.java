@@ -1,121 +1,206 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerTransactionRecord;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerNegotiation;
+import com.bitdubai.fermat_cbp_api.all_definition.wallet.Stock;
+import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.wallet.WalletTransaction;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantAddDebitCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantAddStockCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantGetAvailableBalanceCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantGetBookedBalanceCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantGetStockCollectionCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantPerformTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantCreateCryptoBrokerWalletImplException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantCreateNewCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerWalletImplException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerWalletException;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Currency;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by Yordin Alayn on 19.10.15.
+ * Created by jorge on 26-10-2015.
+ * Modified by Yordin Alayn 27.10.15
  */
-public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
-    private static final int HASH_PRIME_NUMBER_PRODUCT = 7681;
-    private static final int HASH_PRIME_NUMBER_ADD = 3581;
+public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
 
-    private UUID transactionId;
-    private KeyPair keyPairWallet;
-    private KeyPair keyPairBroker;
-    private KeyPair keyPairCustomer;
-    private BalanceType balanceType;
-    private TransactionType transactionType;
-    private float amount;
-    private CurrencyType currencyType;
-    private float runningBookBalance;
-    private float runningAvailableBalance;
-    private long timeStamp;
-    private String memo;
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 5147;
+    private static final int HASH_PRIME_NUMBER_ADD = 4789;
 
-    public CryptoBrokerWalletImpl(
-            UUID transactionId,
-            KeyPair keyPairWallet,
-            KeyPair keyPairBroker,
-            KeyPair keyPairCustomer,
-            BalanceType balanceType,
-            TransactionType transactionType,
-            CurrencyType currencyType,
-            float amount,
-            float runningBookBalance,
-            float runningAvailableBalance,
-            long timeStamp,
-            String memo
-    ){
-        this.transactionId = transactionId;
-        this.keyPairWallet = keyPairWallet;
-        this.keyPairBroker = keyPairBroker;
-        this.keyPairCustomer = keyPairCustomer;
-        this.balanceType = balanceType;
-        this.transactionType = transactionType;
-        this.amount = amount;
-        this.currencyType = currencyType;
-        this.runningBookBalance = runningBookBalance;
-        this.runningAvailableBalance = runningAvailableBalance;
-        this.timeStamp = timeStamp;
-        this.memo = memo;
+    private final KeyPair walletKeyPair;
+    private final String ownerPublicKey;
+    private final ConcurrentHashMap<CurrencyType, Stock> stockMap;
+    private final CryptoBrokerWalletDatabaseDao databaseDao;
+
+    public CryptoBrokerWalletImpl(final KeyPair walletKeyPair, final String ownerPublicKey, final CryptoBrokerWalletDatabaseDao databaseDao){
+        this.walletKeyPair = walletKeyPair;
+        this.ownerPublicKey = ownerPublicKey;
+        this.databaseDao = databaseDao;
+        stockMap = new ConcurrentHashMap<>();
+
     }
 
     @Override
-    public UUID getTransactionId() { return this.transactionId; }
-    public void setTransactionId(UUID id) { this.transactionId = id; }
+    public String getWalletPublicKey() { return this.walletKeyPair.getPublicKey(); }
 
     @Override
-    public BalanceType getBalanceType() { return this.balanceType; }
-    public void setBalanceType(BalanceType balance) { this.balanceType = balance; }
+    public String getOwnerPublicKey() { return this.ownerPublicKey; }
 
     @Override
-    public TransactionType getTransactionType() { return this.transactionType; }
-    public void setBalanceType(TransactionType transaction) { this.transactionType = transaction; }
+    public void addStock(CurrencyType currencyType, FermatEnum merchandise) throws CantAddStockCryptoBrokerWalletException{
+        try {
+            StockTransaction stockRecordBook = stockRecord(currencyType, merchandise, BalanceType.BOOK);
+            StockTransaction stockRecordAvailable = stockRecord(currencyType, merchandise, BalanceType.AVAILABLE);
+            CryptoBrokerStock stock = new CryptoBrokerStock(currencyType, this.walletKeyPair,this.databaseDao);
+            stock.addDebit(stockRecordBook);
+            stock.addDebit(stockRecordAvailable);
+        } catch (CantAddDebitCryptoBrokerWalletException e) {
+            throw new CantAddStockCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T ADD STOCK CRYPTO BROKER WALLET", "");
+        } catch (Exception e) {
+            throw new CantAddStockCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T ADD STOCK CRYPTO BROKER WALLET", "");
+        }
+    }
 
     @Override
-    public CurrencyType getCurrencyType() { return this.currencyType; }
-    public void setCurrencyType(CurrencyType currency) { this.currencyType = currency; }
+    public Stock getStock(CurrencyType currencyType) throws CantGetStockCryptoBrokerWalletException {
+        try{
+            CryptoBrokerStock stock = new CryptoBrokerStock(currencyType, this.walletKeyPair,this.databaseDao);
+            stock.getBookedBalance();
+            stock.getAvailableBalance();
+            return stock;
+        } catch (CantGetBookedBalanceCryptoBrokerWalletException e) {
+            throw new CantGetStockCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T GET STOCK CRYPTO BROKER WALLET", "");
+        } catch (CantGetAvailableBalanceCryptoBrokerWalletException e) {
+            throw new CantGetStockCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T GET STOCK CRYPTO BROKER WALLET", "");
+        } catch (Exception e) {
+            throw new CantGetStockCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T GET STOCK CRYPTO BROKER WALLET", "");
+        }
+    }
 
     @Override
-    public String getPublicKeyWallet() { return this.keyPairWallet.getPublicKey(); }
-    public void setPublicKeyWallet(String publicKey) { this.keyPairWallet = keyPairWallet; }
+    public Collection<Stock> getStocks() throws CantGetStockCollectionCryptoBrokerWalletException {
+        try {
+            HashSet<Stock> stocks = new HashSet<>();
+            for (final Map.Entry<CurrencyType, Stock> StockReference : stockMap.entrySet())
+                stocks.add(StockReference.getValue());
+            return stocks;
+        } catch (Exception e) {
+            throw new CantGetStockCollectionCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T GET STOCK CRYPTO BROKER WALLET", "");
+        }
+    }
 
     @Override
-    public String getPublicKeyBroker() { return this.keyPairBroker.getPublicKey(); }
-    public void setPublicKeyBroker(String publicKey) { this.keyPairBroker = keyPairBroker; }
+    public void performTransaction(StockTransaction transaction) throws CantPerformTransactionException {
+        try{
+            TransactionType transactionType = transaction.getTransactionType();
+            StockTransaction stockTransaction = stockTransactionRecord(transaction);
+            CryptoBrokerStock stock = new CryptoBrokerStock(transaction.getCurrencyType(), this.walletKeyPair,this.databaseDao);
+            if(transactionType == TransactionType.CREDIT){
+                stock.addCredit(stockTransaction);
+            }else{
+                stock.addDebit(stockTransaction);
+            }
+        } catch (CantAddCreditCryptoBrokerWalletException e) {
+            throw new CantPerformTransactionException("CRYPTO BROKER WALLET", e, "CAN'T CREATE NEW TRANSACTION CRYPTO BROKER WALLET", "");
+        } catch (CantAddDebitCryptoBrokerWalletException e) {
+            throw new CantPerformTransactionException("CRYPTO BROKER WALLET", e, "CAN'T CREATE NEW TRANSACTION CRYPTO BROKER WALLET", "");
+        } catch (Exception e) {
+            throw new CantPerformTransactionException("CRYPTO BROKER WALLET", e, "CAN'T CREATE NEW TRANSACTION CRYPTO BROKER WALLET", "");
+        }
+    }
 
-    @Override
-    public String getPublicKeyCustomer() { return this.keyPairCustomer.getPublicKey(); }
-    public void setPublicKeyCustomer(String publicKey) { this.keyPairCustomer = keyPairCustomer; }
+    public void createWallet() throws CantCreateCryptoBrokerWalletImplException{
+        try{
+            databaseDao.createCryptoBrokerWallet(this.walletKeyPair,this.ownerPublicKey);
+        } catch (CantCreateNewCryptoBrokerWalletException e) {
+            throw new CantCreateCryptoBrokerWalletImplException("CRYPTO BROKER WALLET", e, "CAN'T CREATE NEW CRYPTO BROKER WALLET", "");
+        } catch (Exception e) {
+            throw new CantCreateCryptoBrokerWalletImplException("CRYPTO BROKER WALLET", e, "CAN'T CREATE NEW CRYPTO BROKER WALLET", "");
+        }
+    }
 
-    @Override
-    public float getAmount() { return this.amount; }
-    public void setAmount(float amount) { this.amount = amount; }
+    public void getWallet() throws CantGetCryptoBrokerWalletImplException {
+        try{
+            databaseDao.getCryptoBrokerWallet(this.ownerPublicKey);
+        } catch (CantGetCryptoBrokerWalletException e) {
+            throw new CantGetCryptoBrokerWalletImplException("CRYPTO BROKER WALLET", e, "CAN'T CREATE NEW CRYPTO BROKER WALLET", "");
+        } catch (Exception e) {
+            throw new CantGetCryptoBrokerWalletImplException("CRYPTO BROKER WALLET", e, "CAN'T CREATE NEW CRYPTO BROKER WALLET", "");
+        }
+    }
 
-    @Override
-    public float getRunningBookBalance() { return this.runningBookBalance; }
-    public void setRunningBookBalance(float bookBalance) { this.runningBookBalance = bookBalance; }
+    private StockTransaction stockTransactionRecord(StockTransaction transaction){
+        KeyPair walletKeyPair = AsymmetricCryptography.createKeyPair(transaction.getWalletPublicKey());
+        StockTransaction record = new CryptoBrokerStockTransactionRecordImpl(
+                transaction.getTransactionId(),
+                walletKeyPair,
+                transaction.getOwnerPublicKey(),
+                transaction.getBalanceType(),
+                transaction.getTransactionType(),
+                transaction.getCurrencyType(),
+                transaction.getMerchandise(),
+                transaction.getAmount(),
+                0,
+                0,
+                transaction.getTimestamp(),
+                transaction.getMemo()
+        );
+        return record;
+    }
 
-    @Override
-    public float getRunningAvailableBalance() { return this.runningAvailableBalance; }
-    public void setRunningAvailableBalance(float availableBalance) { this.runningAvailableBalance = availableBalance; }
-
-    @Override
-    public long getTimestamp() { return this.timeStamp; }
-    public void setTimestamp(long time) { this.timeStamp = time; }
-
-    @Override
-    public String getMemo() { return this.memo; }
-    public void setMemo(String memo) { this.memo = memo; }
+    private StockTransaction stockRecord(CurrencyType currencyType, FermatEnum merchandise, BalanceType balanceType){
+        UUID transactionId = UUID.randomUUID();
+        long timestamp = 0;
+        String memo = "";
+        StockTransaction record = new CryptoBrokerStockTransactionRecordImpl(
+                transactionId,
+                this.walletKeyPair,
+                this.ownerPublicKey,
+                balanceType,
+                TransactionType.DEBIT,
+                currencyType,
+                merchandise,
+                0,
+                0,
+                0,
+                timestamp,
+                memo
+        );
+        return record;
+    }
 
     public boolean equals(Object o){
-        if(!(o instanceof CryptoBrokerTransactionRecord))
+        if(!(o instanceof CryptoBrokerStockTransactionRecord))
             return false;
-        CryptoBrokerTransactionRecord compare = (CryptoBrokerTransactionRecord) o;
-        return keyPairBroker.getPublicKey().equals(compare.getPublicKeyBroker()) && keyPairWallet.getPublicKey().equals(compare.getPublicKeyWallet());
+        CryptoBrokerStockTransactionRecord compare = (CryptoBrokerStockTransactionRecord) o;
+        return ownerPublicKey.equals(compare.getOwnerPublicKey()) && walletKeyPair.getPublicKey().equals(compare.getWalletPublicKey());
     }
 
     @Override
     public int hashCode(){
         int c = 0;
-        c += keyPairBroker.hashCode();
-        c += keyPairWallet.hashCode();
+        c += ownerPublicKey.hashCode();
+        c += walletKeyPair.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }

@@ -28,16 +28,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetIfIntraWalletUsersExistsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.popup.CreateUserFragmentDialog;
+import com.bitdubai.sub_app.wallet_manager.structure.Item;
+import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +52,7 @@ import java.util.List;
  */
 
 
-public class WalletDesktopFragment extends Fragment implements Thread.UncaughtExceptionHandler, DialogInterface.OnDismissListener {
+public class WalletDesktopFragment extends FermatFragment implements Thread.UncaughtExceptionHandler, DialogInterface.OnDismissListener {
 
     private static final String ARG_POSITION = "position";
     private static final String CWP_WALLET_BASIC_ALL_MAIN = Activities.CWP_WALLET_BASIC_ALL_MAIN.getCode();
@@ -89,7 +96,19 @@ public class WalletDesktopFragment extends Fragment implements Thread.UncaughtEx
             gridView.setNumColumns(4);
         }
 
-        AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstInstalledWallet);
+        ArrayList<Item> list = new ArrayList<>();
+        if(lstInstalledWallet!=null)
+        for(InstalledWallet installedWallet: lstInstalledWallet){
+            list.add(new Item(installedWallet));
+        }
+
+        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
+        list.add(new Item(installedSubApp));
+
+        installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
+        list.add(new Item(installedSubApp));
+
+        AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, list);
         adapter.notifyDataSetChanged();
         gridView.setAdapter(adapter);
 
@@ -101,6 +120,8 @@ public class WalletDesktopFragment extends Fragment implements Thread.UncaughtEx
                 return ;
             }
         });
+
+
 
 
 
@@ -249,19 +270,18 @@ public class WalletDesktopFragment extends Fragment implements Thread.UncaughtEx
     }
 
 
-    public class AppListAdapter extends ArrayAdapter<InstalledWallet> {
+    public class AppListAdapter extends ArrayAdapter<Item> {
 
 
-        public AppListAdapter(Context context, int textViewResourceId, List<InstalledWallet> objects) {
+        public AppListAdapter(Context context, int textViewResourceId, List<Item> objects) {
             super(context, textViewResourceId, objects);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            try
-            {
-                final InstalledWallet installedWallet = getItem(position);
+            try {
+                final Item item = getItem(position);
 
                 ViewHolder holder;
                 if (convertView == null) {
@@ -279,59 +299,77 @@ public class WalletDesktopFragment extends Fragment implements Thread.UncaughtEx
                     holder = (ViewHolder) convertView.getTag();
                 }
 
-                holder.companyTextView.setText(installedWallet.getWalletName());
+                holder.companyTextView.setText(item.getName());
                 holder.companyTextView.setTypeface(tf, Typeface.BOLD);
 
 
                 LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.wallet_3);
 
                 //Hardcodeado hasta que esté el wallet resources
-                switch (installedWallet.getWalletIcon()) {
+                switch (item.getIcon()) {
 
                     case "reference_wallet_icon":
-                        holder.imageView.setImageResource(R.drawable.fermat);
+                        holder.imageView.setImageResource(R.drawable.bitcoin_wallet);
                         holder.imageView.setTag("WalletBitcoinActivity|4");
                         linearLayout.setTag("WalletBitcoinActivity|4");
 
-                        linearLayout.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                               // try {
-                                    // check if intra user identity exists
-                                    //if (walletManager.hasIntraUserIdentity()) {
-                                        //set the next fragment and params
-                                        ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
-                                   // }
-                                   // else
-                                   // {
-
-                                   // }
-                               // } catch (Exception e) {
-                                   // Toast.makeText(getActivity(),"oooopps have an error ",Toast.LENGTH_SHORT).show();
-                               // }
-
-
-                            }
-                        });
 
                         holder.imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
 
-                                //set the next fragment and params
-                                ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                try {
+                                    if (walletManager.hasIntraUserIdentity())
+                                        ((FermatScreenSwapper) getActivity()).selectWallet((InstalledWallet)item.getInterfaceObject());
+                                    else {
+                                        Toast.makeText(getActivity(),"Es necesario crear una identidad",Toast.LENGTH_SHORT).show();
+                                    }
+
+
+                                } catch (CantGetIfIntraWalletUsersExistsException e) {
+                                    e.printStackTrace();
+                                }
 
                             }
                         });
 
                         break;
 
+                    case "intra_user_identity_sub_app":
+                        holder.imageView.setImageResource(R.drawable.intra_user);
+                        holder.imageView.setTag("StoreFrontActivity|1");
+                        linearLayout.setTag("StoreFrontActivity|1");
+                        holder.imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //set the next fragment and params
+                                ((FermatScreenSwapper) getActivity()).selectSubApp((InstalledSubApp)item.getInterfaceObject());
+                            }
+                        });
+                        break;
+
+                    case "intra_user_community_sub_app":
+                        holder.imageView.setImageResource(R.drawable.intra_user);
+                        holder.imageView.setTag("StoreFrontActivity|1");
+                        linearLayout.setTag("StoreFrontActivity|1");
+                        holder.imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                try {
+                                    if (walletManager.hasIntraUserIdentity())
+                                        ((FermatScreenSwapper) getActivity()).selectSubApp((InstalledSubApp)item.getInterfaceObject());
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        break;
                 }
 
             }
-            catch (Exception e)
-            {
+            catch (Exception e){
                 Toast.makeText(getActivity(),"oooopps ",Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
 
 

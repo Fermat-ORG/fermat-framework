@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -17,7 +21,10 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.ActorAdapter;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 
@@ -30,7 +37,7 @@ import java.util.List;
 public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private AssetUserCommunitySubAppModuleManager manager;
-    private List<ActorAssetUser> actors;
+    private List<Actor> actors;
 
     // recycler
     private RecyclerView recyclerView;
@@ -49,6 +56,7 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         try {
             manager = ((AssetUserCommunitySubAppSession) subAppsSession).getManager();
         } catch (Exception ex) {
@@ -65,8 +73,13 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ActorAdapter(getActivity());
+        adapter.setAdapterChangeListener(new AdapterChangeListener<Actor>() {
+            @Override
+            public void onDataSetChanged(List<Actor> dataSet) {
+                actors = dataSet;
+            }
+        });
         recyclerView.setAdapter(adapter);
-
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipeRefresh.setOnRefreshListener(this);
         swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
@@ -75,15 +88,76 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        onRefresh();
+        if (swipeRefresh != null)
+            swipeRefresh.post(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+                }
+            });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_connect) {
+            final ProgressDialog dialog = new ProgressDialog(getActivity());
+            dialog.setMessage("Connecting please wait...");
+            dialog.setCancelable(false);
+            dialog.show();
+            FermatWorker worker = new FermatWorker() {
+                @Override
+                protected Object doInBackground() throws Exception {
+                    List<ActorAssetUser> toConnect = new ArrayList<>();
+                    for (Actor actor : actors) {
+                        if (actor.selected)
+                            toConnect.add(actor);
+                    }
+                    //// TODO: 28/10/15 get Actor asset issuer
+                    manager.connectToActorAssetUser(null, toConnect);
+                    return true;
+                }
+            };
+            worker.setContext(getActivity());
+            worker.setCallBack(new FermatWorkerCallBack() {
+                @Override
+                public void onPostExecute(Object... result) {
+                    dialog.dismiss();
+                    if (swipeRefresh != null)
+                        swipeRefresh.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                onRefresh();
+                            }
+                        });
+                }
+
+                @Override
+                public void onErrorOccurred(Exception ex) {
+                    dialog.dismiss();
+                    Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                    ex.printStackTrace();
+                }
+            });
+            worker.execute();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
+            if (swipeRefresh != null)
+                swipeRefresh.setRefreshing(true);
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -101,7 +175,7 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            actors = (ArrayList<ActorAssetUser>) result[0];
+                            actors = (ArrayList<Actor>) result[0];
                             adapter.changeDataSet(actors);
                         }
                     }
@@ -121,11 +195,17 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
         }
     }
 
-    private synchronized List<ActorAssetUser> getMoreData() throws Exception {
-        List<ActorAssetUser> dataSet = null;
+    private synchronized List<Actor> getMoreData() throws Exception {
+        List<Actor> dataSet = new ArrayList<>();
+        List<AssetUserActorRecord> result = null;
         if (manager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
-        dataSet = manager.getAllActorAssetUserRegistered();
+        result = manager.getAllActorAssetUserRegistered();
+        if (result != null && result.size() > 0) {
+            for (AssetUserActorRecord record : result) {
+                dataSet.add((new Actor(record)));
+            }
+        }
         return dataSet;
     }
 }

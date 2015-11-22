@@ -1,12 +1,12 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantConnecToException;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendCryptoAddressException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.RequestedListNotReadyRecevivedException;
 
 import java.util.List;
 
@@ -24,28 +24,29 @@ public interface AssetUserActorNetworkServiceManager {
     public void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException;
 
     /**
+     * Request a Crypto Address to the ActorAssetUser
      *
-     * @param actorAssetUserSender who send the message
-     * @param actorAssetUserDestination who recibe the message
-     * @param msjContent  the message content
-     *
-     * @throws CantSendMessageException
+     * @param actorAssetIssuerSender
+     * @param actorAssetUserDestination
+     * @throws CantRequestCryptoAddressException
      */
-    public void sendMessage(ActorAssetUser actorAssetUserSender, ActorAssetUser actorAssetUserDestination, String msjContent)  throws CantSendMessageException;
+    public void requestCryptoAddress(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserDestination)  throws CantRequestCryptoAddressException;
 
     /**
-     * Request the list of the actorAssetUser register in the server
+     * Send a Crypto Address to the ActorAssetIssuer
      *
-     * @throws CantRequestListActorAssetUserRegisteredException
+     * @param actorAssetUserSender
+     * @param actorAssetIssuerDestination
+     * @param cryptoAddress
+     * @throws CantSendCryptoAddressException
      */
-    public void requestListActorAssetUserRegistered()  throws CantRequestListActorAssetUserRegisteredException;
+    public void sendCryptoAddress(ActorAssetUser actorAssetUserSender, ActorAssetIssuer actorAssetIssuerDestination, CryptoAddress cryptoAddress)  throws CantSendCryptoAddressException;
 
     /**
-     * Get the content of the list previously requested, this method have to call after the
-     * the notification event is receive <code>Nombre del Evento</>
+     * Get the list of the ActorAssetUser registered
      *
      * @return List<ActorAssetUser>
      */
-    public List<ActorAssetUser> getListActorAssetUserRegistered() throws RequestedListNotReadyRecevivedException;
+    public List<ActorAssetUser> getListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException;
 
 }

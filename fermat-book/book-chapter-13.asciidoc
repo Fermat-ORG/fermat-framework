@@ -1,0 +1,57 @@
+image::https://github.com/bitDubai/media-kit/blob/master/Coins/CCM.jpg[FermatCCM]
+== Chapter 13: Fermat Crypto Commodity Money
+This platform introduces the first abstraction on crypto currency: as its value is exclusively determined by the market, it can be taken as any other available *commodities* to establish a correlation between the crypto value and the value of any set of Fiat Money that the end user is used to operate with. By means of this, the value is held in cryptocurrency but the transactions and the general wallet functions are displayed in Fiat Currency to make it easier for the end user to run his business in a way he is more familiar with. +
+
+=== New components
+Some of the new components added to the framework by this platform are :
+
+* money requests and money transmission registered to show value in *fiat money*
+* Crypto Commodity Money Wallet
+* Discount Wallet
+
+=== Crypto Commodity Money Wallet
+This niche wallet performs the transaction in crypto currency but the results are displayed in *fiat currency*.
+
+=== Discount Wallet
+This niche wallet aims to protect the value stored in the user's by suggesting profitable conditions to spend it. It checks the _exchange rate_ at the time the end user consider ates spending the money and compares it with the rate when the crypto value was purchased, and shows the *positive difference* (gain) as a virtual *discount rate* to the end user at the time he consider ates spending it.
+
+////
+=== _Network Service layer_
+Money Request ::
+Money Transmission :: +
+
+=== _Wallet layer_
+Crypto Commodity Wallet :: 
+Discount Wallet :: +
+
+=== _Composite Wallet layer_
+Multiaccount Wallet :: +
+
+=== _Crypto Money Transaction layer_
+Incoming Device User ::
+Incoming Extra Actor ::
+Incoming Intra Actor ::
+Intra Wallet ::
+Outgoing Device User ::
+Outgoing Extra Actor ::
+Outgoing Intra Actor ::
+Inter Account :: + 
+
+=== _Request layer_
+Money Request :: +
+
+=== _Reference Wallet layer_
+Discount Wallet :: +
+////
+
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+==== _Continue Reading ..._
+////
+link:book-chapter-19.asciidoc[Digital Assets Platform]
+////
+
+link:book-chapter-14.asciidoc[Next Chapter]
+
+link:book-chapter-12.asciidoc[Previous Chapter]
+
+

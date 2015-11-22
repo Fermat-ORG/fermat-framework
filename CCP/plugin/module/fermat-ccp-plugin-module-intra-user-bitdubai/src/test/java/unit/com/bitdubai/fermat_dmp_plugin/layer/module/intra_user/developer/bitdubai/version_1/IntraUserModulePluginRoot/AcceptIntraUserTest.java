@@ -1,8 +1,9 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot;
 
 import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
+import IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -11,7 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraWalletUserModulePluginRoot;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import ErrorManager;
 
 import junit.framework.TestCase;
 
@@ -29,34 +30,44 @@ import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+*/
 /**
  * Created by natalia on 20/08/15.
- */
+ *//*
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class AcceptIntraUserTest extends TestCase {
-    /**
+    */
+/**
      * DealsWithErrors interface Mocked
-     */
+     *//*
+
     @Mock
     private ErrorManager mockErrorManager;
 
-    /**
+    */
+/**
      * UsesFileSystem Interface member variables.
-     */
+     *//*
+
     @Mock
     private PluginFileSystem mockPluginFileSystem;
 
-    /**
+    */
+/**
      * DealWithActorIntraUserManager Interface member variables.
-     */
+     *//*
+
     @Mock
-    private IntraWalletUserManager mockIntraWalletUserManager;
+    private IntraWalletUserIdentityManager mockIntraWalletUserManager;
 
 
-    /**
+    */
+/**
      * DealWithIntraUserNetworkServiceManager Interface member variables.
-     */
+     *//*
+
     @Mock
     private IntraUserManager mockIntraUserNetworkServiceManager;
 
@@ -88,7 +99,7 @@ public class AcceptIntraUserTest extends TestCase {
         testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
         testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
 
-        testIntraUserModulePluginRoot.setIntraWalletUserManager(mockIntraWalletUserManager);
+        testIntraUserModulePluginRoot.setIntraWalletUserIdentityManager(mockIntraWalletUserManager);
         testIntraUserModulePluginRoot.setIntraUserNetworkServiceManager(mockIntraUserNetworkServiceManager);
 
         setUpMockitoRules();
@@ -135,3 +146,4 @@ public class AcceptIntraUserTest extends TestCase {
     }
 }
 
+*/

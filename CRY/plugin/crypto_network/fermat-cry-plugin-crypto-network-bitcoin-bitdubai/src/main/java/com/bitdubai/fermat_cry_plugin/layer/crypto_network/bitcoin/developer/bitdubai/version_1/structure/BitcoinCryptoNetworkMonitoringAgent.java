@@ -9,10 +9,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
@@ -21,12 +20,15 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bit
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
 
 import java.net.InetSocketAddress;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by rodrigo on 08/06/15.
@@ -214,15 +216,18 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
 
             peers.setUserAgent(BitcoinManager.FERMAT_AGENT_NAME, BitcoinManager.FERMAT_AGENT_VERSION);
-            peers.setUseLocalhostPeerWhenPossible(true);
+            peers.setUseLocalhostPeerWhenPossible(false);
             /**
              * If we are using RegTest network, we will connect to local server
              */
             if (networkParameters == RegTestParams.get()) {
-                InetSocketAddress inetSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, REGTEST_SERVER_PORT);
-                PeerAddress peerAddress = new PeerAddress(inetSocketAddress);
-                peers.addAddress(peerAddress);
-                logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoNetwork information: Using RegTest. Connecting to " + inetSocketAddress.toString(), null, null);
+                InetSocketAddress inetSocketAddress1 = new InetSocketAddress(REGTEST_SERVER_1_ADDRESS, REGTEST_SERVER_1_PORT);
+                PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
+                peers.addAddress(peerAddress1);
+
+                InetSocketAddress inetSocketAddress2 = new InetSocketAddress(REGTEST_SERVER_2_ADDRESS, REGTEST_SERVER_2_PORT);
+                PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
+                peers.addAddress(peerAddress2);
             } else
             /**
              * If it is not RegTest, then I will get the Peers by DNSDiscovery
@@ -260,15 +265,49 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         private void doTheMainTask() throws CantConnectToBitcoinNetwork {
             try {
                 peers.start();
-                peers.downloadBlockChain();
+                peers.startBlockChainDownload(myListeners);
                 while (true){
                     //endless loop. Since bitcoinj upgrade, this is no longer running as a guava service.
                     // so we need to keep the thread active.
+                    Thread.sleep(60000);
+                    System.out.println("**CryptoNetwork ConnectedPeers: " + peers.getConnectedPeers().size());
+                    System.out.println("**CryptoNetwork PeerToDownload: " + peers.getDownloadPeer().toString());
+                    System.out.println("**CryptoNetwork PendingTransactions: " + wallet.getPendingTransactions().toString());
+
+                    if (wallet.getPendingTransactions().size() > 0){
+                        peers.stop();
+                        peers.addPeerDiscovery(new DnsDiscovery(networkParameters));
+                        System.out.println("**CryptoNetwork restarting with new peer discovery...");
+                        peers.start();
+                    }
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
                 throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception, "", "Error executing Agent.");
             }
         }
+    }
+
+    public void broadcastTransaction(Transaction transaction) throws ExecutionException, InterruptedException {
+        /**
+         * I make sure the service is running.
+         */
+        if (!peers.isRunning())
+            peers.start();
+
+        /**
+         * If I don't have any peers connected, I will continue trying to connect before broadcasting.
+         */
+        while (peers.numConnectedPeers() == 0){
+            peers.stop();
+            peers.addPeerDiscovery(new DnsDiscovery(networkParameters));
+            peers.start();
+            peers.downloadBlockChain();
+        }
+
+        /**
+         * broadcast it and wait.
+         */
+        peers.broadcastTransaction(transaction).future().get();
     }
 }

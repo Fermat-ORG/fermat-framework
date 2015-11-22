@@ -8,6 +8,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 /**
@@ -20,6 +21,11 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
  * @version 1.0
  */
 public class CompleteComponentRegistrationNotificationEvent extends AbstractP2PFermatEvent {
+
+    /**
+     * Represent the networkServiceTypeApplicant
+     */
+    private NetworkServiceType networkServiceTypeApplicant;
 
 
     /**
@@ -50,6 +56,22 @@ public class CompleteComponentRegistrationNotificationEvent extends AbstractP2PF
      */
     public void setPlatformComponentProfileRegistered(PlatformComponentProfile platformComponentProfileRegistered) {
         this.platformComponentProfileRegistered = platformComponentProfileRegistered;
+    }
+
+    /**
+     * Get the NetworkServiceTypeApplicant
+     * @return NetworkServiceTypeApplicant
+     */
+    public NetworkServiceType getNetworkServiceTypeApplicant() {
+        return networkServiceTypeApplicant;
+    }
+
+    /**
+     * Set the NetworkServiceTypeApplicant
+     * @param networkServiceTypeApplicant
+     */
+    public void setNetworkServiceTypeApplicant(NetworkServiceType networkServiceTypeApplicant) {
+        this.networkServiceTypeApplicant = networkServiceTypeApplicant;
     }
 
 }

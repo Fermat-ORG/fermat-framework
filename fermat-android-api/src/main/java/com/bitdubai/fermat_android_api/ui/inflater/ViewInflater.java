@@ -199,7 +199,7 @@ public class ViewInflater {
                                 //Picasso.with(context).load(R.drawable.person1).into(imageView);
                                 //resourceProviderManager.getImageResource("person1",null,null);
                                 //Bitmap bitmap = BitmapFactory.decodeByteArray()
-                                imageView.setImageResource(R.drawable.mati_profile);
+                                //imageView.setImageResource(R.drawable.mati_profile);
                         }
                 }
 

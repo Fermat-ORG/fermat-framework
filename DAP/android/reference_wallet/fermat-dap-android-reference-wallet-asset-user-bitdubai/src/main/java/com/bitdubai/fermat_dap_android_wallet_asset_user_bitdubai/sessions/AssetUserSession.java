@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
@@ -16,7 +18,7 @@ import java.util.Map;
  * @author Francisco Vasquez
  * @version 1.0
  */
-public class AssetUserSession implements WalletSession {
+public class AssetUserSession extends AbstractFermatSession<InstalledWallet,AssetUserWalletSubAppModuleManager,WalletResourcesProviderManager> implements WalletSession {
 
     private WalletResourcesProviderManager resourceManager;
     private AssetUserWalletSubAppModuleManager walletManager;
@@ -34,6 +36,7 @@ public class AssetUserSession implements WalletSession {
      * @param manager         AssetIssuerWallet Manager
      */
     public AssetUserSession(WalletResourcesProviderManager resourceManager, InstalledWallet installedWallet, ErrorManager errorManager, AssetUserWalletSubAppModuleManager manager) {
+        super(installedWallet.getWalletPublicKey(), installedWallet, errorManager, manager, null);
         this.installedWallet = installedWallet;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
@@ -41,7 +44,7 @@ public class AssetUserSession implements WalletSession {
         this.resourceManager = resourceManager;
     }
 
-    @Override
+
     public InstalledWallet getWalletSessionType() {
         return installedWallet;
     }
@@ -63,7 +66,7 @@ public class AssetUserSession implements WalletSession {
         return errorManager;
     }
 
-    @Override
+
     public WalletResourcesProviderManager getWalletResourcesProviderManager() {
         return resourceManager;
     }

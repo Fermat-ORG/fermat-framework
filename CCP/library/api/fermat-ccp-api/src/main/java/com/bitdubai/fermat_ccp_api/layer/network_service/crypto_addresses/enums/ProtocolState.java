@@ -11,11 +11,10 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum ProtocolState implements FermatEnum {
 
-    DONE               ("DON"), // final state of request.
-    PENDING_ACTION     ("PEA"), // pending local action, is given after raise a crypto addresses event.
-    PROCESSING_RECEIVE ("PCR"), // when an action from the network service is needed receiving.
-    PROCESSING_SEND    ("PCS"), // when an action from the network service is needed sending.
-    WAITING_RESPONSE   ("WRE")  // waiting response from the counterpart.
+    DONE                         ("DON"), // final state of request.
+    PENDING_ACTION               ("PEA"), // pending local action, is given after raise a crypto addresses event.
+    PROCESSING_SEND              ("PCS"), // when an action from the network service is needed sending.
+    WAITING_RESPONSE             ("WRE"), // waiting response from the counterpart.
 
     ;
 
@@ -29,11 +28,10 @@ public enum ProtocolState implements FermatEnum {
 
         switch (code){
 
-            case "DON": return DONE               ;
-            case "PEA": return PENDING_ACTION     ;
-            case "PCR": return PROCESSING_RECEIVE ;
-            case "PCS": return PROCESSING_SEND    ;
-            case "WRE": return WAITING_RESPONSE   ;
+            case "DON": return DONE                        ;
+            case "PEA": return PENDING_ACTION              ;
+            case "PCS": return PROCESSING_SEND             ;
+            case "WRE": return WAITING_RESPONSE            ;
 
             default:
                 throw new InvalidParameterException(

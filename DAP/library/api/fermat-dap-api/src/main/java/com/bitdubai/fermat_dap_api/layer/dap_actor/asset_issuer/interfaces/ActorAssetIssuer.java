@@ -1,8 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 
 /**
  * Created by Nerio on 10/09/15.
@@ -24,12 +23,12 @@ public interface ActorAssetIssuer {
     String getName();
 
     /**
-     * The method <code>getContactRegistrationDate</code> gives us the date when both Asset Issuers
+     * The method <code>getRegistrationDate</code> gives us the date when both Asset Issuers
      * exchanged their information and accepted each other as contacts.
      *
      * @return the date
      */
-    long getContactRegistrationDate();
+    long getRegistrationDate();
 
     /**
      * The method <coda>getProfileImage</coda> gives us the profile image of the represented Asset Issuer
@@ -39,16 +38,16 @@ public interface ActorAssetIssuer {
     byte[] getProfileImage();
 
     /**
-     * The method <code>getContactState</code> gives us the contact state of the represented Asset
-     * Issuer
+     * The method <code>getConnectionState</code> gives us the connection state of the represented
+     * Asset Issuer
      *
-     * @return the contact state
+     * @return the Connection state
      */
-    ConnectionState getContactState();
+    DAPConnectionState getDapConnectionState();
 
     /**
      * Método {@code getDescription}
-     * Este método retorna la descripción o información personal que el Issuer haya configurado
+     * The Method return a description about Issuer
      * acerca de él mismo.
      *
      * @return {@link String} con la descripción del {@link ActorAssetIssuer}
@@ -56,21 +55,33 @@ public interface ActorAssetIssuer {
     String getDescription();
 
     /**
-     * Método {@code getLocation}
-     * Este método retorna la ubicación geográfica del Actor Issuer.
-     * Sólo se utiliza Longitude y Latitude para esto.
+     * The method <code>getLocation</code> gives us the Location of the represented
+     * Asset Issuer
      *
-     * @return {@link Location} con la ubicación del {@link ActorAssetIssuer}
+     * @return the Location
      */
     Location getLocation();
 
     /**
-     * Método {@code getCryptoAddress}
-     * Este método retorna la dirección criptográfica del
-     * Issuer.
+     * The method <code>getLocationLatitude</code> gives us the Location of the represented
+     * Asset Issuer
      *
-     * @return {@link CryptoAddress} con la dirección criptoráfica del {@link ActorAssetIssuer}
+     * @return the Location Latitude
      */
-    CryptoAddress getCryptoAddress();
+    Double getLocationLatitude();
 
+    /**
+     * The method <code>getLocationLongitude</code> gives us the Location of the represented
+     * Asset Issuer
+     *
+     * @return the Location Longitude
+     */
+    Double getLocationLongitude();
+
+    /**
+     * returns the crypto address to which it belongs
+     *
+     * @return CryptoAddress instance.
+     */
+//    CryptoAddress getCryptoAddress();
 }

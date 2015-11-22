@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
@@ -52,6 +53,9 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     StatusBar statusBar;
 
     Map<WizardTypes, Wizard> wizards;
+
+    // esto es para ver a que wallet o subApp hay que hacer el back
+    String backPublicKey;
 
     Activities backActivity;
 
@@ -109,6 +113,10 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.backActivity=activity;
     }
 
+    public void setBackPublicKey(String backPublicKey) {
+        this.backPublicKey = backPublicKey;
+    }
+
     /**
      * Activity  interface implementation.
      */
@@ -154,6 +162,17 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     @Override
     public FermatHeader getHeader() {
         return header;
+    }
+
+    @Override
+    public String getBackAppPublicKey() {
+        return backPublicKey;
+    }
+
+    @Override
+    public void changeBackActivity(String appPublicKeyback,String activityCode) throws InvalidParameterException {
+        this.backPublicKey = appPublicKeyback;
+        this.backActivity = Activities.getValueFromString(activityCode);
     }
 
     // TODO VER COMO HACER ESTO
@@ -212,6 +231,10 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setActivityType(String activityType) {
         this.activityType = activityType;
+    }
+
+    public void setHeader(Header header) {
+        this.header = header;
     }
 }
 

@@ -1,42 +1,75 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
 
-
-import android.app.Fragment;
+import android.app.Activity;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.MarketExchangeRatesPageAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItemData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.OpenNegotiationsItemData;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.NavigationViewAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
+import com.viewpagerindicator.LinePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment the show the list of open negotiations waiting for the broker and the customer un the Home activity
+ *
+ * @author Nelson Ramirez
+ * @version 1.0
+ * @since 20/10/2015
  */
-public class OpenNegotiationsTabFragment extends FermatWalletFragment implements ExpandableRecyclerAdapter.ExpandCollapseListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
+        implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
-    // TODO: Rename and change types of parameters
+    // Constants
+    private static final String WALLET_PUBLIC_KEY = "crypto_broker_wallet";
 
-    private RecyclerView mRecyclerView;
-    private OpenNegotiationsExpandableAdapter mExpandableAdapter;
+    // Fermat Managers
+    private CryptoBrokerWalletModuleManager moduleManager;
+    private ErrorManager errorManager;
+
+    // Data
+    private List<GrouperItem> openNegotiationList;
+    private List<IndexInfoSummary> marketExchangeRateSummaryList;
 
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     */
     public static OpenNegotiationsTabFragment newInstance() {
         return new OpenNegotiationsTabFragment();
     }
@@ -45,93 +78,221 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_open_negotiations, container, false);
-
-
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.open_negotiations_recycler_view);
-
-        // Create a new adapter with 20 test data items
-        mExpandableAdapter = new OpenNegotiationsExpandableAdapter(getActivity(), setUpTestData(5));
-
-        // Attach this activity to the Adapter as the ExpandCollapseListener
-        mExpandableAdapter.setExpandCollapseListener(this);
-
-        // Set the RecyclerView's adapter to the ExpandableAdapter we just created
-        mRecyclerView.setAdapter(mExpandableAdapter)
-        ;
-        // Set the layout manager to a LinearLayout manager for vertical list
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        return rootView;
-    }
-
-
-    /**
-     * Save the instance state of the adapter to keep expanded/collapsed states when rotating or
-     * pausing the activity.
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        mExpandableAdapter.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onListItemExpanded(int position) {
-        //String toastMessage = getString(R.string.item_expanded, position);
-        Toast.makeText(getActivity(), "item expanded", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onListItemCollapsed(int position) {
-        //String toastMessage = getString(R.string.item_collapsed, position);
-        Toast.makeText(getActivity(), "Item collapsed", Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * Method to set up test data used in the RecyclerView.
-     * <p/>
-     * Each child list item contains a string.
-     * Each parent list item contains a number corresponding to the number of the parent and a string
-     * that contains a message.
-     * Each parent also contains a list of children which is generated in this. Every odd numbered
-     * parent gets one child and every even numbered parent gets two children.
-     *
-     * @return A List of Objects that contains all parent items. Expansion of children are handled in the adapter
-     */
-    private List<GrouperItemData> setUpTestData(int numItems) {
-        List<GrouperItemData> parentItemList = new ArrayList<>();
-
-        for (int i = 0; i < numItems; i++) {
-            List<OpenNegotiationsItemData> childItemList = new ArrayList<>();
-
-            OpenNegotiationsItemData childOne = new OpenNegotiationsItemData();
-            childOne.setChildText("hijo 1: " + i);
-            childItemList.add(childOne);
-
-            // Evens get 2 children, odds get 1
-            if (i % 2 == 0) {
-                OpenNegotiationsItemData childTwo = new OpenNegotiationsItemData();
-                childTwo.setChildText("hijo 2" + i);
-                childItemList.add(childTwo);
-            }
-
-            GrouperItemData verticalParent = new GrouperItemData();
-            verticalParent.setChildItemList(childItemList);
-            verticalParent.setParentNumber(i);
-            verticalParent.setParentText("texto padre");
-            if (i == 0) {
-                verticalParent.setInitiallyExpanded(true);
-            }
-            parentItemList.add(verticalParent);
+        try {
+            moduleManager = ((CryptoBrokerWalletSession) walletSession).getModuleManager();
+            errorManager = walletSession.getErrorManager();
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
-        return parentItemList;
+        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
     }
 
+
+    @Override
+    protected void initViews(View layout) {
+        super.initViews(layout);
+
+        Activity activity = getActivity();
+        LayoutInflater layoutInflater = activity.getLayoutInflater();
+        configureActivityHeader(layoutInflater);
+        configureToolbar();
+
+
+        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.cbw_divider_shape);
+        recyclerView.addItemDecoration(itemDecoration);
+
+        if (openNegotiationList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            View emptyListViewsContainer = layout.findViewById(R.id.empty);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }
+
+        try {
+            addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), null));
+            NavigationViewAdapter adapter = new NavigationViewAdapter(activity, null);
+            setNavigationDrawer(adapter);
+        } catch (CantGetActiveLoginIdentityException e) {
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+        }
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
+    }
+
+    private void configureActivityHeader(LayoutInflater layoutInflater) {
+
+        RelativeLayout toolbarHeader = getToolbarHeader();
+        try {
+            toolbarHeader.removeAllViews();
+        } catch (Exception exception) {
+            CommonLogger.exception(TAG, "Error removing all views from toolbarHeader ", exception);
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
+        }
+        toolbarHeader.setVisibility(View.VISIBLE);
+        View container = layoutInflater.inflate(R.layout.cbw_header_layout, toolbarHeader, true);
+
+        if (marketExchangeRateSummaryList.isEmpty()) {
+            FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.cbw_no_market_rate);
+            noMarketRateTextView.setVisibility(View.VISIBLE);
+            View marketRateViewPagerContainer = container.findViewById(R.id.cbw_market_rate_view_pager_container);
+            marketRateViewPagerContainer.setVisibility(View.VISIBLE);
+        } else {
+            ViewPager viewPager = (ViewPager) container.findViewById(R.id.cbw_exchange_rate_view_pager);
+            viewPager.setOffscreenPageLimit(3);
+            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchangeRateSummaryList);
+            viewPager.setAdapter(pageAdapter);
+
+            LinePageIndicator indicator = (LinePageIndicator) container.findViewById(R.id.cbw_exchange_rate_view_pager_indicator);
+            indicator.setViewPager(viewPager);
+        }
+
+    }
+
+    @Override
+    protected boolean hasMenu() {
+        return false;
+    }
+
+    @Override
+    public ExpandableRecyclerAdapter getAdapter() {
+        if (adapter == null) {
+            adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiationList);
+            // setting up event listeners
+            adapter.setChildItemFermatEventListeners(this);
+        }
+        return adapter;
+    }
+
+    @Override
+    public RecyclerView.LayoutManager getLayoutManager() {
+        if (layoutManager == null)
+            layoutManager = new LinearLayoutManager(getActivity());
+
+        return layoutManager;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.fragment_open_contracts_tab;
+    }
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.open_contracts_recycler_view;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return R.id.swipe_refresh;
+    }
+
+    @Override
+    public List<GrouperItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        ArrayList<GrouperItem> data = new ArrayList<>();
+        String grouperText;
+
+        if (moduleManager != null) {
+            try {
+                CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
+
+                grouperText = getActivity().getString(R.string.waiting_for_you);
+                List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
+                waitingForBroker.addAll(cryptoBrokerWallet.getNegotiationsWaitingForBroker(0, 10));
+                GrouperItem<CustomerBrokerNegotiationInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
+                data.add(waitingForBrokerGrouper);
+
+                grouperText = getActivity().getString(R.string.waiting_for_the_customer);
+                List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
+                waitingForCustomer.addAll(cryptoBrokerWallet.getNegotiationsWaitingForCustomer(0, 10));
+                GrouperItem<CustomerBrokerNegotiationInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+                data.add(waitingForCustomerGrouper);
+
+            } catch (CantGetCryptoBrokerWalletException | CantGetNegotiationsWaitingForBrokerException | CantGetNegotiationsWaitingForCustomerException ex) {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+                if (errorManager != null) {
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                }
+            }
+
+        } else {
+            Toast.makeText(getActivity(), "Sorry, an error happened OpenNegotiationsTabFragment (Module == null)", Toast.LENGTH_SHORT).show();
+        }
+
+        return data;
+    }
+
+    private List<IndexInfoSummary> getMarketExchangeRateSummaryData() {
+        List<IndexInfoSummary> data = new ArrayList<>();
+
+        if (moduleManager != null) {
+            try {
+                CryptoBrokerWallet wallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
+                data.addAll(wallet.getCurrentIndexSummaryForStockCurrencies());
+
+            } catch (CantGetCryptoBrokerWalletException | CantGetCurrentIndexSummaryForStockCurrenciesException ex) {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+                if (errorManager != null) {
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                }
+            }
+        } else {
+            Toast.makeText(getActivity(), "Sorry, an error happened OpenNegotiationsTabFragment (Module == null)", Toast.LENGTH_SHORT).show();
+        }
+
+        return data;
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
+    }
+
+    @Override
+    public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
+        walletSession.setData("negotiation_data", data);
+        //changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS);
+    }
+
+    @Override
+    public void onLongItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
+    }
+
+    @Override
+    public void onPostExecute(Object... result) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            if (result != null && result.length > 0) {
+                openNegotiationList = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(openNegotiationList);
+            }
+        }
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
+    }
 }
+

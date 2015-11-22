@@ -1,72 +1,71 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkEventsAgent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.UTXOProvider;
-import org.bitcoinj.wallet.WalletTransaction;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by rodrigo on 9/23/15.
  */
-public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, DatabaseManagerForDevelopers, DealsWithEvents, DealsWithPluginDatabaseSystem, Plugin, Service {
+public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
+        BitcoinNetworkManager,
+        DatabaseManagerForDevelopers {
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    private EventManager eventManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    public BitcoinCryptoNetworkPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
+
     /**
      * BitcoinNetworkManager variable
      */
-    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
-
-    /**
-     * DealsWithEvents interface variable and implementation
-     */
-    EventManager eventManager;
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     * Plugin interface variable and implementation
-     * @param pluginId
-     */
-    UUID pluginId;
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
+    private BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
 
     /**
      * DatabaseManagerForDevelopers interface implementations
      */
-    BitcoinCryptoNetworkDeveloperDatabaseFactory bitcoinCryptoNetworkDeveloperDatabaseFactory;
+    private BitcoinCryptoNetworkDeveloperDatabaseFactory bitcoinCryptoNetworkDeveloperDatabaseFactory;
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         if (bitcoinCryptoNetworkDeveloperDatabaseFactory == null){
@@ -90,20 +89,6 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
         return bitcoinCryptoNetworkDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
-    /**
-     * DealsWithPluginDatabaseSystem interface variable and implementation
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     *Service interface variable and implementation
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
     @Override
     public void start() throws CantStartPluginException {
         /**
@@ -125,38 +110,6 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
          * nothing left to do.
          */
         this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    /**
-     * pauses the plugin
-     */
-    @Override
-    public void pause() {
-
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    /**
-     * resumes the plugin
-     */
-    @Override
-    public void resume() {
-
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    /**
-     * stops the plugin
-     */
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
     }
 
     /**
@@ -189,10 +142,10 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
      * We may have multiple CryptoTranscation because each have a different CryptoStatus
      * @param txHash
      * @return
-     * @throws CantGetGenesisTransactionException
+     * @throws CantGetCryptoTransactionException
      */
     @Override
-    public List<CryptoTransaction> getGenesisTransaction(String txHash) throws CantGetGenesisTransactionException {
+    public List<CryptoTransaction> getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
         return bitcoinCryptoNetworkManager.getGenesisTransaction(txHash);
     }
 
@@ -204,7 +157,7 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
      */
     @Override
     public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
-       bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx);
+        bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx);
     }
 
     /**
@@ -215,5 +168,30 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
     @Override
     public UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType) {
         return bitcoinCryptoNetworkManager.getUTXOProvider(blockchainNetworkType);
+    }
+
+    /**
+     * Gets the specified bitcoin transaction
+     * @param transactionHash
+     * @return
+     */
+    @Override
+    public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
+        return bitcoinCryptoNetworkManager.getBitcoinTransaction(blockchainNetworkType, transactionHash);
+    }
+
+    @Override
+    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, ECKey ecKey) {
+        return null;
+    }
+
+    @Override
+    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, List<ECKey> ecKeys) {
+        return null;
+    }
+
+    @Override
+    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, VaultType vaultType) {
+        return null;
     }
 }

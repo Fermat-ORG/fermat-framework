@@ -72,7 +72,7 @@ public class AssetRedeemPointWalletDatabaseFactory  implements DealsWithPluginDa
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false );
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_VERIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_VERIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ACTOR_FROM_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
@@ -98,6 +98,8 @@ public class AssetRedeemPointWalletDatabaseFactory  implements DealsWithPluginDa
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
+        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
+        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
 
         return table;
     }

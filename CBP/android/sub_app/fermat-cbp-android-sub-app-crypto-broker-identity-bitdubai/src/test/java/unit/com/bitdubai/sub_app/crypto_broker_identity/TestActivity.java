@@ -3,22 +3,19 @@ package unit.com.bitdubai.sub_app.crypto_broker_identity;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentsEnumType;
+
+import java.util.Objects;
 
 /**
  * Created by nelson on 21/09/15.
@@ -84,5 +81,15 @@ public class TestActivity extends Activity implements WizardConfiguration, Ferma
     @Override
     public void onCallbackViewObserver(FermatCallback fermatCallback) {
 
+    }
+
+    @Override
+    public void connectWithOtherApp(Engine emgine, Objects... objectses) {
+
+    }
+
+    @Override
+    public Object[] connectBetweenAppsData() {
+        return new Object[0];
     }
 }

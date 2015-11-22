@@ -11,12 +11,12 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
@@ -108,12 +108,7 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
      */
 
     @Override
-    public UUID getId() {
-        return pluginId;
-    }
-
-    @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
 
@@ -175,6 +170,11 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
+    }
+
+    @Override
+    public boolean isRegister() {
+        return false;
     }
 
     /**

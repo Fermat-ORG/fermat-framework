@@ -28,7 +28,7 @@ public class TabStrip implements FermatTabStrip {
 
     int indicatorColor;
 
-    int indicatorHeight;
+    int indicatorHeight=-1;
 
     int backgroundColor;
 

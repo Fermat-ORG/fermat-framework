@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -18,14 +19,20 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantCreateCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerWalletImplException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerWalletDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +43,8 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 19.10.15.
  */
-public class CryptoBrokerWalletPluginRoot implements DatabaseManagerForDevelopers,
+public class CryptoBrokerWalletPluginRoot implements CryptoBrokerWalletManager,
+        DatabaseManagerForDevelopers,
         DealsWithPluginDatabaseSystem,
         LogManagerForDevelopers,
         DealsWithErrors,
@@ -65,16 +73,34 @@ public class CryptoBrokerWalletPluginRoot implements DatabaseManagerForDeveloper
 
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    public static final String CRYPTO_BROKER_PRIVATE_KEYS_WALLET_FILE_NAME = "cryptoBrokerWalletPrivateKeyWallet";
+    public static final String CRYPTO_BROKER_WALLET_PRIVATE_KEYS_FILE_NAME = "cryptoBrokerWalletPrivateKeyWallet";
 
-    public static final String CRYPTO_BROKER_PRIVATE_KEYS_BROKER_FILE_NAME = "cryptoBrokerWalletPrivateKeyBroker";
+    /*CryptoBrokerMAnager Interface Implementation */
+    @Override
+    public CryptoBrokerWallet createNewCryptoBrokerWallet(String cryptoBroker) throws CantCreateCryptoBrokerWalletException {
+        try {
+            CryptoBrokerWalletImpl CryptoBrokerWallet = new CryptoBrokerWalletImpl(AsymmetricCryptography.generateECCKeyPair(), cryptoBroker, cryptoBrokerWalletDatabaseDao);
+            CryptoBrokerWallet.createWallet();
+            return CryptoBrokerWallet;
+        } catch (Exception e) {
+            throw new CantCreateCryptoBrokerWalletException("CRYPTO BROKER WALLET", e, "CAN'T CREATE NEW CRYPTO BROKER WALLET", "");
+        }
+    }
 
-    public static final String CRYPTO_BROKER_PRIVATE_KEYS_CUSTOMER_FILE_NAME = "cryptoBrokerWalletPrivateKeyCustomer";
+    @Override
+    public CryptoBrokerWallet getCryptoBrokerWallet(String cryptoBroker) throws CryptoBrokerWalletNotFoundException {
+        try {
+            CryptoBrokerWalletImpl CryptoBrokerWallet = new CryptoBrokerWalletImpl(AsymmetricCryptography.generateECCKeyPair(), cryptoBroker, cryptoBrokerWalletDatabaseDao);
+            CryptoBrokerWallet.getWallet();
+            return CryptoBrokerWallet;
+        } catch (CantGetCryptoBrokerWalletImplException e) {
+            throw new CryptoBrokerWalletNotFoundException("CAN'T GET CRYPTO BROKER IDENTITY", e, "Error getting Crypto Broker Wallet", "");
+        } catch (Exception e) {
+            throw new CryptoBrokerWalletNotFoundException("CAN'T CREATE NEW CRYPTO BROKER IDENTITY", e, "Error getting current logged in device user", "");
+        }
+    }
 
-    /**/
-
-
-    /*DatabaseManagerForDevelopers Interface implementation.*/
+    /*DatabaseManagerForDevelopers Interface Implementation.*/
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         CryptoBrokerWalletDeveloperDatabaseFactory dbFactory = new CryptoBrokerWalletDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
@@ -94,24 +120,24 @@ public class CryptoBrokerWalletPluginRoot implements DatabaseManagerForDeveloper
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeCryptoBrokerWalletDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return new ArrayList<>();
     }
 
-    /*DealsWithPluginDatabaseSystem interface implementation.*/
+    /*DealsWithPluginDatabaseSystem interface Implementation.*/
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
 
     }
 
-    /*LogManagerForDevelopers Interface implementation.*/
+    /*LogManagerForDevelopers Interface Implementation.*/
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.CryptoBrokerWalletPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletImpl");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerStockTransactionRecordImpl");
         returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao");
         returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseFactory");
         returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseConstants");
@@ -130,37 +156,37 @@ public class CryptoBrokerWalletPluginRoot implements DatabaseManagerForDeveloper
         }
     }
 
-    /*DealWithErrors Interface implementation.*/
+    /*DealWithErrors Interface Implementation.*/
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
     }
 
-    /*DealsWithLogger Interface implementation.*/
+    /*DealsWithLogger Interface Implementation.*/
     @Override
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
     }
 
-    /*DealsWithDeviceUser Interface implementation.*/
+    /*DealsWithDeviceUser Interface Implementation.*/
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
         this.deviceUserManager = deviceUserManager;
     }
 
-    /*DealWithPluginFileSystem Interface implementation.*/
+    /*DealWithPluginFileSystem Interface Implementation.*/
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    /*PlugIn Interface implementation.*/
+    /*PlugIn Interface Implementation.*/
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
 
-    /*Service Interface implementation.*/
+    /*Service Interface Implementation.*/
     @Override
     public void start() throws CantStartPluginException {
         this.serviceStatus = ServiceStatus.STARTED;

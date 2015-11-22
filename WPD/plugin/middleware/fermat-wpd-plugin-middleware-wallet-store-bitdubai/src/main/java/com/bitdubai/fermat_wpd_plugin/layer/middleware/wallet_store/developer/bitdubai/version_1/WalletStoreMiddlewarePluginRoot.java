@@ -2,36 +2,38 @@ package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.b
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.CatalogItems;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.exceptions.CantGetItemInformationException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.exceptions.CantSetInstallationStatusException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.interfaces.WalletStoreManager;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseFactory;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,40 +53,31 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, WalletStoreManager {
+public class WalletStoreMiddlewarePluginRoot extends AbstractPlugin implements
+        DatabaseManagerForDevelopers,
+        LogManagerForDevelopers,
+        WalletStoreManager {
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER    )
+    private LogManager logManager;
+
 
     /**
      * WalletStoreMiddlewarePluginRoot member variables
      */
     Database database;
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    ErrorManager errorManager;
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
-
-    /**
-     * DealsWithLogger interface member variable
-     */
-    LogManager logManager;
-
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
-    /**
-     * DealsWithPluginDatabaseSystem interface member variables
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
+    public WalletStoreMiddlewarePluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     /**
      * DatabaseManagerForDevelopers interface implementation
@@ -139,78 +132,12 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
             throw new CantStartPluginException("Cannot start WalletStoreNetworkService plugin.", FermatException.wrapException(exception), null, null);
         }
 
-
-//        //todo testing borrar
-//        try {
-//            UUID id = UUID.fromString("12f8ae20-4585-44a6-bacf-a09537984ab1");
-//
-//            this.setInstallationStatus(CatalogItems.SKIN, id, InstallationStatus.INSTALLED);
-//        } catch (CantSetInstallationStatusException e) {
-//            e.printStackTrace();
-//        }
-
-
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
     private void createWalletStoreMiddlewareDatabase() throws CantCreateDatabaseException {
         WalletStoreMiddlewareDatabaseFactory databaseFactory = new WalletStoreMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
         database = databaseFactory.createDatabase(pluginId, WalletStoreMiddlewareDatabaseConstants.DATABASE_NAME);
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * Plugin methods implementation.
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * DealsWithLogger Interface implementation.
-     */
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
     }
 
     /**

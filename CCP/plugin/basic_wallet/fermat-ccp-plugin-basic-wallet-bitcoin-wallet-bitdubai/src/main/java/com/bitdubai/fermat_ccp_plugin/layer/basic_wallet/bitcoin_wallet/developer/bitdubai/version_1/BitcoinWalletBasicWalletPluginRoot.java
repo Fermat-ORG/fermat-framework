@@ -2,16 +2,21 @@ package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.develop
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -33,9 +38,9 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCrea
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWallet;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.developerUtils.DeveloperDatabaseFactory;
 
 import java.util.ArrayList;
@@ -49,36 +54,26 @@ import java.util.UUID;
  * Created by loui on 30/04/15.
  * Modified by Leon Acosta - (laion.cj91@gmail.com) on 18/09/15.
  */
-public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service, Plugin {
+public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implements
+        BitcoinWalletManager,
+        DatabaseManagerForDevelopers {
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
 
     private static final String WALLET_IDS_FILE_NAME = "walletsIds";
     private Map<String, UUID> walletIds = new HashMap<>();
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * DealsWithDatabaseSystem Interface member variables.
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * DealsWithPluginFileSystem Interface member variables.
-     */
-    private PluginFileSystem pluginFileSystem;
-
-    /**
-     * DealsWithPluginIdentity Interface member variables.
-     */
-    private UUID pluginId;
-
-
-    /**
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    public BitcoinWalletBasicWalletPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     /*
      * DatabaseManagerForDevelopers methods implementation
@@ -102,9 +97,16 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         List<DeveloperDatabaseTableRecord> databaseTableRecords = new ArrayList<>();
         try {
-            Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, developerDatabase.getName());
-            databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
-            database.closeDatabase();
+            List<String> databasesNames = new ArrayList<>();
+            Collection<UUID> ids = this.walletIds.values();
+            for (UUID id : ids)
+            {
+                Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, id.toString());
+                databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
+                database.closeDatabase();
+            }
+
+
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
@@ -122,43 +124,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
         return databaseTableRecords;
     }
 
-
-    /**
-     * DealsWithErrors interface implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * DealsWithPluginFileSystem Interface implementation.
-     */
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
     /**
      * Service Interface implementation.
      */
@@ -174,26 +139,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
     }
 
     @Override
@@ -261,5 +206,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
+
 }
 

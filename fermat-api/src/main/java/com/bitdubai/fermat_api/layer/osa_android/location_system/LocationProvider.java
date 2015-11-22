@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.osa_android.location_system;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -13,40 +14,38 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  *  @since   07/05/15.
  * */
 
-public enum LocationProvider {
+public enum LocationProvider implements FermatEnum {
 
-    //Modified by Manuel Perez on 05/08/2015
-    GPS("GPS"),
-    NETWORK("NETWORK");
+    GPS    ("GPS"),
+    NETWORK("NET"),
 
-    private String code;
+    ;
 
-    LocationProvider(String code){
+    private final String code;
 
-        this.code=code;
+    LocationProvider(final String code){
 
+        this.code = code;
     }
 
-    public String getCode(){
-
-        return this.code;
-
-    }
-
-    public static LocationProvider getByCode(String code)throws InvalidParameterException{
+    public static LocationProvider getByCode(String code) throws InvalidParameterException {
 
         switch (code){
 
-            case "GPS":
-                return LocationProvider.GPS;
-            case "NETWORK":
-                return LocationProvider.NETWORK;
+            case "GPS": return GPS;
+            case "NET": return NETWORK;
+
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the LocationProvider enum");
-
-
+                throw new InvalidParameterException(
+                        "Code Received: " + code,
+                        "This Code Is Not Valid for the LocationProvider enum"
+                );
         }
+    }
 
+    @Override
+    public String getCode(){
+        return this.code;
     }
 
 }

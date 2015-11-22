@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -10,19 +11,26 @@ import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.UTXO;
 import org.bitcoinj.core.UTXOProvider;
+import org.bitcoinj.core.UTXOProviderException;
 import org.bitcoinj.core.Wallet;
+import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.store.UnreadableWalletException;
-import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nullable;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptonetwork.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager</code>
@@ -43,13 +53,17 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
+public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, UTXOProvider {
 
     /**
      * BitcoinJ wallet where I'm storing the public keys and transactions
      */
-    Wallet wallet=null;
     private final String WALLET_FILENAME = "/data/data/com.bitdubai.fermat/files/wallet_";
+
+    /**
+     * UTXO Provider interface variables
+     */
+    BlockchainNetworkType utxoProviderNetworkParameter;
 
     /**
      * class variables
@@ -106,7 +120,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             /**
              * load (if any) existing wallet.
              */
-            wallet = getWallet(blockchainNetworkType);
+            Wallet wallet = getWallet(blockchainNetworkType, keyList);
+
 
             /**
              * add new keys (if any).
@@ -123,7 +138,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  * I do not need to reset the wallet because I will
                  * always be importing fresh (unused) keys.
                  */
-                //wallet.reset();
                 isWalletReset = true;
             }
 
@@ -147,7 +161,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                 /**
                  * If the agent for the network is not running, I will start a new one.
                  */
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet);
+                File walletFilename = new File(WALLET_FILENAME + blockchainNetworkType.getCode());
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 bitcoinCryptoNetworkMonitor.start();
@@ -160,21 +175,29 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * by forming the name wallet_[NETWORK]. If it doesn't exists, then I will create a new object for this network.
      * @return
      */
-    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType){
+    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList){
         Wallet wallet;
         String fileName = WALLET_FILENAME + blockchainNetworkType.getCode();
         walletFile = new File(fileName);
         try {
             wallet  =Wallet.loadFromFile(walletFile);
         } catch (UnreadableWalletException e) {
-            wallet = new Wallet(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
+            /**
+             * If I couldn't load the wallet from file, I'm assuming is a new wallet and I will create it.
+             * I'm creating it by importing the keys sent by the vault.
+             */
+            wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
+
+            /**
+             * Will set the autosave information and save it.
+             */
+            wallet.autosaveToFile(walletFile, 1, TimeUnit.SECONDS, null);
+            try {
+                wallet.saveToFile(walletFile);
+            } catch (IOException e1) {
+                e1.printStackTrace(); // I will continue because the key addition will trigger an autosave anyway.
+            }
         }
-
-        /**
-         * Will set the autosave information
-         */
-        wallet.autosaveToFile(walletFile, 1, TimeUnit.SECONDS, null);
-
         return wallet;
     }
 
@@ -274,6 +297,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  * and Add it to the list
                  */
                 transactionList.add(transaction);
+
+                /**
+                 * Will set the Protocol Status of this transaction to Sending Notified.
+                 */
+                getDao().setTransactionProtocolStatus(transaction.getTransactionID(), ProtocolStatus.SENDING_NOTIFIED);
             }
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantDeliverPendingTransactionsException(CantDeliverPendingTransactionsException.DEFAULT_MESSAGE, e, "database error getting the pending transactions.", "database issue");
@@ -294,13 +322,13 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * Gets the CryptoTransaction list that matches the specified hash
      * @param txHash
      * @return
-     * @throws CantGetGenesisTransactionException
+     * @throws CantGetCryptoTransactionException
      */
-    public List<CryptoTransaction> getGenesisTransaction(String txHash) throws CantGetGenesisTransactionException {
+    public List<CryptoTransaction> getGenesisTransaction(String txHash) throws CantGetCryptoTransactionException {
         try {
             return getDao().getIncomingCryptoTransaction(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE, e, "database operation issue.", "database error");
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database operation issue.", "database error");
         }
     }
 
@@ -321,7 +349,87 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @return
      */
     public UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType) {
-        Wallet utxoProvider = getWallet(blockchainNetworkType);
-        return utxoProvider.getUTXOProvider();
+        this.utxoProviderNetworkParameter = blockchainNetworkType;
+        return this;
+    }
+
+    /**
+     * Implementation of UTXOProvider interface. Calculates all the UTXO available which outputs are send to the specified address
+     * @param addresses
+     * @return
+     * @throws UTXOProviderException
+     */
+    @Override
+    public List<UTXO> getOpenTransactionOutputs(List<Address> addresses) throws UTXOProviderException {
+        /**
+         * load the wallet from the passed network. The network type was defined when the UTXO provider was set.
+         */
+        Wallet wallet = this.getWallet(utxoProviderNetworkParameter, null);
+        List<UTXO> utxoList = new ArrayList<>();
+
+        /**
+         * I will get all the outputs that are mine to spent.
+         */
+        for (TransactionOutput output : wallet.calculateAllSpendCandidates()){
+            for (Address address : addresses){
+                /**
+                 * and if one of them matches the passed address, then I will convert it to an UTXO and add it to the list.
+                 */
+                if (output.getAddressFromP2PKHScript(RegTestParams.get()) == address){
+                    UTXO utxo = new UTXO(   output.getHash(),
+                                            output.getIndex(),
+                                            output.getValue(),
+                                            output.getParentTransactionDepthInBlocks(),
+                                            output.getParentTransaction().isCoinBase(),
+                                            output.getScriptPubKey(),
+                                            address.toString());
+                    utxoList.add(utxo);
+                }
+            }
+        }
+        return utxoList;
+    }
+
+
+    /**
+     * Access the store blockchain and get its height
+     * @return
+     * @throws UTXOProviderException
+     */
+    @Override
+    public int getChainHeadHeight() throws UTXOProviderException {
+        try {
+            /**
+             * instantiates a blockchain that will load it from file.
+             */
+            BitcoinCryptoNetworkBlockChain blockChain = new BitcoinCryptoNetworkBlockChain(BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter));
+            /**
+             * get its height.
+             */
+            return blockChain.getBlockChain().getBestChainHeight();
+        } catch (BlockchainException e) {
+            throw new UTXOProviderException("There was an error loading the blockchain.", e);
+        }
+    }
+
+    /**
+     * returns the nertwork parameter defined for this UTXO provider
+     * @return
+     */
+    @Override
+    public NetworkParameters getParams() {
+        return BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter);
+    }
+
+    /**
+     * Gets the specified bitcoin transaction
+     * @param transactionHash
+     * @return
+     */
+    public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
+        Wallet wallet = getWallet(blockchainNetworkType, null);
+        Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
+        Transaction transaction = wallet.getTransaction(sha256Hash);
+        return transaction;
     }
 }

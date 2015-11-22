@@ -1,0 +1,55 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+
+dependencies {
+
+    /**
+     * For doing the code more readable, please keep the elements in the file sorted alphabetically:
+     * - layer name
+     * - plugin name
+     */
+
+    compile project(':fermat-api')
+
+    compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
+    compile project(':fermat-dap-plugin-actor-asset-user-bitdubai')
+    compile project(':fermat-dap-plugin-actor-redeem-point-bitdubai')
+
+    compile project(':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai')
+    compile project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai')
+    compile project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai')
+
+    compile project(':fermat-dap-plugin-digital-asset-transaction-appropriation-stats-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-issuer-redemption-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-redeem-point-redemption-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-user-redemption-bitdubai')
+
+
+    compile project(':fermat-dap-plugin-identity-asset-issuer-bitdubai')
+    compile project(':fermat-dap-plugin-identity-asset-user-bitdubai')
+    compile project(':fermat-dap-plugin-identity-redeem-point-bitdubai')
+
+    compile project(':fermat-dap-plugin-middleware-asset-factory-bitdubai')
+
+    compile project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai')
+
+    compile project(':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai')
+    compile project(':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai')
+    compile project(':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai')
+    compile project(':fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai')
+
+    compile project(':fermat-dap-plugin-wallet-assets-issuer-wallet-bitdubai')
+    compile project(':fermat-dap-plugin-wallet-assets-user-wallet-bitdubai')
+    compile project(':fermat-dap-plugin-wallet-redeem-point-wallet-bitdubai')
+
+    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
+    compile project(':fermat-dap-plugin-wallet-module-asset-user-bitdubai')
+    compile project(':fermat-dap-plugin-wallet-module-redeem-point-bitdubai')
+
+    testCompile 'junit:junit:4.12'
+}

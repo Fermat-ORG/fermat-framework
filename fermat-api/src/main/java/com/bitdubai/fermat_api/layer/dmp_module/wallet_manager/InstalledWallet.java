@@ -2,9 +2,11 @@ package com.bitdubai.fermat_api.layer.dmp_module.wallet_manager;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
+import com.bitdubai.fermat_api.layer.interface_objects.FermatInterfaceObject;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.List;
 /**
  * Created by eze on 2015.07.10..
  */
-public interface InstalledWallet extends Serializable {
+public interface InstalledWallet extends Serializable, FermatInterfaceObject, FermatApp {
 
     /**
      * This method gives us the list of all the languages installed for this wallet
@@ -49,7 +51,7 @@ public interface InstalledWallet extends Serializable {
      *
      * @return the name of the said icon
      */
-    public String getWalletIcon();
+    public String getIcon();
 
     /**
      * This method gives us the public key of the wallet in this device. It is used as identifier of
@@ -64,7 +66,7 @@ public interface InstalledWallet extends Serializable {
      *
      * @return the name of the wallet
      */
-    public String getWalletName();
+    public String getName();
 
     /**
      * This method gives us the version of the wallet

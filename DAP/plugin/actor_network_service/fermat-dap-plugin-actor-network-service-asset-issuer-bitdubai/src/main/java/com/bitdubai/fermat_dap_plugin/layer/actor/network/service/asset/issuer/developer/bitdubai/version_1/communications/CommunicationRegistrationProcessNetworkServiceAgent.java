@@ -58,8 +58,8 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                      * Construct my profile and register me
                      */
                     PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetIssuerActorNetworkServicePluginRoot.getIdentityPublicKey(),
-                            (assetIssuerActorNetworkServicePluginRoot.getAlias().toLowerCase() + "_" + assetIssuerActorNetworkServicePluginRoot.getId().toString()),
-                            (assetIssuerActorNetworkServicePluginRoot.getName() + " ("+assetIssuerActorNetworkServicePluginRoot.getId() + ")"),
+                            assetIssuerActorNetworkServicePluginRoot.getAlias().toLowerCase(),
+                            assetIssuerActorNetworkServicePluginRoot.getName(),
                             assetIssuerActorNetworkServicePluginRoot.getNetworkServiceType(),
                             assetIssuerActorNetworkServicePluginRoot.getPlatformComponentType(),
                             assetIssuerActorNetworkServicePluginRoot.getExtraData());
@@ -67,12 +67,12 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(assetIssuerActorNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile
                      */
-                    assetIssuerActorNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    assetIssuerActorNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager

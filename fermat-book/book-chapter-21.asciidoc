@@ -1,0 +1,16 @@
+image::https://github.com/bitDubai/media-kit/blob/master/Coins/DPN.jpg[FermatDPN]
+== Chapter 21: Fermat Digital Private Network 
+=== Securing your funds 
+
+
+
+
+image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+
+==== _Continue Reading ..._
+
+link:book-chapter-20.asciidoc[Previous Chapter]
+
+link:book-chapter-00(intro).asciidoc[Back to Book Intro]
+
+

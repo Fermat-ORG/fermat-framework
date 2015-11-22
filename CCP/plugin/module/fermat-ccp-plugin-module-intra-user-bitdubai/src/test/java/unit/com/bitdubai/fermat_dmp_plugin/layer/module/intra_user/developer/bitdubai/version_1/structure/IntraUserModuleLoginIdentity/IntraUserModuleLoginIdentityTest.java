@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity;
 
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantShowProfileImageException;
@@ -10,10 +11,12 @@ import org.mockito.Mock;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+*/
 /**
  * Created by natalia on 28/08/15.
  *
- */
+ *//*
+
 public class IntraUserModuleLoginIdentityTest {
     IntraUserModuleLoginIdentity intraUserModuleLoginIdentity;
 
@@ -52,3 +55,4 @@ public class IntraUserModuleLoginIdentityTest {
 
 }
 
+*/

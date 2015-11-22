@@ -3,36 +3,32 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.CryptoPaymentRequestNetworkServicePluginRoot;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantChangeRequestProtocolStateException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeExecutorAgentException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantTakeActionException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,65 +43,48 @@ import java.util.UUID;
 public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
     // Represent the sleep time for the cycles of receive and send in this agent.
-    private static final long SEND_SLEEP_TIME    = 15000;
-    private static final long RECEIVE_SLEEP_TIME = 15000;
+    private static final long SLEEP_TIME = 7500;
 
     // Represent the receive and send cycles for this agent.
-    private Thread toSend   ;
-    private Thread toReceive;
+    private Thread agentThread;
 
     // network services registered
     private Map<String, String> poolConnectionsWaitingForResponse;
 
-    // counter and wait time
-    private Map<String, CryptoPaymentRequestNetworkServiceConnectionRetry> waitingPlatformComponentProfile;
-
-    private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
-
-    private final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
     private final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot;
     private final ErrorManager                                 errorManager                                ;
     private final EventManager                                 eventManager                                ;
-    private final PluginDatabaseSystem                         pluginDatabaseSystem                        ;
-    private final UUID                                         pluginId                                    ;
     private final WsCommunicationsCloudClientManager           wsCommunicationsCloudClientManager          ;
+    private final CryptoPaymentRequestNetworkServiceDao        cryptoPaymentRequestNetworkServiceDao       ;
+    private final PluginVersionReference                       pluginVersionReference                      ;
 
-    public CryptoPaymentRequestExecutorAgent(final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,
-                                             final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot,
+    public CryptoPaymentRequestExecutorAgent(final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot,
                                              final ErrorManager                                 errorManager                                ,
                                              final EventManager                                 eventManager                                ,
-                                             final PluginDatabaseSystem                         pluginDatabaseSystem                        ,
-                                             final UUID                                         pluginId                                    ,
-                                             final WsCommunicationsCloudClientManager           wsCommunicationsCloudClientManager) {
+                                             final CryptoPaymentRequestNetworkServiceDao        cryptoPaymentRequestNetworkServiceDao       ,
+                                             final WsCommunicationsCloudClientManager           wsCommunicationsCloudClientManager          ,
+                                             final PluginVersionReference                       pluginVersionReference                      ) {
 
         this.cryptoPaymentRequestNetworkServicePluginRoot = cryptoPaymentRequestNetworkServicePluginRoot;
-        this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
         this.errorManager                                 = errorManager                                ;
         this.eventManager                                 = eventManager                                ;
-        this.pluginDatabaseSystem                         = pluginDatabaseSystem                        ;
-        this.pluginId                                     = pluginId                                    ;
+        this.cryptoPaymentRequestNetworkServiceDao        = cryptoPaymentRequestNetworkServiceDao       ;
         this.wsCommunicationsCloudClientManager           = wsCommunicationsCloudClientManager          ;
+        this.pluginVersionReference                       = pluginVersionReference                      ;
 
         this.status                                       = AgentStatus.CREATED                         ;
 
-        waitingPlatformComponentProfile   = new HashMap<>();
         poolConnectionsWaitingForResponse = new HashMap<>();
 
         //Create a thread to send the messages
-        this.toSend = new Thread(new Runnable() {
+        this.agentThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (isRunning())
+                while (isRunning()) {
                     sendCycle();
-            }
-        });
-
-        //Create a thread to receive the messages
-        this.toReceive = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isRunning())
                     receiveCycle();
+                }
+
             }
         });
     }
@@ -113,18 +92,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     public void start() throws CantStartAgentException {
 
         try {
-            try {
-
-                this.cryptoPaymentRequestNetworkServiceDao = new CryptoPaymentRequestNetworkServiceDao(
-                        this.pluginDatabaseSystem,
-                        this.pluginId
-                );
-
-                cryptoPaymentRequestNetworkServiceDao.initialize();
-            } catch(CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException e) {
-
-                throw new CantInitializeExecutorAgentException(e, "", "Problem initializing Crypto Payment Request DAO from Executor Agent.");
-            }
+            agentThread.start();
 
             this.status = AgentStatus.STARTED;
 
@@ -134,7 +102,23 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         }
     }
 
-    // TODO MANAGE PAUSE, STOP AND RESUME METHODS.
+    @Override
+    public void pause() {
+        agentThread.interrupt();
+        super.pause();
+    }
+
+    @Override
+    public void resume() {
+        agentThread.start();
+        super.resume();
+    }
+
+    @Override
+    public void stop() {
+        agentThread.interrupt();
+        super.stop();
+    }
 
     public void sendCycle() {
 
@@ -147,15 +131,15 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
             }
 
             //Sleep for a time
-            toSend.sleep(SEND_SLEEP_TIME);
+            Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
 
             reportUnexpectedError(FermatException.wrapException(e));
-        } /*catch(Exception e) {
+        } catch(Exception e) {
 
-            reportUnexpectedError(FermatException.wrapException(e));
-        }*/
+            reportUnexpectedError(e);
+        }
 
     }
 
@@ -170,74 +154,88 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                 switch (cpr.getAction()) {
 
                     case INFORM_APPROVAL:
-
-                        sendMessageToActor(
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST.");
+                        if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
                                 cpr.getActorPublicKey(),
                                 cpr.getActorType(),
                                 cpr.getIdentityPublicKey(),
                                 cpr.getIdentityType()
-                        );
-
-                        toWaitingResponse(cpr.getRequestId());
+                        )) {
+                            confirmRequest(cpr.getRequestId());
+                            System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
+                        }
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Approval. PROCESSING_SEND -> CONFIRM REQUEST -> WAIT MORE.");
                         break;
 
                     case INFORM_DENIAL:
-
-                        sendMessageToActor(
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST.");
+                        if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
                                 cpr.getActorPublicKey(),
                                 cpr.getActorType(),
                                 cpr.getIdentityPublicKey(),
                                 cpr.getIdentityType()
-                        );
-
-                        toWaitingResponse(cpr.getRequestId());
+                        )) {
+                            confirmRequest(cpr.getRequestId());
+                            System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
+                        }
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Denial. PROCESSING_SEND -> CONFIRM REQUEST -> WAIT MORE.");
                         break;
 
                     case INFORM_RECEPTION:
-
-                        sendMessageToActor(
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST.");
+                        if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
                                 cpr.getActorPublicKey(),
                                 cpr.getActorType(),
                                 cpr.getIdentityPublicKey(),
                                 cpr.getIdentityType()
-                        );
-
-                        toWaitingResponse(cpr.getRequestId());
+                        )) {
+                            confirmRequest(cpr.getRequestId());
+                            System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
+                        }
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Reception Inform. PROCESSING_SEND -> CONFIRM REQUEST -> WAIT MORE.");
                         break;
 
                     case INFORM_REFUSAL:
-
-                        sendMessageToActor(
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST.");
+                        if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
                                 cpr.getActorPublicKey(),
                                 cpr.getActorType(),
                                 cpr.getIdentityPublicKey(),
                                 cpr.getIdentityType()
-                        );
-
-                        toWaitingResponse(cpr.getRequestId());
+                        )) {
+                            confirmRequest(cpr.getRequestId());
+                            System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
+                        }
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST -> WAIT MORE.");
                         break;
 
                     case REQUEST:
 
-                        sendMessageToActor(
-                                buildJsonRequestMessage(cpr),
-                                cpr.getActorPublicKey(),
-                                cpr.getActorType(),
-                                cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType()
-                        );
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Request. PROCESSING_SEND -> WAITING_RESPONSE.");
 
-                        toWaitingResponse(cpr.getRequestId());
+                        if (sendMessageToActor(
+                                buildJsonRequestMessage(cpr),
+                                cpr.getIdentityPublicKey(),
+                                cpr.getIdentityType(),
+                                cpr.getActorPublicKey(),
+                                cpr.getActorType()
+                        )) {
+                            toWaitingResponse(cpr.getRequestId());
+                            System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Request. PROCESSING_SEND -> WAITING_RESPONSE -> OK.");
+                        }
+                        System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Request. PROCESSING_SEND -> WAITING_RESPONSE -> WAIT MORE.");
+
                         break;
                 }
             }
 
         } catch(CantListRequestsException               |
                 CantChangeRequestProtocolStateException |
+                CantTakeActionException                 |
                 RequestNotFoundException                e) {
 
             reportUnexpectedError(e);
@@ -255,15 +253,15 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
             }
 
             //Sleep for a time
-            toReceive.sleep(RECEIVE_SLEEP_TIME);
+            Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
 
             reportUnexpectedError(FermatException.wrapException(e));
-        } /*catch(Exception e) {
+        } catch(Exception e) {
 
-            reportUnexpectedError(FermatException.wrapException(e));
-        }*/
+            reportUnexpectedError(e);
+        }
 
     }
 
@@ -271,78 +269,51 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
         try {
 
-            List<CryptoPaymentRequest> cryptoPaymentRequestList = cryptoPaymentRequestNetworkServiceDao.listRequestsByProtocolState(
-                    RequestProtocolState.PROCESSING_RECEIVE
-            );
-
-            for(CryptoPaymentRequest cpr : cryptoPaymentRequestList) {
-                switch (cpr.getAction()) {
-
-                    case INFORM_APPROVAL:
-                        raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_APPROVED, cpr.getRequestId());
-                        toPendingAction(cpr.getRequestId());
-                        break;
-
-                    case INFORM_DENIAL:
-                        raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_DENIED, cpr.getRequestId());
-                        toPendingAction(cpr.getRequestId());
-                        break;
-
-                    case INFORM_RECEPTION:
-                        raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_CONFIRMED_RECEPTION, cpr.getRequestId());
-                        toPendingAction(cpr.getRequestId());
-                        break;
-
-                    case INFORM_REFUSAL:
-                        raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_REFUSED, cpr.getRequestId());
-                        toPendingAction(cpr.getRequestId());
-                        break;
-
-                    case REQUEST:
-                        raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_RECEIVED, cpr.getRequestId());
-                        toPendingAction(cpr.getRequestId());
-                        break;
-                }
+            // if there is pending actions i raise a crypto address news event.
+            if(cryptoPaymentRequestNetworkServiceDao.isPendingRequestByProtocolState(RequestProtocolState.PENDING_ACTION)) {
+                System.out.println("************* Crypto Payment Request -> Pending Action detected!");
+                FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_PAYMENT_REQUEST_NEWS);
+                eventToRaise.setSource(cryptoPaymentRequestNetworkServicePluginRoot.getEventSource());
+                eventManager.raiseEvent(eventToRaise);
             }
 
-        } catch(CantListRequestsException               |
-                CantChangeRequestProtocolStateException |
-                RequestNotFoundException                e) {
+        } catch(CantListRequestsException e) {
 
             reportUnexpectedError(e);
         }
     }
 
-    private void sendMessageToActor(final String jsonMessage      ,
-                                    final String actorPublicKey   ,
-                                    final Actors actorType        ,
-                                    final String identityPublicKey,
-                                    final Actors identityType     ) {
+
+    private boolean sendMessageToActor(final String jsonMessage      ,
+                                       final String identityPublicKey,
+                                       final Actors identityType     ,
+                                       final String actorPublicKey   ,
+                                       final Actors actorType        ) {
 
         try {
+
             if (!poolConnectionsWaitingForResponse.containsKey(actorPublicKey)) {
 
-                if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorPublicKey) == null) {
-
+                if (cryptoPaymentRequestNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) == null) {
 
                     if (wsCommunicationsCloudClientManager != null) {
 
-                        if (cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentProfile() != null) {
+                        if (cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
 
-                            PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
-                                    identityPublicKey,
-                                    NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(identityType)
-                            );
-                            PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
-                                    actorPublicKey,
-                                    NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(actorType)
-                            );
+                            PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                                    .constructBasicPlatformComponentProfileFactory(
+                                            identityPublicKey,
+                                            NetworkServiceType.UNDEFINED,
+                                            platformComponentTypeSelectorByActorType(identityType));
+                            PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                                    .constructBasicPlatformComponentProfileFactory(
+                                            actorPublicKey,
+                                            NetworkServiceType.UNDEFINED,
+                                            platformComponentTypeSelectorByActorType(actorType));
 
-                            communicationNetworkServiceConnectionManager.connectTo(
+                            cryptoPaymentRequestNetworkServicePluginRoot.getNetworkServiceConnectionManager().connectTo(
                                     applicantParticipant,
-                                    cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentProfile(),
+                                    cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot(),
                                     remoteParticipant
                             );
 
@@ -351,42 +322,56 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         }
 
                     }
+
+                    return false;
+
+                } else {
+
+                    return sendMessage(identityPublicKey, actorPublicKey, jsonMessage);
+
                 }
             } else {
 
-                NetworkServiceLocal communicationNetworkServiceLocal = cryptoPaymentRequestNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey);
-
-                if (communicationNetworkServiceLocal != null) {
-
-                    try {
-
-                        communicationNetworkServiceLocal.sendMessage(
-                                cryptoPaymentRequestNetworkServicePluginRoot.getIdentityPublicKey(),
-                                actorPublicKey,
-                                jsonMessage
-                        );
-
-                        poolConnectionsWaitingForResponse.remove(actorPublicKey);
-
-                        communicationNetworkServiceConnectionManager.closeConnection(actorPublicKey); // close connection once i send message ?
-
-                    } catch (Exception e) {
-
-                        reportUnexpectedError(FermatException.wrapException(e));
-                    }
-                }
+                return sendMessage(identityPublicKey, actorPublicKey, jsonMessage);
             }
+
+
         } catch (Exception z) {
 
             reportUnexpectedError(FermatException.wrapException(z));
+            return false;
         }
     }
 
-    private PlatformComponentType platformComponentTypeSelectorByActorType(Actors type) throws InvalidParameterException {
+    private boolean sendMessage(final String identityPublicKey,
+                                final String actorPublicKey   ,
+                                final String jsonMessage      ) {
+
+        NetworkServiceLocal communicationNetworkServiceLocal = cryptoPaymentRequestNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey);
+
+        if (communicationNetworkServiceLocal != null) {
+
+            communicationNetworkServiceLocal.sendMessage(
+                    identityPublicKey,
+                    actorPublicKey,
+                    jsonMessage
+            );
+
+            poolConnectionsWaitingForResponse.remove(actorPublicKey);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private PlatformComponentType platformComponentTypeSelectorByActorType(final Actors type) throws InvalidParameterException {
 
         switch (type) {
 
             case INTRA_USER  : return PlatformComponentType.ACTOR_INTRA_USER  ;
+            case CCM_INTRA_WALLET_USER: return PlatformComponentType.ACTOR_INTRA_USER  ;
+            case CCP_INTRA_WALLET_USER  : return PlatformComponentType.ACTOR_INTRA_USER  ;
             case DAP_ASSET_ISSUER: return PlatformComponentType.ACTOR_ASSET_ISSUER;
             case DAP_ASSET_USER  : return PlatformComponentType.ACTOR_ASSET_USER  ;
 
@@ -422,29 +407,29 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         ).toJson();
     }
 
-    private void toPendingAction(UUID requestId) throws CantChangeRequestProtocolStateException,
-                                                        RequestNotFoundException {
+    private void toWaitingResponse(final UUID requestId) throws CantChangeRequestProtocolStateException,
+                                                                RequestNotFoundException               {
 
-        cryptoPaymentRequestNetworkServiceDao.changeProtocolState(requestId, RequestProtocolState.PENDING_ACTION);
+        cryptoPaymentRequestNetworkServiceDao.changeProtocolState(
+                requestId,
+                RequestProtocolState.WAITING_RESPONSE
+        );
     }
 
-    private void toWaitingResponse(UUID requestId) throws CantChangeRequestProtocolStateException,
-                                                          RequestNotFoundException                            {
+    public void confirmRequest(final UUID requestId) throws CantTakeActionException,
+                                                            RequestNotFoundException   {
 
-        cryptoPaymentRequestNetworkServiceDao.changeProtocolState(requestId, RequestProtocolState.WAITING_RESPONSE);
+        cryptoPaymentRequestNetworkServiceDao.takeAction(
+                requestId,
+                RequestAction.NONE,
+                RequestProtocolState.DONE
+        );
+
     }
 
-    private void raiseEvent(final EventType eventType,
-                            final UUID      requestId) {
 
-        FermatEvent eventToRaise = eventManager.getNewEvent(eventType);
-        ((CryptoPaymentRequestEvent) eventToRaise).setRequestId(requestId);
-        eventToRaise.setSource(CryptoPaymentRequestNetworkServicePluginRoot.EVENT_SOURCE);
-        eventManager.raiseEvent(eventToRaise);
-    }
-
-    private void reportUnexpectedError(FermatException e) {
-        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+    private void reportUnexpectedError(Exception e) {
+        errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
     public void connectionFailure(String identityPublicKey){

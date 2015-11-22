@@ -77,6 +77,9 @@ public class DeveloperDatabaseFactory {
         assetRedeemPointWalletTotalBalancesColumns.add(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME);
         assetRedeemPointWalletTotalBalancesColumns.add(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME);
         assetRedeemPointWalletTotalBalancesColumns.add(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME);
+        assetRedeemPointWalletTotalBalancesColumns.add(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME);
+        assetRedeemPointWalletTotalBalancesColumns.add(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME);
+
 
         /**
          * AssetIssuerWalletTotalBalanceColumns table

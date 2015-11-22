@@ -21,11 +21,6 @@ public enum CryptoCurrencyVault implements FermatVaultEnum {
     }
 
 
-
-    public CryptoCurrency getCryptoCurrency() {
-        return this.cryptoCurrency;
-    }
-
     public static CryptoCurrencyVault getByCode(String code) throws InvalidParameterException {
 
         for (CryptoCurrencyVault vault : CryptoCurrencyVault.values()) {
@@ -44,8 +39,6 @@ public enum CryptoCurrencyVault implements FermatVaultEnum {
         throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "CryptoCurrency Received: " + cryptoCurrency, "This CryptoCurrency is not valid for the CryptoCurrencyVault enum.");
     }
 
-
-
     @Override
     public String getCode() {
         return this.code;
@@ -54,5 +47,10 @@ public enum CryptoCurrencyVault implements FermatVaultEnum {
     @Override
     public VaultType getVaultType() {
         return VaultType.CRYPTO_CURRENCY_VAULT;
+    }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return this.cryptoCurrency;
     }
 }

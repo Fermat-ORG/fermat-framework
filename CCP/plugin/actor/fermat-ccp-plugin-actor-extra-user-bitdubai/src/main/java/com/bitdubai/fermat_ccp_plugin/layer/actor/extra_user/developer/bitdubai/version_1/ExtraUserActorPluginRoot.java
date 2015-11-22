@@ -2,8 +2,9 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -11,9 +12,13 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSetPhotoException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -36,19 +41,18 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.
 import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantLoadPrivateKeyException;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDeveloperDatabaseFactory;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -62,33 +66,30 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, ExtraUserManager, LogManagerForDevelopers, Plugin, Service {
+public class ExtraUserActorPluginRoot extends AbstractPlugin implements
+        DatabaseManagerForDevelopers,
+        ExtraUserManager,
+        LogManagerForDevelopers {
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    ErrorManager errorManager;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
 
-    /**
-     * DealsWithLogger interface member variable
-     */
-    LogManager logManager;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
+
+    public ExtraUserActorPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
+
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
-
-    /**
-     * DealsWithPlatformDatabaseSystem Interface member variables.
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * DealsWithPluginFileSystem Interface member variables.
-     */
-    PluginFileSystem pluginFileSystem;
-
-    /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
 
     /**
      * ExtraUserManager Interface member variables.
@@ -97,11 +98,6 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
 
     public static final String EXTRA_USERS_PROFILE_IMAGE_DIRECTORY_NAME = "extraUserIdentityProfileImages";
     public static final String EXTRA_USERS_PRIVATE_KEYS_DIRECTORY_NAME = "extraUserIdentityPrivateKeys";
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     /**
      * Service Interface implementation.
@@ -127,26 +123,10 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
     }
 
     @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
     public void stop() {
         extraUserActorDao = null;
         this.serviceStatus = ServiceStatus.STOPPED;
     }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
 
     @Override
     public Actor createActor(String actorName) throws CantCreateExtraUserException {
@@ -451,46 +431,4 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
             return new ArrayList<>();
         }
     }
-
-
-    /**
-     * DealsWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * DealsWithPluginFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * Plugin Interface implementation.
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
 }

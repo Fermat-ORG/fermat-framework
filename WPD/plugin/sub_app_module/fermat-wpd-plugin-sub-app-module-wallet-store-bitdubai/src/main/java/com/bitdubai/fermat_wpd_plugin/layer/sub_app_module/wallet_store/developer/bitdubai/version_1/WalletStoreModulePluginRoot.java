@@ -1,17 +1,25 @@
 package com.bitdubai.fermat_wpd_plugin.layer.sub_app_module.wallet_store.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.DealsWithWalletManager;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.DetailedCatalogItem;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.exceptions.CantGetRefinedCatalogException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.exceptions.CantStartInstallationException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.exceptions.CantStartLanguageInstallationException;
@@ -21,28 +29,15 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.excepti
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.exceptions.CantStartUninstallWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogue;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.DetailedCatalogItem;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.WalletStoreManager;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-//import java.util.logging.Logger;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
+
+//import java.util.logging.Logger;
 
 /**
  * @author ciencias
@@ -55,121 +50,36 @@ import java.util.regex.Pattern;
  * * *
  */
 
-public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithWalletManager, DealsWithEvents, DealsWithLogger, DealsWithWalletStoreMiddleware, DealsWithWalletStoreNetworkService, WalletStoreModuleManager, LogManagerForDevelopers, Plugin, Service {
+public class WalletStoreModulePluginRoot extends AbstractPlugin implements
+        WalletStoreModuleManager,
+        LogManagerForDevelopers {
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM   , layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER         )
+    WalletManagerManager walletManagerManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER    )
+    private LogManager logManager;
+
+    @NeededPluginReference(platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION   , layer = Layers.NETWORK_SERVICE, plugin = Plugins.WALLET_STORE         )
+    WalletStoreManager walletStoreManagerNetworkService;
+
+    @NeededPluginReference(platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION   , layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_STORE         )
+    com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManagerMiddleware;
+
 
     /**
      * WalletStoreModulePluginRoot member variables
      */
     com.bitdubai.fermat_wpd_plugin.layer.sub_app_module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager walletStoreModuleManager;
 
-    /**
-     * DealsWithErrors interface member variables
-     */
-    ErrorManager errorManager;
-
-    /**
-     * DealsWithLogger interface member variable
-     */
-    LogManager logManager;
-
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    /**
-     * PlatformService Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<FermatEventListener> listenersAdded = new ArrayList<>();
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    EventManager eventManager;
-
-    /**
-     * DealsWithWalletStoreNetworkService interface member variable
-     */
-    WalletStoreManager walletStoreManagerNetworkService;
-
-    /**
-     * DealsWithWEalletStoreMiddleware interface member variable
-     */
-    com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManagerMiddleware;
-
-    /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
-
-    /**
-     * PlatformService Interface implementation.
-     */
-
-    @Override
-    public void start() throws CantStartPluginException {
-        try {
-            this.serviceStatus = ServiceStatus.STARTED;
-        } catch (Exception exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
+    public WalletStoreModulePluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    /**
-     * DealsWithLogger Interface implementation.
-     */
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * LogManagerForDevelopers Interface implementation.
-     */
 
     @Override
     public List<String> getClassesFullPath() {
@@ -221,35 +131,13 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithWa
     }
 
     /**
-     * DealsWithWalletStoreMiddleware interface implementation
-     *
-     * @param walletStoreManager
-     */
-    @Override
-    public void setWalletStoreManager(com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManager) {
-        this.walletStoreManagerMiddleware = walletStoreManager;
-    }
-
-    /**
-     * DEalswithWalletStoreNetworkService interface implementation
-     *
-     * @param walletStoreManager
-     */
-    @Override
-    public void setWalletStoreManager(WalletStoreManager walletStoreManager) {
-        this.walletStoreManagerNetworkService = walletStoreManager;
-    }
-
-    /**
      * WalletStoreModule manager interface implementation
      */
 
     public com.bitdubai.fermat_wpd_plugin.layer.sub_app_module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager getWalletStoreModuleManager() {
         if (walletStoreModuleManager == null)
-            walletStoreModuleManager = new com.bitdubai.fermat_wpd_plugin.layer.sub_app_module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager(errorManager, logManager, walletStoreManagerMiddleware, walletStoreManagerNetworkService);
+            walletStoreModuleManager = new com.bitdubai.fermat_wpd_plugin.layer.sub_app_module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager(errorManager, logManager, walletStoreManagerMiddleware, walletStoreManagerNetworkService, walletManagerManager);
 
-        //TEST
-        walletStoreModuleManager.setWalletManagerManager(walletManagerManager);
         return walletStoreModuleManager;
     }
 
@@ -301,17 +189,5 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithWa
             return null;
         }
 
-    }
-    /**
-     * DealsWithWalletManager interface variable and implementation
-     * Added by Manuel perez on 02/09/2015
-     * This implementation sets the WalletManagerManager, fixing the installation process
-     */
-    WalletManagerManager walletManagerManager;
-    @Override
-    public void setWalletManagerManager(WalletManagerManager walletManagerManager) {
-        this.walletManagerManager = walletManagerManager;
-        Logger LOG = Logger.getGlobal();
-        LOG.info("MAP_ROOT_SETWMM:"+this.walletManagerManager);
     }
 }
