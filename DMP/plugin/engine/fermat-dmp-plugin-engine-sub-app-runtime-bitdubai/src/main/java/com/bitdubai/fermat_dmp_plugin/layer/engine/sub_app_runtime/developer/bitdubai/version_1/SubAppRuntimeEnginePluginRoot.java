@@ -1234,7 +1234,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY);
-        runtimeSubApp.setPublicKey("public_key_cbp_customer_identity");
+        runtimeSubApp.setPublicKey("sub_app_crypto_customer_identity");
 
         // Activity: List of identities
         runtimeActivity = new Activity();
@@ -1317,7 +1317,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CBP_CRYPTO_BROKER_IDENTITY);
-        runtimeSubApp.setPublicKey("public_key_cbp_broker_identity");
+        runtimeSubApp.setPublicKey("sub_app_crypto_broker_identity");
 
         // Activity: List of identities
         runtimeActivity = new Activity();

@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 
 /**
@@ -14,13 +14,15 @@ public class FiatIndexImpl implements FiatIndex {
     double salePrice;
     double purchasePrice;
     long timestamp;
+    String providerDescription;
 
-    public FiatIndexImpl(FiatCurrency currencyType, FiatCurrency referenceCurrency, double salePrice, double purchasePrice, long timestamp) {
+    public FiatIndexImpl(FiatCurrency currencyType, FiatCurrency referenceCurrency, double salePrice, double purchasePrice, long timestamp, String providerDescription) {
         this.currency = currencyType;
         this.referenceCurrency = referenceCurrency;
         this.salePrice = salePrice;
         this.purchasePrice = purchasePrice;
         this.timestamp = timestamp;
+        this.providerDescription = providerDescription;
     }
 
     @Override
@@ -46,5 +48,10 @@ public class FiatIndexImpl implements FiatIndex {
     @Override
     public long getTimestamp() {
         return timestamp;
+    }
+
+    @Override
+    public String getProviderDescription() {
+        return providerDescription;
     }
 }
