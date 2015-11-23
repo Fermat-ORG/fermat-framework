@@ -276,7 +276,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @return
      */
     private CryptoTransaction getCryptoTransactionFromBitcoinTransaction(Transaction transaction) {
-        return null;
+        return CryptoTransaction.getCryptoTransaction(transaction);
     }
 
     /**
