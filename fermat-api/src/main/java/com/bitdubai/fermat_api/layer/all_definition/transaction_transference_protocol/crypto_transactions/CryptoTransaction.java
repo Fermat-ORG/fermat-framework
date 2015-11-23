@@ -73,6 +73,7 @@ public class CryptoTransaction{
         return cryptoTransaction;
     }
 
+
     /**
      * Gets the CryptoStatus of the trasaction.
      * @param transaction

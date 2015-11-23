@@ -16,6 +16,7 @@ import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.Wallet;
@@ -44,6 +45,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     Wallet wallet;
     PeerGroup peerGroup;
     File walletFileName;
+    BlockChain blockChain;
     final NetworkParameters NETWORK_PARAMETERS;
 
 
@@ -121,7 +123,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 //        BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS, wallet);
 //        BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
         BlockStore blockStore = new MemoryBlockStore(NETWORK_PARAMETERS);
-        BlockChain blockChain = null;
         try {
             blockChain = new BlockChain(NETWORK_PARAMETERS, wallet, blockStore);
         } catch (BlockStoreException e) {
@@ -245,19 +246,35 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         Sha256Hash blockSha256Hash = Sha256Hash.wrap(blockHash);
 
         /**
-         * I first need to find If I have the block already in my blockchain
+         * I first need to find If I have the block already in my local blockchain
          */
+        StoredBlock storedBlock = null;
+        try {
+            storedBlock = blockChain.getBlockStore().get(blockSha256Hash);
+
+        } catch (BlockStoreException e) {
+            //if there is an error, I will try to get it remotely
+        }
+
 
         /**
-         * Will get the block from the peer
+         * If I don't have this block, then I will get the block from the peer
          */
-        Block genesisBlock = getBlockFromPeer(blockSha256Hash);
+        Block genesisBlock = null;
+        if (storedBlock == null)
+            genesisBlock = getBlockFromPeer(blockSha256Hash);
+        else
+            genesisBlock = storedBlock.getHeader();
+
 
         /**
          * Will search all transactions from the block until I find my own.
           */
         for (Transaction transaction : genesisBlock.getTransactions()){
             if (transaction.getHashAsString() == txHash){
+                /**
+                 * I form the CryptoTransaction and return it.
+                 */
                 return getCryptoTransactionFromBitcoinTransaction(transaction);
             }
         }
@@ -266,8 +283,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * If I couldn't find it. then I will return null.
          * */
         return null;
-
-
     }
 
     /**
