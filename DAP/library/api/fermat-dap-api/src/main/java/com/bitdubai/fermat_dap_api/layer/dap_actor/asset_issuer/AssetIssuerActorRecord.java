@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
 import java.util.Arrays;
@@ -10,12 +12,13 @@ import java.util.Arrays;
 /**
  * Created by Nerio on 22/09/15.
  */
-public class AssetIssuerActorRecord implements ActorAssetIssuer {
+public class AssetIssuerActorRecord implements ActorAssetIssuer, DAPActor {
 
     private String              publicLinkedIdentity    ;
+    private String              actorPublicKey          ;
     private String              name                    ;
+    private Actors              type = Actors.DAP_ASSET_ISSUER;
     private String              description             ;
-    private String              publicKey               ;
     private long                registrationDate        ;
     private long                lastConnectionDate      ;
     private DAPConnectionState  dapConnectionState      ;
@@ -34,20 +37,20 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     }
 
     public AssetIssuerActorRecord(String name,
-                                  String publicKey) {
-        this.name       = name      ;
-        this.publicKey  = publicKey ;
+                                  String actorPublicKey) {
+        this.name           = name              ;
+        this.actorPublicKey = actorPublicKey    ;
     }
 
     /**
      *  Method for Set Actor in Actor Network Service Issuer
      */
-    public AssetIssuerActorRecord(String publicKey,
+    public AssetIssuerActorRecord(String actorPublicKey,
                                   String name,
                                   byte[] profileImage,
                                   Location location) {
 
-        this.publicKey              = publicKey                 ;
+        this.actorPublicKey         = actorPublicKey            ;
         this.name                   = name                      ;
         this.profileImage           = profileImage.clone()      ;
         if (location != null) {
@@ -59,19 +62,19 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         }
     }
 
-    public AssetIssuerActorRecord(String publicKey,
+    public AssetIssuerActorRecord(String actorPublicKey,
                                   String name,
                                   byte[] profileImage,
                                   long registrationDate) {
 
-        this.name               = name                                   ;
-        this.publicKey          = publicKey                              ;
-        this.profileImage       = profileImage.clone()                   ;
-        this.registrationDate   = registrationDate                       ;
-        this.dapConnectionState = DAPConnectionState.REGISTERED_ONLINE   ;
+        this.name               = name                                  ;
+        this.actorPublicKey     = actorPublicKey                        ;
+        this.profileImage       = profileImage.clone()                  ;
+        this.registrationDate   = registrationDate                      ;
+        this.dapConnectionState = DAPConnectionState.REGISTERED_ONLINE  ;
     }
 
-    public AssetIssuerActorRecord(String publicKey,
+    public AssetIssuerActorRecord(String actorPublicKey,
                                   String name,
                                   DAPConnectionState dapConnectionState,
                                   double locationLatitude,
@@ -80,7 +83,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                                   byte[] profileImage,
                                   String description) {
 
-        this.publicKey              = publicKey             ;
+        this.actorPublicKey         = actorPublicKey        ;
         this.name                   = name                  ;
         this.dapConnectionState     = dapConnectionState    ;
         this.locationLatitude       = locationLatitude      ;
@@ -91,7 +94,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
             this.description        = description           ;
     }
 
-    public AssetIssuerActorRecord(final String publicKey,
+    public AssetIssuerActorRecord(final String actorPublicKey,
                                   final String name,
                                   final DAPConnectionState dapConnectionState,
                                   final Double locationLatitude,
@@ -101,7 +104,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                                   final byte[] profileImage,
                                   final String description) {
 
-        this.publicKey              =       publicKey               ;
+        this.actorPublicKey         =       actorPublicKey          ;
         this.name                   =       name                    ;
         this.dapConnectionState     =       dapConnectionState      ;
         this.locationLatitude       =       locationLatitude        ;
@@ -115,17 +118,17 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
 
     /**
-     * The metho <code>getPublicKey</code> gives us the public key of the represented Asset Issuer
+     * The metho <code>getActorPublicKey</code> gives us the public key of the represented Asset Issuer
      *
      * @return the public key
      */
     @Override
-    public String getPublicKey() {
-        return this.publicKey;
+    public String getActorPublicKey() {
+        return this.actorPublicKey;
     }
 
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
+    public void setActorPublicKey(String actorPublicKey) {
+        this.actorPublicKey = actorPublicKey;
     }
 
     /**
@@ -140,6 +143,11 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Actors getType() {
+        return type;
     }
 
     /**
@@ -248,7 +256,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                 "publicLinkedIdentity='" + publicLinkedIdentity + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", publicKey='" + publicKey + '\'' +
+                ", actorPublicKey='" + actorPublicKey + '\'' +
                 ", registrationDate=" + registrationDate +
                 ", DAPConnectionState=" + dapConnectionState +
                 ", location=" + location +
