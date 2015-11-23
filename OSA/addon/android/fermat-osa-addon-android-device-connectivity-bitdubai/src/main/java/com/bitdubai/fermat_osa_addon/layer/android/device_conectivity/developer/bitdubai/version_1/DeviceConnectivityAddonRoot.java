@@ -3,6 +3,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer
 import android.content.Context;
 import android.net.NetworkInfo;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectionType;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectivityAgent;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectivityManager;
@@ -358,6 +359,8 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
     }
 
 
-
-
+    @Override
+    public FermatManager getManager() {
+        return null;
+    }
 }
