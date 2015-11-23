@@ -124,12 +124,13 @@ public class CryptoCustomerActorDatabaseDao {
 
                 if(actorPhoto!=null) persistNewCryptoCustomerActorProfileImage(actorPublicKey, actorPhoto);
             }
+
         } catch (CantInsertRecordException e){
-            throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, insert database problems.");
+            throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, insert database problems.");
         } catch (CantUpdateConnectionRegisterCryptoCustomerActorException e){
-            throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, insert database problems.");
+            throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, insert database problems.");
         } catch (Exception e) {
-            throw new CantRegisterCryptoCustomerActorException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, unknown failure.");
+            throw new CantRegisterCryptoCustomerActorException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, unknown failure.");
         }
     }
 
@@ -148,7 +149,7 @@ public class CryptoCustomerActorDatabaseDao {
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCryptoCustomerActorException("The number of records with a primary key is different thatn one ", null, "The id is: " + actorPublicKey.toString(), "");
+                throw new CantRegisterCryptoCustomerActorException("The number of records is 0 ", null, "actorPublicKey: " + actorPublicKey.toString() + "", "");
 
             for (DatabaseTableRecord records : record) {
                 byte[] image;
@@ -163,9 +164,9 @@ public class CryptoCustomerActorDatabaseDao {
             }
             return getActor;
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCryptoCustomerActorException(em.getMessage(), em, "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "Cant load " + CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCryptoCustomerActorException(em.getMessage(), em, "Crypto Customer Actor It Already Exists", "Cant load " + CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantRegisterCryptoCustomerActorException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "unknown failure.");
+            throw new CantRegisterCryptoCustomerActorException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor It Already Exists", "unknown failure.");
         }
     }
 
@@ -199,8 +200,8 @@ public class CryptoCustomerActorDatabaseDao {
                 throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException("Cant Update Customer Identity Wallet Relationship, not exists.", "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant Update Customer Identity Wallet Relationship, not exists");
 
             DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
-            DatabaseTableRecord record = table.getEmptyRecord();
             table.setUUIDFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME, relationshipId, DatabaseFilterType.EQUAL);
+            DatabaseTableRecord record = table.getEmptyRecord();
             record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_WALLET_COLUMN_NAME, walletPublicKey);
             record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_IDENTITY_COLUMN_NAME, identityPublicKey);
             table.updateRecord(record);
@@ -272,7 +273,7 @@ public class CryptoCustomerActorDatabaseDao {
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException("The number of records with a primary key is different thatn one ", null, "The id is: " + relationshipId.toString(), "");
+                throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException("The number of records is 0 ", null, "The id is: " + relationshipId.toString(), "");
 
             for (DatabaseTableRecord records : record) {
                 getRelationship = getCustomerIdentityWalletRelationshipFromRecord(records);
@@ -300,7 +301,7 @@ public class CryptoCustomerActorDatabaseDao {
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException("The number of records with a primary key is different thatn one ", null, "The id is: " + identityPublicKey.toString(), "");
+                throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException("The number of records 0 ", null, "The identityPublickey is: " + identityPublicKey.toString(), "");
 
             for (DatabaseTableRecord records : record) {
                 getRelationship = getCustomerIdentityWalletRelationshipFromRecord(records);
@@ -328,7 +329,7 @@ public class CryptoCustomerActorDatabaseDao {
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException("The number of records with a primary key is different thatn one ", null, "The id is: " + walletPublicKey.toString(), "");
+                throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException("The number of records 0 ", null, "The walletPublicKey is: " + walletPublicKey.toString(), "");
 
             for (DatabaseTableRecord records : record) {
                 getRelationship = getCustomerIdentityWalletRelationshipFromRecord(records);
@@ -359,9 +360,9 @@ public class CryptoCustomerActorDatabaseDao {
                 table.updateRecord(record);
             }
         } catch (CantUpdateRecordException e){
-            throw new CantUpdateConnectionRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, insert database problems.");
+            throw new CantUpdateConnectionRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Crypto Customer Actor", "Cant update Crypto Customer Actor, update database problems.");
         } catch (Exception e) {
-            throw new CantUpdateConnectionRegisterCryptoCustomerActorException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, unknown failure.");
+            throw new CantUpdateConnectionRegisterCryptoCustomerActorException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Crypto Customer Actor", "Cant update Crypto Customer Actor, unknown failure.");
         }
     }
 
