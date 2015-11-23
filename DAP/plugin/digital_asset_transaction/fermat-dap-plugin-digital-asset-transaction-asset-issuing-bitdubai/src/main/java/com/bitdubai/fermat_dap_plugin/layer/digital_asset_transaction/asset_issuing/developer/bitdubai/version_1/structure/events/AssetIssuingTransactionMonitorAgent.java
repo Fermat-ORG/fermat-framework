@@ -297,11 +297,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                         String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByTransactionhash(transactionHash);
                         digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId ,AssetBalanceType.AVAILABLE);
 
-                        /**
-                         * Added By Rodrigo Acosta - at this point, the asset is delivered and confirmed. So we will save the
-                         * Genesis block in the database
-                         */
-                        assetIssuingTransactionDao.persistGenesisBlock(transactionInternalId, cryptoGenesisTransaction.getBlockHash());
+
                     }
                 }
 
@@ -433,6 +429,16 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                 String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                                 System.out.println("ASSET ISSUING internal id "+transactionInternalId);
                                 try {
+                                    /**
+                                     * Added By Rodrigo Acosta - at this point, the asset is delivered and confirmed. So we will save the
+                                     * Genesis block in the database
+                                     */
+                                    try {
+                                        assetIssuingTransactionDao.persistGenesisBlock(transactionInternalId, cryptoGenesisTransaction.getBlockHash());
+                                    } catch (CantPersistsGenesisTransactionException e) {
+                                        e.printStackTrace();
+                                    }
+
                                     digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE);
                                 } catch (CantDeliverDigitalAssetToAssetWalletException e) {
                                     e.printStackTrace();
