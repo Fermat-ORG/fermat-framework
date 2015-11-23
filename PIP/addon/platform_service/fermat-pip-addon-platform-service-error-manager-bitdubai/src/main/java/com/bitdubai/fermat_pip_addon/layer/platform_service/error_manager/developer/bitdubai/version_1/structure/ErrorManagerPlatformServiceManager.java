@@ -73,7 +73,7 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
 
     @Override
     public final void reportUnexpectedAddonsException(final AddonVersionReference exceptionSource                  ,
-                                                      final UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity,
+                                                      final UnexpectedAddonsExceptionSeverity unexpectedPluginExceptionSeverity,
                                                       final Exception                         exception                        ) {
 
         processException(exceptionSource.toString(), unexpectedPluginExceptionSeverity.toString(), exception);

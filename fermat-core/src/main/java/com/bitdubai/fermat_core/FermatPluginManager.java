@@ -107,7 +107,7 @@ public final class FermatPluginManager {
 
             for (final AddonVersionReference avr : neededAddons) {
                 AbstractAddon reference = addonManager.startAddonAndReferences(avr);
-                abstractPlugin.assignAddonReference(reference);
+                abstractPlugin.assignAddonReference(avr, reference.getManager());
             }
 
             final List<PluginVersionReference> neededPlugins = abstractPlugin.getNeededPlugins();
@@ -168,7 +168,7 @@ public final class FermatPluginManager {
 
                 for (final AddonVersionReference avr : neededAddons) {
                     AbstractAddon reference = addonManager.startAddonAndReferences(avr);
-                    abstractPlugin.assignAddonReference(reference);
+                    abstractPlugin.assignAddonReference(avr, reference.getManager());
                 }
 
                 final List<PluginVersionReference> neededPlugins = abstractPlugin.getNeededPlugins();
