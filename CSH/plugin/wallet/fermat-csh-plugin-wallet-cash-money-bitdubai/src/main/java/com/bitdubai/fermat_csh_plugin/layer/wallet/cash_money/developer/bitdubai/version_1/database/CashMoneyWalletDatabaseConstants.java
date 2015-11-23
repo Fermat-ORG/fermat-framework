@@ -56,7 +56,7 @@ public class CashMoneyWalletDatabaseConstants {
     static final String CASH_MONEY_TOTAL_BALANCES_FIRST_KEY_COLUMN = "wallet_key_broker";
 
     /**
-     *CashMoneyBalance Table
+     *CashMoneyWalletBalance Table
      *
      */
     static final String CASH_MONEY_BALANCE_RECORD_TABLE_NAME = "cash_money_balance_record";
