@@ -59,7 +59,6 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
     @Override
     public void start() throws CantStartPluginException {
         try {
-            //TODO: Create wallet manager implementation.
             cashMoneyWalletManagerImpl = new CashMoneyWalletManagerImpl(pluginDatabaseSystem, pluginId, errorManager);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
