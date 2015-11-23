@@ -94,6 +94,8 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
     ArrayList<Item> lstItems;
 
+    private boolean started=false;
+
     /**
      * Create a new instance of this fragment
      *
@@ -211,6 +213,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
     @Override
     public void onRefresh() {
+        if(!started) {
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -239,6 +242,8 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
                 }
             });
             worker.execute();
+            started = true;
+        }
 
     }
 
