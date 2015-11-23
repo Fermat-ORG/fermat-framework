@@ -6,9 +6,9 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by Yordin Alayn on 18.09.15.
  */
 
-public class CantTransactionBankMoneyException extends FermatException {
+public class CantGetBankMoneyWalletTransactionsException extends FermatException {
     public static final String DEFAULT_MESSAGE = "Falled To Get Bank Transaction Wallet Bank Money.";
-    public CantTransactionBankMoneyException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetBankMoneyWalletTransactionsException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
