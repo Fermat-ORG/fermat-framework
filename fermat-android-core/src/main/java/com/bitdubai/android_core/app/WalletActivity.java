@@ -8,16 +8,19 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
@@ -588,6 +591,8 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
 
+
+
     @Override
     public void changeActivityBack(String appBackPublicKey,String activityCode){
         try {
@@ -596,5 +601,27 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivityBack"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
+    }
+
+
+
+    private void moveViewToScreenCenter( View container,View view )
+    {
+        //RelativeLayout root = (RelativeLayout) findViewById( R.id.WelcomeLayout );
+        DisplayMetrics dm = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics( dm );
+        int statusBarOffset = dm.heightPixels - container.getMeasuredHeight();
+
+        int originalPos[] = new int[2];
+        view.getLocationOnScreen( originalPos );
+
+        int xDest = dm.widthPixels/2;
+        xDest -= (view.getMeasuredWidth()/2);
+        int yDest = dm.heightPixels/2 - (view.getMeasuredHeight()/2) - statusBarOffset;
+
+        TranslateAnimation anim = new TranslateAnimation( 0, xDest - originalPos[0] , 0, yDest - originalPos[1] );
+        anim.setDuration(1000);
+        anim.setFillAfter( true );
+        view.startAnimation(anim);
     }
 }
