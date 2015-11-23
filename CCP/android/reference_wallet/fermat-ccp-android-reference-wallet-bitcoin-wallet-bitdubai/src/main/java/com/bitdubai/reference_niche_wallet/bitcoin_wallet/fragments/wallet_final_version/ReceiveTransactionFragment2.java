@@ -130,10 +130,17 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         return rootView;
     }
     private void setUp(LayoutInflater inflater) throws CantGetActiveLoginIdentityException {
-        getPaintActivtyFeactures().addCollapseAnimation(this);
+
         //setUpHeader(inflater);
         //setUpDonut(inflater);
         //WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getPaintActivtyFeactures().addCollapseAnimation(this);
     }
 
 
