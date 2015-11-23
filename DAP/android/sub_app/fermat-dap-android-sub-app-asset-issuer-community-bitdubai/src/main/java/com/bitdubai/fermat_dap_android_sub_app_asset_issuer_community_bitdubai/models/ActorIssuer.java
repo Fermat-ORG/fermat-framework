@@ -17,7 +17,7 @@ public class ActorIssuer extends AssetIssuerActorRecord
 
     public ActorIssuer(AssetIssuerActorRecord record) {
         super(
-                record.getPublicKey(),
+                record.getActorPublicKey(),
                 record.getName(),
                 record.getDapConnectionState(),
                 record.getLocationLatitude(),
