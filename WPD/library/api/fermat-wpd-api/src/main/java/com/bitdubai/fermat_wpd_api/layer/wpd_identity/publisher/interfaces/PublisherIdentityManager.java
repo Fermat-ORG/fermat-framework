@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantCreateNewPublisherException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantGetUserPublisherIdentitiesException;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface PublisherIdentityManager {
+public interface PublisherIdentityManager extends FermatManager {
 
     /**
      * This method will give us a list of all the developers associated to the actual Device User logged in

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantExecuteAppropriationTransactionException;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 12/11/15.
  */
-public interface AssetAppropriationManager {
+public interface AssetAppropriationManager extends FermatManager {
 
     /**
      * This method starts the appropriation flow. Saves the information in the database and store

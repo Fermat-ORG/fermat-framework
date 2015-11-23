@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -60,10 +61,12 @@ public class IncomingIntraUserTransactionHandler {
         IncomingMoneyNotificationEvent incomingMoneyNotificationEvent = (IncomingMoneyNotificationEvent) platformEvent;
         incomingMoneyNotificationEvent.setSource(EventSource.INCOMING_INTRA_USER);
         incomingMoneyNotificationEvent.setActorId(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
-        //incomingMoneyNotificationEvent.setActorType(Actors.getByCode(cryptoAddressBookRecord.getDeliveredToActorPublicKey()));
+        incomingMoneyNotificationEvent.setActorType(cryptoAddressBookRecord.getDeliveredToActorType());
         incomingMoneyNotificationEvent.setAmount(transaction.getInformation().getCryptoAmount());
         incomingMoneyNotificationEvent.setCryptoCurrency(transaction.getInformation().getCryptoCurrency());
         incomingMoneyNotificationEvent.setWalletPublicKey(cryptoAddressBookRecord.getWalletPublicKey());
+        incomingMoneyNotificationEvent.setIntraUserIdentityPublicKey(cryptoAddressBookRecord.getDeliveredByActorPublicKey());
+
         eventManager.raiseEvent(platformEvent);
     }
 }
