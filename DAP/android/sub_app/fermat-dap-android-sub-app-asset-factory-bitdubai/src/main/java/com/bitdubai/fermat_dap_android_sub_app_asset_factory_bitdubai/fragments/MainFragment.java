@@ -5,12 +5,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +26,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters.AssetFactoryAdapter;
-import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.interfaces.PopupMenu;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
@@ -125,14 +124,14 @@ public class MainFragment extends FermatFragment implements
         recyclerView = (RecyclerView) layout.findViewById(R.id.recycler_assets);
         if (recyclerView != null) {
             recyclerView.setHasFixedSize(true);
-            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+            layoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             adapter = new AssetFactoryAdapter(getActivity());
-            adapter.setMenuItemClick(new PopupMenu() {
+            /*adapter.setMenuItemClick(new PopupMenu() {
                 @Override
                 public void onMenuItemClickListener(View menuView, AssetFactory project, int position) {
                     selectedAsset = project;
-                    /*Showing up popup menu*/
+                    *//*Showing up popup menu*//*
                     android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
                     MenuInflater inflater = popupMenu.getMenuInflater();
                     inflater.inflate(R.menu.asset_factory_main, popupMenu.getMenu());
@@ -147,7 +146,7 @@ public class MainFragment extends FermatFragment implements
                     popupMenu.setOnMenuItemClickListener(MainFragment.this);
                     popupMenu.show();
                 }
-            });
+            });*/
             recyclerView.setAdapter(adapter);
         }
         swipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_assets);
