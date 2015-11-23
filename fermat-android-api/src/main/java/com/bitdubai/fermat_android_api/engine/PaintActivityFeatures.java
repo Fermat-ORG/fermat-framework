@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.09.01..
  */
 
-public interface PaintActivtyFeactures {
+public interface PaintActivityFeatures {
 
     public void paintComboBoxInActionBar(ArrayAdapter adapter,ActionBar.OnNavigationListener listener);
 
