@@ -5,9 +5,9 @@
 
 ## Introduction
 
-Plug-ins are one of the three basic components that can be added into the Fermat Framework. The two others are Addons, and GUI components. Each Plug-in has a well defined responsability within the system. Usually a Plug-in performs a task on one or more workflows.  
+Plug-ins are one of the three basic components that can be added into the Fermat Framework. The two others are Add-ons, and GUI components. Each Plug-in has a well defined responsability within the system. Usually a Plug-in performs a task on one or more workflows.  
 
-To accomplish its mission, a Plug-in may have its own database and files to persist its state. It also has an internal structure of classes designed specifically to fullfill its goals. Some of these classes implement public interfaces which in turn, exposes the Plug-in public services to other Fermat components.
+To accomplish its mission, a Plug-in may have its own database and files to persist its state. It also has an internal structure of classes designed specifically to fullfill its goals. Some of these classes implement public interfaces which in return, exposes the Plug-in public services to other Fermat components.
 
 
 <br>
@@ -20,21 +20,21 @@ Several new concepts are introduced at a Plug-in level. In this section the most
 ### Main Classes
 ----------------
 
-There are a few classes that every Plug-in have.
+There are a few classes that every Plug-in has.
 
 
 #### Developer Class
 
-Each Plug-in has a Developer Class. The reason is that there might be more than one version of the Plug-in at the same time. To deal with this, the Framework instead of instantiating the _Plugin Root_ directly, it calls the Developer Class that is somehow representing the Plug-ins developer. 
+Each Plug-in has a Developer Class. The reason is that there might be more than one version of the Plug-in at the same time. To deal with this, instead of the Framework instantiating the _Plugin Root_ directly, it calls the Developer Class that is somehow representing the Plug-ins developer. 
 
-In this way this class is able to choose which version of the Plug-in to run, and if it detects that a data migration must be done from version 1 to version 2, it coordinates that process too.
+By doing so, this class is able to choose which version of the Plug-in to run, and if it detects that a data migration must be done from version 1 to version 2, it coordinates that process too.
 
-An extra purpose of this class is related to the licensing Developers declares for their Plug-in. 
+An extra function of this class is related to the licensing Developers declaring their Plug-in. 
 
 <br>
 #### Plug-in Root Class
 
-The Plug-in root is the starting point of a Plug-in. It is the point of contact between the Framework and the Plug-in. It main purpose is to implement the interfaces that transforms itself into a service that can be started and stopped by the Framework, and other interfaces that are required in order to receive the references to other plugins so as to be able to consume their services.
+The Plug-in root is the starting point of a Plug-in. It is the point of contact between the Framework and the Plug-in. Its main purpose is to implement the interfaces that transforms itself into a service that can be started and stopped by the Framework, and other interfaces that are required in order to receive the references to other plug-ins so as to be able to consume their services.
 
 <br>
 ### Class Groups
@@ -42,7 +42,7 @@ The Plug-in root is the starting point of a Plug-in. It is the point of contact 
 
 #### Public Interfaces
 
-Each Plug-in gives services to other Plug-ins. They do it through public interfaces published either on Fermat-api, or on the Platfom's API where the Plug-in belongs. Some clases of its internal structure implements these public interfaces.
+Each Plug-in gives services to other Plug-ins. They do it through public interfaces published either on Fermat API, or on the API platform where the Plug-in belongs. Some clases of its internal structure implements these public interfaces.
 
 <br>
 #### Internal Structure
@@ -52,7 +52,7 @@ Each Plug-in has an internal class model. Usually it is a hiearchy where one of 
 <br>
 #### Event Handlers
 
-An Event Hander is a type of Class that is called by the Framework's Event Manager whenever and event the Plug-in is suscribed to is triggered. A single Plug-in can have as many Event Handlers as needed. Somewhere within the Internal Structure the Plug-in subscribes itself to different type of events, declaring at that point which Event Handler class must be called.
+An Event Handler is a type of Class that is called by the Event Manager Framework whenever an Plug-in event is suscribed to is triggered. A single Plug-in can have as many Event Handlers as needed. Somewhere within the Internal Structure the Plug-in subscribes itself to different type of events, declaring at that point which Event Handler class must be called.
 
 <br>
 #### Exceptions
@@ -61,23 +61,23 @@ Each Plugin can raise two types of exceptions:
 
 a. **Internal** : These are exceptions that are thrown and handled within the same Plug-in.
 
-b. **External** : These are exceptions that are thrown within a Plug-in and are expected to be catched by it's caller. 
+b. **External** : These are exceptions that are thrown within a Plug-in and are expected to be catched by its caller. 
 
-| NOTE | It is not allowed for an exception that is thrown in Plug-in A go through Plug-in B unhandled and reach Plug-in C. |
+| NOTE | It is not allowed for an exception that is thrown in Plug-in A to go through Plug-in B unhandled and reach Plug-in C. |
 | ------------- | :------------- |
 
 <br>
 #### Agents
 
-We define Agents as objects which at runtime will create a new execution thread. We have developed this pattern in order to standarize and simplify the handling of processes that need to run from time to time and perform certain tasks. 
+We define Agents as objects, which at runtime will create a new execution thread. We have developed this pattern in order to standardize and simplify the handling of processes that need to run from time to time and perform certain tasks. 
 
 <br>
-### Othe Elements
+### Other Elements
 -------------------
 
 #### Databases
 
-Plug-ins may have one or more Databases for storing their data. Usually one Database is enought, but in some cases different instances of the same data model are required.
+Plug-ins may have one or more Databases for storing their data. Usually one Database is enough, but in some cases different instances of the same data model are required.
 
 <br>
 #### Files
@@ -90,7 +90,7 @@ A Plug-in may have one or more files.
 
 ## Part II: Workflow
 
-This section will help you undestand the workflow needed to be followed in order to implement a Plugin in Fermat.
+This section will help you understand the workflow needed to be followed in order to implement a Plug-in in Fermat.
 
 <br>
 ### Getting Organized
@@ -100,7 +100,7 @@ This section will help you undestand the workflow needed to be followed in order
 
 It is mandatory that you create an initial set of github issues before you proceed further on the workflow. This will show the rest of topics that someone is working in this functionality and avoid conflicting work early on. It will also hook the team leader into your workflow and allow him to guide and advise you when needed.
 
-A basic hierarchy of issues is created as a first step. The issues are linked one to the other just by placing a link on the first commit.
+A basic hierarchy of issues is created as a first step. The issues are linked to one another just by placing a link on the first commit.
 
 ##### Naming Convention
 
@@ -110,32 +110,32 @@ Where we refer to '_Plugin Name_' what we expect is the following information:
 * Layer name
 * Plug-in name
 
-All of them seprated by " - ". 
+All of them separated by " - ". 
 
 ##### Linking to parent Issue
 
-Issues that needs to be linked to its parent must have their first line starting with "Parent: " + http link to parent issue. 
+Issues that need to be linked to its parent must have their first line starting with "Parent: " + http link to parent issue. 
 
 ##### Tagging the Team Leader
 
-Team leaders are tagged in the second line in order to ask them to assign the issue to you and at the same time suscribe to any issue update. This helps team leaders to follow the issue events and provide assistance or guidance is they see something wrong. The suggested format is:
+Team leaders are tagged in the second line in order to ask them to assign the issue to you and at the same time subscribe to any issue update. This helps team leaders to follow the issue events and provide assistance or guidance if they see something wrong. The suggested format is:
 
 "@team-leader-user-name please assign this issue to me."
 
 <br>
 #### Plug-in Issue Structure
 
-The mandatory initial structure is the following: (note: the word ISSUE it is not part of the name)
+The mandatory initial structure is the following: (note: the word ISSUE is not part of the name)
 
 <br>
 ##### ISSUE: '_Plugin Name_' - Plug-In
 
-This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all its children and grand children are closed.
+This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all its children and grandchildren are closed.
 
 <br>
-##### ISSUE: '_Plugin Name_' - Analisys
+##### ISSUE: '_Plugin Name_' - Analysis
 
-This is the Analisys root. It is closed whenever all analisys is done. This issue must be linked to the root of the issue structure.
+This is the Analysis root. It is closed whenever all analysis is done. This issue must be linked to the root of the issue structure.
 
 <br>
 ##### ISSUE: '_Plugin Name_' - Implementation
@@ -180,7 +180,7 @@ This issue is closed when this class if fully implemented.
 <br>
 4 - ISSUE: **'_Plugin Name_' - Implementation - Public Interfaces**
 
-This issue is closed when all public interface's code is written.  Note that the 1, 2, n must be replaced with the actual interfase names.
+This issue is closed when all public interface code is written.  Note that the 1, 2, n must be replaced with the actual interfase names.
 
 * ISSUE: '_Plugin Name_' - Implementation - Public Interfaces - Interface 1
 
@@ -192,12 +192,12 @@ This issue is closed when the second public interface is written.
 
 * ISSUE: '_Plugin Name_' Implementation - Public Interfaces - Interface n
 
-This issue is closed when the n public interfaces are written.
+This issue is closed when the n public interfaces is written.
 
 <br>
 5 - ISSUE: **'_Plugin Name_' - Implementation - Internal Structure**
 
-This issue is closed when all internal structure's code is written.  Note that the 1, 2, n must be replaced with the actual class names.
+This issue is closed when all the internal code structure is written.  Note that the 1, 2, n must be replaced with the actual class names.
 
 * ISSUE: '_Plugin Name_' - Implementation - Internal Structure - Class 1
   
@@ -263,11 +263,11 @@ It is expected to have here child issues in the form  '_Plugin Name_' Production
 ### Analysis
 ------------
 
-#### Pulic Interfaces
+#### Public Interfaces
 
 ##### Are there any mandatory public interfaces?
 
-Yes, we have two of them and are the following:
+Yes, we have two of them and they're the following:
 
 ** The Manager Interface ** : This one is usually implemented by the Plug-in Root and its purpose is to allow the caller to have access to other functionality usually implemented on classes of the Internal Structure. 
 
@@ -279,7 +279,7 @@ Public interfaces are defined at the API library of the Platform were the Plug-i
 
 ##### How many public interfaces can a Plug-in have?
 
-There is no limit regarding the interfaces a Plug-in may have. Having said that, it is highly recommended no to expose the internal structure of the Plug-in creating a Public Interface for each of the internal classes. 
+There is no limit regarding the interfaces a Plug-in may have. Having said that, it is highly recommended not to expose the internal structure of the Plug-in creating a Public Interface for each of the internal classes. 
 
 <br>
 #### Database Model
@@ -294,7 +294,7 @@ There is no limit regarding the interfaces a Plug-in may have. Having said that,
 
 #### Internal Structure Class Model
 
-##### How free are you to choose a class model for the internal structure?
+##### How much freedom do you have to choose a class model for the internal structure?
 
 
 <br>
@@ -309,11 +309,11 @@ a. **Version 1** : It just instantiates the Plug-in Root and returns it to the F
 
 b. **Version 2** : It registers each version of the Plugin root into the Framework.
 
-To be able to use **Version 2** you must verify if the Platform your Plug-in belongs to already have it's own speciallized core-api or instead it is started by the Framework wide Fermat-core library.
+To be able to use **Version 2** you must verify if the Platform your Plug-in belongs to already has its own specialized core-api or instead it is started by the Framework wide Fermat-core library.
 
 ##### Code Examples
 
-Note in the following samples that the information regarding the licensing of the Plug-in is hard-coded and always the same. This is because the licensing infraestructure it is not yet in place.
+Note in the following samples that the information regarding the licensing of the Plug-in is hard-coded and always the same. This is because the licensing infraestructure is not yet in place.
 
 **Version 1**
 
@@ -435,11 +435,11 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 
 Currently there are two types of implementations for this class:
 
-a. **Version 1** : Get references of Components it depends on by implementing _Deal With_ interfaces.
+a. **Version 1** : Get references of Components by implementing _Deal With_ interfaces.
 
 b. **Version 2** : Get the references by asking the Framework to provide them.
 
-To be able to use **Version 2** you must verify if the Platform your Plug-in belongs to already have it's own speciallized core-api or instead it is started by the Framework wide Fermat-core library.
+To be able to use **Version 2** you must verify if the Platform your Plug-in belongs to already has its own specialized core-api or instead it is started by the Framework wide Fermat-core library.
 
 ##### Version 1
 
@@ -447,25 +447,25 @@ In this case this class implements many interfaces, Most of them to obtain refer
 
 a. **DealsWithErrors** : Means that the Plug-in needs a reference to the _Error Manager_ in order to report _Unhandled Exceptions_.
 
-b. **DealsWithEvents** : Means that the Plug-in needs a reference to the _Event Manager_ to either raise events or listen to other Components's events.
+b. **DealsWithEvents** : Means that the Plug-in needs a reference to the _Event Manager_ to either raise events or listen to other events Components.
 
-c. **DealsWithPluginDatabaseSystem** : Means that the Plug-in needs a reference to the _Database Manager_ in order to have it own databases.
+c. **DealsWithPluginDatabaseSystem** : Means that the Plug-in needs a reference to the _Database Manager_ in order to have its own databases.
 
-d. **DealsWithPluginFileSystem** : Means that the Plug-in needs a reference to the _File System_ in order to report be able to create, write and read files.
+d. **DealsWithPluginFileSystem** : Means that the Plug-in needs a reference to the _File System_ in order to report, create, write and read files.
 
-e. **LogManagerForDevelopers** : Means that the Plug-in agrees that it databases can be exprored by _Developers_ from outside the Plug-in for debbuggin purposes.
+e. **LogManagerForDevelopers** : Means that the Plug-in agrees that its databases can be explored by _Developers_ from outside the Plug-in for debbuggin purposes.
 
-f. **Plugin** : Declares the current component as a Plug-in and allows it to receive it's identity from the Framework. This identity allows Plug-ins to, for instance, have their own set of _Files_ and _Databases_ . Also to ask the Framework for references to other Components (in **Version 2**).
+f. **Plugin** : Declares the current component as a Plug-in and allows it to receive its identity from the Framework. This identity allows Plug-ins for instance, to have their own set of _Files_ and _Databases_ . Also to ask the Framework for references to other Components (in **Version 2**).
 
 g. **Service** : Enables the Framework to start, pause and stop the Plug-in.
 
-h. **Serializable** : When present, enables the Plug-in to serialize it's current state.
+h. **Serializable** : When present, enables the Plug-in to serialize its current state.
 
 ##### Version 2
 
-In this version the Plug-in Root class extends from AbstractPlugin which does the implementationof **Plugin** and **Service** by itself.
+In this version the Plug-in Root class extends from AbstractPlugin which does the implementation of **Plugin** and **Service** by itself.
 
-Regarding the rest of the interfaces of Version 1, in this case they don't need to be implemented as the procedure to obtain the needed references was changed in order to obtain the references like in this example.
+Regarding the rest of the interfaces of Version 1, in this case they don't need to be implemented as the procedure to obtain the needed references was changed in order to obtain the references, like in this example.
 
 
 ```bash
@@ -488,7 +488,7 @@ As each Plug-in is a _Service_ that can be started, paused and stopped by the Fr
 
 # FROM HERE 
 
-#### SOMEBODY SHOUD CONTINUE THE STYLE, FORMAT AND QUIALITY OF THE EXPLANATION THAT COMES FROM THE TOP -- Luis Molina
+#### SOMEBODY SHOULD CONTINUE THE STYLE, FORMAT AND QUALITY OF THE EXPLANATION THAT COMES FROM THE TOP -- Luis Molina
 
 
 
@@ -498,7 +498,7 @@ As each Plug-in is a _Service_ that can be started, paused and stopped by the Fr
 
 Additional notes:
 
-* The must of the plug-ins can be consumed. For this we'll define in the api of the platform where the plug-in belongs the public interfaces of the same.
+* Most of the plug-ins can be consumed. For this we'll define in the api of the platform where the plug-in belongs the public interfaces of the same.
 * If any method of the interface throws an exception, enums or any other, this exception must be public too, and must be created in the api too. 
 * We've a structure for this:
  * Interfaces:  Layer -> PluginName -> Interfaces
@@ -513,35 +513,35 @@ Additional notes:
 #### Database
 
 To implement a database on a plug-in should follow a predetermined structure design, which basically consists in the creation of three classes:
-* 'Name of the plug-in' Dao. This class must contain all methods that enable plug-in classes open the database plug-in, insert, update, query, and delete records from the database.
-* 'Name of the plug-in' Constants This class must include the names of each of the tables and columns of the database plugin. The nomenclature used must follow these rules:
+* 'Name of the plug-in' Dao. This class must contain all methods that enable plug-in classes to open the database plug-in, insert, update, query, and delete records from the database.
+* 'Name of the plug-in' Constants This class must include the names of each of the tables and columns of the database plug-in. The nomenclature used must follow these rules:
  - You must use public static String objects.
  - The name of this object must be uppercase
  - You must specify what information clearly stores this column.
- - You must assign a String object before mentioned with a brief description of the content of this column, you should use lowercase and avoid special characters and use as a word separator character '_'.
+ - You must assign a String object before mentioning it with a brief description of the content of this column, you should use lowercase and avoid special characters and use as a word separator character '_'.
 Here are some examples:
   1. Name of the database, PLUGIN_NAME_DATABASE public static final String = "plugin_database" .;
   2. The name of a table, PLUGIN_TABLE_NAME public static final String = "plugin_table";
   3. PLUGIN_TABLE_COLUMN_NAME public static final String = "any_column_name";
-* 'Name of the plug-in' DatabaseFactory. This class is responsible for creating the tables in the database Where it is to keep the information.
+* 'Name of the plug-in' DatabaseFactory. This class is responsible for creating the tables in the database where the information is kept.
 
-Additionally, if required that information the database can be displayed through the SubApp Develop, present at runtime on the App Fermat, the implementation of the class' name plug-in'DeveloperDatabaseFactory is required. This class will be instantiated by the PluginRoot class Plug-in for achieve the aforementioned display.
+Additionally, if that information is required the database can be displayed through the SubApp Develop, present at runtime on the App Fermat, the implementation of the class' name plug-in'DeveloperDatabaseFactory is required. This class will be instantiated by the PluginRoot class Plug-in for achieving the aforementioned display.
 
-To facilitate the work of creating these classes, Fermat has developed a script in Groovy, which automates the creation of these classes, following the established design, this plugin is available at: https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/documentation_en.md and https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/script.groovy
+To facilitate the work of creating these classes, Fermat has developed a script in Groovy, which automates the creation of these classes, following the established design, this plug-in is available at: https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/documentation_en.md and https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/script.groovy
 
 <br>
 #### Agents
 
-As the basic purpose of an agent is to run a parallel process or simultaneous to the main run of Plug-in, usually in order to achieve this we need to create classes that extend the Thread class, and rewrite the main "run (method) " which is to be run primarily when starting a new thread or process which represent this agent.
+The basic purpose of an agent is to run a parallel process or simultaneous to the main run of Plug-in, usually in order to achieve this we need to create classes that extend the Thread class, and rewrite the main "run (method) " which is to be run primarily when starting a new thread or process which represent this agent.
 
-We must consider that we should not create indiscriminate agents, we always use as there is no better alternative for carrying out the task or process to be performed, as using excessively Agents they may compromise the stability and performance.
+We must consider that we should not create indiscriminate agents, we always use as there is no better alternative for carrying out the task or process to be performed, as using Agents excessively may compromise the stability and performance.
 
 Whenever you choose this solution for the activity or task required by our plug-in, we should take into account the following points:
 
-* The name must begin plugin your activity and ending with the word "Agent" followed.
+* The plug-in name must begin with your activity and end with the word "Agent".
 Example: TemplateNetworkServiceRegistrationProcessAgent.
 
-* The agent should be smart enough to auto stop when contemplating your task.
+* The agent should be smart enough to stop automatically when contemplating your task.
 
 * Consider and calculate the timeout (sleeping time) between each run, the process performed by the agent, since very straight executions can reduce application performance considerably.
 
@@ -554,10 +554,10 @@ Example: TemplateNetworkServiceRegistrationProcessAgent.
 
 ##### Agents
 
-The basic structure of a class that represents an agent is really simple, should only take into consideration the following points:
+The basic structure of a class that represents an agent is really simple, just take into consideration the following points:
 
 * The implementation of an agent can be performed by inheriting from the "*java.langThread*" class or implementing the "*java.Runnable*" interface.
-* At the beginning of the class must declare a constant that indicates the downtime or waiting time thread when this is going to "sleep".
+* At the beginning of the class you must declare a constant that indicates the downtime or waiting time thread when it is going to "sleep".
 * Must be followed by any other attribute or inner member of the class.
 * Continue with the implementation of the "*public void run()*" method, if the logic in this method is very complex and long, this logic should be developed in a separate method and the same be called within the "*public void run()*" method body, so make the code more readable and understandable. 
 
@@ -579,7 +579,7 @@ Code example:
   ...
 ```
 
-Code example of a complete implementation of a class:
+Example code of a complete class implementation:
 
 ```java
 /*
@@ -734,8 +734,8 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
 
 ```
   **IMPORTANT:** 
-* Agents should have the ability to auto stop, when their task is completed.
-* It is recommended as good practice that before calling the method "*public static native void sleep(long millis) throws InterruptedException;*" is always evaluated if the thread has not been interrupted by another process before putting it into downtime.
+* Agents should have the ability to stop automatically when their task is completed.
+* It is recommended as good practice, that before calling the method "*public static native void sleep(long millis) throws InterruptedException;*" you evaluate if the thread has not been interrupted by another process before putting it into downtime.
   
   Code example:
 
@@ -1085,11 +1085,11 @@ https://github.com/bitDubai/fermat/tree/2a20518c484322846d5727499dfff16c8ddc0bd2
 
 ### FALTA HABLAR DE:
 
-* Location of a Plugin
+* Location of a Plug-in
 
 * The build.gradle File
 
-* Gradle Plugins
+* Gradle Plug-ins
 
 * Folder Structure
 

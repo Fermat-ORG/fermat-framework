@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletRemovalFailedException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletRenameFailedException;
@@ -16,7 +17,7 @@ import java.util.UUID;
  *
  * @author Ezequiel Postan (ezequiel.postan@gmail.com)
  */
-public interface WalletManagerModule {
+public interface WalletManagerModule extends FermatManager {
 
     /**
      * This method let the client create a new wallet of a type already intalled by the user.

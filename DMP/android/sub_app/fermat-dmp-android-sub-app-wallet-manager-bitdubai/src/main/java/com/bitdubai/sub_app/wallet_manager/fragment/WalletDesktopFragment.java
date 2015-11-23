@@ -77,7 +77,6 @@ public class WalletDesktopFragment extends FermatFragment implements Thread.Unca
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-        setHasOptionsMenu(true);
 
         if (walletManager != null)
             try {
@@ -111,17 +110,6 @@ public class WalletDesktopFragment extends FermatFragment implements Thread.Unca
         AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, list);
         adapter.notifyDataSetChanged();
         gridView.setAdapter(adapter);
-
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(getActivity(),"mati",Toast.LENGTH_SHORT).show();
-                return ;
-            }
-        });
-
-
 
 
 

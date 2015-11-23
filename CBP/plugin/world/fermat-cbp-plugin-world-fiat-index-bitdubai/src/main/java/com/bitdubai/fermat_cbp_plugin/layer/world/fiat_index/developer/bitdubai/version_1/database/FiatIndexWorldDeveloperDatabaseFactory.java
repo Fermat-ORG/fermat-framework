@@ -123,7 +123,7 @@ public class FiatIndexWorldDeveloperDatabaseFactory implements DealsWithPluginDa
         fiatIndexColumns.add(FiatIndexWorldDatabaseConstants.FIAT_INDEX_CURRENCY_COLUMN_NAME);
         fiatIndexColumns.add(FiatIndexWorldDatabaseConstants.FIAT_INDEX_SALE_PRICE_COLUMN_NAME);
         fiatIndexColumns.add(FiatIndexWorldDatabaseConstants.FIAT_INDEX_PURCHASE_PRICE_COLUMN_NAME);
-        fiatIndexColumns.add(FiatIndexWorldDatabaseConstants.FIAT_INDEX_PROVIDER_COLUMN_NAME);
+        fiatIndexColumns.add(FiatIndexWorldDatabaseConstants.FIAT_INDEX_PROVIDER_DESCRIPTION_COLUMN_NAME);
         fiatIndexColumns.add(FiatIndexWorldDatabaseConstants.FIAT_INDEX_TIMESTAMP_COLUMN_NAME);
         /**
          * Table Fiat Index addition.
