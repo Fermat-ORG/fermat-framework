@@ -60,7 +60,9 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
         /**
          * I will get the Genesis Transaction from the Crypto Network
          */
-        CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getGenesisTransaction());
+        //todo when implemented, uncomment this.
+        //CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.GetGenesisBlock());
+        CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getGenesisTransaction(), null;
         if(cryptoTransaction==null){
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,"Getting the genesis transaction from Crypto Network","The crypto transaction received is null");
         }

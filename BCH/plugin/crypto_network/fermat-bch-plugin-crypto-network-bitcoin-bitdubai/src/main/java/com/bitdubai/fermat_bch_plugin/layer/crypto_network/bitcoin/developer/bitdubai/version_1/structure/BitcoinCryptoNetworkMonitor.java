@@ -138,6 +138,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         this.wallet.addEventListener(events);
         blockChain.addListener(events);
 
+
         /**
          * I will connect to the regTest server or search for peers if we are in a different network.
          */

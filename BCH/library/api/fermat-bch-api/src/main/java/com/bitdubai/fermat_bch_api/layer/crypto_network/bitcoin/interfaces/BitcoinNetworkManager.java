@@ -39,11 +39,12 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
     /**
      * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
      * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
-     * @param txHAsh the Hash of the transaction we are going to look for.
+     * @param txHash the Hash of the transaction we are going to look for.
+     * @param blockHash the Hash of block where this transaction was stored..
      * @return a CryptoTransaction with the information of the transaction.
      * @throws CantGetCryptoTransactionException
      */
-    CryptoTransaction getCryptoTransactionFromBlockChain(String txHAsh) throws CantGetCryptoTransactionException;
+    CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException;
 
     /**
      * Broadcast a well formed, commited and signed transaction into the specified network
