@@ -362,8 +362,4 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
     public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
-
-
-
-
 }

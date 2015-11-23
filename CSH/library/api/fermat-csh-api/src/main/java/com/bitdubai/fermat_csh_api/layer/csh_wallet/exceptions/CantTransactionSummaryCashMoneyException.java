@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions;
+package com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
