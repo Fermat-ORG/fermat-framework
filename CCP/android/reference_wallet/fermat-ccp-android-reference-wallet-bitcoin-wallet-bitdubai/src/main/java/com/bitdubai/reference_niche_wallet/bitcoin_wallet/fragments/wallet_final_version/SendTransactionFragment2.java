@@ -7,13 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -93,6 +93,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     ReferenceWalletSession referenceWalletSession;
     private long bookBalance;
     private LinearLayout emptyListViewsContainer;
+    private int[] emptyOriginalPos= new int[2];;
+
 
 
     public static SendTransactionFragment2 newInstance() {
@@ -450,35 +452,31 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         moveViewToScreenCenter(emptyListViewsContainer);
     }
 
-    private void moveViewToScreenCenter( View view )
-    {
-        if(Build.VERSION.SDK_INT>17) {
-            DisplayMetrics dm = new DisplayMetrics();
-            //.getWindowManager().getDefaultDisplay().getMetrics( dm );
+    @Override
+    public void startExpandAnimation(int verticalOffSet) {
+        moveViewToOriginalPosition(emptyListViewsContainer);
+    }
 
+    private void moveViewToOriginalPosition(View view) {
+        if(Build.VERSION.SDK_INT>17) {
+            int position[] = new int[2];
+            view.getLocationOnScreen(position);
+            TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0  , emptyOriginalPos[1],0);
+            anim.setDuration(1000);
+            anim.setFillAfter(true);
+            view.startAnimation(anim);
+        }
+    }
+
+    private void moveViewToScreenCenter( View view ) {
+        if (Build.VERSION.SDK_INT > 17) {
+            DisplayMetrics dm = new DisplayMetrics();
             rootView.getDisplay().getMetrics(dm);
-//            int statusBarOffset = dm.heightPixels - rootView.getMeasuredHeight();
-//
-            int originalPos[] = new int[2];
-            int toPos[] = new int[2];
-//            view.getLocationOnScreen(originalPos);
-//
             int xDest = dm.widthPixels / 2;
             xDest -= (view.getMeasuredWidth() / 2);
-            int yDest = dm.heightPixels / 2 - (view.getMeasuredHeight() / 2);
-
-            float centreY=rootView.getY() + rootView.getHeight() / 2;
-            emptyListViewsContainer.getLocationOnScreen(originalPos);
-
-//            LinearLayout aux = emptyListViewsContainer;
-//            aux.setHorizontalGravity(Gravity.CENTER);
-//            aux.setGravity(Gravity.CENTER);
-//            aux.setVerticalGravity(Gravity.CENTER_VERTICAL);
-
-//            aux.getLocationOnScreen(toPos);
-
-
-            TranslateAnimation anim = new TranslateAnimation(0, xDest - originalPos[0], 0, centreY-200);
+            float centreY = rootView.getY() + rootView.getHeight() / 2;
+            emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);
+            TranslateAnimation anim = new TranslateAnimation(0, xDest - emptyOriginalPos[0], 0, centreY - 250);
             anim.setDuration(1000);
             anim.setFillAfter(true);
             view.startAnimation(anim);
