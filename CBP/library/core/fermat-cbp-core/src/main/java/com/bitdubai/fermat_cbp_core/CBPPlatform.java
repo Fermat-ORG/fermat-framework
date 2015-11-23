@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_cbp_core.layer.identity.IdentityLayer;
+import com.bitdubai.fermat_cbp_core.layer.network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_cbp_core.layer.sub_app_module.SubAppModuleLayer;
 import com.bitdubai.fermat_cbp_core.layer.wallet_module.WalletModuleLayer;
 
@@ -29,6 +30,7 @@ public class CBPPlatform extends AbstractPlatform {
             registerLayer(new IdentityLayer() );
             registerLayer(new SubAppModuleLayer() );
             registerLayer(new WalletModuleLayer() );
+            registerLayer(new NetworkServiceLayer());
 
         } catch (CantRegisterLayerException e) {
 
