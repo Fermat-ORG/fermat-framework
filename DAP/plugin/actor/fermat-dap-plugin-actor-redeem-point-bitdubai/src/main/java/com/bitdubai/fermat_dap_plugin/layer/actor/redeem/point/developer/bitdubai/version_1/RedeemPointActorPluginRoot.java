@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * Created by Nerio on 09/09/15.
@@ -168,7 +167,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
             if (actorAssetRedeemPoint != null) {
                 System.out.println("*********************Actor Asset Redeem Point************************");
-                System.out.println("Actor Asset PublicKey: " + actorAssetRedeemPoint.getPublicKey());
+                System.out.println("Actor Asset PublicKey: " + actorAssetRedeemPoint.getActorPublicKey());
                 System.out.println("Actor Asset Name: " + actorAssetRedeemPoint.getName());
                 System.out.println("***************************************************************");
             }
@@ -240,7 +239,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             System.out.println("Se necesita conocer como Implementarlo bien");
 
             try {
-                this.redeemPointActorDao.updateRedeemPointRegisteredDAPConnectionState(actorAssetRedeemPoint.getPublicKey(), DAPConnectionState.CONNECTING);
+                this.redeemPointActorDao.updateRedeemPointRegisteredDAPConnectionState(actorAssetRedeemPoint.getActorPublicKey(), DAPConnectionState.CONNECTING);
             } catch (CantUpdateRedeemPointException e) {
                 e.printStackTrace();
             }
@@ -252,7 +251,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         System.out.println("Actor Asset Redeem Point se Registro " + actorAssetRedeemPoint.getName());
         try {
             //TODO Cambiar luego por la publicKey Linked proveniente de Identity
-            this.redeemPointActorDao.updateRedeemPointDAPConnectionState(actorAssetRedeemPoint.getPublicKey(),
+            this.redeemPointActorDao.updateRedeemPointDAPConnectionState(actorAssetRedeemPoint.getActorPublicKey(),
                     DAPConnectionState.CONNECTED_ONLINE);
         } catch (CantUpdateRedeemPointException e) {
             e.printStackTrace();
