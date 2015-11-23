@@ -376,7 +376,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 }
 
                 @Override
-                public String getPublicKey() {
+                public String getActorPublicKey() {
                     return "publicKeyActor";
                 }
 

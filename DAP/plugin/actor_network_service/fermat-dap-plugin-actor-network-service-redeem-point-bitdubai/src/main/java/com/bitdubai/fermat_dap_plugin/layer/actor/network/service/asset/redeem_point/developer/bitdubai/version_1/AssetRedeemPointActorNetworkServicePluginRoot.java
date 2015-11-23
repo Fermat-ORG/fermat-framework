@@ -372,7 +372,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetRedeemPointToRegister.getPublicKey(),
+                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetRedeemPointToRegister.getActorPublicKey(),
                         actorAssetRedeemPointToRegister.getName().toLowerCase().trim(),
                         actorAssetRedeemPointToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
@@ -386,7 +386,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetRedeemPointToRegister.getPublicKey(),
+                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetRedeemPointToRegister.getActorPublicKey(),
                         actorAssetRedeemPointToRegister.getName().toLowerCase().trim(),
                         actorAssetRedeemPointToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
