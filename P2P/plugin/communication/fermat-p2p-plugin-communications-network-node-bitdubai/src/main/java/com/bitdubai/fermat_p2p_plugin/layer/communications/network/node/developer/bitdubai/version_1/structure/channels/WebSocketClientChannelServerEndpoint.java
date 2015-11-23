@@ -25,7 +25,7 @@ import javax.websocket.server.ServerEndpoint;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@ServerEndpoint("/fermat/client-channel")
+@ServerEndpoint("/client-channel")
 public class WebSocketClientChannelServerEndpoint {
 
     /**
