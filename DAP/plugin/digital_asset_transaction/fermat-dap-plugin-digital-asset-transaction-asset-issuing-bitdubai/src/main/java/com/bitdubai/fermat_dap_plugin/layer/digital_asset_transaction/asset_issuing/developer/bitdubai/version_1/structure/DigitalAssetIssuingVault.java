@@ -58,6 +58,10 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
     public void deliverDigitalAssetMetadataToAssetWallet(CryptoTransaction genesisTransaction, String internalId, AssetBalanceType assetBalanceType)throws CantDeliverDigitalAssetToAssetWalletException{
         try{
             DigitalAssetMetadata digitalAssetMetadataToDeliver=getDigitalAssetMetadataFromLocalStorage(internalId);
+            /**
+             * Added by Rodrigo. This might not be the right place to do this.
+             */
+            digitalAssetMetadataToDeliver.setGenesisBlock(genesisTransaction.getBlockHash());
             if(!isDigitalAssetMetadataHashValid(digitalAssetMetadataToDeliver,genesisTransaction)){
                 throw new CantDeliverDigitalAssetToAssetWalletException("The Digital Asset Metadata Hash is not valid:\n" +
                         "Hash: "+digitalAssetMetadataToDeliver.getDigitalAssetHash()+"\n"+
