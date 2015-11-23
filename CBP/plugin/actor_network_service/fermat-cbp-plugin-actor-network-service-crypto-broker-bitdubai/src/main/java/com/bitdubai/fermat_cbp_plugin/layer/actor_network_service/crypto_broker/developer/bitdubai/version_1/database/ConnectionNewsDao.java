@@ -45,7 +45,7 @@ public final class ConnectionNewsDao {
 
             database = this.pluginDatabaseSystem.openDatabase(
                     this.pluginId,
-                    this.pluginId.toString()
+                    CryptoBrokerActorNetworkServiceDatabaseConstants.CRYPTO_BROKER_ACTOR_NETWORK_SERVICE_DATABASE_NAME
             );
 
         } catch (final DatabaseNotFoundException e) {
@@ -55,7 +55,7 @@ public final class ConnectionNewsDao {
                 CryptoBrokerActorNetworkServiceDatabaseFactory cryptoBrokerActorNetworkServiceDatabaseFactory = new CryptoBrokerActorNetworkServiceDatabaseFactory(pluginDatabaseSystem);
                 database = cryptoBrokerActorNetworkServiceDatabaseFactory.createDatabase(
                         pluginId,
-                        pluginId.toString()
+                        CryptoBrokerActorNetworkServiceDatabaseConstants.CRYPTO_BROKER_ACTOR_NETWORK_SERVICE_DATABASE_NAME
                 );
 
             } catch (final CantCreateDatabaseException f) {
