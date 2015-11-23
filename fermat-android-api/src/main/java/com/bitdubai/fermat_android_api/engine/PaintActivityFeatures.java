@@ -25,4 +25,6 @@ public interface PaintActivityFeatures {
 
     public void invalidate();
 
+    public void addCollapseAnimation(ElementsWithAnimation elementsWithAnimation);
+
 }
