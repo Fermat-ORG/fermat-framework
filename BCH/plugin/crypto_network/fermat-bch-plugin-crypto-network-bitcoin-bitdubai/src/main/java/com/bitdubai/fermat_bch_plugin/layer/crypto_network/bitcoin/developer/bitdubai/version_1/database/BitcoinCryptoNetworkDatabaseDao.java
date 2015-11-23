@@ -631,25 +631,18 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @return
      */
     private CryptoTransaction getCryptoTransactionFromRecord(TransactionTypes transactionType, DatabaseTableRecord record) {
-        String addressFromColumnName, addressToColumnName, transactionHashColumnName, valueColumnName, cryptoStatusColumnName, op_Return;
-        transactionHashColumnName = BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME;
-        addressFromColumnName = BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME;
-        addressToColumnName = BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME;
-        valueColumnName = BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_VALUE_COLUMN_NAME;
-        cryptoStatusColumnName = BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME;
-
-
        CryptoTransaction cryptoTransaction = new CryptoTransaction();
-        cryptoTransaction.setTransactionHash(record.getStringValue(transactionHashColumnName));
+        cryptoTransaction.setTransactionHash(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME));
+        cryptoTransaction.setBlockHash(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME));
         cryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
         try {
-            cryptoTransaction.setCryptoStatus(CryptoStatus.getByCode(record.getStringValue(cryptoStatusColumnName)));
+            cryptoTransaction.setCryptoStatus(CryptoStatus.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME)));
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         }
-        cryptoTransaction.setCryptoAmount(record.getLongValue(valueColumnName));
-        cryptoTransaction.setAddressFrom(new CryptoAddress(record.getStringValue(addressFromColumnName), CryptoCurrency.BITCOIN));
-        cryptoTransaction.setAddressTo(new CryptoAddress(record.getStringValue(addressToColumnName), CryptoCurrency.BITCOIN));
+        cryptoTransaction.setCryptoAmount(record.getLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_VALUE_COLUMN_NAME));
+        cryptoTransaction.setAddressFrom(new CryptoAddress(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME), CryptoCurrency.BITCOIN));
+        cryptoTransaction.setAddressTo(new CryptoAddress(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME), CryptoCurrency.BITCOIN));
         cryptoTransaction.setOp_Return(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_OP_RETURN_COLUMN_NAME));
         return cryptoTransaction;
     }
@@ -723,6 +716,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
              * Forms the CryptoTransaction object
              */
             CryptoTransaction cryptoTransaction = new CryptoTransaction();
+            cryptoTransaction.setTransactionHash(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME));
             cryptoTransaction.setTransactionHash(txHash);
             cryptoTransaction.setAddressTo(addressTo);
             cryptoTransaction.setAddressFrom(addressFrom);
