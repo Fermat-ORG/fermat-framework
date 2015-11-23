@@ -10,7 +10,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoBrokerActorNetworkServiceDatabaseConstants {
+public final class CryptoBrokerActorNetworkServiceDatabaseConstants {
 
     /**
      * Crypto Broker Actor Network Service database global definition.
@@ -28,6 +28,7 @@ public class CryptoBrokerActorNetworkServiceDatabaseConstants {
     public static final String CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME           = "sender_alias"          ;
     public static final String CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME = "destination_public_key";
     public static final String CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME           = "request_type"          ;
+    public static final String CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME          = "request_state"         ;
     public static final String CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME         = "request_action"        ;
     public static final String CONNECTION_NEWS_SENT_TIME_COLUMN_NAME              = "sent_time"             ;
 

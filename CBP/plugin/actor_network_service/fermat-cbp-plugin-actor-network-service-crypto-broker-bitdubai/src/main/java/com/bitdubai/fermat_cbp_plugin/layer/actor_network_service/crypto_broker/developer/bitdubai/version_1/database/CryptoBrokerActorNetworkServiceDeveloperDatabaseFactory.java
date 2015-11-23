@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerActorNetworkServiceDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
+public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID                 pluginId            ;
@@ -44,7 +44,7 @@ public class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
      * @param pluginId
      */
     public CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem,
-                                                                   final UUID                 pluginId            ) {
+                                                                   final UUID pluginId) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
@@ -53,9 +53,9 @@ public class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeCryptoBrokerActorNetworkServiceDatabaseException
+     * @throws CantInitializeDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeCryptoBrokerActorNetworkServiceDatabaseException {
+    public void initializeDatabase() throws CantInitializeDatabaseException {
 
         try {
 
@@ -69,7 +69,7 @@ public class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeCryptoBrokerActorNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (final DatabaseNotFoundException e) {
 
@@ -88,7 +88,7 @@ public class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeCryptoBrokerActorNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
@@ -117,6 +117,7 @@ public class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
         connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          );
         connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
         connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          );
+        connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         );
         connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        );
         connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             );
         /**

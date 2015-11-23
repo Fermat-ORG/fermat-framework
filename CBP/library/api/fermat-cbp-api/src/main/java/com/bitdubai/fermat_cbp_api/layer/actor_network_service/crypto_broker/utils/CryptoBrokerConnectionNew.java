@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.ut
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 
 import java.util.Arrays;
@@ -22,18 +23,20 @@ public final class CryptoBrokerConnectionNew {
     private final byte[]                  senderImage         ;
     private final String                  destinationPublicKey;
     private final RequestType             requestType         ;
+    private final ProtocolState           protocolState       ;
     private final ConnectionRequestAction requestAction       ;
     private final long                    sentTime            ;
 
-    public CryptoBrokerConnectionNew(UUID                    requestId           ,
-                                     String                  senderPublicKey     ,
-                                     Actors                  senderActorType     ,
-                                     String                  senderAlias         ,
-                                     byte[]                  senderImage         ,
-                                     String                  destinationPublicKey,
-                                     RequestType             requestType         ,
-                                     ConnectionRequestAction requestAction       ,
-                                     long                    sentTime            ) {
+    public CryptoBrokerConnectionNew(final UUID                    requestId           ,
+                                     final String                  senderPublicKey     ,
+                                     final Actors                  senderActorType     ,
+                                     final String                  senderAlias         ,
+                                     final byte[]                  senderImage         ,
+                                     final String                  destinationPublicKey,
+                                     final RequestType             requestType         ,
+                                     final ProtocolState           protocolState       ,
+                                     final ConnectionRequestAction requestAction       ,
+                                     final long                    sentTime            ) {
 
         this.requestId            = requestId           ;
         this.senderPublicKey      = senderPublicKey     ;
@@ -42,6 +45,7 @@ public final class CryptoBrokerConnectionNew {
         this.senderImage          = senderImage         ;
         this.destinationPublicKey = destinationPublicKey;
         this.requestType          = requestType         ;
+        this.protocolState        = protocolState       ;
         this.requestAction        = requestAction       ;
         this.sentTime             = sentTime            ;
     }
@@ -96,6 +100,13 @@ public final class CryptoBrokerConnectionNew {
     }
 
     /**
+     * @return an element of ProtocolState indicating the state of the crypto broker connection request.
+     */
+    public ProtocolState getProtocolState() {
+        return protocolState;
+    }
+
+    /**
      * @return an element of ConnectionRequestAction enum indicating the action that must to be done.
      */
     public final ConnectionRequestAction getRequestAction() {
@@ -119,9 +130,9 @@ public final class CryptoBrokerConnectionNew {
                 ", senderImage=" + Arrays.toString(senderImage) +
                 ", destinationPublicKey='" + destinationPublicKey + '\'' +
                 ", requestType=" + requestType +
+                ", protocolState=" + protocolState +
                 ", requestAction=" + requestAction +
                 ", sentTime=" + sentTime +
                 '}';
     }
-
 }
