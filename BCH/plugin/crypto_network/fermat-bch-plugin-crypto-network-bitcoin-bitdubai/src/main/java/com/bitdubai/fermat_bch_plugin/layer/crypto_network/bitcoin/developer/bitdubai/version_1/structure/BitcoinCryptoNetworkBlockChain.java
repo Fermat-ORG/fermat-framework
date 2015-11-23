@@ -6,6 +6,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.BlockStore;
 import org.bitcoinj.store.BlockStoreException;
 import org.bitcoinj.store.MemoryBlockStore;
@@ -31,6 +32,7 @@ public class BitcoinCryptoNetworkBlockChain implements Serializable{
      */
     private BlockChain blockChain;
     private BlockStore blockStore;
+    private Wallet wallet;
     private NetworkParameters networkParameters;
     private final String BLOCKCHAIN_FILENAME = "/data/data/com.bitdubai.fermat/files/bitcoin_Blockchain_";
 
@@ -38,8 +40,9 @@ public class BitcoinCryptoNetworkBlockChain implements Serializable{
     /**
      * Constructor
      */
-    public BitcoinCryptoNetworkBlockChain(NetworkParameters networkParameters) throws BlockchainException {
+    public BitcoinCryptoNetworkBlockChain(NetworkParameters networkParameters, Wallet wallet) throws BlockchainException {
         this.networkParameters= networkParameters;
+        this.wallet = wallet;
 
         /**
          * initialize the objects
@@ -86,7 +89,7 @@ public class BitcoinCryptoNetworkBlockChain implements Serializable{
          * I initialize the blockchain object
          */
         try{
-            blockChain = new BlockChain(this.networkParameters, blockStore);
+            blockChain = new BlockChain(this.networkParameters, wallet, blockStore);
         } catch (Exception e){
             if (withError)
                 throw new BlockStoreException(e);

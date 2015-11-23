@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.system.annotations;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -13,7 +12,7 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation <code>NeededPluginReference</code>
- * haves all the data needed to build the plugin version reference to assign it to the plugin.
+ * contains all the data needed to build the plugin version reference to assign it to the plugin.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 28/10/2015.
  */

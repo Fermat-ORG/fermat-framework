@@ -153,10 +153,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
                     BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = runningAgents.get(blockchainNetworkType);
                     bitcoinCryptoNetworkMonitor.stop();
                     runningAgents.remove(blockchainNetworkType);
-                    bitcoinCryptoNetworkMonitor.setWallet(wallet);
+
+
+                    /**
+                     * once the agent is stoped, I will restart it with the new wallet.
+                     */
+                    File walletFilename = new File(WALLET_FILENAME + blockchainNetworkType.getCode());
+                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename);
+                    runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                     bitcoinCryptoNetworkMonitor.start();
-                    runningAgents.put(blockchainNetworkType,bitcoinCryptoNetworkMonitor);
                 }
             } else {
                 /**
@@ -430,7 +436,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             /**
              * instantiates a blockchain that will load it from file.
              */
-            BitcoinCryptoNetworkBlockChain blockChain = new BitcoinCryptoNetworkBlockChain(BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter));
+            BitcoinCryptoNetworkBlockChain blockChain = new BitcoinCryptoNetworkBlockChain(BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter), null);
             /**
              * get its height.
              */
@@ -459,5 +465,18 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
         Transaction transaction = wallet.getTransaction(sha256Hash);
         return transaction;
+    }
+
+    /**
+     * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
+     * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
+     * @param txHash the Hash of the transaction we are going to look for.
+     * @param blockHash the Hash of block where this transaction was stored..
+     * @return a CryptoTransaction with the information of the transaction.
+     * @throws CantGetCryptoTransactionException
+     */
+
+    public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
+        return null;
     }
 }
