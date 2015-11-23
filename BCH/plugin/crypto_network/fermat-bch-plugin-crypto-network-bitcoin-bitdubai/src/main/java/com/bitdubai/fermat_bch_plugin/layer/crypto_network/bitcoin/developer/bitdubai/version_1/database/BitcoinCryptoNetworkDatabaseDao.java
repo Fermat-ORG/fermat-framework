@@ -717,8 +717,8 @@ public class BitcoinCryptoNetworkDatabaseDao {
              * Forms the CryptoTransaction object
              */
             CryptoTransaction cryptoTransaction = new CryptoTransaction();
-            cryptoTransaction.setTransactionHash(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME));
             cryptoTransaction.setTransactionHash(txHash);
+            cryptoTransaction.setBlockHash((record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME)));
             cryptoTransaction.setAddressTo(addressTo);
             cryptoTransaction.setAddressFrom(addressFrom);
             cryptoTransaction.setCryptoAmount(amount);

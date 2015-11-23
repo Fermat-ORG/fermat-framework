@@ -665,10 +665,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 }
             }
         }
-
-
     }
-
 
     /**
      * Blockchain events
@@ -692,7 +689,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void receiveFromBlock(Transaction tx, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
-        System.out.println("received from block " + tx.toString());
+        //System.out.println("received from block " + tx.toString());
     }
 
     @Override
