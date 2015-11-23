@@ -19,7 +19,7 @@ _www.fermat.org_
 
 A peer-to-peer financial application framework could allow standalone crypto wallets to evolve into any kind of peer-to-peer financial applications. 
 
-For the problem of developing peer-to-peer financial applications crypto networks provide part of the solution as a system of electronic cash, but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallets files or keys, manage identities, interface crypto networks or the legacy financial system.
+Developing peer-to-peer financial applications is challenging. Crypto networks provide part of the solution as a system of electronic cash, but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallets files or keys, manage identities, interface crypto networks or the legacy financial system.
 
 We propose a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. A synchronization scheme running on top of it transform a standalone app into a distributed application across several devices still owned by the same user.
 
