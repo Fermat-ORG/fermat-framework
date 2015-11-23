@@ -88,7 +88,7 @@ The answers to each of these questions are addressed within Fermat.
 <br>
 ## What is Fermat?
 
-Fermat is a system where we experiment on what needs to be done fo the masses to adopt crypto currencies. As it is very easy to develop mobile APPs on Fermat, entrepreneurs can use it to easily test their business models.
+Fermat is a system where we experiment on what needs to be done for the masses to adopt crypto currencies. As it is very easy to develop mobile APPs on Fermat, entrepreneurs can use it to easily test their business models.
 
 Technically Fermat is an open-source P2P system built on a plug-in architecture that handles a stack of platforms and runs on multiple OS including Android, Linux, iOS, OSX and Windows.
 
@@ -109,7 +109,7 @@ Technically Fermat is an open-source P2P system built on a plug-in architecture 
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
 [white paper](FERMAT-WHITE-PAPER.md) that we're anxious to add. So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet or financial APP.
 
-You can learn more, see some cool imagess of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
+You can learn more, see some cool images of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
 
 <br>
 ### Fermat's Purpose

@@ -1,0 +1,37 @@
+package com.bitdubai.fermat_cbp_core.layer.actor_network_service;
+
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_cbp_core.layer.actor_network_service.crypto_broker.CryptoBrokerPluginSubsystem;
+
+/**
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 21/11/2015.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
+ */
+public class ActorNetworkServiceLayer extends AbstractLayer {
+
+    public ActorNetworkServiceLayer() {
+        super(Layers.ACTOR_NETWORK_SERVICE);
+    }
+
+    public void start() throws CantStartLayerException {
+
+        try {
+
+            registerPlugin(new CryptoBrokerPluginSubsystem());
+
+        } catch(CantRegisterPluginException e) {
+
+            throw new CantStartLayerException(
+                    e,
+                    "",
+                    "Problem trying to register a plugin."
+            );
+        }
+    }
+
+}

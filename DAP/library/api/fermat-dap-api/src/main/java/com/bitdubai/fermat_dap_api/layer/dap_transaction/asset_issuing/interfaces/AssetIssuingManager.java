@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -10,7 +11,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exception
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public interface AssetIssuingManager /*extends TransactionProtocolManager<CryptoTransaction>*/ {
+public interface AssetIssuingManager extends FermatManager {
 
     /**
      * This method will create and deliver digital assets according to the amount indicated by the assetsAmount argument.
