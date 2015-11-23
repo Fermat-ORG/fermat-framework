@@ -6,6 +6,11 @@
 */
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler</code>
  * <p/>
@@ -14,5 +19,20 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.de
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ClientConnectionCloseNotificationEventHandler {
+public class ClientConnectionCloseNotificationEventHandler implements FermatEventHandler {
+
+    NetworkService networkServiceRecieved;
+
+    public ClientConnectionCloseNotificationEventHandler(NetworkService networkServiceRecieved){
+
+        this.networkServiceRecieved = networkServiceRecieved;
+
+    }
+
+    @Override
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+
+        this.networkServiceRecieved.handleClientConnectionCloseNotificationEvent(fermatEvent);
+
+    }
 }
