@@ -118,6 +118,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          */
         for (BlockchainNetworkType blockchainNetworkType : blockchainNetworkTypes){
             /**
+             * I will update the detailed stats table with the keys information for each network type and vault
+             */
+            updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, keyList);
+
+            /**
              * load (if any) existing wallet.
              */
             Wallet wallet = getWallet(blockchainNetworkType, keyList);
@@ -167,6 +172,23 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
                 bitcoinCryptoNetworkMonitor.start();
             }
+        }
+    }
+
+    /**
+     * Updates the detailed stats with the passed information
+     * @param cryptoVault
+     * @param blockchainNetworkType
+     * @param keyList
+     */
+    private void updateDetailedCryptoStats(CryptoVaults cryptoVault, BlockchainNetworkType blockchainNetworkType, List<ECKey> keyList) {
+        try {
+            getDao().updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, keyList);
+        } catch (CantExecuteDatabaseOperationException e) {
+            /**
+             * if the stats are not updated, I can continue anyway.
+             */
+            e.printStackTrace();
         }
     }
 

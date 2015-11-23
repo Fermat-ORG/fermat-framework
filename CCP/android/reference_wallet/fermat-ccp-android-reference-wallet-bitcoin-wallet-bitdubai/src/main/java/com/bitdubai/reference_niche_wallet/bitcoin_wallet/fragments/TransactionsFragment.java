@@ -143,7 +143,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
             errorManager = walletSession.getErrorManager();
             tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
 
-            cryptoWalletManager = walletSession.getCryptoWalletManager();
+            cryptoWalletManager = walletSession.getModuleManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
 
             mapTransactionPerDate= new HashMap<String, Set<CryptoWalletTransaction>>();

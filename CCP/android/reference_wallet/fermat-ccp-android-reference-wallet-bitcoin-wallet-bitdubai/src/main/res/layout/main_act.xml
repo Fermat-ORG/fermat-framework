@@ -60,7 +60,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:id="@+id/contacts_container"
         >
 
 
@@ -70,7 +70,8 @@
             android:id="@+id/list_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:scrollingCache="false" />
+            android:scrollingCache="false"
+            />
 
     </FrameLayout>
 
@@ -81,7 +82,7 @@
         android:id="@+id/empty_view"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -97,7 +98,7 @@
             android:layout_centerHorizontal="true"
             android:padding="15dp"
             app:typeface="ROBOTO_REGULAR"
-            android:text="You don´t have\nany contact"
+            android:text="Click me to\nsearch contacts!"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/color_black_light"
             />

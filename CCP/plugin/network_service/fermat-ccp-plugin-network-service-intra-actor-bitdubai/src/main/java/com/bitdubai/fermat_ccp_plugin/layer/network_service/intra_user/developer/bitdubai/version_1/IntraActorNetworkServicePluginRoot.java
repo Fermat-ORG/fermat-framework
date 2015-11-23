@@ -809,6 +809,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         actorNetworkServiceRecord.getActorSenderPublicKey(),
                         actorNetworkServiceRecord.getActorDestinationPublicKey(),
                         actorNetworkServiceRecord.toJson());
+
+
     }
 
     private void changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord) {

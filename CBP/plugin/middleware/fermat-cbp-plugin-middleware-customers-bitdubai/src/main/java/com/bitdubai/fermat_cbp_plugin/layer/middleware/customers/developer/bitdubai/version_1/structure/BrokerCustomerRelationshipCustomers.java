@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.customers.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CustomerType;
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.CryptoCustomerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.cbp_middleware.customer.interfaces.BrokerCustomerRelationship;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.middleware.customer.interfaces.BrokerCustomerRelationship;
 
 import java.util.UUID;
 

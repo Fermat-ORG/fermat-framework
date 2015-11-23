@@ -1,13 +1,14 @@
 package com.bitdubai.fermat_csh_api.all_definition.enums;
 
 
-import com.bitdubai.fermat_csh_api.all_definition.exceptions.InvalidParameterException;;
+import com.bitdubai.fermat_csh_api.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by Yordin Alayn on 24.09.15.
  */
  
 public enum CashCurrencyType {
+    //TODO: Delete this file. Must be replaced by fermat-api\src\main\java\com\bitdubai\fermat_api\layer\world\enums\FiatCurrency.java
     DOLARUSA("USD"),
     EURO("EUR"),
     DOLARAUSTRALIANO("AUD"),

@@ -172,9 +172,11 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
     }
 
     private boolean fermatInit() {
-        Intent intent = new Intent(this, SubAppActivity.class);
+        //Intent intent = new Intent(this, SubAppActivity.class);
+        Intent intent = new Intent(this, DesktopActivity.class);
         intent.putExtra(ACTIVE_PLATFORMS,activePlatforms);
         intent.putExtra(START_ACTIVITY_INIT, "init");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         return true;

@@ -620,7 +620,7 @@ public class AssetIssuingTransactionDao {
         }
     }
 
-    public void persistDigitalAssetHash(String transactionID, String digitalAssetHash) throws CantPersistsGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException {
+    public void persistDigitalAssetHash(String transactionID, String digitalAssetHash) throws CantPersistsGenesisTransactionException {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
@@ -644,13 +644,16 @@ public class AssetIssuingTransactionDao {
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
             throw new CantPersistsGenesisTransactionException(exception, "Persisting Digital Asset Hash in database", "Cannot load the database into memory");
-        } catch (Exception exception) {
+        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
             this.database.closeDatabase();
-            throw new CantPersistsGenesisTransactionException(FermatException.wrapException(exception), "Persisting Digital Asset Hash in database", "Unexpected exception");
+            throw new CantPersistsGenesisTransactionException(exception, "Persisting Digital Asset Hash in database", "Unexpected returned value from database");
+        } catch (CantUpdateRecordException exception) {
+            this.database.closeDatabase();
+            throw new CantPersistsGenesisTransactionException(exception, "Persisting Digital Asset Hash in database", "Can't update record in database");
         }
     }
 
-    public boolean isPublicKeyUsed(String publicKey) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+    public boolean isPublicKeyUsed(String publicKey) throws CantCheckAssetIssuingProgressException {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
@@ -673,13 +676,13 @@ public class AssetIssuingTransactionDao {
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
             throw new CantCheckAssetIssuingProgressException(exception, "Loading Asset Issuing plugin database to memory", "Cannot load the Asset Issuing database");
-        } catch (Exception exception) {
+        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Checking pending assets to issue", "Unexpected exception");
+            throw new CantCheckAssetIssuingProgressException(exception, "Verifying returned records in table", "Unexpected returned value from database");
         }
     }
 
-    public boolean isTransactionIdUsed(UUID transactionId) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+    public boolean isTransactionIdUsed(UUID transactionId) throws CantCheckAssetIssuingProgressException {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
@@ -702,9 +705,9 @@ public class AssetIssuingTransactionDao {
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
             throw new CantCheckAssetIssuingProgressException(exception, "Loading Asset Issuing plugin database to memory", "Cannot load the Asset Issuing database");
-        } catch (Exception exception) {
+        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Checking pending assets to issue", "Unexpected exception");
+            throw new CantCheckAssetIssuingProgressException(exception, "Verifying returned records in table", "Unexpected returned value from database");
         }
     }
 
@@ -757,7 +760,7 @@ public class AssetIssuingTransactionDao {
             databaseTable.loadToMemory();
             this.database.closeDatabase();
             Logger LOG = Logger.getGlobal();
-            LOG.info("ISSUING DAO - Events pending " + databaseTable.getRecords().size());
+            //LOG.info("ISSUING DAO - Events pending " + databaseTable.getRecords().size());
             return !databaseTable.getRecords().isEmpty();
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();

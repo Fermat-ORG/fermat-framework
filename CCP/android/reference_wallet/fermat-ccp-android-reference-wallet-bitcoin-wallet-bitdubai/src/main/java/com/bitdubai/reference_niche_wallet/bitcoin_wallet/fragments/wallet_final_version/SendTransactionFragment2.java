@@ -108,7 +108,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         try {
             referenceWalletSession = (ReferenceWalletSession) walletSession;
-            moduleManager = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
+            moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
             errorManager = walletSession.getErrorManager();
         } catch (Exception ex) {
             if (errorManager != null)
@@ -217,7 +217,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         //txt_balance_amount.setTypeface(tf);
 
         try {
-            long balance = moduleManager.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+            long balance = moduleManager.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getAppPublicKey());
             txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, referenceWalletSession.getTypeAmount()));
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
@@ -242,7 +242,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             int id = item.getItemId();
 
             if(id == BitcoinWalletConstants.IC_ACTION_SEND){
-                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY);
+                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,referenceWalletSession.getAppPublicKey());
                 return true;
             }
 
@@ -315,20 +315,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         try {
             String intraUserPk = referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey();
 
-            List<CryptoWalletTransaction> list =moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(),intraUserPk, MAX_TRANSACTIONS, available_offset);
+            List<CryptoWalletTransaction> list =moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(),intraUserPk, MAX_TRANSACTIONS, available_offset);
 
             lstCryptoWalletTransactionsAvailable.addAll(list);
 
             available_offset = lstCryptoWalletTransactionsAvailable.size();
 
-            lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(),intraUserPk, MAX_TRANSACTIONS, book_offset));
+            lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(),intraUserPk, MAX_TRANSACTIONS, book_offset));
 
             book_offset = lstCryptoWalletTransactionsBook.size();
 
 
             for(CryptoWalletTransaction cryptoWalletTransaction : list){
                 List<CryptoWalletTransaction> lst = new ArrayList<>();
-                lst = moduleManager.getTransactions(intraUserPk,BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, 0);
+                lst = moduleManager.getTransactions(intraUserPk,BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), MAX_TRANSACTIONS, 0);
                 GrouperItem<CryptoWalletTransaction,CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction,CryptoWalletTransaction>(lst,false,cryptoWalletTransaction);
                 data.add(grouperItem);
             }
@@ -414,7 +414,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private long loadBalance(BalanceType balanceType){
         long balance = 0;
         try {
-            balance = referenceWalletSession.getCryptoWalletManager().getCryptoWallet().getBalance(balanceType, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+            balance = referenceWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, referenceWalletSession.getAppPublicKey());
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
         } catch (CantGetCryptoWalletException e) {

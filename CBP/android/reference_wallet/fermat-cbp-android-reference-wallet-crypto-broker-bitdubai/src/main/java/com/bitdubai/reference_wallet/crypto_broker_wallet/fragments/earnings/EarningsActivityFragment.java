@@ -3,6 +3,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.earnings;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +14,7 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
@@ -62,7 +63,7 @@ public class EarningsActivityFragment extends FermatWalletFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        configureActionBar();
+        configureToolbar();
 
         Activity activity = getActivity();
         LayoutInflater layoutInflater = activity.getLayoutInflater();
@@ -77,12 +78,15 @@ public class EarningsActivityFragment extends FermatWalletFragment {
         return rootView;
     }
 
-    private void configureActionBar() {
+    private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
 

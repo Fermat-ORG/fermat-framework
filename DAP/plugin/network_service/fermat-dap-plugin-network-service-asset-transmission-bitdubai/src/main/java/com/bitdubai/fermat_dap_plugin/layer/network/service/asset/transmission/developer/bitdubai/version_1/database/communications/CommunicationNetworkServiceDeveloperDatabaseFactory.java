@@ -112,6 +112,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
         databases.add(developerObjectFactory.getNewDeveloperDatabase(CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
+//        databases.add(developerObjectFactory.getNewDeveloperDatabase("Asset Transmission", CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME));
         return databases;
     }
 

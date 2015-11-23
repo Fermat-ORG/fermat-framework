@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.ContractBasicInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ContractViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ContractExpandableListViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.GrouperViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
 
@@ -16,7 +16,7 @@ import java.util.List;
 
 
 public class OpenContractsExpandableAdapter
-        extends ExpandableRecyclerAdapter<GrouperViewHolder, ContractViewHolder, GrouperItem, ContractBasicInformation> {
+        extends ExpandableRecyclerAdapter<GrouperViewHolder, ContractExpandableListViewHolder, GrouperItem, ContractBasicInformation> {
 
     private LayoutInflater mInflater;
 
@@ -52,9 +52,9 @@ public class OpenContractsExpandableAdapter
      * @return the user's custom parent ViewHolder that must extend ParentViewHolder
      */
     @Override
-    public ContractViewHolder onCreateChildViewHolder(ViewGroup parent) {
+    public ContractExpandableListViewHolder onCreateChildViewHolder(ViewGroup parent) {
         View view = mInflater.inflate(R.layout.cbw_open_contract_list_item, parent, false);
-        return new ContractViewHolder(view);
+        return new ContractExpandableListViewHolder(view);
     }
 
     /**
@@ -81,7 +81,7 @@ public class OpenContractsExpandableAdapter
      * @param position        the position in the RecyclerView of the item
      */
     @Override
-    public void onBindChildViewHolder(ContractViewHolder childViewHolder, int position, ContractBasicInformation childListItem) {
+    public void onBindChildViewHolder(ContractExpandableListViewHolder childViewHolder, int position, ContractBasicInformation childListItem) {
         childViewHolder.bind(childListItem);
     }
 }

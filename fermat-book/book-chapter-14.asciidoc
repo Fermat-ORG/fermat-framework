@@ -21,7 +21,7 @@ Bank Notes :: +
 === _Wallet layer_
 Bank Notes :: +
 
-=== _Middleware layer_
+=== _Middle-ware layer_
 Bank Notes :: +
 
 === _Wallet Module layer_
@@ -31,7 +31,7 @@ Bank Notes Wallet :: +
 Bank Notes Wallet :: +
 ////
 image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
-==== Continue reading ...
+==== _Continue reading ..._
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]
 ////

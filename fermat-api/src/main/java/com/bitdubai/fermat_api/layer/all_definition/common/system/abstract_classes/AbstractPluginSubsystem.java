@@ -73,14 +73,10 @@ public abstract class AbstractPluginSubsystem {
         }
     }
 
-    public final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> listVersions() {
-
-        final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions = new ConcurrentHashMap<>();
+    public final void fillVersions(final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions) {
 
         for(ConcurrentHashMap.Entry<PluginDeveloperReference, AbstractPluginDeveloper> developer : developers.entrySet())
             versions.putAll(developer.getValue().listVersions());
-
-        return versions;
     }
 
     public PluginReference getPluginReference() {

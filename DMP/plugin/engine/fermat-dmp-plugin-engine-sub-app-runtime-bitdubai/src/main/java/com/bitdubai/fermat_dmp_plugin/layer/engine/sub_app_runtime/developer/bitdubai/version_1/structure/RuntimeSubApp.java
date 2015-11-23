@@ -21,6 +21,8 @@ public class RuntimeSubApp implements SubApp {
 
     SubApps type;
 
+    String publicKey;
+
     Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
 
     Activities startActivity;
@@ -36,7 +38,11 @@ public class RuntimeSubApp implements SubApp {
     public void setType(SubApps type) {
         this.type = type;
     }
-    
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
     public void addActivity (Activity activity){
         activities.put(activity.getType(), activity);
     }
@@ -53,6 +59,11 @@ public class RuntimeSubApp implements SubApp {
     @Override
     public SubApps getType() {
         return type;
+    }
+
+    @Override
+    public String getPublicKey() {
+        return publicKey;
     }
 
     @Override
@@ -85,4 +96,8 @@ public class RuntimeSubApp implements SubApp {
         return languagePackages;
     }
 
+    @Override
+    public String getAppPublicKey() {
+        return publicKey;
+    }
 }

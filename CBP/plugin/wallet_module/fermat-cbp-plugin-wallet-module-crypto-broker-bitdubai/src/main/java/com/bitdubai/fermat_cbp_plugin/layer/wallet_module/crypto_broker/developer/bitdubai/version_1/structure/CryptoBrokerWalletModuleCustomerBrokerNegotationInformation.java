@@ -5,13 +5,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.ClauseInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.ClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.CustomerBrokerNegotiationInformation;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;

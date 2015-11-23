@@ -189,7 +189,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
         setNavigatitDrawer();
 
         try {
-            cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
+            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
 
             updateTransactions();
@@ -606,7 +606,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                             Long.parseLong(amount.getText().toString()),
                             validAddress,
                             notes,
-                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                            referenceWalletSession.getAppPublicKey(),
                             user_id,
                             Actors.INTRA_USER,
                             walletContact.actorPublicKey,
@@ -642,11 +642,11 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
                 try {
 
-                    lstCryptoWalletTransactionsAvailable.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),MAX_TRANSACTIONS, available_offset));
+                    lstCryptoWalletTransactionsAvailable.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),MAX_TRANSACTIONS, available_offset));
 
                     available_offset = lstCryptoWalletTransactionsAvailable.size();
 
-                    lstCryptoWalletTransactionsBook.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),MAX_TRANSACTIONS, book_offset));
+                    lstCryptoWalletTransactionsBook.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),MAX_TRANSACTIONS, book_offset));
 
                     book_offset = lstCryptoWalletTransactionsBook.size();
 
@@ -678,7 +678,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
         List<WalletContact> contacts = new ArrayList<>();
         try
         {
-            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listAllActorContactsAndConnections(referenceWalletSession.getWalletSessionType().getWalletPublicKey(), intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey());
+            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listAllActorContactsAndConnections(referenceWalletSession.getAppPublicKey(), intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey());
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
 
                 String contactAddress = "";

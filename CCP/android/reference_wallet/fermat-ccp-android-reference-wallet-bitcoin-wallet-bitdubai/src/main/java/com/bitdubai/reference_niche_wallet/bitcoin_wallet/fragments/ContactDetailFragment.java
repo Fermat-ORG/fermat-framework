@@ -115,7 +115,7 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
 
             cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
             //typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-            cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
+            cryptoWalletManager = referenceWalletSession.getModuleManager();
             errorManager = walletSession.getErrorManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
         } catch (CantGetCryptoWalletException e) {
@@ -163,12 +163,12 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
             if ( id == R.id.send_button) {
                 referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
                 referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS,false);
-                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY);
+                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,referenceWalletSession.getAppPublicKey());
             }
             else if( id == R.id.receive_button){
                     referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
                     referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS,false);
-                    changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY);
+                    changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY,referenceWalletSession.getAppPublicKey());
             }
             else if ( id == R.id.linear_layout_extra_user_receive){
                 ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(
@@ -177,7 +177,7 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
                         referenceWalletSession.getErrorManager(),
                         cryptoWalletWalletContact,
                         referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),
-                        referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+                        referenceWalletSession.getAppPublicKey());
                 receiveFragmentDialog.show();
             }
 

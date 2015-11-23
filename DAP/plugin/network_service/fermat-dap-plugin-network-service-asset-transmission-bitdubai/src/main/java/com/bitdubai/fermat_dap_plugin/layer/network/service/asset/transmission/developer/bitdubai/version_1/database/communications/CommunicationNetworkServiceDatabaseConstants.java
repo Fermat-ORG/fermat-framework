@@ -17,7 +17,7 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
  */
 public class CommunicationNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "assettransmissionnetworkservicedatabase";
+    public static final String DATA_BASE_NAME  = "TransmissionServiceDataBase";
 
     /**
      * incoming messages database table definition.
