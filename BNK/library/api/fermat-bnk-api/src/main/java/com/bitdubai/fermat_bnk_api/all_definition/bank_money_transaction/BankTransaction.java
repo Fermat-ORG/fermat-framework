@@ -24,7 +24,7 @@ public interface BankTransaction {
     float getAmount();
 
 
-    long getAccountNumber();
+    String getAccountNumber();
 
 
     FiatCurrency getCurrency();

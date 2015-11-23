@@ -14,6 +14,7 @@ public enum Layers implements FermatEnum {
      * In order to do make code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     ACTOR                      ("ACT"),
+    ACTOR_CONNECTION           ("ACC"),
     ACTOR_NETWORK_SERVICE      ("ANS"),
     BASIC_WALLET               ("BSW"),
     COMMUNICATION              ("COM"),
@@ -53,6 +54,7 @@ public enum Layers implements FermatEnum {
         switch (code) {
 
             case "ACT":  return ACTOR;
+            case "ACC":  return ACTOR_CONNECTION;
             case "ANS":  return ACTOR_NETWORK_SERVICE;
             case "BSW":  return BASIC_WALLET;
             case "COM":  return COMMUNICATION;

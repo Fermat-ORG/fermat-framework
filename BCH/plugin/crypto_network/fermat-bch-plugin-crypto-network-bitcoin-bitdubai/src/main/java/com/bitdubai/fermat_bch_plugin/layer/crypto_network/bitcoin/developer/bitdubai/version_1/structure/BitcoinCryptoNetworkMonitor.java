@@ -1,16 +1,21 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 
+import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.Wallet;
@@ -113,7 +118,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * creates the blockchain object for the specified network.
          */
-//        BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS);
+//        BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS, wallet);
 //        BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
         BlockStore blockStore = new MemoryBlockStore(NETWORK_PARAMETERS);
         BlockChain blockChain = null;
@@ -137,6 +142,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         peerGroup.addEventListener(events);
         this.wallet.addEventListener(events);
         blockChain.addListener(events);
+
 
         /**
          * I will connect to the regTest server or search for peers if we are in a different network.
@@ -169,15 +175,15 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         peerGroup.start();
         peerGroup.downloadBlockChain();
 
-        while (true){
-            try {
-                Thread.sleep(60000);
-                System.out.println("*****CryptoNetwork isRunning: " + peerGroup.isRunning());
-                System.out.println("****CryptoNetwork: connected peers " + peerGroup.getConnectedPeers().size());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        while (true){
+//            try {
+//                Thread.sleep(60000);
+//                System.out.println("*****CryptoNetwork isRunning: " + peerGroup.isRunning());
+//                System.out.println("****CryptoNetwork: connected peers " + peerGroup.getConnectedPeers().size());
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     /**
@@ -224,5 +230,65 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
     public PeerGroup getPeerGroup() {
         return peerGroup;
+    }
+
+    /**
+     * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
+     * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
+     * @param txHash the Hash of the transaction we are going to look for.
+     * @param blockHash the Hash of block where this transaction was stored..
+     * @return a CryptoTransaction with the information of the transaction.
+     * @throws CantGetCryptoTransactionException
+     */
+
+    public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
+        Sha256Hash blockSha256Hash = Sha256Hash.wrap(blockHash);
+
+        /**
+         * I first need to find If I have the block already in my blockchain
+         */
+
+        /**
+         * Will get the block from the peer
+         */
+        Block genesisBlock = getBlockFromPeer(blockSha256Hash);
+
+        /**
+         * Will search all transactions from the block until I find my own.
+          */
+        for (Transaction transaction : genesisBlock.getTransactions()){
+            if (transaction.getHashAsString() == txHash){
+                return getCryptoTransactionFromBitcoinTransaction(transaction);
+            }
+        }
+
+        /**
+         * If I couldn't find it. then I will return null.
+         * */
+        return null;
+
+
+    }
+
+    /**
+     * Transform a Bitcoin Transaction into a Crypto Transaction
+     * @param transaction
+     * @return
+     */
+    private CryptoTransaction getCryptoTransactionFromBitcoinTransaction(Transaction transaction) {
+        return null;
+    }
+
+    /**
+     * Gets from the DownloadPeer the block that matches the passed hash
+     * @param blockHash
+     * @return
+     */
+    private Block getBlockFromPeer(Sha256Hash blockHash) throws CantGetCryptoTransactionException {
+        try {
+            return peerGroup.getDownloadPeer().getBlock(blockHash).get(1, TimeUnit.MINUTES);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "There was a problem trying to get the block from the Peer.", null);
+        }
     }
 }

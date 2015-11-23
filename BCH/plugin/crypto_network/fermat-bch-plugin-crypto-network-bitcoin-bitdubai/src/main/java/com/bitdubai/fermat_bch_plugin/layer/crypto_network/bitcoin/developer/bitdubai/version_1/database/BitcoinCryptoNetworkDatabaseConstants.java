@@ -19,6 +19,7 @@ class BitcoinCryptoNetworkDatabaseConstants {
 
     static final String TRANSACTIONS_TRX_ID_COLUMN_NAME = "trx_id";
     static final String TRANSACTIONS_HASH_COLUMN_NAME = "hash";
+    static final String TRANSACTIONS_BLOCK_HASH_COLUMN_NAME = "block_hash";
     static final String TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     static final String TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME = "block_depth";
     static final String TRANSACTIONS_ADDRESS_TO_COLUMN_NAME = "address_to";

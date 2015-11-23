@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -20,7 +21,7 @@ import java.util.List;
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 02/09/15.
  * @version 1.0
  */
-public interface CryptoAddressBookManager {
+public interface CryptoAddressBookManager extends FermatManager {
 
     /**
      * Throw the method <code>getCryptoAddressBookRecordByCryptoAddress</code> you can get an instance of the CryptoAddressBookRecord to which the

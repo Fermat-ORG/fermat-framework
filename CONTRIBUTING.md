@@ -9,7 +9,6 @@
 
 Anybody can contribute to Fermat and you are welcome to do so. There is a stable community of mantainers called bitDubai. You might want to join this community and specifically one of their teams which are working on different areas of the system. Visit their [site](https://bitDubai.com) to learn how to join in.
 
-<<<<<<< HEAD
 Also, you might want to add your own functionality to Fermat, perhaps your own platform, plugins, reference wallet or build your own niche wallet. All of these options are covered within this guide.
 
 Depending on where the changes you propose belogns to the procedure may vary a little bit. 
