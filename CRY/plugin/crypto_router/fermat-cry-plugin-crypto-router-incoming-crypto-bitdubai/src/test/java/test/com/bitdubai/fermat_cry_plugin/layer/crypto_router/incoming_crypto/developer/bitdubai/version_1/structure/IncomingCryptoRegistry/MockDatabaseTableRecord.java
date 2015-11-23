@@ -89,7 +89,7 @@ public class MockDatabaseTableRecord implements DatabaseTableRecord {
     }
 
     @Override
-    public void setStateValue(String columnName, WalletFactoryProjectState state) {
+    public void setFermatEnum(String columnName, WalletFactoryProjectState state) {
 
     }
 
