@@ -33,8 +33,7 @@ public class EuropeanCentralBankExchange {
             index = new FiatIndexImpl(fiatCurrency, FiatCurrency.US_DOLLAR, price, price, (new Date().getTime() / 1000), "european_central_bank");
 
         } catch (JSONException e) {
-            //TODO: Report unusual exception!
-            new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE,e,"EuropeanCentralBankExchange","Cant Get Index from" + fiatCurrency.getCode());
+            throw new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE,e,"EuropeanCentralBankExchange","Cant Get Index from" + fiatCurrency.getCode());
         }
 
     return index;

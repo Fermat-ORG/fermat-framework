@@ -28,24 +28,24 @@ public class DefaultIndexProvider implements IndexProvider {
     public FiatIndex getCurrentIndex(FiatCurrency currency) throws CantGetIndexException {
 
         List<FiatIndex> indexList = new ArrayList<>();
+        FiatIndex index;
 
         //Get index from Yahoo exchange API
         try{
-            indexList.add(YahooExchange.getExchangeIndexForCurrency(currency));
+            index = YahooExchange.getExchangeIndexForCurrency(currency);
+            indexList.add(index);
         }catch (CantGetIndexException e) {
             //TODO: Report unusual exception and do nothing more!
         }
 
-        //Get index from Other exchange APIs
+        //Get index from European Central Bank exchange API
         try{
-            indexList.add(EuropeanCentralBankExchange.getExchangeIndexForCurrency(currency));
+            index = EuropeanCentralBankExchange.getExchangeIndexForCurrency(currency);
+            indexList.add(index);
         }catch (CantGetIndexException e) {
             //TODO: Report unusual exception and do nothing more!
         }
 
-
-
-        FiatIndex index;
         try{
             index = IndexHelper.selectBestIndex(indexList);
         } catch (CantSelectBestIndexException e) {
