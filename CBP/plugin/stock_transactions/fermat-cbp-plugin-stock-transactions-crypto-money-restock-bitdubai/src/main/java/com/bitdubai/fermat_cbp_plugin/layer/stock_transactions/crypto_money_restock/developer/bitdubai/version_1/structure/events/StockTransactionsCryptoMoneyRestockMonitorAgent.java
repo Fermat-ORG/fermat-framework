@@ -16,7 +16,12 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoB
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.MissingCryptoMoneyRestockDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.StockTransactionCryptoMoneyRestockManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.utils.CryptoTransactionParametersWrapper;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.utils.WalletTransactionWrapper;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.exceptions.CantCreateHoldTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.exceptions.CantGetHoldTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
@@ -36,18 +41,18 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
     private final ErrorManager errorManager;
     private final StockTransactionCryptoMoneyRestockManager stockTransactionCryptoMoneyRestockManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
-    //private final UnholdManager unHoldManager;
+    private final CryptoUnholdTransactionManager cryptoUnholdTransactionManager;
 
     public StockTransactionsCryptoMoneyRestockMonitorAgent(ErrorManager errorManager,
                                                            StockTransactionCryptoMoneyRestockManager stockTransactionCryptoMoneyRestockManager,
-                                                           CryptoBrokerWalletManager cryptoBrokerWalletManager)
-                                                           //UnholdManager unHoldManager)
+                                                           CryptoBrokerWalletManager cryptoBrokerWalletManager,
+                                                           CryptoUnholdTransactionManager cryptoUnholdTransactionManager)
                                                            {
 
         this.errorManager                            = errorManager;
         this.stockTransactionCryptoMoneyRestockManager = stockTransactionCryptoMoneyRestockManager;
         this.cryptoBrokerWalletManager               = cryptoBrokerWalletManager;
-        //this.unHoldManager                           = unHoldManager;
+        this.cryptoUnholdTransactionManager           = cryptoUnholdTransactionManager;
     }
     @Override
     public void start() throws CantStartAgentException {
@@ -118,59 +123,56 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
                     case INIT_TRANSACTION:
                         //Llamar al metodo de la interfaz public del manager de Bank Hold
                         //Luego cambiar el status al registro de la transaccion leido
+                        CryptoTransactionParametersWrapper cryptoTransactionParametersWrapper = new CryptoTransactionParametersWrapper(
+
+                                cryptoMoneyTransaction.getTransactionId(),
+                                cryptoMoneyTransaction.getCryptoCurrency(),
+                                cryptoMoneyTransaction.getCryWalletPublicKey(),
+                                cryptoMoneyTransaction.getActorPublicKey(),
+                                cryptoMoneyTransaction.getAmount(),
+                                cryptoMoneyTransaction.getMemo(),
+                                "pluginId");
+                        cryptoUnholdTransactionManager.createCryptoUnholdTransaction(cryptoTransactionParametersWrapper);
+
                         cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
-                        stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
-                        break;
-                    case IN_WALLET:
-                        //Llamar al metodo de la interfaz public del manager de la wallet CBP
-                        //Luego cambiar el status al registro de la transaccion leido
-                        //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
-                        try {
-                            WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(cryptoMoneyTransaction.getTransactionId(),
-                                    null,
-                                    BalanceType.AVAILABLE,
-                                    TransactionType.CREDIT,
-                                    CurrencyType.BANK_MONEY,
-                                    cryptoMoneyTransaction.getCbpWalletPublicKey(),
-                                    cryptoMoneyTransaction.getActorPublicKey(),
-                                    cryptoMoneyTransaction.getAmount(),
-                                    0,
-                                    cryptoMoneyTransaction.getConcept());
-
-                            cryptoBrokerWalletManager.getCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
-
-                            cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
-                            stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
-
-                        } catch (CantPerformTransactionException e) {
-                            e.printStackTrace();
-                        } catch (CryptoBrokerWalletNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                         stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
                         break;
                     case IN_HOLD:
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
-                        //Buscar el regsitro de la transaccion en manager de Bank Hold y si lo consigue entonces le cambia el status de IN_WALLET y hace el credito
-//                        BankTransactionParametersWrapper bankTransactionParametersWrapper = new BankTransactionParametersWrapper(
-//
-//                                bankMoneyTransaction.getTransactionId(),
-//                                bankMoneyTransaction.getFiatCurrency(),
-//                                bankMoneyTransaction.getBnkWalletPublicKey(),
-//                                bankMoneyTransaction.getActorPublicKey(),
-//                                bankMoneyTransaction.getBankAccount(),
-//                                bankMoneyTransaction.getAmount(),
-//                                bankMoneyTransaction.getMemo(),
-//                                "pluginId");
-//                        unHoldManager.unHold(bankTransactionParametersWrapper);
-//                        BankTransactionStatus bankTransactionStatus =  unHoldManager.getUnholdTransactionsStatus(bankMoneyTransaction.getTransactionId());
-//                        if (BankTransactionStatus.CONFIRMED.getCode() == bankTransactionStatus.getCode())
-//                        {
+                        //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
+                        CryptoTransactionStatus cryptoTransactionStatus = cryptoUnholdTransactionManager.getCryptoUnholdTransactionStatus(cryptoMoneyTransaction.getTransactionId());
+                        if (CryptoTransactionStatus.CONFIRMED.getCode() == cryptoTransactionStatus.getCode()) {
+                            cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
+                            try {
+                                WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(cryptoMoneyTransaction.getTransactionId(),
+                                        null,
+                                        BalanceType.AVAILABLE,
+                                        TransactionType.CREDIT,
+                                        CurrencyType.BANK_MONEY,
+                                        cryptoMoneyTransaction.getCbpWalletPublicKey(),
+                                        cryptoMoneyTransaction.getActorPublicKey(),
+                                        cryptoMoneyTransaction.getAmount(),
+                                        0,
+                                        cryptoMoneyTransaction.getConcept());
+
+                                cryptoBrokerWalletManager.getCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
+
+                                cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
+                                stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
+
+                            } catch (CantPerformTransactionException e) {
+                                e.printStackTrace();
+                            } catch (CryptoBrokerWalletNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
+                            stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
+                        }
+                        break;
+                    case IN_WALLET:
                         cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
                         stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
-//                        }
                         break;
                 }
             }
@@ -179,6 +181,10 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         } catch (MissingCryptoMoneyRestockDataException e) {
+            e.printStackTrace();
+        } catch (CantCreateHoldTransactionException e) {
+            e.printStackTrace();
+        } catch (CantGetHoldTransactionException e) {
             e.printStackTrace();
         }
     }

@@ -37,6 +37,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_rest
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.CryptoMoneyRestockTransactionImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.StockTransactionCryptoMoneyRestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.events.StockTransactionsCryptoMoneyRestockMonitorAgent;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -75,9 +76,8 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    //TODO: Nompbre del plugin de la interfaz HoldManager, aca el HOLD del CCP que no existe aun
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.CRYPTO_WALLET)
-    //UnholdManager unHoldManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITCOIN_WALLET)
+    CryptoUnholdTransactionManager cryptoUnholdTransactionManager;
 
 
     @Override
@@ -177,8 +177,8 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
             stockTransactionsCryptoMoneyRestockMonitorAgent = new StockTransactionsCryptoMoneyRestockMonitorAgent(
                     errorManager,
                     stockTransactionCryptoMoneyRestockManager,
-                    cryptoBrokerWalletManager//,
-                    //unHoldManager
+                    cryptoBrokerWalletManager,
+                    cryptoUnholdTransactionManager
             );
 
             stockTransactionsCryptoMoneyRestockMonitorAgent.start();
