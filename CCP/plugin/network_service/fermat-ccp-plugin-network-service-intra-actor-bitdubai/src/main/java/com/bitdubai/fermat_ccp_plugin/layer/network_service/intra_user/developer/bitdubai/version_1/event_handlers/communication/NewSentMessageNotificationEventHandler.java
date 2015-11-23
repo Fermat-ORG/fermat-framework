@@ -63,6 +63,7 @@ public class NewSentMessageNotificationEventHandler extends AbstractCommunicatio
 
                 if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)) {
                     // close connection, sender is the destination
+                    System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
                     communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
                     actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorSenderPublicKey());
 
