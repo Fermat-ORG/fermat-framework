@@ -2,15 +2,14 @@ package com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.ve
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.structure.LoggerManager;
 
 /**
  * Created by rodrigo on 2015.06.25..
  */
-public class LoggerAddonRoot extends AbstractAddon implements LoggerSystemOs {
+public class LoggerAddonRoot extends AbstractAddon {
 
     public LoggerAddonRoot(AddonVersionReference addonVersionReference) {
         super(addonVersionReference);
@@ -29,7 +28,8 @@ public class LoggerAddonRoot extends AbstractAddon implements LoggerSystemOs {
     }
 
     @Override
-    public LogManager getLoggerManager() {
+    public FermatManager getManager() {
         return loggerManager;
     }
+
 }

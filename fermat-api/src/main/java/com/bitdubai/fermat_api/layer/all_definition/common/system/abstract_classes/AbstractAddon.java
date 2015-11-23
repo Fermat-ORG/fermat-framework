@@ -4,12 +4,16 @@ import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededOsContext;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignOsContextException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantCollectReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleOsContextException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -30,35 +34,22 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractAddon implements Addon, Service {
 
-    private final Map<AddonVersionReference, Field> addonNeededReferences = new ConcurrentHashMap<>();
+    private final Map<AddonVersionReference, Field> addonNeededReferences;
 
+    private Field   osContextField     ;
     private boolean referencesCollected;
 
     private final AddonVersionReference addonVersionReference;
-    private final boolean               dealsWithOsContext   ;
-    private       Object                osContext            ;
 
     protected     ServiceStatus         serviceStatus        ;
 
     public AbstractAddon(final AddonVersionReference addonVersionReference) {
 
         this.addonVersionReference = addonVersionReference;
-        this.dealsWithOsContext    = false;
-        this.instantiateAddon();
-    }
 
-    public AbstractAddon(final AddonVersionReference addonVersionReference,
-                         final boolean               dealsWithOsContext   ) {
-
-        this.addonVersionReference = addonVersionReference;
-        this.dealsWithOsContext    = dealsWithOsContext;
-        this.instantiateAddon();
-    }
-
-    private void instantiateAddon() {
-
-        this.referencesCollected = false;
-        this.serviceStatus = ServiceStatus.CREATED;
+        this.addonNeededReferences = new ConcurrentHashMap<>();
+        this.referencesCollected   = false;
+        this.serviceStatus         = ServiceStatus.CREATED;
     }
 
     public final AddonVersionReference getAddonVersionReference() {
@@ -66,7 +57,7 @@ public abstract class AbstractAddon implements Addon, Service {
     }
 
     public final boolean isDealsWithOsContext() {
-        return dealsWithOsContext;
+        return osContextField != null;
     }
 
     @Override
@@ -93,14 +84,6 @@ public abstract class AbstractAddon implements Addon, Service {
     @Override
     public void start() throws CantStartPluginException {
         this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    protected final Object getOsContext() {
-        return osContext;
-    }
-
-    public final void setOsContext(Object osContext) {
-        this.osContext = osContext;
     }
 
     @Override
@@ -170,6 +153,10 @@ public abstract class AbstractAddon implements Addon, Service {
 
                         this.addonNeededReferences.put(avr, f);
                     }
+
+                    if (a instanceof NeededOsContext)
+                        this.osContextField = f;
+
                 }
             }
 
@@ -185,10 +172,9 @@ public abstract class AbstractAddon implements Addon, Service {
         }
     }
 
-    public final void assignAddonReference(final AbstractAddon abstractAddon) throws CantAssignReferenceException   ,
-                                                                                     IncompatibleReferenceException {
-
-        final AddonVersionReference avr = abstractAddon.getAddonVersionReference();
+    public final void assignAddonReference(final AddonVersionReference avr          ,
+                                           final FermatManager         fermatManager) throws CantAssignReferenceException   ,
+                                                                                             IncompatibleReferenceException {
 
         try {
 
@@ -203,16 +189,16 @@ public abstract class AbstractAddon implements Addon, Service {
 
             final Class<?> refManager = field.getType();
 
-            if(refManager.isAssignableFrom(abstractAddon.getClass())) {
+            if(refManager.isAssignableFrom(fermatManager.getClass())) {
                 field.setAccessible(true);
-                field.set(this, refManager.cast(abstractAddon));
+                field.set(this, refManager.cast(fermatManager));
 
                 this.addonNeededReferences.remove(avr);
 
             } else {
                 throw new IncompatibleReferenceException(
                         "Working addon: "+this.getAddonVersionReference().toString3()+
-                        " ---- classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),
+                                " ---- classExpected: "+refManager.getName() + " --- classReceived: " + fermatManager.getClass().getName(),
                         ""
                 );
             }
@@ -222,6 +208,37 @@ public abstract class AbstractAddon implements Addon, Service {
             throw new CantAssignReferenceException(
                     e,
                     "Working addon: "+this.getAddonVersionReference().toString3()+ " +++++ Reference to assign: "+ avr.toString(),
+                    "Error assigning references for the addon."
+            );
+        }
+    }
+
+    public final void assignOsContext(final Object object) throws CantAssignOsContextException   ,
+                                                                  IncompatibleOsContextException {
+
+        try {
+
+            final Class<?> osContextClass = this.osContextField.getType();
+
+            if(osContextClass.isAssignableFrom(object.getClass())) {
+                this.osContextField .setAccessible(true);
+                this.osContextField .set(this, osContextClass.cast(object));
+
+                this.osContextField = null;
+
+            } else {
+                throw new IncompatibleOsContextException(
+                        "Working addon: "+this.getAddonVersionReference().toString3()+
+                                " ---- classExpected: "+osContextClass.getName() + " --- classReceived: " + object.getClass().getName(),
+                        ""
+                );
+            }
+
+        } catch (final IllegalAccessException e) {
+
+            throw new CantAssignOsContextException(
+                    e,
+                    "Working addon: "+this.getAddonVersionReference().toString3()+ " +++++ Os Context to assign: "+ object.toString(),
                     "Error assigning references for the addon."
             );
         }

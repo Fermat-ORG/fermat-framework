@@ -3,6 +3,7 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.de
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -21,7 +22,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
  *
  * Created by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
-public class LocationManagerPlatformServicePluginRoot extends AbstractAddon {
+public class LocationManagerPlatformServiceAddonRoot extends AbstractAddon {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER       )
     private ErrorManager errorManager;
@@ -34,8 +35,15 @@ public class LocationManagerPlatformServicePluginRoot extends AbstractAddon {
 
     private LocationServiceMonitorAgent locationServiceMonitorAgent;
 
-    public LocationManagerPlatformServicePluginRoot() {
+
+    public LocationManagerPlatformServiceAddonRoot() {
         super(new AddonVersionReference(new Version()));
+    }
+
+    @Override
+    public FermatManager getManager() {
+        // TODO THE ADD-ON MUST RETURN SOMETHING....
+        return null;
     }
 
     /**

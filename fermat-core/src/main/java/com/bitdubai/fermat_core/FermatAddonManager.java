@@ -1,12 +1,14 @@
 package com.bitdubai.fermat_core;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignOsContextException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantPauseAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantResumeAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStopAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleOsContextException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.UnexpectedServiceStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
@@ -43,7 +45,8 @@ public final class FermatAddonManager {
 
             for (final AddonVersionReference avr : neededAddons) {
                 AbstractAddon reference = startAddonAndReferences(avr);
-                abstractAddon.assignAddonReference(reference);
+
+                abstractAddon.assignAddonReference(avr, reference.getManager());
             }
 
             startAddon(abstractAddon);
@@ -69,7 +72,8 @@ public final class FermatAddonManager {
 
                 for (final AddonVersionReference avr : neededAddons) {
                     AbstractAddon reference = startAddonAndReferences(avr);
-                    abstractAddon.assignAddonReference(reference);
+
+                    abstractAddon.assignAddonReference(avr, reference.getManager());
                 }
 
                 startAddon(abstractAddon);
@@ -104,21 +108,29 @@ public final class FermatAddonManager {
 
         try {
             if(abstractAddon.isDealsWithOsContext())
-                abstractAddon.setOsContext(systemContext.getOsContext());
+                abstractAddon.assignOsContext(systemContext.getOsContext());
 
             abstractAddon.start();
         } catch (com.bitdubai.fermat_api.CantStartPluginException e) {
 
             throw new CantStartAddonException(
                     e,
-                    abstractAddon.getAddonVersionReference().toString(),
+                    abstractAddon.getAddonVersionReference().toString3(),
                     "There was a captured problem during the addon start."
+            );
+        } catch(CantAssignOsContextException |
+                IncompatibleOsContextException e) {
+
+            throw new CantStartAddonException(
+                    e,
+                    abstractAddon.getAddonVersionReference().toString3(),
+                    "There was a problem trying to assign the os context to the addon."
             );
         } catch (Exception e) {
 
             throw new CantStartAddonException(
                     e,
-                    abstractAddon.getAddonVersionReference().toString(),
+                    abstractAddon.getAddonVersionReference().toString3(),
                     "Unhandled exception trying to start the addon."
             );
         }
