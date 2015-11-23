@@ -187,6 +187,13 @@ public abstract class AbstractAddon implements Addon, Service {
                 );
             }
 
+            if (fermatManager == null) {
+                throw new CantAssignReferenceException(
+                        "Addon receiving: " + this.addonVersionReference + " ---- Given addon is null.",
+                        "Please check the given addon."
+                );
+            }
+
             final Class<?> refManager = field.getType();
 
             if(refManager.isAssignableFrom(fermatManager.getClass())) {
