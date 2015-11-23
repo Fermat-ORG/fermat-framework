@@ -4,6 +4,7 @@
     android:id="@+id/row_view"
     android:layout_width="170dp"
     android:layout_height="wrap_content"
+    android:layout_margin="2dp"
     android:background="@color/white"
     android:orientation="vertical"
     android:padding="3dp">
@@ -38,6 +39,7 @@
     </RelativeLayout>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/asset_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
@@ -59,6 +61,7 @@
 
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/asset_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -66,11 +69,12 @@
         android:layout_marginStart="4dp"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="Ammount: 250"
+        android:text="Amount: 250"
         android:textColor="@color/white_amount"
         android:textSize="14sp" />
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/asset_bitcoins"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
