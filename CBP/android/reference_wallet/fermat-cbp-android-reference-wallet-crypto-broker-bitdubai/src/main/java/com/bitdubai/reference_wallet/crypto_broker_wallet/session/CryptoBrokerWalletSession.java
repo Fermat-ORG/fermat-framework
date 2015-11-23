@@ -3,7 +3,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.session;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
@@ -12,7 +12,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.preference_settings.Cr
 import java.util.HashMap;
 import java.util.Map;
 
-public class CryptoBrokerWalletSession extends AbstractFermatSession<InstalledWallet,CryptoBrokerWalletModuleManager,WalletResourcesProviderManager> implements WalletSession {
+public class CryptoBrokerWalletSession extends AbstractFermatSession<InstalledWallet, CryptoBrokerWalletModuleManager, WalletResourcesProviderManager> implements WalletSession {
 
     /**
      * SubApps type
@@ -48,14 +48,13 @@ public class CryptoBrokerWalletSession extends AbstractFermatSession<InstalledWa
      * @param moduleManager the module of this SubApp
      */
     public CryptoBrokerWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletResourcesProviderManager resourcesProviderManager, CryptoBrokerWalletModuleManager moduleManager) {
-        super(wallet.getWalletPublicKey(),wallet,errorManager,moduleManager,resourcesProviderManager);
+        super(wallet.getWalletPublicKey(), wallet, errorManager, moduleManager, resourcesProviderManager);
         this.wallet = wallet;
         data = new HashMap<>();
         this.resourcesProviderManager = resourcesProviderManager;
         this.errorManager = errorManager;
         this.moduleManager = moduleManager;
     }
-
 
 
     /**
@@ -106,6 +105,10 @@ public class CryptoBrokerWalletSession extends AbstractFermatSession<InstalledWa
         return moduleManager;
     }
 
+    public WalletResourcesProviderManager getResourcesProviderManager() {
+        return resourcesProviderManager;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,7 +117,6 @@ public class CryptoBrokerWalletSession extends AbstractFermatSession<InstalledWa
         CryptoBrokerWalletSession that = (CryptoBrokerWalletSession) o;
 
         return wallet == that.wallet;
-
     }
 
     @Override

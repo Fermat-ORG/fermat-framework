@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.customers.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -13,14 +14,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CustomerType;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.CryptoCustomerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.cbp_middleware.customer.exceptions.CantCreateCustomerRelationshipException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_middleware.customer.exceptions.CantDeleteCustomerRelationshipException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_middleware.customer.exceptions.CantListCustomersException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_middleware.customer.exceptions.CantModifyCustomerRelationshipException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_middleware.customer.interfaces.BrokerCustomerRelationship;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantCreateCustomerRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantDeleteCustomerRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantListCustomersException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantModifyCustomerRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.customer.interfaces.BrokerCustomerRelationship;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.customers.developer.bitdubai.version_1.exceptions.CantInitializeCustomersMiddlewareDaoException;
 
 import java.util.ArrayList;
