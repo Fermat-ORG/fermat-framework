@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -15,7 +16,7 @@ import javax.management.NotificationListener;
  * Created by Matias Furszyfer on 2015.08.18..
  */
 
-public interface NotificationManagerMiddleware {
+public interface NotificationManagerMiddleware extends FermatManager {
 
     void addIncomingExtraUserNotification(EventSource eventSource,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType);
 

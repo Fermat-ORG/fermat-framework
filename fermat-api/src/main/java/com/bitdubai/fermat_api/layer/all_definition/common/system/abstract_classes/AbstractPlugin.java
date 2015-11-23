@@ -216,10 +216,9 @@ public abstract class AbstractPlugin implements Plugin, Service {
         }
     }
 
-    public final void assignAddonReference(final AbstractAddon abstractAddon) throws CantAssignReferenceException   ,
-                                                                                     IncompatibleReferenceException {
-
-        final AddonVersionReference avr = abstractAddon.getAddonVersionReference();
+    public final void assignAddonReference(final AddonVersionReference avr          ,
+                                           final FermatManager         fermatManager) throws CantAssignReferenceException   ,
+            IncompatibleReferenceException {
 
         try {
 
@@ -227,23 +226,30 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
             if (field == null) {
                 throw new CantAssignReferenceException(
-                        "Plugin receiving: " + this.pluginVersionReference + " ---- Given addon: " + avr.toString3(),
-                        "The plugin doesn't need the given reference."
+                        "Plugin receiving: " + this.getPluginVersionReference() + " ---- Given addon: " + avr.toString(),
+                        "The Plugin doesn't need the given reference."
+                );
+            }
+
+            if (fermatManager == null) {
+                throw new CantAssignReferenceException(
+                        "Plugin receiving: " + this.pluginVersionReference + " ---- Given addon is null. "+ avr.toString(),
+                        "Please check the given addon."
                 );
             }
 
             final Class<?> refManager = field.getType();
 
-            if(refManager.isAssignableFrom(abstractAddon.getClass())) {
+            if(refManager.isAssignableFrom(fermatManager.getClass())) {
                 field.setAccessible(true);
-                field.set(this, refManager.cast(abstractAddon));
+                field.set(this, refManager.cast(fermatManager));
 
                 this.addonNeededReferences.remove(avr);
 
             } else {
                 throw new IncompatibleReferenceException(
-                        "Working plugin: "+this.getPluginVersionReference().toString3()+
-                        " ------------ classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),
+                        "Working Plugin: "+this.getPluginVersionReference().toString3()+
+                                " ---- classExpected: "+refManager.getName() + " --- classReceived: " + fermatManager.getClass().getName(),
                         ""
                 );
             }
@@ -252,8 +258,8 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
             throw new CantAssignReferenceException(
                     e,
-                    "Working plugin: "+this.getPluginVersionReference().toString3()+ " +++++ Reference to assign: "+ avr.toString3(),
-                    "Error assigning references for the plugin."
+                    "Working Plugin: "+this.getPluginVersionReference().toString3()+ " +++++ Reference to assign: "+ avr.toString(),
+                    "Error assigning references for the Plugin."
             );
         }
     }
@@ -313,6 +319,14 @@ public abstract class AbstractPlugin implements Plugin, Service {
                         "The plugin doesn't need the given reference."
                 );
             }
+
+            if (fermatManager == null) {
+                throw new CantAssignReferenceException(
+                        "Plugin receiving: " + this.pluginVersionReference + " ---- Given plugin is null. "+ pluginVersion.toString3(),
+                        "Please check the given plugin."
+                );
+            }
+
             final Class<?> refManager = field.getType();
 
             if(refManager.isAssignableFrom(fermatManager.getClass())) {
