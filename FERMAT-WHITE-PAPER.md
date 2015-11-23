@@ -36,7 +36,7 @@ By choosing a plug-in architecture for the Framework we make it possible for any
 
 OS dependent GUI components are built on top of the multi-layered plug-in structure to face the end user as what we call _niche-wallets_ or financial applications in general. Apps and wallets with similar functionality are wrapped into what we call _platforms_, each one introducing new _actors_ and plug-ins, to the ever increasing functionality of the whole system.
 
-A built-in _wallet-factory_ allows developers to reuse the highest level components and create niche-wallets or niche-financial-apps by combining existing functionality and adding their own code to the combo. A built-in _wallet-editor_ allows non-developers to reuse any of these niche-wallets to build new branded-wallets just by changing their look and feel. A built-in _p2p-wallet-store_ allows end users to choose which wallets or financial apps to install from the ever growing catalog.
+A built-in _wallet-factory_ allows developers to reuse the highest level components and create niche-wallets or niche-financial-apps by combining existing functionality and adding their own code to the combo. A built-in _wallet-editor_ allows non-developers to reuse any of these niche-wallets to build new branded-wallets just by changing their look and feel. A built-in _p2p-wallet-store_ allows end users to choose which wallets or financial apps to install from the ever growing catalogue.
 
 <br>
 ### Framework
