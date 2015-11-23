@@ -9,8 +9,10 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 
+import org.bitcoinj.core.AbstractBlockChain;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Block;
+import org.bitcoinj.core.BlockChainListener;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.FilteredBlock;
@@ -19,9 +21,13 @@ import org.bitcoinj.core.Message;
 import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerEventListener;
+import org.bitcoinj.core.ScriptException;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.VerificationException;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.core.WalletEventListener;
 import org.bitcoinj.script.Script;
@@ -30,7 +36,9 @@ import org.bitcoinj.script.ScriptOpCodes;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -39,7 +47,7 @@ import javax.annotation.Nullable;
 /**
  * Created by rodrigo on 10/4/15.
  */
-public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListener {
+public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListener, BlockChainListener {
     /**
      * Class variables
      */
@@ -69,7 +77,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
-        //System.out.println("*****CryptoNetwork Blockdownloaded. Pending blocks: " + blocksLeft);
+        System.out.println("*****CryptoNetwork Blockdownloaded. Pending blocks: " + blocksLeft);
         //System.out.println("*****CryptoNetwork " + filteredBlock.toString());
     }
 
@@ -136,6 +144,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
          */
         try {
             getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+                    getBlockHash(tx),
                     getTransactionCryptoStatus(tx),
                     tx.getConfidence().getDepthInBlocks(),
                     getOutgoingTransactionAddressTo(tx),
@@ -153,6 +162,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             try{
                 CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
                 getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+                        getBlockHash(tx),
                         getTransactionCryptoStatus(tx),
                         0,
                         errorAddress,
@@ -452,6 +462,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         if (isNewTransaction(tx.getHashAsString(), cryptoStatus)) {
             try {
                 getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                        getBlockHash(tx),
                         cryptoStatus,
                         tx.getConfidence().getDepthInBlocks(),
                         getIncomingTransactionAddressTo(wallet, tx),
@@ -469,6 +480,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 try {
                     CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
                     getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                            getBlockHash(tx),
                             getTransactionCryptoStatus(tx),
                             0,
                             errorAddress,
@@ -509,6 +521,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     private void saveMissingIncomingTransaction(Wallet wallet, Transaction tx, CryptoStatus missedCryptoStatus) throws CantExecuteDatabaseOperationException {
         getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                getBlockHash(tx),
                 missedCryptoStatus,
                 tx.getConfidence().getDepthInBlocks(),
                 getIncomingTransactionAddressTo(wallet, tx),
@@ -519,6 +532,22 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     }
 
     /**
+     * Gets the first block Hash in which this transaction appears in
+     * @param tx
+     * @return
+     */
+    private String getBlockHash(Transaction tx) {
+        for (Map.Entry<Sha256Hash, Integer> entry : tx.getAppearsInHashes().entrySet()){
+            Sha256Hash hash = entry.getKey();
+            return hash.toString();
+        }
+        /**
+         * will return null if the transaction is not in a block
+         */
+        return null;
+    }
+
+    /**
      * saves into the database any missed transaction with the corresponding CryptoStatus.
      * @param wallet
      * @param tx
@@ -526,6 +555,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     private void saveMissingOutgoingTransaction(Wallet wallet, Transaction tx, CryptoStatus missedCryptoStatus) throws CantExecuteDatabaseOperationException {
         getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+                getBlockHash(tx),
                 missedCryptoStatus,
                 tx.getConfidence().getDepthInBlocks(),
                 getIncomingTransactionAddressTo(wallet, tx),
@@ -637,6 +667,37 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         }
 
 
+    }
+
+
+    /**
+     * Blockchain events
+     * @param block
+     * @throws VerificationException
+     */
+    @Override
+    public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
+
+    }
+
+    @Override
+    public void reorganize(StoredBlock splitPoint, List<StoredBlock> oldBlocks, List<StoredBlock> newBlocks) throws VerificationException {
+
+    }
+
+    @Override
+    public boolean isTransactionRelevant(Transaction tx) throws ScriptException {
+        return true;
+    }
+
+    @Override
+    public void receiveFromBlock(Transaction tx, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
+        System.out.println("received from block " + tx.toString());
+    }
+
+    @Override
+    public boolean notifyTransactionIsInBlock(Sha256Hash txHash, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
+        return true;
     }
 }
 

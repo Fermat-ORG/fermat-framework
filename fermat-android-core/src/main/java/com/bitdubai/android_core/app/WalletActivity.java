@@ -215,48 +215,17 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         if (fragment != null) frgBackType = fragment.getBack();
 
         if (frgBackType != null) {
-
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = walletRuntimeManager.getLastWallet().getLastActivity().getFragment(fragment.getBack());
-
-            //loadFragment(frgBackType);
             changeWalletFragment(walletNavigationStructure.getWalletCategory(), walletNavigationStructure.getWalletType(), walletNavigationStructure.getPublicKey(), frgBackType);
-
-
         } else if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey()!=null) {
             changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
         } else {
-//            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
-//            getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
-//            resetThisActivity();
-//            Intent intent = new Intent(this, SubAppActivity.class);
-//            intent.putExtra(DEVELOP_MODE, developMode);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            finish();
-//            startActivity(intent);
-//            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             Intent intent = new Intent(this, DesktopActivity.class);
             if(developMode==true) intent.putExtra("flag",true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             startActivity(intent);
-
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
-
-
-//        if (getWalletRuntimeManager().getLastWallet().getLastActivity().getType()!= Activities.CWP_WALLET_MANAGER_MAIN){
-//            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
-//            getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
-//            resetThisActivity();
-//
-//            // TODO : Esto debe ir hacia la subAppActivity en caso de querer ver el home, en un futuro cuando se quiera ver la lista de walletAbiertas va ser distinto
-//            Intent intent = new Intent(this, SubAppActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-//            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//
-//        }else{
-//            super.onBackPressed();
-//        }
     }
 
 
@@ -272,6 +241,8 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             Activity activity = wallet.getLastActivity();
 
             loadBasicUI(activity);
+
+            hideBottonIcons();
 
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
@@ -290,6 +261,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     private void setOneFragmentInScreen() {
+
         WalletNavigationStructure walletRuntime = getWalletRuntimeManager().getLastWallet();
         String walletPublicKey = walletRuntime.getPublicKey();
         String walletCategory = walletRuntime.getWalletCategory();

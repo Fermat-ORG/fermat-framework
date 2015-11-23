@@ -17,6 +17,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 
@@ -27,7 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.Su
  * @author Francisco Vasquez
  * @version 1.1
  */
-public abstract class FermatFragment extends Fragment implements FermatFragments {
+public abstract class FermatFragment extends AbstractFermatFragment implements FermatFragments {
 
     /**
      * FLAGS
@@ -157,7 +159,15 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
     }
 
     protected void changeApp(Engine emgine,Object[] objects){
-        getFermatScreenSwapper().connectWithOtherApp(emgine,objects);
+        getFermatScreenSwapper().connectWithOtherApp(emgine, objects);
+    }
+
+    protected void selectSubApp(InstalledSubApp installedSubApp){
+        getFermatScreenSwapper().selectSubApp(installedSubApp);
+    }
+
+    protected void selectWallet(InstalledWallet installedWallet){
+        getFermatScreenSwapper().selectWallet(installedWallet);
     }
 
     protected FermatScreenSwapper getFermatScreenSwapper(){

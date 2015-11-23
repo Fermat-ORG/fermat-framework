@@ -20,6 +20,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMainten
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.HierarchyAccount;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
 import org.bitcoinj.core.ECKey;
 
@@ -569,6 +570,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
             if (i >= currentGeneratedKeys){
                 DatabaseTableRecord record = databaseTable.getEmptyRecord();
                 record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, accountId);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME, i);
                 record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, key.getPublicKeyAsHex());
                 transaction.addRecordToInsert(databaseTable, record);
                 i++;
@@ -591,7 +593,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
      * @param ecKey
      * @param cryptoAddress
      */
-    public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws CantExecuteDatabaseOperationException{
+    public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws CantExecuteDatabaseOperationException, UnexpectedResultReturnedFromDatabaseException {
         /**
          * If we are not allowed to save detailed information then we will exit
          */
@@ -606,6 +608,16 @@ public class AssetsOverBitcoinCryptoVaultDao {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
             throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error loading into memory table " + databaseTable.getTableName(), null);
+        }
+
+        if (databaseTable.getRecords().size() == 0){
+            StringBuilder output = new StringBuilder("The key " + ecKey.toString());
+            output.append(System.lineSeparator());
+            output.append("which generated the address " + cryptoAddress.getAddress());
+            output.append(System.lineSeparator());
+            output.append("is not a key derived from the vault.");
+
+            throw new UnexpectedResultReturnedFromDatabaseException(null, output.toString(), "Vault derivation miss match");
         }
 
         DatabaseTableRecord record = databaseTable.getRecords().get(0);

@@ -194,4 +194,17 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, VaultType vaultType) {
         return null;
     }
+
+    /**
+     * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
+     * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
+     * @param txHash the Hash of the transaction we are going to look for.
+     * @param blockHash the Hash of block where this transaction was stored..
+     * @return a CryptoTransaction with the information of the transaction.
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
+        return  bitcoinCryptoNetworkManager.getCryptoTransactionFromBlockChain(txHash, blockHash);
+    }
 }
