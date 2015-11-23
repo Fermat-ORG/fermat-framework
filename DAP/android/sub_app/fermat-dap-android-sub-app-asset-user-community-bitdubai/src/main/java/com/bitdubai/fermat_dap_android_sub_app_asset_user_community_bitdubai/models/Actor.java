@@ -17,7 +17,7 @@ public class Actor extends AssetUserActorRecord
 
     public Actor(AssetUserActorRecord record) {
         super(
-                record.getPublicKey(),
+                record.getActorPublicKey(),
                 record.getName(),
                 record.getAge(),
                 record.getGenders(),
