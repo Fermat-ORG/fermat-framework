@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Inc
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.UnexpectedServiceStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public final class FermatAddonManager {
         this.systemContext   = systemContext  ;
     }
 
-    public final AbstractAddon startAddonAndReferences(final AddonVersionReference addonVersionReference) throws CantStartAddonException  ,
+    public final FermatManager startAddonAndReferences(final AddonVersionReference addonVersionReference) throws CantStartAddonException  ,
                                                                                                                  VersionNotFoundException {
 
         try {
@@ -39,19 +40,19 @@ public final class FermatAddonManager {
             final AbstractAddon abstractAddon = systemContext.getAddonVersion(addonVersionReference);
 
             if (abstractAddon.isStarted())
-                return abstractAddon;
+                return abstractAddon.getManager();
 
             final List<AddonVersionReference> neededAddons = abstractAddon.getNeededAddons();
 
             for (final AddonVersionReference avr : neededAddons) {
-                AbstractAddon reference = startAddonAndReferences(avr);
+                FermatManager reference = startAddonAndReferences(avr);
 
-                abstractAddon.assignAddonReference(avr, reference.getManager());
+                abstractAddon.assignAddonReference(avr, reference);
             }
 
             startAddon(abstractAddon);
 
-            return abstractAddon;
+            return abstractAddon.getManager();
         } catch (CantListNeededReferencesException e) {
 
             throw new CantStartAddonException(e, addonVersionReference.toString3(), "Error listing references for the addon.");
@@ -71,9 +72,9 @@ public final class FermatAddonManager {
                 final List<AddonVersionReference> neededAddons = abstractAddon.getNeededAddons();
 
                 for (final AddonVersionReference avr : neededAddons) {
-                    AbstractAddon reference = startAddonAndReferences(avr);
+                    FermatManager reference = startAddonAndReferences(avr);
 
-                    abstractAddon.assignAddonReference(avr, reference.getManager());
+                    abstractAddon.assignAddonReference(avr, reference);
                 }
 
                 startAddon(abstractAddon);

@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Cyc
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.UnexpectedServiceStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -91,7 +92,7 @@ public final class FermatPluginManager {
         }
     }
 
-    public final AbstractPlugin startPluginAndReferences(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
+    public final FermatManager startPluginAndReferences(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
                                                                                                                      VersionNotFoundException {
 
         try {
@@ -100,14 +101,18 @@ public final class FermatPluginManager {
 
             final AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
 
-            if (abstractPlugin.isStarted())
-                return abstractPlugin;
+            if (abstractPlugin.isStarted()) {
+                if (abstractPlugin.getManager() != null)
+                    return abstractPlugin.getManager();
+                else
+                    return (FermatManager) abstractPlugin;
+            }
 
             final List<AddonVersionReference> neededAddons = abstractPlugin.getNeededAddons();
 
             for (final AddonVersionReference avr : neededAddons) {
-                AbstractAddon reference = addonManager.startAddonAndReferences(avr);
-                abstractPlugin.assignAddonReference(avr, reference.getManager());
+                FermatManager reference = addonManager.startAddonAndReferences(avr);
+                abstractPlugin.assignAddonReference(avr, reference);
             }
 
             final List<PluginVersionReference> neededPlugins = abstractPlugin.getNeededPlugins();
@@ -130,7 +135,8 @@ public final class FermatPluginManager {
 
             startPlugin(abstractPlugin);
 
-            return abstractPlugin;
+            return (FermatManager) abstractPlugin;
+
         } catch (CantListNeededReferencesException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error listing references for the plugin.");
@@ -167,8 +173,8 @@ public final class FermatPluginManager {
                 final List<AddonVersionReference> neededAddons = abstractPlugin.getNeededAddons();
 
                 for (final AddonVersionReference avr : neededAddons) {
-                    AbstractAddon reference = addonManager.startAddonAndReferences(avr);
-                    abstractPlugin.assignAddonReference(avr, reference.getManager());
+                    FermatManager reference = addonManager.startAddonAndReferences(avr);
+                    abstractPlugin.assignAddonReference(avr, reference);
                 }
 
                 final List<PluginVersionReference> neededPlugins = abstractPlugin.getNeededPlugins();
