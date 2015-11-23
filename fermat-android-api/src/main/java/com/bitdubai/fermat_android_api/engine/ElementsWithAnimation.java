@@ -7,5 +7,5 @@ import android.app.Fragment;
  */
 public interface ElementsWithAnimation{
 
-    public abstract void startCollapseAnimation();
+    public abstract void startCollapseAnimation(int verticalOffset);
 }

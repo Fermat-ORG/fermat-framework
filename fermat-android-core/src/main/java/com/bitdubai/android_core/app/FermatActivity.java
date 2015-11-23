@@ -709,7 +709,7 @@ public abstract class FermatActivity extends AppCompatActivity
                         }
                         if (scrollRange + verticalOffset == 0) {
                             collapsingToolbarLayout.setTitle("");
-                            elementsWithAnimation.startCollapseAnimation();
+                            elementsWithAnimation.startCollapseAnimation(verticalOffset);
                             isShow = true;
                         } else if (isShow) {
                             collapsingToolbarLayout.setTitle("");

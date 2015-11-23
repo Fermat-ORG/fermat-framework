@@ -446,7 +446,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
     @Override
-    public void startCollapseAnimation() {
+    public void startCollapseAnimation(int verticalOffset) {
         moveViewToScreenCenter(emptyListViewsContainer);
     }
 
@@ -478,7 +478,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //            aux.getLocationOnScreen(toPos);
 
 
-            TranslateAnimation anim = new TranslateAnimation(0, xDest - originalPos[0], 0, centreY-70);
+            TranslateAnimation anim = new TranslateAnimation(0, xDest - originalPos[0], 0, centreY-200);
             anim.setDuration(1000);
             anim.setFillAfter(true);
             view.startAnimation(anim);
