@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.in
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,14 +12,22 @@ import java.util.List;
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/11/2015.
  */
-public interface CryptoBrokerSearch {
+public abstract class CryptoBrokerSearch {
+
+    protected List<String> aliasList;
 
     /**
-     * Through the method <code>setAlias</code> we can set the alias of the broker to search.
+     * Through the method <code>addAlias</code> we can add alias of the broker to search.
      *
      * @param alias of the broker.
      */
-    void setAlias(final String alias);
+    public final void addAlias(final String alias) {
+
+        if(this.aliasList == null)
+            this.aliasList = new ArrayList<>();
+
+        this.aliasList.add(alias);
+    }
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
@@ -29,7 +38,7 @@ public interface CryptoBrokerSearch {
      *
      * @throws CantListCryptoBrokersException  if something goes wrong.
      */
-    List<CryptoBrokerConnectionInformation> getResult() throws CantListCryptoBrokersException;
+    public abstract List<CryptoBrokerConnectionInformation> getResult() throws CantListCryptoBrokersException;
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
@@ -42,10 +51,13 @@ public interface CryptoBrokerSearch {
      *
      * @throws CantListCryptoBrokersException  if something goes wrong.
      */
-    List<CryptoBrokerConnectionInformation> getResult(final Integer max) throws CantListCryptoBrokersException;
+    public abstract List<CryptoBrokerConnectionInformation> getResult(final Integer max) throws CantListCryptoBrokersException;
 
     /**
      * Through the method <code>resetFilters</code> you can reset the filters set,
      */
-    void resetFilters();
+    public final void resetFilters() {
+
+        this.aliasList = null;
+    }
 }
