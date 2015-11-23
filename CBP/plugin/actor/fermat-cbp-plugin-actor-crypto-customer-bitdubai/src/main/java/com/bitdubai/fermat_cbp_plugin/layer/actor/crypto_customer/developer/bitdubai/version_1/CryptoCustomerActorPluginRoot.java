@@ -89,16 +89,13 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
         String actorPublicKey = keyPair.getPublicKey();
         String actorPrivateKey = keyPair.getPrivateKey();
         try {
-            persistPrivateKey(actorPrivateKey, actorPublicKey);
-            databaseDao.createRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey, actorName, actorPhoto, ConnectionState.CONNECTED);
+            return databaseDao.createRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey, actorPrivateKey, actorName, actorPhoto, ConnectionState.CONNECTED);
         } catch (CantRegisterCryptoCustomerActorException e){
-            throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
-        } catch (CantPersistPrivateKeyException e){
             throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
         } catch (Exception e){
             throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
         }
-        return new CryptoCustomerActorRecordImpl(actorPublicKey, actorPrivateKey, actorName);
+//        return new CryptoCustomerActorRecordImpl(actorPublicKey, actorPrivateKey, actorName);
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
@@ -30,6 +31,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantClosePurchaseNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateCryptoCustomerActorException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreatePurchaseContractException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreatePurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantDeleteCustomerIdentiyWalletRelationshipException;
@@ -45,6 +47,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.CryptoCustomerActorPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetCryptoCustomerActorProfileImageException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantUpdateConnectionRegisterCryptoCustomerActorException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorRecordImpl;
@@ -100,7 +103,7 @@ public class CryptoCustomerActorDatabaseDao {
 
     //### ACTOR ###
     //CREATE ACTOR
-    public void createRegisterCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey, String actorName, byte[] actorPhoto, ConnectionState connectionState) throws CantRegisterCryptoCustomerActorException{
+    public CryptoCustomerActorRecord createRegisterCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey, String actorPrivateKey, String actorName, byte[] actorPhoto, ConnectionState connectionState) throws CantRegisterCryptoCustomerActorException{
         try {
             UUID actorId = UUID.randomUUID();
             Date time = new Date();
@@ -122,6 +125,8 @@ public class CryptoCustomerActorDatabaseDao {
 
                 table.insertRecord(record);
 
+                persistPrivateKey(actorPrivateKey, actorPublicKey);
+
                 if(actorPhoto!=null) persistNewCryptoCustomerActorProfileImage(actorPublicKey, actorPhoto);
             }
 
@@ -129,17 +134,24 @@ public class CryptoCustomerActorDatabaseDao {
             throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, insert database problems.");
         } catch (CantUpdateConnectionRegisterCryptoCustomerActorException e){
             throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, insert database problems.");
+        } catch (CantPersistPrivateKeyException e){
+            throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, insert database problems.");
+        } catch (CantPersistProfileImageException e){
+            throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, insert database problems.");
         } catch (Exception e) {
             throw new CantRegisterCryptoCustomerActorException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, unknown failure.");
         }
+
+        return new CryptoCustomerActorRecordImpl(actorPublicKey, actorPrivateKey, actorName);
     }
 
     //GET ACTOR.
     public CryptoCustomerActorRecord getRegisterCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey) throws CantRegisterCryptoCustomerActorException {
+        CryptoCustomerActorRecord getActor = null;
+
         try {
             DatabaseTable table;
             List<DatabaseTableRecord> record;
-            CryptoCustomerActorRecord getActor = null;
             table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TABLE_NAME);
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if Actor table exists", "Crypto Customer Actor", "");
@@ -162,22 +174,25 @@ public class CryptoCustomerActorDatabaseDao {
                 String actorName        = records.getStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_NAME_ACTOR_COLUMN_NAME);
                 getActor = new CryptoCustomerActorRecordImpl(actoyPublicKey,"",actorName, image);
             }
-            return getActor;
+
         } catch (CantLoadTableToMemoryException em) {
             throw new CantRegisterCryptoCustomerActorException(em.getMessage(), em, "Crypto Customer Actor It Already Exists", "Cant load " + CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCryptoCustomerActorException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor It Already Exists", "unknown failure.");
         }
+
+        return getActor;
     }
 
     //### RELATIONSHIP ###
     //CREATE RELATIONSHIP
     public CustomerIdentityWalletRelationship createRegisterCustomerIdentityWalletRelationship(String walletPublicKey, String identityPublicKey) throws CantRegisterCryptoCustomerIdentityWalletRelationshipException {
+        UUID relationshipId = UUID.randomUUID();
         try {
             if (relationshipExists(walletPublicKey, identityPublicKey))
                 throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException("Cant create new Customer Identity Wallet Relationship, It exists.", "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, Relationship exists.");
 
-            UUID relationshipId = UUID.randomUUID();
+
             DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
             record.setUUIDValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME, relationshipId);
@@ -185,12 +200,13 @@ public class CryptoCustomerActorDatabaseDao {
             record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_IDENTITY_COLUMN_NAME, identityPublicKey);
             table.insertRecord(record);
 
-            return new CryptoCustomerIdentityWalletRelationshipImpl(relationshipId, walletPublicKey, identityPublicKey);
         } catch (CantInsertRecordException e) {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, insert database problems.");
         } catch (Exception e) {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, unknown failure.");
         }
+
+        return new CryptoCustomerIdentityWalletRelationshipImpl(relationshipId, walletPublicKey, identityPublicKey);
     }
 
     //UPDATE RELATIONSHIP
@@ -205,13 +221,14 @@ public class CryptoCustomerActorDatabaseDao {
             record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_WALLET_COLUMN_NAME, walletPublicKey);
             record.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_IDENTITY_COLUMN_NAME, identityPublicKey);
             table.updateRecord(record);
-
-            return new CryptoCustomerIdentityWalletRelationshipImpl(relationshipId, walletPublicKey, identityPublicKey);
+            
         } catch (CantUpdateRecordException e) {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(e.getMessage(), e, "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant update Customer Identity Wallet Relationship, update database problems.");
         } catch (Exception e) {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant update Customer Identity Wallet Relationship, unknown failure.");
         }
+
+        return new CryptoCustomerIdentityWalletRelationshipImpl(relationshipId, walletPublicKey, identityPublicKey);
     }
 
     //DELETE RELATIONSHIP
@@ -234,10 +251,11 @@ public class CryptoCustomerActorDatabaseDao {
 
     //GET RELATIONSHIP COLLECTION
     public Collection<CustomerIdentityWalletRelationship> getAllRegisterCustomerIdentityWalletRelationships() throws CantRegisterCryptoCustomerIdentityWalletRelationshipException {
+        Collection<CustomerIdentityWalletRelationship> getCollections = new ArrayList<CustomerIdentityWalletRelationship>();
+
         try {
             DatabaseTable table;
             List<DatabaseTableRecord> record;
-            Collection<CustomerIdentityWalletRelationship> getCollections = new ArrayList<CustomerIdentityWalletRelationship>();
 
             table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
             if (table == null) {
@@ -251,20 +269,22 @@ public class CryptoCustomerActorDatabaseDao {
                 getCollections.add(getCustomerIdentityWalletRelationshipFromRecord(records));
             }
 
-            return getCollections;
         } catch (CantLoadTableToMemoryException em) {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(em.getMessage(), em, "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "Cant load " + CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "unknown failure.");
         }
+
+        return getCollections;
     }
 
     //GET RELATIONSHIP ID
     public CustomerIdentityWalletRelationship getAllRegisterCustomerIdentityWalletRelationships(UUID relationshipId) throws CantRegisterCryptoCustomerIdentityWalletRelationshipException {
+        CustomerIdentityWalletRelationship getRelationship = null;
+
         try {
             DatabaseTable table;
             List<DatabaseTableRecord> record;
-            CustomerIdentityWalletRelationship getRelationship = null;
             table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if relationship exists", "Crypto Customer Actor", "");
@@ -279,20 +299,22 @@ public class CryptoCustomerActorDatabaseDao {
                 getRelationship = getCustomerIdentityWalletRelationshipFromRecord(records);
             }
 
-            return getRelationship;
         } catch (CantLoadTableToMemoryException em) {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(em.getMessage(), em, "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "Cant load " + CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "unknown failure.");
         }
+
+        return getRelationship;
     }
 
     //GET RELATIONSHIP IDENTITY
     public CustomerIdentityWalletRelationship getAllRegisterCustomerIdentityWalletRelationshipsByIdentity(String identityPublicKey) throws CantRegisterCryptoCustomerIdentityWalletRelationshipException {
+        CustomerIdentityWalletRelationship getRelationship = null;
+
         try {
             DatabaseTable table;
             List<DatabaseTableRecord> record;
-            CustomerIdentityWalletRelationship getRelationship = null;
             table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if relationship exists", "Crypto Customer Actor", "");
@@ -307,20 +329,22 @@ public class CryptoCustomerActorDatabaseDao {
                 getRelationship = getCustomerIdentityWalletRelationshipFromRecord(records);
             }
 
-            return getRelationship;
         } catch (CantLoadTableToMemoryException em) {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(em.getMessage(), em, "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "Cant load " + CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "unknown failure.");
         }
+
+        return getRelationship;
     }
 
     //GET RELATIONSHIP WALLET
     public CustomerIdentityWalletRelationship getAllRegisterCustomerIdentityWalletRelationshipsByWallet(String walletPublicKey) throws CantRegisterCryptoCustomerIdentityWalletRelationshipException {
+        CustomerIdentityWalletRelationship getRelationship = null;
+
         try {
             DatabaseTable table;
             List<DatabaseTableRecord> record;
-            CustomerIdentityWalletRelationship getRelationship = null;
             table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if relationship exists", "Crypto Customer Actor", "");
@@ -335,12 +359,13 @@ public class CryptoCustomerActorDatabaseDao {
                 getRelationship = getCustomerIdentityWalletRelationshipFromRecord(records);
             }
 
-            return getRelationship;
         } catch (CantLoadTableToMemoryException em) {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(em.getMessage(), em, "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "Cant load " + CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor Identity Wallet Relationship It Already Exists", "unknown failure.");
         }
+
+        return getRelationship;
     }
 
     //OTHERS
@@ -415,6 +440,24 @@ public class CryptoCustomerActorDatabaseDao {
             throw new CantRegisterCryptoCustomerActorException (em.getMessage(), em, "Crypto Customer Actor It Already Exists", "Cant load " + CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCryptoCustomerActorException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor It Already Exists", "unknown failure.");
+        }
+    }
+
+    private void persistPrivateKey(String privateKey, String publicKey) throws CantPersistPrivateKeyException {
+        try {
+            PluginTextFile file = this.pluginFileSystem.createTextFile(
+                    pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName() + "/" + CryptoCustomerActorPluginRoot.ACTOR_CRYPTO_CUSTOMER_PRIVATE_KEYS_DIRECTORY_NAME,
+                    publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+            file.setContent(privateKey);
+            file.persistToMedia();
+        } catch (CantPersistFileException | CantCreateFileException e) {
+            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, e, "Error creating or persisting file.", null);
+        } catch (Exception e) {
+            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
         }
     }
 
