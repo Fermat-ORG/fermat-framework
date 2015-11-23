@@ -1193,7 +1193,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                                final CryptoAddress         cryptoAddress    ,
                                                final String                description      ,
                                                final long                  amount           ,
-                                               final BlockchainNetworkType networkType      ) throws CantSendCryptoPaymentRequestException {
+                                               final BlockchainNetworkType networkType      ,
+                                               final ReferenceWallet       referenceWallet) throws CantSendCryptoPaymentRequestException {
 
         try {
 
@@ -1206,7 +1207,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                     cryptoAddress,
                     description,
                     amount,
-                    networkType
+                    networkType,
+                    referenceWallet
             );
         } catch (CantGenerateCryptoPaymentRequestException e) {
 

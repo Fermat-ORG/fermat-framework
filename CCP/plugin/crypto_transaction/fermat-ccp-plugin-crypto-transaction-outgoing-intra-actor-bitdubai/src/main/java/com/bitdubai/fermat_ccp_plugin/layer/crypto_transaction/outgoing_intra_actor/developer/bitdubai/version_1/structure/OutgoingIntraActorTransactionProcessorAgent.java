@@ -220,13 +220,31 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         transaction.setTransactionHash(hash);
                         dao.setToSTCV(transaction);
 
-                        this.cryptoTransmissionManager.sendCrypto(transaction.getTransactionId(),
-                                transaction.getAddressTo().getCryptoCurrency(),
-                                transaction.getAmount(),
-                                transaction.getActorFromPublicKey(),
-                                transaction.getActorToPublicKey(),
-                                transaction.getTransactionHash(),
-                                transaction.getMemo());
+                        //check if a request payment accept
+                        if(transaction.getRequestId() == null)
+                        {
+                            this.cryptoTransmissionManager.sendCrypto(transaction.getTransactionId(),
+                                    transaction.getAddressTo().getCryptoCurrency(),
+                                    transaction.getAmount(),
+                                    transaction.getActorFromPublicKey(),
+                                    transaction.getActorToPublicKey(),
+                                    transaction.getTransactionHash(),
+                                    transaction.getMemo());
+                        }
+                        else
+                        {
+                            this.cryptoTransmissionManager.acceptCryptoRequest(transaction.getTransactionId(),
+                                    transaction.getTransactionId(),
+                                    transaction.getAddressTo().getCryptoCurrency(),
+                                    transaction.getAmount(),
+                                    transaction.getActorFromPublicKey(),
+                                    transaction.getActorToPublicKey(),
+                                    transaction.getTransactionHash(),
+                                    transaction.getMemo());
+                        }
+
+
+
 
                     } catch (InsufficientCryptoFundsException e) {
                         // TODO: Raise informative event

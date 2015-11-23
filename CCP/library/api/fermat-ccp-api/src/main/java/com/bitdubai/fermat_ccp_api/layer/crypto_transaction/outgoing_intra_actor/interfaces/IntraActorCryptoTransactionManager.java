@@ -38,7 +38,8 @@ public interface IntraActorCryptoTransactionManager extends FermatManager {
                                  String senderPublicKey,
                                  String receptorPublicKey,
                                  Actors senderActorType,
-                                 Actors receptorActorType) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
+                                 Actors receptorActorType,
+                                 ReferenceWallet referenceWallet) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
             com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 
     /**
