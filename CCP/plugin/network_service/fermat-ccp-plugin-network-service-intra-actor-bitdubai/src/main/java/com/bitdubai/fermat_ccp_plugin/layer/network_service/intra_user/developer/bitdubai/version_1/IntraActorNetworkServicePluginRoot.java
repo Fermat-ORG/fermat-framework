@@ -103,7 +103,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1071,35 +1073,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     null
             );                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
+           List<PlatformComponentProfile> list = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
 
-            List<PlatformComponentProfile> list = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+           for (PlatformComponentProfile platformComponentProfile : list) {
 
-            for (PlatformComponentProfile platformComponentProfile : list) {
-
-                JsonObject jsonObject = new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
-                //Se desencripta la imagen para luego ser agregada a la lista.
-                String encoded = "";
-
-                try {
-                    encoded = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString();
-                }catch (Exception e){
-                    encoded = "";
-                    e.printStackTrace();
-                }
-                byte[] image = null;
-                try {
-                    image = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
-                } catch (Exception e) {
-                    image = null;
-                }
-                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), image, platformComponentProfile.getAlias()));
+                byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
+                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias()));
             }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
         }
-
 
         return lstIntraUser;
     }
@@ -1153,10 +1138,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
 
             ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, NotificationDescriptor.ACCEPTED, ActorProtocolState.DONE);
-
-//            actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
-//
-//            actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
             actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
@@ -1290,51 +1271,42 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         //TODO: deberia cambiaresto para que venga el tipo de actor a registrar
 
-
         CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
-
 
         for (Actor actor : actors) {
 
-
-
-        /*
-         * Construct  profile and register
-         */
-
-            //build jsonObject Photo
-            JsonObject jsonObject = new JsonObject();
-            //Se encripta la imagen para luego ser agregada al json.
-            String encodedImage = null;
             try {
-                encodedImage = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-            jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE, encodedImage);
-            // jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE,actor.getPhoto().toString());
-            PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
-                    (actor.getName().toLowerCase()),
-                    (actor.getName().toLowerCase() + "_" + this.getName()),
-                    NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
-                    jsonObject.toString());
+                /*
+                 * Construct  profile and register
+                 */
+                String imageString = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);
+                //System.out.println("imageString = "+imageString);
+
+                PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
+                                                                                                                                            (actor.getName().toLowerCase()),
+                                                                                                                                            (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
+                                                                                                                                            NetworkServiceType.UNDEFINED,
+                                                                                                                                            PlatformComponentType.ACTOR_INTRA_USER,
+                                                                                                                                            imageString);
 
 
-            if (!actorsToRegisterCache.contains(platformComponentProfile)) {
-                actorsToRegisterCache.add(platformComponentProfile);
+               /* for (int i = 0; i < 35; i++) {
+                    communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
+                }*/
 
-                if (register) {
-                    try {
+
+                if (!actorsToRegisterCache.contains(platformComponentProfile)) {
+                    actorsToRegisterCache.add(platformComponentProfile);
+
+                    if (register) {
                         communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
-
-                    } catch (CantRegisterComponentException e) {
-                        e.printStackTrace();
                     }
                 }
-            }
 
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
 
         }
     }

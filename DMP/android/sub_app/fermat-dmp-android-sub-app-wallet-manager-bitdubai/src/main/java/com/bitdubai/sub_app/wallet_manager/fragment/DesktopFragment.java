@@ -145,12 +145,12 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
             rootView = inflater.inflate(R.layout.desktop_main, container, false);
             /* adapt the image to the size of the display */
-            Display display = getActivity().getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-                    getResources(), R.drawable.bg_xxhpdi),size.x,size.y,true);
-            getActivity().getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(), bmp));
+//            Display display = getActivity().getWindowManager().getDefaultDisplay();
+//            Point size = new Point();
+//            display.getSize(size);
+//            Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+//                    getResources(), R.drawable.bg_xxhpdi),size.x,size.y,true);
+           // getActivity().getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(), bmp));
 
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);

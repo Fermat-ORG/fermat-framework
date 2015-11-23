@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -12,7 +13,7 @@ import java.util.UUID;
  *
  * @author Ezequiel Postan
  */
-public interface IntraActorCryptoTransactionManager {
+public interface IntraActorCryptoTransactionManager extends FermatManager {
 
     /**
      * The method <code>payCryptoRequest</code> sends the payment of a request.

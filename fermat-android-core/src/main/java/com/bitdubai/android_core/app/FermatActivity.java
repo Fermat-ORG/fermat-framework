@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -11,6 +12,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -35,6 +37,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,7 +62,8 @@ import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterW
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory;
 import com.bitdubai.fermat.R;
-import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
+import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
+import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
@@ -127,9 +131,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
-import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -151,7 +153,7 @@ public abstract class FermatActivity extends AppCompatActivity
         implements
         WizardConfiguration,
         FermatNotifications,
-        PaintActivtyFeactures,
+        PaintActivityFeatures,
         Observer,
         FermatNotificationListener,
         NavigationView.OnNavigationItemSelectedListener,
@@ -203,6 +205,7 @@ public abstract class FermatActivity extends AppCompatActivity
     private CoordinatorLayout coordinatorLayout;
     private boolean flag=false;
 
+    private ElementsWithAnimation elementsWithAnimation;
 
     /**
      * Called when the activity is first created
@@ -592,6 +595,12 @@ public abstract class FermatActivity extends AppCompatActivity
             pagertabs.setAdapter(adapter);
         }
 
+        if(tabStrip.isHasIcon()){
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                byte[] image = tabStrip.getTabs().get(i).getIcon();
+                tabLayout.getTabAt(i).setIcon(new BitmapDrawable(getResources(),BitmapFactory.decodeByteArray(image,0, image.length)));
+            }
+        }
 
         //pagertabs.setCurrentItem();
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
@@ -700,6 +709,7 @@ public abstract class FermatActivity extends AppCompatActivity
                         }
                         if (scrollRange + verticalOffset == 0) {
                             collapsingToolbarLayout.setTitle("");
+                            elementsWithAnimation.startCollapseAnimation();
                             isShow = true;
                         } else if (isShow) {
                             collapsingToolbarLayout.setTitle("");
@@ -948,6 +958,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     window.setStatusBarColor(Color.TRANSPARENT);
 
 
+
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -1156,8 +1167,22 @@ public abstract class FermatActivity extends AppCompatActivity
 
             if (pager.getBackground() == null) {
                 //Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
-                getWindow().setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
+                //getWindow().setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
                 //pager.setBackground(d);
+                //getWindow().addFlags(WindowManager.LayoutParams.);
+                if(Build.VERSION.SDK_INT>20) {
+                    getWindow().setStatusBarColor(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    getWindow().setStatusBarColor(Color.TRANSPARENT);
+                }
+                final WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+                final Drawable wallpaperDrawable = wallpaperManager.getDrawable();
+
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                Bitmap bmp = Bitmap.createScaledBitmap(((BitmapDrawable)wallpaperDrawable).getBitmap(), size.x, size.y, true);
+
+                getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(),bmp));
             }
 
 
@@ -2019,6 +2044,10 @@ public abstract class FermatActivity extends AppCompatActivity
         return mToolbar;
     }
 
+    public void addCollapseAnimation(ElementsWithAnimation elementsWithAnimation){
+        this.elementsWithAnimation = elementsWithAnimation;
+    }
+
     /**
      * Abstract methods
      */
@@ -2033,6 +2062,9 @@ public abstract class FermatActivity extends AppCompatActivity
      * @param position
      */
     protected abstract void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position);
+
+
+
 
     public void setScreen(Activity activity) {
         try {

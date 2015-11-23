@@ -57,28 +57,29 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
     public abstract void checkDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata) throws DAPException;
 
     public boolean isDigitalAssetHashValid(DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException, DAPException {
-        /*List<CryptoTransaction> cryptoTransactionList = bitcoinNetworkManager.getGenesisTransaction(digitalAssetMetadata.getGenesisTransaction());
-        if(cryptoTransactionList==null||cryptoTransactionList.isEmpty()){
+        /**
+         * I will get the Genesis Transaction from the Crypto Network
+         */
+        //todo when implemented, uncomment this.
+        //CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.GetGenesisBlock());
+        CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getGenesisTransaction(), null);
+        if(cryptoTransaction==null){
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,"Getting the genesis transaction from Crypto Network","The crypto transaction received is null");
         }
-        this.cryptoTransaction=cryptoTransactionList.get(0);*/
-        //I will hardcode this check for testing
-        System.out.println("ASSET DISTRIBUTION OR RECEPTION Check contract is hardcoded");
-        //return true;
-        //This cryptoTransaction is hardcoded and is the same inside the digital AssetMetadata
-        CryptoAddress addressTo = new CryptoAddress("mrSEwcjFZFiouvqNVRhG6RZPgeL1zd6E5p", CryptoCurrency.BITCOIN);
-        this.cryptoTransaction = new CryptoTransaction(digitalAssetMetadata.getGenesisTransaction(),
-                digitalAssetMetadata.getDigitalAsset().getGenesisAddress(),
-                addressTo, CryptoCurrency.BITCOIN, 100000, CryptoStatus.ON_BLOCKCHAIN);
-        this.cryptoTransaction.setOp_Return(digitalAssetMetadata.getDigitalAssetHash());
+        this.cryptoTransaction=cryptoTransaction;
+
         String digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
         System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Hash:" + digitalAssetMetadataHash);
         String digitalAssetGenesisTransaction = digitalAssetMetadata.getGenesisTransaction();
         System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Genesis Transaction:" + digitalAssetGenesisTransaction);
-        //CryptoTransaction cryptoTransaction=getCryptoTransactionFromCryptoNetwork(digitalAssetGenesisTransaction);
+
         System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Crypto Transaction from CryptoNetwork:" + cryptoTransaction);
         String hashFromCryptoTransaction = cryptoTransaction.getOp_Return();
         System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Crypto Transaction OP_return:" + hashFromCryptoTransaction);
+
+        /**
+         * I will compare the OP_Return value of the GenesisTransaction against the Hash of the digital Asset Metadata recieved from the issuer
+         */
         return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
 
     }

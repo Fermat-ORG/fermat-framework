@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -19,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by loui on 18/02/15.
  */
-public interface IntraUserManager {
+public interface IntraUserManager extends FermatManager {
 
     /**
      * The method <code>searchIntraUserByName</code> searches for the intra users that matches the alias

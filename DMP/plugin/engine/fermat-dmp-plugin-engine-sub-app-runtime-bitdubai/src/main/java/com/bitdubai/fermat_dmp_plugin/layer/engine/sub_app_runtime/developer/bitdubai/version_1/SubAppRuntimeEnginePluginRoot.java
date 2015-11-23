@@ -45,30 +45,26 @@ import java.util.Map;
 /**
  * The App Runtime is the module in charge of the UI navigation structure. A user is always at a certain point in this
  * structure.
- *
+ * <p/>
  * A Navigation stack is maintained by this plugin to allow the user to go back all the stack down to the root if necessary.
- *
+ * <p/>
  * Created by Matias Furszyfer 24/07/15
  */
 public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements SubAppRuntimeManager {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager;
 
     /**
      * SubAppRuntimeManager Interface member variables.
      */
     List<FermatEventListener> listenersAdded = new ArrayList<>();
-
     /**
      * Map connect sub app public key - sub app
      */
 
     Map<String, SubApp> listSubApp = new HashMap<>();
-
     String lastSubapPublicKey;
-
     RuntimeSubApp homeScreen;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     public SubAppRuntimeEnginePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -583,8 +579,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             subAppIntraUser.setType(SubApps.CCP_INTRA_USER_COMMUNITY);
             String communityPublicKey = "public_key_intra_user_commmunity";
             subAppIntraUser.setPublicKey(communityPublicKey);
-            listSubApp.put( subAppIntraUser.getPublicKey(),subAppIntraUser);
-
+            listSubApp.put(subAppIntraUser.getPublicKey(), subAppIntraUser);
 
 
             //Activity 1
@@ -670,6 +665,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //Activity 3
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
             subAppIntraUser.addActivity(runtimeActivity);
             runtimeActivity.setColor("#FF0B46F0");
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
@@ -690,6 +686,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS.getCode());
             runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
             runtimeActivity.setColor("#FF0B46F0");
 
             runtimeTitleBar = new TitleBar();
@@ -745,6 +742,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode());
             runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
             runtimeActivity.setColor("#FF0B46F0");
+            runtimeActivity.setBackPublicKey(communityPublicKey);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Request list");
@@ -797,6 +795,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL.getCode());
             runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
             runtimeActivity.setColor("#FF0B46F0");
 
             runtimeTitleBar = new TitleBar();
@@ -858,29 +857,54 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.DAP_MAIN);
-            runtimeActivity.setColor("#FF0B46F0");
+            runtimeActivity.setColor("#1d1d25");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#FF0B46F0");
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("DAP factory");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY.getKey());
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY.getKey(), runtimeFragment);
+            statusBar.setColor("#1d1d25");
 
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Asset Factory");
+            runtimeTitleBar.setColor("#1d1d25");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            runtimeTabStrip = new TabStrip();
+            runtimeTabStrip.setTabsColor("#1d1d25");
+            runtimeTabStrip.setTabsIndicateColor("#ffffff");
+            runtimeTabStrip.setTabsTextColor("#ffffff");
+
+            runtimeTab = new Tab();
+            runtimeTab.setLabel("Editable");
+            runtimeTab.setFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT);
+            runtimeTabStrip.addTab(runtimeTab);
+
+            runtimeTab = new Tab();
+            runtimeTab.setLabel("Published");
+            runtimeTab.setFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT);
+            runtimeTabStrip.addTab(runtimeTab);
+
+            runtimeActivity.setTabStrip(runtimeTabStrip);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey(), runtimeFragment);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey(), runtimeFragment);
 
             dapFactory.addActivity(runtimeActivity);
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.DAP_ASSET_EDITOR_ACTIVITY);
-            runtimeActivity.setColor("#FF0B46F0");
+            runtimeActivity.setColor("#1d1d25");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#FF0B46F0");
+            statusBar.setColor("#1d1d25");
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Asset Editor");
+            runtimeTitleBar.setColor("#1d1d25");
+
             runtimeActivity.setTitleBar(runtimeTitleBar);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey());
 
@@ -990,7 +1014,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_INTRA_USER_IDENTITY);
-            String intraUserIdentityPublicKey ="public_key_ccp_intra_user_identity";
+            String intraUserIdentityPublicKey = "public_key_ccp_intra_user_identity";
             runtimeSubApp.setPublicKey(intraUserIdentityPublicKey);
 
             // Activity: List of identities

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantConnectToAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface ActorAssetIssuerManager {
+public interface ActorAssetIssuerManager extends FermatManager {
 
     /**
      * The method <code>getActorByPublicKey</code> shows the information associated with the actorPublicKey

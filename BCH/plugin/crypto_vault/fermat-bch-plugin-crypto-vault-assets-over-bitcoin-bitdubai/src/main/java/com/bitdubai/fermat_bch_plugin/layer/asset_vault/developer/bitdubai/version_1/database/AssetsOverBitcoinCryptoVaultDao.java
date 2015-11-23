@@ -570,6 +570,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
             if (i >= currentGeneratedKeys){
                 DatabaseTableRecord record = databaseTable.getEmptyRecord();
                 record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, accountId);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME, i);
                 record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, key.getPublicKeyAsHex());
                 transaction.addRecordToInsert(databaseTable, record);
                 i++;
