@@ -4,7 +4,7 @@
     android:id="@+id/assets_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fffafa"
+    android:background="@color/bg_asset_factory"
     android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -15,7 +15,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_assets"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_margin="2dp" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -30,15 +31,15 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:visibility="invisible"
-        app:button_color="#00fb91"
-        app:button_colorPressed="#089e1d"
+        app:button_color="#f22222"
+        app:button_colorPressed="#f22222"
         app:image="@drawable/fab_plus_icon"
         app:shadow_color="#eae8e6"
         app:shadow_radius="3.0dp"
         app:shadow_xOffset="0.5dp"
         app:shadow_yOffset="1.0dp"
         app:show_animation="@anim/fab_jump_to_right"
-        app:stroke_color="@color/fab_material_blue_grey_500"
+        app:stroke_color="#f22222"
         app:type="DEFAULT" />
 
 </RelativeLayout>
