@@ -590,6 +590,12 @@ public abstract class FermatActivity extends AppCompatActivity
             pagertabs.setAdapter(adapter);
         }
 
+        if(tabStrip.isHasIcon()){
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                byte[] image = tabStrip.getTabs().get(i).getIcon();
+                tabLayout.getTabAt(i).setIcon(new BitmapDrawable(getResources(),BitmapFactory.decodeByteArray(image,0, image.length)));
+            }
+        }
 
         //pagertabs.setCurrentItem();
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()

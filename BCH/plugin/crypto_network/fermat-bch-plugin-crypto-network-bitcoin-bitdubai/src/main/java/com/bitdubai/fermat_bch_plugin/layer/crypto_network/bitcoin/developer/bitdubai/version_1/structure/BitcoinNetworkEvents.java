@@ -36,7 +36,9 @@ import org.bitcoinj.script.ScriptOpCodes;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -75,7 +77,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
-        System.out.println("*****CryptoNetwork Blockdownloaded. Pending blocks: " + blocksLeft);
+        //System.out.println("*****CryptoNetwork Blockdownloaded. Pending blocks: " + blocksLeft);
         //System.out.println("*****CryptoNetwork " + filteredBlock.toString());
     }
 
@@ -142,6 +144,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
          */
         try {
             getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+                    getBlockHash(tx),
                     getTransactionCryptoStatus(tx),
                     tx.getConfidence().getDepthInBlocks(),
                     getOutgoingTransactionAddressTo(tx),
@@ -159,6 +162,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             try{
                 CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
                 getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+                        getBlockHash(tx),
                         getTransactionCryptoStatus(tx),
                         0,
                         errorAddress,
@@ -458,6 +462,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         if (isNewTransaction(tx.getHashAsString(), cryptoStatus)) {
             try {
                 getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                        getBlockHash(tx),
                         cryptoStatus,
                         tx.getConfidence().getDepthInBlocks(),
                         getIncomingTransactionAddressTo(wallet, tx),
@@ -475,6 +480,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 try {
                     CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
                     getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                            getBlockHash(tx),
                             getTransactionCryptoStatus(tx),
                             0,
                             errorAddress,
@@ -515,6 +521,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     private void saveMissingIncomingTransaction(Wallet wallet, Transaction tx, CryptoStatus missedCryptoStatus) throws CantExecuteDatabaseOperationException {
         getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                getBlockHash(tx),
                 missedCryptoStatus,
                 tx.getConfidence().getDepthInBlocks(),
                 getIncomingTransactionAddressTo(wallet, tx),
@@ -525,6 +532,22 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     }
 
     /**
+     * Gets the first block Hash in which this transaction appears in
+     * @param tx
+     * @return
+     */
+    private String getBlockHash(Transaction tx) {
+        for (Map.Entry<Sha256Hash, Integer> entry : tx.getAppearsInHashes().entrySet()){
+            Sha256Hash hash = entry.getKey();
+            return hash.toString();
+        }
+        /**
+         * will return null if the transaction is not in a block
+         */
+        return null;
+    }
+
+    /**
      * saves into the database any missed transaction with the corresponding CryptoStatus.
      * @param wallet
      * @param tx
@@ -532,6 +555,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     private void saveMissingOutgoingTransaction(Wallet wallet, Transaction tx, CryptoStatus missedCryptoStatus) throws CantExecuteDatabaseOperationException {
         getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+                getBlockHash(tx),
                 missedCryptoStatus,
                 tx.getConfidence().getDepthInBlocks(),
                 getIncomingTransactionAddressTo(wallet, tx),
@@ -641,10 +665,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 }
             }
         }
-
-
     }
-
 
     /**
      * Blockchain events
@@ -668,7 +689,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void receiveFromBlock(Transaction tx, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
-        System.out.println("received from block " + tx.toString());
+        //System.out.println("received from block " + tx.toString());
     }
 
     @Override

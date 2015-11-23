@@ -1,6 +1,6 @@
 <fermat>
 	<platforms>
-		<platform code="COR" name="Core And Api" logo="COR_logo.png" dependsOn="OSA">
+		<platform code="COR" name="Core And Api" logo="COR_logo.png">
 
 			<layer name="Core" language="java">
 				<libraries>	
@@ -231,6 +231,7 @@
 			<layer name="Wallet" language="java"></layer>
 			<layer name="World" language="java"></layer>
 			<layer name="Identity" language="java"></layer>
+			<layer name="Actor Connection" language="java"></layer>C
 			<layer name="Actor Network Service" language="java"></layer>
 			<layer name="Network Service" language="java"></layer>
 			<layer name="empty layer 2"></layer>
@@ -452,7 +453,7 @@
 
 		</platform>
 
-		<platform code="PIP" name="Plug-ins Platform" logo="PIP_logo.png" dependsOn="P2P, COR">
+		<platform code="PIP" name="Plug-ins Platform" logo="PIP_logo.png" dependsOn="P2P">
 
 			<dependencies>
 				<dependency code="COR"></dependency>
@@ -1658,7 +1659,7 @@
 
 		</platform>
 
-		<platform code="CCP" name="Crypto Currency Platform" logo="CCP_logo.png" dependsOn="WPD, P2P">
+		<platform code="CCP" name="Crypto Currency Platform" logo="CCP_logo.png" dependsOn="WPD, BCH">
 
 			<layer name="Reference Wallet">
 
@@ -1891,8 +1892,7 @@
 
 			<layer name="Crypto Transaction" language="java">
 				<plugins>
-					<plugin
-						name="Incoming Device User"
+					<plugin	name="Incoming Device User"
 						description=""
 						difficulty="1"
 						code-level="concept"
@@ -1906,8 +1906,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Incoming Extra Actor"
+					<plugin	name="Incoming Extra Actor"
 						description=""
 						difficulty="10"
 						code-level="qa"
@@ -1924,8 +1923,7 @@
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Incoming Intra User"
+					<plugin name="Incoming Intra User"
 						description=""
 						difficulty="10"
 						code-level="qa"
@@ -1942,8 +1940,7 @@
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Intra Wallet"
+					<plugin	name="Intra Wallet"
 						description=""
 						difficulty="0"
 						code-level="concept"
@@ -1957,8 +1954,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Outgoing Device User"
+					<plugin	name="Outgoing Device User"
 						description=""
 						difficulty="0"
 						code-level="concept"
@@ -1972,8 +1968,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Outgoing Extra User"
+					<plugin	name="Outgoing Extra User"
 						description=""
 						difficulty="10"
 						code-level="production"
@@ -1990,8 +1985,7 @@
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Outgoing Intra Actor"
+					<plugin	name="Outgoing Intra Actor"
 						description=""
 						difficulty="10"
 						code-level="qa"
@@ -2008,8 +2002,7 @@
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Inter Account"
+					<plugin	name="Inter Account"
 						description=""
 						difficulty="0"
 						code-level="concept"
@@ -2017,6 +2010,34 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin name="Hold"
+						description=""
+						difficulty="6"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin name="Unhold"
+						description=""
+						difficulty="6"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -2192,8 +2213,6 @@
 					</plugin>
 				</plugins>
 			</layer>
-
-
 
 			<layer name="Network Service" language="java">
 				<plugins>
@@ -2662,7 +2681,7 @@
 
 		</platform>
 
-		<platform code="SHP" name="Shopping Platform" logo="SHP_logo.png" dependsOn="WPD">
+		<platform code="SHP" name="Shopping Platform" logo="SHP_logo.png" dependsOn="CCM">
 
 			<layer name="Reference Wallet">
 				<androids>
@@ -3124,7 +3143,7 @@
 
 		</platform>
 
-		<platform code="DAP" name="Digital Asset Platform" logo="DAP_logo.png" dependsOn="WPD">
+		<platform code="DAP" name="Digital Asset Platform" logo="DAP_logo.png" dependsOn="WPD, BCH">
 
 			<layer name="Reference Wallet">
 				<androids>
@@ -3895,7 +3914,7 @@
 			</layer>
 
 		</platform>
-
+ 
 		<platform code="MKT" name="Marketing Platform" logo="MKT_logo.png" dependsOn="DAP">
 
 			<layer name="Sub App" language="java-android">
@@ -5511,6 +5530,42 @@
 					</plugin>
 				</plugins>
 			</layer>
+			
+				<layer name="Actor Connection" language="java">
+				<plugins>
+					<plugin
+						name="Crypto Broker"
+						description=""
+						difficulty="6"
+						code-level="qa"
+						>
+						<authors>
+							<author name="lnacosta" scope="architecture" percentage="100"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+
+					<plugin
+						name="Crypto Customer"
+						description=""
+						difficulty="6"
+						code-level="qa"
+						>
+						<authors>
+							<author name="lnacosta" scope="architecture" percentage="100"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
 
 			<layer name="World" language="java">
 				<plugins>
@@ -7047,7 +7102,7 @@
 
 		</super_layer>
 
-		<super_layer code="OSA" name="Operating System API">
+		<super_layer code="OSA" name="Operating System API" dependsOn="COR">
 
 			<layer name="Multi OS" language="java">
 				<addons>

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -22,7 +23,7 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 30/09/2015.
  */
-public interface CryptoPaymentRequestManager {
+public interface CryptoPaymentRequestManager extends FermatManager {
 
     /**
      * Throw the method <code>sendCryptoPaymentRequest</code> you can send a crypto payment request to the actor with

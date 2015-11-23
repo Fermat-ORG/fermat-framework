@@ -10,10 +10,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.devel
 
 import org.restlet.Application;
 import org.restlet.Restlet;
-import org.restlet.engine.application.Encoder;
-import org.restlet.routing.Filter;
 import org.restlet.routing.Router;
-import org.restlet.service.EncoderService;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.webservices.WebServicesApplication</code>

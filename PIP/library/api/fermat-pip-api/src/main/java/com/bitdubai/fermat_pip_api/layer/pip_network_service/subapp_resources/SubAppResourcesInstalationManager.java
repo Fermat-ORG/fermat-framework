@@ -2,6 +2,7 @@ package com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources;
 
 
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.InstalationProgress;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantInstallCompleteSubAppResourcesException;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantInstallSubAppLanguageException;
@@ -15,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by natalia on 2015.07.28..
  */
-public interface SubAppResourcesInstalationManager {
+public interface SubAppResourcesInstalationManager extends FermatManager {
 
 
 
