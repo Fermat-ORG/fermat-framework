@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.ut
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
+import java.util.Arrays;
+
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData</code>
  * represents a crypto broker and exposes all the functionality of it.
@@ -52,6 +54,16 @@ public final class CryptoBrokerExposingData {
      */
     public final byte[] getImage() {
         return image;
+    }
+
+    @Override
+    public String toString() {
+        return "CryptoBrokerExposingData{" +
+                "publicKey='" + publicKey + '\'' +
+                ", actorType=" + actorType +
+                ", alias='" + alias + '\'' +
+                ", image=" + Arrays.toString(image) +
+                '}';
     }
 
 }
