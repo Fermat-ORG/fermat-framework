@@ -189,7 +189,7 @@ public abstract class AbstractAddon implements Addon, Service {
 
             if (fermatManager == null) {
                 throw new CantAssignReferenceException(
-                        "Addon receiving: " + this.addonVersionReference + " ---- Given addon is null.",
+                        "Addon receiving: " + this.addonVersionReference + " ---- Given addon is null. "+ avr.toString(),
                         "Please check the given addon."
                 );
             }

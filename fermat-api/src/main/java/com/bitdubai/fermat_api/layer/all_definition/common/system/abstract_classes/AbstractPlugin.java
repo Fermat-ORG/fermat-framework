@@ -231,6 +231,13 @@ public abstract class AbstractPlugin implements Plugin, Service {
                 );
             }
 
+            if (fermatManager == null) {
+                throw new CantAssignReferenceException(
+                        "Plugin receiving: " + this.pluginVersionReference + " ---- Given addon is null. "+ avr.toString(),
+                        "Please check the given addon."
+                );
+            }
+
             final Class<?> refManager = field.getType();
 
             if(refManager.isAssignableFrom(fermatManager.getClass())) {
@@ -312,6 +319,14 @@ public abstract class AbstractPlugin implements Plugin, Service {
                         "The plugin doesn't need the given reference."
                 );
             }
+
+            if (fermatManager == null) {
+                throw new CantAssignReferenceException(
+                        "Plugin receiving: " + this.pluginVersionReference + " ---- Given plugin is null. "+ pluginVersion.toString3(),
+                        "Please check the given plugin."
+                );
+            }
+
             final Class<?> refManager = field.getType();
 
             if(refManager.isAssignableFrom(fermatManager.getClass())) {
