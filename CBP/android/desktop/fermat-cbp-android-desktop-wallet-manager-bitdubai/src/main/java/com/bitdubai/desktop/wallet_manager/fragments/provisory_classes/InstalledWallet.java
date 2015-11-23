@@ -26,6 +26,8 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     private String publicKey;
     private String walletPlatformIdentifier;
     private Version version;
+    private int iconResource;
+    private int position;
 
     public InstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.walletCategory = walletCategory;
@@ -91,6 +93,25 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
         return walletIcon;
     }
 
+    @Override
+    public int getIconResource() {
+        return iconResource;
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setIconResource(int iconResource) {
+        this.iconResource = iconResource;
+    }
+
     /**
      * This method gives us the public key of the wallet in this device. It is used as identifier of
      * the wallet
@@ -136,4 +157,6 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     public String getAppPublicKey() {
         return publicKey;
     }
+
+
 }

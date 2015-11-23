@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantAcceptIntraWalletUserException;
@@ -11,7 +12,7 @@ import java.util.List;
  * The interface <code>IntraWalletUserIdentityManager</code>
  * defines the methods to administrate the intra users,
  */
-public interface IntraWalletUserActorManager {
+public interface IntraWalletUserActorManager extends FermatManager {
 
     /**
      * The method <code>askIntraWalletUserForAcceptance</code> registers a new intra user in the list
