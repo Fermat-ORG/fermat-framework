@@ -19,7 +19,9 @@ public interface NotificationManagerMiddleware {
 
     void addIncomingExtraUserNotification(EventSource eventSource,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType);
 
-    Queue<NotificationEvent> getPoolNotification();
+    void addIncomingIntraUserNotification(EventSource eventSource,String intraUserIdentityPublicKey, String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType);
+
+        Queue<NotificationEvent> getPoolNotification();
 
     void addObserver(Observer observer);
 

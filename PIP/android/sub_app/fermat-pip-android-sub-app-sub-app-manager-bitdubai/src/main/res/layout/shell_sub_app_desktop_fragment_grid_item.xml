@@ -40,7 +40,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_column="2"
                 android:gravity="center"
-                android:textColor="@color/black_overlay"
+                android:textColor="#d2d2d2"
                 android:textStyle="bold"
                 android:textSize="13sp"/>
         </LinearLayout>
