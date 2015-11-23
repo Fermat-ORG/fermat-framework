@@ -106,6 +106,6 @@ public interface CryptoBrokerManager extends FermatManager {
      *
      * @throws CantListPendingConnectionNewsException if something goes wrong.
      */
-    List<com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionNew> getPendingConnectionNews() throws CantListPendingConnectionNewsException;
+    List<CryptoBrokerConnectionNew> getPendingConnectionNews() throws CantListPendingConnectionNewsException;
 
 }
