@@ -205,7 +205,7 @@ public abstract class FermatActivity extends AppCompatActivity
     private CoordinatorLayout coordinatorLayout;
     private boolean flag=false;
 
-    private ElementsWithAnimation elementsWithAnimation;
+    private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
 
     /**
      * Called when the activity is first created
@@ -710,11 +710,16 @@ public abstract class FermatActivity extends AppCompatActivity
                         if (scrollRange + verticalOffset == 0) {
                             collapsingToolbarLayout.setTitle("");
                             if(!isShow)
-                            elementsWithAnimation.startCollapseAnimation(scrollRange);
+                                for(ElementsWithAnimation element : elementsWithAnimation){
+                                    element.startCollapseAnimation(scrollRange);
+                                }
+
                             isShow = true;
                         } else if (isShow) {
                             collapsingToolbarLayout.setTitle("");
-                            elementsWithAnimation.startExpandAnimation(verticalOffset);
+                            for(ElementsWithAnimation element : elementsWithAnimation){
+                                element.startExpandAnimation(scrollRange);
+                            }
                             isShow = false;
                         }
                     }
@@ -2047,7 +2052,7 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
     public void addCollapseAnimation(ElementsWithAnimation elementsWithAnimation){
-        this.elementsWithAnimation = elementsWithAnimation;
+        this.elementsWithAnimation.add(elementsWithAnimation);
     }
 
     /**
