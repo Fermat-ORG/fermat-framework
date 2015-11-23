@@ -42,10 +42,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
  * Updated by lnacosta (laion.cj91@gmail.com) on 18/11/2015.
  * Updated by Yordin Alayn (y.alayn@gmail.com) on 21.11.2015.
  */
-public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
-    CryptoCustomerActorManager
-
-{
+public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements CryptoCustomerActorManager {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -88,14 +85,17 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
         ECCKeyPair keyPair = new ECCKeyPair();
         String actorPublicKey = keyPair.getPublicKey();
         String actorPrivateKey = keyPair.getPrivateKey();
+        CryptoCustomerActorRecord actor = null;
+
         try {
-            return databaseDao.createRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey, actorPrivateKey, actorName, actorPhoto, ConnectionState.CONNECTED);
+            actor = databaseDao.createRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey, actorPrivateKey, actorName, actorPhoto, ConnectionState.CONNECTED);
         } catch (CantRegisterCryptoCustomerActorException e){
             throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
         } catch (Exception e){
             throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
         }
-//        return new CryptoCustomerActorRecordImpl(actorPublicKey, actorPrivateKey, actorName);
+
+        return actor;
     }
 
     @Override
@@ -103,15 +103,19 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
 
         // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG. LET'S THINK TOGETHER.
         // TODO MAKE USE OF THE ERROR MANAGER.
+        CryptoCustomerActorRecord actor = null;
+
         try {
-            CryptoCustomerActorRecord actor = this.databaseDao.getRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey);
+            actor = this.databaseDao.getRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey);
             if(actor == null)
                 throw new CantGetCryptoCustomerActorException("", null, ".","Intra User not found");
-            return new CryptoCustomerActorRecordImpl(actorPublicKey, "",actor.getActorName(), actor.getActorPhoto());
+
         } catch (CantRegisterCryptoCustomerActorException e){
             throw new CantGetCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET CRYPTO CUSTOMER ACTOR", "");
         } catch (Exception e){
             throw new CantGetCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET CRYPTO CUSTOMER ACTOR", "");
         }
+
+        return new CryptoCustomerActorRecordImpl(actorPublicKey, "",actor.getActorName(), actor.getActorPhoto());
     }
 }
