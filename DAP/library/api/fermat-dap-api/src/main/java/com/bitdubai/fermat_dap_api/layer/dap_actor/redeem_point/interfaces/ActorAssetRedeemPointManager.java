@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface ActorAssetRedeemPointManager {
+public interface ActorAssetRedeemPointManager extends FermatManager {
 
     /**
      * The method <code>getActorByPublicKey</code> shows the information associated with the actorPublicKey
