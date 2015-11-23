@@ -205,6 +205,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      */
     @Override
     public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
-        return null;
+        return  bitcoinCryptoNetworkManager.getCryptoTransactionFromBlockChain(txHash, blockHash);
     }
 }
