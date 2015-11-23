@@ -93,7 +93,7 @@ public final class FermatPluginManager {
     }
 
     public final FermatManager startPluginAndReferences(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
-                                                                                                                     VersionNotFoundException {
+                                                                                                                    VersionNotFoundException {
 
         try {
 
