@@ -88,7 +88,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     /**
      * Crypto Broker Actor Network Service member variables.
      */
-    private CryptoBrokerExecutorAgent cryptoAddressesExecutorAgent;
+    private CryptoBrokerExecutorAgent cryptoBrokerExecutorAgent;
 
     //private CryptoAddressesNetworkServiceDao cryptoAddressesNetworkServiceDao;
 
@@ -115,6 +115,8 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
      */
     @Override
     public void start() throws CantStartPluginException {
+
+        System.out.println("***************** Crypto Broker Actor Network Service Starting...");
 
         try {
             loadKeyPair(pluginFileSystem);
@@ -177,19 +179,15 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             */
             this.serviceStatus = ServiceStatus.STARTED;
 
-        } catch (CantInitializeNetworkServiceDatabaseException exception) {
+            System.out.println("***************** Crypto Broker Actor Network Service Successfully started...");
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+        } catch (final CantInitializeNetworkServiceDatabaseException e) {
 
-            String context = contextBuffer.toString();
-            String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
-            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
+            String context = "Plugin ID: "     + pluginId + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR+
+                             "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME;
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-            throw pluginStartException;
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, context, "The Template Database triggered an unexpected problem that wasn't able to solve by itself");
         }
     }
 
@@ -361,7 +359,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters){
 
-        System.out.println(" TemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList");
+        System.out.println("********* Crypto Broker Actor Network Service - requestRemoteNetworkServicesRegisteredList");
 
          /*
          * Request the list of component registers
@@ -370,21 +368,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
             wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(this.getPlatformComponentProfilePluginRoot(), discoveryQueryParameters);
 
-        } catch (CantRequestListException e) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Plugin was not registered";
+        } catch (final CantRequestListException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
@@ -465,7 +449,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         try {
 
-            cryptoAddressesExecutorAgent = new CryptoBrokerExecutorAgent(
+            cryptoBrokerExecutorAgent = new CryptoBrokerExecutorAgent(
                     this,
                     errorManager,
                     eventManager,
@@ -473,23 +457,23 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     wsCommunicationsCloudClientManager
             );
 
-            cryptoAddressesExecutorAgent.start();
+            cryptoBrokerExecutorAgent.start();
 
-        } catch(CantStartAgentException e) {
+        } catch(final CantStartAgentException e) {
 
-            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
+        System.out.println("******************* Crypto Broker Actor Network Service handleCompleteComponentRegistrationNotificationEvent");
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.CRYPTO_BROKER &&
-                platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == this.getPlatformComponentType() &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == this.getNetworkServiceType() &&
+                platformComponentProfileRegistered.getIdentityPublicKey().equals(this.getIdentityPublicKey())){
 
             /*
              * Mark as register
@@ -497,6 +481,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             this.register = Boolean.TRUE;
 
             initializeAgent();
+
+            System.out.println("******************* Crypto Broker Actor Network Service all ok, registered.");
+
         }
 
     }
@@ -507,27 +494,13 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         System.out.println("----------------------------------\n" +
                 "FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
                 "--------------------------------------------------------");
-        cryptoAddressesExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
+        cryptoBrokerExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
     }
 
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile){
 
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-    }
-
-    /**
-     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
-     */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(final PlatformComponentProfile remoteComponentProfile) {
-
-        /*
-         * Tell the manager to handler the new connection established
-         */
-        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty())
-            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
     }
 
     @Override

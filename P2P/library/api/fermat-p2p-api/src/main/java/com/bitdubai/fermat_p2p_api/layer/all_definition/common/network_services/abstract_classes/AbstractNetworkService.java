@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 
 /**
  * The class <code>AbstractNetworkService</code>
@@ -153,4 +154,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     private String buildNetworkServiceKeyPairFileName() {
         return PLUGIN_IDS_FILE_NAME + "_" + pluginId;
     }
+
+    public abstract void handleNewMessages(final FermatMessage message);
+
 }
