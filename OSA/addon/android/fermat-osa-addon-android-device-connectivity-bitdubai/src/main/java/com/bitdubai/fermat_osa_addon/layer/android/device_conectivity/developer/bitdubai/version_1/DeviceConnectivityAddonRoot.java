@@ -364,6 +364,8 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
     }
 
 
-
-
+    @Override
+    public FermatManager getManager() {
+        return null;
+    }
 }

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_csh_api.all_definition.cash_money_transaction;
+package com.bitdubai.fermat_csh_api.all_definition.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 
