@@ -379,6 +379,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
+        initializeMessagesListeners();
     }
 
     /**
@@ -613,8 +615,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             this.register = Boolean.TRUE;
 
             initializeIntraActorAgent();
-
-            initializeMessagesListeners();
 
 
             try {
