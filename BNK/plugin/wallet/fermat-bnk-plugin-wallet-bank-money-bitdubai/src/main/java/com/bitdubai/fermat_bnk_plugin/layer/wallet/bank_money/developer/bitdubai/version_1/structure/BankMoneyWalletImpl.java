@@ -8,6 +8,9 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantGetBankMoneyWalletTransactionsException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantGetHeldFundsException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterHoldException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterUnholdException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletBalance;
@@ -37,7 +40,7 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     public void initialize() throws CantInitializeBankMoneyWalletDatabaseException{
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, BankMoneyWalletDatabaseConstants.DATABASE_NAME);
-            //bankMoneyWalletBalance = new BankMoneyWalletBalanceImpl(database);
+            bankMoneyWalletDao = new BankMoneyWalletDao(database);
         }catch (CantOpenDatabaseException | DatabaseNotFoundException e){
             throw new CantInitializeBankMoneyWalletDatabaseException(CantInitializeBankMoneyWalletDatabaseException.DEFAULT_MESSAGE,e,"Couldn't wallet database",null);
         }
@@ -54,7 +57,7 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     }
 
     @Override
-    public List<BankMoneyTransactionRecord> getTransactions(TransactionType type, int max, int offset) throws CantGetBankMoneyWalletTransactionsException {
+    public List<BankMoneyTransactionRecord> getTransactions(TransactionType type, int max, int offset,String account) throws CantGetBankMoneyWalletTransactionsException {
         return null;
     }
 
@@ -62,4 +65,20 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     public double getHeldFunds() throws CantGetHeldFundsException, CantGetHeldFundsException {
         return 0;
     }
+
+    @Override
+    public List<BankAccountNumber> getAccounts(UUID walletPublicKey) {
+        return null;
+    }
+
+    @Override
+    public void hold() throws CantRegisterHoldException {
+
+    }
+
+    @Override
+    public void unhold() throws CantRegisterUnholdException {
+
+    }
+
 }
