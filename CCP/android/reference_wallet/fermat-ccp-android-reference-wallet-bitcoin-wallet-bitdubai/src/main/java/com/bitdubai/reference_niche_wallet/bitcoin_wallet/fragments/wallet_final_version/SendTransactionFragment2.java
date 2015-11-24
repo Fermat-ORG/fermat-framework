@@ -161,6 +161,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
         setNavigationDrawer(navigationViewAdapter);
 
+
+
+
+        emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);
+
     }
 
 
@@ -461,7 +466,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         if(Build.VERSION.SDK_INT>17) {
             int position[] = new int[2];
             view.getLocationOnScreen(position);
-            TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0  , emptyOriginalPos[1],0);
+            float centreY = rootView.getY() + rootView.getHeight() / 2;
+            TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0  , centreY-250,0);
             anim.setDuration(1000);
             anim.setFillAfter(true);
             view.startAnimation(anim);
@@ -475,8 +481,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             int xDest = dm.widthPixels / 2;
             xDest -= (view.getMeasuredWidth() / 2);
             float centreY = rootView.getY() + rootView.getHeight() / 2;
-            emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);
-            TranslateAnimation anim = new TranslateAnimation(0, xDest - emptyOriginalPos[0], 0, centreY - 250);
+
+            TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
             anim.setDuration(1000);
             anim.setFillAfter(true);
             view.startAnimation(anim);
