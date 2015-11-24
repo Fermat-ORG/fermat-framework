@@ -928,11 +928,6 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         }
     }
 
-    @Override
-    public void handleNewMessages(FermatMessage message) {
-
-    }
-
     /**
      * Get the New Received Message List
      *

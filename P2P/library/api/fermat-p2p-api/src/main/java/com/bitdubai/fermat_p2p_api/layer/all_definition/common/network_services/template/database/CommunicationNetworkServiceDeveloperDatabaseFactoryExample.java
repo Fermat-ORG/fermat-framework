@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -13,29 +13,24 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory</code> have
+ * The final Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/11/15.
+ * Created by lnacosta (laion.cj91@gmail.com) on 30/10/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
 
-public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
-
+public final class CommunicationNetworkServiceDeveloperDatabaseFactoryExample {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID                 pluginId            ;
 
@@ -47,7 +42,7 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem,
+    public CommunicationNetworkServiceDeveloperDatabaseFactoryExample(final PluginDatabaseSystem pluginDatabaseSystem,
                                                                    final UUID                 pluginId            ) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -57,13 +52,13 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeDatabaseException
+     * @throws CantInitializeNetworkServiceDatabaseException
      */
-    public void initializeDatabase(final String tableId) throws CantInitializeDatabaseException {
+    public void initializeDatabase(final String tableId) throws CantInitializeNetworkServiceDatabaseException {
 
         switch (tableId) {
 
-            case CryptoBrokerActorNetworkServiceDatabaseConstants.CRYPTO_BROKER_ACTOR_NETWORK_SERVICE_DATABASE_NAME:
+           /* case CryptoBrokerActorNetworkServiceDatabaseConstants.CRYPTO_BROKER_ACTOR_NETWORK_SERVICE_DATABASE_NAME:
 
                 try {
 
@@ -86,7 +81,7 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
                         throw new CantInitializeDatabaseException(z, "tableId: " + tableId, "Error trying to create the database.");
                     }
                 }
-                break;
+                break;*/
 
             case CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME:
                 try {
@@ -95,7 +90,7 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
 
                 } catch (CantOpenDatabaseException e) {
 
-                    throw new CantInitializeDatabaseException(e, "tableId: " + tableId, "Error trying to open the database.");
+                    throw new CantInitializeNetworkServiceDatabaseException(e, "tableId: " + tableId, "Error trying to open the database.");
 
                 } catch (DatabaseNotFoundException e) {
 
@@ -107,7 +102,7 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
 
                     } catch (CantCreateDatabaseException z) {
 
-                        throw new CantInitializeDatabaseException(z, "tableId: " + tableId, "Error trying to create the database.");
+                        throw new CantInitializeNetworkServiceDatabaseException(z, "tableId: " + tableId, "Error trying to create the database.");
                     }
                 }
         }
@@ -116,12 +111,12 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
     public List<DeveloperDatabase> getDatabaseList(final DeveloperObjectFactory developerObjectFactory) {
 
         List<DeveloperDatabase> databases = new ArrayList<>();
-
+/*
         databases.add(developerObjectFactory.getNewDeveloperDatabase(
                 "Actor Network Service",
                 CryptoBrokerActorNetworkServiceDatabaseConstants.CRYPTO_BROKER_ACTOR_NETWORK_SERVICE_DATABASE_NAME
         ));
-
+*/
         databases.add(developerObjectFactory.getNewDeveloperDatabase(
                 "Network Service Template",
                 CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME
@@ -138,11 +133,9 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
 
         switch (developerDatabase.getId()) {
 
-            case CryptoBrokerActorNetworkServiceDatabaseConstants.CRYPTO_BROKER_ACTOR_NETWORK_SERVICE_DATABASE_NAME:
+           /* case CryptoBrokerActorNetworkServiceDatabaseConstants.CRYPTO_BROKER_ACTOR_NETWORK_SERVICE_DATABASE_NAME:
 
-                /**
-                 * Table Connection News columns.
-                 */
+
                 List<String> connectionNewsColumns = new ArrayList<>();
 
                 connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            );
@@ -154,13 +147,13 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
                 connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         );
                 connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        );
                 connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             );
-                /**
-                 * Table Connection News addition.
-                 */
+
                 DeveloperDatabaseTable connectionNewsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME, connectionNewsColumns);
                 tables.add(connectionNewsTable);
 
                 break;
+
+                */
 
             case CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME:
 
@@ -248,5 +241,4 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
             return new ArrayList<>();
         }
     }
-
 }

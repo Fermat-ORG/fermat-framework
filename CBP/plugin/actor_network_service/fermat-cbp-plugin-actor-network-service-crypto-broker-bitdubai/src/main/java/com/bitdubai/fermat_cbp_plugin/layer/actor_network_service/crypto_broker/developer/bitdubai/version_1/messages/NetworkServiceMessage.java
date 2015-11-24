@@ -4,10 +4,10 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.
 import com.google.gson.Gson;
 
 /**
- * The interface <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.NetworkServiceMessage</code>
+ * The interface <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.NetworkServiceMessage</code>
  * indicates all the basic functionality of a network service message,
  * <p>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 08/10/2015.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/11/2015.
  */
 public class NetworkServiceMessage {
 
