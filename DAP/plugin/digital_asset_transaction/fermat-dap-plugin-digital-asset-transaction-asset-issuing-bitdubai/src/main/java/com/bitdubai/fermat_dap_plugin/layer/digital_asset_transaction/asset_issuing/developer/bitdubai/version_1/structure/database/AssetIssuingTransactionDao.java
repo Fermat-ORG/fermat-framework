@@ -902,7 +902,7 @@ public class AssetIssuingTransactionDao {
             for (DatabaseTableRecord databaseTableRecord : databaseTableRecords) {
                 String genesisTransaction = databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
                 genesisTransactionsFromDigitalAssetReceived.add(genesisTransaction);
-                databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, TransactionStatus.DELIVERED.getCode());
+                databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.DELIVERED.getCode());
                 databaseTable.updateRecord(databaseTableRecord);
             }
             this.database.closeDatabase();
