@@ -12,6 +12,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionNewsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.UnexpectedProtocolStateException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
@@ -114,6 +115,24 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     public final void denyConnection(final UUID requestId) throws CantDenyConnectionRequestException ,
                                                                   ConnectionRequestNotFoundException {
 
+        try {
+
+            final ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
+
+            connectionNewsDao.denyConnection(
+                    requestId,
+                    protocolState
+            );
+
+        } catch (CantDenyConnectionRequestException | ConnectionRequestNotFoundException e){
+            // ConnectionRequestNotFoundException - THIS SHOULD NOT HAPPEN.
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDenyConnectionRequestException(e, null, "Unhandled Exception.");
+        }
     }
 
     /**
@@ -125,7 +144,8 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException,
-                                                                    ConnectionRequestNotFoundException  {
+                                                                    ConnectionRequestNotFoundException  ,
+                                                                    UnexpectedProtocolStateException    {
 
     }
 
