@@ -3,6 +3,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
@@ -19,17 +21,10 @@ import org.apache.commons.collections.bag.SynchronizedSortedBag;
  * Created by Joaquin C. on 23/11/15.
  */
 public class NewSentMessageNotificationEventHandler extends AbstractCommunicationBaseEventHandler<NewNetworkServiceMessageSentNotificationEvent> {
-
-    /**
-     * Represent the communicationNetworkServiceConnectionManager
-     */
-    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
-
-
     /**
      * Agent
      */
-    private ActorNetworkServiceRecordedAgent actorNetworkServiceRecordedAgent;
+    private NetworkService actorNetworkServiceRecordedAgent;
 
 
     /**
@@ -37,7 +32,7 @@ public class NewSentMessageNotificationEventHandler extends AbstractCommunicatio
          *
          * @param
          */
-    public NewSentMessageNotificationEventHandler(IntraActorNetworkServicePluginRoot intraActorNetworkServicePluginRoot) {
+    public NewSentMessageNotificationEventHandler(NetworkService intraActorNetworkServicePluginRoot) {
         super(intraActorNetworkServicePluginRoot);
     }
 
@@ -52,30 +47,8 @@ public class NewSentMessageNotificationEventHandler extends AbstractCommunicatio
         @Override
         public void processEvent(NewNetworkServiceMessageSentNotificationEvent event) {
 
-            FermatMessage message = (FermatMessage) event.getData();
-            Gson gson = new Gson();
-
-            try {
-                message.toJson();
-
-                ActorNetworkServiceRecord actorNetworkServiceRecord = gson.fromJson(message.getContent(), ActorNetworkServiceRecord.class);
-
-
-                if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)) {
-                    // close connection, sender is the destination
-                    System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
-                    communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
-                    actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorSenderPublicKey());
-
-                }
-
-
-            } catch (Exception e) {
-                //quiere decir que no estoy reciviendo metadata si no una respuesta
-                System.out.print("EXCEPCION DENTRO DEL PROCCESS EVENT");
-                e.printStackTrace();
-
-            }
+//            if(event.getNetworkServiceTypeApplicant().equals(NetworkServiceType.INTRA_USER))
+            ((IntraActorNetworkServicePluginRoot)networkService).handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
 
         }
 }

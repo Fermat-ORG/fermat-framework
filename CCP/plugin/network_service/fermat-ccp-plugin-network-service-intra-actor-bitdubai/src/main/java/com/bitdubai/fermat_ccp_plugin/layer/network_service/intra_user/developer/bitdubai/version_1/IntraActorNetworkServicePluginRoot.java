@@ -694,13 +694,32 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     }
 
-    private void saveActorsInMemoryCache(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
+    public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage){
+        Gson gson = new Gson();
 
-//        for (PlatformComponentProfile platformComponentProfilePluginRoot : platformComponentProfileRegisteredList){
-//            incomingNotificationsDao.createNotification(UUID.randomUUID(),platformComponentProfilePluginRoot.);
-//        }
+        try {
+            fermatMessage.toJson();
 
+            ActorNetworkServiceRecord actorNetworkServiceRecord = gson.fromJson(fermatMessage.getContent(), ActorNetworkServiceRecord.class);
+
+
+            if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)) {
+                // close connection, sender is the destination
+                System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
+                communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
+                actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorSenderPublicKey());
+
+            }
+
+
+        } catch (Exception e) {
+            //quiere decir que no estoy reciviendo metadata si no una respuesta
+            System.out.print("EXCEPCION DENTRO DEL PROCCESS EVENT");
+            e.printStackTrace();
+
+        }
     }
+
 
     /**
      * (non-Javadoc)
