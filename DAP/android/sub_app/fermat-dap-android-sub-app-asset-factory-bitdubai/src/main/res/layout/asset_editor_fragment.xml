@@ -3,138 +3,244 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fffafa"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/bg_asset_factory"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-                android:id="@+id/name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_section"
-                android:elevation="2dp"
-                android:ems="10"
-                android:hint="Name"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                android:nextFocusDown="@+id/description"
-                android:padding="8dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/material_blue_grey_800" />
+                android:gravity="bottom"
+                android:orientation="horizontal">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/shape_section"
-                android:elevation="2dp"
-                android:ems="10"
-                android:hint="Description"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                android:nextFocusDown="@+id/quantity"
-                android:padding="8dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/material_blue_grey_800" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-                android:id="@+id/quantity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/shape_section"
-                android:elevation="2dp"
-                android:ems="10"
-                android:hint="Quantity"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:nextFocusDown="@+id/bitcoins"
-                android:padding="8dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/material_blue_grey_800" />
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/dap_asset_factory_editor_name_hint"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="12sp" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-                android:id="@+id/bitcoins"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/shape_section"
-                android:elevation="2dp"
-                android:ems="10"
-                android:hint="Bitcoins"
-                android:imeOptions="actionNext"
-                android:inputType="numberDecimal"
-                android:nextFocusDown="@+id/expiration_date"
-                android:padding="8dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/material_blue_grey_800" />
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:ems="10"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:nextFocusDown="@+id/description"
+                        android:padding="8dp"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
-                android:id="@+id/hasExpiration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Has expiration date"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                <ImageView
+                    android:id="@+id/picture"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
+                    android:src="@drawable/img_asset_image"
+                    tools:ignore="ContentDescription" />
+
+
+            </LinearLayout>
+
 
             <LinearLayout
-                android:id="@+id/datetime_picker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:id="@+id/expiration_date"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/dap_asset_factory_editor_description_hint"
+                    android:textColor="@color/text_color_hint"
+                    android:textSize="12sp" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:ems="10"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:nextFocusDown="@+id/quantity"
+                    android:padding="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_section"
-                    android:clickable="true"
-                    android:elevation="2dp"
-                    android:ems="10"
-                    android:hint="Date"
-                    android:imeOptions="actionNext"
-                    android:inputType="datetime"
-                    android:nextFocusDown="@+id/isRedeemable"
-                    android:padding="8dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/material_blue_grey_800"
-                    tools:ignore="UnusedAttribute" />
+                    android:orientation="vertical">
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:id="@+id/expiration_time"
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/dap_asset_factory_editor_quantity_hint"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="12sp" />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                        android:id="@+id/quantity"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:ems="10"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:nextFocusDown="@+id/bitcoins"
+                        android:padding="8dp"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_section"
-                    android:clickable="true"
-                    android:elevation="2dp"
-                    android:ems="10"
-                    android:hint="Time"
-                    android:imeOptions="actionNext"
-                    android:inputType="datetime"
-                    android:nextFocusDown="@+id/isRedeemable"
-                    android:padding="8dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/material_blue_grey_800"
-                    tools:ignore="UnusedAttribute" />
+                    android:orientation="vertical">
 
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/dap_asset_factory_editor_bitcoin_price_hint"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="12sp" />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                        android:id="@+id/bitcoins"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:ems="10"
+                        android:imeOptions="actionNext"
+                        android:inputType="numberDecimal"
+                        android:nextFocusDown="@+id/expiration_date"
+                        android:padding="8dp"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/hasExpiration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_checkbox_selector"
+                        tools:ignore="ContentDescription" />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/dap_asset_factory_editor_expiration_date_hint"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:id="@+id/expiration_date"
+                        android:layout_width="100dp"
+                        android:layout_height="38dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@color/black"
+                        android:clickable="true"
+                        android:ems="10"
+                        android:imeOptions="actionNext"
+                        android:inputType="datetime"
+                        android:nextFocusDown="@+id/isRedeemable"
+                        android:padding="8dp"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        tools:ignore="UnusedAttribute" />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:id="@+id/expiration_time"
+                        android:layout_width="80dp"
+                        android:layout_height="38dp"
+                        android:background="@color/black"
+                        android:clickable="true"
+                        android:ems="10"
+                        android:imeOptions="actionNext"
+                        android:inputType="datetime"
+                        android:nextFocusDown="@+id/isRedeemable"
+                        android:padding="8dp"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        tools:ignore="UnusedAttribute" />
+
+                </LinearLayout>
             </LinearLayout>
 
 
@@ -143,8 +249,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:checked="true"
                 android:text="This asset is redeemable"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:visibility="gone" />
 
 
             <LinearLayout
