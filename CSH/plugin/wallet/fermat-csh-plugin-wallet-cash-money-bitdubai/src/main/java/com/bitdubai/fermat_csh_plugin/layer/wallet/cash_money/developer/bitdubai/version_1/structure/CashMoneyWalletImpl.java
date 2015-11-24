@@ -3,6 +3,7 @@ package com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitduba
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
@@ -60,8 +61,7 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
 
     @Override
     public FiatCurrency getCurrency() throws CantGetCashMoneyWalletCurrencyException {
-        //TODO: ask dao for currency
-        return FiatCurrency.CANADIAN_DOLLAR;
+        return dao.getWalletCurrency(walletPublicKey);
     }
 
 
@@ -79,7 +79,8 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
 
     @Override
     public List<CashMoneyWalletTransaction> getTransactions(TransactionType transactionType, int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
-        //TODO: use dao, get transactions by type.
+        dao.getTransactions(transactionType, max, offset);
+
         return null;
     }
 
