@@ -11,7 +11,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Addre
  */
 public class Actor implements ActorAssetRedeemPoint {
 
-    private String publicKey;
+    private String actorPublicKey;
     private String name;
     private long contactRegistrationDate;
     private byte[] profileImage;
@@ -24,17 +24,17 @@ public class Actor implements ActorAssetRedeemPoint {
     private String contactInformation;
     private String hoursOfOperation;
 
-    public Actor(String name, String publicKey, byte[] profileImage, Location location) {
+    public Actor(String name, String actorPublicKey, byte[] profileImage, Location location) {
         this.name = name;
-        this.publicKey = publicKey;
+        this.actorPublicKey = actorPublicKey;
         this.profileImage = profileImage;
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
     }
 
-    public Actor(String name, String publicKey, byte[] profileImage, long registrationDate, Address address, String contactInformation, String hoursOfOperation) {
+    public Actor(String name, String actorPublicKey, byte[] profileImage, long registrationDate, Address address, String contactInformation, String hoursOfOperation) {
         this.name = name;
-        this.publicKey = publicKey;
+        this.actorPublicKey = actorPublicKey;
         this.profileImage = profileImage;
         this.contactRegistrationDate = registrationDate;
         this.address = address;
@@ -43,12 +43,12 @@ public class Actor implements ActorAssetRedeemPoint {
     }
 
     @Override
-    public String getPublicKey() {
-        return publicKey;
+    public String getActorPublicKey() {
+        return actorPublicKey;
     }
 
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
+    public void setActorPublicKey(String actorPublicKey) {
+        this.actorPublicKey = actorPublicKey;
     }
 
     @Override

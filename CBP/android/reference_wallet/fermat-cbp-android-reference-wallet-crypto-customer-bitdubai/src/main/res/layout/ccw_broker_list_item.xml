@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/waiting_for_broker_list_item_background"
+    android:paddingBottom="8dp"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingTop="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/ccw_customer_image"
+            android:layout_width="@dimen/ccw_image_width_and_height"
+            android:layout_height="@dimen/ccw_image_width_and_height"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="8dp"
+            android:contentDescription="@string/identity_img"
+            tools:src="@drawable/person"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/ccw_receiving_or_sending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:singleLine="true"
+            android:textColor="@color/ccw_first_line_item"
+            android:textSize="@dimen/ccw_title_text_size"
+            tools:text="Selling USD /"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_below="@+id/ccw_customer_name"
+            android:layout_toRightOf="@+id/ccw_customer_image"
+            android:layout_toEndOf="@+id/ccw_customer_image"/>
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/ccw_contract_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:paddingTop="4dp"
+            android:textColor="@color/waiting_for_text"
+            android:textSize="@dimen/ccw_regular_text_size"
+            tools:text="Accept payment in:"
+            android:layout_below="@+id/ccw_receiving_or_sending"
+            android:layout_toRightOf="@+id/ccw_customer_image"
+            android:layout_toEndOf="@+id/ccw_customer_image"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/ccw_update_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/negotiation_date_text"
+            android:textSize="@dimen/ccw_regular_text_size"
+            tools:text="03 Feb 2015"
+            android:layout_below="@+id/ccw_contract_status"
+            android:layout_toRightOf="@+id/ccw_customer_image"
+            android:layout_toEndOf="@+id/ccw_customer_image"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/ccw_type_of_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="@color/ccw_second_line_item"
+            android:textSize="@dimen/ccw_title_text_size"
+            tools:text="Cash"
+            android:layout_alignBottom="@+id/ccw_receiving_or_sending"
+            android:layout_toRightOf="@+id/ccw_receiving_or_sending"
+            android:layout_toEndOf="@+id/ccw_receiving_or_sending"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/ccw_customer_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="@color/ccw_third_line_item"
+            android:textSize="@dimen/ccw_subtitle_text"
+            tools:text="Nelson Ramirez"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/ccw_customer_image"
+            android:layout_toEndOf="@+id/ccw_customer_image"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

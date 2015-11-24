@@ -3,13 +3,13 @@ package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.deve
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.*;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exceptions.CantMakeDepositTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionBankMoneyException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.database.DepositBankMoneyTransactionDao;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 
 import java.util.UUID;
 
@@ -25,6 +25,7 @@ public class DepositBankMoneyTransactionManager implements DepositManager {
     DepositBankMoneyTransactionDao depositBankMoneyTransactionDao;
 
     BankMoneyWallet bankMoneyWallet;
+    BankMoneyTransactionRecord bankMoneyTransactionRecord;
 
     public DepositBankMoneyTransactionManager(UUID pluginId,PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginId = pluginId;
@@ -37,11 +38,12 @@ public class DepositBankMoneyTransactionManager implements DepositManager {
     @Override
     public BankTransaction makeDeposit(BankTransactionParameters parameters) throws CantMakeDepositTransactionException {
         depositBankMoneyTransactionDao.registerDepositTransaction(parameters);
-        /*try {
-            //bankMoneyWallet.getAvailableBalance().credit();
-        }catch (CantTransactionBankMoneyException e){
+        try{
+            bankMoneyWallet.getAvailableBalance().credit(bankMoneyTransactionRecord);
+        }catch (CantRegisterCreditException e){
+            throw new CantMakeDepositTransactionException(CantRegisterCreditException.DEFAULT_MESSAGE,e,null,null);
+        }
 
-        }*/
         return null;
     }
 

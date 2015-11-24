@@ -231,7 +231,7 @@
 			<layer name="Wallet" language="java"></layer>
 			<layer name="World" language="java"></layer>
 			<layer name="Identity" language="java"></layer>
-			<layer name="Actor Connection" language="java"></layer>C
+			<layer name="Actor Connection" language="java"></layer>
 			<layer name="Actor Network Service" language="java"></layer>
 			<layer name="Network Service" language="java"></layer>
 			<layer name="empty layer 2"></layer>
@@ -5531,7 +5531,7 @@
 				</plugins>
 			</layer>
 			
-				<layer name="Actor Connection" language="java">
+			<layer name="Actor Connection" language="java">
 				<plugins>
 					<plugin
 						name="Crypto Broker"
@@ -7353,148 +7353,194 @@
 			description=""
 			previous=""
 			>
+
+			<step id="0"
+				type="start"
+				title="Asset Issuer - Reference Wallet"
+				description="Represents UI Android for job with wallet"
+				platform="DAP"
+				superlayer=""
+				layer="Reference Wallet"
+				name="Asset Issuer"
+				>
+				<next>
+					<step id="1" type="direct call"></step>
+				</next>
+	
+			</step>
+			<step id="1"
+				type="activity"
+				title="Asset Factory"
+				description="Represents UI Android for creation the Asset"
+				platform="DAP"
+				superlayer=""
+				layer="Sub App"
+				name="Asset Factory"
+				>
+				<next>
+					<step id="2" type="direct call"></step>
+				</next>
+	
+			</step>
+			<step id="2"
+				type="activity"
+				title="Asset Issuer - Wallet Module"
+				description=""
+				platform="DAP"
+				superlayer="Connection layer and the representation of the business layer"
+				component="Plugin"
+				layer="Wallet Module"
+				name="Asset Issuer"
+				>
+				<next>
+					<step id="3" type="direct call"></step>
+				</next>
+			</step>
+			<step id="3"
+				type="activity"
+				title="Asset Factory"
+				description=""
+				platform="DAP"
+				superlayer="Connection layer and the representation of the business layer"
+				component="Plugin"
+				layer="Sub App Module"
+				name="Asset Factory"
+				>
+				<next>
+					<step id="4" type="direct call"></step>
+				</next>
+			</step>
+			<step id="4"
+				type="activity"
+				title="Asset Issuer - Actor"
+				description=""
+				platform="DAP"
+				superlayer="Connection layer and the representation of the business layer"
+				component="Plugin"
+				layer="Actor"
+				name="Asset Issuer"
+				>
+				<next>
+					<step id="5" type="direct call"></step>
+				</next>
+			</step>
+			<step id="5"
+				type="activity"
+				title="Asset Factory"
+				description=""
+				platform="DAP"
+				superlayer="Interlayer for the implementation of the Asset Factory"
+				component="Plugin"
+				layer="Middleware"
+				name="Asset Factory"
+				>
+				<next>
+					<step id="6" type="direct call"></step>
+				</next>
+			</step>
+
+			<step id="6"
+				type="activity"
+				title="Asset Issuer - Wallet"
+				description=""
+				platform="DAP"
+				superlayer="Implementation Logic the Wallet"
+				component="Plugin"
+				layer="Wallet"
+				name="Asset Issuer Wallet"
+				>
+				<next>
+					<step id="7" type="direct call"></step>
+				</next>
+			</step>
+			<step id="7"
+				type="activity"
+				title="Asset Issuer - Identity"
+				description=""
+				platform="DAP"
+				superlayer="Implementation Logic the Identity"
+				component="Plugin"
+				layer="Identity"
+				name="Asset Issuer Identity"
+				>
+				<next>
+					<step id="8" type="direct call"></step>
+				</next>
+			</step>
+			<step id="8"
+				type="activity"
+				title="Asset Issuer - Actor Network Service"
+				description=""
+				platform="DAP"
+				superlayer="Layer comunication"
+				component="Plugin"
+				layer="Actor Network Service"
+				name="Asset Issuer Actor Network Service"
+				>
+				<next>
+					<step id="9" type="direct call"></step>
+				</next>
+			</step>
+			<step id="9"
+				type="activity"
+				title="Asset Transmission - Network Service"
+				description=""
+				platform="DAP"
+				superlayer="Layer comunication"
+				component="Plugin"
+				layer="Network Service"
+				name="Asset Transmission Network Service"
+				>
+				<next>
+					<step id="9" type="direct call"></step>
+				</next>
+			</step>
 		</process>
-		<step id="0"
-			type="start"
-			title="Asset Issuer - Reference Wallet"
-			description="Represents UI Android for job with wallet"
-			platform="DAP"
-			superlayer=""
-			layer="Reference Wallet"
-			name="Asset Issuer"
+		
+		<process platform="CBP"		name="Create Crypto Broker Identity"
+			description="Creates a Crypto Broker Identity."
+			previous=""
 			>
-			<next>
-				<step id="1" type="direct call"></step>
-			</next>
-
-		</step>
-		<step id="1"
-			type="activity"
-			title="Asset Factory"
-			description="Represents UI Android for creation the Asset"
-			platform="DAP"
-			superlayer=""
-			layer="Sub App"
-			name="Asset Factory"
-			>
-			<next>
-				<step id="2" type="direct call"></step>
-			</next>
-
-		</step>
-		<step id="2"
-			type="activity"
-			title="Asset Issuer - Wallet Module"
-			description=""
-			platform="DAP"
-			superlayer="Connection layer and the representation of the business layer"
-			component="Plugin"
-			layer="Wallet Module"
-			name="Asset Issuer"
-			>
-			<next>
-				<step id="3" type="direct call"></step>
-			</next>
-		</step>
-		<step id="3"
-			type="activity"
-			title="Asset Factory"
-			description=""
-			platform="DAP"
-			superlayer="Connection layer and the representation of the business layer"
-			component="Plugin"
-			layer="Sub App Module"
-			name="Asset Factory"
-			>
-			<next>
-				<step id="4" type="direct call"></step>
-			</next>
-		</step>
-		<step id="4"
-			type="activity"
-			title="Asset Issuer - Actor"
-			description=""
-			platform="DAP"
-			superlayer="Connection layer and the representation of the business layer"
-			component="Plugin"
-			layer="Actor"
-			name="Asset Issuer"
-			>
-			<next>
-				<step id="5" type="direct call"></step>
-			</next>
-		</step>
-		<step id="5"
-			type="activity"
-			title="Asset Factory"
-			description=""
-			platform="DAP"
-			superlayer="Interlayer for the implementation of the Asset Factory"
-			component="Plugin"
-			layer="Middleware"
-			name="Asset Factory"
-			>
-			<next>
-				<step id="6" type="direct call"></step>
-			</next>
-		</step>
-		//Aca las transacciones
-		<step id="6"
-			type="activity"
-			title="Asset Issuer - Wallet"
-			description=""
-			platform="DAP"
-			superlayer="Implementation Logic the Wallet"
-			component="Plugin"
-			layer="Wallet"
-			name="Asset Issuer Wallet"
-			>
-			<next>
-				<step id="7" type="direct call"></step>
-			</next>
-		</step>
-		<step id="7"
-			type="activity"
-			title="Asset Issuer - Identity"
-			description=""
-			platform="DAP"
-			superlayer="Implementation Logic the Identity"
-			component="Plugin"
-			layer="Identity"
-			name="Asset Issuer Identity"
-			>
-			<next>
-				<step id="8" type="direct call"></step>
-			</next>
-		</step>
-		<step id="8"
-			type="activity"
-			title="Asset Issuer - Actor Network Service"
-			description=""
-			platform="DAP"
-			superlayer="Layer comunication"
-			component="Plugin"
-			layer="Actor Network Service"
-			name="Asset Issuer Actor Network Service"
-			>
-			<next>
-				<step id="9" type="direct call"></step>
-			</next>
-		</step>
-		<step id="9"
-			type="activity"
-			title="Asset Transmission - Network Service"
-			description=""
-			platform="DAP"
-			superlayer="Layer comunication"
-			component="Plugin"
-			layer="Network Service"
-			name="Asset Transmission Network Service"
-			>
-			<next>
-				<step id="9" type="direct call"></step>
-			</next>
-		</step>
+			<steps>
+				<step id="0"	title="Start Crypto Broker Identity creation"
+					description="Start Crypto Broker Identity creation."
+					type="start"
+					platform="CBP"
+					name="Crypto Broker Identity"
+					superlayer=""
+					layer="Sub App"
+					component=""
+					>
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"	title="Process Crypto Broker Identity creation request"
+					description="Process Crypto Broker Identity creation request."
+					type="activity"
+					platform="CBP"
+					name="Crypto Broker Identity"
+					superlayer=""
+					layer="Sub App Module"
+					component="Plugin"
+					>
+					<next>
+						<step id="2" type="direct call"></step>
+					</next>
+				</step>
+				<step id="2"	title="Creates Crypto Broker Identity"
+					description="Creates Crypto Broker Identity."
+					type="end"
+					platform="CBP"
+					name="Crypto Broker"
+					superlayer=""
+					layer="Identity"
+					component=""
+					>
+				</step>
+			</steps>
+		</process>
+		
 		<process platform="CBP"
 			name="Connection request from customer to broker"
 			description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."

@@ -109,7 +109,7 @@ public class AssetIssuerWalletModuleManager {
         for (AssetIssuerWalletTransaction assetIssuerWalletTransactionList : assetIssuerWalletTransactions){
             //TODO: Optimizar para que vea el registro de la tabla Balance Wallet
             DigitalAssetMetadata digitalAssetMetadata = assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey).getDigitalAssetMetadata(assetIssuerWalletTransactionList.getAssetPublicKey());
-            digitalAssetMetadata.setGenesisTransaction(assetIssuerWalletTransactionList.getTransactionHash());
+
             hashMap.put(digitalAssetMetadata, actorAssetUsers.get(i));
 
             if (i > actorAssetUsers.size()){
