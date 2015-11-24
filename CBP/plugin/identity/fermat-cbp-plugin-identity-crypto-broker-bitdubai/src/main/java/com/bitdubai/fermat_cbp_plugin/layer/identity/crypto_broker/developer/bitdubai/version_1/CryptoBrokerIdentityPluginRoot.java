@@ -49,24 +49,25 @@ import java.util.List;
 /**
  * Created by jorge on 28-09-2015.
  * Modified by Yordin Alayn 10.09.15
+ * Updated by lnacosta (laion.cj91@gmail.com) on 24/11/2015.
  */
 public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
         CryptoBrokerIdentityManager,
         DatabaseManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM       , layer = Layers.PLATFORM_SERVICE     , addon  = Addons .ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
+    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM       , layer = Layers.USER                 , addon  = Addons .DEVICE_USER           )
     private DeviceUserManager deviceUserManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API    , layer = Layers.SYSTEM               , addon  = Addons .PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API    , layer = Layers.SYSTEM               , addon  = Addons .PLUGIN_FILE_SYSTEM    )
     private PluginFileSystem pluginFileSystem;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_BROKER  )
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM  , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_BROKER         )
     private CryptoBrokerManager cryptoBrokerANSManager;
 
     /*Variables.*/
