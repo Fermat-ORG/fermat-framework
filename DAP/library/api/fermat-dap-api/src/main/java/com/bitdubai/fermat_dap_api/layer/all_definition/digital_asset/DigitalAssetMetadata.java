@@ -10,6 +10,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 public class DigitalAssetMetadata {
     DigitalAsset digitalAsset;
     String genesisTransaction;
+    String genesisBlock;
     String hash;
 
     public DigitalAssetMetadata(DigitalAsset digitalAsset) {
@@ -37,6 +38,14 @@ public class DigitalAssetMetadata {
 
     public void setGenesisTransaction(String genesisTransaction) {
         this.genesisTransaction = genesisTransaction;
+    }
+
+    public String getGenesisBlock() {
+        return genesisBlock;
+    }
+
+    public void setGenesisBlock(String genesisBlock) {
+        this.genesisBlock = genesisBlock;
     }
 
     @Override

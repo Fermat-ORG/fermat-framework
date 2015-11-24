@@ -34,5 +34,6 @@
     <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
     <color name="waiting_for_customer_list_item_background">#ffffff</color>
     <color name="withe">#FFFFFF</color>
+    <color name="black">#000000</color>
 
 </resources>

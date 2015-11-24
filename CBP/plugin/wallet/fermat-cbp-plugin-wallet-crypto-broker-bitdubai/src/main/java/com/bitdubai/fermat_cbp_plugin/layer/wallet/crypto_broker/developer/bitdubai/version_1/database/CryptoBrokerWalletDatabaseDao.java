@@ -303,7 +303,7 @@ public class CryptoBrokerWalletDatabaseDao {
             DatabaseTable totalBalancesTable = this.database.getTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME);
             DatabaseTableRecord totalBalancesRecord = totalBalancesTable.getEmptyRecord();
 
-            totalBalancesTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME, transaction.getWalletPublicKey(), DatabaseFilterType.EQUAL );
+            totalBalancesTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_WALLET_PUBLIC_KEY_COLUMN_NAME, transaction.getWalletPublicKey(), DatabaseFilterType.EQUAL );
             totalBalancesTable.loadToMemory();
             String description = "STOCK: " +transaction.getCurrencyType();
             loadtotalBalancesRecordAsNew(totalBalancesRecord, transaction, description, runningBookBalance, runningAvailableBalance);

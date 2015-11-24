@@ -30,7 +30,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
+public final class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID                 pluginId            ;
