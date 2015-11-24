@@ -262,7 +262,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * Will search all transactions from the block until I find my own.
           */
         for (Transaction transaction : genesisBlock.getTransactions()){
-            if (transaction.getHashAsString() == txHash){
+            if (transaction.getHashAsString().contentEquals(txHash)){
                 /**
                  * I form the CryptoTransaction and return it.
                  */
