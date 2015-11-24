@@ -256,6 +256,9 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
             e.printStackTrace();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(getActivity(),"ooooopss, create identity first",Toast.LENGTH_SHORT).show();
         }
         return data;
     }

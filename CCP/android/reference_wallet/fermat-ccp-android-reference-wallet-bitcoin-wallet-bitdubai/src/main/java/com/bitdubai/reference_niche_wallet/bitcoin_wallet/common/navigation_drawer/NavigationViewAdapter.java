@@ -86,17 +86,17 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
                     holder.getIcon().setImageResource(R.drawable.btn_drawer_home_normal);
                     break;
                 case 1:
-                    holder.getIcon().setImageResource(R.drawable.btn_drawer_profile_active);
+                    holder.getIcon().setImageResource(R.drawable.btn_drawer_profile_normal);
                     break;
                 case 2:
-                    holder.getIcon().setImageResource(R.drawable.btn_drawer_request_active);
+                    holder.getIcon().setImageResource(R.drawable.btn_drawer_request_normal);
                     break;
                 case 3:
-                    holder.getIcon().setImageResource(R.drawable.btn_drawer_settings_active);
+                    holder.getIcon().setImageResource(R.drawable.btn_drawer_settings_normal);
 
                     break;
                 case 4:
-                    holder.getIcon().setImageResource(R.drawable.btn_drawer_logout_active);
+                    holder.getIcon().setImageResource(R.drawable.btn_drawer_logout_normal);
                     break;
                 default:
                     break;
