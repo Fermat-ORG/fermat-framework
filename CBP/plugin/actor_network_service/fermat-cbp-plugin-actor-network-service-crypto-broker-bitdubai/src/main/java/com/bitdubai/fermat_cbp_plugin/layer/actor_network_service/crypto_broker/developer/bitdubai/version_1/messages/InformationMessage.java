@@ -6,10 +6,10 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.InformationMessage</code>
+ * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.InformationMessage</code>
  * contains the structure of a Information message for this plugin.
  * <p>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 08/10/2015.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/11/2015.
  */
 public class InformationMessage extends NetworkServiceMessage {
 
