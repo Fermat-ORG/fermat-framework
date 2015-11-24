@@ -112,13 +112,13 @@ public interface CryptoBrokerManager extends FermatManager {
     void acceptConnection(final UUID requestId) throws CantAcceptConnectionRequestException, ConnectionRequestNotFoundException;
 
     /**
-     * Through the method <code>getPendingConnectionNews</code> we can list all the connection news
+     * Through the method <code>listPendingConnectionNews</code> we can list all the connection news
      * with a pending local action.
      *
      * @return a list of instance of CryptoBrokerConnectionNews
      *
      * @throws CantListPendingConnectionNewsException if something goes wrong.
      */
-    List<CryptoBrokerConnectionNew> getPendingConnectionNews() throws CantListPendingConnectionNewsException;
+    List<CryptoBrokerConnectionNew> listPendingConnectionNews() throws CantListPendingConnectionNewsException;
 
 }
