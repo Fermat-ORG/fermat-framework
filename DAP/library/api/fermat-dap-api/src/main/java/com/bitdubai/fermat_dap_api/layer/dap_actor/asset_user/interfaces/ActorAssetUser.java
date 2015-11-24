@@ -18,11 +18,11 @@ public interface ActorAssetUser {
     String getPublicLinkedIdentity();
 
     /**
-     * The method <code>getPublicKey</code> gives us the public key of the represented Asset User
+     * The method <code>getActorPublicKey</code> gives us the public key of the represented Asset User
      *
      * @return the public key
      */
-     String getPublicKey();
+     String getActorPublicKey();
 
     /**
      * The method <code>getName</code> gives us the name of the represented Asset User

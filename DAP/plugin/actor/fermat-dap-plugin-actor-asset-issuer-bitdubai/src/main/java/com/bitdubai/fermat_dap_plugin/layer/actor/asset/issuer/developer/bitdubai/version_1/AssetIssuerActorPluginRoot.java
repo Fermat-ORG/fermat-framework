@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantConnectToAssetIssuerException;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.agent.ActorAssetIssuerMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.developerUtils.AssetIssuerActorDeveloperDatabaseFactory;
@@ -155,7 +157,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
             if (actorAssetIssuer != null) {
                 System.out.println("*********************Actor Asset Issuer************************");
-                System.out.println("Actor Asset PublicKey: " + actorAssetIssuer.getPublicKey());
+                System.out.println("Actor Asset PublicKey: " + actorAssetIssuer.getActorPublicKey());
                 System.out.println("Actor Asset Name: " + actorAssetIssuer.getName());
                 System.out.println("Actor Asset Description: " + actorAssetIssuer.getDescription());
                 System.out.println("***************************************************************");
@@ -210,10 +212,13 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @Override
     public void connectToActorAssetIssuer(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToAssetIssuerException {
         for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuers) {
-            System.out.println("Se necesita conocer como Implementar bien: " + actorAssetIssuer.getName());
-
+            DAPActor dapActor = (DAPActor) requester;
             try {
-                this.assetIssuerActorDao.updateAssetIssuerDAPConnectionStateRegistered(actorAssetIssuer.getPublicKey(), DAPConnectionState.CONNECTING);
+                assetIssuerActorNetworkServiceManager.sendMessage(dapActor, actorAssetIssuer, " ");
+                this.assetIssuerActorDao.updateAssetIssuerDAPConnectionStateRegistered(actorAssetIssuer.getActorPublicKey(), DAPConnectionState.CONNECTING);
+
+            } catch (CantSendMessageException e) {
+                e.printStackTrace();
             } catch (CantUpdateAssetIssuerException e) {
                 e.printStackTrace();
             }
@@ -243,8 +248,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             //TODO Cambiar luego por la publicKey Linked proveniente de Identity
             this.assetIssuerActorDao.updateAssetIssuerDAPConnectionState(
-                    actorAssetIssuer.getPublicKey(),
-                    actorAssetIssuer.getPublicKey(),
+                    actorAssetIssuer.getActorPublicKey(),
+                    actorAssetIssuer.getActorPublicKey(),
                     DAPConnectionState.REGISTERED_ONLINE);
         } catch (CantUpdateAssetIssuerException e) {
             e.printStackTrace();
@@ -287,7 +292,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantStartAgentException {
         if (this.actorAssetIssuerMonitorAgent == null) {
-//            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+//            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getActorPublicKey();
             this.actorAssetIssuerMonitorAgent = new ActorAssetIssuerMonitorAgent(this.eventManager,
                     this.pluginDatabaseSystem,
                     this.errorManager,

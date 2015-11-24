@@ -286,12 +286,14 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     public DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
         DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
         try  {
-                DigitalAsset digitalAsset = new  DigitalAsset();
                 PluginTextFile pluginTextFile = null;
-                pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, digitalAssetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                String digitalAssetData = pluginTextFile.getContent();
-                digitalAsset = (DigitalAsset) XMLParser.parseXML(digitalAssetData, digitalAsset);
-                digitalAssetMetadata.setDigitalAsset(digitalAsset);
+
+                String digitalAssetMetadataFileName = digitalAssetPublicKey + "_metadata";
+                pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, digitalAssetMetadataFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                String digitalAssetMetaData = pluginTextFile.getContent();
+                digitalAssetMetadata = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetaData, digitalAssetMetadata);
+
+
         } catch (FileNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantGetDigitalAssetFromLocalStorageException(FermatException.wrapException(e), "File no found", null);

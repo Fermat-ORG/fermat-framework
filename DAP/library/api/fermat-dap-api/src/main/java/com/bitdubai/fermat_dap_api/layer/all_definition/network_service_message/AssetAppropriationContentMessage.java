@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.layer.all_definition.network_service.message;
+package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
