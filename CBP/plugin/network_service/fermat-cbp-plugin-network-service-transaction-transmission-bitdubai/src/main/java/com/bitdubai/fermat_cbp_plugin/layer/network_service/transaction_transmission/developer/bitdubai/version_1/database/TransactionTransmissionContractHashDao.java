@@ -86,7 +86,7 @@ public class TransactionTransmissionContractHashDao {
         return getDataBase().getTable(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
     }
 
-    public void saveCryptoTransmissionMetadata(BusinessTransaction businessTransaction) throws CantInsertRecordDataBaseException {
+    public void saveBusinessTransmissionRecord(BusinessTransaction businessTransaction) throws CantInsertRecordDataBaseException {
 
         try {
 

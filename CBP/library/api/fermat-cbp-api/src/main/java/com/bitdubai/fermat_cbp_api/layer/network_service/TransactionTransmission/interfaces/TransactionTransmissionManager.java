@@ -33,7 +33,7 @@ public interface TransactionTransmissionManager extends TransactionProtocolManag
      * @param transactionHash
      * @throws CantSendContractNewStatusNotificationException
      */
-    void sendContractHashToCryptoBroker(UUID transactionId, CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionHash) throws CantSendBusinessTransactionHashException;
+    void sendContractHashToCryptoBroker(UUID transactionId, CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionHash, String negotiationId) throws CantSendBusinessTransactionHashException;
 
 
     /**
