@@ -43,6 +43,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatab
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActor;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActor;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendBusinessTransactionHashException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransaction;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
@@ -54,6 +55,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionResponseMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -61,6 +63,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.Gson;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -205,10 +208,6 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 getPluginVersionReference());
     }
 
-    @Override
-    public void handleNewMessages(FermatMessage message) {
-
-    }
 
     /**
      * This method initialize the database
@@ -649,7 +648,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 negotiationId,
                 BusinessTransactionTransactionType.TRANSACTION_HASH,
                 timestamp.getTime(),
-                transactionId
+                transactionId,
+                TransactionTransmissionStates.SENDING_HASH
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransaction);
@@ -680,7 +680,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 negotiationId,
                 BusinessTransactionTransactionType.TRANSACTION_HASH,
                 timestamp.getTime(),
-                transactionId
+                transactionId,
+                TransactionTransmissionStates.SENDING_HASH
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransaction);
@@ -708,4 +709,27 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     public List<Transaction<BusinessTransaction>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
         return null;
     }
+
+    @Override
+    public void handleNewMessages(FermatMessage fermatMessage) {
+        Gson gson = new Gson();
+        System.out.println("Transaction Transmission gets a new message");
+        try{
+            BusinessTransaction businessTransactionReceived=gson.fromJson(fermatMessage.getContent(), BusinessTransactionRecord.class);
+            if(businessTransactionReceived.getContractHash()!=null){
+                businessTransactionReceived.setBusinessTransactionTransactionType(BusinessTransactionTransactionType.TRANSACTION_HASH);
+                transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionReceived);
+            }else{
+
+                TransactionTransmissionResponseMessage transactionTransmissionResponseMessage =  gson.fromJson(fermatMessage.getContent(), TransactionTransmissionResponseMessage.class);
+                switch (transactionTransmissionResponseMessage.getTransactionTransmissionStates()){
+                    case CONFIRM_CONTRACT:
+                }
+
+            }
+        } catch (CantInsertRecordDataBaseException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
