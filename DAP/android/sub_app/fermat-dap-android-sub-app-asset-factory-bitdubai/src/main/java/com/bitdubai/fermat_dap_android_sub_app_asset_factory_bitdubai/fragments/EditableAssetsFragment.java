@@ -202,7 +202,14 @@ public class EditableAssetsFragment extends FermatFragment implements
     }
 
     public List<AssetFactory> getMoreDataAsync() throws CantGetAssetFactoryException, CantCreateFileException {
-        return manager.getAssetFactoryAll();
+        List<AssetFactory> items = new ArrayList<>();
+        List<AssetFactory> draftItems = manager.getAssetFactoryByState(State.DRAFT);
+        List<AssetFactory> pendingFinalItems = manager.getAssetFactoryByState(State.PENDING_FINAL);
+        if (draftItems != null && !draftItems.isEmpty())
+            items.addAll(draftItems);
+        if (pendingFinalItems != null && !pendingFinalItems.isEmpty())
+            items.addAll(pendingFinalItems);
+        return items;
     }
 
     @Override
