@@ -19,11 +19,11 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enu
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionNewsException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionNew;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 
 import java.util.ArrayList;
@@ -89,7 +89,7 @@ public final class ConnectionNewsDao {
         }
     }
 
-    public final List<CryptoBrokerConnectionNew> listAllPendingRequests() throws CantListPendingConnectionNewsException {
+    public final List<CryptoBrokerConnectionRequest> listAllPendingRequests() throws CantListPendingConnectionRequestsException {
 
         try {
 
@@ -103,7 +103,7 @@ public final class ConnectionNewsDao {
 
             final List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
 
-            final List<CryptoBrokerConnectionNew> cryptoAddressRequests = new ArrayList<>();
+            final List<CryptoBrokerConnectionRequest> cryptoAddressRequests = new ArrayList<>();
 
             for (final DatabaseTableRecord record : records) {
                 cryptoAddressRequests.add(buildConnectionNewRecord(record));
@@ -113,10 +113,10 @@ public final class ConnectionNewsDao {
 
         } catch (final CantLoadTableToMemoryException e) {
 
-            throw new CantListPendingConnectionNewsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new CantListPendingConnectionRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (final InvalidParameterException e) {
 
-            throw new CantListPendingConnectionNewsException(e, "", "There is a problem with some enum code."                                                                                );
+            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
         }
     }
 
@@ -128,7 +128,7 @@ public final class ConnectionNewsDao {
 
         try {
 
-            final CryptoBrokerConnectionNew connectionNew = new CryptoBrokerConnectionNew(
+            final CryptoBrokerConnectionRequest connectionNew = new CryptoBrokerConnectionRequest(
                     newId                                      ,
                     brokerInformation.getSenderPublicKey()     ,
                     brokerInformation.getSenderActorType()     ,
@@ -166,7 +166,7 @@ public final class ConnectionNewsDao {
 
         try {
 
-            final CryptoBrokerConnectionNew connectionNew = new CryptoBrokerConnectionNew(
+            final CryptoBrokerConnectionRequest connectionNew = new CryptoBrokerConnectionRequest(
                     newId            ,
                     identityPublicKey,
                     identityActorType,
@@ -302,7 +302,7 @@ public final class ConnectionNewsDao {
     }
 
     private DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord       record       ,
-                                                    final CryptoBrokerConnectionNew connectionNew) {
+                                                    final CryptoBrokerConnectionRequest connectionNew) {
 
         record.setUUIDValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            , connectionNew.getRequestId()           );
         record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME     , connectionNew.getSenderPublicKey()     );
@@ -317,7 +317,7 @@ public final class ConnectionNewsDao {
         return record;
     }
 
-    private CryptoBrokerConnectionNew buildConnectionNewRecord(final DatabaseTableRecord record) throws InvalidParameterException {
+    private CryptoBrokerConnectionRequest buildConnectionNewRecord(final DatabaseTableRecord record) throws InvalidParameterException {
 
         UUID   requestId                    = record.getUUIDValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            );
         String senderPublicKey              = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME     );
@@ -334,7 +334,7 @@ public final class ConnectionNewsDao {
         ProtocolState           state            = ProtocolState          .getByCode(protocolStateString  );
         ConnectionRequestAction action           = ConnectionRequestAction.getByCode(requestActionString  );
 
-        return new CryptoBrokerConnectionNew(
+        return new CryptoBrokerConnectionRequest(
                 requestId           ,
                 senderPublicKey     ,
                 senderActorType     ,
