@@ -47,7 +47,7 @@ import java.util.List;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class MainFragment extends FermatFragment implements
+public class EditableAssetsFragment extends FermatFragment implements
         FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener, android.widget.PopupMenu.OnMenuItemClickListener {
 
     /**
@@ -68,8 +68,8 @@ public class MainFragment extends FermatFragment implements
     private boolean isRefreshing;
 
 
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static EditableAssetsFragment newInstance() {
+        return new EditableAssetsFragment();
     }
 
     public static AssetFactory getAssetForEdit() {
@@ -145,7 +145,7 @@ public class MainFragment extends FermatFragment implements
                         cantPublishAssetFactoy.printStackTrace();
                         popupMenu.getMenu().findItem(R.id.action_publish).setVisible(false);
                     }
-                    popupMenu.setOnMenuItemClickListener(MainFragment.this);
+                    popupMenu.setOnMenuItemClickListener(EditableAssetsFragment.this);
                     popupMenu.show();
                 }
             });
