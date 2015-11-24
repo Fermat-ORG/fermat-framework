@@ -113,8 +113,8 @@ public class UnHoldCryptoMoneyTransactionDatabaseDao {
         unHoldCryptoMoneyTransaction.setPublicKeyWallet(crtyptoUnHoldTransactionRecord.getStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_WALLET_PUBLIC_KEY_COLUMN_NAME));
         unHoldCryptoMoneyTransaction.setPublicKeyActor(crtyptoUnHoldTransactionRecord.getStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME));
         unHoldCryptoMoneyTransaction.setPublicKeyPlugin(crtyptoUnHoldTransactionRecord.getStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME));
-        unHoldCryptoMoneyTransaction.setAmount(crtyptoUnHoldTransactionRecord.getFloatValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_WALLET_PUBLIC_KEY_COLUMN_NAME));
-        unHoldCryptoMoneyTransaction.setCurrency(CryptoCurrency.getByCode(crtyptoUnHoldTransactionRecord.getStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_WALLET_PUBLIC_KEY_COLUMN_NAME)));
+        unHoldCryptoMoneyTransaction.setAmount(crtyptoUnHoldTransactionRecord.getFloatValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME));
+        unHoldCryptoMoneyTransaction.setCurrency(CryptoCurrency.getByCode(crtyptoUnHoldTransactionRecord.getStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_CURRENCY_COLUMN_NAME)));
         unHoldCryptoMoneyTransaction.setMemo(crtyptoUnHoldTransactionRecord.getStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME));
         unHoldCryptoMoneyTransaction.setTimestampAcknowledged(crtyptoUnHoldTransactionRecord.getLongValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
         unHoldCryptoMoneyTransaction.setTimestampConfirmedRejected(crtyptoUnHoldTransactionRecord.getLongValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
