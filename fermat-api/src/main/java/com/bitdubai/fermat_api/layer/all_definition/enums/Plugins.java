@@ -171,6 +171,8 @@ public enum Plugins implements FermatEnum {
     BITCOIN_VAULT               ("BV"),
     BITCOIN_WALLET              ("BW"),
     BITCOIN_WATCH_ONLY_VAULT    ("BWOV"),
+    BITCOIN_HOLD                ("BHOLD"),
+    BITCOIN_UNHOLD              ("BUNHOLD"),
     CRYPTO_ADDRESSES            ("CA"),
     CRYPTO_ADDRESS_BOOK         ("CAB"),
     CRYPTO_BROKER               ("CB"),
@@ -219,6 +221,7 @@ public enum Plugins implements FermatEnum {
     CASH_MONEY_RESTOCK          ("CMRE"),
     CASH_MONEY_DESTOCK          ("CMRE"),
     BITDUBAI_CBP_STOCK_TRANSACTIONS_BANK_MONEY_RESTOCK ("BCBPSTBMR"),
+    TRANSACTION_TRANSMISSION    ("TRTX")
 
     // End  new Plugins
 
@@ -251,6 +254,8 @@ public enum Plugins implements FermatEnum {
             case "BV"   :   return BITCOIN_VAULT            ;
             case "BW"   :   return BITCOIN_WALLET           ;
             case "BWOV" :   return BITCOIN_WATCH_ONLY_VAULT ;
+            case "BHOLD":   return BITCOIN_HOLD             ;
+            case "BUNHOLD": return BITCOIN_UNHOLD           ;
             case "CA"   :   return CRYPTO_ADDRESSES         ;
             case "CAB"  :   return CRYPTO_ADDRESS_BOOK      ;
             case "CB"   :   return CRYPTO_BROKER            ;
@@ -294,6 +299,7 @@ public enum Plugins implements FermatEnum {
             case ("BMDE"):  return BANK_MONEY_DESTOCK       ;
             case ("CMRE"):  return CASH_MONEY_RESTOCK       ;
             case ("CMDE"):  return CASH_MONEY_DESTOCK       ;
+            case ("TRTX"):  return TRANSACTION_TRANSMISSION ;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

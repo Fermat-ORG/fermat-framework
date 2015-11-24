@@ -23,22 +23,17 @@ public class IndexHelper {
         if(indexList.size() == 0)
             throw new CantSelectBestIndexException("Cant select best index. No valid indices submitted", null, "IndexHelper", "submitted indices have 0 as purchase/sale value");
 
-
-        if(indexList.size() >= 3)    //More than two valid indices, try to remove extreme values
-        {
+        //If there are more than two valid indices, try to remove extreme values
+        if(indexList.size() >= 3)
             removeExtremeIndexes(indexList);
-        }
 
-
-
-
-
-        if(indexList.size() >= 3)                       //Still more than than two valid indices, calculate the mean, and get the closest one to it
-        {
+        //If there are still more than than two valid indices, calculate the mean, and return the closest index to it
+        if(indexList.size() >= 3)
             return getIndexClosestToMean(indexList);
-        }
 
-        if(indexList.size() == 2)                  //If there are only two, select the highest (in average)
+
+        //If there are only two, return the highest one
+        if(indexList.size() == 2)
         {
             double averageIndexA, averageIndexB;
             averageIndexA = indexList.get(0).getPurchasePrice() + indexList.get(0).getSalePrice();
@@ -50,12 +45,9 @@ public class IndexHelper {
                 return indexList.get(1);
         }
 
-        //There is only one index, return it, nothing more can be done
+        //If there is only one index, return it, nothing more to do
         return indexList.get(0);
     }
-
-
-
 
 
 
@@ -70,9 +62,9 @@ public class IndexHelper {
                 toRemove.add(index);
             }
         }
-
         indexList.removeAll(toRemove);
     }
+
 
     private static void removeExtremeIndexes(List<FiatIndex> indexList)
     {
@@ -94,15 +86,14 @@ public class IndexHelper {
                 toRemove.add(index);
             }
         }
-
         indexList.removeAll(toRemove);
     }
+
 
     private static FiatIndex getIndexClosestToMean(List<FiatIndex> indexList)
     {
         FiatIndex closestIndex = null;
         double closestIndexDistanceToMean = Double.MAX_VALUE;
-
         double mean = mean(indexList);
 
         for(FiatIndex index : indexList)
@@ -111,7 +102,6 @@ public class IndexHelper {
             if( purchaseSaleAverage <= closestIndexDistanceToMean)
                 closestIndex = index;
         }
-
         return closestIndex;
     }
 
@@ -138,5 +128,4 @@ public class IndexHelper {
         }
         return Math.sqrt(sum / indexList.size());
     }
-
 }

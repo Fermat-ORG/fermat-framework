@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
 
+import java.util.UUID;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
  */
@@ -74,4 +76,6 @@ public interface BusinessTransaction {
      * @return Long
      */
     Long getTimestamp();
+
+    UUID getTransactionId();
 }
