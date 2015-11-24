@@ -76,7 +76,7 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET, plugin = Plugins.BITCOIN_WALLET)
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
     BitcoinWalletManager bitcoinWalletManager;
 
 
@@ -86,6 +86,7 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME);
 
+            System.out.println("******* Init Hold Crypto Money Transaction ******");
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
             startMonitorAgent();
 
