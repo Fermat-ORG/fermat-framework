@@ -10,7 +10,7 @@ package com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitduba
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class uedo colgada esta mierdaaaaaaBankMoneyWalletDatabaseConstants {
+public class BankMoneyWalletDatabaseConstants {
 
     /**
      * Database name
