@@ -27,4 +27,6 @@ public interface PaintActivityFeatures {
 
     public void addCollapseAnimation(ElementsWithAnimation elementsWithAnimation);
 
+    public void addNavigationView(NavigationViewPainter navigationViewPainter);
+
 }

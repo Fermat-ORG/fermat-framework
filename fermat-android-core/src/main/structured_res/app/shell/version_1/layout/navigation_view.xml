@@ -15,6 +15,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/navigation_view_body_container"
             >
 
             <android.support.v7.widget.RecyclerView
@@ -28,7 +29,7 @@
             <ImageView
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:src="@drawable/mati_profile"
+                android:src="@drawable/logo_bitcoin_wallet"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:paddingBottom="32dp"

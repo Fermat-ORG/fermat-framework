@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,7 +21,9 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
+import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -68,7 +69,9 @@ import static android.widget.Toast.makeText;
  * @since 20/10/2015
  */
 public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem>
-        implements FermatListItemListeners<CryptoWalletTransaction>,ElementsWithAnimation {
+        implements FermatListItemListeners<CryptoWalletTransaction>,
+        ElementsWithAnimation,
+        NavigationViewPainter {
 
 
     private int MAX_TRANSACTIONS = 20;
@@ -128,6 +131,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getPaintActivtyFeactures().addCollapseAnimation(this);
+        getPaintActivtyFeactures().addNavigationView(this);
+        invalidate();
     }
 
     @Nullable
@@ -136,37 +141,25 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         setUp(inflater);
 
+
         return rootView;
     }
     private void setUp(LayoutInflater inflater){
         try {
             //setUpHeader(inflater);
             setUpDonut(inflater);
-            setUpScreen(inflater);
+            setUpScreen();
         }catch (Exception e){
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
                     UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-        /**
-         * add navigation header
-         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
-
-        /**
-         * Navigation view items
-         */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
-        setNavigationDrawer(navigationViewAdapter);
-
-
-
-
+    private void setUpScreen(){
         emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);
 
     }
+
 
 
     private void setUpDonut(LayoutInflater inflater){
@@ -487,6 +480,35 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             anim.setFillAfter(true);
             view.startAnimation(anim);
         }
+    }
+
+    @Override
+    public View addNavigationViewHeader() {
+        try {
+            return FragmentsCommons.setUpHeaderScreen(getActivity().getLayoutInflater(), getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public FermatAdapter addNavigationViewAdapter() {
+        try {
+            NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null, referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+            //setNavigationDrawer(navigationViewAdapter);
+            return navigationViewAdapter;
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ViewGroup addNavigationViewBodyContainer() {
+        RelativeLayout relativeLayout = new RelativeLayout(getActivity());
+        relativeLayout.setBackgroundResource(R.drawable.navigation_view_fondo);
+        return relativeLayout;
     }
 }
 
