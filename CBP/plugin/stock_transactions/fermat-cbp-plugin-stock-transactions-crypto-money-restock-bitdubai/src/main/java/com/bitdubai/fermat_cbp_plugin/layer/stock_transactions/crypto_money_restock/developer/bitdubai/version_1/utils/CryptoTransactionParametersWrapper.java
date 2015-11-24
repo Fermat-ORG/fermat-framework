@@ -1,17 +1,16 @@
-package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.utils;
+package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransactionParameters;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransactionParameters;
 
 import java.util.UUID;
 
 /**
  * Created by franklin on 18/11/15.
  */
-public class CryptoTransactionParametersWrapper implements CryptoHoldTransactionParameters {
-    private  UUID            transactionId;
-    private  CryptoCurrency  cryptoCurrency;
+public class CryptoTransactionParametersWrapper implements CryptoUnholdTransactionParameters {
+    private UUID transactionId;
+    private CryptoCurrency cryptoCurrency;
     private  String          walletPublicKey;
     private  String          publicActorKey;
     private  float           amount;
@@ -106,4 +105,5 @@ public class CryptoTransactionParametersWrapper implements CryptoHoldTransaction
     public void setMemo(String memo) {
         this.memo = memo;
     }
+
 }
