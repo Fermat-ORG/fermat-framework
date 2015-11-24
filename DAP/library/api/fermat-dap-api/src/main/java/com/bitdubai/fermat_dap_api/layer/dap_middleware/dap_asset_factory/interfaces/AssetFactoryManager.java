@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * Created by franklin on 07/09/15.
  */
-public interface AssetFactoryManager {
+public interface AssetFactoryManager extends FermatManager {
     //Getters
     /**
      * This method returns the information stored about the Asset Factory

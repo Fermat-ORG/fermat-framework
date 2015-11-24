@@ -4,7 +4,7 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterDebitException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalance;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletBalance;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalanceRecord;
 
 import java.util.UUID;
@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * Created by francisco on 10/11/15.
  */
-public class BankMoneyBalanceList implements BankMoneyBalance {
+public class BankMoneyBalanceList implements BankMoneyWalletBalance {
     UUID bankTransactionId;
     String publicKeyActorFrom;
     String publicKeyActorTo;

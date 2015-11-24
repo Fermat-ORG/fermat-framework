@@ -15,16 +15,15 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import java.util.HashMap;
 import java.util.Map;
-
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.AbstractCommunicationNetworkServiceConnectionManager</code>
  * <p/>
  *
  * Methods <code>buildCommunicationNetworkServiceLocal</code> and <code>buildCommunicationNetworkServiceRemoteAgent</code>
- * can ve override
+ * can ve overrided
  *
  * Created by Roberto Requena - (rart3001@gmail.com) on 31/05/15.
  * Modified by lnacosta (laion.cj91@gmail.com) on 02/11/2015.
@@ -57,14 +56,14 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
     /**
      * Constructor with parameters.
      */
-    public AbstractCommunicationNetworkServiceConnectionManager(final PlatformComponentProfile platformComponentProfile,
-                                                                final ECCKeyPair identity,
+    public AbstractCommunicationNetworkServiceConnectionManager(final PlatformComponentProfile       platformComponentProfile      ,
+                                                                final ECCKeyPair                     identity                      ,
                                                                 final CommunicationsClientConnection communicationsClientConnection,
-                                                                final Database dataBase,
-                                                                final ErrorManager errorManager,
-                                                                final EventManager eventManager,
-                                                                final EventSource eventSource,
-                                                                final PluginVersionReference pluginVersionReference) {
+                                                                final Database                       dataBase                      ,
+                                                                final ErrorManager                   errorManager                  ,
+                                                                final EventManager                   eventManager                  ,
+                                                                final EventSource                    eventSource                   ,
+                                                                final PluginVersionReference         pluginVersionReference        ) {
 
         super();
         this.platformComponentProfile       = platformComponentProfile      ;
@@ -78,8 +77,8 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
         this.incomingMessageDao = new IncomingMessageDao(dataBase);
         this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
 
-        this.communicationNetworkServiceLocalsCache       = new HashMap<>();
-        this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>();
+        this.communicationNetworkServiceLocalsCache       = new ConcurrentHashMap<>();
+        this.communicationNetworkServiceRemoteAgentsCache = new ConcurrentHashMap<>();
     }
 
 
@@ -96,7 +95,6 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
              * ask to the communicationLayerManager to connect to other network service
              */
             communicationsClientConnection.requestVpnConnection(platformComponentProfile, remotePlatformComponentProfile);
-
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -131,8 +129,10 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
     @Override
     public final void closeConnection(final String remoteNetworkServicePublicKey) {
         //Remove the instance and stop his threads
-        if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey))
+        if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey)) {
             communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
+            communicationNetworkServiceLocalsCache.remove(remoteNetworkServicePublicKey);
+        }
     }
 
     /**
@@ -142,12 +142,12 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
     @Override
     public final void closeAllConnection() {
 
-        for (final String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+        //Remove the instance and stop his threads
+        for (final Map.Entry<String,CommunicationNetworkServiceRemoteAgent> entry : communicationNetworkServiceRemoteAgentsCache.entrySet())
+            entry.getValue().stop();
 
-            //Remove the instance and stop his threads
-            communicationNetworkServiceRemoteAgentsCache.remove(key).stop();
-        }
-
+        communicationNetworkServiceRemoteAgentsCache.clear();
+        communicationNetworkServiceLocalsCache.clear();
     }
 
     /**
@@ -218,11 +218,9 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
      */
     public final void pause() {
 
-        for (final String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
-
-            //Remove the instance and stop his threads
-            communicationNetworkServiceRemoteAgentsCache.get(key).pause();
-        }
+        //Remove the instance and stop his threads
+        for (final Map.Entry<String,CommunicationNetworkServiceRemoteAgent> entry : communicationNetworkServiceRemoteAgentsCache.entrySet())
+            entry.getValue().pause();
 
     }
 
@@ -235,12 +233,9 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
      */
     public final void resume() {
 
-        for (final String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
-
-            //Remove the instance and stop his threads
-            communicationNetworkServiceRemoteAgentsCache.get(key).resume();
-        }
-
+        //Remove the instance and stop his threads
+        for (final Map.Entry<String,CommunicationNetworkServiceRemoteAgent> entry : communicationNetworkServiceRemoteAgentsCache.entrySet())
+            entry.getValue().resume();
     }
 
     protected CommunicationNetworkServiceLocal buildCommunicationNetworkServiceLocal(final PlatformComponentProfile remoteComponentProfile) {

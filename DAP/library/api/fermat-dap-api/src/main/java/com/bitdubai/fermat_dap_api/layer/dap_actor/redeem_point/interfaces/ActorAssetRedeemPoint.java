@@ -10,16 +10,16 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState
 public interface ActorAssetRedeemPoint {
 
     /**
-     * The metho <code>getPublicKey</code> gives us the public key of the represented Redeem Point
+     * The method <code>getActorPublicKey</code> gives us the public key of the represented Redeem Point
      *
      * @return the public key
      */
-    String getPublicKey();
+    String getActorPublicKey();
 
     /**
      * The method <code>getName</code> gives us the name of the represented Redeem Point
      *
-     * @return the name of the intra user
+     * @return the name of the Actor
      */
     String getName();
 

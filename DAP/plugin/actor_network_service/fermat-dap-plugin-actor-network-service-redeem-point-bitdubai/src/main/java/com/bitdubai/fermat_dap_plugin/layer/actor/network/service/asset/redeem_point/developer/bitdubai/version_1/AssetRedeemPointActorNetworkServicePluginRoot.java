@@ -66,6 +66,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Cli
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
@@ -376,7 +377,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetRedeemPointToRegister.getPublicKey(),
+                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetRedeemPointToRegister.getActorPublicKey(),
                         actorAssetRedeemPointToRegister.getName().toLowerCase().trim(),
                         actorAssetRedeemPointToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
@@ -390,7 +391,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetRedeemPointToRegister.getPublicKey(),
+                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetRedeemPointToRegister.getActorPublicKey(),
                         actorAssetRedeemPointToRegister.getName().toLowerCase().trim(),
                         actorAssetRedeemPointToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
@@ -829,6 +830,11 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
+    }
+
+    @Override
+    public void handleNewMessages(FermatMessage message) {
+
     }
 
     /**

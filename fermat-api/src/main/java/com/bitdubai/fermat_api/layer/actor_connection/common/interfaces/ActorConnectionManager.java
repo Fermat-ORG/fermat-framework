@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.actor_connection.common.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorConnection;
+import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorConnectionSearch;
 import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcceptActorConnectionRequestException;
@@ -7,6 +9,10 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantCanc
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedContactStateException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 
 import java.util.UUID;
 
@@ -16,7 +22,7 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
  */
-public interface ActorConnectionManager<T extends ActorIdentity, Z extends ActorConnection<T>, M extends ActorConnectionSearch<T, Z>> {
+public interface ActorConnectionManager<T extends ActorIdentity, Z extends ActorConnection<T>, M extends ActorConnectionSearch<T, Z>> extends FermatManager {
 
     /**
      * Through the method <code>getSearch</code> we can get a new instance of Actor Connection Search.
@@ -33,8 +39,11 @@ public interface ActorConnectionManager<T extends ActorIdentity, Z extends Actor
      * @param actorConnection    the actor connection that we're trying to generate.
      *
      * @throws CantRequestActorConnectionException if something goes wrong.
+     * @throws UnsupportedActorTypeException       if the requested kind of actor is not supported by the actor identity.
      */
-    void requestConnection(final Z actorConnection) throws CantRequestActorConnectionException;
+    void requestConnection(final Z actorConnection) throws CantRequestActorConnectionException,
+                                                           UnsupportedActorTypeException      ,
+                                                           ConnectionAlreadyRequestedException;
 
     /**
      * Through the method <code>disconnect</code> we can disconnect from an actor.
@@ -46,7 +55,8 @@ public interface ActorConnectionManager<T extends ActorIdentity, Z extends Actor
      * @throws ActorConnectionNotFoundException   if we can't find an actor connection with this connection id.
      */
     void disconnect(final UUID connectionId) throws CantDisconnectFromActorException,
-                                                    ActorConnectionNotFoundException;
+                                                    ActorConnectionNotFoundException,
+                                                    UnexpectedContactStateException ;
 
     /**
      * Through the method <code>denyConnection</code> we can deny an actor connection.
@@ -58,7 +68,8 @@ public interface ActorConnectionManager<T extends ActorIdentity, Z extends Actor
      * @throws ActorConnectionNotFoundException          if we can't find an actor connection with this connection id.
      */
     void denyConnection(final UUID connectionId) throws CantDenyActorConnectionRequestException,
-                                                        ActorConnectionNotFoundException       ;
+                                                        ActorConnectionNotFoundException       ,
+                                                        UnexpectedContactStateException        ;
 
     /**
      * Through the method <code>cancelConnection</code> we can cancel a connection request sent.
@@ -71,7 +82,8 @@ public interface ActorConnectionManager<T extends ActorIdentity, Z extends Actor
      * @throws ActorConnectionNotFoundException            if we can't find an actor connection with this connection id.
      */
     void cancelConnection(final UUID connectionId) throws CantCancelActorConnectionRequestException,
-                                                          ActorConnectionNotFoundException         ;
+                                                          ActorConnectionNotFoundException         ,
+                                                          UnexpectedContactStateException          ;
 
     /**
      * Through the method <code>acceptConnection</code> we can accept a received connection request.
@@ -82,6 +94,7 @@ public interface ActorConnectionManager<T extends ActorIdentity, Z extends Actor
      * @throws ActorConnectionNotFoundException            if we can't find an actor connection with this connection id.
      */
     void acceptConnection(final UUID connectionId) throws CantAcceptActorConnectionRequestException,
-                                                          ActorConnectionNotFoundException         ;
+                                                          ActorConnectionNotFoundException         ,
+                                                          UnexpectedContactStateException          ;
 
 }

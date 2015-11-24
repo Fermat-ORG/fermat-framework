@@ -77,6 +77,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.NewReceiveMessagesNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.NewSentMessageNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
@@ -383,7 +384,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-             /*
+                /*
          * Listen and handle VPN Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
@@ -398,6 +399,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
+        initializeMessagesListeners();
     }
 
     /**
@@ -414,12 +417,23 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 //        listenersAdded.add(fermatEventListener);
 
         /**
-         *
+         *Listen and handle the received messages
          */
         FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
         fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
+        /**
+         * Listen and handle the sent messages
+         */
+
+
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewSentMessageNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
     }
 
     /**
@@ -622,8 +636,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             initializeIntraActorAgent();
 
-            initializeMessagesListeners();
-
 
             try {
 
@@ -702,48 +714,32 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     }
 
-    /**
-     * Handles the events VPNConnectionCloseNotificationEvent
-     * @param fermatEvent
-     */
-    @Override
-    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+    public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage){
+        Gson gson = new Gson();
 
-        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+        try {
+            fermatMessage.toJson();
 
-            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+            ActorNetworkServiceRecord actorNetworkServiceRecord = gson.fromJson(fermatMessage.getContent(), ActorNetworkServiceRecord.class);
 
-            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+            if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)) {
+                // close connection, sender is the destination
+                System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
+                communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
+                actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
 
             }
 
+
+        } catch (Exception e) {
+            //quiere decir que no estoy reciviendo metadata si no una respuesta
+            System.out.print("EXCEPCION DENTRO DEL PROCCESS EVENT");
+            e.printStackTrace();
+
         }
-
     }
 
-    /**
-     * Handles the events ClientConnectionCloseNotificationEvent
-     * @param fermatEvent
-     */
-    @Override
-    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-
-        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
-            this.register = false;
-            communicationNetworkServiceConnectionManager.closeAllConnection();
-        }
-
-    }
-
-    private void saveActorsInMemoryCache(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
-
-//        for (PlatformComponentProfile platformComponentProfilePluginRoot : platformComponentProfileRegisteredList){
-//            incomingNotificationsDao.createNotification(UUID.randomUUID(),platformComponentProfilePluginRoot.);
-//        }
-
-    }
 
     /**
      * (non-Javadoc)
@@ -827,10 +823,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     //launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
 
                     getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DELIVERY);
+                    if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)){
+                        // close connection, sender is the destination
+                        communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
+                        actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorSenderPublicKey());
 
-                    // close connection, sender is the destination
-                    communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
-                    actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorSenderPublicKey());
+                    }
 
                     break;
 
@@ -1005,6 +1003,44 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
+        }
+
+    }
+
+    /**
+     * Handles the events VPNConnectionCloseNotificationEvent
+     * @param fermatEvent
+     */
+    @Override
+    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+
+            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+
+                System.out.println("KKKKKKKKKKKKKKKKKKKKK CALLO VPN public key "+vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        }
+
+    }
+
+    /**
+     * Handles the events ClientConnectionCloseNotificationEvent
+     * @param fermatEvent
+     */
+    @Override
+    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+            System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWW CAYO CONEXION PRINCIPAL WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+            this.register = false;
+            communicationNetworkServiceConnectionManager.closeAllConnection();
         }
 
     }

@@ -42,6 +42,12 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerCompleteRegistrationNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantHandleDapNewMessagesException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceDaoMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageAccept;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageDeny;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageRequest;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
@@ -58,6 +64,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.d
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
@@ -79,6 +86,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -325,7 +333,15 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-         /*
+       /*
+        * Listen and handle New Message Receive Notification Event
+        */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+            /*
          * Listen and handle VPN Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
@@ -341,16 +357,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-//                 /*
-//         * Listen and handle New Message Receive Notification Event
-//         */
-//        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-//        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this, eventManager));
-//        eventManager.addListener(fermatEventListener);
-//        listenersAdded.add(fermatEventListener);
-
     }
-
 
     /**
      * This method initialize the database
@@ -537,7 +544,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetIssuerToRegister.getPublicKey(),
+                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetIssuerToRegister.getActorPublicKey(),
                         actorAssetIssuerToRegister.getName().toLowerCase().trim(),
                         actorAssetIssuerToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
@@ -551,7 +558,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetIssuerToRegister.getPublicKey(),
+                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetIssuerToRegister.getActorPublicKey(),
                         actorAssetIssuerToRegister.getName().toLowerCase().trim(),
                         actorAssetIssuerToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
@@ -584,9 +591,60 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         }
     }
 
-    @Override
-    public void sendMessage(ActorAssetIssuer actorAssetIssuerSender, ActorAssetIssuer actorAssetIssuerDestination, String msjContent) throws CantSendMessageException {
+    public void handleNewMessages(final FermatMessage fermatMessage) {
 
+        try {
+
+            Gson gson = new Gson();
+
+            String jsonMessage = fermatMessage.getContent();
+
+            NetworkServiceDaoMessage networkServiceDaoMessage = gson.fromJson(jsonMessage, NetworkServiceDaoMessage.class);
+
+            switch (networkServiceDaoMessage.getMessageType()) {
+
+                case ACCEPT:
+                    NetworkServiceMessageAccept acceptMessage = gson.fromJson(jsonMessage, NetworkServiceMessageAccept.class);
+//                    receiveAcceptance(acceptMessage);
+                    break;
+
+                case DENY:
+                    NetworkServiceMessageDeny denyMessage = gson.fromJson(jsonMessage, NetworkServiceMessageDeny.class);
+//                    receiveDenial(denyMessage);
+                    break;
+
+                case REQUEST:
+                    // update the request to processing receive state with the given action.
+                    NetworkServiceMessageRequest requestMessage = gson.fromJson(jsonMessage, NetworkServiceMessageRequest.class);
+//                    receiveRequest(requestMessage);
+                    break;
+
+                default:
+                    throw new CantHandleDapNewMessagesException(
+                            "message type: " +networkServiceDaoMessage.getMessageType().name(),
+                            "Message type not handled."
+                    );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void sendMessage(DAPActor dapActor, ActorAssetIssuer actorAssetIssuerDestination, String msjContent) throws CantSendMessageException {
+        switch (dapActor.getType()) {
+            case DAP_ASSET_ISSUER:
+
+                break;
+            case DAP_ASSET_USER:
+
+                break;
+            case DAP_ASSET_REDEEM_POINT:
+
+                break;
+            default:
+
+        }
     }
 
     @Override

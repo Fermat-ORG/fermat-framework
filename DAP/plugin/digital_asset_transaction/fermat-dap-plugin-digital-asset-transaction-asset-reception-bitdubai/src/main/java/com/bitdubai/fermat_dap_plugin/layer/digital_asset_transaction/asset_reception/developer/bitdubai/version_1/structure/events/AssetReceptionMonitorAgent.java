@@ -254,8 +254,6 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
         }
 
         private void doTheMainTask() throws CantExecuteQueryException, CantCheckAssetReceptionProgressException {
-            //TODO: once this works, please, remove the following line
-            //System.out.println("ASSET RECEPTION monitor agent es starting");
             try {
                 assetReceptionDao = new AssetReceptionDao(pluginDatabaseSystem, pluginId);
                 if (assetReceptionDao.isPendingNetworkLayerEvents()) {
@@ -446,7 +444,7 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
         private ActorAssetIssuer getActorAssetIssuer(String senderId) throws CantGetAssetIssuerActorsException {
             List<ActorAssetIssuer> actorAssetIssuerList = actorAssetIssuerManager.getAllAssetIssuerActorInTableRegistered();
             for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuerList) {
-                if (actorAssetIssuer.getPublicKey().equals(senderId)) {
+                if (actorAssetIssuer.getActorPublicKey().equals(senderId)) {
                     return actorAssetIssuer;
                 }
             }

@@ -1,23 +1,29 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.view.animation.TranslateAnimation;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
+import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -26,7 +32,6 @@ import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -46,11 +51,9 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.Receiv
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapterNew;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.FragmentsCommons;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +69,9 @@ import static android.widget.Toast.makeText;
  * @since 20/10/2015
  */
 public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem>
-        implements FermatListItemListeners<CryptoWalletTransaction> {
+        implements FermatListItemListeners<CryptoWalletTransaction>,
+        ElementsWithAnimation,
+        NavigationViewPainter {
 
 
     private int MAX_TRANSACTIONS = 20;
@@ -90,6 +95,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     ReferenceWalletSession referenceWalletSession;
     private long bookBalance;
+    private LinearLayout emptyListViewsContainer;
+    private int[] emptyOriginalPos= new int[2];;
+
 
 
     public static SendTransactionFragment2 newInstance() {
@@ -119,11 +127,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getPaintActivtyFeactures().addCollapseAnimation(this);
+        getPaintActivtyFeactures().addNavigationView(this);
+        invalidate();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         setUp(inflater);
+
 
         return rootView;
     }
@@ -131,26 +148,18 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         try {
             //setUpHeader(inflater);
             setUpDonut(inflater);
-            setUpScreen(inflater);
+            setUpScreen();
         }catch (Exception e){
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
                     UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-        /**
-         * add navigation header
-         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
-
-        /**
-         * Navigation view items
-         */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
-        setNavigationDrawer(navigationViewAdapter);
+    private void setUpScreen(){
+        emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);
 
     }
+
 
 
     private void setUpDonut(LayoutInflater inflater){
@@ -265,7 +274,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         if (openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
-            View emptyListViewsContainer = layout.findViewById(R.id.empty);
+            emptyListViewsContainer =(LinearLayout) layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
     }
@@ -295,7 +304,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_open_contracts_tab;
+        return R.layout.home_send_main;
     }
 
     @Override
@@ -340,6 +349,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
+            Toast.makeText(getActivity(),"ooooopss, create identity first",Toast.LENGTH_SHORT).show();
         }
         return data;
     }
@@ -436,5 +446,70 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
 
+    @Override
+    public void startCollapseAnimation(int verticalOffset) {
+        moveViewToScreenCenter(emptyListViewsContainer);
+    }
+
+    @Override
+    public void startExpandAnimation(int verticalOffSet) {
+        moveViewToOriginalPosition(emptyListViewsContainer);
+    }
+
+    private void moveViewToOriginalPosition(View view) {
+        if(Build.VERSION.SDK_INT>17) {
+            int position[] = new int[2];
+            view.getLocationOnScreen(position);
+            float centreY = rootView.getY() + rootView.getHeight() / 2;
+            TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0  , centreY-250,0);
+            anim.setDuration(1000);
+            anim.setFillAfter(true);
+            view.startAnimation(anim);
+        }
+    }
+
+    private void moveViewToScreenCenter( View view ) {
+        if (Build.VERSION.SDK_INT > 17) {
+            DisplayMetrics dm = new DisplayMetrics();
+            rootView.getDisplay().getMetrics(dm);
+            int xDest = dm.widthPixels / 2;
+            xDest -= (view.getMeasuredWidth() / 2);
+            float centreY = rootView.getY() + rootView.getHeight() / 2;
+
+            TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
+            anim.setDuration(1000);
+            anim.setFillAfter(true);
+            view.startAnimation(anim);
+        }
+    }
+
+    @Override
+    public View addNavigationViewHeader() {
+        try {
+            return FragmentsCommons.setUpHeaderScreen(getActivity().getLayoutInflater(), getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public FermatAdapter addNavigationViewAdapter() {
+        try {
+            NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null, referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+            //setNavigationDrawer(navigationViewAdapter);
+            return navigationViewAdapter;
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ViewGroup addNavigationViewBodyContainer() {
+        RelativeLayout relativeLayout = new RelativeLayout(getActivity());
+        relativeLayout.setBackgroundResource(R.drawable.navigation_view_fondo);
+        return relativeLayout;
+    }
 }
 

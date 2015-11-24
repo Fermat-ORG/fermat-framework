@@ -395,7 +395,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegister.getPublicKey(),
+                PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegister.getActorPublicKey(),
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
@@ -409,7 +409,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                 /*
                  * Construct the profile
                  */
-                PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegister.getPublicKey(),
+                PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegister.getActorPublicKey(),
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
@@ -514,7 +514,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 
             if (this.isRegister()) {
 
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetUserDestination.getPublicKey());
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetUserDestination.getActorPublicKey());
 
                 Gson gson = new Gson();
                 JsonObject packetContent = new JsonObject();
@@ -527,15 +527,15 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                 if (communicationNetworkServiceLocal != null) {
 
                     //Send the message
-                    communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getPublicKey(), actorAssetUserDestination.getPublicKey(), messageContentIntoJson);
+                    communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getActorPublicKey(), actorAssetUserDestination.getActorPublicKey(), messageContentIntoJson);
 
                 } else {
 
                     /*
                      * Created the message
                      */
-                    FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetIssuerSender.getPublicKey(),//Sender
-                            actorAssetUserDestination.getPublicKey(), //Receiver
+                    FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetIssuerSender.getActorPublicKey(),//Sender
+                            actorAssetUserDestination.getActorPublicKey(), //Receiver
                             messageContentIntoJson,                //Message Content
                             FermatMessageContentType.TEXT);//Type
 
@@ -553,12 +553,12 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                     /*
                      * Create the sender basic profile
                      */
-                    PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerSender.getPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
+                    PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
 
                     /*
                      * Create the receiver basic profile
                      */
-                    PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserDestination.getPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+                    PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserDestination.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
 
                     /*
                      * Ask the client to connect
@@ -624,7 +624,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 
 
             if (this.isRegister()) {
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerDestination.getPublicKey());
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerDestination.getActorPublicKey());
 
                 Gson gson = new Gson();
                 JsonObject packetContent = new JsonObject();
@@ -637,15 +637,15 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                 if (communicationNetworkServiceLocal != null) {
 
                     //Send the message
-                    communicationNetworkServiceLocal.sendMessage(actorAssetUserSender.getPublicKey(), actorAssetIssuerDestination.getPublicKey(), messageContentIntoJson);
+                    communicationNetworkServiceLocal.sendMessage(actorAssetUserSender.getActorPublicKey(), actorAssetIssuerDestination.getActorPublicKey(), messageContentIntoJson);
 
                 } else {
 
                     /*
                      * Created the message
                      */
-                    FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetUserSender.getPublicKey(),//Sender
-                            actorAssetIssuerDestination.getPublicKey(), //Receiver
+                    FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetUserSender.getActorPublicKey(),//Sender
+                            actorAssetIssuerDestination.getActorPublicKey(), //Receiver
                             messageContentIntoJson,                //Message Content
                             FermatMessageContentType.TEXT);//Type
 
@@ -663,12 +663,12 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                     /*
                      * Create the sender basic profile
                      */
-                    PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserSender.getPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+                    PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
 
                     /*
                      * Create the receiver basic profile
                      */
-                    PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerDestination.getPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
+                    PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerDestination.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
 
                     /*
                      * Ask the client to connect
@@ -1151,6 +1151,11 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 //        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this, eventManager));
 //        eventManager.addListener(fermatEventListener);
 //        listenersAdded.add(fermatEventListener);
+
+    }
+
+    @Override
+    public void handleNewMessages(FermatMessage message) {
 
     }
 }

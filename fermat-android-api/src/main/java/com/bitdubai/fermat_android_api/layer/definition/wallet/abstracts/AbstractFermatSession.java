@@ -73,4 +73,6 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
     public R getResourceProviderManager() {
         return resourceProviderManager;
     }
+
+
 }

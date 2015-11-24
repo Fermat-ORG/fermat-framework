@@ -112,6 +112,7 @@ public class AssetIssuingTransactionDatabaseFactory implements DealsWithPluginDa
 
             assetIssuingTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING,100,Boolean.TRUE);
             assetIssuingTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING,100,Boolean.TRUE);
+            assetIssuingTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_BLOCK_COLUMN_NAME, DatabaseDataType.STRING,100,Boolean.TRUE);
             assetIssuingTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING,100,Boolean.FALSE);
             assetIssuingTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME,DatabaseDataType.STRING,100,Boolean.FALSE);
             assetIssuingTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME,DatabaseDataType.STRING,10,Boolean.FALSE);

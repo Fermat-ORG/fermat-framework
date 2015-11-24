@@ -17,15 +17,13 @@ public class AssetIssuerCommunityFragmentFactory extends FermatSubAppFragmentFac
 
     @Override
     public FermatFragment getFermatFragment(AssetIssuerCommunityFragmentEnumTypes fragments) throws FragmentNotFoundException {
-        FermatFragment fragment = null;
         switch (fragments) {
             case DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN:
-                fragment = HomeFragment.newInstance();
-                break;
+                return HomeFragment.newInstance();
             default:
-                throw new NotImplementedException("this fragment is not implemented yet...");
+                throw new FragmentNotFoundException(String.format("Fragment: %s not found", fragments.getKey()),
+                        new Exception(), "fermat-dap-android-sub-app-asset-issuer-community", "fragment not found");
         }
-        return fragment;
     }
 
     @Override

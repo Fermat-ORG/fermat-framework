@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+
 /**
  * Created by rodrigoa on 20/05/15.
  */
-public interface BitcoinManager {
+public interface BitcoinManager extends FermatManager {
 
     // changed from UUID to Strubg representing a public key
     // Ezequiel Postan August 15th 2015

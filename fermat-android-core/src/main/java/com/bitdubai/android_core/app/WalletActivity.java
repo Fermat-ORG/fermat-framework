@@ -8,16 +8,19 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
@@ -215,48 +218,17 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         if (fragment != null) frgBackType = fragment.getBack();
 
         if (frgBackType != null) {
-
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = walletRuntimeManager.getLastWallet().getLastActivity().getFragment(fragment.getBack());
-
-            //loadFragment(frgBackType);
             changeWalletFragment(walletNavigationStructure.getWalletCategory(), walletNavigationStructure.getWalletType(), walletNavigationStructure.getPublicKey(), frgBackType);
-
-
         } else if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey()!=null) {
             changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
         } else {
-//            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
-//            getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
-//            resetThisActivity();
-//            Intent intent = new Intent(this, SubAppActivity.class);
-//            intent.putExtra(DEVELOP_MODE, developMode);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            finish();
-//            startActivity(intent);
-//            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             Intent intent = new Intent(this, DesktopActivity.class);
             if(developMode==true) intent.putExtra("flag",true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             startActivity(intent);
-
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
-
-
-//        if (getWalletRuntimeManager().getLastWallet().getLastActivity().getType()!= Activities.CWP_WALLET_MANAGER_MAIN){
-//            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
-//            getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
-//            resetThisActivity();
-//
-//            // TODO : Esto debe ir hacia la subAppActivity en caso de querer ver el home, en un futuro cuando se quiera ver la lista de walletAbiertas va ser distinto
-//            Intent intent = new Intent(this, SubAppActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-//            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//
-//        }else{
-//            super.onBackPressed();
-//        }
     }
 
 
@@ -272,6 +244,8 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             Activity activity = wallet.getLastActivity();
 
             loadBasicUI(activity);
+
+            hideBottonIcons();
 
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
@@ -290,6 +264,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     private void setOneFragmentInScreen() {
+
         WalletNavigationStructure walletRuntime = getWalletRuntimeManager().getLastWallet();
         String walletPublicKey = walletRuntime.getPublicKey();
         String walletCategory = walletRuntime.getWalletCategory();
@@ -616,6 +591,8 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
 
+
+
     @Override
     public void changeActivityBack(String appBackPublicKey,String activityCode){
         try {
@@ -624,5 +601,27 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivityBack"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
+    }
+
+
+
+    private void moveViewToScreenCenter( View container,View view )
+    {
+        //RelativeLayout root = (RelativeLayout) findViewById( R.id.WelcomeLayout );
+        DisplayMetrics dm = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics( dm );
+        int statusBarOffset = dm.heightPixels - container.getMeasuredHeight();
+
+        int originalPos[] = new int[2];
+        view.getLocationOnScreen( originalPos );
+
+        int xDest = dm.widthPixels/2;
+        xDest -= (view.getMeasuredWidth()/2);
+        int yDest = dm.heightPixels/2 - (view.getMeasuredHeight()/2) - statusBarOffset;
+
+        TranslateAnimation anim = new TranslateAnimation( 0, xDest - originalPos[0] , 0, yDest - originalPos[1] );
+        anim.setDuration(1000);
+        anim.setFillAfter( true );
+        view.startAnimation(anim);
     }
 }
