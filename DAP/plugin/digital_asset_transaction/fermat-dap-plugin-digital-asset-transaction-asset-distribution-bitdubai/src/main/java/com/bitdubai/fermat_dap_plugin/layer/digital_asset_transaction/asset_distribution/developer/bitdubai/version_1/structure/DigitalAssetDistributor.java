@@ -13,7 +13,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
@@ -124,7 +123,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     private void deliverDigitalAssetToRemoteDevice(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantDeliverDigitalAssetException {
         try {
             //First, I going to persist in database the basic information about digitalAssetMetadata
-            System.out.println("ASSET DISTRIBUTION begins for " + actorAssetUser.getPublicKey());
+            System.out.println("ASSET DISTRIBUTION begins for " + actorAssetUser.getActorPublicKey());
             persistDigitalAsset(digitalAssetMetadata, actorAssetUser);
             System.out.println("ASSET DISTRIBUTION begins for persisted");
             //Now, I'll check is Hash wasn't modified
@@ -216,7 +215,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
                 digitalAssetMetadata.getGenesisTransaction(),
                 this.digitalAssetFileStoragePath,
                 digitalAssetMetadata.getDigitalAssetHash(),
-                actorAssetUser.getPublicKey(),
+                actorAssetUser.getActorPublicKey(),
                 actorAddress);
         System.out.println("ASSET DISTRIBUTION registered in database");
         persistInLocalStorage(digitalAssetMetadata);
@@ -258,7 +257,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
                 ActorAssetUser actorAssetUser = entry.getValue();
                 //Deliver one DigitalAsset
                 System.out.println("ASSET DISTRIBUTION DAM-Hash:" + digitalAssetMetadata.getDigitalAssetHash());
-                System.out.println("ASSET DISTRIBUTION ActorAssetUser - PublicKey:" + actorAssetUser.getPublicKey());
+                System.out.println("ASSET DISTRIBUTION ActorAssetUser - PublicKey:" + actorAssetUser.getActorPublicKey());
                 System.out.println("ASSET DISTRIBUTION ActorAssetUser - Name:" + actorAssetUser.getName());
                 deliverDigitalAssetToRemoteDevice(digitalAssetMetadata, actorAssetUser);
             }
