@@ -99,7 +99,7 @@ public class RequestMessage extends NetworkServiceMessage {
 
     @Override
     public String toString() {
-        return "CryptoBrokerConnectionNew{" +
+        return "CryptoBrokerConnectionRequest{" +
                 "requestId=" + requestId +
                 ", senderPublicKey='" + senderPublicKey + '\'' +
                 ", senderActorType=" + senderActorType +

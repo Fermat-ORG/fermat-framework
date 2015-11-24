@@ -31,7 +31,6 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
  */
 public class BrokerListActivityFragment extends FermatWalletFragment {
 
-    private static final String CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY = "crypto_customer_wallet";
     private static final String TAG = "BrokerListActivityFragment";
 
     // Fermat Managers
