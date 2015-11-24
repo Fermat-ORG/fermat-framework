@@ -9,20 +9,21 @@ public enum NetworkServiceDaoMessageType {
     ACTOR_ISSUER("AISS"),
     ACTOR_USER("AUSER"),
     ACTOR_REDEEM_POINT("ARPT"),
-    DIGITAL_ASSET_METADATA("DAMD");
+    DIGITAL_ASSET_METADATA("DAMD"),
+    ASSET_APPROPRIATED("ASAPR");
 
     String code;
 
-    NetworkServiceDaoMessageType(String code){
-        this.code=code;
+    NetworkServiceDaoMessageType(String code) {
+        this.code = code;
     }
 
-    public String getCode(){
+    public String getCode() {
         return this.code;
     }
 
     public NetworkServiceDaoMessageType getByCode(String code) throws InvalidParameterException {
-        switch (code){
+        switch (code) {
             case "AISS":
                 return NetworkServiceDaoMessageType.ACTOR_ISSUER;
             case "AUSER":
@@ -31,6 +32,8 @@ public enum NetworkServiceDaoMessageType {
                 return NetworkServiceDaoMessageType.ACTOR_REDEEM_POINT;
             case "DAMD":
                 return NetworkServiceDaoMessageType.DIGITAL_ASSET_METADATA;
+            case "ASAPR":
+                return ASSET_APPROPRIATED;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the AssetCreditType enum.");
         }
