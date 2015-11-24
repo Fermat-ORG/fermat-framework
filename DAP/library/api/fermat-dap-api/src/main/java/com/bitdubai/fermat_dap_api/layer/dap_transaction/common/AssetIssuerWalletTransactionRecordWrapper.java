@@ -31,6 +31,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     private final String digitalAssetMetadataHash;
     private final String genesisBlock;
     private final String transactionId;
+    private final String genesisTransaction;
     private DigitalAssetMetadata digitalAssetMetadata;
 
     AssetIssuerWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
@@ -48,7 +49,8 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
                                               String memo,
                                               String digitalAssetMetadataHash,
                                               String genesisBlock,
-                                              String transactionId){
+                                              String transactionId,
+                                              String genesisTransaction){
         this.digitalAsset = digitalAsset;
         this.digitalAssetPublicKey = digitalAssetPublicKey;
         this.name = name;
@@ -65,9 +67,11 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.digitalAssetMetadataHash = digitalAssetMetadataHash;
         this.genesisBlock = genesisBlock;
         this.transactionId = transactionId;
+        this.genesisTransaction = genesisTransaction;
 
         this.digitalAssetMetadata = new DigitalAssetMetadata(this.digitalAsset);
         digitalAssetMetadata.setGenesisBlock(genesisBlock);
+        digitalAssetMetadata.setGenesisTransaction(this.genesisTransaction);
     }
 
     public AssetIssuerWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
@@ -88,6 +92,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         this.genesisBlock = digitalAssetMetadata.getGenesisBlock();
+        this.genesisTransaction = digitalAssetMetadata.getGenesisTransaction();
         Date date= new Date();
         this.timeStamp = date.getTime();
         this.memo = "Digital Asset delivered at"+this.timeStamp;
