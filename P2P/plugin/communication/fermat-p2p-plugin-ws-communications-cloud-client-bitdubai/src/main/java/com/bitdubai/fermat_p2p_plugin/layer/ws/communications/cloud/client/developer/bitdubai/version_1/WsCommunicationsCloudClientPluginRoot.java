@@ -83,6 +83,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     public static final String SERVER_IP = "52.11.156.16"; //AWS FREE INSTANCE
    // public static final String SERVER_IP = "192.168.1.2";
 
+
     /**
      * Represent the DEFAULT_PORT
      */
