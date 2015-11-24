@@ -88,24 +88,6 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
 
         try {
 
-            CryptoBrokerSearch cryptoBrokerSearch = cryptoBrokerANSManager.getSearch();
-
-            List<CryptoBrokerExposingData> exposingDataList = cryptoBrokerSearch.getResult();
-
-            System.out.println("************** List of Crypto Brokers exposed init. ****************");
-
-            System.out.println("**************                                      ****************");
-
-            for (CryptoBrokerExposingData cryptoBrokerExposingData : exposingDataList) {
-                System.out.println(cryptoBrokerExposingData);
-            }
-
-            System.out.println("**************                                      ****************");
-
-            System.out.println("************** List of Crypto Brokers exposed end . ****************");
-
-
-
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             return cryptoBrokerIdentityDatabaseDao.getAllCryptoBrokersIdentitiesFromCurrentDeviceUser(loggedUser);
 

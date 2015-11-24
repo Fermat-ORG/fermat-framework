@@ -68,9 +68,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
             // setting up  module
             moduleManager = ((CryptoBrokerIdentitySubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
-            // todo commented by lnacosta due to error (first time is not doing the work async):
-           // identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-            onRefresh();
+            identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
 

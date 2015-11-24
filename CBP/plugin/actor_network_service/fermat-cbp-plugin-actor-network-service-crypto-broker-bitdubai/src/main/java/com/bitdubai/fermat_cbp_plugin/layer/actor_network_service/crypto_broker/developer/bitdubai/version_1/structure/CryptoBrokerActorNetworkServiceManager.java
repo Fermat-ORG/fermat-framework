@@ -90,7 +90,8 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
 
-                cryptoBrokersToExpose.remove(cryptoBroker.getPublicKey());
+                if (cryptoBrokersToExpose != null && cryptoBrokersToExpose.containsKey(cryptoBroker.getPublicKey()))
+                    cryptoBrokersToExpose.remove(cryptoBroker.getPublicKey());
             }
 
         } catch (final CantRegisterComponentException e) {
