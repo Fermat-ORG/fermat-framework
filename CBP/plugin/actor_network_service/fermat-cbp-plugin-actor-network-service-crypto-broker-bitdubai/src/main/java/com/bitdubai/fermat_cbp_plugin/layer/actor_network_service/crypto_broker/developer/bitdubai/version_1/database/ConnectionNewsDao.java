@@ -3,8 +3,11 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -89,25 +92,42 @@ public final class ConnectionNewsDao {
         }
     }
 
-    public final List<CryptoBrokerConnectionRequest> listAllPendingRequests() throws CantListPendingConnectionRequestsException {
+    /**
+     * Return all the pending requests depending on the action informed through parameters.
+     *
+     * @param actions  the list of actions that we need to bring.
+     *
+     * @return a list of CryptoBrokerConnectionRequest instances.
+     *
+     * @throws CantListPendingConnectionRequestsException  if something goes wrong.
+     */
+    public final List<CryptoBrokerConnectionRequest> listAllPendingRequests(final List<ConnectionRequestAction> actions) throws CantListPendingConnectionRequestsException {
 
         try {
 
             final ProtocolState protocolState = ProtocolState.PENDING_LOCAL_ACTION;
 
-            final DatabaseTable addressExchangeRequestTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+            final DatabaseTable connectionNewsTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
 
-            addressExchangeRequestTable.setStringFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
+            connectionNewsTable.setFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, protocolState, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
+            final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
 
-            final List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+            for(final ConnectionRequestAction action : actions)
+                connectionNewsTable.setFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, action, DatabaseFilterType.EQUAL);
+
+            final DatabaseTableFilterGroup filterGroup = connectionNewsTable.getNewFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
+
+            connectionNewsTable.setFilterGroup(filterGroup);
+
+            connectionNewsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
 
             final List<CryptoBrokerConnectionRequest> cryptoAddressRequests = new ArrayList<>();
 
-            for (final DatabaseTableRecord record : records) {
+            for (final DatabaseTableRecord record : records)
                 cryptoAddressRequests.add(buildConnectionNewRecord(record));
-            }
 
             return cryptoAddressRequests;
 

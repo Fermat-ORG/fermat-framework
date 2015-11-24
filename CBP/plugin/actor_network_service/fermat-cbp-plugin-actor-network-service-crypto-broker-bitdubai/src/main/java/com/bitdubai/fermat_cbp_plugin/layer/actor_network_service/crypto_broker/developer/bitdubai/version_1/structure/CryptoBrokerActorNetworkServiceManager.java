@@ -24,6 +24,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -141,13 +142,13 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             final ConnectionRequestAction action = ConnectionRequestAction.DISCONNECT     ;
 
             connectionNewsDao.createDisconnectionRequest(
-                    newId            ,
+                    newId,
                     identityPublicKey,
                     identityActorType,
-                    brokerPublicKey  ,
-                    sentTime         ,
-                    state            ,
-                    type             ,
+                    brokerPublicKey,
+                    sentTime,
+                    state,
+                    type,
                     action
             );
 
@@ -235,7 +236,37 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     }
 
     /**
-     * we'll return all the requests pending a local action.
+     * we'll return all the request news with a pending local action.
+     * State : PENDING_LOCAL_ACTION.
+     *
+     * @throws CantListPendingConnectionRequestsException  if something goes wrong.
+     */
+    @Override
+    public final List<CryptoBrokerConnectionRequest> listPendingConnectionNews() throws CantListPendingConnectionRequestsException {
+
+        try {
+
+            List<ConnectionRequestAction> actions = new ArrayList<>();
+
+            actions.add(ConnectionRequestAction.CANCEL    );
+            actions.add(ConnectionRequestAction.DISCONNECT);
+            actions.add(ConnectionRequestAction.REQUEST   );
+
+            return connectionNewsDao.listAllPendingRequests(actions);
+
+        } catch (final CantListPendingConnectionRequestsException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListPendingConnectionRequestsException(e, null, "Unhandled Exception.");
+        }
+    }
+
+    /**
+     * we'll return all the request updates with a pending local action.
      * State : PENDING_LOCAL_ACTION.
      *
      * @throws CantListPendingConnectionRequestsException  if something goes wrong.
@@ -245,7 +276,12 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
         try {
 
-            return connectionNewsDao.listAllPendingRequests();
+            List<ConnectionRequestAction> actions = new ArrayList<>();
+
+            actions.add(ConnectionRequestAction.ACCEPT);
+            actions.add(ConnectionRequestAction.DENY  );
+
+            return connectionNewsDao.listAllPendingRequests(actions);
 
         } catch (final CantListPendingConnectionRequestsException e){
 

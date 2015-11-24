@@ -116,6 +116,8 @@ public interface CryptoBrokerManager extends FermatManager {
      * Through the method <code>listPendingConnectionNews</code> we can list all the connection news
      * with a pending local action.
      *
+     * This method is exposed for the crypto broker actor connection plug-in. Here we'll return all the new requests that arrive to him.
+     *
      * @return a list of instance of CryptoBrokerConnectionNews
      *
      * @throws CantListPendingConnectionRequestsException if something goes wrong.
@@ -125,6 +127,8 @@ public interface CryptoBrokerManager extends FermatManager {
     /**
      * Through the method <code>listPendingConnectionUpdates</code> we can list all the connection news
      * with a pending local action.
+     *
+     * This method is exposed for all the actors that try to connect with a crypto broker. Here we'll return all the updates of the requests that arrive to them.
      *
      * @return a list of instance of CryptoBrokerConnectionNews
      *
