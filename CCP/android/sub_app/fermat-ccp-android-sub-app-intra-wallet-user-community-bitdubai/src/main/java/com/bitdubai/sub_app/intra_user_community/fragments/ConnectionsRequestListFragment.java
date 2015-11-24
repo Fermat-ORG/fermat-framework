@@ -24,7 +24,7 @@ import android.widget.ListPopupWindow;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
+import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
@@ -201,7 +201,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
             ListAdapter listAdapter = new ListAdapter(getActivity(),R.layout.itemlistrow,lstCheckBox);
 
 
-            ((PaintActivtyFeactures) getActivity()).paintComboBoxInActionBar(listAdapter, this);
+            ((PaintActivityFeatures) getActivity()).paintComboBoxInActionBar(listAdapter, this);
         } catch (CantShowLoginIdentitiesException e) {
             e.printStackTrace();
         }

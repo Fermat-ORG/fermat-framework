@@ -1,14 +1,13 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
+import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -145,8 +144,8 @@ public abstract class FermatFragment extends AbstractFermatFragment implements F
         return getPaintActivtyFeactures().getToolbarHeader();
     }
 
-    protected PaintActivtyFeactures getPaintActivtyFeactures(){
-        return ((PaintActivtyFeactures)getActivity());
+    protected PaintActivityFeatures getPaintActivtyFeactures(){
+        return ((PaintActivityFeatures)getActivity());
     }
 
     protected void setNavigationDrawer(FermatAdapter adapter){
