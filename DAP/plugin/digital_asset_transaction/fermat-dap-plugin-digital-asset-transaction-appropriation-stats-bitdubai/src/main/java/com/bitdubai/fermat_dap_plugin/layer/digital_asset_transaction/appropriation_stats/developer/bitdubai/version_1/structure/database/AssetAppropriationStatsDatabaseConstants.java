@@ -7,7 +7,7 @@ public class AssetAppropriationStatsDatabaseConstants {
 
     //VARIABLE DECLARATION
     /*
-     * AAA stands for Asset Appropriation Stats.
+     * AAS stands for Asset Appropriation Stats.
      */
     public static final String APPROPRIATION_STATS_DATABASE = "appropriation_stats_database";
 
@@ -23,6 +23,20 @@ public class AssetAppropriationStatsDatabaseConstants {
     public static final String APPROPRIATION_STATS_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME = "timestamp";
 
     public static final String APPROPRIATION_STATS_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN = APPROPRIATION_STATS_EVENTS_RECORDED_ID_COLUMN_NAME;
+
+    /*
+     * Appropriated assets database table definition.
+     */
+    public static final String APPROPRIATION_STATS_APPROPRIATED_TABLE_NAME = "aas_appropriated";
+
+    public static final String APPROPRIATION_STATS_APPROPRIATED_ID_COLUMN_NAME = "id";
+    /**
+     * Here I'd save the XML Representation for the asset that has been appropriated.
+     */
+    public static final String APPROPRIATION_STATS_APPROPRIATED_ASSET_COLUMN_NAME = "digital_asset";
+    public static final String APPROPRIATION_STATS_APPROPRIATED_USER_COLUMN_NAME = "actor_user";
+    public static final String APPROPRIATION_STATS_APPROPRIATED_TIME_COLUMN_NAME = "time_appropriation";
+
     //CONSTRUCTORS
 
     //PUBLIC METHODS
