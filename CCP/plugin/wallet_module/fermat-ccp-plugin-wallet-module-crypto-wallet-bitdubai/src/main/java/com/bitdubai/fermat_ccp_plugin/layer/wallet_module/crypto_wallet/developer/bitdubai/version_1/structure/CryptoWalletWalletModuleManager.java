@@ -844,7 +844,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         paymentRecord.getAmount(),
                         cryptoWalletWalletContact,
                         PaymentRequest.SEND_PAYMENT,
-                        paymentRecord.getState().name());
+                        paymentRecord.getState());
                 lst.add(cryptoWalletPaymentRequest);
             }
 
@@ -904,7 +904,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         paymentRecord.getAmount(),
                         cryptoWalletWalletContact,
                         PaymentRequest.RECEIVE_PAYMENT,
-                        paymentRecord.getState().name()
+                        paymentRecord.getState()
                 );
 
                 lst.add(cryptoWalletPaymentRequest);

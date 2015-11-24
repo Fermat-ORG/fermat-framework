@@ -216,7 +216,8 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         dao.setTransactionHash(transaction, hash);
                         // TODO: The crypto vault should let us obtain the transaction hash before sending the currency. As this was never provided by the vault
                         // Le setie el hash, mati
-                        //       we will just send the metadata in this place. This MUST be corrected.
+                        //       we will
+                        // just send the metadata in this place. This MUST be corrected.
                         transaction.setTransactionHash(hash);
                         dao.setToSTCV(transaction);
 
