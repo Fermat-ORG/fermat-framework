@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreat
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
@@ -86,6 +87,24 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
     public List<CryptoBrokerIdentity> getAllCryptoBrokersFromCurrentDeviceUser() throws CantGetCryptoBrokerIdentityException {
 
         try {
+
+            CryptoBrokerSearch cryptoBrokerSearch = cryptoBrokerANSManager.getSearch();
+
+            List<CryptoBrokerExposingData> exposingDataList = cryptoBrokerSearch.getResult();
+
+            System.out.println("************** List of Crypto Brokers exposed init. ****************");
+
+            System.out.println("**************                                      ****************");
+
+            for (CryptoBrokerExposingData cryptoBrokerExposingData : exposingDataList) {
+                System.out.println(cryptoBrokerExposingData);
+            }
+
+            System.out.println("**************                                      ****************");
+
+            System.out.println("************** List of Crypto Brokers exposed end . ****************");
+
+
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             return cryptoBrokerIdentityDatabaseDao.getAllCryptoBrokersIdentitiesFromCurrentDeviceUser(loggedUser);
