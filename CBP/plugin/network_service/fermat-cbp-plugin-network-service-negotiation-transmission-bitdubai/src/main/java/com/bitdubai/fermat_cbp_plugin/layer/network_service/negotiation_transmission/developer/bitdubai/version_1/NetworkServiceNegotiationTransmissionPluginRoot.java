@@ -1,122 +1,118 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-//import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Pattern;
 
 /**
  * Created by Yordin Alayn on 16.09.15.
  */
 
-public class NetworkServiceNegotiationTransmissionPluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNetworkService implements DatabaseManagerForDevelopers {
 
-    ErrorManager errorManager;
+    public NetworkServiceNegotiationTransmissionPluginRoot() {
+        super(
+            new PluginVersionReference(new Version()),
+            PlatformComponentType.NETWORK_SERVICE,
+            NetworkServiceType.NEGOTIATION_TRANSMISSION,
+            "Negotiation Transmission Network Service",
+            "NegotiationTransmissionNetworkService",
+            null,
+            EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION
+        );
+    }
 
-    UUID pluginId;
-
-    LogManager logManager;
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
+    /*DatabaseManagerForDevelopers Interface implementation.*/
     @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionPluginRoot");
-        return returnedClasses;
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return null;
     }
 
     @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        try {
-            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-                if (NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-                } else {
-                    NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-                }
-            }
-        } catch (Exception exception) {
-            // this.errorManager.reportUnexpectedPluginException(Plugins., UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-        }
-    }
-
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return null;
     }
 
     @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return null;
     }
-
-    @Override
-    public void start() throws CantStartPluginException {
-        try {
-            this.serviceStatus = ServiceStatus.STARTED;
-        } catch (Exception exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
-    @Override
-    public void setId(UUID uuid) {
-        this.pluginId = uuid;
-    }
+    /*END DatabaseManagerForDevelopers Interface implementation.*/
 
     @Override
     public FermatManager getManager() {
         return null;
     }
 
-    public static LogLevel getLogLevelByClass(String className) {
-        try {
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e) {
-            System.err.println("CantGetLogLevelByClass: " + e.getMessage());
-            return DEFAULT_LOG_LEVEL;
-        }
+    @Override
+    public String getIdentityPublicKey() {
+        return null;
     }
 
+    @Override
+    public void initializeCommunicationNetworkServiceConnectionManager() {
 
+    }
+
+    @Override
+    public List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList() {
+        return null;
+    }
+
+    @Override
+    public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters) {
+
+    }
+
+    @Override
+    public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
+        return null;
+    }
+
+    @Override
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+        return null;
+    }
+
+    @Override
+    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
+
+    }
+
+    @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteNetworkService) {
+
+    }
+
+    @Override
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
+
+    }
+
+    @Override
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
+
+    }
+
+    @Override
+    public void start(){
+        System.out.println("Starting Transaction Transmission Network Service");
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
 }
