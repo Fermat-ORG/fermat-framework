@@ -254,6 +254,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 0,
                 "memo",
                 "digitalAssetMetadaHash",
+                "",
                 UUID.randomUUID().toString()
                 );
 
@@ -279,6 +280,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 20000,
                 "memo",
                 "digitalAssetMetadaHash",
+                "",
                 UUID.randomUUID().toString()
         );
         try {
@@ -303,6 +305,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                     10000,
                     "memo",
                     "digitalAssetMetadaHash",
+                    "",
                     UUID.randomUUID().toString()
             );
             AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper2 = new AssetIssuerWalletTransactionRecordWrapper(
@@ -320,6 +323,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                     0,
                     "memo",
                     "digitalAssetMetadaHash",
+                    "",
                     UUID.randomUUID().toString()
             );
             assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper1, BalanceType.AVAILABLE);
