@@ -7531,7 +7531,7 @@
 					description="Creates Crypto Broker Identity."
 					type="end"
 					platform="CBP"
-					name="Crypto Broker Identity"
+					name="Crypto Broker"
 					superlayer=""
 					layer="Identity"
 					component=""
