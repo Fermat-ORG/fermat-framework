@@ -44,7 +44,6 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBr
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActor;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendBusinessTransactionHashException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransaction;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
@@ -628,7 +627,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     public void sendContractHashToCryptoCustomer(UUID transactionId,
                                                  CryptoBrokerActor cryptoBrokerActorSender,
                                                  CryptoCustomerActor cryptoCustomerActorReceiver,
-                                                 String transactionHash, String negotiationId) throws CantSendBusinessTransactionHashException {
+                                                 String transactionHash,
+                                                 String negotiationId) throws CantSendBusinessTransactionHashException {
         //TODO: check the correct PlatformComponentType for sender and receiver
         //TODO: Check is contractId is necessary
         Date date=new Date();
@@ -647,7 +647,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 transactionId
         );
         try {
-            transactionTransmissionContractHashDao.saveCryptoTransmissionMetadata(businessTransaction);
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransaction);
         } catch (CantInsertRecordDataBaseException e) {
             throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
         }
@@ -655,8 +655,33 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     }
 
     @Override
-    public void sendContractHashToCryptoBroker(UUID transactionId,CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionHash) throws CantSendBusinessTransactionHashException {
-
+    public void sendContractHashToCryptoBroker(UUID transactionId,
+                                               CryptoCustomerActor cryptoCustomerActorSender,
+                                               CryptoBrokerActor cryptoCustomerBrokerReceiver,
+                                               String transactionHash,
+                                               String negotiationId) throws CantSendBusinessTransactionHashException {
+        //TODO: check the correct PlatformComponentType for sender and receiver
+        //TODO: Check is contractId is necessary
+        Date date=new Date();
+        Timestamp timestamp=new Timestamp(date.getTime());
+        BusinessTransaction businessTransaction=new BusinessTransactionRecord(
+                transactionHash,
+                ContractStatus.PENDING_CONFIRMATION,
+                cryptoCustomerActorSender.getIdentity().getPublicKey(),
+                PlatformComponentType.NETWORK_SERVICE,
+                cryptoCustomerBrokerReceiver.getIdentity().getPublicKey(),
+                PlatformComponentType.NETWORK_SERVICE,
+                null,
+                negotiationId,
+                BusinessTransactionTransactionType.TRANSACTION_HASH,
+                timestamp.getTime(),
+                transactionId
+        );
+        try {
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransaction);
+        } catch (CantInsertRecordDataBaseException e) {
+            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+        }
     }
 
     @Override
