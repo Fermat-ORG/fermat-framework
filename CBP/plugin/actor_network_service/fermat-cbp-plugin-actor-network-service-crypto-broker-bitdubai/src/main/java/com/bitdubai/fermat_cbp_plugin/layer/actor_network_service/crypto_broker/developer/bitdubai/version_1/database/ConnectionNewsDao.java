@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.ConnectionNewsDao</code>
  * contains all the methods that interact with the database.
- * Manages the addresses exchange requests by storing them on a Database Table.
+ * Manages the actor connection requests by storing them on a Database Table.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/11/2015.
  *

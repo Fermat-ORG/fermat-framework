@@ -6,6 +6,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionNewsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
@@ -34,6 +35,16 @@ public interface CryptoBrokerManager extends FermatManager {
      * @throws CantExposeIdentityException   if something goes wrong.
      */
     void exposeIdentity(final CryptoBrokerExposingData cryptoBrokerExposingData) throws CantExposeIdentityException;
+
+    /**
+     * Through the method <code>exposeIdentities</code> we can expose the crypto identities created in the device.
+     * The information given will be shown to all the crypto customers.
+     *
+     * @param cryptoBrokerExposingDataList  list of crypto broker exposing information.
+     *
+     * @throws CantExposeIdentitiesException   if something goes wrong.
+     */
+    void exposeIdentities(final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList) throws CantExposeIdentitiesException;
 
     /**
      * Through the method <code>getSearch</code> we can get a new instance of Crypto Broker Search.
