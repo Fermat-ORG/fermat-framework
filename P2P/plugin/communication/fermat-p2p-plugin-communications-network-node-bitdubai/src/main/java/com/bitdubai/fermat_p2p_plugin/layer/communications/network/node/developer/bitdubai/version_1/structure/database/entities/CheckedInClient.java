@@ -2,62 +2,33 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import java.util.Objects;
 
 
 /**
  * The persistent class for the "CHECKED_IN_CLIENTS" database table.
  * 
  */
-@Entity
-@Table(name="\"CHECKED_IN_CLIENTS\"")
-@NamedQuery(name="CheckedInClient.findAll", query="SELECT c FROM CheckedInClient c")
-public class CheckedInClient implements Serializable {
+public class CheckedInClient extends AbstractBaseEntity implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"IDENTITY_PUBLIC_KEY\"", unique=true, nullable=false, length=255)
 	private String identityPublicKey;
 
-	@Column(name="\"CHECKED_IN_TIMESTAMP\"", nullable=false)
 	private Timestamp checkedInTimestamp;
 
-	@Column(name="\"DEVICE_TYPE\"", nullable=false, length=50)
 	private String deviceType;
 
-	@Column(name="\"LATITUDE\"", nullable=false)
 	private double latitude;
 
-	@Column(name="\"LONGITUDE\"", nullable=false)
 	private double longitude;
 
-	//bi-directional many-to-one association to CheckedInNetworkService
-	@OneToMany(mappedBy="checkedInClient")
-	private List<CheckedInNetworkService> checkedInNetworkServices;
-
 	public CheckedInClient() {
-	}
-
-	public String getIdentityPublicKey() {
-		return this.identityPublicKey;
-	}
-
-	public void setIdentityPublicKey(String identityPublicKey) {
-		this.identityPublicKey = identityPublicKey;
+		super();
 	}
 
 	public Timestamp getCheckedInTimestamp() {
-		return this.checkedInTimestamp;
+		return checkedInTimestamp;
 	}
 
 	public void setCheckedInTimestamp(Timestamp checkedInTimestamp) {
@@ -65,15 +36,23 @@ public class CheckedInClient implements Serializable {
 	}
 
 	public String getDeviceType() {
-		return this.deviceType;
+		return deviceType;
 	}
 
 	public void setDeviceType(String deviceType) {
 		this.deviceType = deviceType;
 	}
 
+	public String getIdentityPublicKey() {
+		return identityPublicKey;
+	}
+
+	public void setIdentityPublicKey(String identityPublicKey) {
+		this.identityPublicKey = identityPublicKey;
+	}
+
 	public double getLatitude() {
-		return this.latitude;
+		return latitude;
 	}
 
 	public void setLatitude(double latitude) {
@@ -81,33 +60,39 @@ public class CheckedInClient implements Serializable {
 	}
 
 	public double getLongitude() {
-		return this.longitude;
+		return longitude;
 	}
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
-	public List<CheckedInNetworkService> getCheckedInNetworkServices() {
-		return this.checkedInNetworkServices;
-	}
+    @Override
+    public String getId() {
+        return identityPublicKey;
+    }
 
-	public void setCheckedInNetworkServices(List<CheckedInNetworkService> checkedInNetworkServices) {
-		this.checkedInNetworkServices = checkedInNetworkServices;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CheckedInClient)) return false;
+        CheckedInClient that = (CheckedInClient) o;
+        return Objects.equals(getLatitude(), that.getLatitude()) &&
+                Objects.equals(getLongitude(), that.getLongitude()) &&
+                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+                Objects.equals(getCheckedInTimestamp(), that.getCheckedInTimestamp()) &&
+                Objects.equals(getDeviceType(), that.getDeviceType());
+    }
 
-	public CheckedInNetworkService addCheckedInNetworkService(CheckedInNetworkService checkedInNetworkService) {
-		getCheckedInNetworkServices().add(checkedInNetworkService);
-		checkedInNetworkService.setCheckedInClient(this);
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdentityPublicKey(), getCheckedInTimestamp(), getDeviceType(), getLatitude(), getLongitude());
+    }
 
-		return checkedInNetworkService;
-	}
-
-	public CheckedInNetworkService removeCheckedInNetworkService(CheckedInNetworkService checkedInNetworkService) {
-		getCheckedInNetworkServices().remove(checkedInNetworkService);
-		checkedInNetworkService.setCheckedInClient(null);
-
-		return checkedInNetworkService;
-	}
-
+    @Override
+    public String toString() {
+        return "CheckedInClient{" +
+                "identityPublicKey='" + identityPublicKey + '\'' +
+                '}';
+    }
 }

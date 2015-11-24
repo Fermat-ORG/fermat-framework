@@ -3,56 +3,31 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import java.util.Objects;
 
 
 /**
  * The persistent class for the "CHECKED_IN_NETWORK_SERVICES" database table.
  * 
  */
-@Entity
-@Table(name="\"CHECKED_IN_NETWORK_SERVICES\"")
-@NamedQuery(name="CheckedInNetworkService.findAll", query="SELECT c FROM CheckedInNetworkService c")
-public class CheckedInNetworkService implements Serializable {
+public class CheckedInNetworkService extends AbstractBaseEntity implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"IDENTITY_PUBLIC_KEY\"", unique=true, nullable=false, length=255)
 	private String identityPublicKey;
 
-	@Column(name="\"CHECKED_IN_TIMESTAMP\"", nullable=false)
 	private Timestamp checkedInTimestamp;
 
-	@Column(name="\"EXTRA_DATA\"", nullable=false, length=255)
 	private String extraData;
 
-	@Column(name="\"LATITUDE\"", nullable=false)
 	private double latitude;
 
-	@Column(name="\"LONGITUDE\"", nullable=false)
 	private double longitude;
 
-	@Column(name="\"NETWORK_SERVICE_TYPE\"", nullable=false, length=50)
 	private String networkServiceType;
 
-	//bi-directional many-to-one association to CheckedInActor
-	@OneToMany(mappedBy="checkedInNetworkService")
 	private List<CheckedInActor> checkedInActors;
 
-	//bi-directional many-to-one association to CheckedInClient
-	@ManyToOne
-	@JoinColumn(name="\"CLIENT_IDENTITY_PUBLIC_KEY\"")
 	private CheckedInClient checkedInClient;
 
 	public CheckedInNetworkService() {
@@ -114,20 +89,6 @@ public class CheckedInNetworkService implements Serializable {
 		this.checkedInActors = checkedInActors;
 	}
 
-	public CheckedInActor addCheckedInActor(CheckedInActor checkedInActor) {
-		getCheckedInActors().add(checkedInActor);
-		checkedInActor.setCheckedInNetworkService(this);
-
-		return checkedInActor;
-	}
-
-	public CheckedInActor removeCheckedInActor(CheckedInActor checkedInActor) {
-		getCheckedInActors().remove(checkedInActor);
-		checkedInActor.setCheckedInNetworkService(null);
-
-		return checkedInActor;
-	}
-
 	public CheckedInClient getCheckedInClient() {
 		return this.checkedInClient;
 	}
@@ -136,4 +97,36 @@ public class CheckedInNetworkService implements Serializable {
 		this.checkedInClient = checkedInClient;
 	}
 
+    @Override
+    public String getId() {
+        return identityPublicKey;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CheckedInNetworkService)) return false;
+        CheckedInNetworkService that = (CheckedInNetworkService) o;
+        return Objects.equals(getLatitude(), that.getLatitude()) &&
+                Objects.equals(getLongitude(), that.getLongitude()) &&
+                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+                Objects.equals(getCheckedInTimestamp(), that.getCheckedInTimestamp()) &&
+                Objects.equals(getExtraData(), that.getExtraData()) &&
+                Objects.equals(getNetworkServiceType(), that.getNetworkServiceType()) &&
+                Objects.equals(getCheckedInActors(), that.getCheckedInActors()) &&
+                Objects.equals(getCheckedInClient(), that.getCheckedInClient());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdentityPublicKey(), getCheckedInTimestamp(), getExtraData(), getLatitude(), getLongitude(), getNetworkServiceType(), getCheckedInActors(), getCheckedInClient());
+    }
+
+    @Override
+    public String toString() {
+        return "CheckedInNetworkService{" +
+                "identityPublicKey='" + identityPublicKey + '\'' +
+                ", networkServiceType='" + networkServiceType + '\'' +
+                '}';
+    }
 }

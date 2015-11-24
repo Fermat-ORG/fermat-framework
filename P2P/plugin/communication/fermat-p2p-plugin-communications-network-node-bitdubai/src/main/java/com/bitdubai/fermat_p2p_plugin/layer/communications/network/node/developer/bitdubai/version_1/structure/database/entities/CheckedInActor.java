@@ -2,75 +2,43 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import java.util.Objects;
 
 
 /**
  * The persistent class for the "CHECKED_IN_ACTORS" database table.
  * 
  */
-@Entity
-@Table(name="\"CHECKED_IN_ACTORS\"")
-@NamedQuery(name="CheckedInActor.findAll", query="SELECT c FROM CheckedInActor c")
-public class CheckedInActor implements Serializable {
+public class CheckedInActor extends AbstractBaseEntity implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"IDENTITY_PUBLIC_KEY\"", unique=true, nullable=false, length=255)
 	private String identityPublicKey;
 
-	@Column(name="\"ACTOR_TYPE\"", nullable=false, length=50)
 	private String actorType;
 
-	@Column(name="\"ALIAS\"", nullable=false, length=50)
 	private String alias;
 
-	@Column(name="\"CHECKED_IN_TIMESTAMP\"", nullable=false)
 	private Timestamp checkedInTimestamp;
 
-	@Column(name="\"EXTRA_DATA\"", nullable=false, length=255)
 	private String extraData;
 
-	@Column(name="\"LATITUDE\"", nullable=false)
 	private double latitude;
 
-	@Column(name="\"LONGITUDE\"", nullable=false)
 	private double longitude;
 
-	@Column(name="\"NAME\"", nullable=false, length=50)
 	private String name;
 
-	@Column(name="\"PHOTO\"", nullable=false)
-	private Object photo;
+	private byte[] photo;
 
-	//bi-directional many-to-one association to CheckedInNetworkService
-	@ManyToOne
-	@JoinColumn(name="\"NS_IDENTITY_PUBLIC_KEY\"")
-	private CheckedInNetworkService checkedInNetworkService;
+	private String nsIdentityPublicKey;
 
 	public CheckedInActor() {
-	}
-
-	public String getIdentityPublicKey() {
-		return this.identityPublicKey;
-	}
-
-	public void setIdentityPublicKey(String identityPublicKey) {
-		this.identityPublicKey = identityPublicKey;
+		super();
 	}
 
 	public String getActorType() {
-		return this.actorType;
+		return actorType;
 	}
 
 	public void setActorType(String actorType) {
@@ -78,7 +46,7 @@ public class CheckedInActor implements Serializable {
 	}
 
 	public String getAlias() {
-		return this.alias;
+		return alias;
 	}
 
 	public void setAlias(String alias) {
@@ -86,7 +54,7 @@ public class CheckedInActor implements Serializable {
 	}
 
 	public Timestamp getCheckedInTimestamp() {
-		return this.checkedInTimestamp;
+		return checkedInTimestamp;
 	}
 
 	public void setCheckedInTimestamp(Timestamp checkedInTimestamp) {
@@ -94,15 +62,23 @@ public class CheckedInActor implements Serializable {
 	}
 
 	public String getExtraData() {
-		return this.extraData;
+		return extraData;
 	}
 
 	public void setExtraData(String extraData) {
 		this.extraData = extraData;
 	}
 
+	public String getIdentityPublicKey() {
+		return identityPublicKey;
+	}
+
+	public void setIdentityPublicKey(String identityPublicKey) {
+		this.identityPublicKey = identityPublicKey;
+	}
+
 	public double getLatitude() {
-		return this.latitude;
+		return latitude;
 	}
 
 	public void setLatitude(double latitude) {
@@ -110,7 +86,7 @@ public class CheckedInActor implements Serializable {
 	}
 
 	public double getLongitude() {
-		return this.longitude;
+		return longitude;
 	}
 
 	public void setLongitude(double longitude) {
@@ -118,27 +94,63 @@ public class CheckedInActor implements Serializable {
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public Object getPhoto() {
-		return this.photo;
+	public String getNsIdentityPublicKey() {
+		return nsIdentityPublicKey;
 	}
 
-	public void setPhoto(Object photo) {
+	public void setNsIdentityPublicKey(String nsIdentityPublicKey) {
+		this.nsIdentityPublicKey = nsIdentityPublicKey;
+	}
+
+	public byte[] getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
 
-	public CheckedInNetworkService getCheckedInNetworkService() {
-		return this.checkedInNetworkService;
+	@Override
+	public String getId() {
+		return identityPublicKey;
 	}
 
-	public void setCheckedInNetworkService(CheckedInNetworkService checkedInNetworkService) {
-		this.checkedInNetworkService = checkedInNetworkService;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof CheckedInActor)) return false;
+		CheckedInActor that = (CheckedInActor) o;
+		return Objects.equals(getLatitude(), that.getLatitude()) &&
+				Objects.equals(getLongitude(), that.getLongitude()) &&
+				Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+				Objects.equals(getActorType(), that.getActorType()) &&
+				Objects.equals(getAlias(), that.getAlias()) &&
+				Objects.equals(getCheckedInTimestamp(), that.getCheckedInTimestamp()) &&
+				Objects.equals(getExtraData(), that.getExtraData()) &&
+				Objects.equals(getName(), that.getName()) &&
+				Objects.equals(getPhoto(), that.getPhoto()) &&
+				Objects.equals(getNsIdentityPublicKey(), that.getNsIdentityPublicKey());
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(getIdentityPublicKey(), getActorType(), getAlias(), getCheckedInTimestamp(), getExtraData(), getLatitude(), getLongitude(), getName(), getPhoto(), getNsIdentityPublicKey());
+	}
+
+	@Override
+	public String toString() {
+		return "CheckedInActor{" +
+				"identityPublicKey='" + identityPublicKey + '\'' +
+				", alias='" + alias + '\'' +
+				", name='" + name + '\'' +
+				", actorType='" + actorType + '\'' +
+				'}';
+	}
 }

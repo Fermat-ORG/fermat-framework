@@ -2,80 +2,49 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import java.util.Objects;
 
 
 /**
  * The persistent class for the "NODES_CATALOG_TRANSACTIONS" database table.
  * 
  */
-@Entity
-@Table(name="\"NODES_CATALOG_TRANSACTIONS\"")
-@NamedQuery(name="NodesCatalogTransaction.findAll", query="SELECT n FROM NodesCatalogTransaction n")
-public class NodesCatalogTransaction implements Serializable {
+public class NodesCatalogTransaction extends AbstractBaseEntity implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"HASH_ID\"", unique=true, nullable=false, length=100)
 	private String hashId;
 
-	@Column(name="\"CREATE_TIMESTAMP\"", nullable=false)
 	private Timestamp createTimestamp;
 
-	@Column(name="\"DEFAULT_PORT\"", nullable=false)
 	private Integer defaultPort;
 
-	@Column(name="\"IDENTITY_PUBLIC_KEY\"", nullable=false, length=255)
 	private String identityPublicKey;
 
-	@Column(name="\"IP\"", nullable=false, length=19)
 	private String ip;
 
-	@Column(name="\"LALTITUDE\"", nullable=false)
-	private double laltitude;
+	private double latitude;
 
-	@Column(name="\"LAST_CONNECTION_TIMESTAMP\"", nullable=false)
 	private Timestamp lastConnectionTimestamp;
 
-	@Column(name="\"LATE_NOTIFICATIONS_COUNTER\"", nullable=false)
 	private Integer lateNotificationsCounter;
 
-	@Column(name="\"LOGITUDE\"", nullable=false)
-	private double logitude;
+	private double longitude;
 
-	@Column(name="\"NAME\"", nullable=false, length=50)
 	private String name;
 
-	@Column(name="\"OFFLINE_COUNTER\"", nullable=false)
 	private Integer offlineCounter;
 
-	@Column(name="\"REGISTERED_TIMESTAMP\"", nullable=false)
 	private Timestamp registeredTimestamp;
 
-	@Column(name="\"TYPE\"", nullable=false, length=10)
-	private String type;
+	private String transactionType;
 
 	public NodesCatalogTransaction() {
-	}
-
-	public String getHashId() {
-		return this.hashId;
-	}
-
-	public void setHashId(String hashId) {
-		this.hashId = hashId;
+		super();
 	}
 
 	public Timestamp getCreateTimestamp() {
-		return this.createTimestamp;
+		return createTimestamp;
 	}
 
 	public void setCreateTimestamp(Timestamp createTimestamp) {
@@ -83,15 +52,23 @@ public class NodesCatalogTransaction implements Serializable {
 	}
 
 	public Integer getDefaultPort() {
-		return this.defaultPort;
+		return defaultPort;
 	}
 
 	public void setDefaultPort(Integer defaultPort) {
 		this.defaultPort = defaultPort;
 	}
 
+	public String getHashId() {
+		return hashId;
+	}
+
+	public void setHashId(String hashId) {
+		this.hashId = hashId;
+	}
+
 	public String getIdentityPublicKey() {
-		return this.identityPublicKey;
+		return identityPublicKey;
 	}
 
 	public void setIdentityPublicKey(String identityPublicKey) {
@@ -99,23 +76,15 @@ public class NodesCatalogTransaction implements Serializable {
 	}
 
 	public String getIp() {
-		return this.ip;
+		return ip;
 	}
 
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
 
-	public double getLaltitude() {
-		return this.laltitude;
-	}
-
-	public void setLaltitude(double laltitude) {
-		this.laltitude = laltitude;
-	}
-
 	public Timestamp getLastConnectionTimestamp() {
-		return this.lastConnectionTimestamp;
+		return lastConnectionTimestamp;
 	}
 
 	public void setLastConnectionTimestamp(Timestamp lastConnectionTimestamp) {
@@ -123,23 +92,31 @@ public class NodesCatalogTransaction implements Serializable {
 	}
 
 	public Integer getLateNotificationsCounter() {
-		return this.lateNotificationsCounter;
+		return lateNotificationsCounter;
 	}
 
 	public void setLateNotificationsCounter(Integer lateNotificationsCounter) {
 		this.lateNotificationsCounter = lateNotificationsCounter;
 	}
 
-	public double getLogitude() {
-		return this.logitude;
+	public double getLatitude() {
+		return latitude;
 	}
 
-	public void setLogitude(double logitude) {
-		this.logitude = logitude;
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	public void setName(String name) {
@@ -147,7 +124,7 @@ public class NodesCatalogTransaction implements Serializable {
 	}
 
 	public Integer getOfflineCounter() {
-		return this.offlineCounter;
+		return offlineCounter;
 	}
 
 	public void setOfflineCounter(Integer offlineCounter) {
@@ -155,19 +132,57 @@ public class NodesCatalogTransaction implements Serializable {
 	}
 
 	public Timestamp getRegisteredTimestamp() {
-		return this.registeredTimestamp;
+		return registeredTimestamp;
 	}
 
 	public void setRegisteredTimestamp(Timestamp registeredTimestamp) {
 		this.registeredTimestamp = registeredTimestamp;
 	}
 
-	public String getType() {
-		return this.type;
+	public String getTransactionType() {
+		return transactionType;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setTransactionType(String transactionType) {
+		this.transactionType = transactionType;
 	}
 
+    @Override
+    public String getId() {
+        return identityPublicKey;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NodesCatalogTransaction)) return false;
+        NodesCatalogTransaction that = (NodesCatalogTransaction) o;
+        return Objects.equals(getLatitude(), that.getLatitude()) &&
+                Objects.equals(getLongitude(), that.getLongitude()) &&
+                Objects.equals(getHashId(), that.getHashId()) &&
+                Objects.equals(getDefaultPort(), that.getDefaultPort()) &&
+                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+                Objects.equals(getIp(), that.getIp()) &&
+                Objects.equals(getLastConnectionTimestamp(), that.getLastConnectionTimestamp()) &&
+                Objects.equals(getLateNotificationsCounter(), that.getLateNotificationsCounter()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getOfflineCounter(), that.getOfflineCounter()) &&
+                Objects.equals(getRegisteredTimestamp(), that.getRegisteredTimestamp()) &&
+                Objects.equals(getTransactionType(), that.getTransactionType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getHashId(), getDefaultPort(), getIdentityPublicKey(), getIp(), getLatitude(), getLastConnectionTimestamp(), getLateNotificationsCounter(), getLongitude(), getName(), getOfflineCounter(), getRegisteredTimestamp(), getTransactionType());
+    }
+
+    @Override
+    public String toString() {
+        return "NodesCatalog{" +
+                "identityPublicKey='" + identityPublicKey + '\'' +
+                ", name='" + name + '\'' +
+                ", ip='" + ip + '\'' +
+                ", defaultPort=" + defaultPort +
+                '}';
+    }
 }

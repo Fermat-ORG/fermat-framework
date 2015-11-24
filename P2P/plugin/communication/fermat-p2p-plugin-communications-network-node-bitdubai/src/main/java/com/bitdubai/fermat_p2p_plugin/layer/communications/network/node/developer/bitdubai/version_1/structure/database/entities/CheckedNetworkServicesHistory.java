@@ -2,81 +2,55 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import java.util.Objects;
 
 
 /**
  * The persistent class for the "CHECKED_NETWORK_SERVICES_HISTORY" database table.
  * 
  */
-@Entity
-@Table(name="\"CHECKED_NETWORK_SERVICES_HISTORY\"")
-@NamedQuery(name="CheckedNetworkServicesHistory.findAll", query="SELECT c FROM CheckedNetworkServicesHistory c")
-public class CheckedNetworkServicesHistory implements Serializable {
+public class CheckedNetworkServicesHistory extends AbstractBaseEntity  implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"IDENTITY_PUBLIC_KEY\"", unique=true, nullable=false, length=255)
 	private String identityPublicKey;
 
-	@Column(name="\"CHECK_TYPE\"", nullable=false, length=3)
 	private String checkType;
 
-	@Column(name="\"CHECKED_TIMESTAMP\"", nullable=false)
 	private Timestamp checkedTimestamp;
 
-	@Column(name="\"CLIENT_IDENTITY_PUBLIC_KEY\"", nullable=false, length=255)
 	private String clientIdentityPublicKey;
 
-	@Column(name="\"EXTRA_DATA\"", nullable=false, length=255)
 	private String extraData;
 
-	@Column(name="\"LATITUDE\"", nullable=false)
 	private double latitude;
 
-	@Column(name="\"LONGITUDE\"", nullable=false)
 	private double longitude;
 
-	@Column(name="\"NETWORK_SERVICE_TYPE\"", nullable=false, length=50)
 	private String networkServiceType;
 
 	public CheckedNetworkServicesHistory() {
-	}
-
-	public String getIdentityPublicKey() {
-		return this.identityPublicKey;
-	}
-
-	public void setIdentityPublicKey(String identityPublicKey) {
-		this.identityPublicKey = identityPublicKey;
-	}
-
-	public String getCheckType() {
-		return this.checkType;
-	}
-
-	public void setCheckType(String checkType) {
-		this.checkType = checkType;
+		super();
 	}
 
 	public Timestamp getCheckedTimestamp() {
-		return this.checkedTimestamp;
+		return checkedTimestamp;
 	}
 
 	public void setCheckedTimestamp(Timestamp checkedTimestamp) {
 		this.checkedTimestamp = checkedTimestamp;
 	}
 
+	public String getCheckType() {
+		return checkType;
+	}
+
+	public void setCheckType(String checkType) {
+		this.checkType = checkType;
+	}
+
 	public String getClientIdentityPublicKey() {
-		return this.clientIdentityPublicKey;
+		return clientIdentityPublicKey;
 	}
 
 	public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
@@ -84,15 +58,23 @@ public class CheckedNetworkServicesHistory implements Serializable {
 	}
 
 	public String getExtraData() {
-		return this.extraData;
+		return extraData;
 	}
 
 	public void setExtraData(String extraData) {
 		this.extraData = extraData;
 	}
 
+	public String getIdentityPublicKey() {
+		return identityPublicKey;
+	}
+
+	public void setIdentityPublicKey(String identityPublicKey) {
+		this.identityPublicKey = identityPublicKey;
+	}
+
 	public double getLatitude() {
-		return this.latitude;
+		return latitude;
 	}
 
 	public void setLatitude(double latitude) {
@@ -100,7 +82,7 @@ public class CheckedNetworkServicesHistory implements Serializable {
 	}
 
 	public double getLongitude() {
-		return this.longitude;
+		return longitude;
 	}
 
 	public void setLongitude(double longitude) {
@@ -108,11 +90,43 @@ public class CheckedNetworkServicesHistory implements Serializable {
 	}
 
 	public String getNetworkServiceType() {
-		return this.networkServiceType;
+		return networkServiceType;
 	}
 
 	public void setNetworkServiceType(String networkServiceType) {
 		this.networkServiceType = networkServiceType;
 	}
 
+    @Override
+    public String getId() {
+        return identityPublicKey;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CheckedNetworkServicesHistory)) return false;
+        CheckedNetworkServicesHistory that = (CheckedNetworkServicesHistory) o;
+        return Objects.equals(getLatitude(), that.getLatitude()) &&
+                Objects.equals(getLongitude(), that.getLongitude()) &&
+                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+                Objects.equals(getCheckType(), that.getCheckType()) &&
+                Objects.equals(getCheckedTimestamp(), that.getCheckedTimestamp()) &&
+                Objects.equals(getClientIdentityPublicKey(), that.getClientIdentityPublicKey()) &&
+                Objects.equals(getExtraData(), that.getExtraData()) &&
+                Objects.equals(getNetworkServiceType(), that.getNetworkServiceType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdentityPublicKey(), getCheckType(), getCheckedTimestamp(), getClientIdentityPublicKey(), getExtraData(), getLatitude(), getLongitude(), getNetworkServiceType());
+    }
+
+    @Override
+    public String toString() {
+        return "CheckedInNetworkService{" +
+                "identityPublicKey='" + identityPublicKey + '\'' +
+                ", networkServiceType='" + networkServiceType + '\'' +
+                '}';
+    }
 }

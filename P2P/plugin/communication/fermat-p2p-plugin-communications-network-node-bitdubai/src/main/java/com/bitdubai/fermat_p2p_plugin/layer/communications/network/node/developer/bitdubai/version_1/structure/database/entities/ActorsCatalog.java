@@ -2,71 +2,43 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import java.util.Objects;
 
 
 /**
  * The persistent class for the "ACTORS_CATALOG" database table.
  * 
  */
-@Entity
-@Table(name="\"ACTORS_CATALOG\"")
-@NamedQuery(name="ActorsCatalog.findAll", query="SELECT a FROM ActorsCatalog a")
-public class ActorsCatalog implements Serializable {
+public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"IDENTITY_PUBLIC_KEY\"", unique=true, nullable=false, length=255)
 	private String identityPublicKey;
 
-	@Column(name="\"ACTOR_TYPE\"", nullable=false, length=50)
 	private String actorType;
 
-	@Column(name="\"ALIAS\"", nullable=false, length=50)
 	private String alias;
 
-	@Column(name="\"EXTRA_DATA\"", nullable=false, length=255)
 	private String extraData;
 
-	@Column(name="\"HOSTED_TIMESTAMP\"", nullable=false)
 	private Timestamp hostedTimestamp;
 
-	@Column(name="\"LAST_LATITUDE\"", nullable=false)
 	private double lastLatitude;
 
-	@Column(name="\"LAST_LONGITUDE\"", nullable=false)
 	private double lastLongitude;
 
-	@Column(name="\"NAME\"", nullable=false, length=50)
 	private String name;
 
-	@Column(name="\"NODE_IDENTITY_PUBLIC_KEY\"", nullable=false, length=255)
 	private String nodeIdentityPublicKey;
 
-	@Column(name="\"PHOTO\"", nullable=false)
-	private Object photo;
+	private byte[] photo;
 
 	public ActorsCatalog() {
-	}
-
-	public String getIdentityPublicKey() {
-		return this.identityPublicKey;
-	}
-
-	public void setIdentityPublicKey(String identityPublicKey) {
-		this.identityPublicKey = identityPublicKey;
+		super();
 	}
 
 	public String getActorType() {
-		return this.actorType;
+		return actorType;
 	}
 
 	public void setActorType(String actorType) {
@@ -74,7 +46,7 @@ public class ActorsCatalog implements Serializable {
 	}
 
 	public String getAlias() {
-		return this.alias;
+		return alias;
 	}
 
 	public void setAlias(String alias) {
@@ -82,7 +54,7 @@ public class ActorsCatalog implements Serializable {
 	}
 
 	public String getExtraData() {
-		return this.extraData;
+		return extraData;
 	}
 
 	public void setExtraData(String extraData) {
@@ -90,15 +62,23 @@ public class ActorsCatalog implements Serializable {
 	}
 
 	public Timestamp getHostedTimestamp() {
-		return this.hostedTimestamp;
+		return hostedTimestamp;
 	}
 
 	public void setHostedTimestamp(Timestamp hostedTimestamp) {
 		this.hostedTimestamp = hostedTimestamp;
 	}
 
+	public String getIdentityPublicKey() {
+		return identityPublicKey;
+	}
+
+	public void setIdentityPublicKey(String identityPublicKey) {
+		this.identityPublicKey = identityPublicKey;
+	}
+
 	public double getLastLatitude() {
-		return this.lastLatitude;
+		return lastLatitude;
 	}
 
 	public void setLastLatitude(double lastLatitude) {
@@ -106,7 +86,7 @@ public class ActorsCatalog implements Serializable {
 	}
 
 	public double getLastLongitude() {
-		return this.lastLongitude;
+		return lastLongitude;
 	}
 
 	public void setLastLongitude(double lastLongitude) {
@@ -114,7 +94,7 @@ public class ActorsCatalog implements Serializable {
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	public void setName(String name) {
@@ -122,19 +102,53 @@ public class ActorsCatalog implements Serializable {
 	}
 
 	public String getNodeIdentityPublicKey() {
-		return this.nodeIdentityPublicKey;
+		return nodeIdentityPublicKey;
 	}
 
 	public void setNodeIdentityPublicKey(String nodeIdentityPublicKey) {
 		this.nodeIdentityPublicKey = nodeIdentityPublicKey;
 	}
 
-	public Object getPhoto() {
-		return this.photo;
+	public byte[] getPhoto() {
+		return photo;
 	}
 
-	public void setPhoto(Object photo) {
+	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
 
+    @Override
+    public String getId() {
+        return identityPublicKey;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ActorsCatalog)) return false;
+        ActorsCatalog that = (ActorsCatalog) o;
+        return Objects.equals(getLastLatitude(), that.getLastLatitude()) &&
+                Objects.equals(getLastLongitude(), that.getLastLongitude()) &&
+                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+                Objects.equals(getActorType(), that.getActorType()) &&
+                Objects.equals(getAlias(), that.getAlias()) &&
+                Objects.equals(getExtraData(), that.getExtraData()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getNodeIdentityPublicKey(), that.getNodeIdentityPublicKey()) &&
+                Objects.equals(getPhoto(), that.getPhoto());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdentityPublicKey(), getActorType(), getAlias(), getExtraData(), getLastLatitude(), getLastLongitude(), getName(), getNodeIdentityPublicKey(), getPhoto());
+    }
+
+    @Override
+    public String toString() {
+        return "ActorsCatalog{" +
+                "identityPublicKey='" + identityPublicKey + '\'' +
+                ", alias='" + alias + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

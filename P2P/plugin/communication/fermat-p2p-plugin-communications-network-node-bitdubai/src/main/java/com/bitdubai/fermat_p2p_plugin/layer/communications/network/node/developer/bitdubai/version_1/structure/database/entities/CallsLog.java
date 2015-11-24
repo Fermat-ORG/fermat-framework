@@ -2,95 +2,109 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import java.util.Objects;
+import java.util.UUID;
 
 
 /**
  * The persistent class for the "CALLS_LOG" database table.
  * 
  */
-@Entity
-@Table(name="\"CALLS_LOG\"")
-@NamedQuery(name="CallsLog.findAll", query="SELECT c FROM CallsLog c")
-public class CallsLog implements Serializable {
+public class CallsLog extends AbstractBaseEntity implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"ID\"", unique=true, nullable=false)
-	private Integer id;
+	private UUID uuid;
 
-	@Column(name="\"CALL_ID\"", nullable=false, length=100)
 	private String callId;
 
-	@Column(name="\"CALL_TIMESTAMP\"", nullable=false)
 	private Timestamp callTimestamp;
 
-	@Column(name="\"FINISH_TIMESTAMP\"", nullable=false)
 	private Timestamp finishTimestamp;
 
-	@Column(name="\"START_TIMESTAMP\"", nullable=false)
 	private Timestamp startTimestamp;
 
-	@Column(name="\"STEP\"", nullable=false, length=12)
 	private String step;
 
 	public CallsLog() {
+		super();
 	}
 
-	public Integer getId() {
-		return this.id;
-	}
+    public String getCallId() {
+        return callId;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setCallId(String callId) {
+        this.callId = callId;
+    }
 
-	public String getCallId() {
-		return this.callId;
-	}
+    public Timestamp getCallTimestamp() {
+        return callTimestamp;
+    }
 
-	public void setCallId(String callId) {
-		this.callId = callId;
-	}
+    public void setCallTimestamp(Timestamp callTimestamp) {
+        this.callTimestamp = callTimestamp;
+    }
 
-	public Timestamp getCallTimestamp() {
-		return this.callTimestamp;
-	}
+    public Timestamp getFinishTimestamp() {
+        return finishTimestamp;
+    }
 
-	public void setCallTimestamp(Timestamp callTimestamp) {
-		this.callTimestamp = callTimestamp;
-	}
+    public void setFinishTimestamp(Timestamp finishTimestamp) {
+        this.finishTimestamp = finishTimestamp;
+    }
 
-	public Timestamp getFinishTimestamp() {
-		return this.finishTimestamp;
-	}
+    public String getStep() {
+        return step;
+    }
 
-	public void setFinishTimestamp(Timestamp finishTimestamp) {
-		this.finishTimestamp = finishTimestamp;
-	}
+    public void setStep(String step) {
+        this.step = step;
+    }
 
-	public Timestamp getStartTimestamp() {
-		return this.startTimestamp;
-	}
+    public UUID getUuid() {
+        return uuid;
+    }
 
-	public void setStartTimestamp(Timestamp startTimestamp) {
-		this.startTimestamp = startTimestamp;
-	}
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
 
-	public String getStep() {
-		return this.step;
-	}
+    public Timestamp getStartTimestamp() {
+        return startTimestamp;
+    }
 
-	public void setStep(String step) {
-		this.step = step;
-	}
+    public void setStartTimestamp(Timestamp startTimestamp) {
+        this.startTimestamp = startTimestamp;
+    }
 
+    @Override
+    public String getId() {
+        return uuid.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CallsLog)) return false;
+        CallsLog callsLog = (CallsLog) o;
+        return Objects.equals(getUuid(), callsLog.getUuid()) &&
+                Objects.equals(getCallId(), callsLog.getCallId()) &&
+                Objects.equals(getCallTimestamp(), callsLog.getCallTimestamp()) &&
+                Objects.equals(getFinishTimestamp(), callsLog.getFinishTimestamp()) &&
+                Objects.equals(getStartTimestamp(), callsLog.getStartTimestamp()) &&
+                Objects.equals(getStep(), callsLog.getStep());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUuid(), getCallId(), getCallTimestamp(), getFinishTimestamp(), getStartTimestamp(), getStep());
+    }
+
+    @Override
+    public String toString() {
+        return "CallsLog{" +
+                "uuid=" + uuid +
+                '}';
+    }
 }

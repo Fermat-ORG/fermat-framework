@@ -2,84 +2,98 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import java.util.Objects;
+import java.util.UUID;
 
 
 /**
  * The persistent class for the "METHOD_CALLS_HISTORY" database table.
  * 
  */
-@Entity
-@Table(name="\"METHOD_CALLS_HISTORY\"")
-@NamedQuery(name="MethodCallsHistory.findAll", query="SELECT m FROM MethodCallsHistory m")
-public class MethodCallsHistory implements Serializable {
+public class MethodCallsHistory extends AbstractBaseEntity implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"ID\"", unique=true, nullable=false, length=100)
-	private String id;
+	private UUID uuid;
 
-	@Column(name="\"CREATE_TIMESTAMP\"", nullable=false)
 	private Timestamp createTimestamp;
 
-	@Column(name="\"METHOD_NAME\"", nullable=false, length=100)
 	private String methodName;
 
-	@Column(name="\"PARAMETERS\"", nullable=false, length=255)
 	private String parameters;
 
-	@Column(name="\"PROFILE_IDENTITY_PUBLIC_KEY\"", nullable=false, length=255)
 	private String profileIdentityPublicKey;
 
 	public MethodCallsHistory() {
+		super();
 	}
 
-	public String getId() {
-		return this.id;
-	}
+    public Timestamp getCreateTimestamp() {
+        return createTimestamp;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setCreateTimestamp(Timestamp createTimestamp) {
+        this.createTimestamp = createTimestamp;
+    }
 
-	public Timestamp getCreateTimestamp() {
-		return this.createTimestamp;
-	}
+    public String getMethodName() {
+        return methodName;
+    }
 
-	public void setCreateTimestamp(Timestamp createTimestamp) {
-		this.createTimestamp = createTimestamp;
-	}
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
 
-	public String getMethodName() {
-		return this.methodName;
-	}
+    public String getParameters() {
+        return parameters;
+    }
 
-	public void setMethodName(String methodName) {
-		this.methodName = methodName;
-	}
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
+    }
 
-	public String getParameters() {
-		return this.parameters;
-	}
+    public String getProfileIdentityPublicKey() {
+        return profileIdentityPublicKey;
+    }
 
-	public void setParameters(String parameters) {
-		this.parameters = parameters;
-	}
+    public void setProfileIdentityPublicKey(String profileIdentityPublicKey) {
+        this.profileIdentityPublicKey = profileIdentityPublicKey;
+    }
 
-	public String getProfileIdentityPublicKey() {
-		return this.profileIdentityPublicKey;
-	}
+    public UUID getUuid() {
+        return uuid;
+    }
 
-	public void setProfileIdentityPublicKey(String profileIdentityPublicKey) {
-		this.profileIdentityPublicKey = profileIdentityPublicKey;
-	}
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
 
+    @Override
+    public String getId() {
+        return uuid.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MethodCallsHistory)) return false;
+        MethodCallsHistory that = (MethodCallsHistory) o;
+        return Objects.equals(getUuid(), that.getUuid()) &&
+                Objects.equals(getCreateTimestamp(), that.getCreateTimestamp()) &&
+                Objects.equals(getMethodName(), that.getMethodName()) &&
+                Objects.equals(getParameters(), that.getParameters()) &&
+                Objects.equals(getProfileIdentityPublicKey(), that.getProfileIdentityPublicKey());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUuid(), getCreateTimestamp(), getMethodName(), getParameters(), getProfileIdentityPublicKey());
+    }
+
+    @Override
+    public String toString() {
+        return "MethodCallsHistory{" +
+                "uuid=" + uuid +
+                '}';
+    }
 }

@@ -2,55 +2,34 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import java.util.Objects;
 
 /**
  * The persistent class for the "NODES_CATALOG" database table.
  * 
  */
-@Entity
-@Table(name="\"NODES_CATALOG\"")
-@NamedQuery(name="NodesCatalog.findAll", query="SELECT n FROM NodesCatalog n")
-public class NodesCatalog implements Serializable {
+public class NodesCatalog extends AbstractBaseEntity implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"IDENTITY_PUBLIC_KEY\"", unique=true, nullable=false, length=255)
 	private String identityPublicKey;
 
-	@Column(name="\"DEFAULT_PORT\"", nullable=false)
 	private Integer defaultPort;
 
-	@Column(name="\"IP\"", nullable=false, length=19)
 	private String ip;
 
-	@Column(name="\"LALTITUDE\"", nullable=false)
-	private double laltitude;
+	private double latitude;
 
-	@Column(name="\"LAST_CONNECTION_TIMESTAMP\"", nullable=false)
 	private Timestamp lastConnectionTimestamp;
 
-	@Column(name="\"LATE_NOTIFICATIONS_COUNTER\"", nullable=false)
 	private Integer lateNotificationsCounter;
 
-	@Column(name="\"LOGITUDE\"", nullable=false)
-	private double logitude;
+	private double longitude;
 
-	@Column(name="\"NAME\"", nullable=false, length=50)
 	private String name;
 
-	@Column(name="\"OFFLINE_COUNTER\"", nullable=false)
 	private Integer offlineCounter;
 
-	@Column(name="\"REGISTERED_TIMESTAMP\"", nullable=false)
 	private Timestamp registeredTimestamp;
 
 	public NodesCatalog() {
@@ -80,12 +59,12 @@ public class NodesCatalog implements Serializable {
 		this.ip = ip;
 	}
 
-	public double getLaltitude() {
-		return this.laltitude;
+	public double getLatitude() {
+		return this.latitude;
 	}
 
-	public void setLaltitude(double laltitude) {
-		this.laltitude = laltitude;
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
 
 	public Timestamp getLastConnectionTimestamp() {
@@ -104,12 +83,12 @@ public class NodesCatalog implements Serializable {
 		this.lateNotificationsCounter = lateNotificationsCounter;
 	}
 
-	public double getLogitude() {
-		return this.logitude;
+	public double getLongitude() {
+		return this.longitude;
 	}
 
-	public void setLogitude(double logitude) {
-		this.logitude = logitude;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
 	public String getName() {
@@ -136,4 +115,40 @@ public class NodesCatalog implements Serializable {
 		this.registeredTimestamp = registeredTimestamp;
 	}
 
+	@Override
+	public String getId() {
+		return identityPublicKey;
+	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NodesCatalog)) return false;
+        NodesCatalog that = (NodesCatalog) o;
+        return Objects.equals(getLatitude(), that.getLatitude()) &&
+                Objects.equals(getLongitude(), that.getLongitude()) &&
+                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+                Objects.equals(getDefaultPort(), that.getDefaultPort()) &&
+                Objects.equals(getIp(), that.getIp()) &&
+                Objects.equals(getLastConnectionTimestamp(), that.getLastConnectionTimestamp()) &&
+                Objects.equals(getLateNotificationsCounter(), that.getLateNotificationsCounter()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getOfflineCounter(), that.getOfflineCounter()) &&
+                Objects.equals(getRegisteredTimestamp(), that.getRegisteredTimestamp());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdentityPublicKey(), getDefaultPort(), getIp(), getLatitude(), getLastConnectionTimestamp(), getLateNotificationsCounter(), getLongitude(), getName(), getOfflineCounter(), getRegisteredTimestamp());
+    }
+
+    @Override
+    public String toString() {
+        return "NodesCatalog{" +
+                "identityPublicKey='" + identityPublicKey + '\'' +
+                ", name='" + name + '\'' +
+                ", ip='" + ip + '\'' +
+                ", defaultPort=" + defaultPort +
+                '}';
+    }
 }

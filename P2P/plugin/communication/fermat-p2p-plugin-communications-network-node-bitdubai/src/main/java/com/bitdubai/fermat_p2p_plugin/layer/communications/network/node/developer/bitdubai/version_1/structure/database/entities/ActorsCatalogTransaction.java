@@ -2,77 +2,55 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import java.util.Objects;
 
 
 /**
  * The persistent class for the "ACTORS_CATALOG_TRANSACTIONS" database table.
  * 
  */
-@Entity
-@Table(name="\"ACTORS_CATALOG_TRANSACTIONS\"")
-@NamedQuery(name="ActorsCatalogTransaction.findAll", query="SELECT a FROM ActorsCatalogTransaction a")
-public class ActorsCatalogTransaction implements Serializable {
+public class ActorsCatalogTransaction extends AbstractBaseEntity implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"HASH_ID\"", unique=true, nullable=false, length=100)
 	private String hashId;
 
-	@Column(name="\"ACTOR_TYPE\"", nullable=false, length=50)
 	private String actorType;
 
-	@Column(name="\"ALIAS\"", nullable=false, length=50)
 	private String alias;
 
-	@Column(name="\"EXTRA_DATA\"", nullable=false, length=255)
 	private String extraData;
 
-	@Column(name="\"HOSTED_TIMESTAMP\"", nullable=false)
 	private Timestamp hostedTimestamp;
 
-	@Column(name="\"IDENTITY_PUBLIC_KEY\"", nullable=false, length=255)
 	private String identityPublicKey;
 
-	@Column(name="\"LAST_LATITUDE\"", nullable=false)
 	private double lastLatitude;
 
-	@Column(name="\"LAST_LONGITUDE\"", nullable=false)
 	private double lastLongitude;
 
-	@Column(name="\"NAME\"", nullable=false, length=50)
 	private String name;
 
-	@Column(name="\"NODE_IDENTITY_PUBLIC_KEY\"", nullable=false, length=255)
 	private String nodeIdentityPublicKey;
 
-	@Column(name="\"PHOTO\"", nullable=false)
-	private Object photo;
+	private byte[] photo;
 
-	@Column(name="\"TYPE\"", nullable=false, length=10)
-	private String type;
+	private String transactionType;
 
 	public ActorsCatalogTransaction() {
+		super();
 	}
 
-	public String getHashId() {
-		return this.hashId;
+	public String getTransactionType() {
+		return transactionType;
 	}
 
-	public void setHashId(String hashId) {
-		this.hashId = hashId;
+	public void setTransactionType(String transactionType) {
+		this.transactionType = transactionType;
 	}
 
 	public String getActorType() {
-		return this.actorType;
+		return actorType;
 	}
 
 	public void setActorType(String actorType) {
@@ -80,7 +58,7 @@ public class ActorsCatalogTransaction implements Serializable {
 	}
 
 	public String getAlias() {
-		return this.alias;
+		return alias;
 	}
 
 	public void setAlias(String alias) {
@@ -88,15 +66,23 @@ public class ActorsCatalogTransaction implements Serializable {
 	}
 
 	public String getExtraData() {
-		return this.extraData;
+		return extraData;
 	}
 
 	public void setExtraData(String extraData) {
 		this.extraData = extraData;
 	}
 
+	public String getHashId() {
+		return hashId;
+	}
+
+	public void setHashId(String hashId) {
+		this.hashId = hashId;
+	}
+
 	public Timestamp getHostedTimestamp() {
-		return this.hostedTimestamp;
+		return hostedTimestamp;
 	}
 
 	public void setHostedTimestamp(Timestamp hostedTimestamp) {
@@ -104,7 +90,7 @@ public class ActorsCatalogTransaction implements Serializable {
 	}
 
 	public String getIdentityPublicKey() {
-		return this.identityPublicKey;
+		return identityPublicKey;
 	}
 
 	public void setIdentityPublicKey(String identityPublicKey) {
@@ -112,7 +98,7 @@ public class ActorsCatalogTransaction implements Serializable {
 	}
 
 	public double getLastLatitude() {
-		return this.lastLatitude;
+		return lastLatitude;
 	}
 
 	public void setLastLatitude(double lastLatitude) {
@@ -120,7 +106,7 @@ public class ActorsCatalogTransaction implements Serializable {
 	}
 
 	public double getLastLongitude() {
-		return this.lastLongitude;
+		return lastLongitude;
 	}
 
 	public void setLastLongitude(double lastLongitude) {
@@ -128,7 +114,7 @@ public class ActorsCatalogTransaction implements Serializable {
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	public void setName(String name) {
@@ -136,27 +122,55 @@ public class ActorsCatalogTransaction implements Serializable {
 	}
 
 	public String getNodeIdentityPublicKey() {
-		return this.nodeIdentityPublicKey;
+		return nodeIdentityPublicKey;
 	}
 
 	public void setNodeIdentityPublicKey(String nodeIdentityPublicKey) {
 		this.nodeIdentityPublicKey = nodeIdentityPublicKey;
 	}
 
-	public Object getPhoto() {
-		return this.photo;
+	public byte[] getPhoto() {
+		return photo;
 	}
 
-	public void setPhoto(Object photo) {
+	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
 
-	public String getType() {
-		return this.type;
+	@Override
+	public String getId() {
+		return identityPublicKey;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ActorsCatalogTransaction)) return false;
+		ActorsCatalogTransaction that = (ActorsCatalogTransaction) o;
+		return Objects.equals(getLastLatitude(), that.getLastLatitude()) &&
+				Objects.equals(getLastLongitude(), that.getLastLongitude()) &&
+				Objects.equals(getHashId(), that.getHashId()) &&
+				Objects.equals(getActorType(), that.getActorType()) &&
+				Objects.equals(getAlias(), that.getAlias()) &&
+				Objects.equals(getExtraData(), that.getExtraData()) &&
+				Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+				Objects.equals(getName(), that.getName()) &&
+				Objects.equals(getNodeIdentityPublicKey(), that.getNodeIdentityPublicKey()) &&
+				Objects.equals(getPhoto(), that.getPhoto()) &&
+				Objects.equals(getTransactionType(), that.getTransactionType());
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(getHashId(), getActorType(), getAlias(), getExtraData(), getIdentityPublicKey(), getLastLatitude(), getLastLongitude(), getName(), getNodeIdentityPublicKey(), getPhoto(), getTransactionType());
+	}
+
+	@Override
+	public String toString() {
+		return "ActorsCatalog{" +
+				"identityPublicKey='" + identityPublicKey + '\'' +
+				", alias='" + alias + '\'' +
+				", name='" + name + '\'' +
+				'}';
+	}
 }

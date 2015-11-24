@@ -2,74 +2,45 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import java.util.Objects;
 
 
 /**
  * The persistent class for the "CHECKED_ACTORS_HISTORY" database table.
  * 
  */
-@Entity
-@Table(name="\"CHECKED_ACTORS_HISTORY\"")
-@NamedQuery(name="CheckedActorsHistory.findAll", query="SELECT c FROM CheckedActorsHistory c")
-public class CheckedActorsHistory implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class CheckedActorsHistory extends AbstractBaseEntity implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"IDENTITY_PUBLIC_KEY\"", unique=true, nullable=false, length=255)
+    private static final long serialVersionUID = 1L;
+
 	private String identityPublicKey;
 
-	@Column(name="\"ACTOR_TYPE\"", nullable=false, length=50)
 	private String actorType;
 
-	@Column(name="\"ALIAS\"", nullable=false, length=50)
 	private String alias;
 
-	@Column(name="\"CHECK_TYPE\"", nullable=false, length=3)
 	private String checkType;
 
-	@Column(name="\"CHECKED_TIMESTAMP\"", nullable=false)
 	private Timestamp checkedTimestamp;
 
-	@Column(name="\"CLIENT_IDENTITY_PUBLIC_KEY\"", nullable=false, length=255)
 	private String clientIdentityPublicKey;
 
-	@Column(name="\"EXTRA_DATA\"", nullable=false, length=255)
 	private String extraData;
 
-	@Column(name="\"LAST_LATITUDE\"", nullable=false)
 	private double lastLatitude;
 
-	@Column(name="\"LAST_LONGITUDE\"", nullable=false)
 	private double lastLongitude;
 
-	@Column(name="\"NAME\"", nullable=false, length=50)
 	private String name;
 
-	@Column(name="\"PHOTO\"", nullable=false)
-	private Object photo;
+	private byte[] photo;
 
 	public CheckedActorsHistory() {
-	}
-
-	public String getIdentityPublicKey() {
-		return this.identityPublicKey;
-	}
-
-	public void setIdentityPublicKey(String identityPublicKey) {
-		this.identityPublicKey = identityPublicKey;
+		super();
 	}
 
 	public String getActorType() {
-		return this.actorType;
+		return actorType;
 	}
 
 	public void setActorType(String actorType) {
@@ -77,31 +48,31 @@ public class CheckedActorsHistory implements Serializable {
 	}
 
 	public String getAlias() {
-		return this.alias;
+		return alias;
 	}
 
 	public void setAlias(String alias) {
 		this.alias = alias;
 	}
 
-	public String getCheckType() {
-		return this.checkType;
-	}
-
-	public void setCheckType(String checkType) {
-		this.checkType = checkType;
-	}
-
 	public Timestamp getCheckedTimestamp() {
-		return this.checkedTimestamp;
+		return checkedTimestamp;
 	}
 
 	public void setCheckedTimestamp(Timestamp checkedTimestamp) {
 		this.checkedTimestamp = checkedTimestamp;
 	}
 
+	public String getCheckType() {
+		return checkType;
+	}
+
+	public void setCheckType(String checkType) {
+		this.checkType = checkType;
+	}
+
 	public String getClientIdentityPublicKey() {
-		return this.clientIdentityPublicKey;
+		return clientIdentityPublicKey;
 	}
 
 	public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
@@ -109,15 +80,23 @@ public class CheckedActorsHistory implements Serializable {
 	}
 
 	public String getExtraData() {
-		return this.extraData;
+		return extraData;
 	}
 
 	public void setExtraData(String extraData) {
 		this.extraData = extraData;
 	}
 
+	public String getIdentityPublicKey() {
+		return identityPublicKey;
+	}
+
+	public void setIdentityPublicKey(String identityPublicKey) {
+		this.identityPublicKey = identityPublicKey;
+	}
+
 	public double getLastLatitude() {
-		return this.lastLatitude;
+		return lastLatitude;
 	}
 
 	public void setLastLatitude(double lastLatitude) {
@@ -125,7 +104,7 @@ public class CheckedActorsHistory implements Serializable {
 	}
 
 	public double getLastLongitude() {
-		return this.lastLongitude;
+		return lastLongitude;
 	}
 
 	public void setLastLongitude(double lastLongitude) {
@@ -133,19 +112,56 @@ public class CheckedActorsHistory implements Serializable {
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public Object getPhoto() {
-		return this.photo;
+	public byte[] getPhoto() {
+		return photo;
 	}
 
-	public void setPhoto(Object photo) {
+	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
 
+    @Override
+    public String getId() {
+        return identityPublicKey;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CheckedActorsHistory)) return false;
+        CheckedActorsHistory that = (CheckedActorsHistory) o;
+        return Objects.equals(getLastLatitude(), that.getLastLatitude()) &&
+                Objects.equals(getLastLongitude(), that.getLastLongitude()) &&
+                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+                Objects.equals(getActorType(), that.getActorType()) &&
+                Objects.equals(getAlias(), that.getAlias()) &&
+                Objects.equals(getCheckType(), that.getCheckType()) &&
+                Objects.equals(getCheckedTimestamp(), that.getCheckedTimestamp()) &&
+                Objects.equals(getClientIdentityPublicKey(), that.getClientIdentityPublicKey()) &&
+                Objects.equals(getExtraData(), that.getExtraData()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getPhoto(), that.getPhoto());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdentityPublicKey(), getActorType(), getAlias(), getCheckType(), getCheckedTimestamp(), getClientIdentityPublicKey(), getExtraData(), getLastLatitude(), getLastLongitude(), getName(), getPhoto());
+    }
+
+    @Override
+    public String toString() {
+        return "CheckedActorsHistory{" +
+                "identityPublicKey='" + identityPublicKey + '\'' +
+                ", alias='" + alias + '\'' +
+                ", name='" + name + '\'' +
+                ", actorType='" + actorType + '\'' +
+                '}';
+    }
 }
