@@ -35,6 +35,8 @@ import java.util.UUID;
  * @since 05/11/15
  */
 public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements CryptoBrokerWallet {
+    private List<ContractBasicInformation> contractsHistory;
+
 
     @Override
     public CustomerBrokerNegotiationInformation addClause(CustomerBrokerNegotiationInformation negotiation, ClauseInformation clause) {
@@ -49,8 +51,30 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public Collection<ContractBasicInformation> getContractsHistory(ContractStatus status, int max, int offset) throws CantGetContractHistoryException {
         try {
+            List<ContractBasicInformation> contractsHistory;
+
+            contractsHistory = getContractHistoryTestData();
+
+            if (status != null) {
+                List<ContractBasicInformation> filteredList = new ArrayList<>();
+                for (ContractBasicInformation item : contractsHistory) {
+                    if (item.getStatus().equals(status))
+                        filteredList.add(item);
+                }
+                contractsHistory = filteredList;
+            }
+
+            return contractsHistory;
+
+        } catch (Exception ex) {
+            throw new CantGetContractHistoryException(ex);
+        }
+    }
+
+    private List<ContractBasicInformation> getContractHistoryTestData() {
+        if (contractsHistory == null) {
             ContractBasicInformation contract;
-            List<ContractBasicInformation> contractsHistory = new ArrayList<>();
+            contractsHistory = new ArrayList<>();
 
             contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
             contractsHistory.add(contract);
@@ -92,21 +116,9 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
             contractsHistory.add(contract);
-
-            if (status != null) {
-                List<ContractBasicInformation> filteredList = new ArrayList<>();
-                for (ContractBasicInformation item : contractsHistory) {
-                    if (item.getStatus() == status)
-                        filteredList.add(item);
-                }
-                contractsHistory = filteredList;
-            }
-
-            return contractsHistory;
-
-        } catch (Exception ex) {
-            throw new CantGetContractHistoryException(ex);
         }
+
+        return contractsHistory;
     }
 
     @Override
