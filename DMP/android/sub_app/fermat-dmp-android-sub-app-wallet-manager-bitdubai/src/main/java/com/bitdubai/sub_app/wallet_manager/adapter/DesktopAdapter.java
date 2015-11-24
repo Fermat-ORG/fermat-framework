@@ -83,6 +83,7 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
                 Collections.swap(dataSet, i, i - 1);
             }
         }
+        getItem(fromPosition).setPosition(toPosition);
         notifyItemMoved(fromPosition, toPosition);
         return true;
     }
@@ -91,6 +92,7 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
     public void onItemDismiss(int position) {
         dataSet.remove(position);
         notifyItemRemoved(position);
+        notifyDataSetChanged();
     }
 
 
