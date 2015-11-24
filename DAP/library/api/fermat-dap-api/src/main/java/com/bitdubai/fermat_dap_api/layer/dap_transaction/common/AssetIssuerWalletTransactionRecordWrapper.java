@@ -29,7 +29,9 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     private final long timeStamp;
     private final String memo;
     private final String digitalAssetMetadataHash;
+    private final String genesisBlock;
     private final String transactionId;
+    private DigitalAssetMetadata digitalAssetMetadata;
 
     AssetIssuerWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
                                               String digitalAssetPublicKey,
@@ -45,6 +47,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
                                               long timeStamp,
                                               String memo,
                                               String digitalAssetMetadataHash,
+                                              String genesisBlock,
                                               String transactionId){
         this.digitalAsset = digitalAsset;
         this.digitalAssetPublicKey = digitalAssetPublicKey;
@@ -60,7 +63,11 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.timeStamp = timeStamp;
         this.memo = memo;
         this.digitalAssetMetadataHash = digitalAssetMetadataHash;
+        this.genesisBlock = genesisBlock;
         this.transactionId = transactionId;
+
+        this.digitalAssetMetadata = new DigitalAssetMetadata(this.digitalAsset);
+        digitalAssetMetadata.setGenesisBlock(genesisBlock);
     }
 
     public AssetIssuerWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
@@ -80,9 +87,11 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.amount = cryptoGenesisTransaction.getCryptoAmount();
         this.digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
+        this.genesisBlock = digitalAssetMetadata.getGenesisBlock();
         Date date= new Date();
         this.timeStamp = date.getTime();
         this.memo = "Digital Asset delivered at"+this.timeStamp;
+        this.digitalAssetMetadata = digitalAssetMetadata;
     }
 
     @Override
@@ -158,5 +167,15 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     @Override
     public String getDigitalAssetMetadataHash() {
         return digitalAssetMetadataHash;
+    }
+
+    @Override
+    public String getGenesisBlock() {
+        return this.getGenesisBlock();
+    }
+
+    @Override
+    public DigitalAssetMetadata getDigitalAssetMetadata() {
+        return this.digitalAssetMetadata;
     }
 }
