@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantInitializeNetworkServiceDatabaseException extends FermatException {
 
-    private static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE NETWORK SERVICE DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE NETWORK SERVICE DATABASE EXCEPTION";
 
     public CantInitializeNetworkServiceDatabaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
