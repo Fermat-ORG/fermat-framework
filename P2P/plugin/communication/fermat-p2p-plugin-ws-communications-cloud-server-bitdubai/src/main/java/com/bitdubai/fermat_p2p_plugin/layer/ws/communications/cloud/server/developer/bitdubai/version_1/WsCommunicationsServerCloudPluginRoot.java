@@ -258,7 +258,7 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
             /*
              * Start the socket to handle the request of Component Registered List
              */
-            SocketServerInitialization socketServerInitialization =new SocketServerInitialization(wsCommunicationCloudServer);
+           // SocketServerInitialization socketServerInitialization =new SocketServerInitialization(wsCommunicationCloudServer);
 
         } catch (Exception e) {
             e.printStackTrace();
