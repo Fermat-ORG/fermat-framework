@@ -57,6 +57,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -84,10 +85,10 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         LogManagerForDevelopers,
         TransactionTransmissionManager {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
@@ -96,7 +97,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.WS_CLOUD_CLIENT)
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     public TransactionTransmissionPluginRoot() {
@@ -144,12 +145,12 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     private TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
 
     /**
-     *   Represent the communicationNetworkServiceDeveloperDatabaseFactory
+     * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
     /**
-     *  Represent the remoteNetworkServicesRegisteredList
+     * Represent the remoteNetworkServicesRegisteredList
      */
     private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
@@ -165,9 +166,9 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
          * If all resources are inject
          */
         if (wsCommunicationsCloudClientManager == null ||
-                pluginDatabaseSystem  == null ||
-                errorManager      == null ||
-                eventManager  == null) {
+                pluginDatabaseSystem == null ||
+                errorManager == null ||
+                eventManager == null) {
 
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -199,7 +200,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
      * because at this moment, is create the platformComponentProfile for this component
      */
     @Override
-    public void initializeCommunicationNetworkServiceConnectionManager(){
+    public void initializeCommunicationNetworkServiceConnectionManager() {
         this.communicationNetworkServiceConnectionManager = new TransactionTransmissionCommunicationNetworkServiceConnectionManager(
                 platformComponentProfilePluginRoot,
                 identity,
@@ -307,6 +308,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     /**
      * (non-javadoc)
+     *
      * @see NetworkService#requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters)
      */
     @Override
@@ -345,6 +347,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     /**
      * (non-javadoc)
+     *
      * @see NetworkService#getNetworkServiceConnectionManager()
      */
     @Override
@@ -365,9 +368,9 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TRANSACTION_TRANSMISSION &&
-                platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
+                platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.TRANSACTION_TRANSMISSION &&
+                platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
             /*
              * Mark as register
@@ -381,7 +384,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             /**
              * Initialize the main agent
              */
-        //TODO implement the agent first
+            //TODO implement the agent first
             /*cryptoTransmissionAgent = new CryptoTransmissionAgent(
                     this,
                     cryptoTransmissionConnectionsDAO,
@@ -422,7 +425,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         /*
          * save into the cache
          */
-        remoteNetworkServicesRegisteredList.addAll( platformComponentProfileRegisteredList);
+        remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
 
         //TODO: Implement the agent first
         //cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
@@ -440,7 +443,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
                 "-----------------------\n A: " + remoteComponentProfile.getAlias());
 
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
+        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()) {
 
             remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
 
@@ -488,7 +491,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             /*
              * Verify if the communication cloud client is active
              */
-            if (!wsCommunicationsCloudClientManager.isDisable()){
+            if (!wsCommunicationsCloudClientManager.isDisable()) {
 
                 /*
                  * Initialize the agent and start
@@ -527,13 +530,14 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
     }
 
     /**
      * (non-Javadoc)
+     *
      * @see Service#pause()
      */
     @Override
@@ -553,6 +557,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     /**
      * (non-Javadoc)
+     *
      * @see Service#resume()
      */
     @Override
@@ -572,6 +577,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     /**
      * (non-Javadoc)
+     *
      * @see Service#stop()
      */
     @Override
@@ -615,18 +621,19 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     /**
      * Static method to get the logging level from any class under root.
+     *
      * @param className
      * @return
      */
-    public static LogLevel getLogLevelByClass(String className){
-        try{
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
             /**
              * sometimes the classname may be passed dinamically with an $moretext
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return TransactionTransmissionPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
+        } catch (Exception e) {
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
@@ -635,12 +642,13 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     }
 
     @Override
-    public void sendContractHashToCryptoCustomer(CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionHash, String negotiationId) throws CantSendContractNewStatusNotificationException {
+    public void sendContractHashToCryptoCustomer(UUID transactionId, CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionHash, String negotiationId) throws CantSendContractNewStatusNotificationException {
         //TODO: check the correct PlatformComponentType for sender and receiver
         //TODO: Check is contractId is necessary
-        Date date=new Date();
-        Timestamp timestamp=new Timestamp(date.getTime());
-        BusinessTransaction businessTransaction=new BusinessTransactionRecord(
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+
+        BusinessTransaction businessTransaction = new BusinessTransactionRecord(
                 transactionHash,
                 ContractStatus.PENDING_CONFIRMATION,
                 cryptoCustomerActorReceiver.getIdentity().getPublicKey(),
@@ -650,19 +658,19 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 null,
                 negotiationId,
                 BusinessTransactionTransactionType.TRANSACTION_HASH,
-                timestamp.getTime()
+                timestamp.getTime(),
+                transactionId
         );
         //TODO: initialize hash dao
         //try {
-          //  transactionTransmissionContractHashDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
+        //  transactionTransmissionContractHashDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
         //} catch (CantSaveCryptoTransmissionMetadatatException e) {
         //    throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
         //}
-
     }
 
     @Override
-    public void sendContractHashToCryptoBroker(CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionHash) throws CantSendContractNewStatusNotificationException {
+    public void sendContractHashToCryptoBroker(UUID transactionId, CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionHash) throws CantSendContractNewStatusNotificationException {
 
     }
 
