@@ -18,9 +18,10 @@ public interface TransactionTransmissionManager extends TransactionProtocolManag
      * @param cryptoBrokerActorSender
      * @param cryptoCustomerActorReceiver
      * @param transactionHash
+     * @param negotiationId
      * @throws CantSendContractNewStatusNotificationException
      */
-    void sendContractHashToCryptoCustomer(CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionHash) throws CantSendContractNewStatusNotificationException;
+    void sendContractHashToCryptoCustomer(CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionHash, String negotiationId) throws CantSendContractNewStatusNotificationException;
 
     /**
      * Method that send Contract hash
