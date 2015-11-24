@@ -1,12 +1,13 @@
 package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces;
 
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetDeviceUserListException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantCreateNewDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetDeviceUserListException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantSetImageException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.LoginFailedException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.IncorrectUserOrPasswordException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.LoginFailedException;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
  * @author Ezequiel Postan
  */
 
-public interface DeviceUserManager {
+public interface DeviceUserManager extends FermatManager {
 
     /**
      * This method creates internally a new device user and returns the public key assigned to it.

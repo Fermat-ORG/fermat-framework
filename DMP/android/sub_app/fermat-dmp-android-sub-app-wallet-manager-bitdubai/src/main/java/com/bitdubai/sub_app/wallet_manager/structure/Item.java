@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 public class Item<I extends FermatInterfaceObject> implements FermatInterfaceObject {
 
     I object;
+    public boolean selected=false;
 
 
     public Item(I object) {
@@ -29,6 +30,26 @@ public class Item<I extends FermatInterfaceObject> implements FermatInterfaceObj
     @Override
     public String getIcon() {
         return object.getIcon();
+    }
+
+    @Override
+    public void setIconResource(int bitcoin_wallet) {
+        object.setIconResource(bitcoin_wallet);
+    }
+
+    @Override
+    public int getIconResource() {
+        return object.getIconResource();
+    }
+
+    @Override
+    public int getPosition() {
+        return object.getPosition();
+    }
+
+    @Override
+    public void setPosition(int position) {
+        object.setPosition(position);
     }
 
     public I getInterfaceObject() {

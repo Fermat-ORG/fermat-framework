@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 public class CryptoTransaction{
     private String transactionHash;
+    private String blockHash;
     private CryptoAddress addressFrom;
     private CryptoAddress addressTo;
     private CryptoCurrency cryptoCurrency;
@@ -45,6 +46,10 @@ public class CryptoTransaction{
         return transactionHash;
     }
 
+    public String getBlockHash() {
+        return blockHash;
+    }
+
     public CryptoAddress getAddressFrom() {
         return addressFrom;
     }
@@ -77,6 +82,10 @@ public class CryptoTransaction{
 
     public void setTransactionHash(String transactionHash) {
         this.transactionHash = transactionHash;
+    }
+
+    public void setBlockHash(String blockHash) {
+        this.blockHash = blockHash;
     }
 
     public void setAddressFrom(CryptoAddress addressFrom) {

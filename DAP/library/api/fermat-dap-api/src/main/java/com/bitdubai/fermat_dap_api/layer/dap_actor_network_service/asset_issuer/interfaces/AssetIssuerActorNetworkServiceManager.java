@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by franklin on 15/10/15.
  */
-public interface AssetIssuerActorNetworkServiceManager {
+public interface AssetIssuerActorNetworkServiceManager extends FermatManager {
     /**
      * Register the ActorAssetUser in the cloud server like online
      *

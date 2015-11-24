@@ -43,9 +43,17 @@ project(':fermat-cbp-plugin-actor-crypto-broker-bitdubai').projectDir = new File
 include ':fermat-cbp-plugin-actor-crypto-customer-bitdubai'
 project(':fermat-cbp-plugin-actor-crypto-customer-bitdubai').projectDir = new File('CBP/plugin/actor/fermat-cbp-plugin-actor-crypto-customer-bitdubai')
 
+//Actor Connection
+include ':fermat-cbp-plugin-actor-connection-crypto-broker-bitdubai'
+project(':fermat-cbp-plugin-actor-connection-crypto-broker-bitdubai').projectDir = new File('CBP/plugin/actor_connection/fermat-cbp-plugin-actor-connection-crypto-broker-bitdubai')
+include ':fermat-cbp-plugin-actor-connection-crypto-customer-bitdubai'
+project(':fermat-cbp-plugin-actor-connection-crypto-customer-bitdubai').projectDir = new File('CBP/plugin/actor_connection/fermat-cbp-plugin-actor-connection-crypto-customer-bitdubai')
+
 //Actor Network Service
 include ':fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai'
 project(':fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai').projectDir = new File('CBP/plugin/actor_network_service/fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai')
+
+//Network Service
 include ':fermat-cbp-plugin-network-service-negotiation-transmission-bitdubai'
 project(':fermat-cbp-plugin-network-service-negotiation-transmission-bitdubai').projectDir = new File('CBP/plugin/network_service/fermat-cbp-plugin-network-service-negotiation-transmission-bitdubai')
 
@@ -97,12 +105,12 @@ include ':fermat-cbp-plugin-stock-transactions-crypto-money-restock-bitdubai'
 project(':fermat-cbp-plugin-stock-transactions-crypto-money-restock-bitdubai').projectDir = new File('CBP/plugin/stock_transactions/fermat-cbp-plugin-stock-transactions-crypto-money-restock-bitdubai')
 
 //Negotiation Transaction
-include ':fermat-cbp-plugin-negotiation-transaction-create-bitdubai'
-project(':fermat-cbp-plugin-negotiation-transaction-create-bitdubai').projectDir = new File('CBP/plugin/negotiation_transaction/fermat-cbp-plugin-negotiation-transaction-create-bitdubai')
-include ':fermat-cbp-plugin-negotiation-transaction-update-bitdubai'
-project(':fermat-cbp-plugin-negotiation-transaction-update-bitdubai').projectDir = new File('CBP/plugin/negotiation_transaction/fermat-cbp-plugin-negotiation-transaction-update-bitdubai')
-include ':fermat-cbp-plugin-negotiation-transaction-close-bitdubai'
-project(':fermat-cbp-plugin-negotiation-transaction-close-bitdubai').projectDir = new File('CBP/plugin/negotiation_transaction/fermat-cbp-plugin-negotiation-transaction-close-bitdubai')
+include ':fermat-cbp-plugin-negotiation-transaction-customer-broker-new-bitdubai'
+project(':fermat-cbp-plugin-negotiation-transaction-customer-broker-new-bitdubai').projectDir = new File('CBP/plugin/negotiation_transaction/fermat-cbp-plugin-negotiation-transaction-customer-broker-new-bitdubai')
+include ':fermat-cbp-plugin-negotiation-transaction-customer-broker-update-bitdubai'
+project(':fermat-cbp-plugin-negotiation-transaction-customer-broker-update-bitdubai').projectDir = new File('CBP/plugin/negotiation_transaction/fermat-cbp-plugin-negotiation-transaction-customer-broker-update-bitdubai')
+include ':fermat-cbp-plugin-negotiation-transaction-customer-broker-close-bitdubai'
+project(':fermat-cbp-plugin-negotiation-transaction-customer-broker-close-bitdubai').projectDir = new File('CBP/plugin/negotiation_transaction/fermat-cbp-plugin-negotiation-transaction-customer-broker-close-bitdubai')
 
 //Contract
 include ':fermat-cbp-plugin-contract-customer-broker-purchase-bitdubai'

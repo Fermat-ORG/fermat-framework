@@ -11,4 +11,12 @@ public interface FermatInterfaceObject{
 
     String getIcon();
 
+    void setIconResource(int bitcoin_wallet);
+
+    int getIconResource();
+
+    int getPosition();
+
+    void setPosition(int position);
+
 }

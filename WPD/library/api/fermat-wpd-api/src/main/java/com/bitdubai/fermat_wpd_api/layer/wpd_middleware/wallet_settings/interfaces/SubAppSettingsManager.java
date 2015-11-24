@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantLoadSubAppSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSaveSubAppSettings;
 
@@ -7,7 +8,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
  * Created by Matias Furszyfer on 2015.08.19..
  */
 
-public interface SubAppSettingsManager {
+public interface SubAppSettingsManager extends FermatManager {
 
     /**
      * This method gives us the settings of a wallet
