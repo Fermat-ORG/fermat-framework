@@ -231,7 +231,7 @@
 			<layer name="Wallet" language="java"></layer>
 			<layer name="World" language="java"></layer>
 			<layer name="Identity" language="java"></layer>
-			<layer name="Actor Connection" language="java"></layer>C
+			<layer name="Actor Connection" language="java"></layer>
 			<layer name="Actor Network Service" language="java"></layer>
 			<layer name="Network Service" language="java"></layer>
 			<layer name="empty layer 2"></layer>
@@ -5531,7 +5531,7 @@
 				</plugins>
 			</layer>
 			
-				<layer name="Actor Connection" language="java">
+			<layer name="Actor Connection" language="java">
 				<plugins>
 					<plugin
 						name="Crypto Broker"
