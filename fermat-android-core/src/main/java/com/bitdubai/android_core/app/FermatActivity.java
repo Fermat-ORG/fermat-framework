@@ -1078,7 +1078,7 @@ public abstract class FermatActivity extends AppCompatActivity
             List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
 
             navigationViewPainter = null;
-            elementsWithAnimation = null;
+            elementsWithAnimation = new ArrayList<>();
 
             this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
