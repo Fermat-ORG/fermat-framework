@@ -140,7 +140,7 @@ public class ActorsCatalogTransactionsPendingForPropagation extends AbstractBase
 
 	@Override
 	public String getId() {
-		return identityPublicKey;
+		return hashId;
 	}
 
 	@Override

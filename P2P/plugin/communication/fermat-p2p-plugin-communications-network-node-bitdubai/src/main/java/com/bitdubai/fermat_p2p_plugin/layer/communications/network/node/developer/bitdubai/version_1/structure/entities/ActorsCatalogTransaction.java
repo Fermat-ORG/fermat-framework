@@ -140,7 +140,7 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	@Override
 	public String getId() {
-		return identityPublicKey;
+		return hashId;
 	}
 
 	@Override
