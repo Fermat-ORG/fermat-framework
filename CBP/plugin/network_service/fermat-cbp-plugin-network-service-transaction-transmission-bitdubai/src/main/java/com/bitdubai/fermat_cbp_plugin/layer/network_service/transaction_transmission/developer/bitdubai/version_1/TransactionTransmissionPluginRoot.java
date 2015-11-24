@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -52,6 +51,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionContractHashDao;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent;
@@ -62,13 +62,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import org.bouncycastle.util.Times;
-
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,9 +115,9 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     /**
-     * Represent the dataBase
+     * Represent the database
      */
-    private Database dataBase;
+    private Database database;
 
     /**
      * Connections arrived
@@ -204,7 +199,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 platformComponentProfilePluginRoot,
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
-                dataBase,
+                database,
                 errorManager,
                 eventManager,
                 EVENT_SOURCE,
@@ -222,7 +217,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -245,7 +240,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 /*
                  * We create the new database
                  */
-                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -494,9 +489,9 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
 
             /**
-             * Initialice DAO
+             * Initialize DAO
              */
-            //cryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO(pluginDatabaseSystem,pluginId,cryptoTrasmissionDatabase);
+            transactionTransmissionContractHashDao = new TransactionTransmissionContractHashDao(pluginDatabaseSystem,pluginId, database);
 
             //cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem,pluginId);
 
@@ -630,7 +625,10 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     }
 
     @Override
-    public void sendContractHashToCryptoCustomer(CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionHash, String negotiationId) throws CantSendContractNewStatusNotificationException {
+    public void sendContractHashToCryptoCustomer(UUID transactionId,
+                                                 CryptoBrokerActor cryptoBrokerActorSender,
+                                                 CryptoCustomerActor cryptoCustomerActorReceiver,
+                                                 String transactionHash, String negotiationId) throws CantSendBusinessTransactionHashException {
         //TODO: check the correct PlatformComponentType for sender and receiver
         //TODO: Check is contractId is necessary
         Date date=new Date();
@@ -645,19 +643,19 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 null,
                 negotiationId,
                 BusinessTransactionTransactionType.TRANSACTION_HASH,
-                timestamp.getTime()
+                timestamp.getTime(),
+                transactionId
         );
-        //TODO: initialize hash dao
-        //try {
-          //  transactionTransmissionContractHashDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
-        //} catch (CantSaveCryptoTransmissionMetadatatException e) {
-        //    throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
-        //}
+        try {
+            transactionTransmissionContractHashDao.saveCryptoTransmissionMetadata(businessTransaction);
+        } catch (CantInsertRecordDataBaseException e) {
+            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+        }
 
     }
 
     @Override
-    public void sendContractHashToCryptoBroker(CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionHash) throws CantSendContractNewStatusNotificationException {
+    public void sendContractHashToCryptoBroker(UUID transactionId,CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionHash) throws CantSendBusinessTransactionHashException {
 
     }
 
