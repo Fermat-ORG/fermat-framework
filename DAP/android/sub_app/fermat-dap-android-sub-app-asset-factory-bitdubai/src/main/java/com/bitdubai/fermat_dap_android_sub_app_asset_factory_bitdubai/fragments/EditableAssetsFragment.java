@@ -16,7 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
@@ -118,10 +118,9 @@ public class EditableAssetsFragment extends FermatFragment implements
         if (toolbar != null) {
             toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getActivity().getWindow();
+                window.setStatusBarColor(Color.parseColor("#1d1d25"));
             }
         }
     }

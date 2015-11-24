@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AnimationUtils;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
@@ -102,7 +104,25 @@ public class PublishedAssetsFragment extends FermatFragment implements
         if (toolbar != null) {
             toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getActivity().getWindow();
+                window.setStatusBarColor(Color.parseColor("#1d1d25"));
+            }
         }
+    }
+
+    /**
+     * Get the status bar height for kitkat, lollipop and m devices
+     *
+     * @return int height in pixels
+     */
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     protected void initViews(View layout) {
