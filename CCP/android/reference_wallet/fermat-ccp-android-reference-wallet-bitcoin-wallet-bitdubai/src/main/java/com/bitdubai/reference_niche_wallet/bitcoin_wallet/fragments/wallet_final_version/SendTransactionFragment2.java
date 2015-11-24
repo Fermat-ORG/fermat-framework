@@ -1,21 +1,27 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
@@ -62,7 +68,7 @@ import static android.widget.Toast.makeText;
  * @since 20/10/2015
  */
 public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem>
-        implements FermatListItemListeners<CryptoWalletTransaction> {
+        implements FermatListItemListeners<CryptoWalletTransaction>,ElementsWithAnimation {
 
 
     private int MAX_TRANSACTIONS = 20;
@@ -86,6 +92,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     ReferenceWalletSession referenceWalletSession;
     private long bookBalance;
+    private LinearLayout emptyListViewsContainer;
+    private int[] emptyOriginalPos= new int[2];;
+
 
 
     public static SendTransactionFragment2 newInstance() {
@@ -113,6 +122,12 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
 
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getPaintActivtyFeactures().addCollapseAnimation(this);
     }
 
     @Nullable
@@ -145,6 +160,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
          */
         NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
         setNavigationDrawer(navigationViewAdapter);
+
+
+
+
+        emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);
 
     }
 
@@ -261,7 +281,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         if (openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
-            View emptyListViewsContainer = layout.findViewById(R.id.empty);
+            emptyListViewsContainer =(LinearLayout) layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
     }
@@ -432,5 +452,41 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
 
+    @Override
+    public void startCollapseAnimation(int verticalOffset) {
+        moveViewToScreenCenter(emptyListViewsContainer);
+    }
+
+    @Override
+    public void startExpandAnimation(int verticalOffSet) {
+        moveViewToOriginalPosition(emptyListViewsContainer);
+    }
+
+    private void moveViewToOriginalPosition(View view) {
+        if(Build.VERSION.SDK_INT>17) {
+            int position[] = new int[2];
+            view.getLocationOnScreen(position);
+            float centreY = rootView.getY() + rootView.getHeight() / 2;
+            TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0  , centreY-250,0);
+            anim.setDuration(1000);
+            anim.setFillAfter(true);
+            view.startAnimation(anim);
+        }
+    }
+
+    private void moveViewToScreenCenter( View view ) {
+        if (Build.VERSION.SDK_INT > 17) {
+            DisplayMetrics dm = new DisplayMetrics();
+            rootView.getDisplay().getMetrics(dm);
+            int xDest = dm.widthPixels / 2;
+            xDest -= (view.getMeasuredWidth() / 2);
+            float centreY = rootView.getY() + rootView.getHeight() / 2;
+
+            TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
+            anim.setDuration(1000);
+            anim.setFillAfter(true);
+            view.startAnimation(anim);
+        }
+    }
 }
 

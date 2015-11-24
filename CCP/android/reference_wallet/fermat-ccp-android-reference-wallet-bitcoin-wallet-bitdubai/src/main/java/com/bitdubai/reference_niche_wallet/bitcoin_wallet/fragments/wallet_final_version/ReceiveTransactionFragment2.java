@@ -1,20 +1,24 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -53,7 +57,7 @@ import static android.widget.Toast.makeText;
  * @since 7/10/2015
  */
 public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem>
-        implements FermatListItemListeners<CryptoWalletTransaction> {
+        implements FermatListItemListeners<CryptoWalletTransaction>,ElementsWithAnimation {
 
     private int MAX_TRANSACTIONS = 20;
 
@@ -76,6 +80,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     ReferenceWalletSession referenceWalletSession;
 
     private Typeface tf;
+    private View emptyListViewsContainer;
+    private int[] emptyOriginalPos = new int[2];
 
 
     public static ReceiveTransactionFragment2 newInstance() {
@@ -124,9 +130,17 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         return rootView;
     }
     private void setUp(LayoutInflater inflater) throws CantGetActiveLoginIdentityException {
+
         //setUpHeader(inflater);
         //setUpDonut(inflater);
         //WalletUtils.setNavigatitDrawer(getPaintActivtyFeactures(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getPaintActivtyFeactures().addCollapseAnimation(this);
     }
 
 
@@ -170,7 +184,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         if (openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
-            View emptyListViewsContainer = layout.findViewById(R.id.empty);
+            emptyListViewsContainer = layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
     }
@@ -335,5 +349,41 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 //        );
     }
 
+    @Override
+    public void startCollapseAnimation(int verticalOffset) {
+        moveViewToScreenCenter(emptyListViewsContainer);
+    }
+
+    @Override
+    public void startExpandAnimation(int verticalOffSet) {
+        moveViewToOriginalPosition(emptyListViewsContainer);
+    }
+
+    private void moveViewToOriginalPosition(View view) {
+        if(Build.VERSION.SDK_INT>17) {
+            int position[] = new int[2];
+            view.getLocationOnScreen(position);
+            float centreY = rootView.getY() + rootView.getHeight() / 2;
+            TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0  , centreY-250,0);
+            anim.setDuration(1000);
+            anim.setFillAfter(true);
+            view.startAnimation(anim);
+        }
+    }
+
+    private void moveViewToScreenCenter( View view ) {
+        if (Build.VERSION.SDK_INT > 17) {
+            DisplayMetrics dm = new DisplayMetrics();
+            rootView.getDisplay().getMetrics(dm);
+            int xDest = dm.widthPixels / 2;
+            xDest -= (view.getMeasuredWidth() / 2);
+            float centreY = rootView.getY() + rootView.getHeight() / 2;
+
+            TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
+            anim.setDuration(1000);
+            anim.setFillAfter(true);
+            view.startAnimation(anim);
+        }
+    }
 }
 

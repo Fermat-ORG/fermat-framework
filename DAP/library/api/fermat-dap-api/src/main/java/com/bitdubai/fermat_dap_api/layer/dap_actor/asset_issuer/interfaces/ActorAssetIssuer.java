@@ -9,11 +9,11 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState
 public interface ActorAssetIssuer {
 
     /**
-     * The metho <code>getPublicKey</code> gives us the public key of the represented Asset Issuer
+     * The metho <code>getActorPublicKey</code> gives us the public key of the represented Asset Issuer
      *
      * @return the public key
      */
-    String getPublicKey();
+    String getActorPublicKey();
 
     /**
      * The method <code>getName</code> gives us the name of the represented Asset Issuer
@@ -29,6 +29,14 @@ public interface ActorAssetIssuer {
      * @return the date
      */
     long getRegistrationDate();
+
+    /**
+     * The method <code>getLastConnectionDate</code> gives us the Las Connection Date of the represented
+     * Asset Issuer
+     *
+     * @return the Connection Date
+     */
+    long getLastConnectionDate();
 
     /**
      * The method <coda>getProfileImage</coda> gives us the profile image of the represented Asset Issuer

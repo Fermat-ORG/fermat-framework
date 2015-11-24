@@ -107,9 +107,13 @@ public class AssetCryptoVaultManager  {
     private DeterministicSeed getAssetVaultSeed()  throws InvalidSeedException{
         try{
             VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, ASSET_VAULT_SEED_FILEPATH, ASSET_VAULT_SEED_FILENAME);
-            if (!vaultSeedGenerator.seedExists())
+            if (!vaultSeedGenerator.seedExists()){
                 vaultSeedGenerator.create();
-            else
+                /**
+                 * I realod it to make sure I'm using the seed I will start using from now on. Issue #3330
+                 */
+                vaultSeedGenerator.load();
+            } else
                 vaultSeedGenerator.load();
 
             DeterministicSeed seed = new DeterministicSeed(vaultSeedGenerator.getSeedBytes(), vaultSeedGenerator.getMnemonicCode(), vaultSeedGenerator.getCreationTimeSeconds());
