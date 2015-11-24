@@ -26,6 +26,8 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.*;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.*;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.database.BankMoneyWalletDao;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyWalletDatabaseException;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.BankMoneyWalletImpl;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.ImplementBankMoney;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -65,8 +67,6 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements BankMon
     @Override
     public void start() throws CantStartPluginException {
         try {
-            this.bankMoneyWalletDao = new BankMoneyWalletDao(pluginDatabaseSystem);
-            bankMoneyWalletDao.initializeDatabase(pluginId);
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -82,7 +82,13 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements BankMon
 
     @Override
     public BankMoneyWallet loadBankMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyWalletException {
-        return null;
+        BankMoneyWalletImpl bankMoneyWallet= new BankMoneyWalletImpl(this.pluginId,this.pluginDatabaseSystem);
+        try {
+            bankMoneyWallet.initialize();
+        }catch (CantInitializeBankMoneyWalletDatabaseException e){
+            throw new CantLoadBankMoneyWalletException(CantInitializeBankMoneyWalletDatabaseException.DEFAULT_MESSAGE,e,"couldn't initialize bank wallet",null);
+        }
+        return bankMoneyWallet;
     }
 
     @Override
