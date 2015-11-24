@@ -638,6 +638,9 @@ public class AssetIssuingTransactionDao {
             if (databaseTableRecords.size() > 1) {
                 this.database.closeDatabase();
                 throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", "Transaction ID:" + outgoingTransactionID + " Genesis Bloc:" + genesisBlock);
+            } else if (databaseTableRecords.size() == 0) {
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. No value returned.", "Transaction ID:" + outgoingTransactionID + " Genesis Bloc:" + genesisBlock);
             } else {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
