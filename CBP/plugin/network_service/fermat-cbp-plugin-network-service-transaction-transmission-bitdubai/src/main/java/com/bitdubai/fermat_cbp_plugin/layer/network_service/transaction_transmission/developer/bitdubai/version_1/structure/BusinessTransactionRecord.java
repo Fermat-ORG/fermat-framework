@@ -5,6 +5,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransaction;
 
+import java.util.UUID;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/11/15.
  */
@@ -20,6 +22,7 @@ public class BusinessTransactionRecord implements BusinessTransaction {
     String negotiationId;
     BusinessTransactionTransactionType transactionType;
     Long timestamp;
+    UUID transactionId;
 
     public BusinessTransactionRecord(String contractHash,
                                      ContractStatus contractStatus,
@@ -30,7 +33,8 @@ public class BusinessTransactionRecord implements BusinessTransaction {
                                      String contractId,
                                      String negotiationId,
                                      BusinessTransactionTransactionType transactionType,
-                                     Long timestamp
+                                     Long timestamp,
+                                     UUID transactionId
                                      ){
         this.contractHash=contractHash;
         this.contractStatus=contractStatus;
@@ -42,6 +46,7 @@ public class BusinessTransactionRecord implements BusinessTransaction {
         this.negotiationId=negotiationId;
         this.transactionType=transactionType;
         this.timestamp=timestamp;
+        this.transactionId=transactionId;
 
     }
 
@@ -94,4 +99,7 @@ public class BusinessTransactionRecord implements BusinessTransaction {
     public Long getTimestamp() {
         return this.timestamp;
     }
+
+    @Override
+    public UUID getTransactionId(){ return this.transactionId;  }
 }
