@@ -102,14 +102,24 @@ public class CryptoTransaction{
      * @return
      */
     private static String getBlockHash(Transaction transaction) {
-        for (Map.Entry<Sha256Hash, Integer> entry : transaction.getAppearsInHashes().entrySet()){
-            Sha256Hash hash = entry.getKey();
-            return hash.toString();
+        try{
+            for (Map.Entry<Sha256Hash, Integer> entry : transaction.getAppearsInHashes().entrySet()){
+                Sha256Hash hash = entry.getKey();
+                return hash.toString();
+            }
+        } catch (Exception e){
+            /**
+             * return if error
+             */
+            return null;
         }
+
         /**
          * will return null if the transaction is not in a block
          */
         return null;
+
+
     }
 
     /**

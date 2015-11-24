@@ -11,12 +11,12 @@ import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.Noti
 /**
  * Created by Matias Furszyfer on 2015.08.18..
  */
-public class CloudClietNotificationHandler implements FermatEventHandler {
+public class CloudClientNotificationHandler implements FermatEventHandler {
 
 
     NotificationManagerMiddleware notificationManager;
 
-    public CloudClietNotificationHandler(final NotificationManagerMiddleware notificationManager) {
+    public CloudClientNotificationHandler(final NotificationManagerMiddleware notificationManager) {
         this.notificationManager = notificationManager;
     }
 
