@@ -219,6 +219,7 @@ public class CryptoBrokerWalletDatabaseDao {
         }
     }
 
+    //PRIVATE
     private float calculateBookRunningBalance(final float transactionAmount, String publicKeyWallet) throws CantGetBalanceRecordException {
         return getCurrentBalance(BalanceType.BOOK, publicKeyWallet) + transactionAmount;
     }

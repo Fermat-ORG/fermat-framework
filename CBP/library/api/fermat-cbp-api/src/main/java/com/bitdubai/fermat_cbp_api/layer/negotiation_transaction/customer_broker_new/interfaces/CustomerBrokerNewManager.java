@@ -19,9 +19,9 @@ import java.util.UUID;
  */
 public interface CustomerBrokerNewManager {
 
-    CustomerBrokerNew createCustomerBrokerNewNegotiationTranasction(String publicKeyCustomer, String publicKeyBroker, Collection<Clause> clauses) throws CantCreateCustomerBrokerNewNegotiationTransactionException;
+    CustomerBrokerNew createCustomerBrokerNewNegotiationTranasction(String publicKeyBroker, String publicKeyCustomer, Collection<Clause> clauses) throws CantCreateCustomerBrokerNewNegotiationTransactionException;
 
-    CustomerBrokerNew updateStatusCustomerBrokerNewNegotiationTranasction(UUID transactionId, NegotiationStatus statusTransaction) throws CantUpdateStatusCustomerBrokerNewNegotiationTransactionException;
+    void updateStatusCustomerBrokerNewNegotiationTranasction(UUID transactionId, NegotiationStatus statusTransaction) throws CantUpdateStatusCustomerBrokerNewNegotiationTransactionException;
 
     CustomerBrokerNew getCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerNewNegotiationTransactionException;
 
