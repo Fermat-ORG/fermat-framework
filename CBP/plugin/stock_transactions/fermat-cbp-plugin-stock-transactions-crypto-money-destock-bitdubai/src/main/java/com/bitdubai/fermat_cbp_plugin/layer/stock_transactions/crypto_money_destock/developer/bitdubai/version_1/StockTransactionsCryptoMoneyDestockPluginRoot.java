@@ -78,7 +78,7 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITCOIN_WALLET)
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITCOIN_HOLD)
     CryptoHoldTransactionManager cryptoHoldTransactionManager;
 
     @Override
