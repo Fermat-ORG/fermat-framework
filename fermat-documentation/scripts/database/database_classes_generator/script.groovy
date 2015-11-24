@@ -58,16 +58,16 @@ databaseTables.each { table ->
     templateConstants += """    /**
      * $table.name database table definition.
      */
-    static final String ${upperCaseUnderscore(table.name)}_TABLE_NAME = "${
+    public static final String ${upperCaseUnderscore(table.name)}_TABLE_NAME = "${
         lowerCaseUnderscore(table.name)
     }";\n\n"""
     table.columns.each { column ->
-        templateConstants += """    static final String ${upperCaseUnderscore(table.name)}_${
+        templateConstants += """    public static final String ${upperCaseUnderscore(table.name)}_${
             upperCaseUnderscore(column[0])
         }_COLUMN_NAME = "${lowerCaseUnderscore(column[0])}";\n"""
     }
     if (table.firstKey) {
-        templateConstants += """\n    static final String ${
+        templateConstants += """\n    public static final String ${
             upperCaseUnderscore(table.name)
         }_FIRST_KEY_COLUMN = "${lowerCaseUnderscore(table.firstKey)}";\n\n"""
     }
