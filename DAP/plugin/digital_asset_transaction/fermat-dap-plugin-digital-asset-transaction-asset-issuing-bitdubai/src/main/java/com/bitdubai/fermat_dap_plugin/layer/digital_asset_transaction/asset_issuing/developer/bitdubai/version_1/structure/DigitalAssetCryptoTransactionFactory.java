@@ -212,7 +212,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new ObjectNotSetException("ActorAssetIssuer is null");
         }
         try {
-            this.actorAssetIssuerPublicKey = actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
+            this.actorAssetIssuerPublicKey = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
             if (this.actorAssetIssuerPublicKey == null) {
                 this.actorAssetIssuerPublicKey = "actorPublicKeyNotFound";
             }
@@ -480,7 +480,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 LOG.info("ASSET ISSUING Asset number " + counter);
                 createDigitalAssetCryptoTransaction();
                 counter++;
-                //this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(this.digitalAsset.getPublicKey(), counter);
+                //this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(this.digitalAsset.getActorPublicKey(), counter);
             }
         } catch (ObjectNotSetException exception) {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(),IssuingStatus.DIGITAL_ASSET_INCOMPLETE);
@@ -856,7 +856,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         try {
             this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.SENDING_CRYPTO);
             this.assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(digitalAssetHash, CryptoStatus.PENDING_SUBMIT);
-            //this.cryptoVaultManager.sendBitcoins(this.digitalAsset.getPublicKey(), genesisTransaction, genesisAddress, genesisAmount);
+            //this.cryptoVaultManager.sendBitcoins(this.digitalAsset.getActorPublicKey(), genesisTransaction, genesisAddress, genesisAmount);
             //TODO: Send btc through outgoing intra user
             //genesisTransaction.setOp_Return(digitalAssetHash);
             //this.cryptoVaultManager.sendBitcoins(genesisTransaction);

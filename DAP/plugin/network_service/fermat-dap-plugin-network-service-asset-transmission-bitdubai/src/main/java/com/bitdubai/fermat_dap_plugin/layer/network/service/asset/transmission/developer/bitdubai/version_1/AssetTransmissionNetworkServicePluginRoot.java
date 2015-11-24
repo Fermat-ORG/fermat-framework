@@ -801,7 +801,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             /*
              * ask for a previous connection
              */
-            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetUserReceiver.getPublicKey());
+            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetUserReceiver.getActorPublicKey());
 
             /*
              * Construct the message content in json format
@@ -813,9 +813,9 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
              */
             DigitalAssetMetadataTransactionImpl digitalAssetMetadataTransaction = new DigitalAssetMetadataTransactionImpl();
             digitalAssetMetadataTransaction.setGenesisTransaction(digitalAssetMetadataToSend.getGenesisTransaction());
-            digitalAssetMetadataTransaction.setSenderId(actorAssetIssuerSender.getPublicKey());
+            digitalAssetMetadataTransaction.setSenderId(actorAssetIssuerSender.getActorPublicKey());
             digitalAssetMetadataTransaction.setSenderType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-            digitalAssetMetadataTransaction.setReceiverId(actorAssetUserReceiver.getPublicKey());
+            digitalAssetMetadataTransaction.setReceiverId(actorAssetUserReceiver.getActorPublicKey());
             digitalAssetMetadataTransaction.setReceiverType(PlatformComponentType.ACTOR_ASSET_USER);
             digitalAssetMetadataTransaction.setDigitalAssetMetadata(digitalAssetMetadataToSend);
             digitalAssetMetadataTransaction.setDistributionStatus(DistributionStatus.DELIVERING);
@@ -833,15 +833,15 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getPublicKey(), actorAssetUserReceiver.getPublicKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getActorPublicKey(), actorAssetUserReceiver.getActorPublicKey(), msjContent);
 
             }else{
 
                 /*
                  * Created the message
                  */
-                FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetIssuerSender.getPublicKey(),//Sender
-                                                                                                        actorAssetUserReceiver.getPublicKey(), //Receiver
+                FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetIssuerSender.getActorPublicKey(),//Sender
+                                                                                                        actorAssetUserReceiver.getActorPublicKey(), //Receiver
                                                                                                         msjContent, //Message Content
                                                                                                         FermatMessageContentType.TEXT);//Type
                 /*
@@ -858,12 +858,12 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                 /*
                  * Create the sender basic profile
                  */
-                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerSender.getPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
+                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
 
                 /*
                  * Create the receiver basic profile
                  */
-                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserReceiver.getPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserReceiver.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
 
                 /*
                  * Ask the client to connect
@@ -909,7 +909,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             /*
              * ask for a previous connection
              */
-            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerReceiver.getPublicKey());
+            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerReceiver.getActorPublicKey());
 
             /*
              * Construct the message content in json format
@@ -922,15 +922,15 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(actorAssetUserSender.getPublicKey(), actorAssetIssuerReceiver.getPublicKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(actorAssetUserSender.getActorPublicKey(), actorAssetIssuerReceiver.getActorPublicKey(), msjContent);
 
             }else{
 
                 /*
                  * Created the message
                  */
-                FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetUserSender.getPublicKey(),//Sender
-                                                                                                        actorAssetIssuerReceiver.getPublicKey(), //Receiver
+                FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetUserSender.getActorPublicKey(),//Sender
+                                                                                                        actorAssetIssuerReceiver.getActorPublicKey(), //Receiver
                                                                                                         msjContent, //Message Content
                                                                                                         FermatMessageContentType.TEXT);//Type
                 /*
@@ -947,12 +947,12 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                 /*
                  * Create the sender basic profile
                  */
-                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserSender.getPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
 
                 /*
                  * Create the receiver basic profile
                  */
-                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerReceiver.getPublicKey(),  NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
+                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerReceiver.getActorPublicKey(),  NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
 
                 /*
                  * Ask the client to connect

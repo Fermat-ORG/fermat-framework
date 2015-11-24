@@ -33,16 +33,14 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationItemMenuViewHolder> {
 
 
-    private IntraUserLoginIdentity intraUserLoginIdentity;
     Typeface tf;
     protected NavigationViewAdapter(Context context) {
         super(context);
     }
 
-    public NavigationViewAdapter(Context context, List<MenuItem> dataSet,IntraUserLoginIdentity intraUserLoginIdentity) {
+    public NavigationViewAdapter(Context context, List<MenuItem> dataSet) {
         super(context, dataSet);
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
-        this.intraUserLoginIdentity = intraUserLoginIdentity;
     }
     /**
      * Create a new holder instance

@@ -49,7 +49,7 @@ public class DigitalAssetUserRedemptionVault extends AbstractDigitalAssetVault {
             System.out.println("USER REDEMPTION Actor user is null");
             actorFromPublicKey="UNDEFINED";
         }else{
-            actorFromPublicKey=actorAssetUser.getPublicKey();
+            actorFromPublicKey=actorAssetUser.getActorPublicKey();
         }
         System.out.println("USER REDEMPTION Actor user public key:"+actorFromPublicKey);
         AssetUserWalletTransactionRecordWrapper assetUserWalletTransactionRecordWrapper=new AssetUserWalletTransactionRecordWrapper(
