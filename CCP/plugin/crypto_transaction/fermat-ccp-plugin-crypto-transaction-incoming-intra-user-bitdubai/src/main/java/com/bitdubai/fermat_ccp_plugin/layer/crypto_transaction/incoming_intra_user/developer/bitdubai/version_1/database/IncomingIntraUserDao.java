@@ -150,6 +150,8 @@ public class IncomingIntraUserDao {
                 IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME,
                 IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME);
 
+        registryTable.setUUIDFilter( IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+
         recordToUpdate.setStringValue(
                 IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_PROTOCOL_STATUS_COLUMN_NAME,
                 ProtocolStatus.APPLIED.getCode()
@@ -210,7 +212,10 @@ public class IncomingIntraUserDao {
                 IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_PROTOCOL_STATUS_COLUMN_NAME,
                 protocolStatus.getCode()
         );
-        registryTable.updateRecord(recordToUpdate);
+
+        registryTable.setUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+
+       registryTable.updateRecord(recordToUpdate);
     }
 
     private DatabaseTableRecord getTransactionRecordFromId(UUID id,String tableName, String columnName) throws CantLoadTableToMemoryException, com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserExpectedTransactionNotFoundException {
@@ -375,6 +380,9 @@ public class IncomingIntraUserDao {
                 IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PROTOCOL_STATUS_COLUMN_NAME,
                 protocolStatus.getCode()
         );
+
+        cryptoMetadataTable.setUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ID_COLUMN_NAME, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+
         cryptoMetadataTable.updateRecord(recordToUpdate);
     }
 

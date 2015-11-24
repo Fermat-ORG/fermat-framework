@@ -254,8 +254,6 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
         }
 
         private void doTheMainTask() throws CantExecuteQueryException, CantCheckAssetReceptionProgressException {
-            //TODO: once this works, please, remove the following line
-            //System.out.println("ASSET RECEPTION monitor agent es starting");
             try {
                 assetReceptionDao = new AssetReceptionDao(pluginDatabaseSystem, pluginId);
                 if (assetReceptionDao.isPendingNetworkLayerEvents()) {

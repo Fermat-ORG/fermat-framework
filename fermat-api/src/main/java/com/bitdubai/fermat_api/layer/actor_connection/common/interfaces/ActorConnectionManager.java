@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequ
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedContactStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
  */
-public interface ActorConnectionManager<T extends ActorIdentity, Z extends ActorConnection<T>, M extends ActorConnectionSearch<T, Z>> {
+public interface ActorConnectionManager<T extends ActorIdentity, Z extends ActorConnection<T>, M extends ActorConnectionSearch<T, Z>> extends FermatManager {
 
     /**
      * Through the method <code>getSearch</code> we can get a new instance of Actor Connection Search.

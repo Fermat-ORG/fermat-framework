@@ -21,8 +21,15 @@ dependencies {
 
     compile project(':fermat-api')
 
+    compile project(':fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai')
+
+    compile project(':fermat-cbp-plugin-actor-connection-crypto-broker-bitdubai')
+    compile project(':fermat-cbp-plugin-actor-connection-crypto-customer-bitdubai')
+
     compile project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai')
     compile project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai')
+
+    compile project(':fermat-cbp-plugin-network-service-transaction-transmission-bitdubai')
 
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')

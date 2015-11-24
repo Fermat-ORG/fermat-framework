@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by Yordin Alayn on 24.09.15.
  */
 public class InvalidParameterException extends FermatException {
+    //TODO: Esta clase debe eliminarse, usar el InvalidParameterException del fermat-api
+
     private static String defaultMsg = "Wrong Parameter Found: ";
 
     public static final String DEFAULT_MESSAGE = "INVALID PARAMETER";
