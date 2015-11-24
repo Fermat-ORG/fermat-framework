@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bit
 
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
 
+import java.util.UUID;
+
 /**
  * Created by Yordin Alayn on 16.11.15.
  */
@@ -11,12 +13,16 @@ public class CryptoCustomerIdentityWalletRelationshipImpl implements CustomerIde
     private static final int HASH_PRIME_NUMBER_PRODUCT = 3061;
     private static final int HASH_PRIME_NUMBER_ADD = 7213;
 
+    private UUID relationship;
     private String walletPublicKey;
     private String identityPublicKey;
-    public CryptoCustomerIdentityWalletRelationshipImpl(String walletPublicKey, String identityPublicKey){
+    public CryptoCustomerIdentityWalletRelationshipImpl(UUID relationship, String walletPublicKey, String identityPublicKey){
+        this.relationship = relationship;
         this.walletPublicKey = walletPublicKey;
         this.identityPublicKey = identityPublicKey;
     }
+
+    public UUID getRelationship(){ return this.relationship; }
 
     public String getWalletPublicKey(){ return this.walletPublicKey; }
 
