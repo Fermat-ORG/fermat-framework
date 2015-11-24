@@ -19,7 +19,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
@@ -31,9 +30,7 @@ import org.java_websocket.WebSocketImpl;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -83,8 +80,8 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      * Represent the SERVER_IP
      */
     //public static final String SERVER_IP = "52.34.94.176"; //AWS PAID INSTANCE
-    public static final String SERVER_IP = "52.11.156.16"; //AWS FREE INSTANCE
-    //public static final String SERVER_IP = "52.11.156.16";
+    //public static final String SERVER_IP = "52.11.156.16"; //AWS FREE INSTANCE
+    public static final String SERVER_IP = "192.168.1.2";
 
     /**
      * Represent the DEFAULT_PORT
@@ -95,11 +92,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      * Represent the WEB_SERVICE_PORT
      */
     public static final int WEB_SERVICE_PORT = 8080;
-
-    /**
-     * Represent the newLoggingLevel
-     */
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     /*
      * Hold the list of event listeners

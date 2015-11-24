@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
      * @param pluginId
      */
     public CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem,
-                                                                   final UUID pluginId) {
+                                                                   final UUID                 pluginId            ) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
@@ -55,88 +56,132 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
      *
      * @throws CantInitializeDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeDatabaseException {
+    public void initializeDatabase(final String tableId) throws CantInitializeDatabaseException {
 
         try {
 
-             /*
-              * Open new database connection
-              */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoBrokerActorNetworkServiceDatabaseConstants.CRYPTO_BROKER_ACTOR_NETWORK_SERVICE_DATABASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, tableId);
 
-        } catch (final CantOpenDatabaseException cantOpenDatabaseException) {
+        } catch (final CantOpenDatabaseException e) {
 
-             /*
-              * The database exists but cannot be open. I can not handle this situation.
-              */
-            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeDatabaseException(e, "tableId: "+tableId, "Error trying to open the database.");
 
         } catch (final DatabaseNotFoundException e) {
 
-             /*
-              * The database no exist may be the first time the plugin is running on this device,
-              * We need to create the new database
-              */
             final CryptoBrokerActorNetworkServiceDatabaseFactory cryptoBrokerActorNetworkServiceDatabaseFactory = new CryptoBrokerActorNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
-                  /*
-                   * We create the new database
-                   */
-                database = cryptoBrokerActorNetworkServiceDatabaseFactory.createDatabase(pluginId, CryptoBrokerActorNetworkServiceDatabaseConstants.CRYPTO_BROKER_ACTOR_NETWORK_SERVICE_DATABASE_NAME);
-            } catch (final CantCreateDatabaseException cantCreateDatabaseException) {
-                  /*
-                   * The database cannot be created. I can not handle this situation.
-                   */
-                throw new CantInitializeDatabaseException(cantCreateDatabaseException.getMessage());
+
+                database = cryptoBrokerActorNetworkServiceDatabaseFactory.createDatabase(pluginId, tableId);
+
+            } catch (final CantCreateDatabaseException z) {
+
+                throw new CantInitializeDatabaseException(z, "tableId: "+tableId, "Error trying to create the database.");
             }
         }
     }
 
     public List<DeveloperDatabase> getDatabaseList(final DeveloperObjectFactory developerObjectFactory) {
-        /**
-         * I only have one database on my plugin. I will return its name.
-         */
+
         List<DeveloperDatabase> databases = new ArrayList<>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Crypto Broker", CryptoBrokerActorNetworkServiceDatabaseConstants.CRYPTO_BROKER_ACTOR_NETWORK_SERVICE_DATABASE_NAME));
+
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(
+                "Actor Network Service",
+                CryptoBrokerActorNetworkServiceDatabaseConstants.CRYPTO_BROKER_ACTOR_NETWORK_SERVICE_DATABASE_NAME
+        ));
+
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(
+                "Network Service Template",
+                CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME
+        ));
+
         return databases;
     }
 
 
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
+    public List<DeveloperDatabaseTable> getDatabaseTableList(final DeveloperObjectFactory developerObjectFactory,
+                                                             final DeveloperDatabase      developerDatabase     ) {
+
         List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
-        /**
-         * Table Connection News columns.
-         */
-        List<String> connectionNewsColumns = new ArrayList<String>();
+        switch (developerDatabase.getId()) {
 
-        connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            );
-        connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME     );
-        connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME     );
-        connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          );
-        connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
-        connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          );
-        connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         );
-        connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        );
-        connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             );
-        /**
-         * Table Connection News addition.
-         */
-        DeveloperDatabaseTable connectionNewsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME, connectionNewsColumns);
-        tables.add(connectionNewsTable);
+            case CryptoBrokerActorNetworkServiceDatabaseConstants.CRYPTO_BROKER_ACTOR_NETWORK_SERVICE_DATABASE_NAME:
 
+                /**
+                 * Table Connection News columns.
+                 */
+                List<String> connectionNewsColumns = new ArrayList<>();
 
+                connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            );
+                connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME     );
+                connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME     );
+                connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          );
+                connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
+                connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          );
+                connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         );
+                connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        );
+                connectionNewsColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             );
+                /**
+                 * Table Connection News addition.
+                 */
+                DeveloperDatabaseTable connectionNewsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME, connectionNewsColumns);
+                tables.add(connectionNewsTable);
+
+                break;
+
+            case CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME:
+
+                /**
+                 * Table incoming messages columns.
+                 */
+                List<String> incomingMessagesColumns = new ArrayList<>();
+
+                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME                );
+                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME         );
+                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME       );
+                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      );
+                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME              );
+                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
+                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
+                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME            );
+                /**
+                 * Table incoming messages addition.
+                 */
+                DeveloperDatabaseTable incomingMessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME, incomingMessagesColumns);
+                tables.add(incomingMessagesTable);
+
+                /**
+                 * Table outgoing messages columns.
+                 */
+                List<String> outgoingMessagesColumns = new ArrayList<>();
+
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME                );
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME         );
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME       );
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      );
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME              );
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME            );
+                /**
+                 * Table outgoing messages addition.
+                 */
+                DeveloperDatabaseTable outgoingMessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, outgoingMessagesColumns);
+                tables.add(outgoingMessagesTable);
+                break;
+        }
 
         return tables;
     }
 
     public final List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                            final DeveloperDatabase      developerDatabase     ,
                                                                             final DeveloperDatabaseTable developerDatabaseTable) {
 
         try {
 
-            initializeDatabase();
+            initializeDatabase(developerDatabase.getId());
 
             final List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
 

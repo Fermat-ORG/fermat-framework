@@ -8,6 +8,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -33,6 +38,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerExecutorAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
@@ -57,7 +63,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
  */
-public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkService {
+public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkService implements DatabaseManagerForDevelopers {
 
 
     @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons .ERROR_MANAGER         )
@@ -116,8 +122,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     @Override
     public void start() throws CantStartPluginException {
 
-        System.out.println("***************** Crypto Broker Actor Network Service Starting...");
-
         try {
             loadKeyPair(pluginFileSystem);
         } catch (CantLoadKeyPairException e) {
@@ -165,8 +169,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
              */
             if (!wsCommunicationsCloudClientManager.isDisable()){
 
-                System.out.println("********** entro pa registrarme");
-
                 /*
                  * Initialize the agent and start
                  */
@@ -180,8 +182,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
              * Its all ok, set the new status
             */
             this.serviceStatus = ServiceStatus.STARTED;
-
-            System.out.println("***************** Crypto Broker Actor Network Service Successfully started...");
 
         } catch (final CantInitializeNetworkServiceDatabaseException e) {
 
@@ -289,7 +289,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                 errorManager                       == null ||
                 eventManager                       == null ) {
 
-
             String context =
                     "Plugin ID:                          " + pluginId                           + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
                             "wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
@@ -360,10 +359,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
      */
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters){
-
-        System.out.println("********* Crypto Broker Actor Network Service - requestRemoteNetworkServicesRegisteredList");
-
-         /*
+        /*
          * Request the list of component registers
          */
         try {
@@ -373,7 +369,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         } catch (final CantRequestListException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-
         }
 
     }
@@ -469,7 +464,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        System.out.println("******************* Crypto Broker Actor Network Service handleCompleteComponentRegistrationNotificationEvent");
         /*
          * If the component registered have my profile and my identity public key
          */
@@ -483,9 +477,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             this.register = Boolean.TRUE;
 
             initializeAgent();
-
-            System.out.println("******************* Crypto Broker Actor Network Service all ok, registered.");
-
         }
 
     }
@@ -553,19 +544,19 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         }*/
     }
 
-/*    @Override
+    @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+        return new CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
 
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        return new CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory, developerDatabase);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-    }*/
+        return new CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
+    }
 }

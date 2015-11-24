@@ -34,20 +34,11 @@ public abstract class AbstractCompleteComponentRegistrationNotificationEventHand
     @Override
     public final void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        System.out.println("************ handleEvent CompleteComponentRegistrationNotification.");
-
-        System.out.println("************ networkService.isStarted() : "+networkService.isStarted());
-
-        System.out.println("************ networkService.getNetworkServiceType() : "+networkService.getNetworkServiceType());
-
         if (networkService.isStarted()) {
 
             if (fermatEvent instanceof CompleteComponentRegistrationNotificationEvent) {
 
                 CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) fermatEvent;
-
-                System.out.println("************ completeComponentRegistrationNotificationEvent : "+completeComponentRegistrationNotificationEvent);
-                System.out.println("************ completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered() : "+completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered());
 
                 if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == networkService.getNetworkServiceType())
                      this.handleCompleteComponentRegistrationNotificationEvent(completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered());
