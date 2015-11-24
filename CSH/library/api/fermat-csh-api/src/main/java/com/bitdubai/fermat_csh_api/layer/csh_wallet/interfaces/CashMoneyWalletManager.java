@@ -25,27 +25,4 @@ public interface CashMoneyWalletManager {
      */
     void createCashMoney(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyException;
 
-
-
-
-
-    //TODO: verificar si esto va o no
-       /* List<CashMoneyWallet> getTransactionsCashMoney() throws CantTransactionCashMoneyException;
-
-        CashMoneyWallet registerCashMoney(
-                 final String cashTransactionId
-                ,final String publicKeyActorFrom
-                ,final String publicKeyActorTo
-                ,final String status
-                ,final String balanceType
-                ,final String transactionType
-                ,final double amount
-                ,final String cashCurrencyType
-                ,final String cashReference
-                ,final long runningBookBalance
-                ,final long runningAvailableBalance
-                ,final long timestamp
-                ,final String memo
-        ) throws CantCreateCashMoneyException;*/
-
 }

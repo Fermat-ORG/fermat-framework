@@ -1,103 +1,81 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantTransactionCashMoneyException;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWallet;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoney;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoneyTotalBalanceException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCreditException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddDebitException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetBalancesRecord;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyBalance;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyListException;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyTotalBalanceRecordList;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCurrentBalanceException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantInitializeCashMoneyWalletDatabaseException;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure.CashMoneyConstructor;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure.CashMoneyManagerImp;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure.TransactionCashMoney;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by yordin on 01/10/15.
+ * Created by Alejandro Bicelis on 11/23/2015.
  */
 public class CashMoneyWalletDao {
 
+    private final ErrorManager errorManager;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final UUID pluginId;
 
+    private Database database;
 
-    /**
-     *  Represent the Plugin Database.
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * Database connection
-     */
-    Database database;
-
-    public CashMoneyWalletDao (PluginDatabaseSystem pluginDatabaseSystem){
+    public CashMoneyWalletDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId = pluginId;
+        this.errorManager = errorManager;
     }
 
-    /**
-     *
-     * @param ownerId
-     * @throws CantInitializeCashMoneyWalletDatabaseException
-     */
-    public void initializeDatabase(UUID ownerId) throws CantInitializeCashMoneyWalletDatabaseException {
+    public void initialize() throws CantInitializeCashMoneyWalletDatabaseException {
         try {
-             /*
-              * Open new database connection
-              */
-
-            database = this.pluginDatabaseSystem.openDatabase(ownerId, "mock");
-            database.closeDatabase();
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            throw new CantInitializeCashMoneyWalletDatabaseException(
-                    CantInitializeCashMoneyWalletDatabaseException.DEFAULT_MESSAGE,
-                    cantOpenDatabaseException,
-                    "initializeDatabase",
-                    "Cant Initialize CashMoneyConstructor WalletDatabase Exception - Cant Open Database Exception");
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
         } catch (DatabaseNotFoundException e) {
-             /*
-              * The database no exist may be the first time the plugin is running on this device,
-              * We need to create the new database
-              */
-            CashMoneyWalletDatabaseFactory cashMoneyWalletDatabaseFactory = new CashMoneyWalletDatabaseFactory(pluginDatabaseSystem);
+            CashMoneyWalletDatabaseFactory databaseFactory = new CashMoneyWalletDatabaseFactory(pluginDatabaseSystem);
             try {
-                  /*
-                   * We create the new database
-                   */
-                database = cashMoneyWalletDatabaseFactory.createDatabase(ownerId, "mock");
-                database.closeDatabase();
+                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                  /*
-                   * The database cannot be created. I can not handle this situation.
-                   */
-                throw new CantInitializeCashMoneyWalletDatabaseException(
-                        CantInitializeCashMoneyWalletDatabaseException.DEFAULT_MESSAGE,
-                        cantCreateDatabaseException,
-                        "initializeDatabase",
-                        "Cant Initialize CashMoneyConstructor WalletDatabase Exception - Cant Create Database Exception");
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                throw new CantInitializeCashMoneyWalletDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + pluginId.toString(), "");
             }
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeCashMoneyWalletDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + pluginId.toString(), "");
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantInitializeCashMoneyWalletDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + pluginId.toString(), "");
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*public void addCashMoney(
                              CashMoneyBalanceRecord cashMoneyBalanceRecord,
                              BalanceType balanceType,
@@ -262,7 +240,7 @@ public class CashMoneyWalletDao {
            throw  new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE,cantAddCashMoney,"Cant Add Credit Exception","Cant Add Cash Money");
         }
     }*/
-     /**
+    /**
      *
      * @param balanceType
      * @param max
@@ -374,9 +352,9 @@ public class CashMoneyWalletDao {
             throw new CantGetCashMoneyTotalBalanceRecordList(CantGetCashMoneyTotalBalanceRecordList.DEFAULT_MESSAGE, exception, "Cant Get CashMoneyConstructor Total Balance Record List", "Cant Load Table T oMemory Exception");
         }
     }*/
-        /**
-         *
-         */
+    /**
+     *
+     */
        /* private List<DatabaseTableRecord> getCashMoneyList() throws CantGetCashMoneyListException{
             try {
                 DatabaseTable totalBalancesTable;
