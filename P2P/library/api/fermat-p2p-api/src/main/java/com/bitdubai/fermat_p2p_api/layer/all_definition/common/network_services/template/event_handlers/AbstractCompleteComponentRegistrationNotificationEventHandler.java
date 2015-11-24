@@ -34,17 +34,24 @@ public abstract class AbstractCompleteComponentRegistrationNotificationEventHand
     @Override
     public final void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
+        System.out.println("************ handleEvent CompleteComponentRegistrationNotification.");
+
+        System.out.println("************ networkService.isStarted() : "+networkService.isStarted());
+
+        System.out.println("************ networkService.getNetworkServiceType() : "+networkService.getNetworkServiceType());
+
         if (networkService.isStarted()) {
 
             if (fermatEvent instanceof CompleteComponentRegistrationNotificationEvent) {
 
                 CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) fermatEvent;
 
-                if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == networkService.getNetworkServiceType()) {
+                System.out.println("************ completeComponentRegistrationNotificationEvent : "+completeComponentRegistrationNotificationEvent);
+                System.out.println("************ completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered() : "+completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered());
 
+                if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == networkService.getNetworkServiceType())
                      this.handleCompleteComponentRegistrationNotificationEvent(completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered());
 
-                }
             } else {
                 P2pEventType eventExpected = P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION;
                 String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+

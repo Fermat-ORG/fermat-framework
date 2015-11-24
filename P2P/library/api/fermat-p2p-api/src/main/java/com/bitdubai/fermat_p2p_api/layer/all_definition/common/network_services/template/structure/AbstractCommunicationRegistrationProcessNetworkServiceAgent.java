@@ -36,7 +36,7 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
      * @param networkServicePluginRoot         pluginRoot of the network service.
      * @param communicationsClientConnection   communication client connection instance.
      */
-    public AbstractCommunicationRegistrationProcessNetworkServiceAgent(final AbstractNetworkService networkServicePluginRoot,
+    public AbstractCommunicationRegistrationProcessNetworkServiceAgent(final AbstractNetworkService         networkServicePluginRoot      ,
                                                                        final CommunicationsClientConnection communicationsClientConnection) {
 
         this.networkServicePluginRoot       = networkServicePluginRoot      ;
@@ -73,7 +73,7 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
 
     protected void registrationProcess() {
 
-        try{
+        try {
 
             if (communicationsClientConnection.isRegister() && !networkServicePluginRoot.isRegister()){
 
@@ -84,7 +84,8 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
                          networkServicePluginRoot.getName(),
                          networkServicePluginRoot.getNetworkServiceType(),
                          networkServicePluginRoot.getPlatformComponentType(),
-                         networkServicePluginRoot.getExtraData());
+                         networkServicePluginRoot.getExtraData()
+                );
 
                 // Register me
                 communicationsClientConnection.registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
@@ -107,8 +108,6 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
                     this.status = AgentStatus.STOPPED;
                 }
 
-            } else if (!networkServicePluginRoot.isRegister()){
-                this.status = AgentStatus.STOPPED;
             }
 
             // TODO add better exception control here.

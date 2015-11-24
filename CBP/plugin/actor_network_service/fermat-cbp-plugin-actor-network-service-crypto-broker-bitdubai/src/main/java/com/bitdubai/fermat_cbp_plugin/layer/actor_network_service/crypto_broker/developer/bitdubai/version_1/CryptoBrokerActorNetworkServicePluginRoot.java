@@ -67,7 +67,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     private EventManager eventManager;
 
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons .PLUGIN_FILE_SYSTEM    )
-    protected PluginFileSystem pluginFileSystem        ;
+    private PluginFileSystem pluginFileSystem        ;
 
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons .PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
