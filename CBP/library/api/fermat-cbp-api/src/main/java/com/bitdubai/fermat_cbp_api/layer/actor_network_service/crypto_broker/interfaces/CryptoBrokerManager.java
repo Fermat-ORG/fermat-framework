@@ -16,6 +16,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.uti
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +46,7 @@ public interface CryptoBrokerManager extends FermatManager {
      *
      * @throws CantExposeIdentitiesException   if something goes wrong.
      */
-    void exposeIdentities(final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList) throws CantExposeIdentitiesException;
+    void exposeIdentities(final Collection<CryptoBrokerExposingData> cryptoBrokerExposingDataList) throws CantExposeIdentitiesException;
 
     /**
      * Through the method <code>getSearch</code> we can get a new instance of Crypto Broker Search.
