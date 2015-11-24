@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.ut
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
+import java.util.Arrays;
+
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation</code>
  * represents a crypto broker and exposes all the functionality of it.
@@ -72,6 +74,18 @@ public final class CryptoBrokerConnectionInformation {
      */
     public final long getSendingTime() {
         return sendingTime;
+    }
+
+    @Override
+    public String toString() {
+        return "CryptoBrokerConnectionInformation{" +
+                "senderPublicKey='" + senderPublicKey + '\'' +
+                ", senderActorType=" + senderActorType +
+                ", senderAlias='" + senderAlias + '\'' +
+                ", senderImage=" + Arrays.toString(senderImage) +
+                ", destinationPublicKey='" + destinationPublicKey + '\'' +
+                ", sendingTime=" + sendingTime +
+                '}';
     }
 
 }

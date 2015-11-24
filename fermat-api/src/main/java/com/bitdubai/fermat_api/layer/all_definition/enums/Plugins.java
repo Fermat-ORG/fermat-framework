@@ -219,6 +219,7 @@ public enum Plugins implements FermatEnum {
     CASH_MONEY_RESTOCK          ("CMRE"),
     CASH_MONEY_DESTOCK          ("CMRE"),
     BITDUBAI_CBP_STOCK_TRANSACTIONS_BANK_MONEY_RESTOCK ("BCBPSTBMR"),
+    TRANSACTION_TRANSMISSION    ("TRTX")
 
     // End  new Plugins
 
@@ -294,6 +295,7 @@ public enum Plugins implements FermatEnum {
             case ("BMDE"):  return BANK_MONEY_DESTOCK       ;
             case ("CMRE"):  return CASH_MONEY_RESTOCK       ;
             case ("CMDE"):  return CASH_MONEY_DESTOCK       ;
+            case ("TRTX"):  return TRANSACTION_TRANSMISSION ;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

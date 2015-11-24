@@ -19,6 +19,6 @@ public interface AppFragmentFactory<S extends AbstractFermatSession,J extends Fe
      * @param code the reference used to identify the fragment
      * @return the fragment referenced
      */
-    public android.app.Fragment getFragment(String code, S AppsSession, J settingsManager,R resourceProviderManager) throws FragmentNotFoundException;
+    android.app.Fragment getFragment(String code, S AppsSession, J settingsManager,R resourceProviderManager) throws FragmentNotFoundException;
 
 }
