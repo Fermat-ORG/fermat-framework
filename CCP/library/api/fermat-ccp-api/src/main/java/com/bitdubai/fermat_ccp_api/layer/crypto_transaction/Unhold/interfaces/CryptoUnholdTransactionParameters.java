@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces;
+package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * Created by Franklin Marcano on 21/11/2015.
  */
-public interface CryptoTransaction {
+public interface CryptoUnholdTransactionParameters {
 
     /**
      * Returns the transaction's UUID
