@@ -71,21 +71,27 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
         try {
 
-            final String imageString = Base64.encodeToString(cryptoBroker.getImage(), Base64.DEFAULT);
+            if (!isRegistered()) {
 
-            final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
-                    cryptoBroker.getPublicKey(),
-                    (cryptoBroker.getAlias().toLowerCase()),
-                    (cryptoBroker.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
-                    NetworkServiceType.UNDEFINED,
-                    PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                    imageString
-            );
-
-            if (!isRegistered())
                 addCryptoBrokerToExpose(cryptoBroker);
-            else
+
+            } else {
+
+                final String imageString = Base64.encodeToString(cryptoBroker.getImage(), Base64.DEFAULT);
+
+                final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        cryptoBroker.getPublicKey(),
+                        (cryptoBroker.getAlias().toLowerCase()),
+                        (cryptoBroker.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                        imageString
+                );
+
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
+
+                cryptoBrokersToExpose.remove(cryptoBroker.getPublicKey());
+            }
 
         } catch (final CantRegisterComponentException e) {
 
