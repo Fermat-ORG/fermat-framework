@@ -4,10 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.enums.MessageTypes</code>
- * enumerates the different types of messages transmitted by the crypto payment request network service ccp plugin.
+ * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.enums.MessageTypes</code>
+ * enumerates the different types of messages transmitted by the crypto broker actor network service cbp plugin.
  * <p>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 08/10/2015.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/11/2015.
  */
 public enum MessageTypes implements FermatEnum {
 
