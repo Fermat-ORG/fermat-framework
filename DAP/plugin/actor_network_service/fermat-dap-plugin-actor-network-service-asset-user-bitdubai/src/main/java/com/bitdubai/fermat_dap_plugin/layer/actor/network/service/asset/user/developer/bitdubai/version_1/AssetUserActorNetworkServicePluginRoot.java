@@ -111,6 +111,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
+
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
 
