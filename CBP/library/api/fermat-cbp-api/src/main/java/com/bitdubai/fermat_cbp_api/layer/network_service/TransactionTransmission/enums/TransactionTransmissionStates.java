@@ -8,7 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum TransactionTransmissionStates {
 
     CONFIRM_CONTRACT("CCX"),
-    CONFIRM_RESPONSE("CRX");
+    CONFIRM_RESPONSE("CRX"),
+    SENDING_HASH("HTX");
 
     String code;
 

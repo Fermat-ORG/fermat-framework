@@ -62,7 +62,7 @@ public final class CommunicationNetworkServiceDatabaseConstants {
     public static final String TRANSACTION_TRANSMISSION_HASH_NEGOTIATION_ID_COLUMN_NAME = "negotiation_id";
     public static final String TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
     public static final String TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME = "timestamp";
-    public static final String TRANSACTION_TRANSMISSION_HASH_TYPE_COLUMN_NAME = "type";
+    public static final String TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME = "state";
     public static final String TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME = "pending_flag";
     //public static final String TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME = "timestamp";
 
