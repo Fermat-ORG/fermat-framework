@@ -1,8 +1,9 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 
 /**
@@ -12,6 +13,8 @@ import java.util.Objects;
 public class ClientsConnectionHistory extends AbstractBaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	private UUID uuid;
 
 	private String identityPublicKey;
 
@@ -26,6 +29,9 @@ public class ClientsConnectionHistory extends AbstractBaseEntity implements Seri
 	private String status;
 
 	public ClientsConnectionHistory() {
+        super();
+        this.uuid = UUID.randomUUID();
+        this.connectionTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
 	public String getIdentityPublicKey() {
@@ -76,9 +82,18 @@ public class ClientsConnectionHistory extends AbstractBaseEntity implements Seri
 		this.status = status;
 	}
 
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public String getId() {
-        return null;
+        return uuid.toString();
     }
 
     @Override
@@ -88,6 +103,7 @@ public class ClientsConnectionHistory extends AbstractBaseEntity implements Seri
         ClientsConnectionHistory that = (ClientsConnectionHistory) o;
         return Objects.equals(getLastLatitude(), that.getLastLatitude()) &&
                 Objects.equals(getLastLongitude(), that.getLastLongitude()) &&
+                Objects.equals(getUuid(), that.getUuid()) &&
                 Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
                 Objects.equals(getConnectionTimestamp(), that.getConnectionTimestamp()) &&
                 Objects.equals(getDeviceType(), that.getDeviceType()) &&
@@ -96,7 +112,7 @@ public class ClientsConnectionHistory extends AbstractBaseEntity implements Seri
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIdentityPublicKey(), getConnectionTimestamp(), getDeviceType(), getLastLatitude(), getLastLongitude(), getStatus());
+        return Objects.hash(getUuid(), getIdentityPublicKey(), getConnectionTimestamp(), getDeviceType(), getLastLatitude(), getLastLongitude(), getStatus());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -35,6 +35,7 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 
 	public ActorsCatalog() {
 		super();
+		this.hostedTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
 	public String getActorType() {

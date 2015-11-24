@@ -1,9 +1,10 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 
 /**
@@ -13,6 +14,8 @@ import java.util.Objects;
 public class CheckedInNetworkService extends AbstractBaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+    private UUID uuid;
 
 	private String identityPublicKey;
 
@@ -31,6 +34,9 @@ public class CheckedInNetworkService extends AbstractBaseEntity implements Seria
 	private CheckedInClient checkedInClient;
 
 	public CheckedInNetworkService() {
+		super();
+		this.uuid = UUID.randomUUID();
+		this.checkedInTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
 	public String getIdentityPublicKey() {
@@ -97,9 +103,17 @@ public class CheckedInNetworkService extends AbstractBaseEntity implements Seria
 		this.checkedInClient = checkedInClient;
 	}
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public String getId() {
-        return identityPublicKey;
+        return uuid.toString();
     }
 
     @Override
@@ -109,6 +123,7 @@ public class CheckedInNetworkService extends AbstractBaseEntity implements Seria
         CheckedInNetworkService that = (CheckedInNetworkService) o;
         return Objects.equals(getLatitude(), that.getLatitude()) &&
                 Objects.equals(getLongitude(), that.getLongitude()) &&
+                Objects.equals(getUuid(), that.getUuid()) &&
                 Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
                 Objects.equals(getCheckedInTimestamp(), that.getCheckedInTimestamp()) &&
                 Objects.equals(getExtraData(), that.getExtraData()) &&
@@ -119,7 +134,7 @@ public class CheckedInNetworkService extends AbstractBaseEntity implements Seria
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIdentityPublicKey(), getCheckedInTimestamp(), getExtraData(), getLatitude(), getLongitude(), getNetworkServiceType(), getCheckedInActors(), getCheckedInClient());
+        return Objects.hash(getUuid(), getIdentityPublicKey(), getCheckedInTimestamp(), getExtraData(), getLatitude(), getLongitude(), getNetworkServiceType(), getCheckedInActors(), getCheckedInClient());
     }
 
     @Override

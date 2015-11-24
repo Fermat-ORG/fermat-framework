@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -25,15 +25,9 @@ public class NodesCatalogTransactionsPendingForPropagation extends AbstractBaseE
 
 	private double latitude;
 
-	private Timestamp lastConnectionTimestamp;
-
-	private Integer lateNotificationsCounter;
-
 	private double longitude;
 
 	private String name;
-
-	private Integer offlineCounter;
 
 	private Timestamp registeredTimestamp;
 
@@ -41,6 +35,7 @@ public class NodesCatalogTransactionsPendingForPropagation extends AbstractBaseE
 
 	public NodesCatalogTransactionsPendingForPropagation() {
 		super();
+		this.registeredTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
 	public Timestamp getCreateTimestamp() {
@@ -83,22 +78,6 @@ public class NodesCatalogTransactionsPendingForPropagation extends AbstractBaseE
 		this.ip = ip;
 	}
 
-	public Timestamp getLastConnectionTimestamp() {
-		return lastConnectionTimestamp;
-	}
-
-	public void setLastConnectionTimestamp(Timestamp lastConnectionTimestamp) {
-		this.lastConnectionTimestamp = lastConnectionTimestamp;
-	}
-
-	public Integer getLateNotificationsCounter() {
-		return lateNotificationsCounter;
-	}
-
-	public void setLateNotificationsCounter(Integer lateNotificationsCounter) {
-		this.lateNotificationsCounter = lateNotificationsCounter;
-	}
-
 	public double getLatitude() {
 		return latitude;
 	}
@@ -123,14 +102,6 @@ public class NodesCatalogTransactionsPendingForPropagation extends AbstractBaseE
 		this.name = name;
 	}
 
-	public Integer getOfflineCounter() {
-		return offlineCounter;
-	}
-
-	public void setOfflineCounter(Integer offlineCounter) {
-		this.offlineCounter = offlineCounter;
-	}
-
 	public Timestamp getRegisteredTimestamp() {
 		return registeredTimestamp;
 	}
@@ -146,9 +117,10 @@ public class NodesCatalogTransactionsPendingForPropagation extends AbstractBaseE
 	public void setTransactionType(String transactionType) {
 		this.transactionType = transactionType;
 	}
+
 	@Override
 	public String getId() {
-		return identityPublicKey;
+		return hashId;
 	}
 
 	@Override
@@ -159,20 +131,17 @@ public class NodesCatalogTransactionsPendingForPropagation extends AbstractBaseE
 		return Objects.equals(getLatitude(), that.getLatitude()) &&
 				Objects.equals(getLongitude(), that.getLongitude()) &&
 				Objects.equals(getHashId(), that.getHashId()) &&
+				Objects.equals(getCreateTimestamp(), that.getCreateTimestamp()) &&
 				Objects.equals(getDefaultPort(), that.getDefaultPort()) &&
 				Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
 				Objects.equals(getIp(), that.getIp()) &&
-				Objects.equals(getLastConnectionTimestamp(), that.getLastConnectionTimestamp()) &&
-				Objects.equals(getLateNotificationsCounter(), that.getLateNotificationsCounter()) &&
 				Objects.equals(getName(), that.getName()) &&
-				Objects.equals(getOfflineCounter(), that.getOfflineCounter()) &&
-				Objects.equals(getRegisteredTimestamp(), that.getRegisteredTimestamp()) &&
 				Objects.equals(getTransactionType(), that.getTransactionType());
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getHashId(), getDefaultPort(), getIdentityPublicKey(), getIp(), getLatitude(), getLastConnectionTimestamp(), getLateNotificationsCounter(), getLongitude(), getName(), getOfflineCounter(), getRegisteredTimestamp(), getTransactionType());
+		return Objects.hash(getHashId(), getDefaultPort(), getIdentityPublicKey(), getIp(), getLatitude(), getLongitude(), getName(), getTransactionType());
 	}
 
 	@Override

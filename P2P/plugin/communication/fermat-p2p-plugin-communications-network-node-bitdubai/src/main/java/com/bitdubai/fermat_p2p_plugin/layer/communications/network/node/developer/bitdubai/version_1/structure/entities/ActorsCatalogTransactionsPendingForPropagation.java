@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -6,10 +6,10 @@ import java.util.Objects;
 
 
 /**
- * The persistent class for the "ACTORS_CATALOG_TRANSACTIONS" database table.
+ * The persistent class for the "ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION" database table.
  * 
  */
-public class ActorsCatalogTransaction extends AbstractBaseEntity implements Serializable {
+public class ActorsCatalogTransactionsPendingForPropagation extends AbstractBaseEntity  implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -37,8 +37,9 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	private String transactionType;
 
-	public ActorsCatalogTransaction() {
+	public ActorsCatalogTransactionsPendingForPropagation() {
 		super();
+		this.hostedTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
 	public String getTransactionType() {

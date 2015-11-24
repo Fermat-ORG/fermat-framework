@@ -1,25 +1,20 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-
 /**
- * The persistent class for the "NODES_CATALOG_TRANSACTIONS" database table.
+ * The persistent class for the "NODES_CATALOG" database table.
  * 
  */
-public class NodesCatalogTransaction extends AbstractBaseEntity implements Serializable {
+public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String hashId;
-
-	private Timestamp createTimestamp;
+	private String identityPublicKey;
 
 	private Integer defaultPort;
-
-	private String identityPublicKey;
 
 	private String ip;
 
@@ -37,54 +32,46 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 
 	private Timestamp registeredTimestamp;
 
-	private String transactionType;
-
-	public NodesCatalogTransaction() {
+	public NodesCatalog() {
 		super();
-	}
-
-	public Timestamp getCreateTimestamp() {
-		return createTimestamp;
-	}
-
-	public void setCreateTimestamp(Timestamp createTimestamp) {
-		this.createTimestamp = createTimestamp;
-	}
-
-	public Integer getDefaultPort() {
-		return defaultPort;
-	}
-
-	public void setDefaultPort(Integer defaultPort) {
-		this.defaultPort = defaultPort;
-	}
-
-	public String getHashId() {
-		return hashId;
-	}
-
-	public void setHashId(String hashId) {
-		this.hashId = hashId;
+		this.registeredTimestamp     = new Timestamp(System.currentTimeMillis());
+		this.lastConnectionTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
 	public String getIdentityPublicKey() {
-		return identityPublicKey;
+		return this.identityPublicKey;
 	}
 
 	public void setIdentityPublicKey(String identityPublicKey) {
 		this.identityPublicKey = identityPublicKey;
 	}
 
+	public Integer getDefaultPort() {
+		return this.defaultPort;
+	}
+
+	public void setDefaultPort(Integer defaultPort) {
+		this.defaultPort = defaultPort;
+	}
+
 	public String getIp() {
-		return ip;
+		return this.ip;
 	}
 
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
 
+	public double getLatitude() {
+		return this.latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
 	public Timestamp getLastConnectionTimestamp() {
-		return lastConnectionTimestamp;
+		return this.lastConnectionTimestamp;
 	}
 
 	public void setLastConnectionTimestamp(Timestamp lastConnectionTimestamp) {
@@ -92,23 +79,15 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 	}
 
 	public Integer getLateNotificationsCounter() {
-		return lateNotificationsCounter;
+		return this.lateNotificationsCounter;
 	}
 
 	public void setLateNotificationsCounter(Integer lateNotificationsCounter) {
 		this.lateNotificationsCounter = lateNotificationsCounter;
 	}
 
-	public double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
-
 	public double getLongitude() {
-		return longitude;
+		return this.longitude;
 	}
 
 	public void setLongitude(double longitude) {
@@ -116,7 +95,7 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -124,7 +103,7 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 	}
 
 	public Integer getOfflineCounter() {
-		return offlineCounter;
+		return this.offlineCounter;
 	}
 
 	public void setOfflineCounter(Integer offlineCounter) {
@@ -132,48 +111,38 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 	}
 
 	public Timestamp getRegisteredTimestamp() {
-		return registeredTimestamp;
+		return this.registeredTimestamp;
 	}
 
 	public void setRegisteredTimestamp(Timestamp registeredTimestamp) {
 		this.registeredTimestamp = registeredTimestamp;
 	}
 
-	public String getTransactionType() {
-		return transactionType;
+	@Override
+	public String getId() {
+		return identityPublicKey;
 	}
-
-	public void setTransactionType(String transactionType) {
-		this.transactionType = transactionType;
-	}
-
-    @Override
-    public String getId() {
-        return identityPublicKey;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof NodesCatalogTransaction)) return false;
-        NodesCatalogTransaction that = (NodesCatalogTransaction) o;
+        if (!(o instanceof NodesCatalog)) return false;
+        NodesCatalog that = (NodesCatalog) o;
         return Objects.equals(getLatitude(), that.getLatitude()) &&
                 Objects.equals(getLongitude(), that.getLongitude()) &&
-                Objects.equals(getHashId(), that.getHashId()) &&
-                Objects.equals(getDefaultPort(), that.getDefaultPort()) &&
                 Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+                Objects.equals(getDefaultPort(), that.getDefaultPort()) &&
                 Objects.equals(getIp(), that.getIp()) &&
                 Objects.equals(getLastConnectionTimestamp(), that.getLastConnectionTimestamp()) &&
                 Objects.equals(getLateNotificationsCounter(), that.getLateNotificationsCounter()) &&
                 Objects.equals(getName(), that.getName()) &&
                 Objects.equals(getOfflineCounter(), that.getOfflineCounter()) &&
-                Objects.equals(getRegisteredTimestamp(), that.getRegisteredTimestamp()) &&
-                Objects.equals(getTransactionType(), that.getTransactionType());
+                Objects.equals(getRegisteredTimestamp(), that.getRegisteredTimestamp());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getHashId(), getDefaultPort(), getIdentityPublicKey(), getIp(), getLatitude(), getLastConnectionTimestamp(), getLateNotificationsCounter(), getLongitude(), getName(), getOfflineCounter(), getRegisteredTimestamp(), getTransactionType());
+        return Objects.hash(getIdentityPublicKey(), getDefaultPort(), getIp(), getLatitude(), getLastConnectionTimestamp(), getLateNotificationsCounter(), getLongitude(), getName(), getOfflineCounter(), getRegisteredTimestamp());
     }
 
     @Override

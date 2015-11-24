@@ -1,8 +1,9 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 
 /**
@@ -12,6 +13,8 @@ import java.util.Objects;
 public class CheckedInClient extends AbstractBaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	private UUID uuid;
 
 	private String identityPublicKey;
 
@@ -25,6 +28,8 @@ public class CheckedInClient extends AbstractBaseEntity implements Serializable 
 
 	public CheckedInClient() {
 		super();
+        this.uuid = UUID.randomUUID();
+        this.checkedInTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
 	public Timestamp getCheckedInTimestamp() {
@@ -67,9 +72,17 @@ public class CheckedInClient extends AbstractBaseEntity implements Serializable 
 		this.longitude = longitude;
 	}
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public String getId() {
-        return identityPublicKey;
+        return uuid.toString();
     }
 
     @Override
@@ -79,6 +92,7 @@ public class CheckedInClient extends AbstractBaseEntity implements Serializable 
         CheckedInClient that = (CheckedInClient) o;
         return Objects.equals(getLatitude(), that.getLatitude()) &&
                 Objects.equals(getLongitude(), that.getLongitude()) &&
+                Objects.equals(getUuid(), that.getUuid()) &&
                 Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
                 Objects.equals(getCheckedInTimestamp(), that.getCheckedInTimestamp()) &&
                 Objects.equals(getDeviceType(), that.getDeviceType());
@@ -86,7 +100,7 @@ public class CheckedInClient extends AbstractBaseEntity implements Serializable 
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIdentityPublicKey(), getCheckedInTimestamp(), getDeviceType(), getLatitude(), getLongitude());
+        return Objects.hash(getUuid(), getIdentityPublicKey(), getCheckedInTimestamp(), getDeviceType(), getLatitude(), getLongitude());
     }
 
     @Override

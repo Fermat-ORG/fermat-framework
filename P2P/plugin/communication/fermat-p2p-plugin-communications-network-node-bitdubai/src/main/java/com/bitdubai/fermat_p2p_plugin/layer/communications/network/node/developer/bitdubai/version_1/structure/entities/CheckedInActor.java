@@ -1,8 +1,9 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 
 /**
@@ -12,6 +13,8 @@ import java.util.Objects;
 public class CheckedInActor extends AbstractBaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	private UUID uuid;
 
 	private String identityPublicKey;
 
@@ -35,6 +38,8 @@ public class CheckedInActor extends AbstractBaseEntity implements Serializable {
 
 	public CheckedInActor() {
 		super();
+        this.uuid = UUID.randomUUID();
+        this.checkedInTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
 	public String getActorType() {
@@ -117,34 +122,43 @@ public class CheckedInActor extends AbstractBaseEntity implements Serializable {
 		this.photo = photo;
 	}
 
-	@Override
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    @Override
 	public String getId() {
-		return identityPublicKey;
+		return uuid.toString();
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof CheckedInActor)) return false;
-		CheckedInActor that = (CheckedInActor) o;
-		return Objects.equals(getLatitude(), that.getLatitude()) &&
-				Objects.equals(getLongitude(), that.getLongitude()) &&
-				Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
-				Objects.equals(getActorType(), that.getActorType()) &&
-				Objects.equals(getAlias(), that.getAlias()) &&
-				Objects.equals(getCheckedInTimestamp(), that.getCheckedInTimestamp()) &&
-				Objects.equals(getExtraData(), that.getExtraData()) &&
-				Objects.equals(getName(), that.getName()) &&
-				Objects.equals(getPhoto(), that.getPhoto()) &&
-				Objects.equals(getNsIdentityPublicKey(), that.getNsIdentityPublicKey());
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CheckedInActor)) return false;
+        CheckedInActor that = (CheckedInActor) o;
+        return Objects.equals(getLatitude(), that.getLatitude()) &&
+                Objects.equals(getLongitude(), that.getLongitude()) &&
+                Objects.equals(uuid, that.uuid) &&
+                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+                Objects.equals(getActorType(), that.getActorType()) &&
+                Objects.equals(getAlias(), that.getAlias()) &&
+                Objects.equals(getCheckedInTimestamp(), that.getCheckedInTimestamp()) &&
+                Objects.equals(getExtraData(), that.getExtraData()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getPhoto(), that.getPhoto()) &&
+                Objects.equals(getNsIdentityPublicKey(), that.getNsIdentityPublicKey());
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(getIdentityPublicKey(), getActorType(), getAlias(), getCheckedInTimestamp(), getExtraData(), getLatitude(), getLongitude(), getName(), getPhoto(), getNsIdentityPublicKey());
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, getIdentityPublicKey(), getActorType(), getAlias(), getCheckedInTimestamp(), getExtraData(), getLatitude(), getLongitude(), getName(), getPhoto(), getNsIdentityPublicKey());
+    }
 
-	@Override
+    @Override
 	public String toString() {
 		return "CheckedInActor{" +
 				"identityPublicKey='" + identityPublicKey + '\'' +

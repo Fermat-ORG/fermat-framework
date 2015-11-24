@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -25,7 +25,8 @@ public class MethodCallsHistory extends AbstractBaseEntity implements Serializab
 	private String profileIdentityPublicKey;
 
 	public MethodCallsHistory() {
-		super();
+        super();
+        this.uuid = UUID.randomUUID();
 	}
 
     public Timestamp getCreateTimestamp() {

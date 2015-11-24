@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -14,9 +14,7 @@ public class CallsLog extends AbstractBaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private UUID uuid;
-
-	private String callId;
+	private UUID callId;
 
 	private Timestamp callTimestamp;
 
@@ -28,13 +26,14 @@ public class CallsLog extends AbstractBaseEntity implements Serializable {
 
 	public CallsLog() {
 		super();
+        this.callId = UUID.randomUUID();
 	}
 
-    public String getCallId() {
+    public UUID getCallId() {
         return callId;
     }
 
-    public void setCallId(String callId) {
+    public void setCallId(UUID callId) {
         this.callId = callId;
     }
 
@@ -54,22 +53,6 @@ public class CallsLog extends AbstractBaseEntity implements Serializable {
         this.finishTimestamp = finishTimestamp;
     }
 
-    public String getStep() {
-        return step;
-    }
-
-    public void setStep(String step) {
-        this.step = step;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
     public Timestamp getStartTimestamp() {
         return startTimestamp;
     }
@@ -78,9 +61,17 @@ public class CallsLog extends AbstractBaseEntity implements Serializable {
         this.startTimestamp = startTimestamp;
     }
 
+    public String getStep() {
+        return step;
+    }
+
+    public void setStep(String step) {
+        this.step = step;
+    }
+
     @Override
     public String getId() {
-        return uuid.toString();
+        return callId.toString();
     }
 
     @Override
@@ -88,8 +79,7 @@ public class CallsLog extends AbstractBaseEntity implements Serializable {
         if (this == o) return true;
         if (!(o instanceof CallsLog)) return false;
         CallsLog callsLog = (CallsLog) o;
-        return Objects.equals(getUuid(), callsLog.getUuid()) &&
-                Objects.equals(getCallId(), callsLog.getCallId()) &&
+        return Objects.equals(getCallId(), callsLog.getCallId()) &&
                 Objects.equals(getCallTimestamp(), callsLog.getCallTimestamp()) &&
                 Objects.equals(getFinishTimestamp(), callsLog.getFinishTimestamp()) &&
                 Objects.equals(getStartTimestamp(), callsLog.getStartTimestamp()) &&
@@ -98,13 +88,13 @@ public class CallsLog extends AbstractBaseEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUuid(), getCallId(), getCallTimestamp(), getFinishTimestamp(), getStartTimestamp(), getStep());
+        return Objects.hash(getCallId(), getCallTimestamp(), getFinishTimestamp(), getStartTimestamp(), getStep());
     }
 
     @Override
     public String toString() {
         return "CallsLog{" +
-                "uuid=" + uuid +
+                "callId=" + callId +
                 '}';
     }
 }

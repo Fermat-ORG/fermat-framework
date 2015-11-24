@@ -1,23 +1,22 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.entities;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 
 /**
- * The persistent class for the "CHECKED_ACTORS_HISTORY" database table.
+ * The persistent class for the "CHECKED_NETWORK_SERVICES_HISTORY" database table.
  * 
  */
-public class CheckedActorsHistory extends AbstractBaseEntity implements Serializable {
+public class CheckedNetworkServicesHistory extends AbstractBaseEntity  implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
+
+	private UUID uuid;
 
 	private String identityPublicKey;
-
-	private String actorType;
-
-	private String alias;
 
 	private String checkType;
 
@@ -25,38 +24,28 @@ public class CheckedActorsHistory extends AbstractBaseEntity implements Serializ
 
 	private String clientIdentityPublicKey;
 
-	private String extraData;
-
 	private double lastLatitude;
 
 	private double lastLongitude;
 
-	private String name;
+	private String networkServiceType;
 
-	private byte[] photo;
-
-	public CheckedActorsHistory() {
+	public CheckedNetworkServicesHistory() {
 		super();
-	}
-
-	public String getActorType() {
-		return actorType;
-	}
-
-	public void setActorType(String actorType) {
-		this.actorType = actorType;
-	}
-
-	public String getAlias() {
-		return alias;
-	}
-
-	public void setAlias(String alias) {
-		this.alias = alias;
+        this.uuid = UUID.randomUUID();
+        this.checkedTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
 	public Timestamp getCheckedTimestamp() {
 		return checkedTimestamp;
+	}
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	public void setCheckedTimestamp(Timestamp checkedTimestamp) {
@@ -77,14 +66,6 @@ public class CheckedActorsHistory extends AbstractBaseEntity implements Serializ
 
 	public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
 		this.clientIdentityPublicKey = clientIdentityPublicKey;
-	}
-
-	public String getExtraData() {
-		return extraData;
-	}
-
-	public void setExtraData(String extraData) {
-		this.extraData = extraData;
 	}
 
 	public String getIdentityPublicKey() {
@@ -111,57 +92,44 @@ public class CheckedActorsHistory extends AbstractBaseEntity implements Serializ
 		this.lastLongitude = lastLongitude;
 	}
 
-	public String getName() {
-		return name;
+	public String getNetworkServiceType() {
+		return networkServiceType;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public byte[] getPhoto() {
-		return photo;
-	}
-
-	public void setPhoto(byte[] photo) {
-		this.photo = photo;
+	public void setNetworkServiceType(String networkServiceType) {
+		this.networkServiceType = networkServiceType;
 	}
 
     @Override
     public String getId() {
-        return identityPublicKey;
+        return uuid.toString();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CheckedActorsHistory)) return false;
-        CheckedActorsHistory that = (CheckedActorsHistory) o;
+        if (!(o instanceof CheckedNetworkServicesHistory)) return false;
+        CheckedNetworkServicesHistory that = (CheckedNetworkServicesHistory) o;
         return Objects.equals(getLastLatitude(), that.getLastLatitude()) &&
                 Objects.equals(getLastLongitude(), that.getLastLongitude()) &&
+                Objects.equals(getUuid(), that.getUuid()) &&
                 Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
-                Objects.equals(getActorType(), that.getActorType()) &&
-                Objects.equals(getAlias(), that.getAlias()) &&
                 Objects.equals(getCheckType(), that.getCheckType()) &&
                 Objects.equals(getCheckedTimestamp(), that.getCheckedTimestamp()) &&
                 Objects.equals(getClientIdentityPublicKey(), that.getClientIdentityPublicKey()) &&
-                Objects.equals(getExtraData(), that.getExtraData()) &&
-                Objects.equals(getName(), that.getName()) &&
-                Objects.equals(getPhoto(), that.getPhoto());
+                Objects.equals(getNetworkServiceType(), that.getNetworkServiceType());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIdentityPublicKey(), getActorType(), getAlias(), getCheckType(), getCheckedTimestamp(), getClientIdentityPublicKey(), getExtraData(), getLastLatitude(), getLastLongitude(), getName(), getPhoto());
+        return Objects.hash(getUuid(), getIdentityPublicKey(), getCheckType(), getCheckedTimestamp(), getClientIdentityPublicKey(), getLastLatitude(), getLastLongitude(), getNetworkServiceType());
     }
 
     @Override
     public String toString() {
-        return "CheckedActorsHistory{" +
+        return "CheckedInNetworkService{" +
                 "identityPublicKey='" + identityPublicKey + '\'' +
-                ", alias='" + alias + '\'' +
-                ", name='" + name + '\'' +
-                ", actorType='" + actorType + '\'' +
+                ", networkServiceType='" + networkServiceType + '\'' +
                 '}';
     }
 }
