@@ -73,55 +73,53 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
 
     protected void registrationProcess() {
 
-        while (this.isRunning()){
-            try{
+        try{
 
-                if (communicationsClientConnection.isRegister() && !networkServicePluginRoot.isRegister()){
+            if (communicationsClientConnection.isRegister() && !networkServicePluginRoot.isRegister()){
 
-                    //Construct my profile and register me
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                            networkServicePluginRoot.getIdentityPublicKey(),
-                             networkServicePluginRoot.getAlias().toLowerCase(),
-                             networkServicePluginRoot.getName(),
-                             networkServicePluginRoot.getNetworkServiceType(),
-                             networkServicePluginRoot.getPlatformComponentType(),
-                             networkServicePluginRoot.getExtraData());
+                //Construct my profile and register me
+                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        networkServicePluginRoot.getIdentityPublicKey(),
+                         networkServicePluginRoot.getAlias().toLowerCase(),
+                         networkServicePluginRoot.getName(),
+                         networkServicePluginRoot.getNetworkServiceType(),
+                         networkServicePluginRoot.getPlatformComponentType(),
+                         networkServicePluginRoot.getExtraData());
 
-                    // Register me
-                    communicationsClientConnection.registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
+                // Register me
+                communicationsClientConnection.registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
-                    // Configure my new profile
-                    networkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+                // Configure my new profile
+                networkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
-                    //Initialize the connection manager
-                    networkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                //Initialize the connection manager
+                networkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
-                    // Stop the agent
-                    this.status = AgentStatus.STOPPED;
+                // Stop the agent
+                this.status = AgentStatus.STOPPED;
 
-                } else if (!networkServicePluginRoot.isRegister()){
+            } else if (!networkServicePluginRoot.isRegister()){
 
-                    try {
-                        Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        this.status = AgentStatus.STOPPED;
-                    }
-
-                } else if (!networkServicePluginRoot.isRegister()){
-                    this.status = AgentStatus.STOPPED;
-                }
-
-                // TODO add better exception control here.
-
-            } catch (Exception e) {
                 try {
+                    Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                } catch (InterruptedException e) {
                     e.printStackTrace();
-                    Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
                     this.status = AgentStatus.STOPPED;
                 }
+
+            } else if (!networkServicePluginRoot.isRegister()){
+                this.status = AgentStatus.STOPPED;
+            }
+
+            // TODO add better exception control here.
+
+        } catch (Exception e) {
+            try {
+                e.printStackTrace();
+                Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+                this.status = AgentStatus.STOPPED;
             }
         }
     }

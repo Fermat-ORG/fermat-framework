@@ -1098,4 +1098,9 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 //        listenersAdded.add(fermatEventListener);
 
     }
+
+    @Override
+    public void handleNewMessages(FermatMessage message) {
+
+    }
 }

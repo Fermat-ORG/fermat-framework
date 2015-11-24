@@ -165,6 +165,8 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
              */
             if (!wsCommunicationsCloudClientManager.isDisable()){
 
+                System.out.println("********** entro pa registrarme");
+
                 /*
                  * Initialize the agent and start
                  */
