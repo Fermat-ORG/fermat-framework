@@ -2,7 +2,9 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
@@ -89,8 +91,33 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * - Type          : SENT.
      */
     @Override
-    public final void requestConnection(final CryptoBrokerConnectionInformation cryptoBrokerConnectionInformation) throws CantRequestConnectionException {
+    public final void requestConnection(final CryptoBrokerConnectionInformation brokerInformation) throws CantRequestConnectionException {
 
+        try {
+
+            final UUID newId = UUID.randomUUID();
+
+            final ProtocolState           state  = ProtocolState          .PROCESSING_SEND;
+            final RequestType             type   = RequestType            .SENT           ;
+            final ConnectionRequestAction action = ConnectionRequestAction.REQUEST        ;
+
+            connectionNewsDao.createConnectionRequest(
+                    newId            ,
+                    brokerInformation,
+                    state            ,
+                    type             ,
+                    action
+            );
+
+        } catch (final CantRequestConnectionException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantRequestConnectionException(e, null, "Unhandled Exception.");
+        }
     }
 
     /**
@@ -100,10 +127,39 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * - Type          : SENT.
      */
     @Override
-    public final void disconnect(final String actorIdentityPublicKey,
-                                 final Actors actorIdentityActorType,
-                                 final String cryptoBrokerPublicKey ) throws CantDisconnectException {
+    public final void disconnect(final String identityPublicKey,
+                                 final Actors identityActorType,
+                                 final String brokerPublicKey  ) throws CantDisconnectException {
 
+        try {
+
+            final UUID newId    = UUID.randomUUID();
+            final long sentTime = System.currentTimeMillis();
+
+            final ProtocolState           state  = ProtocolState          .PROCESSING_SEND;
+            final RequestType             type   = RequestType            .SENT           ;
+            final ConnectionRequestAction action = ConnectionRequestAction.DISCONNECT     ;
+
+            connectionNewsDao.createDisconnectionRequest(
+                    newId            ,
+                    identityPublicKey,
+                    identityActorType,
+                    brokerPublicKey  ,
+                    sentTime         ,
+                    state            ,
+                    type             ,
+                    action
+            );
+
+        } catch (final CantDisconnectException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDisconnectException(e, null, "Unhandled Exception.");
+        }
     }
 
     /**

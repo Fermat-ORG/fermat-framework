@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
@@ -17,8 +18,11 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enu
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionNewsException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionNew;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 
@@ -113,6 +117,79 @@ public final class ConnectionNewsDao {
         } catch (final InvalidParameterException e) {
 
             throw new CantListPendingConnectionNewsException(e, "", "There is a problem with some enum code."                                                                                );
+        }
+    }
+
+    public final void createConnectionRequest(final UUID                              newId            ,
+                                              final CryptoBrokerConnectionInformation brokerInformation,
+                                              final ProtocolState                     state            ,
+                                              final RequestType                       type             ,
+                                              final ConnectionRequestAction           action           ) throws CantRequestConnectionException {
+
+        try {
+
+            final CryptoBrokerConnectionNew connectionNew = new CryptoBrokerConnectionNew(
+                    newId                                      ,
+                    brokerInformation.getSenderPublicKey()     ,
+                    brokerInformation.getSenderActorType()     ,
+                    brokerInformation.getSenderAlias()         ,
+                    null                                       ,
+                    brokerInformation.getDestinationPublicKey(),
+                    type                                       ,
+                    state                                      ,
+                    action                                     ,
+                    brokerInformation.getSendingTime()
+            );
+
+            final DatabaseTable addressExchangeRequestTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
+
+            entityRecord = buildDatabaseRecord(entityRecord, connectionNew);
+
+            addressExchangeRequestTable.insertRecord(entityRecord);
+
+        } catch (final CantInsertRecordException e) {
+
+            throw new CantRequestConnectionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+        }
+    }
+
+    public final void createDisconnectionRequest(final UUID                    newId            ,
+                                                 final String                  identityPublicKey,
+                                                 final Actors                  identityActorType,
+                                                 final String                  brokerPublicKey  ,
+                                                 final long                    sentTime         ,
+                                                 final ProtocolState           state            ,
+                                                 final RequestType             type             ,
+                                                 final ConnectionRequestAction action           ) throws CantDisconnectException {
+
+        try {
+
+            final CryptoBrokerConnectionNew connectionNew = new CryptoBrokerConnectionNew(
+                    newId            ,
+                    identityPublicKey,
+                    identityActorType,
+                    null             ,
+                    null             ,
+                    brokerPublicKey  ,
+                    type             ,
+                    state            ,
+                    action           ,
+                    sentTime
+            );
+
+            final DatabaseTable addressExchangeRequestTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
+
+            entityRecord = buildDatabaseRecord(entityRecord, connectionNew);
+
+            addressExchangeRequestTable.insertRecord(entityRecord);
+
+        } catch (final CantInsertRecordException e) {
+
+            throw new CantDisconnectException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
         }
     }
 
