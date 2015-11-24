@@ -96,6 +96,32 @@ public final class CommunicationNetworkServiceDatabaseFactory {
                 throw new CantCreateDatabaseException(cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
+            /*
+             * Create transaction hash table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME       , DatabaseDataType.STRING,        36, Boolean.TRUE );
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME         , DatabaseDataType.STRING,       100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME       , DatabaseDataType.STRING,        10, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME     , DatabaseDataType.STRING,       100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_TYPE_COLUMN_NAME           , DatabaseDataType.STRING,        10, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_PUBLIC_KEY_COLUMN_NAME   , DatabaseDataType.STRING,       100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_TYPE_COLUMN_NAME         , DatabaseDataType.STRING,        10, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_ID_COLUMN_NAME           , DatabaseDataType.STRING,       100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_NEGOTIATION_ID_COLUMN_NAME        , DatabaseDataType.STRING,        10, Boolean.TRUE );
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME                 , DatabaseDataType.STRING,       100, Boolean.FALSE);
+
+            table.addIndex(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
             return database;
 
         } catch (InvalidOwnerIdException invalidOwnerId) {
