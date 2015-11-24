@@ -63,6 +63,7 @@ import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFra
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
+import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
@@ -205,7 +206,8 @@ public abstract class FermatActivity extends AppCompatActivity
     private CoordinatorLayout coordinatorLayout;
     private boolean flag=false;
 
-    private ElementsWithAnimation elementsWithAnimation;
+    private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
+    private NavigationViewPainter navigationViewPainter;
 
     /**
      * Called when the activity is first created
@@ -360,8 +362,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
             setMainLayout(sideMenu, activity.getHeader());
 
-
-
             setMainMenu(mainMenu);
 
             paintTabs(tabs, activity);
@@ -403,6 +403,35 @@ public abstract class FermatActivity extends AppCompatActivity
                 if(sideMenu.getNavigationIconColor().equals("#ffffff")){
                     mToolbar.setNavigationIcon(R.drawable.ic_actionbar_menu);
                 }
+
+                /**
+                 * Set header
+                 */
+                View view = navigationViewPainter.addNavigationViewHeader();
+                FrameLayout frameLayout = (FrameLayout) findViewById(R.id.navigation_view_header);
+                frameLayout.setVisibility(View.VISIBLE);
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                layoutParams.gravity = Gravity.CENTER_VERTICAL;
+                view.setLayoutParams(layoutParams);
+                frameLayout.addView(view);
+                /**
+                 * Set adapter
+                 */
+                FermatAdapter mAdapter = navigationViewPainter.addNavigationViewAdapter();
+                mAdapter.changeDataSet(getNavigationMenu());
+                mAdapter.setFermatListEventListener(this);
+                navigation_recycler_view.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+
+                /**
+                 * Body
+                 */
+                ViewGroup viewGroup = navigationViewPainter.addNavigationViewBodyContainer();
+                RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.navigation_view_body_container);
+                relativeLayout.setBackground(viewGroup.getBackground());
+
+                navigationView.invalidate();
+
             } else {
                 mToolbar.setNavigationIcon(R.drawable.ic_action_back);
                 mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -709,10 +738,17 @@ public abstract class FermatActivity extends AppCompatActivity
                         }
                         if (scrollRange + verticalOffset == 0) {
                             collapsingToolbarLayout.setTitle("");
-                            elementsWithAnimation.startCollapseAnimation();
+                            if(!isShow)
+                                for(ElementsWithAnimation element : elementsWithAnimation){
+                                    element.startCollapseAnimation(scrollRange);
+                                }
+
                             isShow = true;
                         } else if (isShow) {
                             collapsingToolbarLayout.setTitle("");
+                            for(ElementsWithAnimation element : elementsWithAnimation){
+                                element.startExpandAnimation(scrollRange);
+                            }
                             isShow = false;
                         }
                     }
@@ -1941,7 +1977,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void invalidate() {
-        //( (RelativeLayout) findViewById(R.id.activity_header)).invalidate();
+        paintSideMenu(getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu());
     }
 
     @Override
@@ -2045,7 +2081,12 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
     public void addCollapseAnimation(ElementsWithAnimation elementsWithAnimation){
-        this.elementsWithAnimation = elementsWithAnimation;
+        this.elementsWithAnimation.add(elementsWithAnimation);
+    }
+
+    @Override
+    public void addNavigationView(NavigationViewPainter navigationViewPainter) {
+        this.navigationViewPainter = navigationViewPainter;
     }
 
     /**

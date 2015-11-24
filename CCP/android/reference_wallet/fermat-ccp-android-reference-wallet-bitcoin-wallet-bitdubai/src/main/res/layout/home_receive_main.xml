@@ -30,7 +30,9 @@
         android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="center_horizontal"
+        android:layout_gravity="top"
+        android:paddingTop="16dp"
         android:orientation="vertical"
         android:visibility="gone">
 
