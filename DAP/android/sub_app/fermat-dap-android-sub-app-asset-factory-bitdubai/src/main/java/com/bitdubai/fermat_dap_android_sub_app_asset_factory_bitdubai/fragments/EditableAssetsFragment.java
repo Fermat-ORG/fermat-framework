@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
@@ -116,8 +118,28 @@ public class EditableAssetsFragment extends FermatFragment implements
         if (toolbar != null) {
             toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+            }
         }
     }
+
+    /**
+     * Get the status bar height for kitkat, lollipop and m devices
+     *
+     * @return int height in pixels
+     */
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
 
     protected void initViews(View layout) {
         Log.i(TAG, "recycler view setup");
