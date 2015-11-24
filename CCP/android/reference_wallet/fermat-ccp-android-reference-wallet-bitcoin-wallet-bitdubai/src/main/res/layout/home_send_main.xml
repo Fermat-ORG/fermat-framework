@@ -11,7 +11,7 @@
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/open_contracts_recycler_view"
@@ -30,9 +30,12 @@
         android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="center_horizontal"
+        android:layout_gravity="top"
+        android:paddingTop="16dp"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
+
 
         <ImageView
             android:layout_width="90dp"
