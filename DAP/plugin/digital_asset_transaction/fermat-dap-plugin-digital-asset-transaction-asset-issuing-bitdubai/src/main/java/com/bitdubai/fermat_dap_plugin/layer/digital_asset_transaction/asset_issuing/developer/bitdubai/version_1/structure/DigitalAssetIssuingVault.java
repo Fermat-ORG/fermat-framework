@@ -101,7 +101,7 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
         System.out.println("ASSET ISSUING Before delivering - Wallet public key is:"+this.walletPublicKey);
         AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
         AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
-        String actorToPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
+        String actorToPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
         System.out.println("ASSET ISSUING Actor Issuer public key:"+actorToPublicKey);
         System.out.println("ASSET ISSUING Transaction to deliver: "+genesisTransaction.getTransactionHash());
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(

@@ -77,7 +77,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
-        System.out.println("*****CryptoNetwork Blockdownloaded. Pending blocks: " + blocksLeft);
+        //System.out.println("*****CryptoNetwork Blockdownloaded. Pending blocks: " + blocksLeft);
         //System.out.println("*****CryptoNetwork " + filteredBlock.toString());
     }
 
@@ -665,10 +665,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 }
             }
         }
-
-
     }
-
 
     /**
      * Blockchain events
@@ -692,7 +689,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void receiveFromBlock(Transaction tx, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
-        System.out.println("received from block " + tx.toString());
+        //System.out.println("received from block " + tx.toString());
     }
 
     @Override

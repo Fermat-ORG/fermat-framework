@@ -25,8 +25,9 @@ databaseTables << [
         name: "Transactions",
         columns: [
                 ["Transaction ID", "STRING", "100", "true"],
-                ["Actor Public Key", "STRING", "100", "true"],
-                ["Transaction Type", "STRING", "100", "true"],
+                ["Wallet Public Key", "STRING", "100", "false"],
+                ["Actor Public Key", "STRING", "100", "false"],
+                ["Transaction Type", "STRING", "100", "false"],
                 ["Amount", "MONEY", "100", "false"],
                 ["Memo", "STRING", "100", "false"],
                 ["Timestamp", "LONG_INTEGER", "100", "false"],

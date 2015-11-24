@@ -6,14 +6,14 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankCurrencyType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransaction;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 
 import java.util.UUID;
 
 /**
  * Created by francisco on 05/11/15.
  */
-public class TransactionBankMoney implements BankMoneyTransaction {
+public class TransactionBankMoney implements BankMoneyTransactionRecord {
 
     UUID bankTransactionId;
     String publicKeyBroker;

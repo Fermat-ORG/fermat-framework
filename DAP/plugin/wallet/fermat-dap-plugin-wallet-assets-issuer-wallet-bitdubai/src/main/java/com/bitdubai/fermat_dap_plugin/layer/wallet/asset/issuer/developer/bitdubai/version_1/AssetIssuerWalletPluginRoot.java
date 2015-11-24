@@ -254,7 +254,8 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 0,
                 "memo",
                 "digitalAssetMetadaHash",
-                UUID.randomUUID().toString()
+                "",
+                UUID.randomUUID().toString(), ""
                 );
 
         DigitalAsset digitalAsset1 = new DigitalAsset();
@@ -279,7 +280,8 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 20000,
                 "memo",
                 "digitalAssetMetadaHash",
-                UUID.randomUUID().toString()
+                "",
+                UUID.randomUUID().toString(), ""
         );
         try {
 
@@ -303,7 +305,8 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                     10000,
                     "memo",
                     "digitalAssetMetadaHash",
-                    UUID.randomUUID().toString()
+                    "",
+                    UUID.randomUUID().toString(), ""
             );
             AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper2 = new AssetIssuerWalletTransactionRecordWrapper(
                     digitalAsset,
@@ -320,7 +323,8 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                     0,
                     "memo",
                     "digitalAssetMetadaHash",
-                    UUID.randomUUID().toString()
+                    "",
+                    UUID.randomUUID().toString(), ""
             );
             assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper1, BalanceType.AVAILABLE);
             assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).debit (assetIssuerWalletTransactionRecordWrapper2, BalanceType.AVAILABLE);
@@ -376,7 +380,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 }
 
                 @Override
-                public String getPublicKey() {
+                public String getActorPublicKey() {
                     return "publicKeyActor";
                 }
 

@@ -14,10 +14,10 @@ public class TestImplementActorAssetUser {
     @Test
     public void implementationTest(){
         ActorAssetUser actorAssetUser=new MockActorAssetUser();
-        System.out.println(actorAssetUser.getPublicKey());
+        System.out.println(actorAssetUser.getActorPublicKey());
         ActorAssetDistributionUser actorAssetDistributionUser= new  ActorAssetDistributionUser();
         actorAssetDistributionUser.setActorAssetUser(actorAssetUser);
-        System.out.println(actorAssetDistributionUser.getPublicKey());
+        System.out.println(actorAssetDistributionUser.getActorPublicKey());
         String actorXML= XMLParser.parseObject(actorAssetDistributionUser);
         System.out.println(actorXML);
         ActorAssetUser newActorAssetUser= actorAssetDistributionUser;

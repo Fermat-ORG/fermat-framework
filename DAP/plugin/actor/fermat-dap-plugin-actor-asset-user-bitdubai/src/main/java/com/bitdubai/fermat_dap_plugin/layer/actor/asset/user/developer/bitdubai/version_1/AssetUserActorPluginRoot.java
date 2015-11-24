@@ -22,7 +22,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -178,7 +177,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
             if (actorAssetUser != null) {
                 System.out.println("*****************Actor Asset User************************");
-                System.out.println("Actor Asset PublicKey: " + actorAssetUser.getPublicKey());
+                System.out.println("Actor Asset PublicKey: " + actorAssetUser.getActorPublicKey());
                 System.out.println("Actor Asset Name: " + actorAssetUser.getName());
                 System.out.println("**********************************************************");
             }
@@ -246,12 +245,12 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                             CryptoCurrency.BITCOIN,
                             Actors.DAP_ASSET_ISSUER,
                             Actors.DAP_ASSET_USER,
-                            requester.getPublicKey(),
-                            actorAssetUser.getPublicKey(),
+                            requester.getActorPublicKey(),
+                            actorAssetUser.getActorPublicKey(),
                             CryptoAddressDealers.DAP_ASSET,
                             BlockchainNetworkType.DEFAULT);
 
-                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
+                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
                 } catch (CantUpdateAssetUserConnectionException e) {
                     e.printStackTrace();
                 }
@@ -286,7 +285,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             //TODO Cambiar luego por la publicKey Linked proveniente de Identity
             this.assetUserActorDao.updateAssetUserDAPConnectionStateOrCrpytoAddress(
-                    actorAssetUser.getPublicKey(),
+                    actorAssetUser.getActorPublicKey(),
                     DAPConnectionState.REGISTERED_ONLINE,
                     actorAssetUser.getCryptoAddress());
         } catch (CantUpdateAssetUserConnectionException e) {
@@ -334,7 +333,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
                 if (!actorAssetUser.isEmpty()) {
                     for (ActorAssetUser actorAssetUser1 : actorAssetUser) {
-                        System.out.println("Actor Asset User: " + actorAssetUser1.getPublicKey());
+                        System.out.println("Actor Asset User: " + actorAssetUser1.getActorPublicKey());
                         System.out.println("Actor Asset User: " + actorAssetUser1.getName());
                         if (actorAssetUser1.getCryptoAddress() != null) {
                             System.out.println("Actor Asset User: " + actorAssetUser1.getCryptoAddress().getAddress());
@@ -397,7 +396,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantStartAgentException {
         if (this.assetUserActorMonitorAgent == null) {
-//            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+//            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getActorPublicKey();
             this.assetUserActorMonitorAgent = new AssetUserActorMonitorAgent(
                     this.eventManager,
                     this.pluginDatabaseSystem,

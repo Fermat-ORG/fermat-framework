@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 import java.util.Arrays;
@@ -11,10 +13,10 @@ import java.util.Arrays;
 /**
  * Created by Nerio on 22/09/15.
  */
-public class AssetUserActorRecord implements ActorAssetUser {
+public class AssetUserActorRecord implements ActorAssetUser, DAPActor {
 
     private String              publicLinkedIdentity    ;
-    private String              publicKey               ;
+    private String              actorPublicKey          ;
     private String              name                    ;
     private String              age                     ;
     private Genders             genders                 ;
@@ -37,13 +39,13 @@ public class AssetUserActorRecord implements ActorAssetUser {
     /**
      *  Method for Set Actor in Actor Network Service User
      */
-    public AssetUserActorRecord(String publicKey,
+    public AssetUserActorRecord(String actorPublicKey,
                                 String name,
                                 byte[] profileImage,
                                 Location location) {
 
         this.name                   = name                                  ;
-        this.publicKey              = publicKey                             ;
+        this.actorPublicKey         = actorPublicKey                        ;
         this.profileImage           = profileImage.clone()                  ;
 
         if (location != null) {
@@ -61,7 +63,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     }
 
-    public AssetUserActorRecord(String publicKey,
+    public AssetUserActorRecord(String actorPublicKey,
                                 String name,
                                 String age,
                                 Genders genders,
@@ -73,7 +75,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
                                 Long lastConnectionDate,
                                 byte[] profileImage){
 
-        this.publicKey                  = publicKey             ;
+        this.actorPublicKey             = actorPublicKey        ;
         this.name                       = name                  ;
         this.age                        = age                   ;
         this.genders                    = genders               ;
@@ -93,7 +95,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     }
 
-    public AssetUserActorRecord(final String publicKey,
+    public AssetUserActorRecord(final String actorPublicKey,
                                 final String name,
                                 final String age,
                                 final Genders genders,
@@ -104,9 +106,9 @@ public class AssetUserActorRecord implements ActorAssetUser {
                                 final Long lastConnectionDate,
                                 final byte[] profileImage) {
 
-        this.publicKey              =       publicKey               ;
+        this.actorPublicKey         =       actorPublicKey          ;
         this.name                   =       name                    ;
-            this.age                =       age                     ;
+        this.age                    =       age                     ;
         this.genders                =       genders                 ;
         this.dapConnectionState     =       dapConnectionState      ;
         this.locationLatitude       =       locationLatitude        ;
@@ -131,23 +133,23 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     /**
-     * The method <code>getPublicKey</code> gives us the public key of the represented Asset User
+     * The method <code>getActorPublicKey</code> gives us the public key of the represented Asset User
      *
      * @return the public key
      */
     @Override
-    public String getPublicKey() {
-        return this.publicKey;
+    public String getActorPublicKey() {
+        return this.actorPublicKey;
     }
 
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
+    public void setActorPublicKey(String actorPublicKey) {
+        this.actorPublicKey = actorPublicKey;
     }
 
     /**
      * The method <code>getName</code> gives us the name of the represented Asset User
      *
-     * @return the name of the intra user
+     * @return the name of the Asset User
      */
     @Override
     public String getName() {
@@ -156,6 +158,16 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * The method <code>getType</code> gives us the Enum of the represented a Actor
+     *
+     * @return Enum Actors
+     */
+    @Override
+    public Actors getType() {
+        return Actors.DAP_ASSET_USER;
     }
 
     /**
@@ -317,7 +329,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
     public String toString() {
         return "AssetUserActorRecord{" +
                 "publicLinkedIdentity='" + publicLinkedIdentity + '\'' +
-                ", publicKey='" + publicKey + '\'' +
+                ", actorPublicKey='" + actorPublicKey + '\'' +
                 ", name='" + name + '\'' +
                 ", age='" + age + '\'' +
                 ", genders=" + genders +
