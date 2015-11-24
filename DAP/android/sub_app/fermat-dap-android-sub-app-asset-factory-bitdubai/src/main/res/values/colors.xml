@@ -18,4 +18,5 @@
     <color name="blue_amount">#ffffff</color>
     <color name="blue_bitcoins">#ffffff</color>
     <color name="bg_asset_factory">#1d1d25</color>
+    <color name="text_color_hint">#0072bd</color>
 </resources>
