@@ -173,6 +173,8 @@ public enum Plugins implements FermatEnum {
     BITCOIN_VAULT               ("BV"),
     BITCOIN_WALLET              ("BW"),
     BITCOIN_WATCH_ONLY_VAULT    ("BWOV"),
+    BITCOIN_HOLD                ("BHOLD"),
+    BITCOIN_UNHOLD              ("BUNHOLD"),
     CRYPTO_ADDRESSES            ("CA"),
     CRYPTO_ADDRESS_BOOK         ("CAB"),
     CRYPTO_BROKER               ("CB"),
@@ -254,6 +256,8 @@ public enum Plugins implements FermatEnum {
             case "BV"   :   return BITCOIN_VAULT            ;
             case "BW"   :   return BITCOIN_WALLET           ;
             case "BWOV" :   return BITCOIN_WATCH_ONLY_VAULT ;
+            case "BHOLD":   return BITCOIN_HOLD             ;
+            case "BUNHOLD": return BITCOIN_UNHOLD           ;
             case "CA"   :   return CRYPTO_ADDRESSES         ;
             case "CAB"  :   return CRYPTO_ADDRESS_BOOK      ;
             case "CB"   :   return CRYPTO_BROKER            ;

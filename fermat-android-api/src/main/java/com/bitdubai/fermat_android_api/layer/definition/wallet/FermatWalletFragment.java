@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
@@ -139,6 +140,10 @@ public class FermatWalletFragment<M extends ModuleManager> extends Fragment impl
         getPaintActivtyFeactures().addNavigationViewHeader(view);
     }
 
+    protected void addNavigationView(NavigationViewPainter navigationViewPainter){
+        getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+    }
+
     protected Toolbar getToolbar() {
         return getPaintActivtyFeactures().getToolbar();
     }
@@ -149,6 +154,9 @@ public class FermatWalletFragment<M extends ModuleManager> extends Fragment impl
 
     protected FermatScreenSwapper getFermatScreenSwapper() {
         return (FermatScreenSwapper) getActivity();
+    }
+    protected void invalidate(){
+        getPaintActivtyFeactures().invalidate();
     }
 
 

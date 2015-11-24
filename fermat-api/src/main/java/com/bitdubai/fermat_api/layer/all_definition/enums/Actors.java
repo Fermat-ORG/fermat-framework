@@ -9,12 +9,13 @@ public enum Actors implements FermatEnum {
     INTRA_USER("IUS"),
     EXTRA_USER("EUS"),
     SHOP("SHP"),
+
     DAP_ASSET_ISSUER("DAPASIS"),
     DAP_ASSET_USER("DAPASUS"),
     DAP_ASSET_REDEEM_POINT("DAPARP"),
+
     CCP_INTRA_WALLET_USER("CCPIU"),
     CCM_INTRA_WALLET_USER("CCMIU"),
-
 
     CBP_CRYPTO_BROKER   ("CBPCRBR"),
     CBP_CRYPTO_CUSTOMER ("CBPCRCU"),
@@ -38,9 +39,11 @@ public enum Actors implements FermatEnum {
             case "IUS":     return INTRA_USER;
             case "EUS":     return EXTRA_USER;
             case "SHP":     return SHOP;
+
             case "DAPASIS": return DAP_ASSET_ISSUER;
             case "DAPASUS": return DAP_ASSET_USER;
             case "DAPARP":  return DAP_ASSET_REDEEM_POINT;
+
             case "CCPIU":   return CCP_INTRA_WALLET_USER;
             case "CCMIU":   return CCM_INTRA_WALLET_USER;
 

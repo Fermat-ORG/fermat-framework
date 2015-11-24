@@ -128,7 +128,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
     public void deliverDigitalAssetToRemoteDevice(DigitalAssetMetadata digitalAssetMetadata, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantRedeemDigitalAssetException {
         try{
             //First, I going to persist in database the basic information about digitalAssetMetadata
-            System.out.println("ASSET USER REDEMPTION begins for "+actorAssetRedeemPoint.getPublicKey());
+            System.out.println("ASSET USER REDEMPTION begins for "+actorAssetRedeemPoint.getActorPublicKey());
             persistDigitalAsset(digitalAssetMetadata, actorAssetRedeemPoint);
             System.out.println("ASSET USER REDEMPTION begins for persisted");
             //Now, I'll check is Hash wasn't modified
@@ -220,7 +220,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                 digitalAssetMetadata.getGenesisTransaction(),
                 this.digitalAssetFileStoragePath,
                 digitalAssetMetadata.getDigitalAssetHash(),
-                actorAssetRedeemPoint.getPublicKey(),
+                actorAssetRedeemPoint.getActorPublicKey(),
                 actorAddress);
         System.out.println("ASSET USER REDEMPTION registered in database");
         persistInLocalStorage(digitalAssetMetadata);
@@ -262,7 +262,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                 ActorAssetUser actorAssetUser=entry.getValue();
                 //Deliver one DigitalAsset
                 System.out.println("ASSET USER REDEMPTION DAM-Hash:"+digitalAssetMetadata.getDigitalAssetHash());
-                System.out.println("ASSET USER REDEMPTION ActorAssetUser - PublicKey:"+actorAssetUser.getPublicKey());
+                System.out.println("ASSET USER REDEMPTION ActorAssetUser - PublicKey:"+actorAssetUser.getActorPublicKey());
                 System.out.println("ASSET USER REDEMPTION ActorAssetUser - Name:"+actorAssetUser.getName());
                 deliverDigitalAssetToRemoteDevice(digitalAssetMetadata, actorAssetUser);
             }

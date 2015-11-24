@@ -7,6 +7,8 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.Crypto
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendBusinessTransactionHashException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
 
+import java.util.UUID;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
@@ -18,9 +20,10 @@ public interface TransactionTransmissionManager extends TransactionProtocolManag
      * @param cryptoBrokerActorSender
      * @param cryptoCustomerActorReceiver
      * @param transactionHash
+     * @param negotiationId
      * @throws CantSendContractNewStatusNotificationException
      */
-    void sendContractHashToCryptoCustomer(CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionHash) throws CantSendContractNewStatusNotificationException;
+    void sendContractHashToCryptoCustomer(UUID transactionId, CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionHash, String negotiationId) throws CantSendContractNewStatusNotificationException;
 
     /**
      * Method that send Contract hash
@@ -30,7 +33,7 @@ public interface TransactionTransmissionManager extends TransactionProtocolManag
      * @param transactionHash
      * @throws CantSendContractNewStatusNotificationException
      */
-    void sendContractHashToCryptoBroker(CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionHash) throws CantSendContractNewStatusNotificationException;
+    void sendContractHashToCryptoBroker(UUID transactionId, CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionHash) throws CantSendContractNewStatusNotificationException;
 
 
     /**
