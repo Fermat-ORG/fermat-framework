@@ -42,8 +42,8 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotationInformation imple
 
     public CryptoCustomerWalletModuleCustomerBrokerNegotationInformation(String brokerAlias, String merchandise, String paymentMethod, String paymentCurrency, NegotiationStatus status) {
 
-        this.customerIdentity = new ActorIdentityImpl("CustomerAlias", new byte[0]);
-        this.brokerIdentity = new ActorIdentityImpl(brokerAlias, new byte[0]);
+        this.customerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl("CustomerAlias", new byte[0]);
+        this.brokerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl(brokerAlias, new byte[0]);
 
         String currencyQty = decimalFormat.format(random.nextFloat() * 100);
         String exchangeRate = decimalFormat.format(random.nextFloat());
@@ -98,47 +98,5 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotationInformation imple
     @Override
     public long getLastUpdate() {
         return date;
-    }
-
-
-    private class ActorIdentityImpl implements ActorIdentity {
-
-        private String alias;
-        private byte[] img;
-
-        public ActorIdentityImpl(String alias, byte[] img) {
-            this.alias = alias;
-            this.img = img;
-        }
-
-        @Override
-        public String getAlias() {
-            return alias;
-        }
-
-        @Override
-        public String getPublicKey() {
-            return "54as65d4a8sd4ds8fv2vr3as2df6a85";
-        }
-
-        @Override
-        public byte[] getProfileImage() {
-            return img;
-        }
-
-        @Override
-        public void setNewProfileImage(byte[] imageBytes) {
-
-        }
-
-        @Override
-        public boolean isPublished() {
-            return true;
-        }
-
-        @Override
-        public String createMessageSignature(String message) throws CantCreateMessageSignatureException {
-            return null;
-        }
     }
 }

@@ -5,7 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by nelson on 22/09/15.
  */
-public class CantGetCryptoCustomerIdentityListException extends FermatException {
+public class CantGetAssociatedCryptoCustomerIdentityException extends FermatException {
+    public static final String DEFAULT_MESSAGE = "Can't get the CryptoCustomerIdentity associated with the wallet";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +16,15 @@ public class CantGetCryptoCustomerIdentityListException extends FermatException 
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetCryptoCustomerIdentityListException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetAssociatedCryptoCustomerIdentityException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
+    }
+
+    public CantGetAssociatedCryptoCustomerIdentityException(String message, Exception cause) {
+        super(message, cause, "", "");
+    }
+
+    public CantGetAssociatedCryptoCustomerIdentityException(Exception cause) {
+        super(DEFAULT_MESSAGE, cause, "", "");
     }
 }
