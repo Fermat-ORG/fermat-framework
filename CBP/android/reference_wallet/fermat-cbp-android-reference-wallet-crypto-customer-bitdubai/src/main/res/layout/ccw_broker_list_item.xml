@@ -71,7 +71,7 @@
             android:singleLine="true"
             android:textColor="@color/ccw_second_line_item"
             android:textSize="@dimen/ccw_title_text_size"
-            tools:text="Transfer to Bank"
+            tools:text="Cash"
             android:layout_alignBottom="@+id/ccw_receiving_or_sending"
             android:layout_toRightOf="@+id/ccw_receiving_or_sending"
             android:layout_toEndOf="@+id/ccw_receiving_or_sending"/>

@@ -20,7 +20,9 @@ public class AssetFactoryFragmentFactory extends FermatSubAppFragmentFactory<Ass
     @Override
     public FermatFragment getFermatFragment(AssetFactoryFragmentsEnumType fragments) throws FragmentNotFoundException {
         switch (fragments) {
-            case DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY:
+            case DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT:
+                return MainFragment.newInstance();
+            case DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT:
                 return MainFragment.newInstance();
             case DAP_SUB_APP_ASSET_EDITOR_ACTIVITY:
                 return AssetEditorFragment.newInstance(MainFragment.getAssetForEdit());

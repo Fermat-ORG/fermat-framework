@@ -64,6 +64,11 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
      */
     private UUID pluginId;
 
+    @Override
+    public FermatManager getManager() {
+        return null;
+    }
+
     public UUID getPluginId() {
 		return pluginId;
 	}
@@ -356,11 +361,5 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
-    }
-
-
-    @Override
-    public FermatManager getManager() {
-        return null;
     }
 }

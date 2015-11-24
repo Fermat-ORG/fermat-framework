@@ -7,5 +7,6 @@ dependencies {
     compile project(':fermat-pip-api')
     compile project(':fermat-api')
     compile project(':fermat-cbp-api')
+    compile project(':fermat-p2p-api')
 
 }
