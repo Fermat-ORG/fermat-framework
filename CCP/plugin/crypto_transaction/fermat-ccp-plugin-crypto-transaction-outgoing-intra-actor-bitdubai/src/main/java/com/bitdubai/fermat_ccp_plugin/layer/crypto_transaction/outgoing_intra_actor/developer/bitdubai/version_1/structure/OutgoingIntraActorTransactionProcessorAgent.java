@@ -234,7 +234,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         else
                         {
                             this.cryptoTransmissionManager.acceptCryptoRequest(transaction.getTransactionId(),
-                                    transaction.getTransactionId(),
+                                    transaction.getRequestId(),
                                     transaction.getAddressTo().getCryptoCurrency(),
                                     transaction.getAmount(),
                                     transaction.getActorFromPublicKey(),

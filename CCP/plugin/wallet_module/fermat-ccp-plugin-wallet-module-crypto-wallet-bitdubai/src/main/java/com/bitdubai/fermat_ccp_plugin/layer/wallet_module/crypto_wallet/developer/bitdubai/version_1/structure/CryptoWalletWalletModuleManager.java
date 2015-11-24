@@ -850,13 +850,13 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
 
             //TODO: Harcoder
-            if(lst.size() == 0){
+            /*if(lst.size() == 0){
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
                 lst.add(cryptoWalletPaymentRequest);
                 cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
 
                 lst.add(cryptoWalletPaymentRequest);
-            }
+            }*/
 
 
             return lst;
@@ -911,13 +911,13 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             }
 
             //TODO: Harcoder
-            if(lst.size() == 0) {
+           /* if(lst.size() == 0) {
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"1 hour ago", "Starbucks coffe", 500000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
                 lst.add(cryptoWalletPaymentRequest);
                 cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"2 hour ago", "Hamburguer from MC donald", 100000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
 
                 lst.add(cryptoWalletPaymentRequest);
-            }
+            }*/
 
             return lst;
         } catch (Exception e) {
