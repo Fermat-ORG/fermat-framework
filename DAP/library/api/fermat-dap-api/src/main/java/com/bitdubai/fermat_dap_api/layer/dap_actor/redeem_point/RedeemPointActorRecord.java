@@ -13,11 +13,10 @@ import java.util.Arrays;
 /**
  * Created by Nerio on 22/09/15.
  */
-public class RedeemPointActorRecord implements ActorAssetRedeemPoint, DAPActor {
+public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
     private String              actorPublicKey      ;
     private String              name                ;
-    private Actors              type = Actors.DAP_ASSET_REDEEM_POINT;
     private long                registrationDate    ;
     private DAPConnectionState  dapConnectionState  ;
     private CryptoAddress       cryptoAddress       ;
@@ -121,16 +120,6 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint, DAPActor {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * The method <code>getType</code> gives us the Enum of the represented a Actor
-     *
-     * @return Enum Actors
-     */
-    @Override
-    public Actors getType() {
-        return type;
     }
 
     /**

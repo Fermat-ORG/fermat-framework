@@ -10,6 +10,11 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
     </style>
+    <style name="AppTheme.NoNavigation">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+    </style>
     <style name="AppTheme.NoActionBarStart">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
+import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
@@ -60,9 +63,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     private FermatButton expirationDate;
     private FermatButton expirationTime;
     private FermatCheckBox isRedeemableView;
-    private FermatCheckBox hasExpirationDate;
-
-    private LinearLayout datetimePicker;
+    private LinearLayout hasExpirationDate;
 
     private int year = 0;
     private int month = 0;
@@ -134,6 +135,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.asset_editor_fragment, container, false);
+        configureToolbar();
         rootView.findViewById(R.id.action_delete).setOnClickListener(this);
         rootView.findViewById(R.id.action_create).setOnClickListener(this);
 
@@ -146,14 +148,12 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         expirationDate = (FermatButton) rootView.findViewById(R.id.expiration_date);
         expirationTime = (FermatButton) rootView.findViewById(R.id.expiration_time);
         isRedeemableView = (FermatCheckBox) rootView.findViewById(R.id.isRedeemable);
-        hasExpirationDate = (FermatCheckBox) rootView.findViewById(R.id.hasExpiration);
-        datetimePicker = (LinearLayout) rootView.findViewById(R.id.datetime_picker);
-        datetimePicker.setVisibility(View.GONE);
+        hasExpirationDate = (LinearLayout) rootView.findViewById(R.id.hasExpiration);
 
-        hasExpirationDate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        hasExpirationDate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                datetimePicker.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            public void onClick(View view) {
+                hasExpirationDate.setActivated(!hasExpirationDate.isActivated());
             }
         });
 
@@ -231,7 +231,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         });
 
         if (isEdit && asset.getExpirationDate() != null) {
-            hasExpirationDate.setChecked(true);
+            hasExpirationDate.setActivated(true);
             calendar.setTime(asset.getExpirationDate());
             expirationDate.setText(String.format("%d/%d/%d", calendar.get(Calendar.DAY_OF_MONTH),
                     calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
@@ -240,6 +240,18 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         }
 
         return rootView;
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getPaintActivtyFeactures().getToolbar();
+        if (toolbar != null) {
+            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
+            toolbar.setTitleTextColor(Color.WHITE);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getActivity().getWindow();
+                window.setStatusBarColor(Color.parseColor("#1d1d25"));
+            }
+        }
     }
 
     @Override
@@ -281,7 +293,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
                 dialog.dismiss();
                 if (getActivity() != null) {
                     Toast.makeText(getActivity(), "Asset deleted successfully", Toast.LENGTH_SHORT).show();
-                    changeActivity(Activities.DAP_MAIN.getCode(),subAppsSession.getAppPublicKey());
+                    changeActivity(Activities.DAP_MAIN.getCode(), subAppsSession.getAppPublicKey());
                 }
             }
 
@@ -309,7 +321,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         asset.setAssetBehavior(AssetBehavior.REGENERATION_ASSET);
         //// TODO: 02/10/15 Get at least one resource with one image byte[] (Choose from gallery or take a picture)
         asset.setResources(null);
-        if (hasExpirationDate.isChecked()) {
+        if (hasExpirationDate.isActivated()) {
             if (!expirationDate.getText().toString().trim().isEmpty()) {
                 try {
                     @SuppressLint("SimpleDateFormat")
@@ -344,7 +356,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
                 dialog.dismiss();
                 if (getActivity() != null) {
                     Toast.makeText(getActivity(), String.format("Asset %s has been created", asset.getName()), Toast.LENGTH_SHORT).show();
-                    changeActivity(Activities.DAP_MAIN.getCode(),subAppsSession.getAppPublicKey());
+                    changeActivity(Activities.DAP_MAIN.getCode(), subAppsSession.getAppPublicKey());
                 }
             }
 

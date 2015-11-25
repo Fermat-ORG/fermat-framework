@@ -69,7 +69,7 @@ public abstract class FermatFragment extends AbstractFermatFragment implements F
      * @param key  Enum Wizard registered type
      * @param args Object[] where you're be able to passing arguments like session, settings, resources, module, etc...
      */
-    protected void startWizard(WizardTypes key, Object... args) {
+    protected void startWizard(String key, Object... args) {
         if (context != null && isAttached) {
             context.showWizard(key, args);
         }

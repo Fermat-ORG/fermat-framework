@@ -15,6 +15,7 @@ public class AssetHolder extends FermatViewHolder {
 
 
     public LinearLayout rowView;
+    public View bottomLine;
     public ImageView thumbnail;
     public FermatTextView name;
     public FermatTextView state;
@@ -29,6 +30,7 @@ public class AssetHolder extends FermatViewHolder {
     public AssetHolder(View itemView) {
         super(itemView);
         rowView = (LinearLayout) itemView.findViewById(R.id.row_view);
+        bottomLine = itemView.findViewById(R.id.bottom_line);
         thumbnail = (ImageView) itemView.findViewById(R.id.asset_image);
         name = (FermatTextView) itemView.findViewById(R.id.asset_name);
         state = (FermatTextView) itemView.findViewById(R.id.state);
