@@ -84,8 +84,10 @@ public interface BusinessTransaction {
 
     void setState(TransactionTransmissionStates transactionTransmissionStates);
 
-    public boolean isPendingToRead();
+    TransactionTransmissionStates getState();
 
-    public void confirmRead();
+    boolean isPendingToRead();
+
+    void confirmRead();
 
 }

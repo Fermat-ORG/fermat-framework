@@ -125,6 +125,11 @@ public class BusinessTransactionRecord implements BusinessTransaction {
     }
 
     @Override
+    public TransactionTransmissionStates getState(){
+        return this.transactionTransmissionStates;
+    }
+
+    @Override
     public void confirmRead() {
         this.pendingFlag=true;
     }
