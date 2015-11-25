@@ -13,4 +13,6 @@ public interface FermatWizardPage {
     void setType(WizardPageTypes pageType);
 
     WizardPageTypes getType();
+
+    String getFragment();
 }

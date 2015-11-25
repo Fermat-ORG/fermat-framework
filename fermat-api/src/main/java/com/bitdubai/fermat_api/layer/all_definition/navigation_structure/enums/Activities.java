@@ -26,6 +26,7 @@ public enum Activities {
     CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY("CCPBWCDA"),
     CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY("CCPBWSA"),
     CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY("CCPBWACA"),
+    CCP_BITCOIN_WALLET_NO_IDENTITY_ACTIVITY("CCPBWNIA"),
 
     /**
      * Intra user
@@ -377,6 +378,8 @@ public enum Activities {
                 return BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY;
             case "CCPSAIUCCD":
                 return CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY;
+            case "CCPBWNIA":
+                return CCP_BITCOIN_WALLET_NO_IDENTITY_ACTIVITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
