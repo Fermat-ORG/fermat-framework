@@ -15,7 +15,7 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 
 	private String hashId;
 
-	private Timestamp createTimestamp;
+	private Timestamp lastConnectionTimestamp;
 
 	private Integer defaultPort;
 
@@ -23,9 +23,9 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 
 	private String ip;
 
-	private double latitude;
+	private double lastLatitude;
 
-	private double longitude;
+	private double lastLongitude;
 
 	private String name;
 
@@ -38,12 +38,12 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
         this.registeredTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
-    public Timestamp getCreateTimestamp() {
-        return createTimestamp;
+    public Timestamp getLastConnectionTimestamp() {
+        return lastConnectionTimestamp;
     }
 
-    public void setCreateTimestamp(Timestamp createTimestamp) {
-        this.createTimestamp = createTimestamp;
+    public void setLastConnectionTimestamp(Timestamp lastConnectionTimestamp) {
+        this.lastConnectionTimestamp = lastConnectionTimestamp;
     }
 
     public Integer getDefaultPort() {
@@ -78,20 +78,20 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
         this.ip = ip;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public double getLastLatitude() {
+        return lastLatitude;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setLastLatitude(double lastLatitude) {
+        this.lastLatitude = lastLatitude;
     }
 
-    public double getLongitude() {
-        return longitude;
+    public double getLastLongitude() {
+        return lastLongitude;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setLastLongitude(double lastLongitude) {
+        this.lastLongitude = lastLongitude;
     }
 
     public String getName() {
@@ -128,10 +128,10 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
         if (this == o) return true;
         if (!(o instanceof NodesCatalogTransaction)) return false;
         NodesCatalogTransaction that = (NodesCatalogTransaction) o;
-        return Objects.equals(getLatitude(), that.getLatitude()) &&
-                Objects.equals(getLongitude(), that.getLongitude()) &&
+        return Objects.equals(getLastLatitude(), that.getLastLatitude()) &&
+                Objects.equals(getLastLongitude(), that.getLastLongitude()) &&
                 Objects.equals(getHashId(), that.getHashId()) &&
-                Objects.equals(getCreateTimestamp(), that.getCreateTimestamp()) &&
+                Objects.equals(getLastConnectionTimestamp(), that.getLastConnectionTimestamp()) &&
                 Objects.equals(getDefaultPort(), that.getDefaultPort()) &&
                 Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
                 Objects.equals(getIp(), that.getIp()) &&
@@ -141,7 +141,7 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 
     @Override
     public int hashCode() {
-        return Objects.hash(getHashId(), getDefaultPort(), getIdentityPublicKey(), getIp(), getLatitude(), getLongitude(), getName(), getTransactionType());
+        return Objects.hash(getHashId(), getDefaultPort(), getIdentityPublicKey(), getIp(), getLastLatitude(), getLastLongitude(), getName(), getTransactionType());
     }
 
     @Override

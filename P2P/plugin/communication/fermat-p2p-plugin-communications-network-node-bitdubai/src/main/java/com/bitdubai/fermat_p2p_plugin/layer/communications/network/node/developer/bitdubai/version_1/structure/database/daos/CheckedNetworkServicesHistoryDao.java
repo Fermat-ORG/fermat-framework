@@ -9,7 +9,10 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedNetworkServicesHistory;
+
+import java.sql.Timestamp;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.CheckedNetworkServicesHistoryDao</code>
@@ -27,7 +30,7 @@ public class CheckedNetworkServicesHistoryDao extends AbstractBaseDao<CheckedNet
      * @param dataBase
      */
     public CheckedNetworkServicesHistoryDao(Database dataBase) {
-        super(dataBase, "", "");
+        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_FIRST_KEY_COLUMN);
     }
 
     /**
@@ -36,7 +39,19 @@ public class CheckedNetworkServicesHistoryDao extends AbstractBaseDao<CheckedNet
      */
     @Override
     protected CheckedNetworkServicesHistory getEntityFromDatabaseTableRecord(DatabaseTableRecord record) throws InvalidParameterException {
-        return null;
+
+        CheckedNetworkServicesHistory entity = new CheckedNetworkServicesHistory();
+
+        entity.setUuid(record.getUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_UUID_COLUMN_NAME));
+        entity.setIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
+        entity.setCheckType(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CHECK_TYPE_COLUMN_NAME));
+        entity.setCheckedTimestamp(new Timestamp(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME)));
+        entity.setClientIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
+        entity.setLastLatitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_LAST_LATITUDE_COLUMN_NAME));
+        entity.setLastLongitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_LAST_LONGITUDE_COLUMN_NAME));
+        entity.setNetworkServiceType(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_NETWORK_SERVICE_TYPE_COLUMN_NAME));
+
+        return entity;
     }
 
     /**
@@ -45,6 +60,18 @@ public class CheckedNetworkServicesHistoryDao extends AbstractBaseDao<CheckedNet
      */
     @Override
     protected DatabaseTableRecord getDatabaseTableRecordFromEntity(CheckedNetworkServicesHistory entity) {
-        return null;
+
+        DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
+
+        databaseTableRecord.setUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_UUID_COLUMN_NAME, entity.getUuid());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getIdentityPublicKey());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CHECK_TYPE_COLUMN_NAME, entity.getCheckType());
+        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME, entity.getCheckedTimestamp().getTime());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getClientIdentityPublicKey());
+        databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_LAST_LATITUDE_COLUMN_NAME, entity.getLastLatitude());
+        databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_LAST_LONGITUDE_COLUMN_NAME, entity.getLastLongitude());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_NETWORK_SERVICE_TYPE_COLUMN_NAME, entity.getNetworkServiceType());
+
+        return databaseTableRecord;
     }
 }
