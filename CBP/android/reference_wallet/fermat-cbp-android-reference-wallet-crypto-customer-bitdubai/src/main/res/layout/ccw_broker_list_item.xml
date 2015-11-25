@@ -16,7 +16,7 @@
         android:layout_marginTop="8dp">
 
         <ImageView
-            android:id="@+id/ccw_customer_image"
+            android:id="@+id/ccw_broker_image"
             android:layout_width="120dp"
             android:layout_height="80dp"
             android:layout_marginEnd="10dp"
@@ -32,8 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/ccw_customer_image"
-            android:layout_toRightOf="@+id/ccw_customer_image"
+            android:layout_toEndOf="@+id/ccw_broker_image"
+            android:layout_toRightOf="@+id/ccw_broker_image"
             android:layout_marginTop="8dp"
             android:singleLine="true"
             android:textColor="@color/ccw_first_line_item"
@@ -42,7 +42,7 @@
 
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/ccw_customer_name"
+            android:id="@+id/ccw_broker_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -51,8 +51,8 @@
             android:textSize="16sp"
             tools:text="Nelson Ramirez"
             android:layout_below="@+id/ccw_merchandise_to_sell"
-            android:layout_toRightOf="@+id/ccw_customer_image"
-            android:layout_toEndOf="@+id/ccw_customer_image"/>
+            android:layout_toRightOf="@+id/ccw_broker_image"
+            android:layout_toEndOf="@+id/ccw_broker_image"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccw_exchange_rate_text"
@@ -61,7 +61,7 @@
             android:textSize="12sp"
             android:text="EXCHANGE RATE"
             android:background="#78a9ff"
-            android:layout_below="@+id/ccw_customer_image"
+            android:layout_below="@+id/ccw_broker_image"
             android:textColor="@color/withe"
             android:paddingStart="6dp"
             android:paddingLeft="6dp"

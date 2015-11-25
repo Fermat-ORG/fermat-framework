@@ -64,7 +64,8 @@ public class BrokerListViewHolder extends FermatViewHolder {
     public void bind(BrokerIdentityBusinessInfo data) {
         brokerName.setText(data.getAlias());
 
-        String text = res.getString(R.string.ccw_selling_merchandise, data.getMerchandiseCurrency());
+        String currency = data.getMerchandiseCurrency().getCode();
+        String text = res.getString(R.string.ccw_selling_merchandise, currency);
         merchandiseToSell.setText(text);
 
         final byte[] profileImage = data.getProfileImage();

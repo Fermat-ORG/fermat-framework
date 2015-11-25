@@ -44,7 +44,7 @@ public class CryptoCustomerWalletModuleBrokerIdentityBusinessInfo implements Bro
 
     @Override
     public void setNewProfileImage(byte[] imageBytes) {
-
+        img = imageBytes;
     }
 
     @Override
