@@ -12,7 +12,7 @@ public interface VaultKeyMaintenanceParameters {
     /**
      * When new keys are being generated, how many keys we are creating each time
      */
-    public static final int KEY_GENERATION_BLOCK = 100;
+    public static final int KEY_GENERATION_BLOCK = 200;
 
     /**
      * When true, we save all the detailed keys information into database
