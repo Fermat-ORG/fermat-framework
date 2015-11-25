@@ -40,6 +40,8 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
+    private CryptoCustomerWalletModuleCryptoCustomerWalletManager walletManager;
+
     public CryptoCustomerWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -53,7 +55,10 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     @Override
     public CryptoCustomerWallet getCryptoCustomerWallet(String walletPublicKey) throws CantGetCryptoCustomerWalletException {
         try {
-            return new CryptoCustomerWalletModuleCryptoCustomerWalletManager();
+            if (walletManager == null)
+                walletManager = new CryptoCustomerWalletModuleCryptoCustomerWalletManager();
+            return walletManager;
+
         } catch (Exception e) {
             throw new CantGetCryptoCustomerWalletException(FermatException.wrapException(e));
         }

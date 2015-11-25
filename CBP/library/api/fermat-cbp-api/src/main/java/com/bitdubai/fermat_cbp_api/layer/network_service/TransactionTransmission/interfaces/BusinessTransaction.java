@@ -3,6 +3,9 @@ package com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmissio
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
+
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
@@ -74,4 +77,15 @@ public interface BusinessTransaction {
      * @return Long
      */
     Long getTimestamp();
+
+    UUID getTransactionId();
+
+    void setBusinessTransactionTransactionType(BusinessTransactionTransactionType businessTransactionTransactionType);
+
+    void setState(TransactionTransmissionStates transactionTransmissionStates);
+
+    public boolean isPendingToRead();
+
+    public void confirmRead();
+
 }

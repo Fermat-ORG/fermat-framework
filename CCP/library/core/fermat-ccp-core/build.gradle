@@ -43,6 +43,8 @@ dependencies {
     compile project(':fermat-ccp-plugin-crypto-transaction-incoming-intra-user-bitdubai')
     compile project(':fermat-ccp-plugin-crypto-transaction-outgoing-extra-user-bitdubai')
     compile project(':fermat-ccp-plugin-crypto-transaction-outgoing-intra-actor-bitdubai')
+    compile project(':fermat-ccp-plugin-crypto-transaction-hold-bitdubai')
+    compile project(':fermat-ccp-plugin-crypto-transaction-unhold-bitdubai')
 
     compile project(':fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai')
 
