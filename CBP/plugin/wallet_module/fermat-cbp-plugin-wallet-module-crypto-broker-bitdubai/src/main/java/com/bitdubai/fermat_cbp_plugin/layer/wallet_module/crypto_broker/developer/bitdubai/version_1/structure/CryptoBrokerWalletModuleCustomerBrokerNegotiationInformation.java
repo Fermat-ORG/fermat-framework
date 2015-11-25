@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
@@ -134,6 +135,11 @@ public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implem
         @Override
         public boolean isPublished() {
             return true;
+        }
+
+        @Override
+        public ExposureLevel getExposureLevel() {
+            return ExposureLevel.PUBLISH;
         }
 
         @Override

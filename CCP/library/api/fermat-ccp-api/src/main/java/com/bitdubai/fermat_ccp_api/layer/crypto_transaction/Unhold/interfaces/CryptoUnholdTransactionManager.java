@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces;
 
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.exceptions.CantCreateHoldTransactionException;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.exceptions.CantGetHoldTransactionException;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransaction;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.exceptions.CantCreateUnHoldTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.exceptions.CantGetUnHoldTransactionException;
+
 
 import java.util.UUID;
 
@@ -12,6 +12,6 @@ import java.util.UUID;
  */
 public interface CryptoUnholdTransactionManager {
 
-    CryptoHoldTransaction   createCryptoUnholdTransaction(CryptoUnholdTransactionParameters UnholdParameters) throws CantCreateHoldTransactionException;
-    CryptoTransactionStatus getCryptoUnholdTransactionStatus(UUID transactionId) throws CantGetHoldTransactionException;
+    CryptoUnholdTransaction   createCryptoUnholdTransaction(CryptoUnholdTransactionParameters UnholdParameters) throws CantCreateUnHoldTransactionException;
+    CryptoTransactionStatus getCryptoUnholdTransactionStatus(UUID transactionId) throws CantGetUnHoldTransactionException;
 }
