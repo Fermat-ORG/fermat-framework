@@ -1,11 +1,9 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterCreditException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.*;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletBalance;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyBalanceRecord;
 
 import java.util.UUID;
 
@@ -183,12 +181,22 @@ public class BankMoneyBalanceList implements BankMoneyWalletBalance {
     }
 
     @Override
-    public void debit(BankMoneyBalanceRecord BankMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException {
+    public void debit(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterDebitException {
 
     }
 
     @Override
-    public void credit(BankMoneyBalanceRecord BankMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterCreditException {
+    public void credit(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterCreditException {
+
+    }
+
+    @Override
+    public void hold() throws CantRegisterHoldException {
+
+    }
+
+    @Override
+    public void unhold() throws CantRegisterUnholdException {
 
     }
 }

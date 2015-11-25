@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="175dp"
+        android:background="#12aca1">
+
+        <ImageView
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:src="@drawable/img_drawer_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You need an identity before\nyou can enter"
+        android:textSize="18sp"
+        android:textColor="#4f4f4f"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center"
+        android:paddingTop="80dp"
+        android:paddingBottom="120dp"/>
+
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_create"
+        android:text="CREATE"
+        android:textColor="#ffffff"
+        android:background="#1173aa"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
+
+
+</LinearLayout>
