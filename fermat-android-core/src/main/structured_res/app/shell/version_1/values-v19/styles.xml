@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <style name="AppTheme" parent="Theme.AppCompat">
+                <item name="android:windowBackground">@android:color/transparent</item>
+                <item name="android:colorBackgroundCacheHint">@null</item>
+                <item name="android:windowShowWallpaper">true</item>
+                <item name="android:windowTranslucentNavigation">true</item>
+                <item name="android:windowTranslucentStatus">true</item>
+        </style>
+</resources>

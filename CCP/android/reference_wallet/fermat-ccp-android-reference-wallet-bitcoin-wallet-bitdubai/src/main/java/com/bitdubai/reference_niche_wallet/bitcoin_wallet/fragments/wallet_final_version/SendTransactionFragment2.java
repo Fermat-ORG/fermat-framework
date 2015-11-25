@@ -162,6 +162,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private void setUpScreen(){
         int[] emptyOriginalPos = new int[2];
         emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);
+        if(animationManager!=null)
         animationManager.setEmptyOriginalPos(emptyOriginalPos);
 
     }
