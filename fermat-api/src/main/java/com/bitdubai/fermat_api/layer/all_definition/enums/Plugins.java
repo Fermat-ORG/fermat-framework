@@ -216,12 +216,18 @@ public enum Plugins implements FermatEnum {
     WS_CLOUD_CLIENT             ("WCL"),
 
     //CBP
+    CRYPTO_CUSTOMER_ACTOR       ("CCAC"),
+    CRYPTO_BROKER_WALLET        ("CBWA"),
     BANK_MONEY_RESTOCK          ("BMRE"),
     BANK_MONEY_DESTOCK          ("BMDE"),
     CASH_MONEY_RESTOCK          ("CMRE"),
     CASH_MONEY_DESTOCK          ("CMRE"),
     BITDUBAI_CBP_STOCK_TRANSACTIONS_BANK_MONEY_RESTOCK ("BCBPSTBMR"),
-    TRANSACTION_TRANSMISSION    ("TRTX")
+    TRANSACTION_TRANSMISSION    ("TRTX"),
+    NEGOTIATION_TRANSMISSION    ("NGTR"),
+    CUSTOMER_BROKER_NEW         ("CBNE"),
+    CUSTOMER_BROKER_UPDATE      ("CBUP"),
+    CUSTOMER_BROKER_CLOSE       ("CBCL")
 
     // End  new Plugins
 
@@ -295,11 +301,17 @@ public enum Plugins implements FermatEnum {
             case "WSTA" :   return WALLET_STATISTICS        ;
             case "WST"  :   return WALLET_STORE             ;
             case "WCL"  :   return WS_CLOUD_CLIENT          ;
+            case ("CCAC"):  return CRYPTO_CUSTOMER_ACTOR    ;
+            case ("CBWA"):  return CRYPTO_BROKER_WALLET     ;
             case ("BMRE"):  return BANK_MONEY_RESTOCK       ;
             case ("BMDE"):  return BANK_MONEY_DESTOCK       ;
             case ("CMRE"):  return CASH_MONEY_RESTOCK       ;
             case ("CMDE"):  return CASH_MONEY_DESTOCK       ;
             case ("TRTX"):  return TRANSACTION_TRANSMISSION ;
+            case ("NGTR"):  return NEGOTIATION_TRANSMISSION ;
+            case ("CBNE"):  return CUSTOMER_BROKER_NEW      ;
+            case ("CBUP"):  return CUSTOMER_BROKER_UPDATE   ;
+            case ("CBCL"):  return CUSTOMER_BROKER_CLOSE    ;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

@@ -31,7 +31,7 @@ public enum NetworkServiceType implements FermatEnum {
     INTRA_USER                       ("INT_USR"),
     TEMPLATE                         ("TEMP"),
     TRANSACTION_TRANSMISSION         ("TRTX"),
-    NEGOTIATION_TRANSMISSION         ("NGTRANS"),
+    NEGOTIATION_TRANSMISSION         ("NGTR"),
     UNDEFINED                        ("UNDEF"),
 
     ;
@@ -57,7 +57,7 @@ public enum NetworkServiceType implements FermatEnum {
             case "INT_USR"   : return INTRA_USER;
             case "TEMP"      : return TEMPLATE;
             case "TRTX"      : return TRANSACTION_TRANSMISSION;
-            case "NGTRANS"   : return NEGOTIATION_TRANSMISSION;
+            case "NGTR"   : return NEGOTIATION_TRANSMISSION;
             case "UNDEF"     : return UNDEFINED;
 
             default: throw new InvalidParameterException(
