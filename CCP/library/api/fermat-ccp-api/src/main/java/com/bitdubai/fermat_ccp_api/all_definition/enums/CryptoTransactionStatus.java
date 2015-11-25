@@ -24,13 +24,13 @@ public enum CryptoTransactionStatus {
 
     public static CryptoTransactionStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "NEG":
+            case "ACK":
                 return CryptoTransactionStatus.ACKNOWLEDGED;
             case "PEN":
                 return CryptoTransactionStatus.PENDING;
             case "CON":
                 return CryptoTransactionStatus.CONFIRMED;
-            case "CAN":
+            case "REJ":
                 return CryptoTransactionStatus.REJECTED;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This is an invalid CashTransactionStatus code");
