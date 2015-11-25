@@ -665,6 +665,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //Activity 3
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
             subAppIntraUser.addActivity(runtimeActivity);
             runtimeActivity.setColor("#FF0B46F0");
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
@@ -685,6 +686,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS.getCode());
             runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
             runtimeActivity.setColor("#FF0B46F0");
 
             runtimeTitleBar = new TitleBar();
@@ -740,6 +742,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode());
             runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
             runtimeActivity.setColor("#FF0B46F0");
+            runtimeActivity.setBackPublicKey(communityPublicKey);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Request list");
@@ -792,6 +795,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL.getCode());
             runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
             runtimeActivity.setColor("#FF0B46F0");
 
             runtimeTitleBar = new TitleBar();

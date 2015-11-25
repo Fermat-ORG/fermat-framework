@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
@@ -22,13 +23,13 @@ public interface AssetIssuerActorNetworkServiceManager extends FermatManager {
 
     /**
      *
-     * @param actorAssetIssuerSender who send the message
+     * @param dapActor who send the message
      * @param actorAssetIssuerDestination who recibe the message
      * @param msjContent  the message content
      *
      * @throws CantSendMessageException
      */
-    public void sendMessage(ActorAssetIssuer actorAssetIssuerSender, ActorAssetIssuer actorAssetIssuerDestination, String msjContent)  throws CantSendMessageException;
+    public void sendMessage(DAPActor dapActor, ActorAssetIssuer actorAssetIssuerDestination, String msjContent)  throws CantSendMessageException;
 
     /**
      * Request the list of the actorAssetUser register in the server

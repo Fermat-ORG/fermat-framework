@@ -14,6 +14,7 @@ import java.util.UUID;
  * Created by francisco on 21/10/15.
  */
 public class AssetIssuerSubAppSettings implements SubAppSettings {
+
     @Override
     public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {
         return null;

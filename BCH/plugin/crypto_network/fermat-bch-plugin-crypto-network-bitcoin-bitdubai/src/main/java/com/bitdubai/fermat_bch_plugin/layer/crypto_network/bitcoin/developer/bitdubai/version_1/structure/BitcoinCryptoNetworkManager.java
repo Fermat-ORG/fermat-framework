@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -477,6 +478,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      */
 
     public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
+        /**
+         * I will get the CryptoTransaction from all agents running. Only one will return the CryptoTransaction
+         */
+        for (BitcoinCryptoNetworkMonitor monitor : runningAgents.values()){
+            return monitor.getCryptoTransactionFromBlockChain(txHash, blockHash);
+        }
+
+        /**
+         * if no agents are running, then no CryptoTransaction to return.
+         */
         return null;
     }
 }
