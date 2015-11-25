@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecord {
 
-
+    //TODO: add atributtes.
 
     @Override
     public UUID getBankTransactionId() {
