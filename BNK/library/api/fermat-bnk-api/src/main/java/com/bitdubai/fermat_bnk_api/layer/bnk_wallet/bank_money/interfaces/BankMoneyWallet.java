@@ -26,9 +26,9 @@ public interface BankMoneyWallet {
 
     double getHeldFunds() throws CantGetHeldFundsException, CantGetHeldFundsException;
 
-    void hold() throws CantRegisterHoldException;
+    void hold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterHoldException;
 
-    void unhold() throws CantRegisterUnholdException;
+    void unhold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterUnholdException;
 
     List<BankAccountNumber> getAccounts(UUID walletPublicKey) ;
 }

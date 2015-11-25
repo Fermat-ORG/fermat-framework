@@ -200,14 +200,14 @@ public class BankMoneyWalletDao {
 
     public void makeUnhold(BankMoneyTransactionRecord bankMoneyTransactionRecord,BalanceType balanceType)throws CantMakeUnholdException{
         try {
-            double availableAmount;
+            double unholdAmount;
             double bookAmount;
             long runningAvailableBalance = 0;
             long runningBookBalance = 0;
 
             if (balanceType == BalanceType.AVAILABLE) {
-                availableAmount = bankMoneyTransactionRecord.getAmount();
-                runningAvailableBalance = (long) (getAvailableBalance() + availableAmount);
+                unholdAmount = bankMoneyTransactionRecord.getAmount();
+                runningAvailableBalance = (long) (getHeldFunds() + (-unholdAmount));
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
 
             }
@@ -250,7 +250,7 @@ public class BankMoneyWalletDao {
         long heldFunds = 0;
         try {
             for (DatabaseTableRecord record : getTransactions(TransactionType.HOLD)) {
-                heldFunds = record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME);
+                heldFunds = record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
                 heldFunds += heldFunds;
             }
         }catch (CantGetTransactionsException e){
@@ -287,7 +287,7 @@ public class BankMoneyWalletDao {
 
     public List<BankMoneyWalletBalance> getBalanceType(BalanceType balanceType) throws CantCalculateBalanceException {
         try {
-            DatabaseTable table = database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_TABLE_NAME);
+            DatabaseTable table = database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
             table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
             return createBankMoneyBalanceList(table.getRecords());
@@ -310,7 +310,7 @@ public class BankMoneyWalletDao {
      */
     private DatabaseTableRecord getBankMoneyTotalBalance() throws CantGetBankMoneyTotalBalanceException {
         try {
-            DatabaseTable balancesTable = database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_TABLE_NAME);
+            DatabaseTable balancesTable = database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
             balancesTable.loadToMemory();
             return balancesTable.getRecords().get(0);
         } catch (CantLoadTableToMemoryException e) {

@@ -45,7 +45,7 @@ public class BankMoneyWalletDatabaseConstants {
     /**
      * Bank Money Total Balances database table definition.
      */
-    public static final String BANK_MONEY_TOTAL_BALANCES_TABLE_NAME = "bank_money_total_balances";
+    public static final String BANK_MONEY_ACCOUNTS_TABLE_NAME = "bank_money_accounts";
 
     public static final String BANK_MONEY_TOTAL_BALANCES_WALLET_KEY_BROKER_COLUMN_NAME = "wallet_key_broker";
     public static final String BANK_MONEY_TOTAL_BALANCES_PUBLIC_KEY_BROKER_COLUMN_NAME = "public_key_broker";

@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
  */
 public interface BankAccountNumber {
 
+    String getAlias();
+
     String getAccount();
 
     FiatCurrency getCurrencyType();
