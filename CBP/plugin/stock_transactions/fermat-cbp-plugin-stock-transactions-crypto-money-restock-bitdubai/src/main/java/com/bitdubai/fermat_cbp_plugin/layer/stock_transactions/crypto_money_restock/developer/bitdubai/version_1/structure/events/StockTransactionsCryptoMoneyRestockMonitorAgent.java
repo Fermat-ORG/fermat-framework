@@ -25,6 +25,7 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.Cr
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -153,7 +154,7 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
                                         cryptoMoneyTransaction.getCbpWalletPublicKey(),
                                         cryptoMoneyTransaction.getActorPublicKey(),
                                         cryptoMoneyTransaction.getAmount(),
-                                        0,
+                                        new Date().getTime() / 1000,
                                         cryptoMoneyTransaction.getConcept());
 
                                 cryptoBrokerWalletManager.getCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);

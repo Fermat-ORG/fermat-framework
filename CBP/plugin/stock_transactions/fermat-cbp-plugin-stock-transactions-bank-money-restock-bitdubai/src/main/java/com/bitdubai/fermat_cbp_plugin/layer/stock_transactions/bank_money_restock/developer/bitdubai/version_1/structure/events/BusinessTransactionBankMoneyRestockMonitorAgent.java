@@ -25,6 +25,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restoc
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -152,7 +153,7 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent  implements Agent{
                                                                                                                 bankMoneyTransaction.getCbpWalletPublicKey(),
                                                                                                                 bankMoneyTransaction.getActorPublicKey(),
                                                                                                                 bankMoneyTransaction.getAmount(),
-                                                                                                                0,
+                                                                                                                new Date().getTime() / 1000,
                                                                                                                 bankMoneyTransaction.getConcept());
 
                                cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);

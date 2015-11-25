@@ -25,6 +25,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destoc
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -138,7 +139,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent{
                                     bankMoneyTransaction.getCbpWalletPublicKey(),
                                     bankMoneyTransaction.getActorPublicKey(),
                                     bankMoneyTransaction.getAmount(),
-                                    0,
+                                    new Date().getTime() / 1000,
                                     bankMoneyTransaction.getConcept());
 
                             cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
@@ -173,6 +174,12 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent{
                         if (BankTransactionStatus.CONFIRMED.getCode() == bankTransactionStatus.getCode())
                         {
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
+                            stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
+                        }
+                        if (BankTransactionStatus.REJECTED.getCode() == bankTransactionStatus.getCode())
+                        {
+                            //Debito a la CBP Wallet
+                            bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
                         }
                         break;
