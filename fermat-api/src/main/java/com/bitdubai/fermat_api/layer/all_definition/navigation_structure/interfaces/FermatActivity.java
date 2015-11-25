@@ -50,4 +50,6 @@ public interface FermatActivity extends Serializable{
 
     public void changeBackActivity(String appPublicKeyback,String activityCode) throws InvalidParameterException;
 
+    public FermatWizard getWizard(String wizardCode);
+
 }

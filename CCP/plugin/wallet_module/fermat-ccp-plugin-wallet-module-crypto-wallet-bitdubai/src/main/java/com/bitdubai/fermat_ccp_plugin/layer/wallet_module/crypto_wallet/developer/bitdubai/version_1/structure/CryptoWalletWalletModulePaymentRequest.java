@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 
@@ -20,11 +21,11 @@ public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest{
 
     private int type;
 
-    private String state;
+    private CryptoPaymentState state;
 
     private UUID requestId;
 
-    public CryptoWalletWalletModulePaymentRequest(UUID requestId,String date, String reason, long amount, CryptoWalletWalletContact cryptoWalletWalletContact, int type,String state) {
+    public CryptoWalletWalletModulePaymentRequest(UUID requestId,String date, String reason, long amount, CryptoWalletWalletContact cryptoWalletWalletContact, int type,CryptoPaymentState state) {
         this.requestId = requestId;
 
         this.date = date;
@@ -67,7 +68,7 @@ public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest{
     }
 
     @Override
-    public String getState() {
+    public CryptoPaymentState getState() {
         return state;
     }
 

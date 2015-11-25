@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.enums.MessageTypes;
@@ -27,6 +28,7 @@ public class RequestMessage extends NetworkServiceMessage {
     private final long                  startTimeStamp   ;
     private final RequestAction         action           ;
     private final BlockchainNetworkType networkType      ;
+    private final ReferenceWallet      referenceWallet;
 
     public RequestMessage(final UUID                  requestId        ,
                           final String                identityPublicKey,
@@ -38,7 +40,8 @@ public class RequestMessage extends NetworkServiceMessage {
                           final long                  amount           ,
                           final long                  startTimeStamp   ,
                           final RequestAction         action           ,
-                          final BlockchainNetworkType networkType      ) {
+                          final BlockchainNetworkType networkType     ,
+                          final ReferenceWallet      referenceWallet) {
 
         super(MessageTypes.REQUEST);
 
@@ -53,6 +56,7 @@ public class RequestMessage extends NetworkServiceMessage {
         this.startTimeStamp    = startTimeStamp   ;
         this.action            = action           ;
         this.networkType       = networkType      ;
+        this.referenceWallet   = referenceWallet    ;
     }
 
     public UUID getRequestId() {
@@ -99,6 +103,10 @@ public class RequestMessage extends NetworkServiceMessage {
         return networkType;
     }
 
+    public ReferenceWallet getReferenceWallet() {
+        return referenceWallet;
+    }
+
     @Override
     public String toString() {
         return "RequestMessage{" +
@@ -113,6 +121,7 @@ public class RequestMessage extends NetworkServiceMessage {
                 ", startTimeStamp=" + startTimeStamp +
                 ", action=" + action +
                 ", networkType=" + networkType +
+                ",referenceWallet=" + referenceWallet +
                 '}';
     }
 
