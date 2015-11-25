@@ -46,8 +46,31 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
     }
 
     @Override
-    public void payCryptoRequest(UUID requestId, String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String description, String senderPublicKey, String receptorPublicKey, Actors senderActorType, Actors receptorActorType) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
-        // TODO: COMPLETE WHEN MONEY REQUESTS ARE IMPLEMENTED
+    public void payCryptoRequest(UUID requestId, String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String description, String senderPublicKey, String receptorPublicKey, Actors senderActorType, Actors receptorActorType,ReferenceWallet referenceWallet) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
+
+        try {
+            BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
+            ;
+            long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
+
+            if (cryptoAmount > funds)
+                throw new OutgoingIntraActorInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
+
+            OutgoingIntraActorDao dao = new OutgoingIntraActorDao(this.errorManager, this.pluginDatabaseSystem);
+            dao.initialize(this.pluginId);
+            UUID transactionId = UUID.randomUUID();
+
+            dao.registerNewTransaction(transactionId,requestId, walletPublicKey, destinationAddress, cryptoAmount, null, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet);
+
+        } catch (OutgoingIntraActorInsufficientFundsException e) {
+            throw e;
+        } catch (OutgoingIntraActorCantInsertRecordException | CantLoadWalletException | CantCalculateBalanceException | CantInitializeOutgoingIntraActorDaoException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            throw new OutgoingIntraActorCantSendFundsExceptions("An exception happened",e,"","");
+        } catch (Exception e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(e));
+            throw new OutgoingIntraActorCantSendFundsExceptions("An unexpected exception happened", FermatException.wrapException(e),"","");
+        }
     }
 
     /**
@@ -85,7 +108,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             OutgoingIntraActorDao dao = new OutgoingIntraActorDao(this.errorManager, this.pluginDatabaseSystem);
             dao.initialize(this.pluginId);
             UUID transactionId = UUID.randomUUID();
-            dao.registerNewTransaction(transactionId, walletPublicKey, destinationAddress, cryptoAmount, null, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet);
+            dao.registerNewTransaction(transactionId,null, walletPublicKey, destinationAddress, cryptoAmount, null, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet);
             return transactionId;
         } catch (OutgoingIntraActorInsufficientFundsException e) {
             throw e;
@@ -126,7 +149,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
         try {
             UUID transactionId = UUID.randomUUID();
             dao.initialize(this.pluginId);
-            dao.registerNewTransaction(transactionId, walletPublicKey, destinationAddress, cryptoAmount, op_Return, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet);
+            dao.registerNewTransaction(transactionId, null,walletPublicKey, destinationAddress, cryptoAmount, op_Return, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet);
             return transactionId;
         } catch (CantInitializeOutgoingIntraActorDaoException | OutgoingIntraActorCantInsertRecordException e) {
             throw new OutgoingIntraActorCantSendFundsExceptions("An exception happened",e,"","");

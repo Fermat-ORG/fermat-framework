@@ -1092,8 +1092,26 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     }
 
     @Override
-    public void acceptCryptoRequest(UUID transmissionId, UUID requestId, CryptoCurrency cryptoCurrency, long cryptoAmount, String senderPublicKey, String destinationPublicKey, String associatedCryptoTransactionHash, String paymentDescription) throws CantAcceptCryptoRequestException {
+    public void acceptCryptoRequest(UUID transactionId, UUID requestId, CryptoCurrency cryptoCurrency, long cryptoAmount, String senderPublicKey, String destinationPublicKey, String associatedCryptoTransactionHash, String paymentDescription) throws CantAcceptCryptoRequestException {
 
+        CryptoTransmissionMetadata cryptoTransmissionMetadata = new CryptoTransmissionMetadataRecord(
+                associatedCryptoTransactionHash,
+                cryptoAmount,
+                cryptoCurrency,
+                destinationPublicKey,
+                paymentDescription,
+                requestId,
+                senderPublicKey
+                ,transactionId,
+                CryptoTransmissionStates.PRE_PROCESSING_SEND,
+                CryptoTransmissionMetadataType.METADATA_SEND
+        );
+
+        try {
+            cryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
+        } catch (CantSaveCryptoTransmissionMetadatatException e) {
+            throw new CantAcceptCryptoRequestException("Metada can t be saved in table",e,"","database corrupted");
+        }
     }
 
     /**

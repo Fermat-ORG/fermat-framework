@@ -725,12 +725,14 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)) {
                 // close connection, sender is the destination
+                System.out.println("ENTRANDO EN EL METODO PARA CERRAR LA CONEXION DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
                 System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
                 communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
                 actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
 
             }
 
+            System.out.println("SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
 
         } catch (Exception e) {
             //quiere decir que no estoy reciviendo metadata si no una respuesta

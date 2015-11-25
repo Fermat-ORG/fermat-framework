@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -338,7 +339,8 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
                                     new CryptoAddress(walletContact.address, CryptoCurrency.BITCOIN),
                                     txt_notes.getText().toString(),
                                     Long.valueOf(editTextAmount.getText().toString()),
-                                    BlockchainNetworkType.DEFAULT
+                                    BlockchainNetworkType.DEFAULT,
+                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
                             );
                         }
 
