@@ -11,8 +11,8 @@ public class MockActorAssetIssuer implements ActorAssetIssuer {
 
 
     @Override
-    public String getPublicKey() {
-        return "getPublicKey";
+    public String getActorPublicKey() {
+        return "getActorPublicKey";
     }
 
     @Override
@@ -25,6 +25,10 @@ public class MockActorAssetIssuer implements ActorAssetIssuer {
         return 0;
     }
 
+    @Override
+    public long getLastConnectionDate() {
+        return 0;
+    }
 
     @Override
     public DAPConnectionState getDapConnectionState() {

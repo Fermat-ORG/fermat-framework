@@ -6,14 +6,17 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionNewsException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.UnexpectedProtocolStateException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionNew;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +37,16 @@ public interface CryptoBrokerManager extends FermatManager {
      * @throws CantExposeIdentityException   if something goes wrong.
      */
     void exposeIdentity(final CryptoBrokerExposingData cryptoBrokerExposingData) throws CantExposeIdentityException;
+
+    /**
+     * Through the method <code>exposeIdentities</code> we can expose the crypto identities created in the device.
+     * The information given will be shown to all the crypto customers.
+     *
+     * @param cryptoBrokerExposingDataList  list of crypto broker exposing information.
+     *
+     * @throws CantExposeIdentitiesException   if something goes wrong.
+     */
+    void exposeIdentities(final Collection<CryptoBrokerExposingData> cryptoBrokerExposingDataList) throws CantExposeIdentitiesException;
 
     /**
      * Through the method <code>getSearch</code> we can get a new instance of Crypto Broker Search.
@@ -87,7 +100,7 @@ public interface CryptoBrokerManager extends FermatManager {
      * @throws CantCancelConnectionRequestException   if something goes wrong.
      * @throws ConnectionRequestNotFoundException     if the connection request cannot be found.
      */
-    void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException, ConnectionRequestNotFoundException;
+    void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException, ConnectionRequestNotFoundException, UnexpectedProtocolStateException;
 
     /**
      * Through the method <code>acceptConnection</code> we can accept a received connection request.
@@ -101,13 +114,27 @@ public interface CryptoBrokerManager extends FermatManager {
     void acceptConnection(final UUID requestId) throws CantAcceptConnectionRequestException, ConnectionRequestNotFoundException;
 
     /**
-     * Through the method <code>getPendingConnectionNews</code> we can list all the connection news
+     * Through the method <code>listPendingConnectionNews</code> we can list all the connection news
      * with a pending local action.
+     *
+     * This method is exposed for the crypto broker actor connection plug-in. Here we'll return all the new requests that arrive to him.
      *
      * @return a list of instance of CryptoBrokerConnectionNews
      *
-     * @throws CantListPendingConnectionNewsException if something goes wrong.
+     * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
-    List<CryptoBrokerConnectionNew> getPendingConnectionNews() throws CantListPendingConnectionNewsException;
+    List<CryptoBrokerConnectionRequest> listPendingConnectionNews() throws CantListPendingConnectionRequestsException;
+
+    /**
+     * Through the method <code>listPendingConnectionUpdates</code> we can list all the connection news
+     * with a pending local action.
+     *
+     * This method is exposed for all the actors that try to connect with a crypto broker. Here we'll return all the updates of the requests that arrive to them.
+     *
+     * @return a list of instance of CryptoBrokerConnectionNews
+     *
+     * @throws CantListPendingConnectionRequestsException if something goes wrong.
+     */
+    List<CryptoBrokerConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException;
 
 }

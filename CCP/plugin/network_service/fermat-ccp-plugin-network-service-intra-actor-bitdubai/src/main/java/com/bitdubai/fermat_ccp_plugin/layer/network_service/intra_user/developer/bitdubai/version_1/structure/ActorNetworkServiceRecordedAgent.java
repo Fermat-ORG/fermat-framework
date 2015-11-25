@@ -370,15 +370,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     }
 
 
-    private void toPendingAction(UUID requestId){ //throws CantChangeRequestProtocolStateException,
-           // RequestNotFoundException {
-
-        //actorNetworkServiceDao.changeProtocolState(requestId, ActorProtocolState.PENDING_ACTION);
-    }
-
-//    private void toWaitingResponse(UUID notificationId,DAO dao) throws CantUpdateRecordDataBaseException, RequestNotFoundException, CantUpdateRecordException {
-//        //dao.changeProtocolState(notificationId, ActorProtocolState.WAITING_RESPONSE);
-//    }
 
     private void raiseEvent(final EventType eventType,
                             final UUID      requestId) {

@@ -53,7 +53,7 @@ public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
             System.out.println("ASSET DISTRIBUTION Actor Issuer is null");
             actorFromPublicKey="UNDEFINED";
         }else{
-            actorFromPublicKey=actorAssetIssuer.getPublicKey();
+            actorFromPublicKey=actorAssetIssuer.getActorPublicKey();
         }
         System.out.println("ASSET DISTRIBUTION Actor Issuer public key:"+actorFromPublicKey);
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(

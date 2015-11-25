@@ -371,6 +371,16 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
                 PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.setContent(digitalAssetInnerXML);
                 pluginTextFile.persistToMedia();
+
+                /**
+                 * I'm also saving to file the DigitalAssetMetadata of this digital Asset.
+                 */
+                String digitalAssetMetadataFilename = assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey() + "_metadata";
+                String digitalAssetMetadataXML = assetIssuerWalletTransactionRecord.getDigitalAssetMetadata().toString();
+                pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, digitalAssetMetadataFilename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                pluginTextFile.setContent(digitalAssetMetadataXML);
+                pluginTextFile.persistToMedia();
+
             }else{
                 transaction.addRecordToUpdate(databaseTable, assetBalanceRecord);
             }

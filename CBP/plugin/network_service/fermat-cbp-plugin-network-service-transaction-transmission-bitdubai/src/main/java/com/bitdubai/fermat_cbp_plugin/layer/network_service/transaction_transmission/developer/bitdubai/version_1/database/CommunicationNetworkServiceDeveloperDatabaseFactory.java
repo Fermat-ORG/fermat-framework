@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
         this.pluginId             = pluginId            ;
     }
 
-    public final void initializeDatabase() throws CantInitializeNetworkServiceDatabaseException {
+    public final void initializeDatabase() throws CantInitializeDatabaseException {
 
         try {
 
@@ -52,7 +53,7 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
 
         } catch (final CantOpenDatabaseException cantOpenDatabaseException) {
 
-            throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
+            throw new CantInitializeDatabaseException(cantOpenDatabaseException);
         } catch (final DatabaseNotFoundException e) {
 
             final CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
@@ -62,7 +63,7 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
                 database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (final CantCreateDatabaseException cantCreateDatabaseException) {
 
-                throw new CantInitializeNetworkServiceDatabaseException(cantCreateDatabaseException);
+                throw new CantInitializeDatabaseException(cantCreateDatabaseException);
             }
         }
     }

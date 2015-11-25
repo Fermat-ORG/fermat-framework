@@ -125,8 +125,8 @@ public class AssetIssuerActorDao implements Serializable {
              * if Asset Issuer exist on table
              * change status
              */
-//            if (assetIssuerExists(assetIssuerActorRecord.getPublicKey())) {
-//                this.updateAssetIssuerDAPConnectionState(assetIssuerLoggedInPublicKey, assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getDAPConnectionState());
+//            if (assetIssuerExists(assetIssuerActorRecord.getActorPublicKey())) {
+//                this.updateAssetIssuerDAPConnectionState(assetIssuerLoggedInPublicKey, assetIssuerActorRecord.getActorPublicKey(), assetIssuerActorRecord.getDAPConnectionState());
 //            } else {
                 /**
                  * Get actual date
@@ -141,7 +141,7 @@ public class AssetIssuerActorDao implements Serializable {
 
                     record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
 
-                    record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getPublicKey());
+                    record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getActorPublicKey());
                     record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME, assetIssuerActorRecord.getName());
 
                     record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, assetIssuerActorRecord.getDapConnectionState().getCode());
@@ -161,7 +161,7 @@ public class AssetIssuerActorDao implements Serializable {
                     /**
                      * Persist profile image on a file
                      */
-                    persistNewAssetIssuerProfileImage(assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getProfileImage());
+                    persistNewAssetIssuerProfileImage(assetIssuerActorRecord.getActorPublicKey(), assetIssuerActorRecord.getProfileImage());
                 }
             }
             database.closeDatabase();
@@ -180,8 +180,8 @@ public class AssetIssuerActorDao implements Serializable {
              * if Asset Issuer exist on table
              * change status
              */
-            if (assetIssuerExists(assetIssuerActorRecord.getPublicKey())) {
-                this.updateAssetIssuerDAPConnectionState(assetIssuerLoggedInPublicKey, assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getDapConnectionState());
+            if (assetIssuerExists(assetIssuerActorRecord.getActorPublicKey())) {
+                this.updateAssetIssuerDAPConnectionState(assetIssuerLoggedInPublicKey, assetIssuerActorRecord.getActorPublicKey(), assetIssuerActorRecord.getDapConnectionState());
             } else {
                 /**
                  * Get actual date
@@ -189,7 +189,7 @@ public class AssetIssuerActorDao implements Serializable {
                 DatabaseTable table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
 
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getPublicKey());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getActorPublicKey());
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetIssuerLoggedInPublicKey);
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME, assetIssuerActorRecord.getName());
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, assetIssuerActorRecord.getDapConnectionState().getCode());
@@ -206,7 +206,7 @@ public class AssetIssuerActorDao implements Serializable {
                 /**
                  * Persist profile image on a file
                  */
-                persistNewAssetIssuerProfileImage(assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getProfileImage());
+                persistNewAssetIssuerProfileImage(assetIssuerActorRecord.getActorPublicKey(), assetIssuerActorRecord.getProfileImage());
             }
         } catch (CantInsertRecordException e) {
             throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", e, "", "Cant create new ASSET ISSUER, insert database problems.");
@@ -225,8 +225,8 @@ public class AssetIssuerActorDao implements Serializable {
              * if Asset Issuer exist on table
              * change status
              */
-            if (assetIssuerRegisteredExists(assetIssuerActorRecord.getPublicKey())) {
-                updateAssetIssuerDAPConnectionStateRegistered(assetIssuerActorRecord.getPublicKey(), DAPConnectionState.REGISTERED_ONLINE);
+            if (assetIssuerRegisteredExists(assetIssuerActorRecord.getActorPublicKey())) {
+                updateAssetIssuerDAPConnectionStateRegistered(assetIssuerActorRecord.getActorPublicKey(), DAPConnectionState.REGISTERED_ONLINE);
             } else {
                 /**
                  * Get actual date
@@ -234,7 +234,7 @@ public class AssetIssuerActorDao implements Serializable {
                 DatabaseTable table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
 
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getPublicKey());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getActorPublicKey());
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME, assetIssuerActorRecord.getName());
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, assetIssuerActorRecord.getDapConnectionState().getCode());
                 record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
@@ -250,7 +250,7 @@ public class AssetIssuerActorDao implements Serializable {
                 /**
                  * Persist profile image on a file
                  */
-                persistNewAssetIssuerProfileImage(assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getProfileImage());
+                persistNewAssetIssuerProfileImage(assetIssuerActorRecord.getActorPublicKey(), assetIssuerActorRecord.getProfileImage());
 
             }
         } catch (CantInsertRecordException e) {
@@ -276,12 +276,12 @@ public class AssetIssuerActorDao implements Serializable {
             }
 
             // 2) Find the Asset Issuer , filter by keys.
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, actorAssetIssuer.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, actorAssetIssuer.getActorPublicKey(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
             if (table.getRecords().isEmpty()) {
-                throw new AssetIssuerNotFoundException("The following public key was not found: " + actorAssetIssuer.getPublicKey());
+                throw new AssetIssuerNotFoundException("The following public key was not found: " + actorAssetIssuer.getActorPublicKey());
             }
 
             // 3) Get Asset Issuer record and update state.
@@ -298,7 +298,7 @@ public class AssetIssuerActorDao implements Serializable {
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
 
                 //UPDATE PROFILE IMAGE
-                updateAssetIssuerProfileImage(actorAssetIssuer.getPublicKey(), actorAssetIssuer.getProfileImage());
+                updateAssetIssuerProfileImage(actorAssetIssuer.getActorPublicKey(), actorAssetIssuer.getProfileImage());
 
                 table.updateRecord(record);
             }
@@ -400,8 +400,8 @@ public class AssetIssuerActorDao implements Serializable {
              */
 
             for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuerRecord) {
-                    if (assetIssuerRegisteredExists(actorAssetIssuer.getPublicKey())) {
-                        this.updateAssetIssuerDAPConnectionStateActorNetworService(actorAssetIssuer.getPublicKey(), actorAssetIssuer.getDapConnectionState());
+                    if (assetIssuerRegisteredExists(actorAssetIssuer.getActorPublicKey())) {
+                        this.updateAssetIssuerDAPConnectionStateActorNetworService(actorAssetIssuer.getActorPublicKey(), actorAssetIssuer.getDapConnectionState());
                     } else {
                         /**
                          * Get actual date
@@ -421,7 +421,7 @@ public class AssetIssuerActorDao implements Serializable {
                         DatabaseTableRecord record = table.getEmptyRecord();
 
                         record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
-                        record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetIssuer.getPublicKey());
+                        record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetIssuer.getActorPublicKey());
                         record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME, actorAssetIssuer.getName());
 
                        record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
@@ -449,7 +449,7 @@ public class AssetIssuerActorDao implements Serializable {
                         /**
                          * Persist profile image on a file
                          */
-                        persistNewAssetIssuerProfileImage(actorAssetIssuer.getPublicKey(), actorAssetIssuer.getProfileImage());
+                        persistNewAssetIssuerProfileImage(actorAssetIssuer.getActorPublicKey(), actorAssetIssuer.getProfileImage());
                     }
                 }
             if(actorAssetIssuerRecord.isEmpty()){
