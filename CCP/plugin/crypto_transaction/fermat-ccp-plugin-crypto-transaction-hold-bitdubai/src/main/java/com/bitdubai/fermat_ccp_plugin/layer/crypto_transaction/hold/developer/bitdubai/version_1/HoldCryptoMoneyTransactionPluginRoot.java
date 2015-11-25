@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -76,7 +77,7 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET, plugin = Plugins.BITCOIN_WALLET)
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
     BitcoinWalletManager bitcoinWalletManager;
 
 
@@ -86,7 +87,9 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME);
 
+            System.out.println("******* Init Hold Crypto Money Transaction ******");
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
+            //testHold();
             startMonitorAgent();
 
             database.closeDatabase();
@@ -226,5 +229,84 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
         }
 
         return cryptoTransactionStatus;
+    }
+
+    private void testHold(){
+        try {
+            CryptoHoldTransactionParameters cryptoHoldTransactionParameters = new CryptoHoldTransactionParameters() {
+                @Override
+                public UUID getTransactionId() {
+                    return UUID.randomUUID();
+                }
+
+                @Override
+                public void setTransactionId(UUID transactionId) {
+
+                }
+
+                @Override
+                public String getPublicKeyWallet() {
+                    return "walletPublicKey";
+                }
+
+                @Override
+                public void setPublicKeyWallet(String publicKeyWallet) {
+
+                }
+
+                @Override
+                public String getPublicKeyActor() {
+                    return "actorWalletPublicKey";
+                }
+
+                @Override
+                public void setPublicKeyActor(String publicKeyActor) {
+
+                }
+
+                @Override
+                public String getPublicKeyPlugin() {
+                    return pluginId.toString();
+                }
+
+                @Override
+                public void setPublicKeyPlugin(String publicKeyPlugin) {
+
+                }
+
+                @Override
+                public float getAmount() {
+                    return 1500;
+                }
+
+                @Override
+                public void setAmount(float amount) {
+
+                }
+
+                @Override
+                public CryptoCurrency getCurrency() {
+                    return CryptoCurrency.BITCOIN;
+                }
+
+                @Override
+                public void setCurrency(CryptoCurrency currency) {
+
+                }
+
+                @Override
+                public String getMemo() {
+                    return "memo";
+                }
+
+                @Override
+                public void setMemo(String memo) {
+
+                }
+            };
+            createCryptoHoldTransaction(cryptoHoldTransactionParameters);
+        } catch (CantCreateHoldTransactionException e) {
+            e.printStackTrace();
+        }
     }
 }

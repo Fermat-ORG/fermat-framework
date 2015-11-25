@@ -9,12 +9,12 @@ import java.util.Arrays;
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionNew</code>
+ * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest</code>
  * represents a crypto broker connection new, it can be a connection request or a disconnection.
  * <p>
  * Created by lnacosta (laion.cj91@gmail.com) on 17/11/2015.
  */
-public final class CryptoBrokerConnectionNew {
+public final class CryptoBrokerConnectionRequest {
 
     private final UUID                    requestId           ;
     private final String                  senderPublicKey     ;
@@ -27,16 +27,16 @@ public final class CryptoBrokerConnectionNew {
     private final ConnectionRequestAction requestAction       ;
     private final long                    sentTime            ;
 
-    public CryptoBrokerConnectionNew(final UUID                    requestId           ,
-                                     final String                  senderPublicKey     ,
-                                     final Actors                  senderActorType     ,
-                                     final String                  senderAlias         ,
-                                     final byte[]                  senderImage         ,
-                                     final String                  destinationPublicKey,
-                                     final RequestType             requestType         ,
-                                     final ProtocolState           protocolState       ,
-                                     final ConnectionRequestAction requestAction       ,
-                                     final long                    sentTime            ) {
+    public CryptoBrokerConnectionRequest(final UUID                    requestId           ,
+                                         final String                  senderPublicKey     ,
+                                         final Actors                  senderActorType     ,
+                                         final String                  senderAlias         ,
+                                         final byte[]                  senderImage         ,
+                                         final String                  destinationPublicKey,
+                                         final RequestType             requestType         ,
+                                         final ProtocolState           protocolState       ,
+                                         final ConnectionRequestAction requestAction       ,
+                                         final long                    sentTime            ) {
 
         this.requestId            = requestId           ;
         this.senderPublicKey      = senderPublicKey     ;
@@ -122,7 +122,7 @@ public final class CryptoBrokerConnectionNew {
 
     @Override
     public String toString() {
-        return "CryptoBrokerConnectionNew{" +
+        return "CryptoBrokerConnectionRequest{" +
                 "requestId=" + requestId +
                 ", senderPublicKey='" + senderPublicKey + '\'' +
                 ", senderActorType=" + senderActorType +
