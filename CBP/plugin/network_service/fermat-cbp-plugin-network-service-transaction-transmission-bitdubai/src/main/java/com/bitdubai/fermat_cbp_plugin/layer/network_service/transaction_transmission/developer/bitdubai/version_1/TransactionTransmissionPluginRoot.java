@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -26,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
@@ -44,17 +44,23 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatab
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActor;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActor;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendBusinessTransactionHashException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransaction;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionContractHashDao;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantGetTransactionTransmissionException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.messages.TransactionTransmissionResponseMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -62,14 +68,11 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-
-import org.bouncycastle.util.Times;
+import com.google.gson.Gson;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,9 +124,9 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     /**
-     * Represent the dataBase
+     * Represent the database
      */
-    private Database dataBase;
+    private Database database;
 
     /**
      * Connections arrived
@@ -145,12 +148,12 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     private TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
 
     /**
-     * Represent the communicationNetworkServiceDeveloperDatabaseFactory
+     *   Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
     /**
-     * Represent the remoteNetworkServicesRegisteredList
+     *  Represent the remoteNetworkServicesRegisteredList
      */
     private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
@@ -166,10 +169,9 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
          * If all resources are inject
          */
         if (wsCommunicationsCloudClientManager == null ||
-                pluginDatabaseSystem == null ||
-                errorManager == null ||
-                eventManager == null) {
-
+                pluginDatabaseSystem  == null ||
+                errorManager      == null ||
+                eventManager  == null) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -200,17 +202,18 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
      * because at this moment, is create the platformComponentProfile for this component
      */
     @Override
-    public void initializeCommunicationNetworkServiceConnectionManager() {
+    public void initializeCommunicationNetworkServiceConnectionManager(){
         this.communicationNetworkServiceConnectionManager = new TransactionTransmissionCommunicationNetworkServiceConnectionManager(
                 platformComponentProfilePluginRoot,
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
-                dataBase,
+                database,
                 errorManager,
                 eventManager,
                 EVENT_SOURCE,
                 getPluginVersionReference());
     }
+
 
     /**
      * This method initialize the database
@@ -223,7 +226,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -246,7 +249,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 /*
                  * We create the new database
                  */
-                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -263,17 +266,17 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
     @Override
@@ -286,11 +289,6 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         return this.identity.getPublicKey();
     }
 
-
-    @Override
-    public void handleNewMessages(FermatMessage message) {
-
-    }
 
     @Override
     public List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList() {
@@ -308,7 +306,6 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     /**
      * (non-javadoc)
-     *
      * @see NetworkService#requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters)
      */
     @Override
@@ -347,7 +344,6 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     /**
      * (non-javadoc)
-     *
      * @see NetworkService#getNetworkServiceConnectionManager()
      */
     @Override
@@ -368,9 +364,9 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.TRANSACTION_TRANSMISSION &&
-                platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TRANSACTION_TRANSMISSION &&
+                platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
              * Mark as register
@@ -384,7 +380,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             /**
              * Initialize the main agent
              */
-            //TODO implement the agent first
+        //TODO implement the agent first
             /*cryptoTransmissionAgent = new CryptoTransmissionAgent(
                     this,
                     cryptoTransmissionConnectionsDAO,
@@ -425,7 +421,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         /*
          * save into the cache
          */
-        remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
+        remoteNetworkServicesRegisteredList.addAll( platformComponentProfileRegisteredList);
 
         //TODO: Implement the agent first
         //cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
@@ -443,7 +439,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
                 "-----------------------\n A: " + remoteComponentProfile.getAlias());
 
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()) {
+        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
 
             remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
 
@@ -491,7 +487,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             /*
              * Verify if the communication cloud client is active
              */
-            if (!wsCommunicationsCloudClientManager.isDisable()) {
+            if (!wsCommunicationsCloudClientManager.isDisable()){
 
                 /*
                  * Initialize the agent and start
@@ -502,9 +498,9 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
 
             /**
-             * Initialice DAO
+             * Initialize DAO
              */
-            //cryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO(pluginDatabaseSystem,pluginId,cryptoTrasmissionDatabase);
+            transactionTransmissionContractHashDao = new TransactionTransmissionContractHashDao(pluginDatabaseSystem,pluginId, database);
 
             //cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem,pluginId);
 
@@ -530,14 +526,13 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
     }
 
     /**
      * (non-Javadoc)
-     *
      * @see Service#pause()
      */
     @Override
@@ -557,7 +552,6 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     /**
      * (non-Javadoc)
-     *
      * @see Service#resume()
      */
     @Override
@@ -577,7 +571,6 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     /**
      * (non-Javadoc)
-     *
      * @see Service#stop()
      */
     @Override
@@ -621,19 +614,18 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     /**
      * Static method to get the logging level from any class under root.
-     *
      * @param className
      * @return
      */
-    public static LogLevel getLogLevelByClass(String className) {
-        try {
+    public static LogLevel getLogLevelByClass(String className){
+        try{
             /**
              * sometimes the classname may be passed dinamically with an $moretext
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return TransactionTransmissionPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e) {
+        } catch (Exception e){
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
@@ -642,13 +634,16 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     }
 
     @Override
-    public void sendContractHashToCryptoCustomer(UUID transactionId, CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionHash, String negotiationId) throws CantSendContractNewStatusNotificationException {
+    public void sendContractHashToCryptoCustomer(UUID transactionId,
+                                                 CryptoBrokerActor cryptoBrokerActorSender,
+                                                 CryptoCustomerActor cryptoCustomerActorReceiver,
+                                                 String transactionHash,
+                                                 String negotiationId) throws CantSendBusinessTransactionHashException {
         //TODO: check the correct PlatformComponentType for sender and receiver
         //TODO: Check is contractId is necessary
-        Date date = new Date();
-        Timestamp timestamp = new Timestamp(date.getTime());
-
-        BusinessTransaction businessTransaction = new BusinessTransactionRecord(
+        Date date=new Date();
+        Timestamp timestamp=new Timestamp(date.getTime());
+        BusinessTransaction businessTransaction=new BusinessTransactionRecord(
                 transactionHash,
                 ContractStatus.PENDING_CONFIRMATION,
                 cryptoCustomerActorReceiver.getIdentity().getPublicKey(),
@@ -659,38 +654,235 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 negotiationId,
                 BusinessTransactionTransactionType.TRANSACTION_HASH,
                 timestamp.getTime(),
-                transactionId
+                transactionId,
+                TransactionTransmissionStates.SENDING_HASH
         );
-        //TODO: initialize hash dao
-        //try {
-        //  transactionTransmissionContractHashDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
-        //} catch (CantSaveCryptoTransmissionMetadatatException e) {
-        //    throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
-        //}
-    }
-
-    @Override
-    public void sendContractHashToCryptoBroker(UUID transactionId, CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionHash) throws CantSendContractNewStatusNotificationException {
+        try {
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransaction);
+        } catch (CantInsertRecordDataBaseException e) {
+            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+        }
 
     }
 
     @Override
-    public void sendContractNewStatusNotification(CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionId, ContractStatus contractStatus) throws CantSendBusinessTransactionHashException {
+    public void sendContractHashToCryptoBroker(UUID transactionId,
+                                               CryptoCustomerActor cryptoCustomerActorSender,
+                                               CryptoBrokerActor cryptoCustomerBrokerReceiver,
+                                               String transactionHash,
+                                               String negotiationId) throws CantSendBusinessTransactionHashException {
+        //TODO: check the correct PlatformComponentType for sender and receiver
+        //TODO: Check is contractId is necessary
+        Date date=new Date();
+        Timestamp timestamp=new Timestamp(date.getTime());
+        BusinessTransaction businessTransaction=new BusinessTransactionRecord(
+                transactionHash,
+                ContractStatus.PENDING_CONFIRMATION,
+                cryptoCustomerActorSender.getIdentity().getPublicKey(),
+                PlatformComponentType.NETWORK_SERVICE,
+                cryptoCustomerBrokerReceiver.getIdentity().getPublicKey(),
+                PlatformComponentType.NETWORK_SERVICE,
+                null,
+                negotiationId,
+                BusinessTransactionTransactionType.TRANSACTION_HASH,
+                timestamp.getTime(),
+                transactionId,
+                TransactionTransmissionStates.SENDING_HASH
+        );
+        try {
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransaction);
+        } catch (CantInsertRecordDataBaseException e) {
+            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+        }
+    }
+
+    @Override
+    public void sendContractNewStatusNotification(CryptoBrokerActor cryptoBrokerActorSender,
+                                                  CryptoCustomerActor cryptoCustomerActorReceiver,
+                                                  String transactionId,
+                                                  ContractStatus contractStatus) throws CantSendBusinessTransactionHashException {
+        Date date=new Date();
+        Timestamp timestamp=new Timestamp(date.getTime());
+        UUID uuidTransactionId=UUID.fromString(transactionId);
+        BusinessTransaction businessTransaction=new BusinessTransactionRecord(
+                null,
+                contractStatus,
+                cryptoBrokerActorSender.getIdentity().getPublicKey(),
+                PlatformComponentType.NETWORK_SERVICE,
+                cryptoCustomerActorReceiver.getIdentity().getPublicKey(),
+                PlatformComponentType.NETWORK_SERVICE,
+                null,
+                null,
+                BusinessTransactionTransactionType.CONTRACT_STATUS_UPDATE,
+                timestamp.getTime(),
+                uuidTransactionId,
+                TransactionTransmissionStates.UPDATE_CONTRACT
+        );
+        try {
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransaction);
+        } catch (CantInsertRecordDataBaseException e) {
+            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+        }
 
     }
 
     @Override
     public void sendTransactionNewStatusNotification(CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionId, ContractStatus contractStatus) throws CantSendBusinessTransactionHashException {
+        Date date=new Date();
+        Timestamp timestamp=new Timestamp(date.getTime());
+        UUID uuidTransactionId=UUID.fromString(transactionId);
+        BusinessTransaction businessTransaction=new BusinessTransactionRecord(
+                null,
+                contractStatus,
+                cryptoCustomerActorSender.getIdentity().getPublicKey(),
+                PlatformComponentType.NETWORK_SERVICE,
+                cryptoCustomerBrokerReceiver.getIdentity().getPublicKey(),
+                PlatformComponentType.NETWORK_SERVICE,
+                null,
+                null,
+                BusinessTransactionTransactionType.CONTRACT_STATUS_UPDATE,
+                timestamp.getTime(),
+                uuidTransactionId,
+                TransactionTransmissionStates.UPDATE_CONTRACT
+        );
+        try {
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransaction);
+        } catch (CantInsertRecordDataBaseException e) {
+            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+        }
+    }
 
+    @Override
+    public void confirmNotificationReception(CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionId) throws CantSendBusinessTransactionHashException {
+        Date date=new Date();
+        Timestamp timestamp=new Timestamp(date.getTime());
+        UUID uuidTransactionId=UUID.fromString(transactionId);
+        BusinessTransaction businessTransaction=new BusinessTransactionRecord(
+                null,
+                null,
+                cryptoBrokerActorSender.getIdentity().getPublicKey(),
+                PlatformComponentType.NETWORK_SERVICE,
+                cryptoCustomerActorReceiver.getIdentity().getPublicKey(),
+                PlatformComponentType.NETWORK_SERVICE,
+                null,
+                null,
+                BusinessTransactionTransactionType.CONFIRM_MESSAGE,
+                timestamp.getTime(),
+                uuidTransactionId,
+                TransactionTransmissionStates.CONFIRM_RESPONSE
+        );
+        try {
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransaction);
+        } catch (CantInsertRecordDataBaseException e) {
+            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+        }
+    }
+
+    @Override
+    public void confirmNotificationReception(CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionId) throws CantSendBusinessTransactionHashException {
+        Date date=new Date();
+        Timestamp timestamp=new Timestamp(date.getTime());
+        UUID uuidTransactionId=UUID.fromString(transactionId);
+        BusinessTransaction businessTransaction=new BusinessTransactionRecord(
+                null,
+                null,
+                cryptoCustomerActorSender.getIdentity().getPublicKey(),
+                PlatformComponentType.NETWORK_SERVICE,
+                cryptoCustomerBrokerReceiver.getIdentity().getPublicKey(),
+                PlatformComponentType.NETWORK_SERVICE,
+                null,
+                null,
+                BusinessTransactionTransactionType.CONFIRM_MESSAGE,
+                timestamp.getTime(),
+                uuidTransactionId,
+                TransactionTransmissionStates.CONFIRM_RESPONSE
+        );
+        try {
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransaction);
+        } catch (CantInsertRecordDataBaseException e) {
+            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+        }
     }
 
     @Override
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
-
+        try {
+            this.transactionTransmissionContractHashDao.confirmReception(transactionID);
+        } catch (CantUpdateRecordDataBaseException e) {
+            throw new CantConfirmTransactionException(e.DEFAULT_MESSAGE,e,"Confirm reception","Cannot update the flag in database");
+        } catch (PendingRequestNotFoundException e) {
+            throw new CantConfirmTransactionException(null,e,"Confirm reception","Cannot find the transaction id in database\n"+transactionID);
+        } catch (CantGetTransactionTransmissionException e) {
+            throw new CantConfirmTransactionException(e.DEFAULT_MESSAGE,e,"Confirm reception","Cannot get the business transaction record from the database");
+        }
     }
 
     @Override
     public List<Transaction<BusinessTransaction>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
-        return null;
+        List<Transaction<BusinessTransaction>> pendingTransaction=new ArrayList<>();
+        try {
+
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, "false");
+
+            List<BusinessTransaction> businessTransactionList=transactionTransmissionContractHashDao.findAll(filters);
+            if(!businessTransactionList.isEmpty()){
+
+                for(BusinessTransaction businessTransaction : businessTransactionList){
+                    Transaction<BusinessTransaction> transaction = new Transaction<>(businessTransaction.getTransactionId(),
+                            (BusinessTransaction) businessTransaction,
+                            Action.APPLY,
+                            businessTransaction.getTimestamp());
+
+                    pendingTransaction.add(transaction);
+                }
+
+            }
+            return pendingTransaction;
+
+        } catch (CantReadRecordDataBaseException e) {
+            throw new CantDeliverPendingTransactionsException("CAN'T GET PENDING METADATA NOTIFICATIONS",e, "Transaction Transmission network service", "database error");
+        } catch (Exception e) {
+            throw new CantDeliverPendingTransactionsException("CAN'T GET PENDING METADATA NOTIFICATIONS",e, "Transaction Transmission network service", "database error");
+
+        }
     }
+
+    @Override
+    public void handleNewMessages(FermatMessage fermatMessage) {
+        Gson gson = new Gson();
+        System.out.println("Transaction Transmission gets a new message");
+        try{
+            BusinessTransaction businessTransactionReceived=gson.fromJson(fermatMessage.getContent(), BusinessTransactionRecord.class);
+            if(businessTransactionReceived.getContractHash()!=null){
+                businessTransactionReceived.setBusinessTransactionTransactionType(BusinessTransactionTransactionType.TRANSACTION_HASH);
+                transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionReceived);
+            }else{
+
+                TransactionTransmissionResponseMessage transactionTransmissionResponseMessage =  gson.fromJson(fermatMessage.getContent(), TransactionTransmissionResponseMessage.class);
+                switch (transactionTransmissionResponseMessage.getTransactionTransmissionStates()){
+                    case CONFIRM_CONTRACT:
+                        transactionTransmissionContractHashDao.changeState(transactionTransmissionResponseMessage.getTransactionId(), TransactionTransmissionStates.CONFIRM_CONTRACT);
+                        System.out.print("-----------------------\n" +
+                                "TRANSACTION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
+                                "-----------------------\n STATE: " + TransactionTransmissionStates.CONFIRM_CONTRACT);
+                        //TODO: raise event
+                        break;
+                    case CONFIRM_RESPONSE:
+                        transactionTransmissionContractHashDao.changeState(transactionTransmissionResponseMessage.getTransactionId(), TransactionTransmissionStates.CONFIRM_RESPONSE);
+                        System.out.print("-----------------------\n" +
+                                "TRANSACTION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
+                                "-----------------------\n STATE: " + TransactionTransmissionStates.CONFIRM_RESPONSE);
+                        //TODO: raise event
+                        break;
+                }
+
+            }
+        } catch (CantInsertRecordDataBaseException | CantUpdateRecordDataBaseException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+        } catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+        }
+    }
+
 }

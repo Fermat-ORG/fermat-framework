@@ -185,8 +185,6 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
     }
 
     private void configureNavigationDrawer() {

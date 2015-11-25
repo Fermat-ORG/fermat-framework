@@ -42,8 +42,6 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
     @Override
     public List<CryptoBrokerExposingData> getResult() throws CantListCryptoBrokersException {
 
-
-
         try {
 
             DiscoveryQueryParameters discoveryQueryParameters = communicationsClientConnection.constructDiscoveryQueryParamsFactory(
@@ -67,8 +65,8 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             for (final PlatformComponentProfile platformComponentProfile : list) {
 
-                byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte));
+                //byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), null/*imageByte*/));
             }
 
             return cryptoBrokerExposingDataList;

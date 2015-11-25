@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
@@ -15,10 +17,12 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseI
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetAssociatedCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSummaryForCurrenciesOfInterestException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotStartNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWallet;
 
 import java.util.ArrayList;
@@ -35,7 +39,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private List<ContractBasicInformation> contractsHistory;
     private List<ContractBasicInformation> openContracts;
     private List<CustomerBrokerNegotiationInformation> openNegotiations;
-    private Map<String, List> connectedBrokers;
+    private List<BrokerIdentityBusinessInfo> connectedBrokers;
 
 
     public CryptoCustomerWalletModuleCryptoCustomerWalletManager() {
@@ -182,14 +186,20 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public Collection<CryptoBrokerIdentity> getListOfConnectedBrokers(String customerPublicKey) throws CantGetCryptoBrokerListException {
-        Map<String, List> testData = getBrokerListTestData();
-        List brokerList = testData.get(customerPublicKey);
+    public Collection<BrokerIdentityBusinessInfo> getListOfConnectedBrokersAndTheirMerchandises(String customerPublicKey) throws CantGetCryptoBrokerListException {
+        return getBrokerListTestData();
+    }
 
-        if (brokerList == null)
-            brokerList = new ArrayList();
+    @Override
+    public Collection<MerchandiseExchangeRate> getListOfBrokerMerchandisesExchangeRate(String brokerPublicKey, FermatEnum target) {
+        List<MerchandiseExchangeRate> list = new ArrayList<>();
 
-        return brokerList;
+        list.add(new CryptoCustomerWalletModuleMerchandiseExchangeRate(target, CryptoCurrency.LITECOIN, 250));
+        list.add(new CryptoCustomerWalletModuleMerchandiseExchangeRate(target, FiatCurrency.COLOMBIAN_PESO, 240000.23));
+        list.add(new CryptoCustomerWalletModuleMerchandiseExchangeRate(target, FiatCurrency.BRAZILIAN_REAL, 1.2));
+        list.add(new CryptoCustomerWalletModuleMerchandiseExchangeRate(target, CryptoCurrency.CHAVEZCOIN, 366985));
+
+        return list;
     }
 
     @Override
@@ -303,41 +313,39 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         return contractsHistory;
     }
 
-    private Map<String, List> getBrokerListTestData() {
+    private List<BrokerIdentityBusinessInfo> getBrokerListTestData() {
         if (connectedBrokers == null) {
-            CryptoBrokerIdentity broker;
+            connectedBrokers = new ArrayList<>();
 
-
-            List brokerIdentityList = new ArrayList<>();
-            broker = new CryptoCustomerWalletModuleCryptoBrokerIdentity("elBrokerVerdugo", new byte[0], "elBrokerVerdugo");
-            brokerIdentityList.add(broker);
-            broker = new CryptoCustomerWalletModuleCryptoBrokerIdentity("Brokers de Argentina", new byte[0], "BrokersDeArgentina");
-            brokerIdentityList.add(broker);
-            broker = new CryptoCustomerWalletModuleCryptoBrokerIdentity("leonAcostaBroker", new byte[0], "leonAcostaBroker");
-            brokerIdentityList.add(broker);
-            broker = new CryptoCustomerWalletModuleCryptoBrokerIdentity("Nelson Ramirez", new byte[0], "NelsonRamirez");
-            brokerIdentityList.add(broker);
-            broker = new CryptoCustomerWalletModuleCryptoBrokerIdentity("Luis Molina", new byte[0], "LuisMolina");
-            brokerIdentityList.add(broker);
-            broker = new CryptoCustomerWalletModuleCryptoBrokerIdentity("Mayorista La Asuncion", new byte[0], "MayoristaLaAsuncion");
-            brokerIdentityList.add(broker);
-            broker = new CryptoCustomerWalletModuleCryptoBrokerIdentity("brokers_mcbo", new byte[0], "brokers_mcbo");
-            brokerIdentityList.add(broker);
-
-            connectedBrokers = new HashMap<>();
-            connectedBrokers.put("customer_1", brokerIdentityList);
-
-            brokerIdentityList = new ArrayList<>();
-            broker = new CryptoCustomerWalletModuleCryptoBrokerIdentity("Brokers de Argentina", new byte[0], "BrokersDeArgentina");
-            brokerIdentityList.add(broker);
-            broker = new CryptoCustomerWalletModuleCryptoBrokerIdentity("leonAcostaBroker", new byte[0], "leonAcostaBroker");
-            brokerIdentityList.add(broker);
-            broker = new CryptoCustomerWalletModuleCryptoBrokerIdentity("Mayorista La Asuncion", new byte[0], "MayoristaLaAsuncion");
-            brokerIdentityList.add(broker);
-            broker = new CryptoCustomerWalletModuleCryptoBrokerIdentity("brokers_mcbo", new byte[0], "brokers_mcbo");
-            brokerIdentityList.add(broker);
-
-            connectedBrokers.put("customer_2", brokerIdentityList);
+            BrokerIdentityBusinessInfo broker;
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("elBrokerVerdugo", new byte[0], "elBrokerVerdugo", CryptoCurrency.BITCOIN);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("elBrokerVerdugo", new byte[0], "elBrokerVerdugo", FiatCurrency.US_DOLLAR);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Brokers de Argentina", new byte[0], "BrokersDeArgentina", FiatCurrency.US_DOLLAR);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Brokers de Argentina", new byte[0], "BrokersDeArgentina", FiatCurrency.AUSTRALIAN_DOLLAR);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Brokers de Argentina", new byte[0], "BrokersDeArgentina", CryptoCurrency.CHAVEZCOIN);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("leonAcostaBroker", new byte[0], "leonAcostaBroker", CryptoCurrency.CHAVEZCOIN);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("leonAcostaBroker", new byte[0], "leonAcostaBroker", CryptoCurrency.BITCOIN);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("leonAcostaBroker", new byte[0], "leonAcostaBroker", CryptoCurrency.LITECOIN);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("leonAcostaBroker", new byte[0], "leonAcostaBroker", FiatCurrency.EURO);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Nelson Ramirez", new byte[0], "NelsonRamirez", FiatCurrency.US_DOLLAR);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Luis Molina", new byte[0], "LuisMolina", FiatCurrency.CHINESE_YUAN);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Luis Molina", new byte[0], "LuisMolina", FiatCurrency.ARGENTINE_PESO);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Mayorista La Asuncion", new byte[0], "MayoristaLaAsuncion", FiatCurrency.BRITISH_POUND);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("brokers_mcbo", new byte[0], "brokers_mcbo", FiatCurrency.US_DOLLAR);
+            connectedBrokers.add(broker);
         }
 
         return connectedBrokers;

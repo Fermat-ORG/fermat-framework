@@ -204,7 +204,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     communicationsClientConnection         ,
                     connectionNewsDao                      ,
                     errorManager                           ,
-                    getPlatformComponentProfilePluginRoot(),
                     getPluginVersionReference()
             );
 
@@ -374,7 +373,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         // set to not registered.
         register = Boolean.FALSE;
 
-        fermatManager.setIsRegistered(false);
+        fermatManager.setPlatformComponentProfile(null);
 
         this.serviceStatus = ServiceStatus.STOPPED;
     }
@@ -517,7 +516,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
             initializeAgent();
 
-            fermatManager.setIsRegistered(true);
+            fermatManager.setPlatformComponentProfile(this.getPlatformComponentProfilePluginRoot());
 
         }
 

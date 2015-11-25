@@ -16,6 +16,7 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -546,6 +547,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 setActionBarProperties(title, activity);
                 paintToolbarIcon(titleBar);
             } else {
+                if(appBarLayout!=null)
                 appBarLayout.setVisibility(View.GONE);
                 if (collapsingToolbarLayout != null)
                     collapsingToolbarLayout.setVisibility(View.GONE);
@@ -726,7 +728,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
             if (mToolbar != null)
-                setSupportActionBar(mToolbar);
+                    setSupportActionBar(mToolbar);
 
             collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
@@ -1227,14 +1229,20 @@ public abstract class FermatActivity extends AppCompatActivity
                     getWindow().setStatusBarColor(Color.TRANSPARENT);
                 }
                 final WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
-                final Drawable wallpaperDrawable = wallpaperManager.getDrawable();
+                Drawable wallpaperDrawable = null;
+                if(Build.VERSION.SDK_INT>19)
+                    wallpaperDrawable = wallpaperManager.getBuiltInDrawable();
 
                 Display display = getWindowManager().getDefaultDisplay();
                 Point size = new Point();
                 display.getSize(size);
-                Bitmap bmp = Bitmap.createScaledBitmap(((BitmapDrawable)wallpaperDrawable).getBitmap(), size.x, size.y, true);
+                Bitmap bmp = Bitmap.createScaledBitmap(((BitmapDrawable) wallpaperDrawable).getBitmap(), size.x + 300, size.y, true);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER,
+                        WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
 
-                getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(),bmp));
+                //getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(),bmp));
+
+                //getWindow().setBackgroundDrawable(scaleDrawable);
             }
 
 
