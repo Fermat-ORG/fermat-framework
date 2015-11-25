@@ -65,7 +65,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
 //        if (pluginRoot.getStatus() == ServiceStatus.STARTED ) {
         if (platformEvent.getSource() == AssetIssuerActorNetworkServicePluginRoot.EVENT_SOURCE) {
 
-            System.out.print("ACTOR NETWORK SERVICE ASSET ISSUER - NOTIFICACION EVENTO MENSAJE RECIBIDO!!!!");
+            System.out.println("ACTOR NETWORK SERVICE ASSET ISSUER - NOTIFICACION EVENTO MENSAJE RECIBIDO!!!!");
 
             NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageReceivedNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
             FermatMessage fermatMessageReceive = (FermatMessage) newNetworkServiceMessageReceivedNotificationEvent.getData();
@@ -90,7 +90,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
                     ActorAssetIssuer actorAssetIssuerDestination = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.ISSUER).getAsString(), AssetIssuerActorRecord.class);
                     String message = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.PUBLICKEY_EXTENDED).getAsString(), String.class);
 
-                    System.out.print("Actor Asset User: SE LANZARA EVENTO PARA REQUEST CRYPTO ADDRESS");
+                    System.out.println("Actor Asset User: SE LANZARA EVENTO PARA REQUEST CRYPTO ADDRESS");
 
                     FermatEvent event = eventManager.getNewEvent(EventType.NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER);
                     event.setSource(EventSource.ACTOR_ASSET_ISSUER);

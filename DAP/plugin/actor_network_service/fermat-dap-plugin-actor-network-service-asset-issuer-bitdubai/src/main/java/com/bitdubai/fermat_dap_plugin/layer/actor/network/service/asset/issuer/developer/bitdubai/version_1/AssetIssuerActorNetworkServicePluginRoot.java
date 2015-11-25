@@ -43,7 +43,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantHandleDapNewMessagesException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceDaoMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageAccept;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageDeny;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageRequest;
@@ -596,7 +596,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
             String jsonMessage = fermatMessage.getContent();
 
-            NetworkServiceDaoMessage networkServiceDaoMessage = gson.fromJson(jsonMessage, NetworkServiceDaoMessage.class);
+            NetworkServiceMessage networkServiceDaoMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
 
             switch (networkServiceDaoMessage.getMessageType()) {
 
