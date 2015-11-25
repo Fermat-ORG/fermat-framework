@@ -51,17 +51,18 @@ public final class CommunicationNetworkServiceDatabaseConstants {
     public static final String TRANSACTION_TRANSMISSION_HASH_TABLE_NAME = "transaction_transmission_hash";
 
     public static final String TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME = "transmission_id";
-    public static final String TRANSACTION_TRANSMISSION_HASH_REQUEST_ID_COLUMN_NAME = "request_id";
     public static final String TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME = "contract_hash";
+    public static final String TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME="contract_status";
+    public static final String TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME = "sender_public_key";
+    public static final String TRANSACTION_TRANSMISSION_HASH_SENDER_TYPE_COLUMN_NAME = "sender_type";
+    public static final String TRANSACTION_TRANSMISSION_HASH_RECEIVER_PUBLIC_KEY_COLUMN_NAME = "receiver_public_key";
+    public static final String TRANSACTION_TRANSMISSION_HASH_RECEIVER_TYPE_COLUMN_NAME = "receiver_type";
     public static final String TRANSACTION_TRANSMISSION_HASH_CONTRACT_ID_COLUMN_NAME = "contract_id";
     public static final String TRANSACTION_TRANSMISSION_HASH_NEGOTIATION_ID_COLUMN_NAME = "negotiation_id";
-    public static final String TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME = "sender_public_key";
-    public static final String TRANSACTION_TRANSMISSION_HASH_DESTINATION_PUBLIC_KEY_COLUMN_NAME = "destination_public_key";
-    public static final String TRANSACTION_TRANSMISSION_HASH_PAYMENT_DESCRIPTION_COLUMN_NAME = "payment_description";
-    public static final String TRANSACTION_TRANSMISSION_HASH_STATUS_COLUMN_NAME = "status";
-    public static final String TRANSACTION_TRANSMISSION_HASH_TYPE_COLUMN_NAME = "type";
-    public static final String TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME = "pending_flag";
+    public static final String TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
     public static final String TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME = "timestamp";
+    public static final String TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME = "state";
+    public static final String TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME = "pending_flag";
 
     public static final String TRANSACTION_TRANSMISSION_HASH_FIRST_KEY_COLUMN = "transmission_id";
 
