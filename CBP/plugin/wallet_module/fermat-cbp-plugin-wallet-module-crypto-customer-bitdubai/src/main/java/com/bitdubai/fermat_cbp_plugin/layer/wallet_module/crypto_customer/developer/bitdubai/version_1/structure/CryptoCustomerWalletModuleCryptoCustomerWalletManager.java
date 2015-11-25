@@ -191,7 +191,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public Collection<MerchandiseExchangeRate> getListOfBrokerMerchandisesExchangeRate(String brokerPublicKey, Currency target) {
+    public Collection<MerchandiseExchangeRate> getListOfBrokerMerchandisesExchangeRate(String brokerPublicKey, FermatEnum target) {
         List<MerchandiseExchangeRate> list = new ArrayList<>();
 
         list.add(new CryptoCustomerWalletModuleMerchandiseExchangeRate(target, CryptoCurrency.LITECOIN, 250));

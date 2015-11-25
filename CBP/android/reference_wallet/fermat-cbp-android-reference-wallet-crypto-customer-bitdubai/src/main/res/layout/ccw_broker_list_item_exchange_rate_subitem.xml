@@ -8,7 +8,7 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:layout_marginStart="8dp"
-    android:background="#e2e2e2"
+    android:background="#518ffd"
     android:orientation="vertical"
     android:paddingBottom="4dp"
     android:paddingEnd="8dp"
@@ -18,10 +18,11 @@
     android:paddingTop="4dp">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_broker_exchange_rate_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/ccw_first_line_item"
-        android:textSize="14sp"
-        tools:text="USD/BTC: 322.43"
+        android:textColor="#FFF"
+        android:textSize="16sp"
+        android:text="@string/ccw_broker_exchange_rate_for_selling_item"
         />
 </RelativeLayout>
