@@ -15,7 +15,6 @@ import java.util.UUID;
 public interface CryptoCustomerActor extends Actor {
 
     //CONNECTED BROKERS
-    //Collection<ActorIdentity> getConnectedBrokers();
     // TODO OUR IDENTITY IS NOT AN ACTOR. PLEASE CHECK IF THIS IS OK
 
     //RELATIONSHIP IDENTIDAD-WALLET
