@@ -140,6 +140,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import java.util.Vector;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -177,7 +178,7 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * WizardTypes
      */
-    private Map<WizardTypes, Wizard> wizards;
+    private Map<String, Wizard> wizards;
 
     /**
      * Activity type
@@ -377,7 +378,7 @@ public abstract class FermatActivity extends AppCompatActivity
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    LENGTH_LONG).show();
+                    LENGTH_SHORT).show();
         }
         // rendering wizards components
         try {
@@ -436,10 +437,12 @@ public abstract class FermatActivity extends AppCompatActivity
                      * Background color
                      */
                     RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
-                    if (navigationViewPainter.addBodyBackground() != null) {
-                        relativeLayout.setBackground(navigationViewPainter.addBodyBackground());
-                    } else if (navigationViewPainter.addBodyBackgroundColor() > 0) {
-                        relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
+                    if(relativeLayout!=null) {
+                        if (navigationViewPainter.addBodyBackground() != null) {
+                            relativeLayout.setBackground(navigationViewPainter.addBodyBackground());
+                        } else if (navigationViewPainter.addBodyBackgroundColor() > 0) {
+                            relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
+                        }
                     }
 
 
@@ -1825,7 +1828,7 @@ public abstract class FermatActivity extends AppCompatActivity
      *
      * @param wizards
      */
-    public void setWizards(Map<WizardTypes, Wizard> wizards) {
+    public void setWizards(Map<String, Wizard> wizards) {
         if (wizards != null && wizards.size() > 0) {
             if (this.wizards == null)
                 this.wizards = new HashMap<>();
@@ -1840,10 +1843,13 @@ public abstract class FermatActivity extends AppCompatActivity
      * @param args Object... arguments to passing to the wizard fragment
      */
     @Override
-    public void showWizard(WizardTypes key, Object... args) {
+    public void showWizard(String key, Object... args) {
         try {
             if (wizards == null)
                 throw new NullPointerException("the wizard is null");
+
+            Set<String> keys = wizards.keySet();
+            System.out.println(keys);
             Wizard wizard = wizards.get(key);
             if (wizard != null) {
             /* Starting Wizard Activity */

@@ -297,7 +297,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                                     remoteParticipant
                             );
 
-                            // i put the actor in the pool of connections waiting for response-
+                            // I put the actor in the pool of connections waiting for response-
                             poolConnectionsWaitingForResponse.put(actorNetworkServiceRecord.getActorDestinationPublicKey(), actorNetworkServiceRecord);
                         }
 
