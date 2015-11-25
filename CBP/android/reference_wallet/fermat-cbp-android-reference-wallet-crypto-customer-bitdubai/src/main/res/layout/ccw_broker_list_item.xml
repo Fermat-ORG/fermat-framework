@@ -2,25 +2,28 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/waiting_for_broker_list_item_background"
-    android:paddingBottom="8dp"
-    android:paddingEnd="@dimen/activity_horizontal_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingStart="@dimen/activity_horizontal_margin"
-    android:paddingTop="8dp">
+    android:layout_margin="8dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="3dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+
         <ImageView
             android:id="@+id/ccw_customer_image"
             android:layout_width="@dimen/ccw_image_width_and_height"
             android:layout_height="@dimen/ccw_image_width_and_height"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:contentDescription="@string/identity_img"
             tools:src="@drawable/person"/>
 
@@ -28,65 +31,58 @@
             android:id="@+id/ccw_receiving_or_sending"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/ccw_customer_image"
+            android:layout_toRightOf="@+id/ccw_customer_image"
             android:paddingTop="4dp"
             android:singleLine="true"
             android:textColor="@color/ccw_first_line_item"
-            android:textSize="@dimen/ccw_title_text_size"
-            tools:text="Selling USD /"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_below="@+id/ccw_customer_name"
-            android:layout_toRightOf="@+id/ccw_customer_image"
-            android:layout_toEndOf="@+id/ccw_customer_image"/>
+            android:textSize="16sp"
+            tools:text="Selling USD"/>
 
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/ccw_contract_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:paddingTop="4dp"
-            android:textColor="@color/waiting_for_text"
-            android:textSize="@dimen/ccw_regular_text_size"
-            tools:text="Accept payment in:"
-            android:layout_below="@+id/ccw_receiving_or_sending"
-            android:layout_toRightOf="@+id/ccw_customer_image"
-            android:layout_toEndOf="@+id/ccw_customer_image"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/ccw_update_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/negotiation_date_text"
-            android:textSize="@dimen/ccw_regular_text_size"
-            tools:text="03 Feb 2015"
-            android:layout_below="@+id/ccw_contract_status"
-            android:layout_toRightOf="@+id/ccw_customer_image"
-            android:layout_toEndOf="@+id/ccw_customer_image"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/ccw_type_of_payment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textColor="@color/ccw_second_line_item"
-            android:textSize="@dimen/ccw_title_text_size"
-            tools:text="Cash"
-            android:layout_alignBottom="@+id/ccw_receiving_or_sending"
-            android:layout_toRightOf="@+id/ccw_receiving_or_sending"
-            android:layout_toEndOf="@+id/ccw_receiving_or_sending"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccw_customer_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/ccw_receiving_or_sending"
+            android:layout_alignStart="@+id/ccw_receiving_or_sending"
+            android:layout_below="@+id/ccw_receiving_or_sending"
             android:layout_gravity="center_vertical"
             android:singleLine="true"
-            android:textColor="@color/ccw_third_line_item"
+            android:textColor="@color/ccw_second_line_item"
             android:textSize="@dimen/ccw_subtitle_text"
-            tools:text="Nelson Ramirez"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/ccw_customer_image"
-            android:layout_toEndOf="@+id/ccw_customer_image"/>
+            tools:text="Nelson Ramirez"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/ccw_exchange_rate_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="EXCHANGE RATE"
+            android:background="@color/ccw_list_divider"
+            android:layout_below="@+id/ccw_customer_image"
+            android:textColor="@color/withe"
+            android:paddingStart="6dp"
+            android:paddingLeft="6dp"
+            android:paddingEnd="6dp"
+            android:paddingRight="6dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+        <View
+            android:id="@+id/ccw_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/ccw_exchange_rate_text"
+            android:layout_marginBottom="4dp"
+            android:background="@color/ccw_list_divider"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ccw_broker_exchange_rates"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/ccw_divider"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>
