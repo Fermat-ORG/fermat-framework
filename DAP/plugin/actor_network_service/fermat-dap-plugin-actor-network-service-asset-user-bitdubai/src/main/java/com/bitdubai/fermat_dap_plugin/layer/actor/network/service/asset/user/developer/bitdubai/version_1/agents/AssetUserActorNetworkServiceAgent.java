@@ -215,12 +215,20 @@ public class AssetUserActorNetworkServiceAgent {
                             /*
                             * Create the sender basic profile
                             */
-                                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(fm.getSender(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+                                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                                        constructBasicPlatformComponentProfileFactory(
+                                                fm.getSender(),
+                                                NetworkServiceType.UNDEFINED,
+                                                PlatformComponentType.ACTOR_ASSET_USER);
 
                             /*
                              * Create the receiver basic profile
                              */
-                                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(fm.getReceiver(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+                                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                                        constructBasicPlatformComponentProfileFactory(
+                                                fm.getReceiver(),
+                                                NetworkServiceType.UNDEFINED,
+                                                PlatformComponentType.ACTOR_ASSET_USER);
 
 
                             try {
