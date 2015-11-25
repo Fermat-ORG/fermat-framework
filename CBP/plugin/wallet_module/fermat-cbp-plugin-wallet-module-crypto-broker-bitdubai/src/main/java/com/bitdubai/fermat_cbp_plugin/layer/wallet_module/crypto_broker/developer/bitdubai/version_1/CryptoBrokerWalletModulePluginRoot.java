@@ -33,6 +33,8 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
         LogManagerForDevelopers,
         CryptoBrokerWalletModuleManager {
 
+    private CryptoBrokerWallet walletManager;
+
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
@@ -52,7 +54,10 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
     @Override
     public CryptoBrokerWallet getCryptoBrokerWallet(String walletPublicKey) throws CantGetCryptoBrokerWalletException {
         try {
-            return new CryptoBrokerWalletModuleCryptoBrokerWalletManager();
+            if (walletManager == null)
+                walletManager = new CryptoBrokerWalletModuleCryptoBrokerWalletManager();
+
+            return walletManager;
         } catch (Exception e) {
             throw new CantGetCryptoBrokerWalletException(FermatException.wrapException(e));
         }
