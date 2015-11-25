@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/no_brokers"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="20sp"/>
 
     </LinearLayout>
