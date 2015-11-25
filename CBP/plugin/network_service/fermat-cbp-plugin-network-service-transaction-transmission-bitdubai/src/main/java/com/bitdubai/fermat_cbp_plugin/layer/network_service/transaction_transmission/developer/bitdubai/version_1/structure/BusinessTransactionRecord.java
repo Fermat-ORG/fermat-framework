@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmi
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransaction;
 
 import java.util.UUID;
@@ -23,6 +24,8 @@ public class BusinessTransactionRecord implements BusinessTransaction {
     BusinessTransactionTransactionType transactionType;
     Long timestamp;
     UUID transactionId;
+    TransactionTransmissionStates transactionTransmissionStates;
+    boolean pendingFlag;
 
     public BusinessTransactionRecord(String contractHash,
                                      ContractStatus contractStatus,
@@ -34,7 +37,8 @@ public class BusinessTransactionRecord implements BusinessTransaction {
                                      String negotiationId,
                                      BusinessTransactionTransactionType transactionType,
                                      Long timestamp,
-                                     UUID transactionId
+                                     UUID transactionId,
+                                     TransactionTransmissionStates transactionTransmissionStates
                                      ){
         this.contractHash=contractHash;
         this.contractStatus=contractStatus;
@@ -47,6 +51,8 @@ public class BusinessTransactionRecord implements BusinessTransaction {
         this.transactionType=transactionType;
         this.timestamp=timestamp;
         this.transactionId=transactionId;
+        this.transactionTransmissionStates = transactionTransmissionStates;
+        this.pendingFlag=false;
 
     }
 
@@ -102,4 +108,25 @@ public class BusinessTransactionRecord implements BusinessTransaction {
 
     @Override
     public UUID getTransactionId(){ return this.transactionId;  }
+
+    @Override
+    public void setBusinessTransactionTransactionType(BusinessTransactionTransactionType businessTransactionTransactionType) {
+        this.transactionType=businessTransactionTransactionType;
+    }
+
+    @Override
+    public void setState(TransactionTransmissionStates transactionTransmissionStates) {
+        this.transactionTransmissionStates=transactionTransmissionStates;
+    }
+
+    @Override
+    public boolean isPendingToRead() {
+        return this.pendingFlag;
+    }
+
+    @Override
+    public void confirmRead() {
+        this.pendingFlag=true;
+    }
+
 }

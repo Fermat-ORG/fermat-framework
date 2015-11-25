@@ -1075,8 +1075,34 @@ The following link is the template of how these classes should be defined.
 
 https://github.com/bitDubai/fermat/tree/2a20518c484322846d5727499dfff16c8ddc0bd2/fermat-documentation/scripts/database/database_classes_generator
 
-
-
+###Folder Structure
+<br>
+The Folder Structure must be comprised of a main directory that contains three letters in upper case summarizing the plugin name.
+<br>
+For example:
+If the plugin is called Bank, the name of the main directory should be BNK.
+<br>
+On the main directory should create at least two directory required. One will be called "library" and the other called "plugin".
+<br>
+* **"library"**
+<br>
+Inside the "library" directory will contain the api where you may define the public interfaces that connect the components of the platform.
+<br>
+For this it is necessary to define a directory called "api" in creating a module package, it should be called as the plugin. The rule must be respected to define the package name consists of placing the name "Fermat" followed by the initials three letters of the legend followed by "api" plugin. They must be inserted by means of a hyphen between separate legend.
+For example:
+<br>
+```java
+"fermat-bnk-api"
+```
+* **"plugin"**
+<br>
+Inside the "plugin" directory must be defined modules that have the Plugin. These should be defined as java packages.
+<br>
+The name of the java package should consist of the words "Fermat" followed by three letters of identifying the Plugin followed the legend "plugin" followed with leyeda identifying the module and finally ends with the words "bitdubai".
+An Example How should the packet format:
+```java
+"fermat-bnk-plugin-wallet-bank-money-bitdubai"
+```
 <br><br><br><br><br><br><br>
 
 

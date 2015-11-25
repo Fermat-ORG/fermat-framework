@@ -18,7 +18,5 @@ public interface BankMoneyWalletBalance {
 
     void credit(BankMoneyTransactionRecord bankMoneyTransactionRecord)  throws CantRegisterCreditException;
 
-    void hold() throws CantRegisterHoldException;
 
-    void unhold() throws CantRegisterUnholdException;
 }

@@ -157,7 +157,7 @@ public class BankMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
         /**
          * Table Bank Money Total Balances addition.
          */
-        DeveloperDatabaseTable bankMoneyTotalBalancesTable = developerObjectFactory.getNewDeveloperDatabaseTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_TABLE_NAME, bankMoneyTotalBalancesColumns);
+        DeveloperDatabaseTable bankMoneyTotalBalancesTable = developerObjectFactory.getNewDeveloperDatabaseTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME, bankMoneyTotalBalancesColumns);
         tables.add(bankMoneyTotalBalancesTable);
 
 
