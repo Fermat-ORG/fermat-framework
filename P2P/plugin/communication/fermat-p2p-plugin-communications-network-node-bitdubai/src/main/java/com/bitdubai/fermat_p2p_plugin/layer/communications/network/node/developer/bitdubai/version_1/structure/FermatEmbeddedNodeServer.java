@@ -12,15 +12,23 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.servlets.HomeServlet;
 
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.cdi.CdiInjectorFactory;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
 import org.xnio.BufferAllocator;
 import org.xnio.ByteBufferSlicePool;
 
+import java.io.File;
+import java.nio.file.Paths;
+
 import javax.servlet.ServletException;
 
+import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.handlers.PathHandler;
+import io.undertow.server.handlers.resource.ClassPathResourceManager;
+import io.undertow.server.handlers.resource.FileResourceManager;
+import io.undertow.server.handlers.resource.PathResourceManager;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.ServletContainer;
@@ -106,7 +114,7 @@ public class FermatEmbeddedNodeServer {
          */
         ResteasyDeployment deployment = new ResteasyDeployment();
         deployment.setApplicationClass(JaxRsActivator.class.getName());
-        deployment.setInjectorFactoryClass("org.jboss.resteasy.cdi.CdiInjectorFactory");
+        deployment.setInjectorFactoryClass(CdiInjectorFactory.class.getName());
 
         /*
          * Create the App DeploymentInfo and configure

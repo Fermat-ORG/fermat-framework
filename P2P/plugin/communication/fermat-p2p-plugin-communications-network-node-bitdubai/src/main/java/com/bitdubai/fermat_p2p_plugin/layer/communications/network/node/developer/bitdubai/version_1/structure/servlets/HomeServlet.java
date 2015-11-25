@@ -25,8 +25,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class HomeServlet extends HttpServlet {
 
-
-
     @Override
     public void init(final ServletConfig config) throws ServletException {
         super.init(config);
