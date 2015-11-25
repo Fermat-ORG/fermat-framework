@@ -32,7 +32,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communication.server.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot</code> is
  * the responsible to initialize all component to work together, and hold all resources they needed.
@@ -81,7 +80,8 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     //public static final String SERVER_IP = "52.34.94.176"; //AWS PAID INSTANCE
     public static final String SERVER_IP = "52.11.156.16"; //AWS FREE INSTANCE
-    //public static final String SERVER_IP = "192.168.1.2";
+   // public static final String SERVER_IP = "192.168.1.2";
+
 
     /**
      * Represent the DEFAULT_PORT
@@ -128,22 +128,16 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
          /*
          * If all resources are inject
          */
-        if (eventManager == null            ||
-                locationManager == null ||
-                    errorManager == null) {
+        if (eventManager    == null ||
+            locationManager == null ||
+            errorManager    == null ) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("locationManager: " + locationManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
+            String context = "Plugin ID: "       + pluginId        + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                             "eventManager: "    + eventManager    + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                             "locationManager: " + locationManager + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                             "errorManager: "    + errorManager;
 
-            String context = contextBuffer.toString();
-            String possibleCause = "No all required resource are injected";
-            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+            CantStartPluginException pluginStartException = new CantStartPluginException(context, "No all required resource are injected");
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
