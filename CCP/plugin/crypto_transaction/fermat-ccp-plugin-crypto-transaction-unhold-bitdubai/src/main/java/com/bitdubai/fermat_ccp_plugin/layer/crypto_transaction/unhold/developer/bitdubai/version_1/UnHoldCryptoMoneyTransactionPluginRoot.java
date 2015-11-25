@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1;
+package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -12,8 +12,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -31,39 +29,43 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.exceptions.CantCreateUnHoldTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.exceptions.CantGetUnHoldTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransaction;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransactionManager;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransactionParameters;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.exceptions.CantCreateHoldTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.exceptions.CantGetHoldTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransaction;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransactionParameters;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.database.HoldCryptoMoneyTransactionDatabaseConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.database.HoldCryptoMoneyTransactionDatabaseFactory;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.database.HoldCryptoMoneyTransactionDeveloperDatabaseFactory;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.MissingHoldCryptoDataException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.structure.HoldCryptoMoneyTransactionManager;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.structure.events.HoldCryptoMoneyTransactionMonitorAgent;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.utils.HoldCryptoMoneyTransactionImpl;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.database.UnHoldCryptoMoneyTransactionDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.database.UnHoldCryptoMoneyTransactionDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.database.UnHoldCryptoMoneyTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.exceptions.MissingUnHoldCryptoDataException;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.structure.UnHoldCryptoMoneyTransactionManager;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.structure.events.UnHoldCryptoMoneyTransactionMonitorAgent;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.utils.UnHoldCryptoMoneyTransactionImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by franklin on 16/11/15.
  */
-public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implements
-        CryptoHoldTransactionManager,
+public class UnHoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implements
+        CryptoUnholdTransactionManager,
         DatabaseManagerForDevelopers {
 
-    public HoldCryptoMoneyTransactionPluginRoot() {
+    public UnHoldCryptoMoneyTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
-    private HoldCryptoMoneyTransactionManager holdCryptoMoneyTransactionManager;
+    private UnHoldCryptoMoneyTransactionManager unHoldCryptoMoneyTransactionManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -83,13 +85,12 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
 
     @Override
     public void start() throws CantStartPluginException {
-        holdCryptoMoneyTransactionManager = new HoldCryptoMoneyTransactionManager(pluginDatabaseSystem, pluginId);
+        unHoldCryptoMoneyTransactionManager = new UnHoldCryptoMoneyTransactionManager(pluginDatabaseSystem, pluginId);
         try {
-            Database database = pluginDatabaseSystem.openDatabase(pluginId, HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME);
+            Database database = pluginDatabaseSystem.openDatabase(pluginId, UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_DATABASE_NAME);
 
-            System.out.println("******* Init Hold Crypto Money Transaction ******");
+            System.out.println("******* Init UnHold Crypto Money Transaction ******");
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
-            //testHold();
             startMonitorAgent();
 
             database.closeDatabase();
@@ -98,15 +99,15 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
         {
             try
             {
-                HoldCryptoMoneyTransactionDatabaseFactory holdCryptoMoneyTransactionDatabaseFactory = new HoldCryptoMoneyTransactionDatabaseFactory(this.pluginDatabaseSystem);
-                holdCryptoMoneyTransactionDatabaseFactory.createDatabase(this.pluginId, HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME);
+                UnHoldCryptoMoneyTransactionDatabaseFactory UnHoldCryptoMoneyTransactionDatabaseFactory = new UnHoldCryptoMoneyTransactionDatabaseFactory(this.pluginDatabaseSystem);
+                UnHoldCryptoMoneyTransactionDatabaseFactory.createDatabase(this.pluginId, UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_DATABASE_NAME);
             }
             catch(CantCreateDatabaseException cantCreateDatabaseException)
             {
                 errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             }catch (Exception exception) {
-                throw new CantStartPluginException("Cannot start HoldCryptoMoneyTransactionPluginRoot plugin.", FermatException.wrapException(exception), null, null);
+                throw new CantStartPluginException("Cannot start UnHoldCryptoMoneyTransactionPluginRoot plugin.", FermatException.wrapException(exception), null, null);
             }
         }
         this.serviceStatus = ServiceStatus.STARTED;
@@ -119,23 +120,23 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        HoldCryptoMoneyTransactionDeveloperDatabaseFactory holdCryptoMoneyTransactionDeveloperDatabaseFactory = new HoldCryptoMoneyTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-        return holdCryptoMoneyTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+        UnHoldCryptoMoneyTransactionDeveloperDatabaseFactory unHoldCryptoMoneyTransactionDeveloperDatabaseFactory = new UnHoldCryptoMoneyTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        return unHoldCryptoMoneyTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        HoldCryptoMoneyTransactionDeveloperDatabaseFactory holdCryptoMoneyTransactionDeveloperDatabaseFactory = new HoldCryptoMoneyTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-        return holdCryptoMoneyTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        UnHoldCryptoMoneyTransactionDeveloperDatabaseFactory unHoldCryptoMoneyTransactionDeveloperDatabaseFactory = new UnHoldCryptoMoneyTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        return unHoldCryptoMoneyTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        HoldCryptoMoneyTransactionDeveloperDatabaseFactory holdCryptoMoneyTransactionDeveloperDatabaseFactory = new HoldCryptoMoneyTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        UnHoldCryptoMoneyTransactionDeveloperDatabaseFactory unHoldCryptoMoneyTransactionDeveloperDatabaseFactory = new UnHoldCryptoMoneyTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = null;
         try {
-            holdCryptoMoneyTransactionDeveloperDatabaseFactory.initializeDatabase();
-            developerDatabaseTableRecordList = holdCryptoMoneyTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+            unHoldCryptoMoneyTransactionDeveloperDatabaseFactory.initializeDatabase();
+            developerDatabaseTableRecordList = unHoldCryptoMoneyTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (Exception e) {
             System.out.println("******* Error trying to get database table list for plugin Hold Crypto Money Transaction ******");
         }
@@ -143,48 +144,48 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
     }
 
 
-    private HoldCryptoMoneyTransactionMonitorAgent holdCryptoMoneyTransactionMonitorAgent;
+    private UnHoldCryptoMoneyTransactionMonitorAgent unHoldCryptoMoneyTransactionMonitorAgent;
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-        if(holdCryptoMoneyTransactionMonitorAgent == null) {
-            holdCryptoMoneyTransactionMonitorAgent = new HoldCryptoMoneyTransactionMonitorAgent(
+        if(unHoldCryptoMoneyTransactionMonitorAgent == null) {
+            unHoldCryptoMoneyTransactionMonitorAgent = new UnHoldCryptoMoneyTransactionMonitorAgent(
                     errorManager,
-                    holdCryptoMoneyTransactionManager,
+                    unHoldCryptoMoneyTransactionManager,
                     bitcoinWalletManager
             );
 
-            holdCryptoMoneyTransactionMonitorAgent.start();
-        }else holdCryptoMoneyTransactionMonitorAgent.start();
+            unHoldCryptoMoneyTransactionMonitorAgent.start();
+        }else unHoldCryptoMoneyTransactionMonitorAgent.start();
     }
 
 
     @Override
-    public CryptoHoldTransaction createCryptoHoldTransaction(CryptoHoldTransactionParameters holdParameters) throws CantCreateHoldTransactionException {
-        HoldCryptoMoneyTransactionImpl cryptoMoneyTransaction = new HoldCryptoMoneyTransactionImpl();
+    public CryptoUnholdTransaction createCryptoUnholdTransaction(CryptoUnholdTransactionParameters holdParameters) throws CantCreateUnHoldTransactionException {
+        UnHoldCryptoMoneyTransactionImpl unHoldCryptoMoneyTransaction = new UnHoldCryptoMoneyTransactionImpl();
         try {
-            cryptoMoneyTransaction.setTransactionId(holdParameters.getTransactionId());
-            cryptoMoneyTransaction.setPublicKeyWallet(holdParameters.getPublicKeyWallet());
-            cryptoMoneyTransaction.setStatus(CryptoTransactionStatus.ACKNOWLEDGED);
-            cryptoMoneyTransaction.setPublicKeyActor(holdParameters.getPublicKeyActor());
-            cryptoMoneyTransaction.setPublicKeyPlugin(holdParameters.getPublicKeyPlugin());
-            cryptoMoneyTransaction.setAmount(holdParameters.getAmount());
-            cryptoMoneyTransaction.setCurrency(holdParameters.getCurrency());
-            cryptoMoneyTransaction.setMemo(holdParameters.getMemo());
-             holdCryptoMoneyTransactionManager.saveHoldCryptoMoneyTransactionData(cryptoMoneyTransaction);
+            unHoldCryptoMoneyTransaction.setTransactionId(holdParameters.getTransactionId());
+            unHoldCryptoMoneyTransaction.setPublicKeyWallet(holdParameters.getPublicKeyWallet());
+            unHoldCryptoMoneyTransaction.setStatus(CryptoTransactionStatus.ACKNOWLEDGED);
+            unHoldCryptoMoneyTransaction.setPublicKeyActor(holdParameters.getPublicKeyActor());
+            unHoldCryptoMoneyTransaction.setPublicKeyPlugin(holdParameters.getPublicKeyPlugin());
+            unHoldCryptoMoneyTransaction.setAmount(holdParameters.getAmount());
+            unHoldCryptoMoneyTransaction.setCurrency(holdParameters.getCurrency());
+            unHoldCryptoMoneyTransaction.setMemo(holdParameters.getMemo());
+            unHoldCryptoMoneyTransactionManager.saveUnHoldCryptoMoneyTransactionData(unHoldCryptoMoneyTransaction);
         } catch (DatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (MissingHoldCryptoDataException e) {
+        } catch (MissingUnHoldCryptoDataException e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
-        return cryptoMoneyTransaction;
+        return unHoldCryptoMoneyTransaction;
     }
 
     @Override
-    public CryptoTransactionStatus getCryptoHoldTransactionStatus(final UUID transactionId) throws CantGetHoldTransactionException {
+    public CryptoTransactionStatus getCryptoUnholdTransactionStatus(final UUID transactionId) throws CantGetUnHoldTransactionException {
         CryptoTransactionStatus cryptoTransactionStatus = null;
         // I define the filter
         DatabaseTableFilter filter = new DatabaseTableFilter() {
@@ -205,7 +206,7 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
 
             @Override
             public String getColumn() {
-                return HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TRANSACTION_ID_COLUMN_NAME;
+                return UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TRANSACTION_ID_COLUMN_NAME;
             }
 
             @Override
@@ -221,7 +222,7 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
 
 
         try {
-            cryptoTransactionStatus = holdCryptoMoneyTransactionManager.getHoldCryptoMoneyTransactionList(filter).get(0).getStatus();
+            cryptoTransactionStatus = unHoldCryptoMoneyTransactionManager.getUnHoldCryptoMoneyTransactionList(filter).get(0).getStatus();
         } catch (DatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (InvalidParameterException e) {
@@ -229,84 +230,5 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
         }
 
         return cryptoTransactionStatus;
-    }
-
-    private void testHold(){
-        try {
-            CryptoHoldTransactionParameters cryptoHoldTransactionParameters = new CryptoHoldTransactionParameters() {
-                @Override
-                public UUID getTransactionId() {
-                    return UUID.randomUUID();
-                }
-
-                @Override
-                public void setTransactionId(UUID transactionId) {
-
-                }
-
-                @Override
-                public String getPublicKeyWallet() {
-                    return "walletPublicKey";
-                }
-
-                @Override
-                public void setPublicKeyWallet(String publicKeyWallet) {
-
-                }
-
-                @Override
-                public String getPublicKeyActor() {
-                    return "actorWalletPublicKey";
-                }
-
-                @Override
-                public void setPublicKeyActor(String publicKeyActor) {
-
-                }
-
-                @Override
-                public String getPublicKeyPlugin() {
-                    return pluginId.toString();
-                }
-
-                @Override
-                public void setPublicKeyPlugin(String publicKeyPlugin) {
-
-                }
-
-                @Override
-                public float getAmount() {
-                    return 1500;
-                }
-
-                @Override
-                public void setAmount(float amount) {
-
-                }
-
-                @Override
-                public CryptoCurrency getCurrency() {
-                    return CryptoCurrency.BITCOIN;
-                }
-
-                @Override
-                public void setCurrency(CryptoCurrency currency) {
-
-                }
-
-                @Override
-                public String getMemo() {
-                    return "memo";
-                }
-
-                @Override
-                public void setMemo(String memo) {
-
-                }
-            };
-            createCryptoHoldTransaction(cryptoHoldTransactionParameters);
-        } catch (CantCreateHoldTransactionException e) {
-            e.printStackTrace();
-        }
     }
 }
