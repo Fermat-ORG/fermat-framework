@@ -14,6 +14,7 @@ public enum Platforms implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     BLOCKCHAINS                         ("BCH"),
+    BANKING_PLATFORM                    ("BNK"),
     COMMUNICATION_PLATFORM              ("CP"),
     CRYPTO_BROKER_PLATFORM              ("CBP"),
     CRYPTO_COMMODITY_MONEY              ("CCM"),
@@ -35,6 +36,7 @@ public enum Platforms implements FermatEnum {
         switch (code) {
 
             case "BCH":  return BLOCKCHAINS;
+            case "BNK":  return BANKING_PLATFORM;
             case "CP":   return COMMUNICATION_PLATFORM;
             case "CBP":  return CRYPTO_BROKER_PLATFORM;
             case "CCM":  return CRYPTO_COMMODITY_MONEY;
