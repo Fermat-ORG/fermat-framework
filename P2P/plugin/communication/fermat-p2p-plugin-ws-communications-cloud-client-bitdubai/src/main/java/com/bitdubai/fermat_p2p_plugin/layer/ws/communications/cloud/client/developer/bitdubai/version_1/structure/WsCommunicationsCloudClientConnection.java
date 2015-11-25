@@ -51,6 +51,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -424,6 +428,91 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         return resultList;
     }
 
+
+    /**
+     * Method that request to the communication cloud server the list of component registered that match
+     * whit the discovery query params
+     *
+     * @param discoveryQueryParameters
+     * @throws CantRequestListException this exception means the list receive is empty or a internal error
+     */
+    public List<PlatformComponentProfile> requestListComponentRegisteredSocket(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException{
+
+        System.out.println("WsCommunicationsCloudClientConnection - new requestListComponentRegistered");
+        List<PlatformComponentProfile> resultList = new ArrayList<>();
+        Socket clientConnect = null;
+        BufferedReader bufferedReader=null;
+        PrintWriter printWriter=null;
+
+        try {
+
+            /*
+             * Validate parameter
+             */
+            if (discoveryQueryParameters == null){
+                throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
+            }
+
+            /*
+             * Construct a jsonObject whit the parameters
+             */
+            Gson gson = new Gson();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsCloudClientChannel.getIdentityPublicKey());
+            jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
+
+            clientConnect = new Socket(WsCommunicationsCloudClientPluginRoot.SERVER_IP,9001);
+            bufferedReader = new BufferedReader(new InputStreamReader(clientConnect.getInputStream()));
+
+            printWriter= new PrintWriter(clientConnect.getOutputStream());
+            printWriter.println(gson.toJson(jsonObject));
+            printWriter.flush();
+
+            String respondServer =  bufferedReader.readLine();
+
+            if(respondServer != null && respondServer != "" && respondServer.contains(JsonAttNamesConstants.RESULT_LIST)){
+
+                 /*
+                 * Decode into a json object
+                 */
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respondServer);
+
+                  /*
+                 * Get the receivedList
+                 */
+                resultList = gson.fromJson(respondJsonObject.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
+                }.getType());
+
+                System.out.println("WsCommunicationsCloudClientConnection - resultList.size() = " + resultList.size());
+
+            }
+
+            bufferedReader.close();
+            printWriter.close();
+            clientConnect.close();
+
+        }catch (Exception e){
+
+            try {
+
+                if (clientConnect != null) {
+                    bufferedReader.close();
+                    printWriter.close();
+                    clientConnect.close();
+                }
+
+            }catch (Exception ex){}
+
+            e.printStackTrace();
+            CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            throw cantRequestListException;
+
+        }
+
+        return resultList;
+    }
+
     /**
      * (non-javadoc)
      * @see CommunicationsClientConnection#requestVpnConnection(PlatformComponentProfile, PlatformComponentProfile)
@@ -470,7 +559,8 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
                 /*
                  * Convert to json representation
                  */
-                String jsonListRepresentation = gson.toJson(participants, new TypeToken<List<PlatformComponentProfileCommunication>>() { }.getType());
+                String jsonListRepresentation = gson.toJson(participants, new TypeToken<List<PlatformComponentProfileCommunication>>() {
+                }.getType());
 
                  /*
                  * Construct a fermat packet whit the request
