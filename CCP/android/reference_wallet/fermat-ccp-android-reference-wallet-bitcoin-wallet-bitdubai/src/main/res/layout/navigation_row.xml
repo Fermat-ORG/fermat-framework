@@ -24,7 +24,7 @@
         android:paddingRight="8dip"
         android:paddingTop="14dip"
         android:text="Home"
-        android:textColor="#4a4a4a"
+        android:textColor="#ffffff"
         android:textSize="16sp"
         >
     </com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView>
