@@ -83,8 +83,6 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_TRANSMISSION)
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_PAYMENT_REQUEST)
-    private CryptoPaymentManager  cryptoPaymentManager;
 
     /*
      * Incoming Intra User member variables
@@ -174,7 +172,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
         }
 
         try {
-            this.relayAgent = new IncomingIntraUserRelayAgent(this.errorManager, this.eventManager, this.bitcoinWalletManager, this.cryptoAddressBookManager, this.registry, this.cryptoPaymentManager);
+            this.relayAgent = new IncomingIntraUserRelayAgent(this.errorManager, this.eventManager, this.bitcoinWalletManager, this.cryptoAddressBookManager, this.registry);
             this.relayAgent.start();
         } catch (CantStartIncomingIntraUserRelayAgentException e) {
             this.eventRecorderService.stop();

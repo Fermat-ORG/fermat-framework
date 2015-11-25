@@ -65,10 +65,6 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM        , layer = Layers.NETWORK_SERVICE   , plugin = Plugins.CRYPTO_TRANSMISSION)
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_PAYMENT_REQUEST)
-    private CryptoPaymentManager  cryptoPaymentManager;
-
-
     public OutgoingIntraActorTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -128,8 +124,7 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
                                                                                             this.bitcoinWalletManager,
                                                                                             this.outgoingIntraActorDao,
                                                                                             this.transactionHandlerFactory,
-                                                                                            this.cryptoTransmissionNetworkServiceManager,
-                                                                                            this.cryptoPaymentManager);
+                                                                                            this.cryptoTransmissionNetworkServiceManager);
             this.transactionProcessorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;

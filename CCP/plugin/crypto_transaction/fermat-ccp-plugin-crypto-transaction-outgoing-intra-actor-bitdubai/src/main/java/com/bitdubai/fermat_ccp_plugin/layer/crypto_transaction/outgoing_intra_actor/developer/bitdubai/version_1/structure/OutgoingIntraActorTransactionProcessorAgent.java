@@ -48,7 +48,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
     private OutgoingIntraActorDao                      outgoingIntraActorDao;
     private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
     private CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager;
-    private CryptoPaymentManager                        cryptoPaymentManager;
+
 
     private Thread                    agentThread;
     private TransactionProcessorAgent transactionProcessorAgent;
@@ -58,8 +58,8 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                                                        final BitcoinWalletManager bitcoinWalletManager,
                                                        final OutgoingIntraActorDao outgoingIntraActorDao,
                                                        final OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
-                                                       final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,
-                                                       final  CryptoPaymentManager  cryptoPaymentManager) {
+                                                       final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager
+                                                       ) {
 
         this.errorManager                            = errorManager;
         this.cryptoVaultManager                      = cryptoVaultManager;
@@ -67,13 +67,13 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         this.outgoingIntraActorDao                   = outgoingIntraActorDao;
         this.transactionHandlerFactory               = transactionHandlerFactory;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
-        this.cryptoPaymentManager      = cryptoPaymentManager;
+
     }
 
 
     public void start() {
         this.transactionProcessorAgent = new TransactionProcessorAgent();
-        this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager,this.cryptoPaymentManager);
+        this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager);
         this.agentThread               = new Thread(this.transactionProcessorAgent);
         this.agentThread.start();
 
@@ -100,7 +100,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         private CryptoVaultManager                         cryptoVaultManager;
         private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
         private CryptoTransmissionNetworkServiceManager    cryptoTransmissionManager;
-        private CryptoPaymentManager                        cryptoPaymentManager;
+
 
 
         private static final int SLEEP_TIME = 5000;
@@ -114,15 +114,13 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                                  BitcoinWalletManager                       bitcoinWalletManager,
                                  CryptoVaultManager                         cryptoVaultManager,
                                  OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
-                                 CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager,
-                                 CryptoPaymentManager                        cryptoPaymentManager) {
+                                 CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager) {
             this.dao                       = dao;
             this.errorManager              = errorManager;
             this.cryptoVaultManager        = cryptoVaultManager;
             this.bitcoinWalletManager      = bitcoinWalletManager;
             this.transactionHandlerFactory = transactionHandlerFactory;
             this.cryptoTransmissionManager = cryptoTransmissionNetworkServiceManager;
-            this.cryptoPaymentManager      = cryptoPaymentManager;
         }
 
         public boolean isRunning(){
@@ -260,29 +258,20 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         try {
                             dao.cancelTransaction(transaction);
 
-                            //si no puedo mandar los btc y es un request payment tengo que dejarlo en estado con error para volver a procesarlo
-                            this.cryptoPaymentManager.getCryptoPaymentRegistry().revertOutgoingRequest(transaction.getRequestId());
-
                             Exception inconsistentFundsException = new OutgoingIntraActorInconsistentFundsException("Basic wallet balance and crypto vault funds are inconsistent", e, "", "");
                             reportUnexpectedException(inconsistentFundsException);
                         } catch (OutgoingIntraActorCantCancelTransactionException e1) {
                             reportUnexpectedException(e1);
-                        } catch (CantUpdateRequestPaymentStateException e2) {
-                            reportUnexpectedException(e2);
+
                         } catch (Exception exception) {
                             reportUnexpectedException(FermatException.wrapException(exception));
                         }
                     } catch (InvalidSendToAddressException | CouldNotSendMoneyException e) {
                         try {
                             dao.cancelTransaction(transaction);
-                            //si no puedo mandar los btc y es un request payment tengo que dejarlo en estado con error para volver a procesarlo
-                            this.cryptoPaymentManager.getCryptoPaymentRegistry().revertOutgoingRequest(transaction.getRequestId());
-
                             reportUnexpectedException(e);
                         } catch (OutgoingIntraActorCantCancelTransactionException e1) {
                             reportUnexpectedException(e1);
-                        } catch (CantUpdateRequestPaymentStateException e2) {
-                            reportUnexpectedException(e2);
                         } catch (Exception exception) {
                             reportUnexpectedException(FermatException.wrapException(exception));
                         }

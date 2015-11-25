@@ -28,12 +28,11 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
 
     private BitcoinWalletWallet      bitcoinWallet;
     private CryptoAddressBookManager cryptoAddressBookManager;
-    private CryptoPaymentManager    cryptoPaymentManager;
 
-    public IncomingIntraUserBitcoinBasicWalletTransactionExecutor(final BitcoinWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager, final CryptoPaymentManager   cryptoPaymentManager){
+    public IncomingIntraUserBitcoinBasicWalletTransactionExecutor(final BitcoinWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager){
         this.bitcoinWallet            = bitcoinWallet;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
-        this.cryptoPaymentManager     = cryptoPaymentManager;
+
     }
 
     @Override
@@ -120,9 +119,10 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
     }
 
     private void processPaymentRequest(UUID requestId) throws CantProcessRequestAcceptedException {
-        try
+       /* try
         {
-            cryptoPaymentManager.getCryptoPaymentRegistry().acceptIncomingRequest(requestId);
+            //Hay que disparar un evento para que escuche el Crypto Payment
+           // cryptoPaymentManager.getCryptoPaymentRegistry().acceptIncomingRequest(requestId);
         }
         catch(CantGetCryptoPaymentRegistryException e)
         {
@@ -135,6 +135,6 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
         catch(Exception e)
         {
             throw new CantProcessRequestAcceptedException("I couldn't update request payment accepted",FermatException.wrapException(e),"","unknown error");
-        }
+        }*/
     }
 }
