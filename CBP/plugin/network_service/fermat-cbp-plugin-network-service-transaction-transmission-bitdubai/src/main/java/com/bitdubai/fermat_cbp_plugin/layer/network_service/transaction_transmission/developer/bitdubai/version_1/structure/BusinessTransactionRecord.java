@@ -25,6 +25,7 @@ public class BusinessTransactionRecord implements BusinessTransaction {
     Long timestamp;
     UUID transactionId;
     TransactionTransmissionStates transactionTransmissionStates;
+    boolean pendingFlag;
 
     public BusinessTransactionRecord(String contractHash,
                                      ContractStatus contractStatus,
@@ -51,6 +52,7 @@ public class BusinessTransactionRecord implements BusinessTransaction {
         this.timestamp=timestamp;
         this.transactionId=transactionId;
         this.transactionTransmissionStates = transactionTransmissionStates;
+        this.pendingFlag=false;
 
     }
 
@@ -115,6 +117,16 @@ public class BusinessTransactionRecord implements BusinessTransaction {
     @Override
     public void setState(TransactionTransmissionStates transactionTransmissionStates) {
         this.transactionTransmissionStates=transactionTransmissionStates;
+    }
+
+    @Override
+    public boolean isPendingToRead() {
+        return this.pendingFlag;
+    }
+
+    @Override
+    public void confirmRead() {
+        this.pendingFlag=true;
     }
 
 }

@@ -39,18 +39,32 @@ public interface TransactionTransmissionManager extends TransactionProtocolManag
     /**
      * Method that send the Contract New Status Notification
      *
-     * @param transactionId (GenesisTransaction)
+     * @param transactionId
      * @param contractStatus
      */
     void sendContractNewStatusNotification(CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionId, ContractStatus contractStatus) throws CantSendBusinessTransactionHashException;
 
     /**
-     * Method that send the Contract New Status Notification
+     * Method that send the a Contract New Status Notification
      *
-     * @param transactionId (GenesisTransaction)
+     * @param transactionId
      * @param contractStatus
      */
     void sendTransactionNewStatusNotification(CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionId, ContractStatus contractStatus) throws CantSendBusinessTransactionHashException;
+
+    /**
+     * Method that send the Contract New Status Notification
+     *
+     * @param transactionId
+     */
+    void confirmNotificationReception(CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionId) throws CantSendBusinessTransactionHashException;
+
+    /**
+     * Method that send the a confirm answer
+     *
+     * @param transactionId
+     */
+    void confirmNotificationReception(CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionId) throws CantSendBusinessTransactionHashException;
 
 
 }

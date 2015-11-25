@@ -9,7 +9,8 @@ public enum TransactionTransmissionStates {
 
     CONFIRM_CONTRACT("CCX"),
     CONFIRM_RESPONSE("CRX"),
-    SENDING_HASH("HTX");
+    SENDING_HASH("HTX"),
+    UPDATE_CONTRACT("UCX");
 
     String code;
 
