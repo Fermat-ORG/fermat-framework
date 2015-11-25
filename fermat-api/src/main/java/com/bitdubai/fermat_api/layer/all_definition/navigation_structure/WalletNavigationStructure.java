@@ -41,6 +41,11 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
     private Activities startActivity;
 
     /**
+     * Activity used to block something
+     */
+    private Activities blockActivity;
+
+    /**
      * Last active screen
      */
 

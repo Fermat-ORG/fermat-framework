@@ -83,7 +83,7 @@
 
         <activity
             android:name="com.bitdubai.android_core.app.DesktopActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppThemeDesktop"
             >
         </activity>
 
