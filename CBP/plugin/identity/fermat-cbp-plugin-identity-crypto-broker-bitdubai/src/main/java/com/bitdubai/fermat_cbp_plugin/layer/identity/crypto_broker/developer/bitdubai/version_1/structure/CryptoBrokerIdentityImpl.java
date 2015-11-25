@@ -19,15 +19,7 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity {
     private final String alias;
     private final KeyPair keyPair;
     private byte[] profileImage;
-    private boolean published;
     private ExposureLevel exposureLevel;
-
-    public CryptoBrokerIdentityImpl(final String alias, final KeyPair keyPair, final byte[] profileImage, final boolean published){
-        this.alias = alias;
-        this.keyPair = keyPair;
-        this.profileImage = profileImage;
-        this.published = published;
-    }
 
     public CryptoBrokerIdentityImpl(final String        alias        ,
                                     final KeyPair       keyPair      ,
@@ -61,7 +53,7 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity {
     }
 
     @Override
-    public boolean isPublished(){ return this.published; }
+    public boolean isPublished(){ return this.exposureLevel.equals(ExposureLevel.PUBLISH); }
 
     @Override
     public ExposureLevel getExposureLevel() {
