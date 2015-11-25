@@ -139,7 +139,7 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent  implements Agent{
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de Bank Hold y si lo consigue entonces le cambia el status de IN_WALLET y hace el credito
-                        BankTransactionStatus bankTransactionStatus =  holdManager.getUnholdTransactionsStatus(bankMoneyTransaction.getTransactionId());
+                        BankTransactionStatus bankTransactionStatus =  holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId());
                         if (BankTransactionStatus.CONFIRMED.getCode() == bankTransactionStatus.getCode())
                         {
 

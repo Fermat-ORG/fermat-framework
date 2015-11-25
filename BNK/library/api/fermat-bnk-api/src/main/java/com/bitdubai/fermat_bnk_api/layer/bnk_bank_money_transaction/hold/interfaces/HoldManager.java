@@ -17,6 +17,6 @@ public interface HoldManager {
 
     BankTransaction hold(BankTransactionParameters parameters)throws CantMakeHoldTransactionException;
 
-    BankTransactionStatus getUnholdTransactionsStatus(UUID transactionId) throws CantGetHoldTransactionException;
+    BankTransactionStatus getHoldTransactionsStatus(UUID transactionId) throws CantGetHoldTransactionException;
 
 }
