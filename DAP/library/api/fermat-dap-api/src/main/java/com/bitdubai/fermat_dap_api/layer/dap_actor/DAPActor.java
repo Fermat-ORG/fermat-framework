@@ -27,7 +27,7 @@ public interface DAPActor {
      *
      * @return Enum Actors
      */
-    Actors getType();
+//    Actors getType();
 
     /**
      * The method <coda>getProfileImage</coda> gives us the profile image of the represented a Actor

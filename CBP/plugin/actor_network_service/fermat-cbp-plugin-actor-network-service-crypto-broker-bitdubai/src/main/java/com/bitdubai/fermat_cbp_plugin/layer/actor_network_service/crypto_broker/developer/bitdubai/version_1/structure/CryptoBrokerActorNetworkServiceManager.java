@@ -48,21 +48,19 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     private final CommunicationsClientConnection communicationsClientConnection;
     private final ConnectionNewsDao              connectionNewsDao             ;
     private final ErrorManager                   errorManager                  ;
-    private final PlatformComponentProfile       platformComponentProfile      ;
     private final PluginVersionReference         pluginVersionReference        ;
 
-    private boolean isRegistered = false;
+
+    private PlatformComponentProfile platformComponentProfile;
 
     public CryptoBrokerActorNetworkServiceManager(final CommunicationsClientConnection communicationsClientConnection,
                                                   final ConnectionNewsDao              connectionNewsDao             ,
                                                   final ErrorManager                   errorManager                  ,
-                                                  final PlatformComponentProfile       platformComponentProfile      ,
                                                   final PluginVersionReference         pluginVersionReference        ) {
 
         this.communicationsClientConnection = communicationsClientConnection;
         this.connectionNewsDao              = connectionNewsDao             ;
         this.errorManager                   = errorManager                  ;
-        this.platformComponentProfile       = platformComponentProfile      ;
         this.pluginVersionReference         = pluginVersionReference        ;
     }
 
@@ -73,21 +71,28 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
         try {
 
-            final String imageString = Base64.encodeToString(cryptoBroker.getImage(), Base64.DEFAULT);
+            if (!isRegistered()) {
 
-            final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
-                    cryptoBroker.getPublicKey(),
-                    (cryptoBroker.getAlias().toLowerCase()),
-                    (cryptoBroker.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
-                    NetworkServiceType.UNDEFINED,
-                    PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                    imageString
-            );
-
-            if (!isRegistered)
                 addCryptoBrokerToExpose(cryptoBroker);
-            else
+
+            } else {
+
+                final String imageString = Base64.encodeToString(cryptoBroker.getImage(), Base64.DEFAULT);
+
+                final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        cryptoBroker.getPublicKey(),
+                        (cryptoBroker.getAlias().toLowerCase()),
+                        (cryptoBroker.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                        null// imageString
+                );
+
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
+
+                if (cryptoBrokersToExpose != null && cryptoBrokersToExpose.containsKey(cryptoBroker.getPublicKey()))
+                    cryptoBrokersToExpose.remove(cryptoBroker.getPublicKey());
+            }
 
         } catch (final CantRegisterComponentException e) {
 
@@ -128,11 +133,15 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
         }
     }
 
-    public final void setIsRegistered(final boolean isRegistered) {
+    private boolean isRegistered() {
+        return platformComponentProfile != null;
+    }
 
-        this.isRegistered = isRegistered;
+    public final void setPlatformComponentProfile(final PlatformComponentProfile platformComponentProfile) {
 
-        if (isRegistered && cryptoBrokersToExpose != null && !cryptoBrokersToExpose.isEmpty()) {
+        this.platformComponentProfile = platformComponentProfile;
+
+        if (platformComponentProfile != null && cryptoBrokersToExpose != null && !cryptoBrokersToExpose.isEmpty()) {
 
             try {
 

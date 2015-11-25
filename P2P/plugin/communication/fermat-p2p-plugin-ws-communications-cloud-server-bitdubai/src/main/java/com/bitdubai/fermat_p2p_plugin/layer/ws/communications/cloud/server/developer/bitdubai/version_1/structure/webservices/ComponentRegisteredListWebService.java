@@ -68,6 +68,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
 
         try{
 
+            System.out.println("ComponentRegisteredListWebService - entity = "+entity);
             wsCommunicationCloudServer = (WsCommunicationCloudServer) getContext().getAttributes().get(WebServicesApplication.PLUGIN_ROOT_ATT_NAME);
 
             /*
@@ -75,7 +76,6 @@ public class ComponentRegisteredListWebService extends ServerResource {
              */
             JSONObject requestParametersJsonObject = (new JsonRepresentation(entity)).getJsonObject();
 
-            System.out.println("ComponentRegisteredListWebService - requestParametersJsonObject = "+requestParametersJsonObject);
 
             String clientIdentityPublicKey = requestParametersJsonObject.getString(JsonAttNamesConstants.NAME_IDENTITY);
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(requestParametersJsonObject.getString(JsonAttNamesConstants.DISCOVERY_PARAM));

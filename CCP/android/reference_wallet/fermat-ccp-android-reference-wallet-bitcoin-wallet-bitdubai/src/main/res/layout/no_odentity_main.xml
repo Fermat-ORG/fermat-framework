@@ -27,8 +27,8 @@
         android:textColor="#4f4f4f"
         android:gravity="center_horizontal"
         android:layout_gravity="center"
-        android:paddingTop="80dp"
-        android:paddingBottom="120dp"/>
+        android:paddingTop="90dp"
+        android:paddingBottom="130dp"/>
 
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
@@ -39,6 +39,7 @@
         android:textColor="#ffffff"
         android:background="#1173aa"
         android:layout_marginLeft="16dp"
+        android:textStyle="bold"
         android:layout_marginRight="16dp"/>
 
 

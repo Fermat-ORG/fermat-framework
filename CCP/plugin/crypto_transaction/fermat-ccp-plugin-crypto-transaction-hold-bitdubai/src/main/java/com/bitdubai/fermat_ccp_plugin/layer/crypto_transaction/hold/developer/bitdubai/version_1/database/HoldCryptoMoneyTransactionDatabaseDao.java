@@ -113,8 +113,8 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
         holdCryptoMoneyTransaction.setPublicKeyWallet(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_WALLET_PUBLIC_KEY_COLUMN_NAME));
         holdCryptoMoneyTransaction.setPublicKeyActor(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME));
         holdCryptoMoneyTransaction.setPublicKeyPlugin(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME));
-        holdCryptoMoneyTransaction.setAmount(crtyptoHoldTransactionRecord.getFloatValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_WALLET_PUBLIC_KEY_COLUMN_NAME));
-        holdCryptoMoneyTransaction.setCurrency(CryptoCurrency.getByCode(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_WALLET_PUBLIC_KEY_COLUMN_NAME)));
+        holdCryptoMoneyTransaction.setAmount(crtyptoHoldTransactionRecord.getFloatValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME));
+        holdCryptoMoneyTransaction.setCurrency(CryptoCurrency.getByCode(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_CURRENCY_COLUMN_NAME)));
         holdCryptoMoneyTransaction.setMemo(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_MEMO_COLUMN_NAME));
         holdCryptoMoneyTransaction.setTimestampAcknowledged(crtyptoHoldTransactionRecord.getLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
         holdCryptoMoneyTransaction.setTimestampConfirmedRejected(crtyptoHoldTransactionRecord.getLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
