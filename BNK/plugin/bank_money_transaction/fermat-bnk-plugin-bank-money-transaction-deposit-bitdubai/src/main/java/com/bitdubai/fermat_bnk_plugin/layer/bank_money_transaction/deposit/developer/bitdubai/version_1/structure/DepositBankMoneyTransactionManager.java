@@ -25,7 +25,7 @@ public class DepositBankMoneyTransactionManager implements DepositManager {
     DepositBankMoneyTransactionDao depositBankMoneyTransactionDao;
 
     BankMoneyWallet bankMoneyWallet;
-    BankMoneyTransactionRecord bankMoneyTransactionRecord;
+    BankMoneyTransactionRecordImpl bankMoneyTransactionRecord;
 
     public DepositBankMoneyTransactionManager(UUID pluginId,PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginId = pluginId;
