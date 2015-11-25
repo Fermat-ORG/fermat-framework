@@ -604,12 +604,28 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionPluginRoot");
+        return returnedClasses;
     }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        /*
+         * I will check the current values and update the LogLevel in those which is different
+         */
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
 
+            /*
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (TransactionTransmissionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                TransactionTransmissionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                TransactionTransmissionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                TransactionTransmissionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
     }
 
     /**
