@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
@@ -47,7 +49,7 @@ import java.util.List;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class MainFragment extends FermatFragment implements
+public class EditableAssetsFragment extends FermatFragment implements
         FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener, android.widget.PopupMenu.OnMenuItemClickListener {
 
     /**
@@ -68,8 +70,8 @@ public class MainFragment extends FermatFragment implements
     private boolean isRefreshing;
 
 
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static EditableAssetsFragment newInstance() {
+        return new EditableAssetsFragment();
     }
 
     public static AssetFactory getAssetForEdit() {
@@ -116,8 +118,27 @@ public class MainFragment extends FermatFragment implements
         if (toolbar != null) {
             toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getActivity().getWindow();
+                window.setStatusBarColor(Color.parseColor("#1d1d25"));
+            }
         }
     }
+
+    /**
+     * Get the status bar height for kitkat, lollipop and m devices
+     *
+     * @return int height in pixels
+     */
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
 
     protected void initViews(View layout) {
         Log.i(TAG, "recycler view setup");
@@ -145,7 +166,7 @@ public class MainFragment extends FermatFragment implements
                         cantPublishAssetFactoy.printStackTrace();
                         popupMenu.getMenu().findItem(R.id.action_publish).setVisible(false);
                     }
-                    popupMenu.setOnMenuItemClickListener(MainFragment.this);
+                    popupMenu.setOnMenuItemClickListener(EditableAssetsFragment.this);
                     popupMenu.show();
                 }
             });
@@ -202,7 +223,14 @@ public class MainFragment extends FermatFragment implements
     }
 
     public List<AssetFactory> getMoreDataAsync() throws CantGetAssetFactoryException, CantCreateFileException {
-        return manager.getAssetFactoryAll();
+        List<AssetFactory> items = new ArrayList<>();
+        List<AssetFactory> draftItems = manager.getAssetFactoryByState(State.DRAFT);
+        List<AssetFactory> pendingFinalItems = manager.getAssetFactoryByState(State.PENDING_FINAL);
+        if (draftItems != null && !draftItems.isEmpty())
+            items.addAll(draftItems);
+        if (pendingFinalItems != null && !pendingFinalItems.isEmpty())
+            items.addAll(pendingFinalItems);
+        return items;
     }
 
     @Override

@@ -18,8 +18,10 @@ public class TabStrip implements FermatTabStrip {
 
     /**
      * WIZARD
+     *
+     * Wizard type enum
      */
-    Map<WizardTypes, Wizard> wizards;
+    Map<String, Wizard> wizards;
 
     /**
      * TabStrip class member variables
@@ -218,18 +220,18 @@ public class TabStrip implements FermatTabStrip {
      * @param wizard Wizard runtime
      * @throws Exception
      */
-    public void addWizard(WizardTypes type, Wizard wizard) throws Exception {
+    public void addWizard(String type, Wizard wizard) throws Exception {
         if (wizards == null)
             wizards = new HashMap<>();
         if (wizard == null || type == null)
             throw new NullPointerException("arguments cannot be null");
         if (wizards.get(type) != null) {
-            throw new Exception(String.format("Type %s is already registered.", type.getKey()));
+            throw new Exception(String.format("Type %s is already registered.", type));
         }
         wizards.put(type, wizard);
     }
 
-    public Map<WizardTypes, Wizard> getWizards() {
+    public Map<String, Wizard> getWizards() {
         return wizards;
     }
 }
