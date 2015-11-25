@@ -5,8 +5,14 @@
  * -Name.
  */
 
+//API
 include ':fermat-bnk-api'
 project(':fermat-bnk-api').projectDir = new File('BNK/library/api/fermat-bnk-api')
+
+//core
+include ':fermat-bnk-core'
+project(':fermat-bnk-core').projectDir = new File('BNK/library/core/fermat-bnk-core')
+
 
 //Desktop
 include ':fermat-bnk-android-desktop-wallet-manager-bitdubai'
