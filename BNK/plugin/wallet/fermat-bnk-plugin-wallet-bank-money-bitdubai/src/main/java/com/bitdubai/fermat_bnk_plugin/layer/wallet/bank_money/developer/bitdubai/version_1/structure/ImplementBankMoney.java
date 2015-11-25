@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.*;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletBalance;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
@@ -13,6 +14,7 @@ import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetTransactionsException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by francisco on 04/11/15.
@@ -46,7 +48,7 @@ public class ImplementBankMoney implements BankMoneyWallet, BankMoneyWalletBalan
     }
 
     @Override
-    public List<BankMoneyTransactionRecord> getTransactions(TransactionType transactionType, int max, int offset) throws CantGetBankMoneyWalletTransactionsException {
+    public List<BankMoneyTransactionRecord> getTransactions(TransactionType transactionType, int max, int offset,String account) throws CantGetBankMoneyWalletTransactionsException {
         try {
             return bankMoneyWalletDao.getTransactions(transactionType,max,offset);
         } catch (CantGetTransactionsException e) {
@@ -95,12 +97,17 @@ public class ImplementBankMoney implements BankMoneyWallet, BankMoneyWalletBalan
     }
 
     @Override
-    public void hold() throws CantRegisterHoldException {
+    public void hold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterHoldException {
 
     }
 
     @Override
-    public void unhold() throws CantRegisterUnholdException {
+    public void unhold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterUnholdException {
 
+    }
+
+    @Override
+    public List<BankAccountNumber> getAccounts(UUID walletPublicKey) {
+        return null;
     }
 }

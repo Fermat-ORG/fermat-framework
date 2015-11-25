@@ -100,7 +100,7 @@ public class BankMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
             }           /**
              * Create Bank Money Total Balances table.
              */
-            table = databaseFactory.newTableFactory(ownerId, BankMoneyWalletDatabaseConstants.BANK_MONEY_TOTAL_BALANCES_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
 
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);

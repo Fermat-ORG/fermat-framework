@@ -25,18 +25,22 @@ import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreat
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantChangeExposureLevelException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantExposeActorIdentitiesException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantExposeActorIdentityException;
+import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetIdentityException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerIdentityDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerIdentityImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
@@ -52,8 +56,7 @@ import java.util.List;
  * Modified by Yordin Alayn 10.09.15
  * Updated by lnacosta (laion.cj91@gmail.com) on 24/11/2015.
  */
-public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
-        CryptoBrokerIdentityManager,
+public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements CryptoBrokerIdentityManager,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM       , layer = Layers.PLATFORM_SERVICE     , addon  = Addons .ERROR_MANAGER         )
@@ -84,44 +87,36 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
 
 
     /*CryptoBrokerIdentityManager Interface implementation.*/
-    public List<CryptoBrokerIdentity> getAllCryptoBrokersFromCurrentDeviceUser() throws CantGetCryptoBrokerIdentityException {
+    public final List<CryptoBrokerIdentity> listIdentitiesFromCurrentDeviceUser() throws CantListCryptoBrokerIdentitiesException {
 
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            return cryptoBrokerIdentityDatabaseDao.getAllCryptoBrokersIdentitiesFromCurrentDeviceUser(loggedUser);
+            return cryptoBrokerIdentityDatabaseDao.listIdentitiesFromDeviceUser(loggedUser);
 
         } catch (CantGetLoggedInDeviceUserException e) {
 
             this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetCryptoBrokerIdentityException("CAN'T GET CRYPTO BROKER IDENTITIES", e, "Error get logged user device", "");
-        } catch (CantListCryptoBrokerIdentitiesException e) {
+            throw new CantListCryptoBrokerIdentitiesException("CAN'T GET CRYPTO BROKER IDENTITIES", e, "Error get logged user device", "");
+        } catch (com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantListCryptoBrokerIdentitiesException e) {
 
             this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetCryptoBrokerIdentityException("CAN'T GET CRYPTO BROKER IDENTITIES", e, "", "");
+            throw new CantListCryptoBrokerIdentitiesException("CAN'T GET CRYPTO BROKER IDENTITIES", e, "", "");
         } catch (Exception e) {
 
             this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetCryptoBrokerIdentityException("CAN'T GET CRYPTO BROKER IDENTITIES", FermatException.wrapException(e), "", "");
+            throw new CantListCryptoBrokerIdentitiesException("CAN'T GET CRYPTO BROKER IDENTITIES", FermatException.wrapException(e), "", "");
         }
     }
 
-    public CryptoBrokerIdentity createCryptoBrokerIdentity(String alias, byte[] profileImage) throws CantCreateCryptoBrokerIdentityException {
+    public final CryptoBrokerIdentity createCryptoBrokerIdentity(String alias, byte[] image) throws CantCreateCryptoBrokerIdentityException {
 
         try {
+
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = new ECCKeyPair();
-            CryptoBrokerIdentity cryptoBroker = new CryptoBrokerIdentityImpl(alias, keyPair, profileImage, false);
+            CryptoBrokerIdentity cryptoBroker = new CryptoBrokerIdentityImpl(alias, keyPair, image, ExposureLevel.HIDE);
             cryptoBrokerIdentityDatabaseDao.createNewCryptoBrokerIdentity(cryptoBroker, keyPair.getPrivateKey(), loggedUser);
-
-            try {
-
-                exposeIdentity(cryptoBroker);
-
-            } catch (final CantExposeActorIdentityException e) {
-
-                this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
 
             return cryptoBroker;
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -140,34 +135,65 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
 
     }
 
-    /*DatabaseManagerForDevelopers Interface implementation.*/
     @Override
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        CryptoBrokerIdentityDeveloperDatabaseFactory dbFactory = new CryptoBrokerIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-        return dbFactory.getDatabaseList(developerObjectFactory);
-    }
+    public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
 
-    @Override
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        CryptoBrokerIdentityDeveloperDatabaseFactory dbFactory = new CryptoBrokerIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-        return dbFactory.getDatabaseTableList(developerObjectFactory);
-    }
-
-    @Override
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         try {
-            CryptoBrokerIdentityDeveloperDatabaseFactory dbFactory = new CryptoBrokerIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-            dbFactory.initializeDatabase();
-            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeCryptoBrokerIdentityDatabaseException e) {
+
+            cryptoBrokerIdentityDatabaseDao.changeExposureLevel(publicKey, ExposureLevel.PUBLISH);
+
+            exposeIdentity(cryptoBrokerIdentityDatabaseDao.getIdentity(publicKey));
+
+        } catch (final CantExposeActorIdentityException e) {
+
             this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantPublishIdentityException(e, "", "Cant expose actor identity.");
+        } catch (final CantChangeExposureLevelException e) {
+
+            this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantPublishIdentityException(e, "", "There was a problem trying to change the exposure level.");
+        } catch (final IdentityNotFoundException e) {
+
+            this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final CantGetIdentityException e) {
+
+            this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantPublishIdentityException(e, "", "There was a problem trying to get the identity.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantPublishIdentityException(e, "", "Unhandled Exception.");
         }
-        return new ArrayList<>();
+    }
+
+    @Override
+    public void hideIdentity(String publicKey) throws CantHideIdentityException, IdentityNotFoundException {
+
+        try {
+
+            cryptoBrokerIdentityDatabaseDao.changeExposureLevel(publicKey, ExposureLevel.HIDE);
+
+            // TODO actor network service hide identity?
+
+        } catch (final CantChangeExposureLevelException e) {
+
+            this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantHideIdentityException(e, "", "There was a problem trying to change the exposure level.");
+        } catch (final IdentityNotFoundException e) {
+
+            this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantHideIdentityException(e, "", "Unhandled Exception.");
+        }
     }
 
     /*Service Interface implementation.*/
     @Override
-    public void start() throws CantStartPluginException {
+    public final void start() throws CantStartPluginException {
 
         try {
 
@@ -198,12 +224,22 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
 
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
-            for (final CryptoBrokerIdentity identity : getAllCryptoBrokersFromCurrentDeviceUser())
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage()));
+            for (final CryptoBrokerIdentity identity : listIdentitiesFromCurrentDeviceUser()) {
+
+                if (identity.isPublished()) {
+                    cryptoBrokerExposingDataList.add(
+                            new CryptoBrokerExposingData(
+                                    identity.getPublicKey()   ,
+                                    identity.getAlias()       ,
+                                    identity.getProfileImage()
+                            )
+                    );
+                }
+            }
 
             cryptoBrokerANSManager.exposeIdentities(cryptoBrokerExposingDataList);
 
-        } catch (final CantGetCryptoBrokerIdentityException e) {
+        } catch (final CantListCryptoBrokerIdentitiesException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeActorIdentitiesException(e, "", "Problem trying to list crypto brokers from current device user.");
@@ -226,5 +262,30 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements
             throw new CantExposeActorIdentityException(e, "", "Problem exposing identity.");
         }
     }
-    
+
+    /*DatabaseManagerForDevelopers Interface implementation.*/
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        CryptoBrokerIdentityDeveloperDatabaseFactory dbFactory = new CryptoBrokerIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        CryptoBrokerIdentityDeveloperDatabaseFactory dbFactory = new CryptoBrokerIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        try {
+            CryptoBrokerIdentityDeveloperDatabaseFactory dbFactory = new CryptoBrokerIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            dbFactory.initializeDatabase();
+            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeCryptoBrokerIdentityDatabaseException e) {
+            this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        return new ArrayList<>();
+    }
+
 }
