@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by eze on 2015.07.30..
  */
-public class CouldNotPublishCryptoBrokerException extends FermatException {
+public class CantHideCryptoBrokerException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CouldNotPublishCryptoBrokerException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CouldNotPublishCryptoBrokerException(String message, Exception cause, String context, String possibleReason) {
+    public CantHideCryptoBrokerException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

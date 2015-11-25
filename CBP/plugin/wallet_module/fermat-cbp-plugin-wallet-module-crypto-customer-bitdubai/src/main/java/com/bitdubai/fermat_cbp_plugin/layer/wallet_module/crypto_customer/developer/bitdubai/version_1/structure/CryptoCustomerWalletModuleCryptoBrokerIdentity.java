@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.devel
 
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 
 /**
@@ -38,6 +39,11 @@ public class CryptoCustomerWalletModuleCryptoBrokerIdentity implements CryptoBro
     @Override
     public void setNewProfileImage(byte[] imageBytes) {
 
+    }
+
+    @Override
+    public ExposureLevel getExposureLevel() {
+        return ExposureLevel.PUBLISH;
     }
 
     @Override

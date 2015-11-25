@@ -2,8 +2,8 @@ package com.bitdubai.sub_app.crypto_broker_identity.util;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CouldNotPublishCryptoBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CouldNotUnPublishCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantPublishCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantHideCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -60,10 +60,10 @@ public class PublishIdentityExecutor {
 
     private int runPublish(String publicKey) {
         try {
-            moduleManager.publishCryptoBrokerIdentity(publicKey);
+            moduleManager.publishIdentity(publicKey);
             return SUCCESS;
 
-        } catch (CouldNotPublishCryptoBrokerException ex) {
+        } catch (CantPublishCryptoBrokerException ex) {
             if (errorManager != null){
                 errorManager.reportUnexpectedSubAppException(
                         SubApps.CBP_CRYPTO_BROKER_IDENTITY,
@@ -77,10 +77,10 @@ public class PublishIdentityExecutor {
 
     private int runUnPublish(String publicKey) {
         try {
-            moduleManager.unPublishCryptoBrokerIdentity(publicKey);
+            moduleManager.hideIdentity(publicKey);
             return SUCCESS;
 
-        } catch (CouldNotUnPublishCryptoBrokerException ex) {
+        } catch (CantHideCryptoBrokerException ex) {
             if(errorManager != null){
                 errorManager.reportUnexpectedSubAppException(
                         SubApps.CBP_CRYPTO_BROKER_IDENTITY,

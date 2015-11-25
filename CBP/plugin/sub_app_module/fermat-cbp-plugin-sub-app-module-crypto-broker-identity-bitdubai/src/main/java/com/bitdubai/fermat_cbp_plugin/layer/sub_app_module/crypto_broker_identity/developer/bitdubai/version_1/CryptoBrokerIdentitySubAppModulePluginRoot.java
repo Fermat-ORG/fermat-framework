@@ -13,13 +13,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CouldNotCreateCryptoBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CouldNotPublishCryptoBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CouldNotUnPublishCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantCreateCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantPublishCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantHideCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure.CryptoBrokerIdentityInformationImpl;
@@ -31,8 +31,7 @@ import java.util.List;
 /**
  * Created by Angel 16/10/2015
  */
-public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractPlugin implements
-        CryptoBrokerIdentityModuleManager {
+public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractPlugin implements CryptoBrokerIdentityModuleManager {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_BROKER)
     private CryptoBrokerIdentityManager identityManager;
@@ -54,40 +53,40 @@ public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractPlugin i
         }
     }
 
-    public List<CryptoBrokerIdentity> getAllCryptoBrokersFromCurrentDeviceUser() throws CantGetCryptoBrokerIdentityException {
-        return this.identityManager.getAllCryptoBrokersFromCurrentDeviceUser();
+    public List<CryptoBrokerIdentity> getAllCryptoBrokersFromCurrentDeviceUser() throws CantListCryptoBrokerIdentitiesException {
+        return this.identityManager.listIdentitiesFromCurrentDeviceUser();
     }
 
     @Override
-    public CryptoBrokerIdentityInformation createCryptoBrokerIdentity(String cryptoBrokerName, byte[] profileImage) throws CouldNotCreateCryptoBrokerException {
+    public CryptoBrokerIdentityInformation createCryptoBrokerIdentity(String alias, byte[] image) throws CantCreateCryptoBrokerException {
         try {
-            CryptoBrokerIdentity identity = this.identityManager.createCryptoBrokerIdentity(cryptoBrokerName,profileImage);
+            CryptoBrokerIdentity identity = this.identityManager.createCryptoBrokerIdentity(alias, image);
             return converIdentityToInformation(identity);
         } catch (CantCreateCryptoBrokerIdentityException e) {
-            throw new CouldNotCreateCryptoBrokerException(CouldNotCreateCryptoBrokerException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantCreateCryptoBrokerException(CantCreateCryptoBrokerException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
     @Override
-    public void publishCryptoBrokerIdentity(String cryptoBrokerPublicKey) throws CouldNotPublishCryptoBrokerException {
+    public void publishIdentity(String publicKey) throws CantPublishCryptoBrokerException {
 
     }
 
     @Override
-    public void unPublishCryptoBrokerIdentity(String cryptoBrokerPublicKey) throws CouldNotUnPublishCryptoBrokerException {
+    public void hideIdentity(String publicKey) throws CantHideCryptoBrokerException {
 
     }
 
     @Override
-    public List<CryptoBrokerIdentityInformation> getAllCryptoBrokersIdentities(int max, int offset) throws CantGetCryptoBrokerListException {
+    public List<CryptoBrokerIdentityInformation> listIdentities(int max, int offset) throws CantListCryptoBrokersException {
         try {
             List<CryptoBrokerIdentityInformation> cryptoBrokers = new ArrayList<>();
-            for(CryptoBrokerIdentity identity : this.identityManager.getAllCryptoBrokersFromCurrentDeviceUser()){
+            for(CryptoBrokerIdentity identity : this.identityManager.listIdentitiesFromCurrentDeviceUser()){
                 cryptoBrokers.add(converIdentityToInformation(identity));
             }
             return cryptoBrokers;
-        } catch (CantGetCryptoBrokerIdentityException e) {
-            throw new CantGetCryptoBrokerListException(CantGetCryptoBrokerListException.DEFAULT_MESSAGE, e, "","");
+        } catch (CantListCryptoBrokerIdentitiesException e) {
+            throw new CantListCryptoBrokersException(CantListCryptoBrokersException.DEFAULT_MESSAGE, e, "","");
         }
     }
 
