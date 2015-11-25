@@ -301,7 +301,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         }catch (Exception e){
 
-            CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
         }
@@ -348,7 +348,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         }catch (Exception e){
 
-            CantRequestListException pluginStartException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            CantRequestListException pluginStartException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
         }
@@ -420,7 +420,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         }catch (Exception e){
             e.printStackTrace();
-            CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw cantRequestListException;
 
         }
@@ -505,7 +505,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }catch (Exception ex){}
 
             e.printStackTrace();
-            CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw cantRequestListException;
 
         }
@@ -577,7 +577,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         }catch (Exception e){
 
-            CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
         }
@@ -639,7 +639,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         }catch (Exception e){
 
-            CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
         }
