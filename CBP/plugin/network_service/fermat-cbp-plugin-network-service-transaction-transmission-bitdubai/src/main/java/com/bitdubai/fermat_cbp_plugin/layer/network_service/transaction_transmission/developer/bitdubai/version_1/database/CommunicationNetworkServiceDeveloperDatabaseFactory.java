@@ -139,6 +139,7 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
         contractHashColumns.add(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME);
         contractHashColumns.add(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME);
         contractHashColumns.add(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME);
+        contractHashColumns.add(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME);
         /**
          * Table contract hash addition.
          */
