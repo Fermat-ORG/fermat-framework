@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identit
 
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CouldNotPublishCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantPublishCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
 
 import java.util.List;
@@ -31,20 +31,20 @@ public interface CryptoCustomerIdentityModuleManager extends ModuleManager {
     public CryptoCustomerIdentityInformation createCryptoCustomerIdentity(String cryptoBrokerName, byte[] profileImage) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
 
     /**
-     * The method <code>publishCryptoBrokerIdentity</code> is used to publish a Broker identity
+     * The method <code>publishIdentity</code> is used to publish a Broker identity
      *
      * @param cryptoCustomerPublicKey the public key of the crypto Broker to publish
      *
-     * @throws CouldNotPublishCryptoBrokerException
+     * @throws CantPublishCryptoBrokerException
      */
     public void publishCryptoCustomerIdentity(String cryptoCustomerPublicKey) throws CouldNotPublishCryptoCustomerException;
 
     /**
-     * The method <code>publishCryptoBrokerIdentity</code> is used to publish a Broker identity
+     * The method <code>publishIdentity</code> is used to publish a Broker identity
      *
      * @param cryptoCustomerPublicKey the public key of the crypto Broker to publish
      *
-     * @throws CouldNotPublishCryptoBrokerException
+     * @throws CantPublishCryptoBrokerException
      */
     public void unPublishCryptoCustomerIdentity(String cryptoCustomerPublicKey) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotUnPublishCryptoCustomerException;
 

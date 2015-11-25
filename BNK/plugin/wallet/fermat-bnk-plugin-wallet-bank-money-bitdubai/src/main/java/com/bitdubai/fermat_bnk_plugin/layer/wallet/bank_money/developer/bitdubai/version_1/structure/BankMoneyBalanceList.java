@@ -190,13 +190,5 @@ public class BankMoneyBalanceList implements BankMoneyWalletBalance {
 
     }
 
-    @Override
-    public void hold() throws CantRegisterHoldException {
 
-    }
-
-    @Override
-    public void unhold() throws CantRegisterUnholdException {
-
-    }
 }
