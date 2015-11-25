@@ -174,6 +174,8 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
 
             cryptoBrokerIdentityDatabaseDao.changeExposureLevel(publicKey, ExposureLevel.HIDE);
 
+            // TODO actor network service hide identity?
+
         } catch (final CantChangeExposureLevelException e) {
 
             this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
