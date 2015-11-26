@@ -19,6 +19,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 public abstract class FermatDialog <S extends FermatSession,R extends ResourceProviderManager> extends Dialog {
 
 
+    private final Activity activity;
     private S fermatSession;
 
     private R resources;
@@ -36,6 +37,7 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
      */
     public FermatDialog(Activity activity,S fermatSession,R resources) {
         super(activity);
+        this.activity = activity;
         this.fermatSession = fermatSession;
         this.resources = resources;
     }
@@ -95,6 +97,6 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
         getFermatScreenSwapper().connectWithOtherApp(emgine,fermatAppToConnectPublicKey, objects);
     }
     protected FermatScreenSwapper getFermatScreenSwapper(){
-        return (FermatScreenSwapper) getOwnerActivity();
+        return (FermatScreenSwapper) activity;
     }
 }
