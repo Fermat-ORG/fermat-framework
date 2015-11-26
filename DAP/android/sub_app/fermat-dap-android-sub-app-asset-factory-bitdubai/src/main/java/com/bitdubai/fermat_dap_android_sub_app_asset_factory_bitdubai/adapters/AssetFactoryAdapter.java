@@ -1,10 +1,15 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.holders.AssetHolder;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.interfaces.PopupMenu;
@@ -67,6 +72,40 @@ public class AssetFactoryAdapter extends FermatAdapter<AssetFactory, AssetHolder
                 holder.itemView.setLongClickable(false);
                 break;
         }
+        // loading image resource in background
+        new FermatWorker((android.app.Activity) context, new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+                    try {
+                        BitmapDrawable drawable = (BitmapDrawable) result[0];
+                        holder.thumbnail.setImageDrawable(drawable);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+
+            }
+        }) {
+            @Override
+            protected BitmapDrawable doInBackground() throws Exception {
+                BitmapDrawable drawable = null;
+                if (data.getResources() != null && context != null) {
+                    for (Resource resource : data.getResources()) {
+                        byte[] imageBytes = resource.getResourceBinayData();
+                        if (imageBytes != null) {
+                            drawable = new BitmapDrawable(context.getResources(), BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
+                            break;
+                        }
+                    }
+                }
+                return drawable;
+            }
+        }.execute();
     }
 
     private void renderPendingFinal(AssetHolder holder, AssetFactory data, int position) {
