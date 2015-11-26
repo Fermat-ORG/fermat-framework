@@ -21,6 +21,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listener
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingIntraUserDebitTransactionNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressReceiveAssetUserActorNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressRequestAssetUserActorNotificationEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.BegunWalletInstallationEventListener;
 
 //import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
 
@@ -830,7 +831,6 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingActorRequestConnectionNotificationEvent(this);
         }
-
     },
     NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER("NCA_REQUEST_AU") {
         @Override
@@ -865,6 +865,7 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new IncomingIntraUserTransactionDebitNotificationEvent(this);
         }
+
     };
 
 

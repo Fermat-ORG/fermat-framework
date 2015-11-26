@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message;
+package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * <p/>
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 23/11/15.
  */
-public class AssetAppropriationContentMessage implements Serializable {
+public class AssetAppropriationContentMessage implements Serializable, DAPContentMessage {
 
     //VARIABLE DECLARATION
 

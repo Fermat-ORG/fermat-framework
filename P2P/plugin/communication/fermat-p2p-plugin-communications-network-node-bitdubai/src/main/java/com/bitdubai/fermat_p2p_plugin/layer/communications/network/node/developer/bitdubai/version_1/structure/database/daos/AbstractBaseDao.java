@@ -75,7 +75,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * Return the data base table instance
      * @return DatabaseTable
      */
-    private DatabaseTable getDatabaseTable() {
+    protected DatabaseTable getDatabaseTable() {
         return getDataBase().getTable(tableName);
     }
 
