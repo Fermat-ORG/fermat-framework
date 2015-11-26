@@ -20,11 +20,11 @@ public class AssetUserGroupMemberRecord implements ActorAssetUserGroupMember {
 
     @Override
     public String getGroupId() {
-        return null;
+        return groupId;
     }
 
     @Override
     public String getActorPublicKey() {
-        return null;
+        return actorPublicKey;
     }
 }
