@@ -24,6 +24,7 @@ public class DepositBankMoneyTransactionDatabaseConstants {
     public static final String DEPOSIT_TIMESTAMP_COLUMN_NAME = "timestamp";
     public static final String DEPOSIT_MEMO_COLUMN_NAME = "memo";
     public static final String DEPOSIT_STATUS_COLUMN_NAME = "status";
+    public static final String DEPOSIT_FIAT_CURRENCY_TYPE_COLUMN_NAME = "fiat_currency";
 
     public static final String DEPOSIT_FIRST_KEY_COLUMN = "id";
 }
