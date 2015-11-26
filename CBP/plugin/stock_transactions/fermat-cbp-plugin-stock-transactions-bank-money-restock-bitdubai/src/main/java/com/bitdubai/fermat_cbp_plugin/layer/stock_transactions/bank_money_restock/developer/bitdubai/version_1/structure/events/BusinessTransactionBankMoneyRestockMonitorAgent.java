@@ -162,9 +162,9 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent  implements Agent{
                                stockTransactionBankMoneyRestockManager.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
 
                            } catch (CantPerformTransactionException e) {
-                                e.printStackTrace();
+                               errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                             } catch (CryptoBrokerWalletNotFoundException e) {
-                                e.printStackTrace();
+                               errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                             }
                         }
 
@@ -179,15 +179,15 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent  implements Agent{
                 }
             }
         } catch (DatabaseOperationException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (InvalidParameterException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (MissingBankMoneyRestockDataException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (CantMakeHoldTransactionException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (CantGetHoldTransactionException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         }
     }
 }

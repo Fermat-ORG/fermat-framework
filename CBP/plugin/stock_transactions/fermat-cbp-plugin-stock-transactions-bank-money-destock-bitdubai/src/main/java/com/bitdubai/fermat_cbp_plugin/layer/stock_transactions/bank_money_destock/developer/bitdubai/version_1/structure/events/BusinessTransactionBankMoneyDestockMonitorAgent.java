@@ -144,16 +144,14 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent{
 
                             cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
 
-                            bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
+                            bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                             stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
 
                         } catch (CantPerformTransactionException e) {
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                         } catch (CryptoBrokerWalletNotFoundException e) {
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                         }
-                        bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
-                        stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
                         break;
                     case IN_UNHOLD:
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
@@ -178,7 +176,6 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent{
                         }
                         if (BankTransactionStatus.REJECTED.getCode() == bankTransactionStatus.getCode())
                         {
-                            //Debito a la CBP Wallet
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
                         }
@@ -186,15 +183,15 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent{
                 }
             }
         } catch (DatabaseOperationException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (InvalidParameterException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (MissingBankMoneyDestockDataException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (CantGetUnholdTransactionException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (CantMakeUnholdTransactionException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         }
     }
 }

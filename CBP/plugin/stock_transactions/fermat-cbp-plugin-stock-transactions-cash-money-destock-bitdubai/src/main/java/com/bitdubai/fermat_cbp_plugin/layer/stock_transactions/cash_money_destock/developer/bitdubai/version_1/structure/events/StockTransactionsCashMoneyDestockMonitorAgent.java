@@ -149,12 +149,10 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                             stockTransactionCashMoneyDestockManager.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
 
                         } catch (CantPerformTransactionException e) {
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                         } catch (CryptoBrokerWalletNotFoundException e) {
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                         }
-                        cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
-                        stockTransactionCashMoneyDestockManager.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
                         break;
                     case IN_UNHOLD:
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
@@ -179,7 +177,6 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                         }
                         if (castTransactionStatus.REJECTED.getCode() == castTransactionStatus.getCode())
                         {
-                            //Debito en la Wallet CBP
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionCashMoneyDestockManager.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
                         }
@@ -187,15 +184,15 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                 }
             }
         } catch (DatabaseOperationException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (InvalidParameterException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (MissingCashMoneyDestockDataException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (CantCreateHoldTransactionException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (CantGetHoldTransactionException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         }
     }
 }

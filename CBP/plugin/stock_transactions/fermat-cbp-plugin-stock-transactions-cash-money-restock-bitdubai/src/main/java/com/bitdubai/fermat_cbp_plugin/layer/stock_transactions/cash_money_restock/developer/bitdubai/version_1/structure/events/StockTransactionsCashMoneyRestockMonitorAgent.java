@@ -123,10 +123,33 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent{
                     case INIT_TRANSACTION:
                         //Llamar al metodo de la interfaz public del manager de Bank Hold
                         //Luego cambiar el status al registro de la transaccion leido
-                        cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
-                        stockTransactionCashMoneyRestockManager.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
+                        //Llamar al metodo de la interfaz public del manager de la wallet CBP
+                        //Luego cambiar el status al registro de la transaccion leido
+                        //Buscar el regsitro de la transaccion en manager de Bank Hold y si lo consigue entonces le cambia el status de IN_WALLET y hace el credito
+                        CashTransactionParametersWrapper cashTransactionParametersWrapper = new CashTransactionParametersWrapper(
+
+                                cashMoneyTransaction.getTransactionId(),
+                                cashMoneyTransaction.getFiatCurrency(),
+                                cashMoneyTransaction.getCashWalletPublicKey(),
+                                cashMoneyTransaction.getActorPublicKey(),
+                                cashMoneyTransaction.getAmount(),
+                                cashMoneyTransaction.getCashReference(),
+                                cashMoneyTransaction.getMemo());
+                        //"pluginId");
+                        cashUnHoldTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
+                        CashTransactionStatus castTransactionStatus =  cashUnHoldTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
+                        if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode())
+                        {
+                            cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
+                            stockTransactionCashMoneyRestockManager.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
+                        }
+                        if (castTransactionStatus.REJECTED.getCode() == castTransactionStatus.getCode())
+                        {
+                            cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
+                            stockTransactionCashMoneyRestockManager.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
+                        }
                         break;
-                    case IN_WALLET:
+                    case IN_HOLD:
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
@@ -144,57 +167,32 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent{
 
                             cryptoBrokerWalletManager.getCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
 
-                            cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
+                            cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                             stockTransactionCashMoneyRestockManager.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
 
                         } catch (CantPerformTransactionException e) {
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                         } catch (CryptoBrokerWalletNotFoundException e) {
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                         }
-                        cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
-                        stockTransactionCashMoneyRestockManager.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
-                        break;
-                    case IN_HOLD:
-                        //Llamar al metodo de la interfaz public del manager de la wallet CBP
-                        //Luego cambiar el status al registro de la transaccion leido
-                        //Buscar el regsitro de la transaccion en manager de Bank Hold y si lo consigue entonces le cambia el status de IN_WALLET y hace el credito
-                        CashTransactionParametersWrapper cashTransactionParametersWrapper = new CashTransactionParametersWrapper(
 
-                                cashMoneyTransaction.getTransactionId(),
-                                cashMoneyTransaction.getFiatCurrency(),
-                                cashMoneyTransaction.getCashWalletPublicKey(),
-                                cashMoneyTransaction.getActorPublicKey(),
-                                cashMoneyTransaction.getAmount(),
-                                cashMoneyTransaction.getCashReference(),
-                                cashMoneyTransaction.getMemo());
-                                //"pluginId");
-                        cashUnHoldTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
-                        CashTransactionStatus castTransactionStatus =  cashUnHoldTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
-                        if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode())
-                        {
-                            cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
-                            stockTransactionCashMoneyRestockManager.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
-                        }
-                        if (castTransactionStatus.REJECTED.getCode() == castTransactionStatus.getCode())
-                        {
-                            //Debito a la Wallet CBP
-                            cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
-                            stockTransactionCashMoneyRestockManager.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
-                        }
+                        break;
+                    case IN_WALLET:
+                        cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
+                        stockTransactionCashMoneyRestockManager.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
                         break;
                 }
             }
         } catch (DatabaseOperationException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (InvalidParameterException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (MissingCashMoneyRestockDataException e) {
-            e.printStackTrace();;
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (CantGetUnholdTransactionException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (CantCreateUnholdTransactionException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         }
     }
 }
