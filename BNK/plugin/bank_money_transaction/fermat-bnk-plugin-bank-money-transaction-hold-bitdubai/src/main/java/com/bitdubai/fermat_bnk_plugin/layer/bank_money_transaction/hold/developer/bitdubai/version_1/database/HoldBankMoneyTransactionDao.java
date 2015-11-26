@@ -17,7 +17,6 @@ import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.develope
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantInitializeHoldBankMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantUpdateHoldTransactionException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.HoldBankMoneyTransactionInconsistentTableStateException;
-import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.structure.BankMoneyTransactionRecordImpl;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.structure.BankTransactionImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -97,7 +96,7 @@ public class HoldBankMoneyTransactionDao {
         return HoldTransaction;
     }
 
-    public List<BankTransaction> getCashHoldTransactionList(DatabaseTableFilter filter) throws CantGetHoldTransactionException
+    public List<BankTransaction> getHoldTransactionList(DatabaseTableFilter filter) throws CantGetHoldTransactionException
     {
         List<BankTransaction> transactions = new ArrayList<>();
         try {
@@ -106,9 +105,9 @@ public class HoldBankMoneyTransactionDao {
                 transactions.add(transaction);
             }
         } catch (CantCreateHoldTransactionException e) {
-            throw new CantGetHoldTransactionException(CantGetHoldTransactionException.DEFAULT_MESSAGE, e, "Failed to get Cash Hold Transaction list. Filter: " + filter.toString(), "");
+            throw new CantGetHoldTransactionException(CantGetHoldTransactionException.DEFAULT_MESSAGE, e, "Failed to get bank Hold Transaction list. Filter: " + filter.toString(), "");
         }catch (CantLoadTableToMemoryException e) {
-            throw new CantGetHoldTransactionException(CantGetHoldTransactionException.DEFAULT_MESSAGE, e, "Failed to get Cash Hold Transaction list. Filter: " + filter.toString(), "");
+            throw new CantGetHoldTransactionException(CantGetHoldTransactionException.DEFAULT_MESSAGE, e, "Failed to get bank Hold Transaction list. Filter: " + filter.toString(), "");
         }
         return transactions;
     }
@@ -120,10 +119,10 @@ public class HoldBankMoneyTransactionDao {
         filter.setValue(BankTransactionStatus.ACKNOWLEDGE.getCode());
         filter.setType(DatabaseFilterType.EQUAL);
 
-        return getCashHoldTransactionList(filter);
+        return getHoldTransactionList(filter);
     }
 
-    public void updateCashHoldTransactionStatus(UUID transactionId, BankTransactionStatus status) throws CantUpdateHoldTransactionException
+    public void updateHoldTransactionStatus(UUID transactionId, BankTransactionStatus status) throws CantUpdateHoldTransactionException
     {
         DatabaseTableRecord record;
         try {
@@ -218,7 +217,7 @@ public class HoldBankMoneyTransactionDao {
         try {
             transactionStatus = BankTransactionStatus.getByCode(record.getStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME));
         } catch (InvalidParameterException e) {
-            throw new CantCreateHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Invalid CashTransactionStatus value stored in table"
+            throw new CantCreateHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Invalid bankTransactionStatus value stored in table"
                     + HoldBankMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME + " for id " + transactionId);
         }
         return new BankTransactionImpl(transactionId,publicKeyPlugin,publicKeyWallet,publicKeyActor,amount,accountNumber,currency,memo, BankOperationType.HOLD, TransactionType.HOLD,timestampAcknowledged);

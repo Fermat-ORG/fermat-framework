@@ -36,13 +36,13 @@ public class HoldBankMoneyTransactionManager implements HoldManager {
         return holdBankMoneyTransactionDao.getAcknowledgedTransactionList();
     }
     public void setTransactionStatusToPending(UUID transactionId) throws CantUpdateHoldTransactionException {
-        holdBankMoneyTransactionDao.updateCashHoldTransactionStatus(transactionId, BankTransactionStatus.PENDING);
+        holdBankMoneyTransactionDao.updateHoldTransactionStatus(transactionId, BankTransactionStatus.PENDING);
     }
     public void setTransactionStatusToConfirmed(UUID transactionId) throws CantUpdateHoldTransactionException {
-        holdBankMoneyTransactionDao.updateCashHoldTransactionStatus(transactionId, BankTransactionStatus.CONFIRMED);
+        holdBankMoneyTransactionDao.updateHoldTransactionStatus(transactionId, BankTransactionStatus.CONFIRMED);
     }
     public void setTransactionStatusToRejected(UUID transactionId) throws CantUpdateHoldTransactionException {
-        holdBankMoneyTransactionDao.updateCashHoldTransactionStatus(transactionId, BankTransactionStatus.REJECTED);
+        holdBankMoneyTransactionDao.updateHoldTransactionStatus(transactionId, BankTransactionStatus.REJECTED);
     }
 
 
