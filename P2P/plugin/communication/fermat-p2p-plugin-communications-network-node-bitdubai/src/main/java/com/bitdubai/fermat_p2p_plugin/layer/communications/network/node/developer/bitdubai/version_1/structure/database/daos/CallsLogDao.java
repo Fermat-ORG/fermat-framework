@@ -9,7 +9,10 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CallsLog;
+
+import java.sql.Timestamp;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.CallsLogDao</code>
@@ -27,7 +30,9 @@ public class CallsLogDao extends AbstractBaseDao<CallsLog> {
      * @param dataBase
      */
     public CallsLogDao(Database dataBase) {
-        super(dataBase, "", "");
+        super(dataBase,
+                CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_TABLE_NAME,
+                CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_FIRST_KEY_COLUMN);
     }
 
     /**
@@ -36,7 +41,23 @@ public class CallsLogDao extends AbstractBaseDao<CallsLog> {
      */
     @Override
     protected CallsLog getEntityFromDatabaseTableRecord(DatabaseTableRecord record) throws InvalidParameterException {
-        return null;
+
+        CallsLog callsLog = new CallsLog();
+
+        try{
+
+            callsLog.setCallId(record.getUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_CALL_ID_COLUMN_NAME));
+            callsLog.setCallTimestamp(new Timestamp(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_CALL_TIMESTAMP_COLUMN_NAME)));
+            callsLog.setStartTimestamp(new Timestamp(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_START_TIMESTAMP_COLUMN_NAME)));
+            callsLog.setFinishTimestamp(new Timestamp(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_FINISH_TIMESTAMP_COLUMN_NAME)));
+            callsLog.setStep(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_STEP_COLUMN_NAME));
+
+        }catch (Exception e){
+
+            return null;
+        }
+
+        return callsLog;
     }
 
     /**
@@ -45,6 +66,18 @@ public class CallsLogDao extends AbstractBaseDao<CallsLog> {
      */
     @Override
     protected DatabaseTableRecord getDatabaseTableRecordFromEntity(CallsLog entity) {
-        return null;
+
+        /*
+         * Create the record to the entity
+         */
+        DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
+
+        databaseTableRecord.setUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_CALL_ID_COLUMN_NAME, entity.getCallId());
+        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_CALL_TIMESTAMP_COLUMN_NAME, entity.getCallTimestamp().getTime());
+        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_START_TIMESTAMP_COLUMN_NAME, entity.getStartTimestamp().getTime());
+        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_FINISH_TIMESTAMP_COLUMN_NAME, entity.getFinishTimestamp().getTime());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_STEP_COLUMN_NAME,entity.getStep());
+
+        return databaseTableRecord;
     }
 }
