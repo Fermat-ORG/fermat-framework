@@ -12,7 +12,7 @@ import com.bitdubai.fermat_csh_core.layer.cash_money_transaction.hold.HoldPlugin
 public class WalletLayer extends AbstractLayer {
 
     public WalletLayer() {
-        super(Layers.TRANSACTION);
+        super(Layers.WALLET);
     }
 
     public void start() throws CantStartLayerException {

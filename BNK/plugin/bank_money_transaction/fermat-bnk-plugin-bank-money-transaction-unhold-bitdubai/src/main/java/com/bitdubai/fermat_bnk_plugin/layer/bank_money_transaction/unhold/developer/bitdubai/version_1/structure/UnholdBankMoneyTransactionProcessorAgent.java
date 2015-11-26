@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
@@ -13,18 +13,18 @@ import java.util.List;
 /**
  * Created by memo on 25/11/15.
  */
-public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
+public class UnholdBankMoneyTransactionProcessorAgent extends FermatAgent {
 
     private static final int SLEEP = 5000;
 
     private Thread agentThread;
 
     private final ErrorManager errorManager;
-    private final HoldBankMoneyTransactionManager holdTransactionManager;
+    private final UnholdBankMoneyTransactionManager unholdTransactionManager;
 
-    public HoldBankMoneyTransactionProcessorAgent(final ErrorManager errorManager, final HoldBankMoneyTransactionManager holdManager) {
+    public UnholdBankMoneyTransactionProcessorAgent(final ErrorManager errorManager, final UnholdBankMoneyTransactionManager holdManager) {
         this.errorManager = errorManager;
-        this.holdTransactionManager = holdManager;
+        this.unholdTransactionManager = holdManager;
 
         this.agentThread = new Thread(new Runnable() {
             @Override
@@ -77,7 +77,7 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
         List<BankTransaction> transactionList;
 
         try {
-            transactionList = holdTransactionManager.getAcknowledgedTransactionList();
+            transactionList = unholdTransactionManager.getAcknowledgedTransactionList();
         } catch (CantGetHoldTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return;
@@ -101,10 +101,10 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
             try {
                 if(availableBalance >= transaction.getAmount()) {
                     //TODO: wallet.debit(transaction.getAmount());
-                    holdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
+                    unholdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
                 }
                 else {
-                    holdTransactionManager.setTransactionStatusToRejected(transaction.getTransactionId());
+                    unholdTransactionManager.setTransactionStatusToRejected(transaction.getTransactionId());
                 }
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
