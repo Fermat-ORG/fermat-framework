@@ -48,6 +48,8 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBr
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActor;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingConfirmBusinessTransactionContract;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingNewContractStatusUpdate;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendBusinessTransactionHashException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.PendingRequestNotFoundException;
@@ -56,17 +58,23 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionConnectionsDAO;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionContractHashDao;
 //import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.IncomingNewContractStatusUpdateEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantGetTransactionTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.messages.TransactionTransmissionResponseMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionMetadataRecord;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
@@ -82,6 +90,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
@@ -147,11 +156,15 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     /**
      * Represent the communicationNetworkServiceConnectionManager
      */
-    private TransactionTransmissionCommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
     private PlatformComponentProfile platformComponentProfilePluginRoot;
 
     private TransactionTransmissionContractHashDao transactionTransmissionContractHashDao;
+
+    private TransactionTransmissionAgent transactionTransmissionAgent;
+
+    private TransactionTransmissionConnectionsDAO transactionTransmissionConnectionsDAO;
 
     /**
      * Represent the communicationRegistrationProcessNetworkServiceAgent
@@ -214,7 +227,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
      */
     @Override
     public void initializeCommunicationNetworkServiceConnectionManager(){
-        this.communicationNetworkServiceConnectionManager = new TransactionTransmissionCommunicationNetworkServiceConnectionManager(
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
                 platformComponentProfilePluginRoot,
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
@@ -278,11 +291,22 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     /**
      * Initialize the event listener and configure
      */
-    private void initializeListener(){
+    private void initializeListeners(){
 //        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
 //        fermatEventListener.setEventHandler(new IncomingNewContractStatusUpdateEventHandler());
 //        eventManager.addListener(fermatEventListener);
 //        listenersAdded.add(fermatEventListener);
+    }
+
+    /**
+     * Messages listeners
+     */
+    private void initializeMessagesListeners(){
+
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     @Override
@@ -402,10 +426,10 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
              * Initialize the main agent
              */
         //TODO implement the agent first
-            /*cryptoTransmissionAgent = new CryptoTransmissionAgent(
+            transactionTransmissionAgent = new TransactionTransmissionAgent(
                     this,
-                    cryptoTransmissionConnectionsDAO,
-                    cryptoTransmissionMetadataDAO,
+                    transactionTransmissionConnectionsDAO,
+                    transactionTransmissionContractHashDao,
                     communicationNetworkServiceConnectionManager,
                     wsCommunicationsCloudClientManager,
                     platformComponentProfileRegistered,
@@ -413,13 +437,13 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                     new ArrayList<PlatformComponentProfile>(),
                     identity,
                     eventManager
-            );*/
+            );
 
             // Initialize messages handlers
-            //initializeMessagesListeners();
+            initializeMessagesListeners();
 
             // start main threads
-            //cryptoTransmissionAgent.start();
+            transactionTransmissionAgent.start();
 
 
         }
@@ -427,8 +451,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteNetworkService) {
-        //TODO: implement the agent first
-        //cryptoTransmissionAgent.connectionFailure(remoteNetworkService.getIdentityPublicKey());
+
+        transactionTransmissionAgent.connectionFailure(remoteNetworkService.getIdentityPublicKey());
     }
 
     @Override
@@ -444,8 +468,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
          */
         remoteNetworkServicesRegisteredList.addAll( platformComponentProfileRegisteredList);
 
-        //TODO: Implement the agent first
-        //cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
+        transactionTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
     }
 
     @Override
@@ -473,12 +496,25 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-        //TODO: to implement
+        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+            this.register = false;
+            communicationNetworkServiceConnectionManager.closeAllConnection();
+        }
     }
 
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-        //TODO: to implement
+        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+
+            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+
+                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        }
     }
 
     @Override
@@ -512,7 +548,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             /*
              * Initialize listeners
              */
-            initializeListener();
+            initializeListeners();
 
 
             /*
@@ -533,10 +569,10 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
              */
             transactionTransmissionContractHashDao = new TransactionTransmissionContractHashDao(pluginDatabaseSystem,pluginId, database);
 
-            //cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem,pluginId);
+            transactionTransmissionConnectionsDAO = new TransactionTransmissionConnectionsDAO(pluginDatabaseSystem,pluginId);
 
 
-            //remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
+            remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
             connectionArrived = new AtomicBoolean(false);
 
@@ -609,7 +645,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     public void stop() {
 
         //Clear all references of the event listeners registered with the event manager.
-        //listenersAdded.clear();
+        listenersAdded.clear();
 
         /*
          * Stop all connection on the managers
@@ -625,7 +661,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         /**
          * Stop agent
          */
-        //cryptoTransmissionAgent.stop();
+        transactionTransmissionAgent.stop();
 
         /*
          * Set the new status
@@ -878,7 +914,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
                 for(BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList){
                     Transaction<BusinessTransactionMetadata> transaction = new Transaction<>(businessTransactionMetadata.getTransactionId(),
-                            (BusinessTransactionMetadata) businessTransactionMetadata,
+                            businessTransactionMetadata,
                             Action.APPLY,
                             businessTransactionMetadata.getTimestamp());
 
@@ -908,20 +944,29 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             }else{
 
                 TransactionTransmissionResponseMessage transactionTransmissionResponseMessage =  gson.fromJson(fermatMessage.getContent(), TransactionTransmissionResponseMessage.class);
+                FermatEvent fermatEvent;
                 switch (transactionTransmissionResponseMessage.getTransactionTransmissionStates()){
                     case CONFIRM_CONTRACT:
                         transactionTransmissionContractHashDao.changeState(transactionTransmissionResponseMessage.getTransactionId(), TransactionTransmissionStates.CONFIRM_CONTRACT);
                         System.out.print("-----------------------\n" +
                                 "TRANSACTION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
                                 "-----------------------\n STATE: " + TransactionTransmissionStates.CONFIRM_CONTRACT);
-                        //TODO: raise event
+                        fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);
+                        IncomingConfirmBusinessTransactionContract incomingConfirmBusinessTransactionContract = (IncomingConfirmBusinessTransactionContract) fermatEvent;
+                        incomingConfirmBusinessTransactionContract.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+                        incomingConfirmBusinessTransactionContract.setDestinationPlatformComponentType(businessTransactionMetadataReceived.getReceiverType());
+                        eventManager.raiseEvent(incomingConfirmBusinessTransactionContract);
                         break;
                     case CONFIRM_RESPONSE:
                         transactionTransmissionContractHashDao.changeState(transactionTransmissionResponseMessage.getTransactionId(), TransactionTransmissionStates.CONFIRM_RESPONSE);
                         System.out.print("-----------------------\n" +
                                 "TRANSACTION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
                                 "-----------------------\n STATE: " + TransactionTransmissionStates.CONFIRM_RESPONSE);
-                        //TODO: raise event
+                        fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                        IncomingConfirmBusinessTransactionResponse incomingConfirmBusinessTransactionResponse = (IncomingConfirmBusinessTransactionResponse) fermatEvent;
+                        incomingConfirmBusinessTransactionResponse.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+                        incomingConfirmBusinessTransactionResponse.setDestinationPlatformComponentType(businessTransactionMetadataReceived.getReceiverType());
+                        eventManager.raiseEvent(incomingConfirmBusinessTransactionResponse);
                         break;
                 }
 
@@ -936,7 +981,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     private void launchNotificationTest(){
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
         IncomingNewContractStatusUpdate incomingNewContractStatusUpdate = (IncomingNewContractStatusUpdate) fermatEvent;
-        incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
+        incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
         eventManager.raiseEvent(incomingNewContractStatusUpdate);
     }
 
