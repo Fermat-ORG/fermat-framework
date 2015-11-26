@@ -210,12 +210,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment implements 
 
         // TODO falta implementar funcionalidad para editar info del identity en el backend
 
-        if (executor != null) {
-            executor.shutdown();
-        }
-
-        executor = null;
-        PublishIdentityWorker publishIdentityWorker = new PublishIdentityWorker(subAppsSession, wantPublishIdentity, this);
+        PublishIdentityWorker publishIdentityWorker = new PublishIdentityWorker(getActivity(), subAppsSession, wantPublishIdentity, this);
 
         executor = publishIdentityWorker.execute();
     }

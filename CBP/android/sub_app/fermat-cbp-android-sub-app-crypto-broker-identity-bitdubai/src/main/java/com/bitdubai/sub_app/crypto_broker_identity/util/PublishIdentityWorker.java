@@ -1,5 +1,7 @@
 package com.bitdubai.sub_app.crypto_broker_identity.util;
 
+import android.app.Activity;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -30,10 +32,10 @@ public class PublishIdentityWorker extends FermatWorker {
     private CryptoBrokerIdentityInformation identityInfo;
     private boolean wantToPublish;
 
-    public PublishIdentityWorker(SubAppsSession session, boolean wantToPublish, FermatWorkerCallBack callBack) {
-        this.wantToPublish = wantToPublish;
+    public PublishIdentityWorker(Activity context, SubAppsSession session, boolean wantToPublish, FermatWorkerCallBack callBack) {
+        super(context, callBack);
 
-        setCallBack(callBack);
+        this.wantToPublish = wantToPublish;
 
         if (session != null) {
             CryptoBrokerIdentitySubAppSession subAppSession = (CryptoBrokerIdentitySubAppSession) session;
