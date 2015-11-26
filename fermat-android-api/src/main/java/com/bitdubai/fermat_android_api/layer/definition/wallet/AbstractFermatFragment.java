@@ -66,7 +66,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,PS extends 
      * @param key  Enum Wizard registered type
      * @param args Object[] where you're be able to passing arguments like session, settings, resources, module, etc...
      */
-    protected void startWizard(WizardTypes key, Object... args) {
+    protected void startWizard(String key, Object... args) {
         if (context != null && isAttached) {
             context.showWizard(key, args);
         }
@@ -100,4 +100,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,PS extends 
     public void setSubAppResourcesProviderManager(R subAppResourcesProviderManager) {
         this.subAppResourcesProviderManager = subAppResourcesProviderManager;
     }
+
+
 }

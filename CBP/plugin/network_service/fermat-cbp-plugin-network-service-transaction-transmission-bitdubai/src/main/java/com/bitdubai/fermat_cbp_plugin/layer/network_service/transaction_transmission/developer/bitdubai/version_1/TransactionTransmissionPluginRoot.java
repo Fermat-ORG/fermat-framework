@@ -57,18 +57,16 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionContractHashDao;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.IncomingNewContractStatusUpdateEventHandler;
+//import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.IncomingNewContractStatusUpdateEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantGetTransactionTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.messages.TransactionTransmissionResponseMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionMetadataRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.messages.TransactionTransmissionResponseMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
@@ -281,10 +279,10 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
      * Initialize the event listener and configure
      */
     private void initializeListener(){
-        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
-        fermatEventListener.setEventHandler(new IncomingNewContractStatusUpdateEventHandler());
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
+//        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
+//        fermatEventListener.setEventHandler(new IncomingNewContractStatusUpdateEventHandler());
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
     }
 
     @Override
@@ -471,6 +469,16 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                     "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
                     "-----------------------\n A: " + remoteComponentProfile.getAlias());
         }
+    }
+
+    @Override
+    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+        //TODO: to implement
+    }
+
+    @Override
+    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+        //TODO: to implement
     }
 
     @Override

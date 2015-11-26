@@ -64,14 +64,7 @@ public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
         );
         System.out.println("ASSET DISTRIBUTION AssetIssuerWalletTransactionRecordWrapper:"+assetIssuerWalletTransactionRecordWrapper.getDescription());
         System.out.println("ASSET DISTRIBUTION Balance Type:"+balanceType);
-        //I'm gonna mock a credit in Asset issuer wallet for testing, TODO: delete this lines in advanced testing
-        try {
-            assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, BalanceType.BOOK);
-            assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, BalanceType.AVAILABLE);
-        } catch (CantRegisterCreditException e) {
-            e.printStackTrace();
-        }
-        //End mock
+
         assetIssuerWalletBalance.debit(assetIssuerWalletTransactionRecordWrapper, balanceType);
     }
 

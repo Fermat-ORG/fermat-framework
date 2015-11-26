@@ -573,8 +573,8 @@ public class AssetsOverBitcoinCryptoVaultDao {
                 record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME, i);
                 record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, key.getPublicKeyAsHex());
                 transaction.addRecordToInsert(databaseTable, record);
-                i++;
             }
+            i++;
         }
 
         /**

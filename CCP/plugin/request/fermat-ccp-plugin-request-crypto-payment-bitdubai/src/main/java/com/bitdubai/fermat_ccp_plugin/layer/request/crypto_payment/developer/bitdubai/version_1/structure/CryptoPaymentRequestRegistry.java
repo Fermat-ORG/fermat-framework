@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bi
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformApprovalException;
@@ -88,7 +89,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                              CryptoAddress         cryptoAddress    ,
                                              String                description      ,
                                              long                  amount           ,
-                                             BlockchainNetworkType networkType      ) throws CantGenerateCryptoPaymentRequestException {
+                                             BlockchainNetworkType networkType      ,
+                                             ReferenceWallet       referenceWallet) throws CantGenerateCryptoPaymentRequestException {
 
 
         System.out.println("********** Crypto Payment Request -> generating request. SENT - NOT_SENT_YET.");
@@ -124,7 +126,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     startTimeStamp,
                     type,
                     state,
-                    networkType
+                    networkType,
+                    referenceWallet
             );
 
             // if i can save it, i send it to the network service.
@@ -141,7 +144,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     description,
                     amount,
                     startTimeStamp,
-                    networkType
+                    networkType,
+                    referenceWallet
             );
 
             System.out.println("********** Crypto Payment Request -> generating request. SENT - WAITING RECEPTION CONFIRMATION -> OK.");
@@ -174,7 +178,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                                               String                description      ,
                                                               long                  amount           ,
                                                               long                  startTimeStamp   ,
-                                                              BlockchainNetworkType networkType      ) throws CantSendRequestException                     ,
+                                                              BlockchainNetworkType networkType,
+                                                              ReferenceWallet       referenceWallet) throws CantSendRequestException                     ,
                                                                                                               CantChangeCryptoPaymentRequestStateException ,
                                                                                                               CryptoPaymentRequestNotFoundException        {
 
@@ -190,7 +195,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                 description,
                 amount,
                 startTimeStamp,
-                networkType
+                networkType,
+                referenceWallet
         );
 
         // change the state to waiting reception confirmation
@@ -326,7 +332,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     cryptoPayment.getIdentityPublicKey(),
                     cryptoPayment.getActorPublicKey(),
                     cryptoPayment.getIdentityType(),
-                    cryptoPayment.getActorType()
+                    cryptoPayment.getActorType(),
+                    cryptoPayment.getReferenceWallet()
             );
 
             cryptoPaymentRequestDao.changeState(
@@ -534,7 +541,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                     cryptoPayment.getDescription(),
                                     cryptoPayment.getAmount(),
                                     cryptoPayment.getStartTimeStamp(),
-                                    cryptoPayment.getNetworkType()
+                                    cryptoPayment.getNetworkType(),
+                                    cryptoPayment.getReferenceWallet()
                             );
 
                         } catch(CantSendRequestException                     |

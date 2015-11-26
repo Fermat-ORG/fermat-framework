@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestType;
@@ -31,6 +32,7 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
     private final RequestAction                 action           ;
     private final RequestProtocolState          protocolState    ;
     private final BlockchainNetworkType         networkType      ;
+    private final ReferenceWallet               referenceWallet      ;
 
     public CryptoPaymentRequestNetworkServiceRecord(final UUID                          requestId        ,
                                                     final String                        identityPublicKey,
@@ -44,7 +46,8 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
                                                     final RequestType direction        ,
                                                     final RequestAction                 action           ,
                                                     final RequestProtocolState          protocolState    ,
-                                                    final BlockchainNetworkType         networkType      ) {
+                                                    final BlockchainNetworkType         networkType      ,
+                                                    final ReferenceWallet               referenceWallet) {
 
         this.requestId         = requestId        ;
         this.identityPublicKey = identityPublicKey;
@@ -59,6 +62,7 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
         this.action            = action           ;
         this.protocolState     = protocolState    ;
         this.networkType       = networkType      ;
+        this.referenceWallet   = referenceWallet  ;
     }
 
     @Override
@@ -124,6 +128,11 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
     @Override
     public BlockchainNetworkType getNetworkType() {
         return networkType;
+    }
+
+    @Override
+    public ReferenceWallet getReferenceWallet() {
+        return referenceWallet;
     }
 
     @Override
