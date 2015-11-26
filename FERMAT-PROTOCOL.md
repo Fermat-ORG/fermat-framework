@@ -62,7 +62,7 @@ The protocol itself issues tokens for miners and for development. In the last ca
 
 End users automatically aquires fermats by receiving bitcoins into a their Fermat wallet. They can go back to bitcoin by transfering fermats into a Bitcoin wallet. 
 
-Fermat tokes are necesary for users to pay for two things:
+Fermat tokes are necesary for users to pay for three things:
 
 #### Communication
 
@@ -78,8 +78,32 @@ End Users pay with fermats to receive personalized technical support from Fermat
 
 ## Fermat Protocol Version 1.0
 
+The Fermat Protocol spans through Fermat Nodes and Fermat Clients. It defines the internal rules on each of them and also the rules of engagement between each other.
+
 ### Fermat Nodes
+
+Fermat nodes performs several tasks at the same time. For each one of them, the protocol has it own set of rules:
+
+#### Nodes Catalogue
+
+Each node mantains a full catalogue of all nodes registered in the network.
+
+#### Identity Catalogue
+
+Each node mantains a part of a distributed catalogue of the End User identities. This catalogue is designed to facilitate End Users to find each other.
+
+#### Identity Home
+
+Each node is home to a set of End Users identities. These identities can receive calls only through their home node.
+
+#### Call Bridge
+
+Each node interconects clients between each other in order to let them freely transfer information between them.
+
+#### Fermat Blockchain
+
+Each node mantains the Fermat Blockchain: a public record of all coinbase transactions where the protocol issues new fermats.
 
 ### Fermat Clients
 
-
+Fermat clients run the Fermat Framework, which in turn run the Fermat Components (libraries, add-ons, plug-ins, GUIs, etc.). 
