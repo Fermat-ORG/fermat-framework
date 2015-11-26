@@ -25,6 +25,8 @@ public class CryptoTransaction{
     private String op_Return;
 
 
+
+
     /**
      * Overloaded constructor
      * @param transactionHash
