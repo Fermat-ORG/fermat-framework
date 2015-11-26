@@ -40,6 +40,23 @@ The Fermat Protocol generates tokens according to a standard crytptographic algo
 
 With the mining mechanism, tokens are distributed to those who contribute most work to the operation of the Fermat Network. In this case, fermats are distributed through a predetermined algorithm to the miners that connect clients between each other and allows them to talk through them.
 
+#### Token Issuing
+
+### Fermat.org (Non-profit organization)
+
+Fund-raising Fermat tokens are issued by a non-profit organization called Fermat.org that will never receive financial benefits from the Fermat system. This organization have the following responsibilities:
+
+* Issuance of initial tokens
+* Holding of developer tokens
+* Management of bounty payments
+* Determining the Fermat System direction
+
+Fermat.org makes decisions in a decentralized manner, using a “proof of stake” voting mechanism for any decision.
+
+### Fermat Protocol
+
+The protocol itself issues tokens for miners and for development. In the last case, thay are deposited on accounts of the Fermat.org Non-profit until awarded as bounty payments for developers. 
+
 
 ## Protocol Version 1.0
 
