@@ -50,7 +50,7 @@ Fund-raising Fermat tokens are issued by a non-profit organization called Fermat
 * Holding of developer tokens
 * Management of bounty payments
 * Determining the Fermat System direction
-* Collectiong and distributing statistical information from the Fermat System.
+* Collecting and distributing statistical information from the Fermat System.
 
 Fermat.org makes decisions in a decentralized manner, using a “proof of stake” voting mechanism for any decision.
 
