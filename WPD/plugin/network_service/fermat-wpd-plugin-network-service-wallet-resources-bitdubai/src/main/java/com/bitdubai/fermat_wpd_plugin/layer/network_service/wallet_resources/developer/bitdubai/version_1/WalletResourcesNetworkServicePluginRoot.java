@@ -339,6 +339,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                if(communicationNetworkServiceConnectionManager != null)
                 communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
             }
@@ -356,6 +357,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
       /*  if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             this.register = false;
+            if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.closeAllConnection();
         } */
 

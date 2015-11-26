@@ -23,10 +23,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_request.money_request.interfaces.DealsWithMoneyRequest;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.incoming_intra_user.IncomingIntraUserManager;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.database.IncomingIntraUserTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoMetadataEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIncomingIntraUserCryptoRegistryException;
@@ -63,7 +65,7 @@ import java.util.List;
 
 public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
         implements DatabaseManagerForDevelopers,
-        IncomingIntraUserManager {
+       IncomingIntraUserManager {
 
     private final List<FermatEventListener> listenersAdded = new ArrayList<>();
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
@@ -80,6 +82,8 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
     private CryptoAddressBookManager cryptoAddressBookManager;
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_TRANSMISSION)
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
+
+
     /*
      * Incoming Intra User member variables
      */
@@ -88,6 +92,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
     private IncomingIntraUserCryptoMonitorAgent cryptoMonitorAgent;
     private IncomingIntraUserMetadataMonitorAgent metadataMonitorAgent;
     private IncomingIntraUserEventRecorderService eventRecorderService;
+
     public IncomingIntraUserTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }

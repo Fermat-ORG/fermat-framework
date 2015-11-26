@@ -25,9 +25,9 @@ public class ActorsCatalogTransactionsPendingForPropagation extends AbstractBase
 
 	private String identityPublicKey;
 
-	private double lastLatitude;
+	private Double lastLatitude;
 
-	private double lastLongitude;
+	private Double lastLongitude;
 
 	private String name;
 
@@ -98,19 +98,19 @@ public class ActorsCatalogTransactionsPendingForPropagation extends AbstractBase
 		this.identityPublicKey = identityPublicKey;
 	}
 
-	public double getLastLatitude() {
+	public Double getLastLatitude() {
 		return lastLatitude;
 	}
 
-	public void setLastLatitude(double lastLatitude) {
+	public void setLastLatitude(Double lastLatitude) {
 		this.lastLatitude = lastLatitude;
 	}
 
-	public double getLastLongitude() {
+	public Double getLastLongitude() {
 		return lastLongitude;
 	}
 
-	public void setLastLongitude(double lastLongitude) {
+	public void setLastLongitude(Double lastLongitude) {
 		this.lastLongitude = lastLongitude;
 	}
 

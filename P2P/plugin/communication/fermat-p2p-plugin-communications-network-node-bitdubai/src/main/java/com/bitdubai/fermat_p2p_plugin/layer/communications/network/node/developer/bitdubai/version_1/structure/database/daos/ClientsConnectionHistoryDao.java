@@ -9,7 +9,11 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsConnectionHistory;
+
+import java.sql.Timestamp;
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.ClientsConnectionHistoryDao</code>
@@ -27,7 +31,7 @@ public class ClientsConnectionHistoryDao extends AbstractBaseDao<ClientsConnecti
      * @param dataBase
      */
     public ClientsConnectionHistoryDao(Database dataBase) {
-        super(dataBase, "", "");
+        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_FIRST_KEY_COLUMN);
     }
 
     /**
@@ -36,7 +40,18 @@ public class ClientsConnectionHistoryDao extends AbstractBaseDao<ClientsConnecti
      */
     @Override
     protected ClientsConnectionHistory getEntityFromDatabaseTableRecord(DatabaseTableRecord record) throws InvalidParameterException {
-        return null;
+
+        ClientsConnectionHistory entity = new ClientsConnectionHistory();
+
+        entity.setUuid(record.getUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_FIRST_KEY_COLUMN));
+        entity.setIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
+        entity.setConnectionTimestamp(new Timestamp(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_CONNECTION_TIMESTAMP_COLUMN_NAME)));
+        entity.setDeviceType(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_DEVICE_TYPE_COLUMN_NAME));
+        entity.setLastLatitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_LAST_LATITUDE_COLUMN_NAME));
+        entity.setLastLongitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_LAST_LONGITUDE_COLUMN_NAME));
+        entity.setStatus(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_STATUS_COLUMN_NAME));
+
+        return entity;
     }
 
     /**
@@ -45,7 +60,18 @@ public class ClientsConnectionHistoryDao extends AbstractBaseDao<ClientsConnecti
      */
     @Override
     protected DatabaseTableRecord getDatabaseTableRecordFromEntity(ClientsConnectionHistory entity) {
-        return null;
+
+        DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
+
+        databaseTableRecord.setUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_FIRST_KEY_COLUMN, entity.getUuid());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getIdentityPublicKey());
+        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_CONNECTION_TIMESTAMP_COLUMN_NAME, entity.getConnectionTimestamp().getTime());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_DEVICE_TYPE_COLUMN_NAME, entity.getDeviceType());
+        databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_LAST_LATITUDE_COLUMN_NAME, entity.getLastLatitude());
+        databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_LAST_LONGITUDE_COLUMN_NAME, entity.getLastLongitude());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_STATUS_COLUMN_NAME, entity.getStatus());
+
+        return databaseTableRecord;
     }
 }
 

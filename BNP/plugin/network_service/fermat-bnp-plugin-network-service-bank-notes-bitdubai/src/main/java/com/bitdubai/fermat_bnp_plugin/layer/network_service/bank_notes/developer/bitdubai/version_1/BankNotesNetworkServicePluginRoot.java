@@ -188,7 +188,8 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                if(communicationNetworkServiceConnectionManager != null)
+                 communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
             }
 
@@ -205,7 +206,9 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
 
        /* if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             this.register = false;
-            communicationNetworkServiceConnectionManager.closeAllConnection();
+
+            if(communicationNetworkServiceConnectionManager != null)
+                communicationNetworkServiceConnectionManager.closeAllConnection();
         }*/
 
     }
