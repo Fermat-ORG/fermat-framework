@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -21,14 +20,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.PendingRequestNotFoundException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransaction;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantGetTransactionTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionRecord;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionMetadataRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,14 +106,14 @@ public class TransactionTransmissionContractHashDao {
         return getDataBase().getTable(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
     }
 
-    public void saveBusinessTransmissionRecord(BusinessTransaction businessTransaction) throws CantInsertRecordDataBaseException {
+    public void saveBusinessTransmissionRecord(BusinessTransactionMetadata businessTransactionMetadata) throws CantInsertRecordDataBaseException {
 
         try {
 
             DatabaseTable databaseTable = getDatabaseTable();
             DatabaseTableRecord databaseTableEmptyRecord = databaseTable.getEmptyRecord();
 
-            databaseTableEmptyRecord = buildDatabaseRecord(databaseTableEmptyRecord, businessTransaction);
+            databaseTableEmptyRecord = buildDatabaseRecord(databaseTableEmptyRecord, businessTransactionMetadata);
 
             databaseTable.insertRecord(databaseTableEmptyRecord);
 
@@ -125,20 +124,20 @@ public class TransactionTransmissionContractHashDao {
     }
 
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord record,
-                                                    BusinessTransaction businessTransaction) {
+                                                    BusinessTransactionMetadata businessTransactionMetadata) {
 
-        record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME, businessTransaction.getTransactionId());
-        //if(businessTransaction.getRequestId()!=null) record.setUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME,  businessTransaction.getRequestId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME, businessTransaction.getContractHash());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME, businessTransaction.getContractStatus().getCode());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_ID_COLUMN_NAME, businessTransaction.getContractId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME , businessTransaction.getSenderId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_TYPE_COLUMN_NAME, businessTransaction.getSenderType().getCode());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_PUBLIC_KEY_COLUMN_NAME, businessTransaction.getReceiverId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_TYPE_COLUMN_NAME, businessTransaction.getReceiverType().getCode());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_NEGOTIATION_ID_COLUMN_NAME, businessTransaction.getNegotiationId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME , businessTransaction.getType().getCode());
-        record.setLongValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME, businessTransaction.getTimestamp());
+        record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME, businessTransactionMetadata.getTransactionId());
+        //if(businessTransactionMetadata.getRequestId()!=null) record.setUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME,  businessTransactionMetadata.getRequestId());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME, businessTransactionMetadata.getContractHash());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME, businessTransactionMetadata.getContractStatus().getCode());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_ID_COLUMN_NAME, businessTransactionMetadata.getContractId());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME , businessTransactionMetadata.getSenderId());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_TYPE_COLUMN_NAME, businessTransactionMetadata.getSenderType().getCode());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_PUBLIC_KEY_COLUMN_NAME, businessTransactionMetadata.getReceiverId());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_TYPE_COLUMN_NAME, businessTransactionMetadata.getReceiverType().getCode());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_NEGOTIATION_ID_COLUMN_NAME, businessTransactionMetadata.getNegotiationId());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME , businessTransactionMetadata.getType().getCode());
+        record.setLongValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME, businessTransactionMetadata.getTimestamp());
 
         return record;
     }
@@ -156,8 +155,8 @@ public class TransactionTransmissionContractHashDao {
 
         try {
 
-            BusinessTransaction businessTransaction = getMetadata(transaction_id);
-            businessTransaction.setState(transactionTransmissionStates);
+            BusinessTransactionMetadata businessTransactionMetadata = getMetadata(transaction_id);
+            businessTransactionMetadata.setState(transactionTransmissionStates);
 
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
@@ -165,7 +164,7 @@ public class TransactionTransmissionContractHashDao {
             /*
              * 1- Create the record to the entity
              */
-            DatabaseTableRecord cryptoTransmissionMetadataRecord = buildDatabaseRecord(entityRecord,businessTransaction);
+            DatabaseTableRecord cryptoTransmissionMetadataRecord = buildDatabaseRecord(entityRecord, businessTransactionMetadata);
 
             /*
              * 2.- Create a new transaction and execute
@@ -192,7 +191,7 @@ public class TransactionTransmissionContractHashDao {
 
     }
 
-    public BusinessTransaction getMetadata(UUID transmissionId) throws CantGetTransactionTransmissionException,
+    public BusinessTransactionMetadata getMetadata(UUID transmissionId) throws CantGetTransactionTransmissionException,
             PendingRequestNotFoundException {
 
         if (transmissionId == null)
@@ -224,7 +223,7 @@ public class TransactionTransmissionContractHashDao {
         }
     }
 
-    private BusinessTransaction buildBusinessTransactionRecord(DatabaseTableRecord record) throws InvalidParameterException {
+    private BusinessTransactionMetadata buildBusinessTransactionRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
         UUID transactionId = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME);
         String contractHash = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME);
@@ -245,7 +244,7 @@ public class TransactionTransmissionContractHashDao {
         BusinessTransactionTransactionType recordTransactionType=BusinessTransactionTransactionType.getByCode(type);
         TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.getByCode(state);
 
-        return new BusinessTransactionRecord(
+        return new BusinessTransactionMetadataRecord(
                 contractHash,
                 recordContractStatus,
                 receiverPublicKey,
@@ -265,11 +264,11 @@ public class TransactionTransmissionContractHashDao {
     public void confirmReception(UUID transactionID) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException, CantGetTransactionTransmissionException {
         try {
 
-            BusinessTransaction businessTransaction = getMetadata(transactionID);
+            BusinessTransactionMetadata businessTransactionMetadata = getMetadata(transactionID);
 
-            businessTransaction.confirmRead();
+            businessTransactionMetadata.confirmRead();
 
-            update(businessTransaction);
+            update(businessTransactionMetadata);
 
         } catch (PendingRequestNotFoundException e) {
             throw new PendingRequestNotFoundException(null, "RequestID: "+transactionID.toString(), "Can not find an address exchange request with the given request id.");
@@ -285,9 +284,9 @@ public class TransactionTransmissionContractHashDao {
         }
     }
 
-    public void update(BusinessTransaction businessTransaction) throws CantUpdateRecordDataBaseException {
+    public void update(BusinessTransactionMetadata businessTransactionMetadata) throws CantUpdateRecordDataBaseException {
 
-        if (businessTransaction == null) {
+        if (businessTransactionMetadata == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
@@ -295,7 +294,7 @@ public class TransactionTransmissionContractHashDao {
 
             DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
-            DatabaseTableRecord entityRecord = buildDatabaseRecord(databaseTableRecord,businessTransaction);
+            DatabaseTableRecord entityRecord = buildDatabaseRecord(databaseTableRecord, businessTransactionMetadata);
 
             DatabaseTransaction transaction = getDataBase().newTransaction();
             transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
@@ -323,7 +322,7 @@ public class TransactionTransmissionContractHashDao {
      * @return List<FermatMessage>
      * @throws CantReadRecordDataBaseException
      */
-    public List<BusinessTransaction> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<BusinessTransactionMetadata> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()) {
@@ -331,7 +330,7 @@ public class TransactionTransmissionContractHashDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<BusinessTransaction> list = null;
+        List<BusinessTransactionMetadata> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -357,7 +356,7 @@ public class TransactionTransmissionContractHashDao {
             for (DatabaseTableRecord record : records) {
 
 
-                BusinessTransaction outgoingTemplateNetworkServiceMessage = buildBusinessTransactionRecord(record);
+                BusinessTransactionMetadata outgoingTemplateNetworkServiceMessage = buildBusinessTransactionRecord(record);
 
                 list.add(outgoingTemplateNetworkServiceMessage);
 
@@ -380,9 +379,9 @@ public class TransactionTransmissionContractHashDao {
         return list;
     }
 
-    public void changeState(BusinessTransaction businessTransaction) throws CantUpdateRecordDataBaseException {
+    public void changeState(BusinessTransactionMetadata businessTransactionMetadata) throws CantUpdateRecordDataBaseException {
 
-        if (businessTransaction == null) {
+        if (businessTransactionMetadata == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
@@ -393,7 +392,7 @@ public class TransactionTransmissionContractHashDao {
             /*
              * 1- Create the record to the entity
              */
-            DatabaseTableRecord cryptoTransmissionMetadataRecord = buildDatabaseRecord(entityRecord,businessTransaction);
+            DatabaseTableRecord cryptoTransmissionMetadataRecord = buildDatabaseRecord(entityRecord, businessTransactionMetadata);
 
             /*
              * 2.- Create a new transaction and execute
