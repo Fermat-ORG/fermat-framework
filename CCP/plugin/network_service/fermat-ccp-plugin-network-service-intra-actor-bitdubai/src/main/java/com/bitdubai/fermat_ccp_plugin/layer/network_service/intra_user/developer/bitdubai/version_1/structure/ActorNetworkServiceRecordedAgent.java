@@ -148,7 +148,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     case ACCEPTED:
                     case DISCONNECTED:
                     case RECEIVED:
-
+                    case DENIED:
                         sendMessageToActor(
                                 cpr
                         );
