@@ -18,13 +18,13 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 
 	private String ip;
 
-	private double latitude;
+	private double lastLatitude;
 
 	private Timestamp lastConnectionTimestamp;
 
 	private Integer lateNotificationsCounter;
 
-	private double longitude;
+	private double lastLongitude;
 
 	private String name;
 
@@ -62,12 +62,12 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 		this.ip = ip;
 	}
 
-	public double getLatitude() {
-		return this.latitude;
+	public double getLastLatitude() {
+		return this.lastLatitude;
 	}
 
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
+	public void setLastLatitude(double lastLatitude) {
+		this.lastLatitude = lastLatitude;
 	}
 
 	public Timestamp getLastConnectionTimestamp() {
@@ -86,12 +86,12 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 		this.lateNotificationsCounter = lateNotificationsCounter;
 	}
 
-	public double getLongitude() {
-		return this.longitude;
+	public double getLastLongitude() {
+		return this.lastLongitude;
 	}
 
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
+	public void setLastLongitude(double lastLongitude) {
+		this.lastLongitude = lastLongitude;
 	}
 
 	public String getName() {
@@ -128,8 +128,8 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
         if (this == o) return true;
         if (!(o instanceof NodesCatalog)) return false;
         NodesCatalog that = (NodesCatalog) o;
-        return Objects.equals(getLatitude(), that.getLatitude()) &&
-                Objects.equals(getLongitude(), that.getLongitude()) &&
+        return Objects.equals(getLastLatitude(), that.getLastLatitude()) &&
+                Objects.equals(getLastLongitude(), that.getLastLongitude()) &&
                 Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
                 Objects.equals(getDefaultPort(), that.getDefaultPort()) &&
                 Objects.equals(getIp(), that.getIp()) &&
@@ -142,7 +142,7 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIdentityPublicKey(), getDefaultPort(), getIp(), getLatitude(), getLastConnectionTimestamp(), getLateNotificationsCounter(), getLongitude(), getName(), getOfflineCounter(), getRegisteredTimestamp());
+        return Objects.hash(getIdentityPublicKey(), getDefaultPort(), getIp(), getLastLatitude(), getLastConnectionTimestamp(), getLateNotificationsCounter(), getLastLongitude(), getName(), getOfflineCounter(), getRegisteredTimestamp());
     }
 
     @Override

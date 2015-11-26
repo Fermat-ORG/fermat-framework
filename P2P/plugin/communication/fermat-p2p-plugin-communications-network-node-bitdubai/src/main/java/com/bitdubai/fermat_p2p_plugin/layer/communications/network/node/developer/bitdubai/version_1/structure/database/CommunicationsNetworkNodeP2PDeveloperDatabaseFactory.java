@@ -252,7 +252,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_LATITUDE_COLUMN_NAME);
         checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_LONGITUDE_COLUMN_NAME);
-        checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_CLIENT_IDENTITY_PUBLICKEY_COLUMN_NAME);
+        checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_NETWORK_SERVICE_TYPE_COLUMN_NAME);
         checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_CHECKED_IN_TIMESTAMP_COLUMN_NAME);
         /**
@@ -311,7 +311,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_LAST_LATITUDE_COLUMN_NAME);
         checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_LAST_LONGITUDE_COLUMN_NAME);
-        checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CLIENT_IDENTITY_PUBLICKEY_COLUMN_NAME);
+        checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_NETWORK_SERVICE_TYPE_COLUMN_NAME);
         checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME);
         checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CHECK_TYPE_COLUMN_NAME);
@@ -364,7 +364,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         List<String> methodcallshistoryColumns = new ArrayList<String>();
 
         methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_UUID_COLUMN_NAME);
-        methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_METHODNAME_COLUMN_NAME);
+        methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_METHOD_NAME_COLUMN_NAME);
         methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_PARAMETERS_COLUMN_NAME);
         methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CREATE_TIMESTAMP_COLUMN_NAME);
