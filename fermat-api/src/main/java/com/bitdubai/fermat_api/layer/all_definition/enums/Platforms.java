@@ -17,6 +17,7 @@ public enum Platforms implements FermatEnum {
     BANKING_PLATFORM                    ("BNK"),
     COMMUNICATION_PLATFORM              ("CP"),
     CRYPTO_BROKER_PLATFORM              ("CBP"),
+    CASH_PLATFORM                       ("CSH"),
     CRYPTO_COMMODITY_MONEY              ("CCM"),
     CRYPTO_CURRENCY_PLATFORM            ("CCP"),
     DIGITAL_ASSET_PLATFORM              ("DAP"),
@@ -39,6 +40,7 @@ public enum Platforms implements FermatEnum {
             case "BNK":  return BANKING_PLATFORM;
             case "CP":   return COMMUNICATION_PLATFORM;
             case "CBP":  return CRYPTO_BROKER_PLATFORM;
+            case "CSH":  return CASH_PLATFORM;
             case "CCM":  return CRYPTO_COMMODITY_MONEY;
             case "CCP":  return CRYPTO_CURRENCY_PLATFORM;
             case "DAP":  return DIGITAL_ASSET_PLATFORM;
