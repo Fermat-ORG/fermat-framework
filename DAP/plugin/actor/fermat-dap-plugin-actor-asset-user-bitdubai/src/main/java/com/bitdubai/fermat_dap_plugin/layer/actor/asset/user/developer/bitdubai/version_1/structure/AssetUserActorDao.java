@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -29,16 +30,22 @@ import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreat
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.database.AssetUserActorDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.database.AssetUserActorDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantCreateAssetUserGroupException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantDeleteAssetUserGroupException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserActorProfileImageException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupTableExcepcion;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUsersListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserConnectionException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserGroupException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -52,6 +59,8 @@ import java.util.UUID;
 public class AssetUserActorDao implements Serializable {
 
     String ASSET_USER_PROFILE_IMAGE_FILE_NAME = "assetUserActorProfileImage";
+    private boolean GROUP_EXIST = true;
+    private boolean GROUP_NOT_EXIST = false;
 
     /**
      * Represent the Plugin Database.
@@ -887,6 +896,181 @@ public class AssetUserActorDao implements Serializable {
             throw new CantCreateNewDeveloperException(em.getMessage(), em, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant check if alias exists, unknown failure.");
+        }
+    }
+
+    public void createAssetUserGroup (AssetUserGroupRecord assetUserGroupRecord) throws CantCreateAssetUserGroupException {
+        try {
+            DatabaseTable table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetAssetUserGroupTableExcepcion("CANT GET ASSET USER GROUP, TABLE NOT FOUND.", " ASSET USER GROUP", "");
+            } else {
+                if (existsAssetUserGroup(assetUserGroupRecord.getGroupId())) {
+                    this.updateAssetUserGroup(assetUserGroupRecord);
+                } else {
+
+                    table.loadToMemory();
+
+                    if (table.getRecords().size() == 0) {
+                        DatabaseTableRecord record = table.getEmptyRecord();
+                        record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME, assetUserGroupRecord.getGroupId());
+                        record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME, assetUserGroupRecord.getGroupName());
+                        table.insertRecord(record);
+                    }
+                }
+            }
+            database.closeDatabase();
+        } catch (CantInsertRecordException e) {
+            throw new CantCreateAssetUserGroupException("CAN'T INSERT USER GROUP", e, "", "Cant create new GROUP, insert database problems.");
+        } catch (Exception e) {
+            throw new CantCreateAssetUserGroupException("CAN'T CREATE USER GROUP", FermatException.wrapException(e), "", "Cant create new GROUP, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
+    }
+
+    public void updateAssetUserGroup(AssetUserGroupRecord assetUserGroupRecord) throws CantUpdateAssetUserGroupException {
+        DatabaseTable table;
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetAssetUserGroupTableExcepcion("CANT GET ASSET USER GROUP, TABLE NOT FOUND.", " ASSET USER GROUP", "");
+            }
+
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME, assetUserGroupRecord.getGroupId(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME, assetUserGroupRecord.getGroupName());
+                table.updateRecord(record);
+            }
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantUpdateAssetUserGroupException(e.getMessage(), e, "asset User Group", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME + " table in memory.");
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateAssetUserGroupException(e.getMessage(), e, "asset User Group", "Cant Update " + AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantUpdateAssetUserGroupException(e.getMessage(), FermatException.wrapException(e), "Asset User Group", "Cant update Asset User Group, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
+    }
+
+    public void deleteAssetUserGroup(String assetUserGroupId) throws CantDeleteAssetUserGroupException {
+        DatabaseTable table;
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetAssetUserGroupTableExcepcion("CANT GET ASSET USER GROUP, TABLE NOT FOUND.", " ASSET USER GROUP", "");
+            }
+
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME, assetUserGroupId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+                table.deleteRecord(record);
+            }
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantDeleteAssetUserGroupException(e.getMessage(), e, "asset User Group", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME + " table in memory.");
+        } catch (CantDeleteRecordException e) {
+            throw new CantDeleteAssetUserGroupException(e.getMessage(), e, "asset User Group", "Cant Update " + AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantDeleteAssetUserGroupException(e.getMessage(), FermatException.wrapException(e), "Asset User Group", "Cant update Asset User Group, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
+    }
+
+    public List<AssetUserGroupRecord>  getAssetUserGroupsList() throws CantGetAssetUserGroupExcepcion {
+        DatabaseTable table;
+        List<AssetUserGroupRecord> assetUserGroupRecordList = new ArrayList<AssetUserGroupRecord>();
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetAssetUserGroupTableExcepcion("CANT GET ASSET USER GROUP, TABLE NOT FOUND.", " ASSET USER GROUP", "");
+            }
+
+            table.loadToMemory();
+
+            assetUserGroupRecordList = createAssetUserGroupsList(assetUserGroupRecordList, table.getRecords());
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetUserGroupExcepcion(e.getMessage(), e, "asset User Group", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantGetAssetUserGroupExcepcion(e.getMessage(), FermatException.wrapException(e), "Asset User Group", "Cant Get Asset User Group, unknown failure.");
+        } finally {
+            database.closeDatabase();
+            return assetUserGroupRecordList;
+        }
+    }
+
+    private List<AssetUserGroupRecord> createAssetUserGroupsList(List<AssetUserGroupRecord> assetUserGroupRecordList, List<DatabaseTableRecord> records) {
+        for (DatabaseTableRecord record : records) {
+            AssetUserGroupRecord assetUserGroupRecord = new AssetUserGroupRecord();
+            assetUserGroupRecord.setGroupId(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME));
+            assetUserGroupRecord.setGroupName(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME));
+            assetUserGroupRecordList.add(assetUserGroupRecord);
+        }
+        return assetUserGroupRecordList;
+    }
+
+    private boolean existsAssetUserGroup(String assetUserGroupId) throws CantGetAssetUserGroupExcepcion {
+        DatabaseTable table;
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetAssetUserGroupTableExcepcion("CANT GET ASSET USER GROUP, TABLE NOT FOUND.", " ASSET USER GROUP", "");
+            }
+
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME, assetUserGroupId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+                if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME) != null)
+                    return GROUP_EXIST;
+            }
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetUserGroupExcepcion(e.getMessage(), e, "asset User Group", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantGetAssetUserGroupExcepcion(e.getMessage(), FermatException.wrapException(e), "Asset User Group", "Cant get Asset User Group, unknown failure.");
+        } finally {
+            database.closeDatabase();
+            return GROUP_NOT_EXIST;
         }
     }
 }
