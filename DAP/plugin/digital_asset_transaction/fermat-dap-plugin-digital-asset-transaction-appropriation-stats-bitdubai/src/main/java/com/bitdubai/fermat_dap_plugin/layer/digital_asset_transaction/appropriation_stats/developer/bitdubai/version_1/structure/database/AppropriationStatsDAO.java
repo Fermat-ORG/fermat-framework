@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.appropriation_stats.exceptions.CantCheckAppropriationStatsException;
@@ -28,7 +29,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.appropriation_stats.exc
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.exceptions.CantLoadAppropriationStatsEventListException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
 import java.io.Closeable;
 import java.util.ArrayList;

@@ -128,7 +128,7 @@ public class AppropriationStatsMonitorAgent implements Agent {
 
                 for (String eventId : dao.getPendingIssuerNetworkServiceEvents()) {
                     switch (dao.getEventTypeById(eventId)) {
-                        case NEW_NETWORK_SERVICE_MESSAGE_RECEIVE:
+                        case NEW_RECEIVE_MESSAGE_ACTOR:
                             //TODO GET ALL THE MESSAGES ON THE NETWORK SERVICE AND PROCESS THESE THAT ARE FOR ME.
                             //assetIssuerActorNetworkServiceManager.getPendingMessages(); or something like that...
                             String message = "";
