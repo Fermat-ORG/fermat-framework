@@ -89,7 +89,7 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
 
             System.out.println("******* Init Hold Crypto Money Transaction ******");
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
-            testHold();
+            //testHold();
             startMonitorAgent();
 
             database.closeDatabase();
