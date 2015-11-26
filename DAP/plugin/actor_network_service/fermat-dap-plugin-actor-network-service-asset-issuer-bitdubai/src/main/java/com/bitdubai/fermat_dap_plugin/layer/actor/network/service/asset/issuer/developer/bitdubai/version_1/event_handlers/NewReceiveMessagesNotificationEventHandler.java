@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
@@ -16,10 +15,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.util.JsonAssetIssuerANSAttNamesConstants;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.event_handlers.AbstractNewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
@@ -39,86 +38,84 @@ import com.google.gson.JsonParser;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NewReceiveMessagesNotificationEventHandler extends AbstractNewReceiveMessagesNotificationEventHandler {
+//public class NewReceiveMessagesNotificationEventHandler extends AbstractNewReceiveMessagesNotificationEventHandler {
+public class NewReceiveMessagesNotificationEventHandler implements FermatEventHandler {
 
     private EventManager eventManager;
     private AssetIssuerActorNetworkServicePluginRoot pluginRoot;
 
-    public NewReceiveMessagesNotificationEventHandler(AbstractNetworkService assetIssuerActorNetworkServicePluginRoot){
-        super(assetIssuerActorNetworkServicePluginRoot);
-    }
-
-//    public NewReceiveMessagesNotificationEventHandler(AssetIssuerActorNetworkServicePluginRoot assetIssuerActorNetworkServicePluginRoot, EventManager eventManager){
-//        this.pluginRoot = assetIssuerActorNetworkServicePluginRoot;
-//        this.eventManager = eventManager;
+//    public NewReceiveMessagesNotificationEventHandler(AbstractNetworkService assetIssuerActorNetworkServicePluginRoot){
+//        super(assetIssuerActorNetworkServicePluginRoot);
 //    }
 
-
-    @Override
-    protected void handleNewMessages(FermatMessage message) throws FermatException {
-        ((AssetIssuerActorNetworkServicePluginRoot)networkService).handleNewMessages(message);
+    //    public NewReceiveMessagesNotificationEventHandler(AssetIssuerActorNetworkServicePluginRoot assetIssuerActorNetworkServicePluginRoot, EventManager eventManager){
+    public NewReceiveMessagesNotificationEventHandler(AssetIssuerActorNetworkServicePluginRoot assetIssuerActorNetworkServicePluginRoot) {
+        this.pluginRoot = assetIssuerActorNetworkServicePluginRoot;
     }
+
 
 //    @Override
-//    public void handleEvent(FermatEvent platformEvent) throws FermatException {
-//        // if the service is started ...
+//    protected void handleNewMessages(FermatMessage message) throws FermatException {
+//        ((AssetIssuerActorNetworkServicePluginRoot)networkService).handleNewMessages(message);
+//    }
+
+    @Override
+    public void handleEvent(FermatEvent platformEvent) throws FermatException {
+        // if the service is started ...
 //        if (pluginRoot.getStatus() == ServiceStatus.STARTED ) {
-//
-//            NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageReceivedNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
-//
-//            // if the message is destined to us.
+        if (platformEvent.getSource() == AssetIssuerActorNetworkServicePluginRoot.EVENT_SOURCE) {
+
+            System.out.println("ACTOR NETWORK SERVICE ASSET ISSUER - NOTIFICACION EVENTO MENSAJE RECIBIDO!!!!");
+
+            NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageReceivedNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
+            FermatMessage fermatMessageReceive = (FermatMessage) newNetworkServiceMessageReceivedNotificationEvent.getData();
+
+            // if the message is destined to us.
 //            if(newNetworkServiceMessageReceivedNotificationEvent.getNetworkServiceTypeApplicant() == pluginRoot.getNetworkServiceType()) {
-//                System.out.print("NOTIFICACION EVENTO MENSAJE RECIBIDO TO ASSET ISSUER!!!!");
+                /*
+                * If is null then is RequestCryptoAddres from getSender else is new CryptoAddres delivered from remote assetUser
+                */
+            Gson gson = new Gson();
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = parser.parse(fermatMessageReceive.getContent()).getAsJsonObject();
+            CharSequence pblicKeyExtended = JsonAssetIssuerANSAttNamesConstants.PUBLICKEY_EXTENDED;
+
+
+            if (fermatMessageReceive.getContent() != null) {
+
+                if (fermatMessageReceive.getContent().contains(pblicKeyExtended)) {
+
+                    //TODO: Revisar si estos son los actores y si aplicara este metodo
+                    ActorAssetRedeemPoint actorRedeemPointSender = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.REDEEM_POINT).getAsString(), RedeemPointActorRecord.class);
+                    ActorAssetIssuer actorAssetIssuerDestination = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.ISSUER).getAsString(), AssetIssuerActorRecord.class);
+                    String message = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.PUBLICKEY_EXTENDED).getAsString(), String.class);
+
+                    System.out.println("Actor Asset User: SE LANZARA EVENTO PARA REQUEST CRYPTO ADDRESS");
+
+                    FermatEvent event = eventManager.getNewEvent(EventType.NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER);
+                    event.setSource(EventSource.ACTOR_ASSET_ISSUER);
+                    ((NewCryptoAddressRequestAssetUserActorNotificationEvent) event).setNewCryptoAddressRequest(actorRedeemPointSender, actorAssetIssuerDestination, message);
+                    eventManager.raiseEvent(event);
+
+                }
+//                else {
 //
+//                    CryptoAddress cryptoAddress = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.CRYPTOADDRES).getAsString(), CryptoAddress.class);
+//                    ActorAssetIssuer actorAssetIssuerDestination = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.ISSUER).getAsString(), AssetIssuerActorRecord.class);
+//                    ActorAssetRedeemPoint actorAssetUserSender = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.REDEEM_POINT).getAsString(), RedeemPointActorRecord.class);
 //
-//                FermatMessage fermatMessageReceive = (FermatMessage) newNetworkServiceMessageReceivedNotificationEvent.getData();
+//                    System.out.print("Actor Asset User: SE LANZARA EVENTO PARA RECEIVE CRYPTO ADDRESS");
 //
-//                /*
-//                * If is null then is RequestCryptoAddres from getSender else is new CryptoAddres delivered from remote assetUser
-//                */
-//
-//
-//                Gson gson = new Gson();
-//                JsonParser parser = new JsonParser();
-//                JsonObject jsonObject = (JsonObject) parser.parse(fermatMessageReceive.getContent()).getAsJsonObject();
-//                CharSequence contieneCryptoAddress = JsonAssetIssuerANSAttNamesConstants.CRYPTOADDRES;
-//
-//                if(fermatMessageReceive.getContent()!=null) {
-//
-//                    if (!fermatMessageReceive.getContent().contains(contieneCryptoAddress)) {
-//
-//                        //TODO: Revisar si estos son los actores y si aplicara este metodo
-//                        ActorAssetIssuer actorAssetIssuerSender = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.ISSUER).getAsString(), AssetIssuerActorRecord.class);
-//                        ActorAssetUser actorAssetUserDestination = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.USER).getAsString(), AssetUserActorRecord.class);
-//
-//                        System.out.print("Actor Asset User: SE LANZARA EVENTO PARA REQUEST CRYPTO ADDRESS");
-//
-//                        FermatEvent event = eventManager.getNewEvent(EventType.NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER);
-//                        event.setSource(EventSource.ACTOR_ASSET_USER);
-//                        ((NewCryptoAddressRequestAssetUserActorNotificationEvent) event).setNewCryptoAddressRequest(actorAssetIssuerSender,actorAssetUserDestination);
-//                        eventManager.raiseEvent(event);
-//
-//
-//
-//                    } else {
-//
-//
-//                        CryptoAddress cryptoAddress = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.CRYPTOADDRES).getAsString(), CryptoAddress.class);
-//                        ActorAssetIssuer actorAssetIssuerDestination = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.ISSUER).getAsString(), AssetIssuerActorRecord.class);
-//                        ActorAssetUser actorAssetUserSender = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.USER).getAsString(), AssetUserActorRecord.class);
-//
-//                        System.out.print("Actor Asset User: SE LANZARA EVENTO PARA RECEIVE CRYPTO ADDRESS");
-//
-//                        FermatEvent event = eventManager.getNewEvent(EventType.NEW_CRYPTO_ADDRESS_RECEIVE_ASSET_USER);
-//                        event.setSource(EventSource.ACTOR_ASSET_USER);
-//                        ((NewCryptoAddressReceiveAssetUserActorNotificationEvent) event).setNewCryptoAddressReceive(actorAssetUserSender, actorAssetIssuerDestination, cryptoAddress);
-//                        eventManager.raiseEvent(event);
-//
-//                    }
+//                    FermatEvent event = eventManager.getNewEvent(EventType.NEW_CRYPTO_ADDRESS_RECEIVE_ASSET_USER);
+//                    event.setSource(EventSource.ACTOR_ASSET_USER);
+//                    ((NewCryptoAddressReceiveAssetUserActorNotificationEvent) event).setNewCryptoAddressReceive(actorAssetUserSender, actorAssetIssuerDestination, cryptoAddress);
+//                    eventManager.raiseEvent(event);
 //                }
+            }
 //            }
-//        } else {
+        }
+//        else {
 //            System.out.print("ASSET ISSUER ACTOR NETWORK SERVICE NOT STARTED.");
 //        }
-//    }
+    }
 }
