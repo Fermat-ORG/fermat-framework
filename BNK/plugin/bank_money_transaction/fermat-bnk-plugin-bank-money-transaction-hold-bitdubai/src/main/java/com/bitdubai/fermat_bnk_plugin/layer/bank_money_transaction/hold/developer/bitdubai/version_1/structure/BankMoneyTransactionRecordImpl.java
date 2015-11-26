@@ -12,6 +12,17 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
 
     //TODO: add atributtes.
 
+
+    UUID bankTransactionId;
+
+    BankTransactionStatus status;
+
+    BalanceType balanceType;
+
+    TransactionType transactionType;
+
+    String publicKey;
+
     @Override
     public UUID getBankTransactionId() {
         return null;
