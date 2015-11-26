@@ -318,6 +318,14 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
+
+        try {
+            bottomNavigationEnabled(true);
+        }catch (Exception e){
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     private void setOneFragmentInScreen() throws InvalidParameterException {
