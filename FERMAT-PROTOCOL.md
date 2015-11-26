@@ -58,12 +58,27 @@ Fermat.org makes decisions in a decentralized manner, using a â€œproof of stakeâ
 
 The protocol itself issues tokens for miners and for development. In the last case, thay are deposited on accounts of the Fermat.org Non-profit until awarded as bounty payments for developers. 
 
+### Token Usage
 
-## Protocol Version 1.0
+End users automatically aquires fermats by receiving bitcoins into a their Fermat wallet. They can go back to bitcoin by transfering fermats into a Bitcoin wallet. 
+
+Fermat tokes are necesary for users to pay for two things:
+
+#### Communication
+
+End Users pay Fermat Nodes with fermats to be able to receive calls from other devices. 
+
+#### Use of Fermat Components
+
+End Users pay Fermat Component's developers with fermats to be able to use their plug-ins, GUI components, skins, language packages, etc. Developers defines a Micro-Use-License for each components. Products like Wallets or Financial APPs use these components, so the cost for using these products is the sum of the cost of the Micro-Use-Licenses defined by each developer involved. This is the way how developers are paid for mantaining their components.
+
+#### Technical Support
+
+End Users pay with fermats to receive personalized technical support from Fermat Component's developers.
+
+## Fermat Protocol Version 1.0
 
 ### Fermat Nodes
-
-
 
 ### Fermat Clients
 
