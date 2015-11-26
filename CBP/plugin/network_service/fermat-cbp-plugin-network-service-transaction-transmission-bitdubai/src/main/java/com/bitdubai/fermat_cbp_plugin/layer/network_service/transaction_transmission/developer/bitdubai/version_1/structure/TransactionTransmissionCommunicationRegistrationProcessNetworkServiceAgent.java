@@ -8,6 +8,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/11/15.
  */
 public class TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent extends AbstractCommunicationRegistrationProcessNetworkServiceAgent {
+
     public TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent(
             AbstractNetworkService networkServicePluginRoot,
             CommunicationsClientConnection communicationsClientConnection) {
@@ -15,4 +16,5 @@ public class TransactionTransmissionCommunicationRegistrationProcessNetworkServi
                 networkServicePluginRoot,
                 communicationsClientConnection);
     }
+
 }
