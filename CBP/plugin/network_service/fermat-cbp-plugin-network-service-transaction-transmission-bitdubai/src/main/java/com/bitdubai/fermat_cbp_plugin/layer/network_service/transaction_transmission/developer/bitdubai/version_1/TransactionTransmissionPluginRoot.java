@@ -531,7 +531,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
              */
             //initializeListener();
 
-             /*
+        /*
          * Listen and handle VPN Connection Close Notification Event
          */
             FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
@@ -539,7 +539,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-              /*
+        /*
          * Listen and handle Client Connection Close Notification Event
          */
             fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
