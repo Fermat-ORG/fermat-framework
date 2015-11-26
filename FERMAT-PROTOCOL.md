@@ -34,7 +34,7 @@ With the fund-raising mechanism, tokens are distributed to those who fund the in
 
 With the development mechanism, tokens are generated using a predefined mechanism and are only available for the development of Fermat components. These fermats become available through a pre-determined schedule and are distributed via a community-driven bounty system where decisions are made based on the proof-of-stake mechanism.
 
-### Mining Mechanism
+#### Mining Mechanism
 
 The Fermat Protocol generates tokens according to a standard crytptographic algorithm acting as a proof of the value nodes are contributing to the application (Fermat uses a kind of Proof of Work Algorithm designed for the particular services Fermat nodes are providing).
 
