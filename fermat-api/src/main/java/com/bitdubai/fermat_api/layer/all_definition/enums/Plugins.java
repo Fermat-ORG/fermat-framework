@@ -146,6 +146,14 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE("BWPDWSSAM"),
     // End  WPD Plugins
 
+    //Init BNK Plugins
+    BITDUBAI_BNK_HOLD_MONEY_TRANSACTION("BBNKHMT"),
+    BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION("BBNKUMT"),
+    BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION("BBNKDMT"),
+    BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION("BBNKWMT"),
+    BITDUBAI_BNK_BANK_MONEY_WALLET("BBNKBMW"),
+    // End BNK Plugins
+
     //Init CSH Plugins
     BITDUBAI_CSH_MONEY_TRANSACTION_HOLD("BCSHMTH"),
     BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD("BCSHMTU"),
@@ -314,6 +322,11 @@ public enum Plugins implements FermatEnum {
             case ("CRRE"):  return CRYPTO_MONEY_RESTOCK     ;
             case ("CRDE"):  return CRYPTO_MONEY_DESTOCK     ;
             case ("TRTX"):  return TRANSACTION_TRANSMISSION ;
+            case "BBNKHMT": return BITDUBAI_BNK_HOLD_MONEY_TRANSACTION;
+            case "BBNKUMT": return BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION;
+            case "BBNKDMT": return BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION;
+            case "BBNKWMT": return BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION;
+            case "BBNKBMW": return BITDUBAI_BNK_BANK_MONEY_WALLET;
             case ("NGTR"):  return NEGOTIATION_TRANSMISSION ;
             case ("CBNE"):  return CUSTOMER_BROKER_NEW      ;
             case ("CBUP"):  return CUSTOMER_BROKER_UPDATE   ;
