@@ -22,6 +22,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
@@ -53,6 +55,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionContractHashDao;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantGetTransactionTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
@@ -62,6 +66,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.messages.TransactionTransmissionResponseMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
@@ -103,6 +110,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
+    private List<FermatEventListener>    listenersAdded;
+
     public TransactionTransmissionPluginRoot() {
         super(new PluginVersionReference(new Version()),
                 PlatformComponentType.NETWORK_SERVICE,
@@ -111,6 +120,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 "TransactionTransmissionNetworkService",
                 null,
                 EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+        this.listenersAdded = new ArrayList<>();
     }
 
     /**
@@ -450,6 +460,41 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         }
     }
 
+    /**
+     * Handles the events VPNConnectionCloseNotificationEvent
+     * @param fermatEvent
+     */
+    @Override
+    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+
+            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+
+                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        }
+
+    }
+
+    /**
+     * Handles the events ClientConnectionCloseNotificationEvent
+     * @param fermatEvent
+     */
+    @Override
+    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+            this.register = false;
+            communicationNetworkServiceConnectionManager.closeAllConnection();
+        }
+
+    }
+
     @Override
     public void start() throws CantStartPluginException {
 
@@ -482,6 +527,22 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
              * Initialize listeners
              */
             //initializeListener();
+
+        /*
+         * Listen and handle VPN Connection Close Notification Event
+         */
+            FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
+            fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle Client Connection Close Notification Event
+         */
+            fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
+            fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
 
             /*

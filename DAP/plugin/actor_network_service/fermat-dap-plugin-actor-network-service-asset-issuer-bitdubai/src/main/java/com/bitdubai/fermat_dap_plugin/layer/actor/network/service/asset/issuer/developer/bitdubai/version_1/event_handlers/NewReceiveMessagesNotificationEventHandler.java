@@ -77,13 +77,13 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
                 */
             Gson gson = new Gson();
             JsonParser parser = new JsonParser();
-            JsonObject jsonObject = (JsonObject) parser.parse(fermatMessageReceive.getContent()).getAsJsonObject();
+            JsonObject jsonObject = parser.parse(fermatMessageReceive.getContent()).getAsJsonObject();
             CharSequence pblicKeyExtended = JsonAssetIssuerANSAttNamesConstants.PUBLICKEY_EXTENDED;
 
 
             if (fermatMessageReceive.getContent() != null) {
 
-                if (!fermatMessageReceive.getContent().contains(pblicKeyExtended)) {
+                if (fermatMessageReceive.getContent().contains(pblicKeyExtended)) {
 
                     //TODO: Revisar si estos son los actores y si aplicara este metodo
                     ActorAssetRedeemPoint actorRedeemPointSender = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.REDEEM_POINT).getAsString(), RedeemPointActorRecord.class);
