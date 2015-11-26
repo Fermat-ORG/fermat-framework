@@ -8,6 +8,7 @@ The Fermat Protocol is an open standard meaning that can be freely adopted, impl
 
 We expect the protocol to evolve through time to address miss behaviours and mitigate attacks. The protocol may be adapted in response to proposed improvements and market feedback but all changes must be decided by consensus of its users.
 
+<br>
 ## Fermat Application Tokens
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg "Fermat Application Token")
@@ -76,6 +77,7 @@ End Users pay Fermat Component's developers with fermats to be able to use their
 
 End Users pay with fermats to receive personalized technical support from Fermat Component's developers.
 
+<br>
 ## Fermat Protocol Version 1.0
 
 The Fermat Protocol spans through Fermat Nodes and Fermat Clients. It defines the internal rules on each of them and also the rules of engagement between each other.
