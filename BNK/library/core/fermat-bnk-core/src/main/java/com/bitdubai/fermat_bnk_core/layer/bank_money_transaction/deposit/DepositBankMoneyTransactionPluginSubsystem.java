@@ -13,7 +13,7 @@ public class DepositBankMoneyTransactionPluginSubsystem extends AbstractPluginSu
 
 
     public DepositBankMoneyTransactionPluginSubsystem() {
-        super(new PluginReference(Plugins.EXTRA_WALLET_USER));
+        super(new PluginReference(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION));
     }
 
     @Override

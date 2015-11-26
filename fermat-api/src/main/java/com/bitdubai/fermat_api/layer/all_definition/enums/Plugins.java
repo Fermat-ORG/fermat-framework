@@ -312,7 +312,7 @@ public enum Plugins implements FermatEnum {
             case "BBNKUMT": return BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION;
             case "BBNKDMT": return BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION;
             case "BBNKWMT": return BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION;
-            case "BBNKBMW": return BITDUBAI_BNK_BANK_MONEY_WALLET;  
+            case "BBNKBMW": return BITDUBAI_BNK_BANK_MONEY_WALLET;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

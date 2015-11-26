@@ -1,17 +1,18 @@
-package com.bitdubai.fermat_bnk_core.layer.bank_money_transaction.hold;
+package com.bitdubai.fermat_bnk_core.layer.wallet.bank_money;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by memo on 25/11/15.
  */
-public class HoldBankMoneyTransactionPluginSubsystem extends AbstractPluginSubsystem {
-    public HoldBankMoneyTransactionPluginSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION));
+public class BankMoneyWalletPluginSubsystem extends AbstractPluginSubsystem {
+
+    public BankMoneyWalletPluginSubsystem() {
+        super(new PluginReference(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET));
     }
 
     @Override

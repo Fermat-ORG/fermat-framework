@@ -21,6 +21,11 @@ dependencies {
 
     compile project(':fermat-api')
     compile project(':fermat-bnk-plugin-bank-money-transaction-deposit-bitdubai')
+    compile project(':fermat-bnk-plugin-bank-money-transaction-withdraw-bitdubai')
+    compile project(':fermat-bnk-plugin-bank-money-transaction-hold-bitdubai')
+    compile project(':fermat-bnk-plugin-bank-money-transaction-unhold-bitdubai')
+    compile project(':fermat-bnk-plugin-wallet-bank-money-bitdubai')
+
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
