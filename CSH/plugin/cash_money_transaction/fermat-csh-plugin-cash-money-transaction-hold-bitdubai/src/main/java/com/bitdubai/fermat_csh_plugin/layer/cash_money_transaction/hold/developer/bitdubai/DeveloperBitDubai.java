@@ -2,28 +2,37 @@ package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.develop
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.CashMoneyTransactionHoldPluginRoot;
-
 
 
 /**
  * Created by Alejandro Bicelis on 11/17/2015
  */
 
-public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
-
-    Plugin plugin;
-
-    @Override
-    public Plugin getPlugin() {
-        return plugin;
-    }
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
     public DeveloperBitDubai() {
-        plugin = new CashMoneyTransactionHoldPluginRoot();
+        super(new PluginDeveloperReference(Developers.BITDUBAI));
+    }
+
+    @Override
+    public void start() throws CantStartPluginDeveloperException {
+        try {
+
+            this.registerVersion(new CashMoneyTransactionHoldPluginRoot());
+
+        } catch (CantRegisterVersionException e) {
+
+            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+        }
     }
 
     @Override

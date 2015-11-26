@@ -19,6 +19,7 @@ dependencies {
     compile project(':fermat-bch-core')
     compile project(':fermat-cbp-core')
     compile project(':fermat-ccp-core')
+    compile project(':fermat-csh-core')
     compile project(':fermat-dap-core')
     compile project(':fermat-p2p-core')
     compile project(':fermat-pip-core')

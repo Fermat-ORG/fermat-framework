@@ -27,6 +27,7 @@ databaseTables << [
                 ["Transaction ID", "STRING", "100", "true"],
                 ["Wallet Public Key", "STRING", "100", "false"],
                 ["Actor Public Key", "STRING", "100", "false"],
+                ["Plugin Public Key", "STRING", "100", "false"],
                 ["Transaction Type", "STRING", "100", "false"],
                 ["Amount", "MONEY", "100", "false"],
                 ["Memo", "STRING", "100", "false"],
