@@ -53,7 +53,7 @@ public class CallsLogDao extends AbstractBaseDao<CallsLog> {
             callsLog.setStep(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_STEP_COLUMN_NAME));
 
         }catch (Exception e){
-            //e.printStackTrace();
+
             return null;
         }
 
