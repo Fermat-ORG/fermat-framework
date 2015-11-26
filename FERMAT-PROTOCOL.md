@@ -77,6 +77,18 @@ End Users pay Fermat Component's developers with fermats to be able to use their
 
 End Users pay with fermats to receive personalized technical support from Fermat Component's developers.
 
+
+<br> 
+
+## The Fermat Network
+
+### Peer-to-Peer Network Architecture
+
+The Fermat Network is structured as a peer-to-peer network architecture on top of the Internet. Fermat nodes are peers to each other, meaning that they are all equal and there are no "special" nodes. All the nodes share the burden of providing all services. The network nodes interconnect to each other only when they need to do so according to the Fermat P2P Protocol. There is no server, no centralized service, and no hierarchy within the network. 
+
+The term "Fermat Network" refers to the collection of nodes running the Fermat P2P Protocol. In addition to the Fermat P2P Protocol, there are other protocols such as the Fermat Consensus Protocol which allows the network to agree which transactions are going to be recorded on the blockchain, and the Fermat Client Protocol which is used for coomunicating Fermat Clients between each other and to Fermat Nodes. We use the term "Extended Fermat Network" to refer to the overall network that includes both Fermat Nodes and Clients.
+
+
 <br>
 ## Fermat Protocol Version 1.0
 
