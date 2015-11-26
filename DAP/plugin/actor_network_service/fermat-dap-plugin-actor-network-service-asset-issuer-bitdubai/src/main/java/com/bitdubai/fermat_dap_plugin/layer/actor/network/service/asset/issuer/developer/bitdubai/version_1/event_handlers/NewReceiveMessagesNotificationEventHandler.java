@@ -11,7 +11,9 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewReceiveMessageActorNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewRequestMessageActorNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
@@ -82,15 +84,15 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
 
                 if (fermatMessageReceive.getContent().contains(pblicKeyExtended)) {
 
-                    ActorAssetRedeemPoint actorRedeemPointSender = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.REDEEM_POINT).getAsString(), RedeemPointActorRecord.class);
-                    ActorAssetIssuer actorAssetIssuerDestination = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.ISSUER).getAsString(), AssetIssuerActorRecord.class);
-                    String message = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.PUBLICKEY_EXTENDED).getAsString(), String.class);
+                    ActorAssetRedeemPoint actorSender = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.REDEEM_POINT).getAsString(), RedeemPointActorRecord.class);
+                    ActorAssetIssuer actorDestination = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.ISSUER).getAsString(), AssetIssuerActorRecord.class);
+                    DAPMessage message = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.PUBLICKEY_EXTENDED).getAsString(), DAPMessage.class);
 
                     System.out.println("Actor Asset User: SE LANZARA EVENTO PARA REQUEST PUBLIC KEY EXTENDED");
 
-                    FermatEvent event = eventManager.getNewEvent(EventType.NEW_REQUEST_MESSAGE_ACTOR);
+                    FermatEvent event = eventManager.getNewEvent(EventType.NEW_RECEIVE_MESSAGE_ACTOR);
                     event.setSource(EventSource.ACTOR_ASSET_ISSUER);
-                    ((NewRequestMessageActorNotificationEvent) event).setNewRequestMessage(actorRedeemPointSender, actorAssetIssuerDestination, message);
+                    ((NewReceiveMessageActorNotificationEvent) event).setNewReceiveMessage(actorSender, actorDestination, message);
                     eventManager.raiseEvent(event);
 
                 }

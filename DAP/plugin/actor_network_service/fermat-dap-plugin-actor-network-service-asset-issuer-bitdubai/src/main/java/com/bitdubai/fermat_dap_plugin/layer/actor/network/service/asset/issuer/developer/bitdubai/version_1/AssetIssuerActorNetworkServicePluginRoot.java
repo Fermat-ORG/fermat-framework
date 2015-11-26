@@ -658,7 +658,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         }
 
         if (actorSender instanceof ActorAssetRedeemPoint) {
-            requestPublicKeyExtended(actorSender, actorDestination, "GENERATE_PUBLIC_KEY_EXTENDED");
+            requestPublicKeyExtended(actorSender, actorDestination, msjContent);
         }
     }
 
