@@ -25,25 +25,25 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
-import com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor;
+import com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker;
 
-import java.io.ByteArrayOutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession.IDENTITY_INFO;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor.DATA_NOT_CHANGED;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor.EXCEPTION_THROWN;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor.SUCCESS;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker.DATA_NOT_CHANGED;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker.INVALID_ENTRY_DATA;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityWorker.SUCCESS;
 
 
 /**
@@ -62,16 +62,11 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment implements 
     private boolean wantPublishIdentity;
 
     // Managers
-    private CryptoBrokerIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    // UI
-    private Button mUpdateButton;
-    private FermatTextView mBrokerName;
     private ImageView mBrokerImage;
-    private FermatCheckBox publishIdentityCheckBox;
 
-    private ExecutorService _executor;
+    private ExecutorService executor;
 
 
     public static EditCryptoBrokerIdentityFragment newInstance() {
@@ -83,20 +78,9 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment implements 
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerIdentitySubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
-            _executor = Executors.newFixedThreadPool(2);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (_executor != null) {
-            _executor.shutdown();
-            _executor = null;
         }
     }
 
@@ -117,10 +101,10 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment implements 
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        mUpdateButton = (Button) layout.findViewById(R.id.update_crypto_broker_button);
-        mBrokerName = (FermatTextView) layout.findViewById(R.id.crypto_broker_name);
+        Button mUpdateButton = (Button) layout.findViewById(R.id.update_crypto_broker_button);
+        FermatTextView mBrokerName = (FermatTextView) layout.findViewById(R.id.crypto_broker_name);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-        publishIdentityCheckBox = (FermatCheckBox) layout.findViewById(R.id.publish_identity);
+        FermatCheckBox publishIdentityCheckBox = (FermatCheckBox) layout.findViewById(R.id.publish_identity);
 
         final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) subAppsSession.getData(IDENTITY_INFO);
 
@@ -142,9 +126,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment implements 
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean value) {
                 CommonLogger.debug(TAG, "IN publishIdentityCheckBox.setOnCheckedChangeListener");
-
-
-                oncheckedchanged(value, identityInfo.getPublicKey());
+                wantPublishIdentity = value;
             }
         });
 
@@ -164,32 +146,6 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment implements 
                 editIdentityInfo();
             }
         });
-    }
-
-    private void oncheckedchanged(final boolean value, final String publicKey) {
-        FermatWorker worker = new FermatWorker(getActivity(), this) {
-            @Override
-            protected Object doInBackground() throws Exception {
-                if (value)
-                    moduleManager.publishIdentity(publicKey);
-                else
-                    moduleManager.hideIdentity(publicKey);
-
-                wantPublishIdentity = value;
-                return true;
-            }
-        };
-        worker.execute(_executor);
-    }
-
-    @Override
-    public void onPostExecute(Object... result) {
-
-    }
-
-    @Override
-    public void onErrorOccurred(Exception ex) {
-        Toast.makeText(getActivity().getApplicationContext(), "Error trying to change the exposure level.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -254,15 +210,14 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment implements 
 
         // TODO falta implementar funcionalidad para editar info del identity en el backend
 
-        PublishIdentityExecutor executor = new PublishIdentityExecutor(subAppsSession, wantPublishIdentity);
-        int resultCode = executor.execute();
-
-        if (resultCode == SUCCESS || resultCode == DATA_NOT_CHANGED) {
-            //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(),re);
-
-        } else if (resultCode == EXCEPTION_THROWN) {
-            Toast.makeText(getActivity(), "No se pudieron editar los datos", Toast.LENGTH_LONG).show();
+        if (executor != null) {
+            executor.shutdown();
         }
+
+        executor = null;
+        PublishIdentityWorker publishIdentityWorker = new PublishIdentityWorker(subAppsSession, wantPublishIdentity, this);
+
+        executor = publishIdentityWorker.execute();
     }
 
 
@@ -282,15 +237,40 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment implements 
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
 
-    /**
-     * Bitmap to byte[]
-     *
-     * @param bitmap Bitmap
-     * @return byte array
-     */
-    private byte[] toByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
+    @Override
+    public void onPostExecute(Object... result) {
+        if (executor != null) {
+            executor.shutdown();
+            executor = null;
+        }
+
+        if (result.length > 0) {
+            int resultCode = (int) result[0];
+
+            if (resultCode == SUCCESS || resultCode == DATA_NOT_CHANGED) {
+                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(), subAppsSession.getAppPublicKey());
+
+            } else if (resultCode == INVALID_ENTRY_DATA) {
+                Toast.makeText(getActivity(), "Please check the submitted data", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+        if (executor != null) {
+            executor.shutdown();
+            executor = null;
+        }
+
+        Toast.makeText(getActivity().getApplicationContext(),
+                "Error trying to change the exposure level.",
+                Toast.LENGTH_SHORT).
+                show();
+
+        errorManager.reportUnexpectedSubAppException(
+                SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                ex);
     }
 }
