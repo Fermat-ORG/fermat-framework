@@ -86,23 +86,23 @@ The Fermat Protocol spans through Fermat Nodes and Fermat Clients. It defines th
 
 Fermat nodes performs several tasks at the same time. For each one of them, the protocol has it own set of rules:
 
-#### Nodes Catalogue
+#### Mantains the Distributed Nodes Catalogue
 
 Each node mantains a full catalogue of all nodes registered in the network.
 
-#### Identity Catalogue
+#### Mantains an Identities Catalogue
 
 Each node mantains a part of a distributed catalogue of the End User identities. This catalogue is designed to facilitate End Users to find each other.
 
-#### Identity Home
+#### Act as Identities' Home
 
 Each node is home to a set of End Users identities. These identities can receive calls only through their home node.
 
-#### Call Bridge
+#### Acts as a Call Bridge
 
 Each node interconects clients between each other in order to let them freely transfer information between them.
 
-#### Fermat Blockchain
+#### Mantains the Fermat Blockchain
 
 Each node mantains the Fermat Blockchain: a public record of all coinbase transactions where the protocol issues new fermats.
 
