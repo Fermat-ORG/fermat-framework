@@ -28,11 +28,11 @@ Fermat implement three different mechanisms for token generation and distributio
 
 #### Fund-raising Mechanism
 
-With the fund-raising mechanism, tokens are distributed to those who fund the initial development of the DApp. The funds collected are used to fund the development of applications that promote the development of the Fermat Protocol. The tokens generated during the fund-raising are recorded as the genesis transaction of the Fermat's blockchain.
+With the fund-raising mechanism, tokens are distributed to those who fund the initial development of the Fermat system. The funds collected are used to fund the development of the core of the Fermat system (core libriaries, api libraries and add-ons and the fermat.org web site). The tokens generated during the fund-raising are recorded as the genesis transaction of the Fermat's blockchain.
 
 #### Development Mechanism
 
-With the development mechanism, tokens are generated using a predefined mechanism and are only available for the development of Fermat components. These fermats become available through a pre-determined schedule and are distributed via a community-driven bounty system where decisions are made based on the proof-of-stake mechanism.
+With the development mechanism, tokens are generated using a predefined mechanism and are only available for the development of Fermat components (plug-ins, GUI components, skins, language packages, and analisys of future development). These fermats become available through a pre-determined schedule and are distributed via a community-driven bounty system where decisions are made based on the proof-of-stake mechanism.
 
 #### Mining Mechanism
 
