@@ -138,27 +138,27 @@ Any of these IPs can be used to connect to one node just for introductions, usin
 
 To connect to a known peer, nodes establish a TCP connection, usually to port 9444 (the port generally known as the one used by Fermat), or an alternative port if one is provided. Upon establishing a connection, the node will start a "handshake" (see The initial handshake between peers) by transmitting a version message, which contains basic identifying information, including:
 
-*Protocol_Version*
+**Protocol_Version**
 
 _A constant that defines the Fermat P2P Protocol version the client node "speaks"._
 
-*Local_Services*
+**Local_Services**
 
 _A list of local services supported by the node._
 
-*Time*
+**Time**
 
 _The current time._
 
-*addrYou*
+**addrYou**
 
 _The IP address of the remote node as seen from this node._
 
-*addrMe*
+**addrMe**
 
 _The IP address of the local node, as discovered by the local node._
 
-*subver*
+**subver**
 
 _A sub-version showing the type of software running on this node (the name of the implementation)._
 
