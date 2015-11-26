@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces;
 
 /**
- * Created by lcampo on 25/11/15.
+ * Created by Luis Campo on 25/11/15.
  */
 public interface ActorAssetUserGroup {
     /**
