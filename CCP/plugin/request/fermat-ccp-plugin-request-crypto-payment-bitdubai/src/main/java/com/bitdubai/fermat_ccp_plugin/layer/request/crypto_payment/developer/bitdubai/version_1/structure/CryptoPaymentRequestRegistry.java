@@ -18,6 +18,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantG
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantRejectCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantUpdateRequestPaymentStateException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPayment;
@@ -631,6 +632,44 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
         if(errorHandlingEvents)
             throw new CantExecuteUnfinishedActionsException(errorString, "Error trying to execute a pending action.");
+    }
+
+    @Override
+    public void acceptIncomingRequest(UUID requestId) throws CantUpdateRequestPaymentStateException{
+        try
+        {
+            cryptoPaymentRequestDao.changeState(requestId, CryptoPaymentState.APPROVED);
+        }
+        catch(CantChangeCryptoPaymentRequestStateException e)
+        {
+            reportUnexpectedException(e);
+            throw new CantUpdateRequestPaymentStateException(e, "", "Error updated record.");
+        }
+        catch(CryptoPaymentRequestNotFoundException e)
+        {
+            reportUnexpectedException(e);
+            throw new CantUpdateRequestPaymentStateException(e, "", "Cannot find a CryptoPaymentRequest with the given id..");
+        }
+
+    }
+
+    @Override
+    public void revertOutgoingRequest(UUID requestId) throws CantUpdateRequestPaymentStateException{
+        try
+        {
+            cryptoPaymentRequestDao.changeState(requestId, CryptoPaymentState.ERROR);
+        }
+        catch(CantChangeCryptoPaymentRequestStateException e)
+        {
+            reportUnexpectedException(e);
+            throw new CantUpdateRequestPaymentStateException(e, "", "Error updated record.");
+        }
+        catch(CryptoPaymentRequestNotFoundException e)
+        {
+            reportUnexpectedException(e);
+            throw new CantUpdateRequestPaymentStateException(e, "", "Cannot find a CryptoPaymentRequest with the given id..");
+        }
+
     }
 
     private void reportUnexpectedException(Exception e) {
