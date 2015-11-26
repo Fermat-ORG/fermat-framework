@@ -12,7 +12,7 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 import java.util.Map;
@@ -21,8 +21,8 @@ import java.util.Map;
  * Created by nelson on 28/10/15.
  */
 public class NegotiationInformationViewHolder extends ChildViewHolder {
-    public ImageView customerImage;
-    public FermatTextView customerName;
+    public ImageView brokerImage;
+    public FermatTextView brokerName;
     public FermatTextView merchandiseAmount;
     public FermatTextView merchandise;
     public FermatTextView paymentMethod;
@@ -45,15 +45,15 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         this.itemView = itemView;
         res = itemView.getResources();
 
-        customerImage = (ImageView) itemView.findViewById(R.id.cbw_customer_image);
-        customerName = (FermatTextView) itemView.findViewById(R.id.cbw_customer_name);
-        merchandiseAmount = (FermatTextView) itemView.findViewById(R.id.cbw_merchandise_amount);
-        merchandise = (FermatTextView) itemView.findViewById(R.id.cbw_merchandise);
-        paymentMethod = (FermatTextView) itemView.findViewById(R.id.cbw_type_of_payment);
-        exchangeRateAmount = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_amount);
-        paymentCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_payment_currency);
-        lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.cbw_update_date);
-        status = (FermatTextView) itemView.findViewById(R.id.cbw_negotiation_status);
+        brokerImage = (ImageView) itemView.findViewById(R.id.ccw_broker_image);
+        brokerName = (FermatTextView) itemView.findViewById(R.id.ccw_broker_name);
+        merchandiseAmount = (FermatTextView) itemView.findViewById(R.id.ccw_merchandise_amount);
+        merchandise = (FermatTextView) itemView.findViewById(R.id.ccw_merchandise);
+        paymentMethod = (FermatTextView) itemView.findViewById(R.id.ccw_type_of_payment);
+        exchangeRateAmount = (FermatTextView) itemView.findViewById(R.id.ccw_exchange_rate_amount);
+        paymentCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_payment_currency);
+        lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.ccw_update_date);
+        status = (FermatTextView) itemView.findViewById(R.id.ccw_negotiation_status);
     }
 
     public void bind(CustomerBrokerNegotiationInformation itemInfo) {
@@ -62,8 +62,8 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         lastUpdateDate.setText(date);
 
         ActorIdentity broker = itemInfo.getBroker();
-        customerImage.setImageDrawable(getImgDrawable(broker.getProfileImage()));
-        customerName.setText(broker.getAlias());
+        brokerImage.setImageDrawable(getImgDrawable(broker.getProfileImage()));
+        brokerName.setText(broker.getAlias());
 
         NegotiationStatus negotiationStatus = itemInfo.getStatus();
         itemView.setBackgroundColor(getStatusBackgroundColor(negotiationStatus));

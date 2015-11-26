@@ -1,7 +1,10 @@
-/**
+
+
+/*
  * Please keep the elements ordered alphabetically.
  */
 
+apply from: 'BCH/settings.gradle'
 apply from: 'BNK/settings.gradle'
 apply from: 'CBP/settings.gradle'
 apply from: 'CCM/settings.gradle'
@@ -13,7 +16,7 @@ apply from: 'P2P/settings.gradle'
 apply from: 'PIP/settings.gradle'
 apply from: 'WPD/settings.gradle'
 
-include ':fermat-android-api'
+include ':fermat-android-api', ':fermat-cbp-plugin-network-service-transaction-transmission-bitdubai'
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
@@ -21,13 +24,6 @@ include ':fermat-core'
 
 include ':fermat-cry-api'
 project(':fermat-cry-api').projectDir = new File('CRY/library/api/fermat-cry-api')
-
-
-include ':fermat-bch-api'
-project(':fermat-bch-api').projectDir = new File('BCH/library/api/fermat-bch-api')
-
-include ':fermat-bch-core'
-project(':fermat-bch-core').projectDir = new File('BCH/library/core/fermat-bch-core')
 
 //BNP Projects
 
@@ -76,20 +72,6 @@ project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai').projectDir = ne
 
 include ':fermat-dmp-android-sub-app-shop-manager-bitdubai'
 project(':fermat-dmp-android-sub-app-shop-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai')
-// Intra user
-
-include ':fermat-bch-plugin-crypto-network-bitcoin-bitdubai'
-project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_network/fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
-/*TODO COMMENTED IS NOT IN USE
-include ':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai'
-project(':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai')
-*/
-include ':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
-project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
-
-include ':fermat-bch-plugin-middleware-crypto-addresses-bitdubai'
-project(':fermat-bch-plugin-middleware-crypto-addresses-bitdubai').projectDir = new File('BCH/plugin/middleware/fermat-bch-plugin-middleware-crypto-addresses-bitdubai')
-
 
 // identity
 include ':fermat-mkt-plugin-identity-marketer-bitdubai'

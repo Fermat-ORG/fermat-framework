@@ -237,7 +237,6 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     @Override
     public void start() throws CantStartPluginException {
 
-        this.serviceStatus = ServiceStatus.STARTED;
         try {
 
             this.intraWalletUserIdentityDao = new IntraWalletUserIdentityDao(pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
@@ -253,6 +252,8 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
+        this.serviceStatus = ServiceStatus.STARTED;
+
     }
 
     /**

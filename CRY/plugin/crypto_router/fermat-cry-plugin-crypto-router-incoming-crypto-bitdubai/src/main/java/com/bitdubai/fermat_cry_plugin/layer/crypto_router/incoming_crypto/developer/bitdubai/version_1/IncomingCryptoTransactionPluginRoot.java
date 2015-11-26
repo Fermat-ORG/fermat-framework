@@ -245,7 +245,7 @@ public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implemen
              */
             this.serviceStatus = ServiceStatus.STOPPED;
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeCryptoRegistryException);
-            throw new CantStartPluginException("Registry failed to start", cantInitializeCryptoRegistryException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(), "");
+            throw new CantStartPluginException("Registry failed to start", cantInitializeCryptoRegistryException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getCode(), "");
         }
 
         /**
@@ -264,7 +264,7 @@ public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implemen
              */
             this.serviceStatus = ServiceStatus.STOPPED;
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartServiceException);
-            throw new CantStartPluginException("Event Recorded could not be started", cantStartServiceException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(), "");
+            throw new CantStartPluginException("Event Recorded could not be started", cantStartServiceException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getCode(), "");
         }
 
         /**
@@ -288,7 +288,7 @@ public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implemen
             this.serviceStatus = ServiceStatus.STOPPED;
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
 
-            throw new CantStartPluginException("Relay Agent could not be started", cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(), "");
+            throw new CantStartPluginException("Relay Agent could not be started", cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getCode(), "");
         }
 
         /**
@@ -316,7 +316,7 @@ public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implemen
             this.serviceStatus = ServiceStatus.STOPPED;
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
 
-            throw new CantStartPluginException("Monitor agent could not be started", cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(), "");
+            throw new CantStartPluginException("Monitor agent could not be started", cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getCode(), "");
         }
 
         // I will indicate that the service is started just if all of the agents are running.

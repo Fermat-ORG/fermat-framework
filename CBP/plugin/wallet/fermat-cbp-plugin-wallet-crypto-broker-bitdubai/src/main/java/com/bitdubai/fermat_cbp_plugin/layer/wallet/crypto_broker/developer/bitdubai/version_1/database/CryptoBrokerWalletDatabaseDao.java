@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -26,17 +27,9 @@ import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUs
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_cbp_api.all_definition.wallet.Stock;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
-import com.bitdubai.fermat_cbp_api.all_definition.wallet.WalletTransaction;
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantGetStockCollectionCryptoBrokerWalletException;
-//import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerStockBalance;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.CryptoBrokerWalletPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantCreateNewCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerWalletDatabaseException;
@@ -48,15 +41,12 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddDebitException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerWalletException;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCollectionStocksCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerWalletPublicKeyException;
-//import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerStockBalanceImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerStockTransactionRecordImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -132,7 +122,7 @@ public class CryptoBrokerWalletDatabaseDao {
             //esto tiene que cambiar
 //            String privateKey = AsymmetricCryptography.createPrivateKey();
             //esto tiene que cambiar
-            String publicKey = getCryptoBrokerWalletPublicKey(ownerPublicKey);
+            String publicKey    = getCryptoBrokerWalletPublicKey(ownerPublicKey);
             String privateKey   = getCryptoBrokerWalletPrivateKey(publicKey);
             KeyPair walletKeys  = AsymmetricCryptography.createKeyPair(privateKey);
             return new CryptoBrokerWalletImpl(walletKeys, ownerPublicKey, this);
@@ -146,9 +136,9 @@ public class CryptoBrokerWalletDatabaseDao {
     }
 
     /*GET BALANCE BOOKED*/
-    public float getCalculateBookBalance(final FermatEnum stockType, final String walletPublicKey) throws CantCalculateBalanceException {
+    public float getCalculateBookBalance(final CurrencyType currencyType, final String walletPublicKey) throws CantCalculateBalanceException {
         try {
-            return getCurrentBalance(BalanceType.BOOK,stockType,walletPublicKey);
+            return getCurrentBalance(BalanceType.BOOK,currencyType,walletPublicKey);
         } catch (CantGetBalanceRecordException exception) {
             throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
@@ -158,9 +148,9 @@ public class CryptoBrokerWalletDatabaseDao {
     }
 
     /*GET BALANCE AVAILABLE*/
-    public float getCalculateAvailableBalance(final FermatEnum stockType, final String walletPublicKey) throws CantCalculateBalanceException {
+    public float getCalculateAvailableBalance(final CurrencyType currencyType, final String walletPublicKey) throws CantCalculateBalanceException {
         try{
-            return getCurrentBalance(BalanceType.AVAILABLE,stockType,walletPublicKey);
+            return getCurrentBalance(BalanceType.AVAILABLE,currencyType,walletPublicKey);
         } catch (CantGetBalanceRecordException exception){
             throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
@@ -237,10 +227,10 @@ public class CryptoBrokerWalletDatabaseDao {
         return getCurrentBalance(BalanceType.AVAILABLE, publicKeyWallet) + transactionAmount;
     }
 
-    private List<DatabaseTableRecord> getBalancesRecord(final FermatEnum stockType, final String walletPublicKey) throws CantGetBalanceRecordException{
+    private List<DatabaseTableRecord> getBalancesRecord(final CurrencyType currencyType, final String walletPublicKey) throws CantGetBalanceRecordException{
         try {
             DatabaseTable totalBalancesTable = this.database.getTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME);
-            totalBalancesTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME, stockType.getCode(), DatabaseFilterType.EQUAL);
+            totalBalancesTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME, currencyType.getCode(), DatabaseFilterType.EQUAL);
             totalBalancesTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
             totalBalancesTable.loadToMemory();
             return totalBalancesTable.getRecords();
@@ -258,14 +248,14 @@ public class CryptoBrokerWalletDatabaseDao {
         return !cryptoBrokerTable.getRecords().isEmpty();
     }
 
-    private float getCurrentBalance(final BalanceType balanceType, final FermatEnum stockType, final String walletPublicKey) throws CantGetBalanceRecordException {
+    private float getCurrentBalance(final BalanceType balanceType, final CurrencyType currencyType, final String walletPublicKey) throws CantGetBalanceRecordException {
         long balanceAmount = 0;
         if (balanceType == BalanceType.AVAILABLE){
-            for (DatabaseTableRecord record : getBalancesRecord(stockType, walletPublicKey)){
+            for (DatabaseTableRecord record : getBalancesRecord(currencyType, walletPublicKey)){
                 balanceAmount += record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME);
             }
         } else {
-            for (DatabaseTableRecord record : getBalancesRecord(stockType, walletPublicKey)){
+            for (DatabaseTableRecord record : getBalancesRecord(currencyType, walletPublicKey)){
                 balanceAmount += record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BOOK_BALANCE_COLUMN_NAME);
             }
         }
@@ -313,7 +303,7 @@ public class CryptoBrokerWalletDatabaseDao {
             DatabaseTable totalBalancesTable = this.database.getTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME);
             DatabaseTableRecord totalBalancesRecord = totalBalancesTable.getEmptyRecord();
 
-            totalBalancesTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME, transaction.getWalletPublicKey(), DatabaseFilterType.EQUAL );
+            totalBalancesTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_WALLET_PUBLIC_KEY_COLUMN_NAME, transaction.getWalletPublicKey(), DatabaseFilterType.EQUAL );
             totalBalancesTable.loadToMemory();
             String description = "STOCK: " +transaction.getCurrencyType();
             loadtotalBalancesRecordAsNew(totalBalancesRecord, transaction, description, runningBookBalance, runningAvailableBalance);
@@ -343,6 +333,7 @@ public class CryptoBrokerWalletDatabaseDao {
         databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
         databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode());
         databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_CURRENCY_TYPE_COLUMN_NAME, transaction.getCurrencyType().getCode());
+        databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, transaction.getMerchandise().getCode());
         databaseTableRecord.setFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME, transaction.getAmount());
         databaseTableRecord.setFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_BOOK_BALANCE_COLUMN_NAME, runningBookBalance);
         databaseTableRecord.setFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, runningAvailableBalance);
@@ -364,15 +355,15 @@ public class CryptoBrokerWalletDatabaseDao {
         databaseTableRecord.setFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, runningAvailableBalance);
     }
 
-    private StockTransaction getStockTransactionFromRecord(final DatabaseTableRecord record) throws InvalidParameterException{
+    private StockTransaction getStockTransactionFromRecord(final DatabaseTableRecord record) throws InvalidParameterException {
         UUID  transactionId                 = record.getUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME);
         String walletPublicKey              = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME);
         String ownerPublicKey               = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BROKER_PUBLIC_KEY_COLUMN_NAME);
         BalanceType  balanceType            = BalanceType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME));
         TransactionType  transactionType    = TransactionType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME));
         CurrencyType currencyType           = CurrencyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_CURRENCY_TYPE_COLUMN_NAME));
-        float   amount                      = record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME);;
-        ;
+        FermatEnum merchadise               = CurrencyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
+        float   amount                      = record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME);
         float   runningBookBalance          = record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_BOOK_BALANCE_COLUMN_NAME);
         float   runningAvailableBalance     = record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
         long    timeStamp                   = record.getLongValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME);
@@ -386,6 +377,7 @@ public class CryptoBrokerWalletDatabaseDao {
                 balanceType,
                 transactionType,
                 currencyType,
+                merchadise,
                 amount,
                 runningBookBalance,
                 runningAvailableBalance,

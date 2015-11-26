@@ -1,145 +1,115 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantCreatePurchaseContractException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantCreatePurchaseNegotiationException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantGetPurchaseContractException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantGetPurchaseNegotiationException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.interfaces.CryptoCustomerActor;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActor;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateCustomerIdentiyWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantDeleteCustomerIdentiyWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentiyWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateCustomerIdentiyWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDatabaseDao;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantRegisterCryptoCustomerIdentityWalletRelationshipException;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.UUID;
 
 /**
  * Created by jorge on 30-10-2015.
+ * Modified by Yordin Alayn 11.11.2015
  */
 public class CryptoCustomerActorImpl implements CryptoCustomerActor {
 
+    //TODO: CAMBIAR NUMEROS PRIMOS
     private static final int HASH_PRIME_NUMBER_PRODUCT = 7841;
     private static final int HASH_PRIME_NUMBER_ADD = 1831;
 
     private final ActorIdentity identity;
-    private final CustomerBrokerPurchaseNegotiationManager negotiationManager;
+    private final CryptoCustomerActorDatabaseDao databaseDao;
 
-    public CryptoCustomerActorImpl(final ActorIdentity identity, final CustomerBrokerPurchaseNegotiationManager negotiationManager){
+    public CryptoCustomerActorImpl(final ActorIdentity identity, CryptoCustomerActorDatabaseDao databaseDao){
         this.identity = identity;
-        this.negotiationManager = negotiationManager;
+        this.databaseDao = databaseDao;
     }
 
-    @Override
-    public Collection<ActorIdentity> getConnectedBrokers() {
-        return null;
-    }
-
-    @Override
-    public void createAsotiationCryptoCustomerIdentityWallet(){
-
-    }
-
-    @Override
-    public CustomerBrokerNegotiation createNegotiationPurchase(final ActorIdentity cryptoBroker,final Collection<Clause> clauses) throws CantCreatePurchaseNegotiationException {
+    //RELATIONSHIP IDENTIDAD-WALLET
+    public CustomerIdentityWalletRelationship createCustomerIdentityWalletRelationship(String walletPublicKey, String identityPublicKey) throws CantCreateCustomerIdentiyWalletRelationshipException{
         try {
-            return negotiationManager.createCustomerBrokerPurchaseNegotiation(identity.getPublicKey(), cryptoBroker.getPublicKey());
-        } catch (CantCreateCustomerBrokerPurchaseNegotiationException e) {
-            throw new CantCreatePurchaseNegotiationException(CantCreatePurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
+            return databaseDao.createRegisterCustomerIdentityWalletRelationship(walletPublicKey,identityPublicKey);
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantCreateCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantCreateCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
         }
     }
 
     @Override
-    public CustomerBrokerNegotiation getNegotiationPurchase(final UUID negotiationId) throws CantGetPurchaseNegotiationException {
+    public CustomerIdentityWalletRelationship updateCustomerIdentityWalletRelationship(UUID relationshipId, String walletPublicKey, String identityPublicKey) throws CantUpdateCustomerIdentiyWalletRelationshipException {
         try {
-            for(CustomerBrokerNegotiation purchase : negotiationManager.getNegotiationsByCustomer(identity)){
-                if(negotiationId.equals(purchase.getNegotiationId()))
-                    return purchase;
-            }
-            throw new CantGetPurchaseNegotiationException(CantCreatePurchaseNegotiationException.DEFAULT_MESSAGE, null, "", "");
-        } catch (CantGetListPurchaseNegotiationsException e) {
-            throw new CantGetPurchaseNegotiationException(CantCreatePurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
-        }
-    }
-
-
-    public CustomerBrokerNegotiation updateNegotiationPurchase(UUID negotiationId) throws CantGetPurchaseNegotiationException{
-        return null;
-    }
-    
-    public CustomerBrokerNegotiation closeNegotiationPurchase(UUID negotiationId) throws CantGetPurchaseNegotiationException{
-        return null;
-    }
-
-    @Override
-    public Collection<CustomerBrokerNegotiation> getNegotiationPurchases() throws CantGetPurchaseNegotiationException {
-        try {
-            HashSet<CustomerBrokerNegotiation> purchases = new HashSet<>();
-            purchases.addAll(negotiationManager.getNegotiationsByCustomer(identity));
-            return purchases;
-        } catch (CantGetListPurchaseNegotiationsException e) {
-            throw new CantGetPurchaseNegotiationException(CantCreatePurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
+            return databaseDao.updateRegisterCustomerIdentityWalletRelationship(relationshipId, walletPublicKey, identityPublicKey);
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantUpdateCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T UPDATE RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantUpdateCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T UPDATE RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
         }
     }
 
     @Override
-    public Collection<CustomerBrokerNegotiation> getNegotiationPurchases(final NegotiationStatus status) throws CantGetPurchaseNegotiationException {
+    public void deleteCustomerIdentityWalletRelationship(UUID relationshipId) throws CantDeleteCustomerIdentiyWalletRelationshipException {
         try {
-            HashSet<CustomerBrokerNegotiation> purchases = new HashSet<>();
-            for(CustomerBrokerNegotiation purchase : negotiationManager.getNegotiationsByCustomer(identity)){
-                if(purchase.getStatus() == status)
-                    purchases.add(purchase);
-            }
-            return purchases;
-        } catch (CantGetListPurchaseNegotiationsException e) {
-            throw new CantGetPurchaseNegotiationException(CantCreatePurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
+            databaseDao.deleteRegisterCustomerIdentityWalletRelationship(relationshipId);
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantDeleteCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T DELETE RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantDeleteCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T DELETE RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
         }
     }
 
     @Override
-    public void sendActorNetworkServiceNegotiationPurchases(CustomerBrokerNegotiation negotiation){
-
+    public Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationships() throws CantGetCustomerIdentiyWalletRelationshipException {
+        try {
+            return databaseDao.getAllRegisterCustomerIdentityWalletRelationships();
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        }
     }
 
     @Override
-    public void receiveActorNetworkServicePurchases(CustomerBrokerNegotiation negotiation){
-
+    public CustomerIdentityWalletRelationship getAllCustomerIdentityWalletRelationships(UUID relationshipId) throws CantGetCustomerIdentiyWalletRelationshipException{
+        try {
+            return databaseDao.getAllRegisterCustomerIdentityWalletRelationships(relationshipId);
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        }
     }
 
     @Override
-    public CustomerBrokerContractPurchase createContractPurchase(ActorIdentity cryptoBroker,Collection<Clause> clauses) throws CantCreatePurchaseContractException{
-        return null;
+    public CustomerIdentityWalletRelationship getAllCustomerIdentityWalletRelationshipsByIdentity(String identityPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException{
+        try {
+            return databaseDao.getAllRegisterCustomerIdentityWalletRelationshipsByIdentity(identityPublicKey);
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        }
     }
 
     @Override
-    public CustomerBrokerContractPurchase getContractPurchase(UUID negotiationId) throws CantGetPurchaseContractException{
-        return null;
+    public CustomerIdentityWalletRelationship getAllCustomerIdentityWalletRelationshipsByWallet(String walletPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException{
+        try {
+            return databaseDao.getAllRegisterCustomerIdentityWalletRelationshipsByIdentity(walletPublicKey);
+        } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
+        }
     }
 
-    @Override
-    public Collection<CustomerBrokerContractPurchase> getContractPurchases() throws CantGetPurchaseContractException{
-        return null;
-    }
-
-    @Override
-    public Collection<CustomerBrokerContractPurchase> getContractPurchases(NegotiationStatus status) throws CantGetPurchaseContractException{
-        return null;
-    }
-
-    @Override
-    public void sendActorNetworkServiceContractPurchases(CustomerBrokerNegotiation negotiation){
-
-    }
-
-    @Override
-    public void receiveActorNetworkServiceContractPurchases(CustomerBrokerNegotiation negotiation){
-
-    }
-
+    //OTHERS
     @Override
     public ActorIdentity getIdentity() {
         return identity;

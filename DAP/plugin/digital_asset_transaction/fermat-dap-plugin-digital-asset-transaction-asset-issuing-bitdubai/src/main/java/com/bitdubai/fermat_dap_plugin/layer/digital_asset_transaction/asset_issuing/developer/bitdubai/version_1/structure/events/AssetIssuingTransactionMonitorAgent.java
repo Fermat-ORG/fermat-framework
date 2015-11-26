@@ -285,13 +285,19 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     List<String> transactionHashFromAssetsDelivered=assetIssuingTransactionDao.getTransactionHashByDeliveredStatus();
                     for(String transactionHash: transactionHashFromAssetsDelivered){
                         CryptoTransaction cryptoGenesisTransaction=getGenesisTransactionFromAssetVault(transactionHash);
+
                         String digitalAssetPublicKey=assetIssuingTransactionDao.getPublicKeyByTransactionHash(transactionHash);
                         if(digitalAssetIssuingVault.isAssetTransactionHashAvailableBalanceInAssetWallet(transactionHash, digitalAssetPublicKey)){
                             assetIssuingTransactionDao.updateDigitalAssetTransactionStatusByTransactionHash(transactionHash, TransactionStatus.RECEIVED);
                             continue;
                         }
+
+
+
                         String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByTransactionhash(transactionHash);
                         digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId ,AssetBalanceType.AVAILABLE);
+
+
                     }
                 }
 
@@ -365,7 +371,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 CantCheckAssetIssuingProgressException,
                 UnexpectedResultReturnedFromDatabaseException,
                 CantGetCryptoTransactionException,
-                CantDeliverDigitalAssetToAssetWalletException, InvalidParameterException {
+                InvalidParameterException {
 
             if(isPendingEvents()){
                 System.out.println("ASSET ISSUING: is pending event");
@@ -390,10 +396,17 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                 System.out.println("ASSET ISSUING crypto transaction on crypto network "+cryptoGenesisTransaction.getTransactionHash());
                                 String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                                 System.out.println("ASSET ISSUING internal id "+transactionInternalId);
-                                digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK);
+                                try {
+                                    digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK);
+                                } catch (CantDeliverDigitalAssetToAssetWalletException e) {
+                                    e.printStackTrace();
+                                    continue;
+                                }
                                 assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
 
                             }
+
+                            assetIssuingTransactionDao.updateEventStatus(eventId);
 
                         }
                     }
@@ -415,8 +428,23 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                 this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(publicKey);
                                 String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                                 System.out.println("ASSET ISSUING internal id "+transactionInternalId);
-                                digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE);
-                                assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
+                                try {
+                                    /**
+                                     * Added By Rodrigo Acosta - at this point, the asset is delivered and confirmed. So we will save the
+                                     * Genesis block in the database
+                                     */
+                                    try {
+                                        assetIssuingTransactionDao.persistGenesisBlock(transactionInternalId, cryptoGenesisTransaction.getBlockHash());
+                                    } catch (CantPersistsGenesisTransactionException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE);
+                                } catch (CantDeliverDigitalAssetToAssetWalletException e) {
+                                    e.printStackTrace();
+                                    continue;
+                                }
+                                assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
 
                             }
                             assetIssuingTransactionDao.updateEventStatus(eventId);
@@ -428,9 +456,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     if(eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER)){
                         //TODO: to handle
                     }
-
-                    assetIssuingTransactionDao.updateEventStatus(eventId);
-
                 }
             }
 

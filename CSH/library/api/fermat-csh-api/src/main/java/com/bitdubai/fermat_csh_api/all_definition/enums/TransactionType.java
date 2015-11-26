@@ -4,11 +4,14 @@ import com.bitdubai.fermat_csh_api.all_definition.exceptions.InvalidParameterExc
 
 /**
  * Created by Yordin Alayn on 24.09.15.
+ * Modified by Alejandro Bicelis on 23/11/2015
  */
 public enum TransactionType {
 
     DEBIT("DEBIT"),
-    CREDIT("CREDIT");
+    CREDIT("CREDIT"),
+    HOLD("HOLD"),
+    UNHOLD("UNHOLD");
 
     private final String code;
 
@@ -22,7 +25,9 @@ public enum TransactionType {
         switch (code) {
             case "DEBIT": return TransactionType.DEBIT;
             case "CREDIT": return TransactionType.CREDIT;
-            default: return TransactionType.CREDIT;
+            case "HOLD": return TransactionType.HOLD;
+            case "UNHOLD": return TransactionType.UNHOLD;
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionType enum");
         }
     }
 }

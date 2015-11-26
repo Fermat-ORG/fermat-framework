@@ -5,8 +5,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -91,6 +93,7 @@ public class MainFragment extends FermatFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.main_assets_draf_fragment, container, false);
+        configureToolbar();
         initViews(rootView);
         return rootView;
     }
@@ -108,6 +111,14 @@ public class MainFragment extends FermatFragment implements
         selectedAsset = null;
     }
 
+    private void configureToolbar() {
+        Toolbar toolbar = getPaintActivtyFeactures().getToolbar();
+        if (toolbar != null) {
+            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
+            toolbar.setTitleTextColor(Color.WHITE);
+        }
+    }
+
     protected void initViews(View layout) {
         Log.i(TAG, "recycler view setup");
         if (layout == null)
@@ -115,7 +126,7 @@ public class MainFragment extends FermatFragment implements
         recyclerView = (RecyclerView) layout.findViewById(R.id.recycler_assets);
         if (recyclerView != null) {
             recyclerView.setHasFixedSize(true);
-            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+            layoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             adapter = new AssetFactoryAdapter(getActivity());
             adapter.setMenuItemClick(new PopupMenu() {
@@ -155,7 +166,7 @@ public class MainFragment extends FermatFragment implements
             public void onClick(View view) {
                 /* create new asset factory project */
                 selectedAsset = null;
-                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
+                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), subAppsSession.getAppPublicKey(), getAssetForEdit());
             }
         });
         create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));

@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -117,6 +118,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          * For each network that is active to be monitored I will...
          */
         for (BlockchainNetworkType blockchainNetworkType : blockchainNetworkTypes){
+
             /**
              * load (if any) existing wallet.
              */
@@ -152,20 +154,51 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
                     BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = runningAgents.get(blockchainNetworkType);
                     bitcoinCryptoNetworkMonitor.stop();
                     runningAgents.remove(blockchainNetworkType);
-                    bitcoinCryptoNetworkMonitor.setWallet(wallet);
+
+
+                    /**
+                     * once the agent is stoped, I will restart it with the new wallet.
+                     */
+                    File walletFilename = new File(WALLET_FILENAME + blockchainNetworkType.getCode());
+                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename);
+                    runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                     bitcoinCryptoNetworkMonitor.start();
-                    runningAgents.put(blockchainNetworkType,bitcoinCryptoNetworkMonitor);
                 }
             } else {
                 /**
                  * If the agent for the network is not running, I will start a new one.
                  */
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet);
+                File walletFilename = new File(WALLET_FILENAME + blockchainNetworkType.getCode());
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 bitcoinCryptoNetworkMonitor.start();
             }
+
+            /**
+             * I will update the detailed stats table with the keys that are imported in the wallet.
+             */
+            List<ECKey> importedKEys = wallet.getImportedKeys();
+            updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, importedKEys);
+        }
+    }
+
+    /**
+     * Updates the detailed stats with the passed information
+     * @param cryptoVault
+     * @param blockchainNetworkType
+     * @param keyList
+     */
+    private void updateDetailedCryptoStats(CryptoVaults cryptoVault, BlockchainNetworkType blockchainNetworkType, List<ECKey> keyList) {
+        try {
+            getDao().deleteDetailedCryptoStats(cryptoVault, blockchainNetworkType);
+            getDao().updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, keyList);
+        } catch (CantExecuteDatabaseOperationException e) {
+            /**
+             * if the stats are not updated, I can continue anyway.
+             */
+            e.printStackTrace();
         }
     }
 
@@ -185,7 +218,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
              * If I couldn't load the wallet from file, I'm assuming is a new wallet and I will create it.
              * I'm creating it by importing the keys sent by the vault.
              */
-            wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
+            //wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
+
+            wallet = new Wallet(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
+            wallet.importKeys(keyList);
 
             /**
              * Will set the autosave information and save it.
@@ -197,9 +233,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
                 e1.printStackTrace(); // I will continue because the key addition will trigger an autosave anyway.
             }
         }
-
-
-
         return wallet;
     }
 
@@ -404,7 +437,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             /**
              * instantiates a blockchain that will load it from file.
              */
-            BitcoinCryptoNetworkBlockChain blockChain = new BitcoinCryptoNetworkBlockChain(BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter));
+            BitcoinCryptoNetworkBlockChain blockChain = new BitcoinCryptoNetworkBlockChain(BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter), null);
             /**
              * get its height.
              */
@@ -430,6 +463,31 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      */
     public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
         Wallet wallet = getWallet(blockchainNetworkType, null);
-        return wallet.getTransaction(Sha256Hash.of(transactionHash.getBytes()));
+        Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
+        Transaction transaction = wallet.getTransaction(sha256Hash);
+        return transaction;
+    }
+
+    /**
+     * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
+     * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
+     * @param txHash the Hash of the transaction we are going to look for.
+     * @param blockHash the Hash of block where this transaction was stored..
+     * @return a CryptoTransaction with the information of the transaction.
+     * @throws CantGetCryptoTransactionException
+     */
+
+    public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
+        /**
+         * I will get the CryptoTransaction from all agents running. Only one will return the CryptoTransaction
+         */
+        for (BitcoinCryptoNetworkMonitor monitor : runningAgents.values()){
+            return monitor.getCryptoTransactionFromBlockChain(txHash, blockHash);
+        }
+
+        /**
+         * if no agents are running, then no CryptoTransaction to return.
+         */
+        return null;
     }
 }

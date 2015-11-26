@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.DeveloperNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,7 +31,7 @@ public abstract class AbstractPluginSubsystem {
     }
 
     /**
-     * Throw the method <code>registerDeveloper</code> you can add new developers to the plugin subsystem.
+     * Through the method <code>registerDeveloper</code> you can add new developers to the plugin subsystem.
      * Here we'll corroborate too that the developer is not added twice.
      *
      * @param pluginDeveloper  pluginDeveloper in-self.
@@ -70,6 +71,12 @@ public abstract class AbstractPluginSubsystem {
 
             throw new DeveloperNotFoundException(pluginDeveloperReference.toString(), "developer not found in the specified plugin subsystem.");
         }
+    }
+
+    public final void fillVersions(final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions) {
+
+        for(ConcurrentHashMap.Entry<PluginDeveloperReference, AbstractPluginDeveloper> developer : developers.entrySet())
+            versions.putAll(developer.getValue().listVersions());
     }
 
     public PluginReference getPluginReference() {

@@ -19,6 +19,7 @@ class BitcoinCryptoNetworkDatabaseConstants {
 
     static final String TRANSACTIONS_TRX_ID_COLUMN_NAME = "trx_id";
     static final String TRANSACTIONS_HASH_COLUMN_NAME = "hash";
+    static final String TRANSACTIONS_BLOCK_HASH_COLUMN_NAME = "block_hash";
     static final String TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     static final String TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME = "block_depth";
     static final String TRANSACTIONS_ADDRESS_TO_COLUMN_NAME = "address_to";
@@ -41,6 +42,19 @@ class BitcoinCryptoNetworkDatabaseConstants {
     static final String CRYPTOVAULTS_STATS_MONITORED_PUBLICKEYS_COLUMN_NAME = "monitored_publickeys";
 
     static final String CRYPTOVAULTS_STATS_FIRST_KEY_COLUMN = "crypto_vault";
+
+    /**
+     * CryptoVaults_DetailedStats database table definition.
+     */
+    static final String CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME = "cryptovaults_detailed_stats";
+
+    static final String CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME = "crypto_vault";
+    static final String CRYPTOVAULTS_DETAILED_STATS_NETWORK_COLUMN_NAME = "network";
+    static final String CRYPTOVAULTS_DETAILED_STATS_ORDER_COLUMN_NAME = "key_order";
+    static final String CRYPTOVAULTS_DETAILED_STATS_MONITORED_PUBLICKEYS_COLUMN_NAME = "monitored_publickeys";
+    static final String CRYPTOVAULTS_DETAILED_STATS_MONITORED_ADDRESSES_COLUMN_NAME = "monitored_addresses";
+
+    static final String CRYPTOVAULTS_DETAILED_STATS_FIRST_KEY_COLUMN = "crypto_vault";
 
     /**
      * EventAgent_Stats database table definition.

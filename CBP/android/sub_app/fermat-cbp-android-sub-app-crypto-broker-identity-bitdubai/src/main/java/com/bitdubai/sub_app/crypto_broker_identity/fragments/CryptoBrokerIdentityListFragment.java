@@ -3,12 +3,10 @@ package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 
@@ -19,9 +17,9 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
@@ -100,7 +98,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         newIdentityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
+                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode(), subAppsSession.getAppPublicKey());
             }
         });
 
@@ -113,7 +111,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
 
-        if (identityInformationList.isEmpty()) {
+        if (identityInformationList == null || identityInformationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
@@ -162,8 +160,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
 
         try {
-            data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
-        } catch (CantGetCryptoBrokerListException ex) {
+            data = moduleManager.listIdentities(0, 0);
+        } catch (CantListCryptoBrokersException ex) {
             errorManager.reportUnexpectedSubAppException(
                     SubApps.CBP_CRYPTO_BROKER_IDENTITY,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
@@ -181,7 +179,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     @Override
     public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {
         subAppsSession.setData(IDENTITY_INFO, data);
-        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode());
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode(), subAppsSession.getAppPublicKey());
     }
 
     @Override

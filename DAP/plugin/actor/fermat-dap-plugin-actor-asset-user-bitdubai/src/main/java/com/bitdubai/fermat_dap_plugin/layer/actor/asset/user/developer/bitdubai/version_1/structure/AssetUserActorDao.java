@@ -126,8 +126,8 @@ public class AssetUserActorDao implements Serializable {
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("CANT GET ASSET USER ACTOR, TABLE NOT FOUND.", " ASSET USER ACTOR", "");
             } else {
-                if (assetUserExists(actorAssetUserRecord.getPublicKey())) {
-                    this.updateAssetUserDAPConnectionStateOrCrpytoAddress(actorAssetUserRecord.getPublicKey(), actorAssetUserRecord.getDapConnectionState(), actorAssetUserRecord.getCryptoAddress());
+                if (assetUserExists(actorAssetUserRecord.getActorPublicKey())) {
+                    this.updateAssetUserDAPConnectionStateOrCrpytoAddress(actorAssetUserRecord.getActorPublicKey(), actorAssetUserRecord.getDapConnectionState(), actorAssetUserRecord.getCryptoAddress());
                 } else {
 
                     table.loadToMemory();
@@ -136,7 +136,7 @@ public class AssetUserActorDao implements Serializable {
                         DatabaseTableRecord record = table.getEmptyRecord();
                         record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
 
-                        record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME, actorAssetUserRecord.getPublicKey());
+                        record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME, actorAssetUserRecord.getActorPublicKey());
                         record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NAME_COLUMN_NAME, actorAssetUserRecord.getName());
 
                         if (actorAssetUserRecord.getAge() != null)
@@ -164,7 +164,7 @@ public class AssetUserActorDao implements Serializable {
                         /**
                          * Persist profile image on a file
                          */
-                        persistNewAssetUserProfileImage(actorAssetUserRecord.getPublicKey(), actorAssetUserRecord.getProfileImage());
+                        persistNewAssetUserProfileImage(actorAssetUserRecord.getActorPublicKey(), actorAssetUserRecord.getProfileImage());
                     }
                 }
             }
@@ -238,8 +238,8 @@ public class AssetUserActorDao implements Serializable {
              * if Asset User exist on table
              * change status
              */
-            if (assetUserRegisteredExists(actorAssetUserRecord.getPublicKey())) {
-                this.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUserRecord.getPublicKey(), dapConnectionState, cryptoAddress);
+            if (assetUserRegisteredExists(actorAssetUserRecord.getActorPublicKey())) {
+                this.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUserRecord.getActorPublicKey(), dapConnectionState, cryptoAddress);
             } else {
                 /**
                  * Get actual date
@@ -260,7 +260,7 @@ public class AssetUserActorDao implements Serializable {
 
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
 
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetUserRecord.getPublicKey());
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetUserRecord.getActorPublicKey());
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NAME_COLUMN_NAME, actorAssetUserRecord.getName());
 
                 if (actorAssetUserRecord.getAge() != null)
@@ -287,7 +287,7 @@ public class AssetUserActorDao implements Serializable {
                 /**
                  * Persist profile image on a file
                  */
-                persistNewAssetUserProfileImage(actorAssetUserRecord.getPublicKey(), actorAssetUserRecord.getProfileImage());
+                persistNewAssetUserProfileImage(actorAssetUserRecord.getActorPublicKey(), actorAssetUserRecord.getProfileImage());
 
                 database.closeDatabase();
             }
@@ -313,8 +313,8 @@ public class AssetUserActorDao implements Serializable {
             for (ActorAssetUser actorAssetUser : actorAssetUserRecord) {
 
                 if (compareRegisterTables(actorAssetUser)) {
-                    if (assetUserRegisteredExists(actorAssetUser.getPublicKey())) {
-                        this.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getPublicKey(), actorAssetUser.getDapConnectionState(), actorAssetUser.getCryptoAddress());
+                    if (assetUserRegisteredExists(actorAssetUser.getActorPublicKey())) {
+                        this.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), actorAssetUser.getDapConnectionState(), actorAssetUser.getCryptoAddress());
                     } else {
                         /**
                          * Get actual date
@@ -334,7 +334,7 @@ public class AssetUserActorDao implements Serializable {
                         DatabaseTableRecord record = table.getEmptyRecord();
 
                         record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
-                        record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetUser.getPublicKey());
+                        record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetUser.getActorPublicKey());
                         record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NAME_COLUMN_NAME, actorAssetUser.getName());
 
                         if (actorAssetUser.getAge() != null)
@@ -366,7 +366,7 @@ public class AssetUserActorDao implements Serializable {
                         /**
                          * Persist profile image on a file
                          */
-                        persistNewAssetUserProfileImage(actorAssetUser.getPublicKey(), actorAssetUser.getProfileImage());
+                        persistNewAssetUserProfileImage(actorAssetUser.getActorPublicKey(), actorAssetUser.getProfileImage());
                     }
                 }
             }
@@ -694,7 +694,7 @@ public class AssetUserActorDao implements Serializable {
             }
             // 2) Find  Asset Users by Connection State.
             //TODO Actor Asset User en Tabla REGISTERED con DAPDAPConnectionState CONNECTED_ONLINE indicara que tiene CryptoAddress
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
+//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -877,7 +877,7 @@ public class AssetUserActorDao implements Serializable {
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check Table(s), tables not found.", "Asset User Actor", "Cant check table(s) not found.");
             }
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME, actorAssetUserRecord.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME, actorAssetUserRecord.getActorPublicKey(), DatabaseFilterType.EQUAL);
             table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_NAME_COLUMN_NAME, actorAssetUserRecord.getName(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 

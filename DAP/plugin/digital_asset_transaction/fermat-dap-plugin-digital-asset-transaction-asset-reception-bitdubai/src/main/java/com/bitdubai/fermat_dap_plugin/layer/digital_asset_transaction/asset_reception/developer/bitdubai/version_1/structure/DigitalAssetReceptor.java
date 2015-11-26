@@ -147,7 +147,7 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
     public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
         setDigitalAssetLocalFilePath(digitalAssetMetadata);
-        //this.assetDistributionDao.persistDigitalAsset(digitalAssetMetadata.getGenesisTransaction(), this.digitalAssetFileStoragePath, digitalAssetMetadata.getDigitalAssetHash(), actorAssetUser.getPublicKey());
+        //this.assetDistributionDao.persistDigitalAsset(digitalAssetMetadata.getGenesisTransaction(), this.digitalAssetFileStoragePath, digitalAssetMetadata.getDigitalAssetHash(), actorAssetUser.getActorPublicKey());
         persistInLocalStorage(digitalAssetMetadata);
     }
 

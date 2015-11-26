@@ -2,7 +2,6 @@ package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_dis
 
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -15,7 +14,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 public class ActorAssetDistributionUser implements ActorAssetUser {
 
     private String name;
-    private String publicKey;
+    private String actorPublicKey;
     private byte[] profileImage;
     private long registrationDate;
     private long lastConnectionDate;
@@ -25,12 +24,12 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
         return new ECCKeyPair().getPublicKey();
     }
     @Override
-    public String getPublicKey() {
-        return this.publicKey;
+    public String getActorPublicKey() {
+        return this.actorPublicKey;
     }
 
-    public void setPublicKey(String publicKey){
-        this.publicKey=publicKey;
+    public void setActorPublicKey(String actorPublicKey){
+        this.actorPublicKey=actorPublicKey;
     }
 
     @Override
@@ -148,6 +147,6 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
         setLastConnectionDate(actorAssetUser.getLastConnectionDate());
         setName(actorAssetUser.getName());
         setProfileImage(actorAssetUser.getProfileImage());
-        setPublicKey(actorAssetUser.getPublicKey());
+        setActorPublicKey(actorAssetUser.getActorPublicKey());
     }
 }

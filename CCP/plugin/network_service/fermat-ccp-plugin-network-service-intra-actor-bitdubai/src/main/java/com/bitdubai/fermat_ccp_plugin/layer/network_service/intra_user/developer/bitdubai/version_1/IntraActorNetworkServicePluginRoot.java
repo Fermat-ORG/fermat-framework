@@ -76,6 +76,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.NewReceiveMessagesNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.NewSentMessageNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -102,7 +103,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -376,6 +379,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
+        initializeMessagesListeners();
     }
 
     /**
@@ -392,12 +397,23 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 //        listenersAdded.add(fermatEventListener);
 
         /**
-         *
+         *Listen and handle the received messages
          */
         FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
         fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
+        /**
+         * Listen and handle the sent messages
+         */
+
+
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewSentMessageNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
     }
 
     /**
@@ -600,8 +616,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             initializeIntraActorAgent();
 
-            initializeMessagesListeners();
-
 
             try {
 
@@ -680,13 +694,32 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     }
 
-    private void saveActorsInMemoryCache(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
+    public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage){
+        Gson gson = new Gson();
 
-//        for (PlatformComponentProfile platformComponentProfilePluginRoot : platformComponentProfileRegisteredList){
-//            incomingNotificationsDao.createNotification(UUID.randomUUID(),platformComponentProfilePluginRoot.);
-//        }
+        try {
+            fermatMessage.toJson();
 
+            ActorNetworkServiceRecord actorNetworkServiceRecord = gson.fromJson(fermatMessage.getContent(), ActorNetworkServiceRecord.class);
+
+
+            if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)) {
+                // close connection, sender is the destination
+                System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
+                communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
+                actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
+
+            }
+
+
+        } catch (Exception e) {
+            //quiere decir que no estoy reciviendo metadata si no una respuesta
+            System.out.print("EXCEPCION DENTRO DEL PROCCESS EVENT");
+            e.printStackTrace();
+
+        }
     }
+
 
     /**
      * (non-Javadoc)
@@ -770,10 +803,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     //launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
 
                     getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DELIVERY);
+                    if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)){
+                        // close connection, sender is the destination
+                        communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
+                        actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorSenderPublicKey());
 
-                    // close connection, sender is the destination
-                    communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
-                    actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorSenderPublicKey());
+                    }
 
                     break;
 
@@ -807,6 +842,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         actorNetworkServiceRecord.getActorSenderPublicKey(),
                         actorNetworkServiceRecord.getActorDestinationPublicKey(),
                         actorNetworkServiceRecord.toJson());
+
+
     }
 
     private void changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord) {
@@ -1055,31 +1092,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     null
             );                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
+           List<PlatformComponentProfile> list = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
 
-            List<PlatformComponentProfile> list = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+           for (PlatformComponentProfile platformComponentProfile : list) {
 
-            for (PlatformComponentProfile platformComponentProfile : list) {
-
-                JsonObject jsonObject = new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
-                //Se desencripta la imagen para luego ser agregada a la lista.
-                String encoded = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString();
-                byte[] image = null;
-                try {
-                    image = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
-                } catch (Exception e) {
-                    image = null;
-                }
-                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), image, platformComponentProfile.getAlias()));
+                byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
+                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias()));
             }
-
-
-            //requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
         }
-
 
         return lstIntraUser;
     }
@@ -1133,10 +1157,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
 
             ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, NotificationDescriptor.ACCEPTED, ActorProtocolState.DONE);
-
-//            actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
-//
-//            actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
             actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
@@ -1270,51 +1290,42 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         //TODO: deberia cambiaresto para que venga el tipo de actor a registrar
 
-
         CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
-
 
         for (Actor actor : actors) {
 
-
-
-        /*
-         * Construct  profile and register
-         */
-
-            //build jsonObject Photo
-            JsonObject jsonObject = new JsonObject();
-            //Se encripta la imagen para luego ser agregada al json.
-            String encodedImage = null;
             try {
-                encodedImage = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-            jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE, encodedImage);
-            // jsonObject.addProperty(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE,actor.getPhoto().toString());
-            PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
-                    (actor.getName().toLowerCase()),
-                    (actor.getName().toLowerCase() + "_" + this.getName()),
-                    NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
-                    jsonObject.toString());
+                /*
+                 * Construct  profile and register
+                 */
+                String imageString = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);
+                //System.out.println("imageString = "+imageString);
+
+                PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
+                                                                                                                                            (actor.getName().toLowerCase()),
+                                                                                                                                            (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
+                                                                                                                                            NetworkServiceType.UNDEFINED,
+                                                                                                                                            PlatformComponentType.ACTOR_INTRA_USER,
+                                                                                                                                            imageString);
 
 
-            if (!actorsToRegisterCache.contains(platformComponentProfile)) {
-                actorsToRegisterCache.add(platformComponentProfile);
+               /* for (int i = 0; i < 35; i++) {
+                    communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
+                }*/
 
-                if (register) {
-                    try {
+
+                if (!actorsToRegisterCache.contains(platformComponentProfile)) {
+                    actorsToRegisterCache.add(platformComponentProfile);
+
+                    if (register) {
                         communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
-
-                    } catch (CantRegisterComponentException e) {
-                        e.printStackTrace();
                     }
                 }
-            }
 
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
 
         }
     }

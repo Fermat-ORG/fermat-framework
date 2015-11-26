@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.Service;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,16 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
@@ -28,12 +27,12 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -54,7 +53,7 @@ public class DatabaseToolsFragment extends FermatFragment {
      * SubApp session
      */
 
-    public  DeveloperSubAppSession developerSubAppSession;
+    public DeveloperSubAppSession developerSubAppSession;
 
     View rootView;
 
@@ -63,7 +62,7 @@ public class DatabaseToolsFragment extends FermatFragment {
 
     private ArrayList<Resource> mlist;
 
-    private GridView gridView;
+    private ListView listView;
 
     public static DatabaseToolsFragment newInstance() {
         return new DatabaseToolsFragment();
@@ -74,7 +73,7 @@ public class DatabaseToolsFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(super.subAppsSession!=null){
+        if (super.subAppsSession != null) {
             developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
         }
 
@@ -99,52 +98,64 @@ public class DatabaseToolsFragment extends FermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        rootView = inflater.inflate(R.layout.start, container, false);
+        rootView = inflater.inflate(R.layout.start_init, container, false);
         rootView.setTag(1);
-        gridView=(GridView) rootView.findViewById(R.id.gridView);
+
+        listView =(ListView) rootView.findViewById(R.id.gridView);
+
         try {
 
-            List<Plugins> plugins = databaseTools.getAvailablePluginList();
-            List<Addons> addons = databaseTools.getAvailableAddonList();
+            List<PluginVersionReference> plugins = databaseTools.getAvailablePluginList();
+            List<AddonVersionReference> addons = databaseTools.getAvailableAddonList();
 
-
-
-            mlist=new ArrayList<Resource>();
+            mlist = new ArrayList<Resource>();
 
             for (int i = 0; i < plugins.size(); i++) {
-                Resource item = new Resource();
-                item.picture = "plugin";
-                item.label = plugins.get(i).toString().toLowerCase().replace("_", " ");
-                item.code = plugins.get(i).getKey();
-                item.type=Resource.TYPE_PLUGIN;
-                mlist.add(item);
+
+                PluginVersionReference pvr = plugins.get(i);
+
+                String label = pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getPlatformReference().getPlatform().getCode()+" "+
+                        pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getLayer().name()+" "+
+                        pvr.getPluginDeveloperReference().getPluginReference().getPlugin().name();
+
+                mlist.add(
+                        new Resource(
+                                "plugin",
+                                label.replaceAll("_", " "),
+                                pvr.toKey(),
+                                pvr.getPluginDeveloperReference().getDeveloper().name(),
+                                Resource.TYPE_PLUGIN
+                        )
+                );
+
             }
             for (int i = 0; i < addons.size(); i++) {
                 Resource item = new Resource();
                 item.picture = "addon";
-                item.label = addons.get(i).toString().replace("_", " ");
-                item.code = addons.get(i).getCode();
-                item.type=Resource.TYPE_ADDON;
+                item.label = addons.get(i).toString3();
+                item.code = addons.get(i).toKey();
+                item.type = Resource.TYPE_ADDON;
                 mlist.add(item);
             }
 
-            Configuration config = getResources().getConfiguration();
-            if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                gridView.setNumColumns(6);
-            } else {
-                gridView.setNumColumns(3);
-            }
-            AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
-            adapter.notifyDataSetChanged();
-            gridView.setAdapter(adapter);
+            Collections.sort(mlist, new Comparator<Resource>() {
+                public int compare(Resource o1, Resource o2) {
+                    return (o1.label).compareTo(o2.label);
+                }
+            });
 
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item_init, mlist);
+
+            adapter.notifyDataSetChanged();
+            listView.setAdapter(adapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
 
-                    Resource item=(Resource) gridView.getItemAtPosition(position);
-                    developerSubAppSession.setData("resource",item);
-                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),R.id.startContainer,null);
+                    Resource item = (Resource) listView.getItemAtPosition(position);
+                    developerSubAppSession.setData("resource", item);
+                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), R.id.startContainer, null);
 
 
                 }
@@ -161,50 +172,33 @@ public class DatabaseToolsFragment extends FermatFragment {
 
 
     public class AppListAdapter extends ArrayAdapter<Resource> {
+        private int layoutResource;
 
-
-        public AppListAdapter(Context context, int textViewResourceId, List<Resource> objects) {
-            super(context, textViewResourceId, objects);
+        public AppListAdapter(Context context, int layoutResource, List<Resource> objects) {
+            super(context, layoutResource, objects);
+            this.layoutResource = layoutResource;
         }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-           final Resource item = getItem(position);
-
+            final Resource item = getItem(position);
 
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.developer_app_grid_item, parent, false);
+
+                convertView = inflater.inflate(R.layout.developer_app_grid_item_init, parent, false);
 
 
                 holder = new ViewHolder();
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
 
-                //no hago el click listener en este punto porque la position no es correcta cuando va a la segunda pagina
-               /* holder.imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                      //  Resource item=(Resource) gridView.getItemAtPosition(position);
-
-                        //set the next fragment and params
-                      //  Object[] params = new Object[1];
-                       // params[0] = item;
-
-                        developerSubAppSession.setData("resource",view.getTag(position));
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),null);
-
-                    }
-                });*/
-
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
                 holder.companyTextView = textView;
-
 
                 convertView.setTag(holder);
             } else {
@@ -212,7 +206,6 @@ public class DatabaseToolsFragment extends FermatFragment {
             }
 
             holder.companyTextView.setText(item.label);
-
 
             switch (item.picture) {
                 case "plugin":
@@ -229,24 +222,15 @@ public class DatabaseToolsFragment extends FermatFragment {
                     break;
             }
 
-
-
             return convertView;
         }
-
-
-
     }
+
     /**
      * ViewHolder.
      */
     private class ViewHolder {
-
-
-
         public ImageView imageView;
         public TextView companyTextView;
-
-
     }
 }

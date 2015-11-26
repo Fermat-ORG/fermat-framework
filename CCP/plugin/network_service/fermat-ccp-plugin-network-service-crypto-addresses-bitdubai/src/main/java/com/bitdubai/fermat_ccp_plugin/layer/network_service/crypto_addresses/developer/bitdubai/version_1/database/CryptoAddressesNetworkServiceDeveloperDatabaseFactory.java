@@ -30,7 +30,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
+public final class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID                 pluginId            ;
@@ -110,14 +110,16 @@ public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
         return tables;
     }
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                      final DeveloperDatabaseTable developerDatabaseTable) {
 
         try {
+
             initializeDatabase();
 
-            List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
+            final List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
 
-            DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
+            final DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
 
             try {
 
@@ -141,8 +143,10 @@ public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
                 returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
             }
             return returnedRecords;
+
         } catch (Exception e) {
-            System.out.println(e);
+
+            System.err.println(e);
             return new ArrayList<>();
         }
     }

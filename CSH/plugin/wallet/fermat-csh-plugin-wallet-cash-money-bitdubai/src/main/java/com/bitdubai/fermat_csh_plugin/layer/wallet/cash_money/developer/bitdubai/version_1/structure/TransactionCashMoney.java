@@ -4,14 +4,14 @@ import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashCurrencyType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyTransaction;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
 
 import java.util.UUID;
 
 /**
  * Created by francisco on 22/10/15.
  */
-public class TransactionCashMoney implements CashMoneyTransaction {
+public class TransactionCashMoney implements CashMoneyWalletTransaction {
 
     UUID cashTransactionId;
     String walletKeyBroker;

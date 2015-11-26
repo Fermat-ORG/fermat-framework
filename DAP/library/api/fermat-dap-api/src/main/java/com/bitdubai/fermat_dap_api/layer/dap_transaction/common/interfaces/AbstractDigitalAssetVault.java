@@ -47,7 +47,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/10/15.
  */
-public abstract class AbstractDigitalAssetVault implements DigitalAssetVault{
+public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
 
     //public String LOCAL_STORAGE_PATH="digital-asset-metadata/";
     public AssetUserWalletManager assetUserWalletManager;
@@ -307,7 +307,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault{
         if(dapTransactionType.getCode().equals(DAPTransactionType.DISTRIBUTION.getCode())){
             AssetIssuerWallet assetWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
             AssetIssuerWalletBalance assetIssuerWalletBalance= assetWallet.getBookBalance(balanceType);
-            actorFromPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
+            actorFromPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
             System.out.println("ASSET DISTRIBUTION Actor Issuer public key:"+actorFromPublicKey);
             System.out.println("ASSET Distribution Transaction to deliver: "+genesisTransaction.getTransactionHash());
             AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(
@@ -329,7 +329,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault{
         if(dapTransactionType.getCode().equals(DAPTransactionType.RECEPTION.getCode())){
             AssetUserWallet assetWallet=this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
             AssetUserWalletBalance assetUserWalletBalance= assetWallet.getBookBalance(balanceType);
-            actorToPublicKey=this.actorAssetUserManager.getActorAssetUser().getPublicKey();
+            actorToPublicKey=this.actorAssetUserManager.getActorAssetUser().getActorPublicKey();
             System.out.println("ASSET RECEPTION Actor Issuer public key:"+actorToPublicKey);
             System.out.println("ASSET RECEPTION Transaction to deliver: "+genesisTransaction.getTransactionHash());
             AssetUserWalletTransactionRecordWrapper assetUserWalletTransactionRecordWrapper=new AssetUserWalletTransactionRecordWrapper(

@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_publisher.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProject;
@@ -27,7 +28,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface WalletPublisherMiddlewareManager{
+public interface WalletPublisherMiddlewareManager extends FermatManager {
 
     /**
      * This method returns the information stored about the all published component

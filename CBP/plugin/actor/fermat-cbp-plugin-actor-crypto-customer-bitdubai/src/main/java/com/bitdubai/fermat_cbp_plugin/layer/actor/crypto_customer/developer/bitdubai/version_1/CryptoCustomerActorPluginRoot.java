@@ -1,105 +1,135 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantCreateCryptoCustomerActorException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.interfaces.CryptoCustomerActor;
-import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.interfaces.CryptoCustomerActorManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.DealsWithCustomerBrokerPurchases;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorImpl;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateCryptoCustomerActorException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCryptoCustomerActorException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActorManager;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActorRecord;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDatabaseDao;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantRegisterCryptoCustomerActorException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorRecordImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 /**
+ * TODO THIS PLUG-IN DOES........
+ *
  * Created by jorge on 30-10-2015.
+ * Updated by lnacosta (laion.cj91@gmail.com) on 18/11/2015.
+ * Updated by Yordin Alayn (y.alayn@gmail.com) on 21.11.2015.
  */
-public class CryptoCustomerActorPluginRoot implements CryptoCustomerActorManager,DealsWithCustomerBrokerPurchases,DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
+    CryptoCustomerActorManager
 
+{
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
-    private LogManager logManager;
-    private UUID pluginId;
-    private ServiceStatus status;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.CRYPTO_BROKER_PURCHASE)
     private CustomerBrokerPurchaseNegotiationManager purchaseNegotiationManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
+    private CryptoCustomerActorDatabaseDao databaseDao;
+
+    public static final String ACTOR_CRYPTO_CUSTOMER_PROFILE_IMAGE_DIRECTORY_NAME = "actorCryptoCustomerProfileImage";
+    public static final String ACTOR_CRYPTO_CUSTOMER_PRIVATE_KEYS_DIRECTORY_NAME = "actorCryptoCustomerPrivateKeys";
+
     public CryptoCustomerActorPluginRoot(){
-        this.pluginId = UUID.randomUUID();
-        this.status = ServiceStatus.CREATED;
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public List<String> getClassesFullPath() {
-        return null;
-    }
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-
-    }
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
+        super(new PluginVersionReference(new Version()));
     }
 
     @Override
     public void start() throws CantStartPluginException {
-        this.status = ServiceStatus.STARTED;
+        try {
+            databaseDao = new CryptoCustomerActorDatabaseDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
+            databaseDao.initialize();
+            this.serviceStatus = ServiceStatus.STARTED;
+        } catch (final CantInitializeCryptoCustomerActorDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, "pluginDatabaseSystem=" + pluginDatabaseSystem + "pluginId=" + pluginId, "Cannot initialize Crypto Customer Actor Database.");
+        }
     }
 
     @Override
-    public void pause() {
-        this.status = ServiceStatus.PAUSED;
+    public CryptoCustomerActorRecord createNewCryptoCustomerActor(String actorLoggedInPublicKey, String actorName, byte[] actorPhoto) throws CantCreateCryptoCustomerActorException {
+
+        // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG. LET'S THINK TOGETHER.
+        // TODO MAKE USE OF THE ERROR MANAGER.
+        ECCKeyPair keyPair = new ECCKeyPair();
+        String actorPublicKey = keyPair.getPublicKey();
+        String actorPrivateKey = keyPair.getPrivateKey();
+        try {
+            return databaseDao.createRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey, actorPrivateKey, actorName, actorPhoto, ConnectionState.CONNECTED);
+        } catch (CantRegisterCryptoCustomerActorException e){
+            throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
+        }
+//        return new CryptoCustomerActorRecordImpl(actorPublicKey, actorPrivateKey, actorName);
     }
 
     @Override
-    public void resume() {
-        this.status = ServiceStatus.STARTED;
+    public CryptoCustomerActorRecord getCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey) throws CantGetCryptoCustomerActorException {
+
+        // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG. LET'S THINK TOGETHER.
+        // TODO MAKE USE OF THE ERROR MANAGER.
+        try {
+            CryptoCustomerActorRecord actor = this.databaseDao.getRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey);
+            if(actor == null)
+                throw new CantGetCryptoCustomerActorException("", null, ".","Intra User not found");
+            return new CryptoCustomerActorRecordImpl(actorPublicKey, "",actor.getActorName(), actor.getActorPhoto());
+        } catch (CantRegisterCryptoCustomerActorException e){
+            throw new CantGetCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET CRYPTO CUSTOMER ACTOR", "");
+        } catch (Exception e){
+            throw new CantGetCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET CRYPTO CUSTOMER ACTOR", "");
+        }
     }
 
-    @Override
-    public void stop() {
-        this.status = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.status;
-    }
-
-    @Override
-    public void setCustomerBrokerPurchaseNegotiationManager(CustomerBrokerPurchaseNegotiationManager purchaseNegotiationManager) {
-        this.purchaseNegotiationManager = purchaseNegotiationManager;
-    }
-
-    @Override
-    public CryptoCustomerActor createNewCryptoCustomerActor(ActorIdentity identity) throws CantCreateCryptoCustomerActorException {
-        return new CryptoCustomerActorImpl(identity, purchaseNegotiationManager);
-    }
-
-    @Override
-    public CryptoCustomerActor getCryptoCustomer(ActorIdentity identity) {
-        return new CryptoCustomerActorImpl(identity, purchaseNegotiationManager);
+    private void persistPrivateKey(String privateKey, String publicKey) throws CantPersistPrivateKeyException {
+        try {
+            PluginTextFile file = this.pluginFileSystem.createTextFile(
+                    pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName() + "/" + ACTOR_CRYPTO_CUSTOMER_PRIVATE_KEYS_DIRECTORY_NAME,
+                    publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+            file.setContent(privateKey);
+            file.persistToMedia();
+        } catch (CantPersistFileException | CantCreateFileException e) {
+            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, e, "Error creating or persisting file.", null);
+        } catch (Exception e) {
+            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+        }
     }
 }

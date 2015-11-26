@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/coordinator"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        >
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar_layout"
@@ -23,27 +24,28 @@
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
+                app:title=""
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin" />
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/toolbar_header_container"
-                    android:fitsSystemWindows="true"
                     app:layout_collapseMode="parallax"
                     >
 
                 </RelativeLayout>
 
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                   />
 
             </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -51,9 +53,6 @@
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/wallet_factory_orange"
-                app:tabIndicatorColor="#ac2acc"
-                app:tabSelectedTextColor="#aaa222"
                 app:tabTextColor="#fff"
 
                 />
@@ -77,30 +76,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#fff"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:id="@+id/navigation_view_header"
-                android:visibility="visible">
-
-            </FrameLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/navigation_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="4dp"/>
-
-
-        </LinearLayout>
+       <include layout="@layout/navigation_view"></include>
 
         </android.support.design.widget.NavigationView>
 

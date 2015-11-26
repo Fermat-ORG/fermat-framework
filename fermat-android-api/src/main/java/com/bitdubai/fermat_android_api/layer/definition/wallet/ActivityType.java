@@ -7,7 +7,8 @@ public enum ActivityType {
 
     ACTIVITY_TYPE_SUB_APP ("SubAppActivity"),
     ACTIVITY_TYPE_WALLET   ("WalletActivity"),
-    ACTIVITY_TYPE_FACTORY("WalletFactoryActivity");
+    ACTIVITY_TYPE_FACTORY("WalletFactoryActivity"),
+    ACTIVITY_TYPE_DESKTOP("desktopActivity");
 
     private final String code;
 

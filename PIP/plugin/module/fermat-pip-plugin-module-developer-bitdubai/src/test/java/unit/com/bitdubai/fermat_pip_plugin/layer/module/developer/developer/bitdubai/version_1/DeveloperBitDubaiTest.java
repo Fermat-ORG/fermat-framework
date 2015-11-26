@@ -2,7 +2,7 @@ package unit.com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bit
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
-import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.DeveloperBitDubai;
 
 import org.junit.Assert;
 import org.junit.Test;

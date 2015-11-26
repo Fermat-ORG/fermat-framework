@@ -1,9 +1,12 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.BlockStore;
 import org.bitcoinj.store.BlockStoreException;
 import org.bitcoinj.store.MemoryBlockStore;
@@ -22,13 +25,14 @@ import java.io.Serializable;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class BitcoinCryptoNetworkBlockChain implements Serializable{
+public class BitcoinCryptoNetworkBlockChain implements Serializable{
 
     /**
      * Classes variables
      */
     private BlockChain blockChain;
     private BlockStore blockStore;
+    private Wallet wallet;
     private NetworkParameters networkParameters;
     private final String BLOCKCHAIN_FILENAME = "/data/data/com.bitdubai.fermat/files/bitcoin_Blockchain_";
 
@@ -36,8 +40,9 @@ class BitcoinCryptoNetworkBlockChain implements Serializable{
     /**
      * Constructor
      */
-    public BitcoinCryptoNetworkBlockChain(NetworkParameters networkParameters) throws BlockchainException {
+    public BitcoinCryptoNetworkBlockChain(NetworkParameters networkParameters, Wallet wallet) throws BlockchainException {
         this.networkParameters= networkParameters;
+        this.wallet = wallet;
 
         /**
          * initialize the objects
@@ -67,7 +72,7 @@ class BitcoinCryptoNetworkBlockChain implements Serializable{
          * I will define the SPV blockstore were I will save the blockchain.
          * I will be saving the file under the network type I'm being created for.
          */
-        String fileName = BLOCKCHAIN_FILENAME + networkParameters.toString();
+        String fileName = BLOCKCHAIN_FILENAME + BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters).getCode();
         File blockChainFile = new File(fileName);
         try {
             blockStore = new SPVBlockStore(networkParameters, blockChainFile);
@@ -84,7 +89,7 @@ class BitcoinCryptoNetworkBlockChain implements Serializable{
          * I initialize the blockchain object
          */
         try{
-            blockChain = new BlockChain(this.networkParameters, blockStore);
+            blockChain = new BlockChain(this.networkParameters, wallet, blockStore);
         } catch (Exception e){
             if (withError)
                 throw new BlockStoreException(e);

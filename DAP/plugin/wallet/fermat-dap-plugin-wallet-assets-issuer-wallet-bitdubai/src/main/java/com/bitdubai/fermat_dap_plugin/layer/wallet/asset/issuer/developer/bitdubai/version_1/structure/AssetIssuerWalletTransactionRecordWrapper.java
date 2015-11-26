@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdu
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 
@@ -26,7 +27,10 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     private final long timeStamp;
     private final String memo;
     private final String digitalAssetMetadataHash;
+    private final String genesisBlock;
     private final String transactionId;
+    private final String genesisTransaction;
+    private DigitalAssetMetadata digitalAssetMetadata;
 
     public AssetIssuerWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
                                               String assetIssuingPublicKey,
@@ -42,7 +46,9 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
                                               long timeStamp,
                                               String memo,
                                               String digitalAssetMetadataHash,
-                                              String transactionId){
+                                                     String genesisBlock,
+                                              String transactionId,
+                                                     String genesisTransaction){
         this.digitalAsset = digitalAsset;
         this.assetIssuingPublicKey = assetIssuingPublicKey;
         this.name = name;
@@ -57,7 +63,13 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.timeStamp = timeStamp;
         this.memo = memo;
         this.digitalAssetMetadataHash = digitalAssetMetadataHash;
+        this.genesisBlock = genesisBlock;
         this.transactionId = transactionId;
+        this.genesisTransaction = genesisTransaction;
+
+        this.digitalAssetMetadata = new DigitalAssetMetadata(this.digitalAsset);
+        digitalAssetMetadata.setGenesisBlock(genesisBlock);
+        digitalAssetMetadata.setGenesisTransaction(this.genesisTransaction);
     }
     @Override
     public DigitalAsset getDigitalAsset() {
@@ -132,5 +144,15 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     @Override
     public String getDigitalAssetMetadataHash() {
         return digitalAssetMetadataHash;
+    }
+
+    @Override
+    public String getGenesisBlock() {
+        return this.genesisBlock;
+    }
+
+    @Override
+    public DigitalAssetMetadata getDigitalAssetMetadata() {
+        return this.digitalAssetMetadata;
     }
 }

@@ -117,7 +117,7 @@ public class LogToolsFragmentLevel2 extends FermatFragment {
     private void changeLogLevel(String pluginKey,LogLevel logLevel, String resource) {
         try {
             //Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
-            Plugins plugin = Plugins.getByKey(pluginKey);
+            Plugins plugin = Plugins.getByCode(pluginKey);
 
 
             //logTool.setLogLevel(plugin, logLevel);

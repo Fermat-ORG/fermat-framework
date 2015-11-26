@@ -7,8 +7,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Plu
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 
 import java.util.Map;
@@ -22,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractLayer {
 
-    private final Map<AddonReference , AbstractAddonSubsystem> addons ;
+    private final Map<AddonReference , AbstractAddonSubsystem > addons ;
     private final Map<PluginReference, AbstractPluginSubsystem> plugins;
 
     private final LayerReference layerReference;
@@ -38,7 +40,7 @@ public abstract class AbstractLayer {
     public abstract void start() throws CantStartLayerException;
 
     /**
-     * Throw the method <code>registerAddon</code> you can add new addons to the layer.
+     * Through the method <code>registerAddon</code> you can add new addons to the layer.
      * Here we'll corroborate too that the addon is not added twice.
      *
      * @param abstractAddonSubsystem  subsystem of the addon.
@@ -71,7 +73,7 @@ public abstract class AbstractLayer {
     }
 
     /**
-     * Throw the method <code>registerPlugin</code> you can add new plugins to the layer.
+     * Through the method <code>registerPlugin</code> you can add new plugins to the layer.
      * Here we'll corroborate too that the plugin is not added twice.
      *
      * @param abstractPluginSubsystem  subsystem of the plugin).
@@ -122,6 +124,18 @@ public abstract class AbstractLayer {
 
             throw new PluginNotFoundException("plugin: "+pluginReference, "plugin not found in the specified layer.");
         }
+    }
+
+    public final void fillAddonVersions(final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions) {
+
+        for(ConcurrentHashMap.Entry<AddonReference, AbstractAddonSubsystem> addon : addons.entrySet())
+            addon.getValue().fillVersions(versions);
+    }
+
+    public final void fillPluginVersions(final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions) {
+
+        for(ConcurrentHashMap.Entry<PluginReference, AbstractPluginSubsystem> plugin : plugins.entrySet())
+            plugin.getValue().fillVersions(versions);
     }
 
     public final LayerReference getLayerReference() {

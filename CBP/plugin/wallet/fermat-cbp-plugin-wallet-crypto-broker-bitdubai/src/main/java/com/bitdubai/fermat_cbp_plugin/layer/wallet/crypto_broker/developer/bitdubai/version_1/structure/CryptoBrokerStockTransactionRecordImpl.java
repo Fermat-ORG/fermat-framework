@@ -1,10 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private TransactionType transactionType;
     private float amount;
     private CurrencyType currencyType;
+    private FermatEnum merchandise;
     private float runningBookBalance;
     private float runningAvailableBalance;
     private long timeStamp;
@@ -35,6 +37,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             BalanceType balanceType,
             TransactionType transactionType,
             CurrencyType currencyType,
+            FermatEnum merchandise,
             float amount,
             float runningBookBalance,
             float runningAvailableBalance,
@@ -67,6 +70,8 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     public String getOwnerPublicKey() { return this.ownerPublicKey; }
 
     public CurrencyType getCurrencyType() { return this.currencyType; }
+
+    public FermatEnum getMerchandise() { return this.merchandise; }
 
     public float getAmount() { return this.amount; }
 

@@ -35,6 +35,20 @@ public class AssetsOverBitcoinCryptoVaultDatabaseConstants {
     static final String KEY_MAINTENANCE_FIRST_KEY_COLUMN = "account_id";
 
     /**
+     * key_Maintenance_detail database table definition.
+     */
+    static final String KEY_MAINTENANCE_DETAIL_TABLE_NAME = "key_maintenance_detail";
+
+    static final String KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME = "account_id";
+    static final String KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME = "depth";
+    static final String KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME = "public_key";
+    static final String KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME = "address";
+
+    static final String KEY_MAINTENANCE_DETAIL_FIRST_KEY_COLUMN = "account_id";
+
+
+
+    /**
      * key_Maintenance_Monitor database table definition.
      */
     static final String KEY_MAINTENANCE_MONITOR_TABLE_NAME = "key_maintenance_monitor";

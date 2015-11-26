@@ -54,9 +54,13 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     Map<WizardTypes, Wizard> wizards;
 
+    // esto es para ver a que wallet o subApp hay que hacer el back
+    String backPublicKey;
+
     Activities backActivity;
 
     Header header;
+    private boolean fullScreen;
 
     public Activity() {
     }
@@ -110,6 +114,11 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.backActivity=activity;
     }
 
+    public void setBackPublicKey(String backPublicKey) {
+        this.backPublicKey = backPublicKey;
+    }
+
+
     /**
      * Activity  interface implementation.
      */
@@ -158,7 +167,13 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     }
 
     @Override
-    public void changeBackActivity(String activityCode) throws InvalidParameterException {
+    public String getBackAppPublicKey() {
+        return backPublicKey;
+    }
+
+    @Override
+    public void changeBackActivity(String appPublicKeyback,String activityCode) throws InvalidParameterException {
+        this.backPublicKey = appPublicKeyback;
         this.backActivity = Activities.getValueFromString(activityCode);
     }
 
@@ -222,6 +237,14 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setHeader(Header header) {
         this.header = header;
+    }
+
+    public boolean isFullScreen() {
+        return fullScreen;
+    }
+
+    public void setFullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
     }
 }
 

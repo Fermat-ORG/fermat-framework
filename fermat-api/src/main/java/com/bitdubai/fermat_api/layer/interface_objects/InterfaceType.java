@@ -9,7 +9,8 @@ public enum InterfaceType {
 
     //Modified by Manuel Perez on 03/08/2015
     SUB_APP("SA"),
-    WALLET("W");
+    WALLET("W"),
+    EMPTY("E");
 
     private String code;
 
@@ -26,6 +27,7 @@ public enum InterfaceType {
         switch (code) {
             case "SA": return SUB_APP;
             case "W": return WALLET;
+            case "E": return EMPTY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Developers enum");
         }

@@ -10,7 +10,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoAddressesNetworkServiceDatabaseConstants {
+public final class CryptoAddressesNetworkServiceDatabaseConstants {
 
     /**
      * Crypto Address Request database table definition.

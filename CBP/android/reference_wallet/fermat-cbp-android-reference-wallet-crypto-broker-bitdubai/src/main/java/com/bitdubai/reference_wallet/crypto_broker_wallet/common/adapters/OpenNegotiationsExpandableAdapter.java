@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.GrouperViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.NegotiationInformationViewHolder;
@@ -68,7 +68,7 @@ public class OpenNegotiationsExpandableAdapter
     public void onBindParentViewHolder(GrouperViewHolder parentViewHolder, int position, GrouperItem parentListItem) {
         parentViewHolder.bind(parentListItem.getChildCount(), parentListItem.getParentText());
 
-        if (!parentListItem.getParentText().toLowerCase().contains("customer")) {
+        if (position == 0) {
             parentViewHolder.setBackgroundColor(R.color.cbw_waiting_for_broker_grouper_background);
         }
     }
