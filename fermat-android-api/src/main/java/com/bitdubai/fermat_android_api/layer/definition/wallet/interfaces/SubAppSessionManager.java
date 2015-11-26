@@ -15,7 +15,7 @@ import java.util.Map;
 public interface SubAppSessionManager {
 
 
-    public SubAppsSession openSubAppSession(InstalledSubApp subApp, ErrorManager errorManager,ModuleManager moduleManager);
+    public SubAppsSession openSubAppSession(InstalledSubApp subApp,String subAppPublicKey, ErrorManager errorManager,ModuleManager moduleManager);
 
     public boolean closeSubAppSession(String subAppPublicKey);
     //subApp publicKey

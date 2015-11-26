@@ -1040,9 +1040,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-                System.out.println("KKKKKKKKKKKKKKKKKKKKK CALLO VPN public key "+vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                if(communicationNetworkServiceConnectionManager != null)
+                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
             }
 
@@ -1058,9 +1057,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
-            System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWW CAYO CONEXION PRINCIPAL WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
             this.register = false;
-            communicationNetworkServiceConnectionManager.closeAllConnection();
+            if(communicationNetworkServiceConnectionManager != null)
+                communicationNetworkServiceConnectionManager.closeAllConnection();
         }
 
     }

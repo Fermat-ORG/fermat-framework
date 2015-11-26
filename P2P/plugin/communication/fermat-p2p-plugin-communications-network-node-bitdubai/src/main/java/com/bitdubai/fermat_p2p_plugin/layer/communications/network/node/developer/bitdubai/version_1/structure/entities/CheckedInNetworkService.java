@@ -21,17 +21,13 @@ public class CheckedInNetworkService extends AbstractBaseEntity implements Seria
 
 	private Timestamp checkedInTimestamp;
 
-	private String extraData;
-
 	private double latitude;
 
 	private double longitude;
 
 	private String networkServiceType;
 
-	private List<CheckedInActor> checkedInActors;
-
-	private CheckedInClient checkedInClient;
+	private String clientIdentityPublicKey;
 
 	public CheckedInNetworkService() {
 		super();
@@ -39,32 +35,32 @@ public class CheckedInNetworkService extends AbstractBaseEntity implements Seria
 		this.checkedInTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
-	public String getIdentityPublicKey() {
-		return this.identityPublicKey;
-	}
-
-	public void setIdentityPublicKey(String identityPublicKey) {
-		this.identityPublicKey = identityPublicKey;
-	}
-
 	public Timestamp getCheckedInTimestamp() {
-		return this.checkedInTimestamp;
+		return checkedInTimestamp;
 	}
 
 	public void setCheckedInTimestamp(Timestamp checkedInTimestamp) {
 		this.checkedInTimestamp = checkedInTimestamp;
 	}
 
-	public String getExtraData() {
-		return this.extraData;
+	public String getClientIdentityPublicKey() {
+		return clientIdentityPublicKey;
 	}
 
-	public void setExtraData(String extraData) {
-		this.extraData = extraData;
+	public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
+		this.clientIdentityPublicKey = clientIdentityPublicKey;
+	}
+
+	public String getIdentityPublicKey() {
+		return identityPublicKey;
+	}
+
+	public void setIdentityPublicKey(String identityPublicKey) {
+		this.identityPublicKey = identityPublicKey;
 	}
 
 	public double getLatitude() {
-		return this.latitude;
+		return latitude;
 	}
 
 	public void setLatitude(double latitude) {
@@ -72,7 +68,7 @@ public class CheckedInNetworkService extends AbstractBaseEntity implements Seria
 	}
 
 	public double getLongitude() {
-		return this.longitude;
+		return longitude;
 	}
 
 	public void setLongitude(double longitude) {
@@ -80,64 +76,46 @@ public class CheckedInNetworkService extends AbstractBaseEntity implements Seria
 	}
 
 	public String getNetworkServiceType() {
-		return this.networkServiceType;
+		return networkServiceType;
 	}
 
 	public void setNetworkServiceType(String networkServiceType) {
 		this.networkServiceType = networkServiceType;
 	}
 
-	public List<CheckedInActor> getCheckedInActors() {
-		return this.checkedInActors;
+	public UUID getUuid() {
+		return uuid;
 	}
 
-	public void setCheckedInActors(List<CheckedInActor> checkedInActors) {
-		this.checkedInActors = checkedInActors;
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
 
-	public CheckedInClient getCheckedInClient() {
-		return this.checkedInClient;
-	}
-
-	public void setCheckedInClient(CheckedInClient checkedInClient) {
-		this.checkedInClient = checkedInClient;
-	}
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    @Override
+	@Override
     public String getId() {
         return uuid.toString();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CheckedInNetworkService)) return false;
-        CheckedInNetworkService that = (CheckedInNetworkService) o;
-        return Objects.equals(getLatitude(), that.getLatitude()) &&
-                Objects.equals(getLongitude(), that.getLongitude()) &&
-                Objects.equals(getUuid(), that.getUuid()) &&
-                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
-                Objects.equals(getCheckedInTimestamp(), that.getCheckedInTimestamp()) &&
-                Objects.equals(getExtraData(), that.getExtraData()) &&
-                Objects.equals(getNetworkServiceType(), that.getNetworkServiceType()) &&
-                Objects.equals(getCheckedInActors(), that.getCheckedInActors()) &&
-                Objects.equals(getCheckedInClient(), that.getCheckedInClient());
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof CheckedInNetworkService)) return false;
+		CheckedInNetworkService that = (CheckedInNetworkService) o;
+		return Objects.equals(getLatitude(), that.getLatitude()) &&
+				Objects.equals(getLongitude(), that.getLongitude()) &&
+				Objects.equals(getUuid(), that.getUuid()) &&
+				Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+				Objects.equals(getCheckedInTimestamp(), that.getCheckedInTimestamp()) &&
+				Objects.equals(getNetworkServiceType(), that.getNetworkServiceType()) &&
+				Objects.equals(getClientIdentityPublicKey(), that.getClientIdentityPublicKey());
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getUuid(), getIdentityPublicKey(), getCheckedInTimestamp(), getExtraData(), getLatitude(), getLongitude(), getNetworkServiceType(), getCheckedInActors(), getCheckedInClient());
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(getUuid(), getIdentityPublicKey(), getCheckedInTimestamp(), getLatitude(), getLongitude(), getNetworkServiceType(), getClientIdentityPublicKey());
+	}
 
-    @Override
+	@Override
     public String toString() {
         return "CheckedInNetworkService{" +
                 "identityPublicKey='" + identityPublicKey + '\'' +
