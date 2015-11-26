@@ -8,6 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestNewsEvent;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestUpdatesEvent;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingBusinessTransactionContractHash;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingNewContractStatusUpdate;
 
 /**
@@ -29,6 +31,12 @@ public enum EventType implements FermatEventEnum {
     },
     CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES("CBCRUPD") {
         public final FermatEvent getNewEvent() { return new CryptoBrokerConnectionRequestUpdatesEvent(this); }
+    },
+    INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH("IBTCH") {
+        public final FermatEvent getNewEvent() { return new IncomingBusinessTransactionContractHash(this);}
+    },
+    INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE("ICBTR") {
+        public final FermatEvent getNewEvent() { return new IncomingConfirmBusinessTransactionResponse(this);}
     },
     INCOMING_NEW_CONTRACT_STATUS_UPDATE("INCSU") {
         public final FermatEvent getNewEvent() { return new IncomingNewContractStatusUpdate(this);}
