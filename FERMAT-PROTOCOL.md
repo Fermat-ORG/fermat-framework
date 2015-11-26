@@ -41,7 +41,7 @@ The Fermat Protocol generates tokens according to a standard crytptographic algo
 With the mining mechanism, tokens are distributed to those who contribute most work to the operation of the Fermat Network. In this case, fermats are distributed through a predetermined algorithm to the miners that connect clients between each other and allows them to talk through them.
 
 
-## Version 1.0
+## Protocol Version 1.0
 
 ### Fermat Nodes
 
