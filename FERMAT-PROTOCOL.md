@@ -24,7 +24,7 @@ Fermat blockchain only records the issuing of new fermats and outsources the tra
 
 ### Token Generation & Distribution
 
-Fermat implement three different mechanisms for token distribution:
+Fermat implement three different mechanisms for token generation and distribution:
 
 #### Fund-raising Mechanism
 
