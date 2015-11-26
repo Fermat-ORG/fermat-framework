@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -11,6 +12,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -32,10 +34,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +48,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,15 +59,14 @@ import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionMana
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
-import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
+import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory;
-import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
-import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.fermat.R;
-import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
+import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
+import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
@@ -98,7 +101,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
@@ -110,8 +112,8 @@ import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
@@ -129,15 +131,17 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.Wa
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
-import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
+import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
+import com.bitdubai.sub_app.wallet_manager.structure.Item;
+import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import java.util.Vector;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -153,7 +157,7 @@ public abstract class FermatActivity extends AppCompatActivity
         implements
         WizardConfiguration,
         FermatNotifications,
-        PaintActivtyFeactures,
+        PaintActivityFeatures,
         Observer,
         FermatNotificationListener,
         NavigationView.OnNavigationItemSelectedListener,
@@ -175,7 +179,7 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * WizardTypes
      */
-    private Map<WizardTypes, Wizard> wizards;
+    private Map<String, Wizard> wizards;
 
     /**
      * Activity type
@@ -205,6 +209,8 @@ public abstract class FermatActivity extends AppCompatActivity
     private CoordinatorLayout coordinatorLayout;
     private boolean flag=false;
 
+    private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
+    private NavigationViewPainter navigationViewPainter;
 
     /**
      * Called when the activity is first created
@@ -368,10 +374,12 @@ public abstract class FermatActivity extends AppCompatActivity
             paintTitleBar(titleBar, activity);
 
             paintSideMenu(sideMenu);
+
+            setScreen(activity);
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    LENGTH_LONG).show();
+                    LENGTH_SHORT).show();
         }
         // rendering wizards components
         try {
@@ -398,6 +406,50 @@ public abstract class FermatActivity extends AppCompatActivity
                 if(sideMenu.getNavigationIconColor().equals("#ffffff")){
                     mToolbar.setNavigationIcon(R.drawable.ic_actionbar_menu);
                 }
+
+                /**
+                 * Set header
+                 */
+                if(navigationViewPainter!=null) {
+                    View view = navigationViewPainter.addNavigationViewHeader();
+                    FrameLayout frameLayout = (FrameLayout) findViewById(R.id.navigation_view_header);
+                    frameLayout.setVisibility(View.VISIBLE);
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    layoutParams.gravity = Gravity.CENTER_VERTICAL;
+                    view.setLayoutParams(layoutParams);
+                    frameLayout.addView(view);
+                    /**
+                     * Set adapter
+                     */
+                    FermatAdapter mAdapter = navigationViewPainter.addNavigationViewAdapter();
+                    mAdapter.changeDataSet(getNavigationMenu());
+                    mAdapter.setFermatListEventListener(this);
+                    navigation_recycler_view.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+
+                    /**
+                     * Body
+                     */
+                    RelativeLayout navigation_view_footer = (RelativeLayout) findViewById(R.id.navigation_view_footer);
+                    ViewGroup viewGroup = navigationViewPainter.addNavigationViewBodyContainer(getLayoutInflater(), navigation_view_footer);
+
+
+                    /**
+                     * Background color
+                     */
+                    RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
+                    if(relativeLayout!=null) {
+                        if (navigationViewPainter.addBodyBackground() != null) {
+                            relativeLayout.setBackground(navigationViewPainter.addBodyBackground());
+                        } else if (navigationViewPainter.addBodyBackgroundColor() > 0) {
+                            relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
+                        }
+                    }
+
+
+                    navigationView.invalidate();
+                }
+
             } else {
                 mToolbar.setNavigationIcon(R.drawable.ic_action_back);
                 mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -406,6 +458,7 @@ public abstract class FermatActivity extends AppCompatActivity
                         onBackPressed();
                     }
                 });
+                mDrawerLayout.setEnabled(false);
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
@@ -498,6 +551,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 setActionBarProperties(title, activity);
                 paintToolbarIcon(titleBar);
             } else {
+                if(appBarLayout!=null)
                 appBarLayout.setVisibility(View.GONE);
                 if (collapsingToolbarLayout != null)
                     collapsingToolbarLayout.setVisibility(View.GONE);
@@ -589,6 +643,12 @@ public abstract class FermatActivity extends AppCompatActivity
             pagertabs.setAdapter(adapter);
         }
 
+        if(tabStrip.isHasIcon()){
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                byte[] image = tabStrip.getTabs().get(i).getIcon();
+                tabLayout.getTabAt(i).setIcon(new BitmapDrawable(getResources(),BitmapFactory.decodeByteArray(image,0, image.length)));
+            }
+        }
 
         //pagertabs.setCurrentItem();
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
@@ -613,7 +673,7 @@ public abstract class FermatActivity extends AppCompatActivity
         //comment by luis campo
         //PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        System.out.println("tabLayout: "+ tabLayout);
+        System.out.println("tabLayout: " + tabLayout);
         tabLayout.setVisibility(View.VISIBLE);
 
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
@@ -672,7 +732,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
             if (mToolbar != null)
-                setSupportActionBar(mToolbar);
+                    setSupportActionBar(mToolbar);
 
             collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
@@ -697,9 +757,17 @@ public abstract class FermatActivity extends AppCompatActivity
                         }
                         if (scrollRange + verticalOffset == 0) {
                             collapsingToolbarLayout.setTitle("");
+                            if(!isShow)
+                                for(ElementsWithAnimation element : elementsWithAnimation){
+                                    element.startCollapseAnimation(scrollRange);
+                                }
+
                             isShow = true;
                         } else if (isShow) {
                             collapsingToolbarLayout.setTitle("");
+                            for(ElementsWithAnimation element : elementsWithAnimation){
+                                element.startExpandAnimation(scrollRange);
+                            }
                             isShow = false;
                         }
                     }
@@ -916,15 +984,16 @@ public abstract class FermatActivity extends AppCompatActivity
                     // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
+
                     // finally change the color
                     if (Build.VERSION.SDK_INT > 20)
                         window.setStatusBarColor(Color.TRANSPARENT);
 
                     gc();
-                    InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
+                    //InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
 
 
-                    window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
+                    //window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -941,9 +1010,9 @@ public abstract class FermatActivity extends AppCompatActivity
 
                     // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-                    // finally change the color
                     window.setStatusBarColor(Color.TRANSPARENT);
+
+
 
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
@@ -1014,6 +1083,9 @@ public abstract class FermatActivity extends AppCompatActivity
 
             List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
 
+            navigationViewPainter = null;
+            elementsWithAnimation = new ArrayList<>();
+
             this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
             System.gc();
@@ -1044,7 +1116,8 @@ public abstract class FermatActivity extends AppCompatActivity
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
             }
 
-            if (getIntent().getBooleanExtra("flag",false)) {
+            //if (getIntent().getBooleanExtra("flag",false)) {
+            if(true){
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
                 activePlatforms.add(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
                 activePlatforms.add(Platforms.DIGITAL_ASSET_PLATFORM);
@@ -1062,8 +1135,9 @@ public abstract class FermatActivity extends AppCompatActivity
                         //por ahora va esto
                         if (activePlatforms.contains(Platforms.CRYPTO_CURRENCY_PLATFORM)) {
                             WalletManager manager = getWalletManager();
-                            WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
-                            fragments.add(walletDesktopFragment);
+                            //WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
+                            DesktopFragment desktopFragment = DesktopFragment.newInstance(manager);
+                            fragments.add(desktopFragment);
                         }
                         break;
                     case "WPD":
@@ -1100,18 +1174,79 @@ public abstract class FermatActivity extends AppCompatActivity
              */
             screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
-            ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
+            final ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
             pager.setVisibility(View.VISIBLE);
 
             //set default page to show
             pager.setCurrentItem(0);
 
+            final RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radiogroup);
+            radioGroup.setVisibility(View.VISIBLE);
+            pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    switch (position) {
+                        case 0:
+                            radioGroup.check(R.id.radioButton);
+                            break;
+                        case 1:
+                            radioGroup.check(R.id.radioButton2);
+                            break;
+                        case 2:
+                            radioGroup.check(R.id.radioButton3);
+                            break;
+                        case 3:
+                            radioGroup.check(R.id.radioButton4);
+                            break;
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
             pager.setAdapter(this.screenPagerAdapter);
+
+            for(int childPos = 0 ; childPos < radioGroup.getChildCount();childPos++){
+                final int finalChildPos = childPos;
+                radioGroup.getChildAt(childPos).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pager.setCurrentItem(finalChildPos, true);
+                    }
+                });
+            }
 
             if (pager.getBackground() == null) {
                 //Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
-                getWindow().setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
+                //getWindow().setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
                 //pager.setBackground(d);
+                //getWindow().addFlags(WindowManager.LayoutParams.);
+                if(Build.VERSION.SDK_INT>20) {
+                    getWindow().setStatusBarColor(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    getWindow().setStatusBarColor(Color.TRANSPARENT);
+                }
+                final WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+                Drawable wallpaperDrawable = null;
+                if(Build.VERSION.SDK_INT>19)
+                    wallpaperDrawable = wallpaperManager.getBuiltInDrawable();
+
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                Bitmap bmp = Bitmap.createScaledBitmap(((BitmapDrawable) wallpaperDrawable).getBitmap(), size.x + 300, size.y, true);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER,
+                        WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
+
+                //getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(),bmp));
+
+                //getWindow().setBackgroundDrawable(scaleDrawable);
             }
 
 
@@ -1128,6 +1263,38 @@ public abstract class FermatActivity extends AppCompatActivity
         //      new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
         getActionBar().setListNavigationCallbacks(adapter, listener);
         adapter.notifyDataSetChanged();
+    }
+
+    protected void bottomNavigationEnabled(boolean enabled){
+        if(enabled) {
+            List<Item> lst = new ArrayList<>();
+            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Identity", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            Item item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_01);
+            item2.setPosition(1);
+            lst.add(item2);
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Community", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_02);
+            item2.setPosition(2);
+            lst.add(item2);
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Scanner", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_04);
+            item2.setPosition(3);
+            lst.add(item2);
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Store", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_03);
+            item2.setPosition(4);
+            lst.add(item2);
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Support", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_05);
+            item2.setPosition(5);
+            lst.add(item2);
+            BottomNavigation bottomNavigation = new BottomNavigation(this, lst);
+        }
     }
 
 
@@ -1694,7 +1861,7 @@ public abstract class FermatActivity extends AppCompatActivity
      *
      * @param wizards
      */
-    public void setWizards(Map<WizardTypes, Wizard> wizards) {
+    public void setWizards(Map<String, Wizard> wizards) {
         if (wizards != null && wizards.size() > 0) {
             if (this.wizards == null)
                 this.wizards = new HashMap<>();
@@ -1709,10 +1876,13 @@ public abstract class FermatActivity extends AppCompatActivity
      * @param args Object... arguments to passing to the wizard fragment
      */
     @Override
-    public void showWizard(WizardTypes key, Object... args) {
+    public void showWizard(String key, Object... args) {
         try {
             if (wizards == null)
                 throw new NullPointerException("the wizard is null");
+
+            Set<String> keys = wizards.keySet();
+            System.out.println(keys);
             Wizard wizard = wizards.get(key);
             if (wizard != null) {
             /* Starting Wizard Activity */
@@ -1732,6 +1902,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
         //navigationDrawerFragment.onDetach();
         resetThisActivity();
+    }
+
+    protected void hideBottonIcons(){
+        final LinearLayout linearLayout = (LinearLayout)findViewById(R.id.icons_container);
+        if(linearLayout!=null)
+        linearLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -1864,7 +2040,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void invalidate() {
-        //( (RelativeLayout) findViewById(R.id.activity_header)).invalidate();
+        paintSideMenu(getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu());
     }
 
     @Override
@@ -1967,6 +2143,16 @@ public abstract class FermatActivity extends AppCompatActivity
         return mToolbar;
     }
 
+    public void addCollapseAnimation(ElementsWithAnimation elementsWithAnimation){
+        this.elementsWithAnimation.add(elementsWithAnimation);
+    }
+
+    @Override
+    public void addNavigationView(NavigationViewPainter navigationViewPainter) {
+        this.navigationViewPainter = navigationViewPainter;
+        invalidate();
+    }
+
     /**
      * Abstract methods
      */
@@ -1982,4 +2168,19 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     protected abstract void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position);
 
+
+
+
+    public void setScreen(Activity activity) {
+        try {
+            if (activity.isFullScreen()) {
+                // finally change the color
+                requestWindowFeature(Window.FEATURE_NO_TITLE);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            }
+        }catch (Exception e){
+
+        }
+    }
 }

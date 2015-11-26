@@ -1,6 +1,5 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contracts_history;
 
-
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
@@ -24,9 +23,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
@@ -41,6 +40,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Fragmento que muestra el Historial del Contratos. Muestra una lista de contratos completados, cancelados, o en reclamo
  *
@@ -52,7 +52,6 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         implements FermatListItemListeners<ContractBasicInformation> {
 
     // Constants
-    private static final String WALLET_PUBLIC_KEY = "crypto_broker_wallet";
     private static final String TAG = "ContractsHistoryActivityFragment";
 
     // Fermat Managers
@@ -61,11 +60,11 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     // Data
     private ArrayList<ContractBasicInformation> contractHistoryList;
+    private CryptoBrokerWallet walletManager;
     private ContractStatus filterContractStatus = null;
 
     //UI
     private View noContractsView;
-
 
     public static ContractsHistoryActivityFragment newInstance() {
         return new ContractsHistoryActivityFragment();
@@ -77,6 +76,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         try {
             moduleManager = ((CryptoBrokerWalletSession) walletSession).getModuleManager();
+            walletManager = moduleManager.getCryptoBrokerWallet(walletSession.getAppPublicKey());
             errorManager = walletSession.getErrorManager();
 
             contractHistoryList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -93,6 +93,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         super.initViews(layout);
 
         configureToolbar();
+
         configureNavigationDrawer();
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
@@ -106,7 +107,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.contract_history_menu, menu);
+        inflater.inflate(R.menu.cbw_contract_history_menu, menu);
     }
 
     @Override
@@ -159,7 +160,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_contracts_history_activity;
+        return R.layout.cbw_fragment_contracts_history_activity;
     }
 
     @Override
@@ -184,8 +185,6 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
     }
 
     private void configureNavigationDrawer() {
@@ -213,7 +212,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
         walletSession.setData("contract_data", data);
-        //changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS);
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS, walletSession.getAppPublicKey());
     }
 
     @Override
@@ -226,8 +225,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         if (moduleManager != null) {
             try {
-                CryptoBrokerWallet wallet = moduleManager.getCryptoBrokerWallet(WALLET_PUBLIC_KEY);
-                data.addAll(wallet.getContractsHistory(filterContractStatus, 0, 20));
+                data.addAll(walletManager.getContractsHistory(filterContractStatus, 0, 20));
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

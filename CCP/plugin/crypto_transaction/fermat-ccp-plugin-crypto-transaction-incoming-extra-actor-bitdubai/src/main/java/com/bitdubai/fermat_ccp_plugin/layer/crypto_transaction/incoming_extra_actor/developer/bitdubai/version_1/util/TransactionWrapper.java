@@ -16,6 +16,8 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
      */
     private UUID transactionId;
 
+    private UUID requestId;
+
     private String actorFromPublicKey;
 
     private String actorToPublicKey;
@@ -50,9 +52,18 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         return this.transactionId;
     }
 
+    @Override
+    public UUID getRequestId() {
+        return requestId;
+    }
+
 
     public void setIdTransaction(UUID id) {
         this.transactionId = id;
+    }
+
+    public void setIdRequest(UUID id) {
+        this.requestId = id;
     }
 
     @Override

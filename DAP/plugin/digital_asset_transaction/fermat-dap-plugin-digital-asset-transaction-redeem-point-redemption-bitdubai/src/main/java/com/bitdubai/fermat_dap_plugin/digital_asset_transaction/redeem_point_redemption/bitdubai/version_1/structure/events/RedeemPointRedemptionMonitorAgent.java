@@ -1,12 +1,12 @@
 package com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -84,7 +84,8 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                              UUID pluginId,
                                              ActorAssetRedeemPointManager actorAssetRedeemPointManager,
                                              AssetRedeemPointWalletManager assetRedeemPointWalletManager,
-                                             ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
+                                             ActorAssetUserManager actorAssetUserManager,
+                                             BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException {
         this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
         this.assetTransmissionManager = Validate.verifySetter(assetTransmissionManager, "assetTransmissionManager is null");
@@ -94,6 +95,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         this.actorAssetRedeemPointManager = Validate.verifySetter(actorAssetRedeemPointManager, "actorAssetRedeemPointManager is null");
         this.assetRedeemPointWalletManager = Validate.verifySetter(assetRedeemPointWalletManager, "assetRedeemPointWalletManager is null");
         this.actorAssetUserManager = Validate.verifySetter(actorAssetUserManager, "actorAssetUserManager is null");
+        this.bitcoinNetworkManager = Validate.verifySetter(bitcoinNetworkManager, "bitcoinNetworkManager is null");
     }
 
 
@@ -129,7 +131,6 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
     }
 
     //PRIVATE METHODS
-
 
 
     public boolean isMonitorAgentActive() {
@@ -179,15 +180,10 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             for (Transaction<DigitalAssetMetadataTransaction> transaction : newAssetTransaction) {
                                 if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT) {
                                     //GET THE BASIC INFORMATION.
-                                    String userPublicKey = transaction.getInformation().getSenderId();
                                     DigitalAssetMetadataTransaction assetMetadataTransaction = transaction.getInformation();
                                     DigitalAssetMetadata metadata = assetMetadataTransaction.getDigitalAssetMetadata();
                                     DigitalAsset digitalAsset = metadata.getDigitalAsset();
                                     String transactionId = assetMetadataTransaction.getGenesisTransaction();
-
-                                    //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
-                                    //BUT THAT'S NOT YET IMPLEMENTED.
-                                    AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
 
                                     dao.updateTransactionStatusById(DistributionStatus.CHECKING_HASH, transactionId);
                                     boolean hashValid = AssetVerification.isDigitalAssetHashValid(bitcoinNetworkManager, metadata);
@@ -206,18 +202,6 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
                                     dao.updateTransactionStatusById(DistributionStatus.CONTRACT_CHECKED, transactionId);
 
-
-                                    AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
-                                    assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
-                                            assetMetadataTransaction,
-                                            actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
-                                            actorAssetRedeemPointManager.getActorAssetRedeemPoint().getCryptoAddress());
-
-                                    AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.BOOK);
-
-                                    //CREDIT ON BOOK BALANCE
-                                    walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.BOOK);
-
                                     //PERSIST METADATA
                                     dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
                                     persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
@@ -231,42 +215,81 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
                             break;
 
-                        case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER:
+                        case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT:
+                            boolean notifyEventOnCryptoNetwork = false;
                             for (String transactionId : dao.getPendingSubmitGenesisTransactions()) {
-                                //UPDATE TRANSACTION CRYPTO STATUS.
-                                dao.updateTransactionCryptoStatusById(CryptoStatus.ON_CRYPTO_NETWORK, transactionId);
+                                for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(transactionId)) {
+                                    if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_CRYPTO_NETWORK) {
+                                        //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
+                                        //BUT THAT'S NOT YET IMPLEMENTED.
+                                        AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
+
+                                        DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
+
+                                        String userPublicKey = dao.getSenderPublicKeyById(transactionId);
+                                        AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
+                                        assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
+                                                digitalAssetMetadata,
+                                                cryptoTransaction,
+                                                userPublicKey,
+                                                actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
+
+                                        AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.BOOK);
+
+                                        //CREDIT ON BOOK BALANCE
+                                        walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.BOOK);
+                                        //UPDATE TRANSACTION CRYPTO STATUS.
+                                        dao.updateTransactionCryptoStatusById(CryptoStatus.ON_CRYPTO_NETWORK, transactionId);
+                                        notifyEventOnCryptoNetwork = true; //Without this I'd have to put the update in there and it can result on unnecessary updates.
+                                    }
+                                }
                             }
-                            //UPDATE EVENT STATUS
-                            dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
+
+                            if (notifyEventOnCryptoNetwork) {
+                                //UPDATE EVENT STATUS
+                                dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
+                            }
                             break;
 
-                        case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER:
+                        case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT:
+                            boolean notifyEventOnBlockChain = false;
                             for (String transactionId : dao.getOnCryptoNetworkGenesisTransactions()) {
-                                String userPublicKey = dao.getSenderPublicKeyById(transactionId);
+                                for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(transactionId)) {
+                                    if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN) {
+                                        String userPublicKey = dao.getSenderPublicKeyById(transactionId);
 
-                                //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
-                                //BUT THAT'S NOT YET IMPLEMENTED.
-                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
+                                        //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
+                                        //BUT THAT'S NOT YET IMPLEMENTED.
+                                        AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
 
-                                DigitalAssetMetadata metadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
-                                AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
-                                assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
-                                        metadata,
-                                        transactionId,
-                                        userPublicKey,
-                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getPublicKey(),
-                                        actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
-                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getCryptoAddress());
+                                        DigitalAssetMetadata metadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
+                                        AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
+                                        assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
+                                                metadata,
+                                                cryptoTransaction,
+                                                userPublicKey,
+                                                actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
 
-                                //CREDIT ON AVAILABLE BALANCE.
-                                AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.AVAILABLE);
-                                walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.AVAILABLE);
+                                        //CREDIT ON AVAILABLE BALANCE.
+                                        AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.AVAILABLE);
+                                        walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.AVAILABLE);
 
-                                //I GOT IT, EVERYTHING WENT OK!
-                                dao.updateTransactionStatusById(DistributionStatus.ASSET_ACCEPTED, transactionId);
-                                dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);
+                                        //I GOT IT, EVERYTHING WENT OK!
+                                        dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);
+                                        notifyEventOnBlockChain = true;
+                                    }
+                                }
                             }
-                            dao.updateEventStatus(EventStatus.NOTIFIED, eventId); //I can't do anything with this event!
+                            if (notifyEventOnBlockChain) {
+                                dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
+                            }
+                            break;
+
+                        case INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT:
+                            //TODO IMPLEMENT THIS
+                            break;
+                        case INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT:
+                            //TODO IMPLEMENT THIS
                             break;
 
                         default:

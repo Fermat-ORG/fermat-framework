@@ -66,6 +66,11 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     }
 
     @Override
+    public UUID getRequestId() {
+        return null;
+    }
+
+    @Override
     public String getActorFromPublicKey() {
         return actorFromPublicKey;
     }

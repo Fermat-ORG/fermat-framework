@@ -5,4 +5,18 @@
     <color name="wallet_factory_orange">#ff9900</color>
     <color name="black">#000</color>
     <color name="gray">#797979</color>
+    <color name="dark_gray">#585555</color>
+
+    <color name="white">#ffffff</color>
+    <color name="blue">#0072bc</color>
+    <color name="state_color_publishing">#1d1d25</color>
+    <color name="state_color_editable">#ffffff</color>
+    <color name="white_asset_name">#0072bc</color>
+    <color name="white_amount">#1d1d25</color>
+    <color name="white_bitcoins">#1d1d25</color>
+    <color name="blue_asset_name">#ffffff</color>
+    <color name="blue_amount">#ffffff</color>
+    <color name="blue_bitcoins">#ffffff</color>
+    <color name="bg_asset_factory">#1d1d25</color>
+    <color name="text_color_hint">#0072bd</color>
 </resources>

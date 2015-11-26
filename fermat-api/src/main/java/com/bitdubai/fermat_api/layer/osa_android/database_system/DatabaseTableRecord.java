@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
 import java.util.List;
 import java.util.UUID;
@@ -49,7 +50,7 @@ import java.util.UUID;
 
     public void setSelectField (String columnName);
 
-    public void setStateValue(String columnName, WalletFactoryProjectState state);
+    public void setFermatEnum(String columnName, FermatEnum state);
 
     public List<DatabaseRecord> getValues();
 

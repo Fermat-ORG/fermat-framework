@@ -6,10 +6,10 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
@@ -44,14 +44,20 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.drafts.Draft_17;
-import org.restlet.data.MediaType;
-import org.restlet.engine.application.Decoder;
-import org.restlet.ext.json.JsonRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -63,6 +69,11 @@ import java.util.List;
  * @since Java JDK 1.7
  */
 public class WsCommunicationsCloudClientConnection implements CommunicationsClientConnection {
+
+    /**
+     * Represent the WEB_SERVICE_URL
+     */
+    private static String WEB_SERVICE_URL = WsCommunicationsCloudClientPluginRoot.HTTP_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.WEB_SERVICE_PORT + "/fermat/cloud-server/v1/components/registered/";
 
     /**
      * Represent the wsCommunicationsCloudClientChannel
@@ -290,7 +301,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         }catch (Exception e){
 
-            CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
         }
@@ -337,7 +348,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         }catch (Exception e){
 
-            CantRequestListException pluginStartException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            CantRequestListException pluginStartException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
         }
@@ -369,41 +380,31 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             Gson gson = new Gson();
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsCloudClientChannel.getIdentityPublicKey());
+            //jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, "09A3B707D154r3B12C7CC626BCD7CF19EA8813B1B56A1B75E1C27335F8086C7ED588A7A06BCA67A289B73097FF67F5B1A0844FF2D550A6FCEFB66277EFDEB13A1");
             jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
 
-            /*
-             * Construct the web service client
-             */
-            ClientResource requestResource = new ClientResource(WsCommunicationsCloudClientPluginRoot.HTTP_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.WEB_SERVICE_PORT + "/fermat/cloud-server/v1/components/registered/");
+            // Create a new RestTemplate instance
+            HttpHeaders requestHeaders = new HttpHeaders();
+            requestHeaders.setAccept(Collections.singletonList(new org.springframework.http.MediaType("application", "json")));
+            HttpEntity<?> requestEntity = new HttpEntity<Object>(jsonObject.toString(), requestHeaders);
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 
-            /*
-             * Construct the parameters JsonRepresentation
-             */
-            Representation parameters = new JsonRepresentation(gson.toJson(jsonObject));
-            parameters.setMediaType(MediaType.APPLICATION_JSON);
+            ResponseEntity<String> responseEntity = restTemplate.exchange(WEB_SERVICE_URL, HttpMethod.POST, requestEntity, String.class);
 
-            /*
-             * Do the request via post and obtain the result
-             */
-            Representation respond = requestResource.post(parameters);
-           // Decoder decoder = new Decoder(requestResource.getContext());
-
-            //String respondText = decoder.decode(respond).getText();
-            String respondText = respond.getText();
-
-            System.out.println("WsCommunicationsCloudClientConnection - Respond length:" + respondText.length());
-            System.out.println("WsCommunicationsCloudClientConnection - Respond Text:" + respondText);
+            String respond = responseEntity.getBody();
+            //System.out.println("responseEntity = " + respond);
 
             /*
              * if respond have the result list
              */
-            if (respondText.contains(JsonAttNamesConstants.RESULT_LIST)){
+            if (respond.contains(JsonAttNamesConstants.RESULT_LIST)){
 
                 /*
                  * Decode into a json object
                  */
                 JsonParser parser = new JsonParser();
-                JsonObject respondJsonObject = parser.parse(respondText).getAsJsonObject();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.toString());
 
                  /*
                  * Get the receivedList
@@ -418,8 +419,93 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }
 
         }catch (Exception e){
+            e.printStackTrace();
+            CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
+            throw cantRequestListException;
 
-            CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+        }
+
+        return resultList;
+    }
+
+
+    /**
+     * Method that request to the communication cloud server the list of component registered that match
+     * whit the discovery query params
+     *
+     * @param discoveryQueryParameters
+     * @throws CantRequestListException this exception means the list receive is empty or a internal error
+     */
+    public List<PlatformComponentProfile> requestListComponentRegisteredSocket(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException{
+
+        System.out.println("WsCommunicationsCloudClientConnection - new requestListComponentRegistered");
+        List<PlatformComponentProfile> resultList = new ArrayList<>();
+        Socket clientConnect = null;
+        BufferedReader bufferedReader=null;
+        PrintWriter printWriter=null;
+
+        try {
+
+            /*
+             * Validate parameter
+             */
+            if (discoveryQueryParameters == null){
+                throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
+            }
+
+            /*
+             * Construct a jsonObject whit the parameters
+             */
+            Gson gson = new Gson();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsCloudClientChannel.getIdentityPublicKey());
+            jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
+
+            clientConnect = new Socket(WsCommunicationsCloudClientPluginRoot.SERVER_IP,9001);
+            bufferedReader = new BufferedReader(new InputStreamReader(clientConnect.getInputStream()));
+
+            printWriter= new PrintWriter(clientConnect.getOutputStream());
+            printWriter.println(gson.toJson(jsonObject));
+            printWriter.flush();
+
+            String respondServer =  bufferedReader.readLine();
+
+            if(respondServer != null && respondServer != "" && respondServer.contains(JsonAttNamesConstants.RESULT_LIST)){
+
+                 /*
+                 * Decode into a json object
+                 */
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respondServer);
+
+                  /*
+                 * Get the receivedList
+                 */
+                resultList = gson.fromJson(respondJsonObject.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
+                }.getType());
+
+                System.out.println("WsCommunicationsCloudClientConnection - resultList.size() = " + resultList.size());
+
+            }
+
+            bufferedReader.close();
+            printWriter.close();
+            clientConnect.close();
+
+        }catch (Exception e){
+
+            try {
+
+                if (clientConnect != null) {
+                    bufferedReader.close();
+                    printWriter.close();
+                    clientConnect.close();
+                }
+
+            }catch (Exception ex){}
+
+            e.printStackTrace();
+            CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw cantRequestListException;
 
         }
@@ -473,7 +559,8 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
                 /*
                  * Convert to json representation
                  */
-                String jsonListRepresentation = gson.toJson(participants, new TypeToken<List<PlatformComponentProfileCommunication>>() { }.getType());
+                String jsonListRepresentation = gson.toJson(participants, new TypeToken<List<PlatformComponentProfileCommunication>>() {
+                }.getType());
 
                  /*
                  * Construct a fermat packet whit the request
@@ -490,7 +577,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         }catch (Exception e){
 
-            CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
         }
@@ -552,7 +639,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         }catch (Exception e){
 
-            CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
         }
@@ -575,7 +662,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile) {
         return wsCommunicationVPNClientManagerAgent.getActiveVpnConnection(networkServiceType, remotePlatformComponentProfile);
-
     }
 
     /**
@@ -602,4 +688,77 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     public boolean isRegister() {
         return wsCommunicationsCloudClientChannel.isRegister();
     }
+
+    public void springTest(){
+
+        System.out.println("Iniciando springTest() = ");
+
+        List<PlatformComponentProfile> resultList = new ArrayList<>();
+
+        try {
+
+            /*
+             * Construct a jsonObject whit the parameters
+             */
+            Gson gson = new Gson();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, "09A3B707D154r3B12C7CC626BCD7CF19EA8813B1B56A1B75E1C27335F8086C7ED588A7A06BCA67A289B73097FF67F5B1A0844FF2D550A6FCEFB66277EFDEB13A1");
+            jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, "{\"networkServiceType\":\"UNDEFINED\",\"platformComponentType\":\"ACTOR_INTRA_USER\"}");
+
+            // Create a new RestTemplate instance
+            HttpHeaders requestHeaders = new HttpHeaders();
+            requestHeaders.setAccept(Collections.singletonList(new org.springframework.http.MediaType("application", "json")));
+            HttpEntity<?> requestEntity = new HttpEntity<Object>(jsonObject.toString(), requestHeaders);
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+
+            ResponseEntity<String> responseEntity = restTemplate.exchange(WEB_SERVICE_URL, HttpMethod.POST, requestEntity, String.class);
+
+            String respond = responseEntity.getBody();
+            System.out.println("responseEntity = " + respond);
+
+
+
+            /*
+             * if respond have the result list
+             */
+            if (respond.length() > 39){
+
+                /*
+                 * Decode into a json object
+                 */
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.toString());
+
+                //JsonObject respondJsonObject = (JsonObject) parser.parse(stringRepresentation.getText());
+
+                 /*
+                 * Get the receivedList
+                 */
+                resultList = gson.fromJson(respondJsonObject.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
+                }.getType());
+
+                System.out.println("resultList.size() = " + resultList.size());
+
+                for (PlatformComponentProfile componentProfile:resultList) {
+                    System.out.println("componentProfile.getIdentityPublicKey() = " + componentProfile.getIdentityPublicKey());
+                    System.out.println("componentProfile.getAlias() = " + componentProfile.getAlias());
+                    System.out.println("componentProfile.getName() = " + componentProfile.getName());
+                    System.out.println("componentProfile.getExtraData() = " + componentProfile.getExtraData().length());
+                    System.out.println("----------------------------------------------------------------");
+                    System.out.println("\n");
+                }
+
+            }else {
+                System.out.println("WsCommunicationsCloudClientConnection - Requested list is not available, resultList.size() = " + resultList.size());
+            }
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+
+        }
+
+    }
+
 }

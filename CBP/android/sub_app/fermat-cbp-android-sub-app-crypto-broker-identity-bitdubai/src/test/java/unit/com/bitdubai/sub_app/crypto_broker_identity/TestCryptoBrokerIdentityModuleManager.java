@@ -1,11 +1,11 @@
 package unit.com.bitdubai.sub_app.crypto_broker_identity;
 
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotCreateCryptoBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotPublishCryptoBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotUnPublishCryptoBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantCreateCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantPublishCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantHideCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,33 +30,33 @@ public class TestCryptoBrokerIdentityModuleManager implements CryptoBrokerIdenti
     }
 
     @Override
-    public CryptoBrokerIdentityInformation createCryptoBrokerIdentity(final String cryptoBrokerName, final byte[] profileImage) throws CouldNotCreateCryptoBrokerException {
+    public CryptoBrokerIdentityInformation createCryptoBrokerIdentity(final String cryptoBrokerName, final byte[] profileImage) throws CantCreateCryptoBrokerException {
         if (selectedAction == CREATE_IDENTITY_RETURN_IDENTITY)
             return new TestCryptoBrokerIdentityInformation(cryptoBrokerName, profileImage, false);
         if (selectedAction == CREATE_IDENTITY_THROW_EXCEPTION)
-            throw new CouldNotCreateCryptoBrokerException("messageTest", new Exception(), "contextTest", "possibleReasonTest");
+            throw new CantCreateCryptoBrokerException("messageTest", new Exception(), "contextTest", "possibleReasonTest");
 
         return null;
     }
 
     @Override
-    public void publishCryptoBrokerIdentity(String cryptoBrokerPublicKey) throws CouldNotPublishCryptoBrokerException {
+    public void publishCryptoBrokerIdentity(String cryptoBrokerPublicKey) throws CantPublishCryptoBrokerException {
         if (selectedAction == PUBLISH_IDENTITY_THROW_EXCEPTION)
-            throw new CouldNotPublishCryptoBrokerException("messageTest", new Exception(), "contextTest", "possibleReasonTest");
+            throw new CantPublishCryptoBrokerException("messageTest", new Exception(), "contextTest", "possibleReasonTest");
         if(selectedAction == PUBLISH_IDENTITY_RUN_OK)
             return;
     }
 
     @Override
-    public void unPublishCryptoBrokerIdentity(String cryptoBrokerPublicKey) throws CouldNotUnPublishCryptoBrokerException {
+    public void unPublishCryptoBrokerIdentity(String cryptoBrokerPublicKey) throws CantHideCryptoBrokerException {
         if (selectedAction == UNPUBLISH_IDENTITY_THROW_EXCEPTION)
-            throw new CouldNotUnPublishCryptoBrokerException("messageTest", new Exception(), "contextTest", "possibleReasonTest");
+            throw new CantHideCryptoBrokerException("messageTest", new Exception(), "contextTest", "possibleReasonTest");
         if(selectedAction == UNPUBLISH_IDENTITY_RUN_OK)
             return;
     }
 
     @Override
-    public List<CryptoBrokerIdentityInformation> getAllCryptoBrokersIdentities(int max, int offset) throws CantGetCryptoBrokerListException {
+    public List<CryptoBrokerIdentityInformation> getAllCryptoBrokersIdentities(int max, int offset) throws CantListCryptoBrokersException {
         if (selectedAction == GET_ALL_IDENTITIES_RETURN_LIST) {
             ArrayList<CryptoBrokerIdentityInformation> list = new ArrayList<>();
             TestCryptoBrokerIdentityInformation identityInfo = new TestCryptoBrokerIdentityInformation("broker test", new byte[0], false);
@@ -65,7 +65,7 @@ public class TestCryptoBrokerIdentityModuleManager implements CryptoBrokerIdenti
         }
 
         if (selectedAction == GET_ALL_IDENTITIES_THROW_EXCEPTION)
-            throw new CantGetCryptoBrokerListException("messageTest", new Exception(), "contextTest", "possibleReasonTest");
+            throw new CantListCryptoBrokersException("messageTest", new Exception(), "contextTest", "possibleReasonTest");
 
         return null;
     }

@@ -9,6 +9,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.Get
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.ChildNumber;
@@ -68,7 +69,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param account
      */
     public void addVaultAccount(HierarchyAccount account){
-        DeterministicKey accountMasterKey = this.deriveChild(account.getAccountPath(), false, true, ChildNumber.ZERO);
+        DeterministicKey accountMasterKey = this.deriveChild(account.getAccountPath(), true, true, ChildNumber.ZERO);
         accountsMasterKeys.put(account.getId(), accountMasterKey);
     }
 
@@ -133,7 +134,33 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
             setActiveNetwork(blockchainNetworkType);
         }
 
+        /**
+         * I will update the detailed key maintenance information by adding this generated address to the table.
+         */
+        try {
+            updateKeyDetailedStatsWithNewAddress(hierarchyAccount.getId(), ecKey, cryptoAddress);
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, null, null);
+        }
+
         return cryptoAddress;
+    }
+
+    /**
+     * Updates the Detailed Key maintenance table by marking the passed key as used with the passed cryptoAddress
+     * @param hierarchyAccountId
+     * @param ecKey
+     * @param cryptoAddress
+     */
+    private void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws UnexpectedResultReturnedFromDatabaseException {
+        try {
+            getDao().updateKeyDetailedStatsWithNewAddress(hierarchyAccountId, ecKey, cryptoAddress);
+        } catch (CantExecuteDatabaseOperationException e) {
+            /**
+             * will continue because this is not critical.
+             */
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -152,8 +179,12 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
          * I will derive a new Key from this account
          */
         DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
-        DeterministicKey ecKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(keyDepth, false));
+        DeterministicKey deterministicKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, false, new ChildNumber(keyDepth, false));
 
+        /**
+         * I convert from a HD key to a ECKey
+         */
+        ECKey ecKey = ECKey.fromPrivate(deterministicKey.getPrivKey());
         return ecKey;
     }
 
@@ -207,6 +238,11 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         return dao;
     }
 
+    /**
+     * Gets all the already derived keys from the hierarchy on this account.
+     * @param account
+     * @return
+     */
     public List<ECKey> getDerivedKeys(HierarchyAccount account){
         DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
         List<ECKey> childKeys = new ArrayList<>();
@@ -214,7 +250,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         //todo I need to get the value of generated keys from the database
         for (int i = 0; i < 101; i++) {
             // I derive the key at position i
-            DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
+            DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, false, new ChildNumber(i, false));
             // I add this key to the ECKey list
             childKeys.add(ECKey.fromPrivate(derivedKey.getPrivKey()));
         }

@@ -212,7 +212,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new ObjectNotSetException("ActorAssetIssuer is null");
         }
         try {
-            this.actorAssetIssuerPublicKey = actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
+            this.actorAssetIssuerPublicKey = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
             if (this.actorAssetIssuerPublicKey == null) {
                 this.actorAssetIssuerPublicKey = "actorPublicKeyNotFound";
             }
@@ -286,12 +286,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             if(this.assetIssuingTransactionDao.isPublicKeyUsed(publicKey)){
                 throw new CantIssueDigitalAssetException("The public key "+publicKey+" is already registered in database");
             }
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new CantIssueDigitalAssetException(exception, "Checking the asset publicKey in database", "Unexpected results");
         } catch (CantCheckAssetIssuingProgressException exception) {
             throw new CantIssueDigitalAssetException(exception, "Checking the asset publicKey in database", "Cannot check the publicKey in database");
         }
-
     }
 
     /**
@@ -483,7 +480,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 LOG.info("ASSET ISSUING Asset number " + counter);
                 createDigitalAssetCryptoTransaction();
                 counter++;
-                //this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(this.digitalAsset.getPublicKey(), counter);
+                //this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(this.digitalAsset.getActorPublicKey(), counter);
             }
         } catch (ObjectNotSetException exception) {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(),IssuingStatus.DIGITAL_ASSET_INCOMPLETE);
@@ -505,9 +502,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         }*/ catch (CantSetObjectException exception) {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(),IssuingStatus.WALLET_EXCEPTION);
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets","The wallet public key is probably null");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(),IssuingStatus.DATABASE_EXCEPTION);
-            throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets - Asset number "+counter,"Unexpected results in database");
         } catch (CantCheckAssetIssuingProgressException exception) {
             //ALREADY UPDATED STATUS IN THE ROOT OF THIS EXCEPTION.
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets - Asset number "+counter,"Cannot check the asset issuing progress");
@@ -862,7 +856,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         try {
             this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.SENDING_CRYPTO);
             this.assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(digitalAssetHash, CryptoStatus.PENDING_SUBMIT);
-            //this.cryptoVaultManager.sendBitcoins(this.digitalAsset.getPublicKey(), genesisTransaction, genesisAddress, genesisAmount);
+            //this.cryptoVaultManager.sendBitcoins(this.digitalAsset.getActorPublicKey(), genesisTransaction, genesisAddress, genesisAmount);
             //TODO: Send btc through outgoing intra user
             //genesisTransaction.setOp_Return(digitalAssetHash);
             //this.cryptoVaultManager.sendBitcoins(genesisTransaction);

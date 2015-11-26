@@ -9,11 +9,17 @@ public enum Actors implements FermatEnum {
     INTRA_USER("IUS"),
     EXTRA_USER("EUS"),
     SHOP("SHP"),
+
     DAP_ASSET_ISSUER("DAPASIS"),
     DAP_ASSET_USER("DAPASUS"),
     DAP_ASSET_REDEEM_POINT("DAPARP"),
+
     CCP_INTRA_WALLET_USER("CCPIU"),
     CCM_INTRA_WALLET_USER("CCMIU"),
+
+    CBP_CRYPTO_BROKER   ("CBPCRBR"),
+    CBP_CRYPTO_CUSTOMER ("CBPCRCU"),
+
     ;
 
     private String code;
@@ -29,21 +35,24 @@ public enum Actors implements FermatEnum {
     public static Actors getByCode(String code)/*throws InvalidParameterException*/ {
 
         switch (code) {
-            case "DUS":     return Actors.DEVICE_USER;
-            case "IUS":     return Actors.INTRA_USER;
-            case "EUS":     return Actors.EXTRA_USER;
-            case "SHP":     return Actors.SHOP;
-            case "DAPASIS": return Actors.DAP_ASSET_ISSUER;
-            case "DAPASUS": return Actors.DAP_ASSET_USER;
-            case "DAPARP":  return Actors.DAP_ASSET_REDEEM_POINT;
-            case "CCPIU":   return Actors.CCP_INTRA_WALLET_USER;
-            case "CCMIU":   return Actors.CCM_INTRA_WALLET_USER;
-            //Modified by Manuel Perez on 03/08/2015
-            //default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Actors enum");
+            case "DUS":     return DEVICE_USER;
+            case "IUS":     return INTRA_USER;
+            case "EUS":     return EXTRA_USER;
+            case "SHP":     return SHOP;
+
+            case "DAPASIS": return DAP_ASSET_ISSUER;
+            case "DAPASUS": return DAP_ASSET_USER;
+            case "DAPARP":  return DAP_ASSET_REDEEM_POINT;
+
+            case "CCPIU":   return CCP_INTRA_WALLET_USER;
+            case "CCMIU":   return CCM_INTRA_WALLET_USER;
+
+            case "CBPCRBR": return CBP_CRYPTO_BROKER;
+            case "CBPCRCU": return CBP_CRYPTO_CUSTOMER;
+
+            default:
+                throw new IllegalArgumentException("The code"+code+" is not valid for the Actors enum.");
+
         }
-        /**
-         * Return by default.
-         */
-        return Actors.DEVICE_USER;
     }
 }

@@ -1,6 +1,6 @@
 <fermat>
 	<platforms>
-		<platform code="COR" name="Core And Api" logo="COR_logo.png" dependsOn="OSA">
+		<platform code="COR" name="Core And Api" logo="COR_logo.png">
 
 			<layer name="Core" language="java">
 				<libraries>	
@@ -220,7 +220,7 @@
 			<layer name="User Level Business Transaction" language="java"></layer>
 			<layer name="Business Transaction" language="java"></layer>
 			<layer name="Negotiation Transaction" language="java"></layer>
-			<layer name="Stock Transaction" language="java"></layer>
+			<layer name="Stock Transactions" language="java"></layer>
 			<layer name="Digital Asset Transaction" language="java"></layer>
 			<layer name="Crypto Money Transaction" language="java"></layer>
 			<layer name="Cash Money Transaction" language="java"></layer>
@@ -231,6 +231,7 @@
 			<layer name="Wallet" language="java"></layer>
 			<layer name="World" language="java"></layer>
 			<layer name="Identity" language="java"></layer>
+			<layer name="Actor Connection" language="java"></layer>
 			<layer name="Actor Network Service" language="java"></layer>
 			<layer name="Network Service" language="java"></layer>
 			<layer name="empty layer 2"></layer>
@@ -452,7 +453,7 @@
 
 		</platform>
 
-		<platform code="PIP" name="Plug-ins Platform" logo="PIP_logo.png" dependsOn="P2P, COR">
+		<platform code="PIP" name="Plug-ins Platform" logo="PIP_logo.png" dependsOn="P2P">
 
 			<dependencies>
 				<dependency code="COR"></dependency>
@@ -1658,7 +1659,7 @@
 
 		</platform>
 
-		<platform code="CCP" name="Crypto Currency Platform" logo="CCP_logo.png" dependsOn="WPD, P2P">
+		<platform code="CCP" name="Crypto Currency Platform" logo="CCP_logo.png" dependsOn="WPD, BCH">
 
 			<layer name="Reference Wallet">
 
@@ -1891,8 +1892,7 @@
 
 			<layer name="Crypto Transaction" language="java">
 				<plugins>
-					<plugin
-						name="Incoming Device User"
+					<plugin	name="Incoming Device User"
 						description=""
 						difficulty="1"
 						code-level="concept"
@@ -1906,8 +1906,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Incoming Extra Actor"
+					<plugin	name="Incoming Extra Actor"
 						description=""
 						difficulty="10"
 						code-level="qa"
@@ -1924,8 +1923,7 @@
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Incoming Intra User"
+					<plugin name="Incoming Intra User"
 						description=""
 						difficulty="10"
 						code-level="qa"
@@ -1942,8 +1940,7 @@
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Intra Wallet"
+					<plugin	name="Intra Wallet"
 						description=""
 						difficulty="0"
 						code-level="concept"
@@ -1957,8 +1954,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Outgoing Device User"
+					<plugin	name="Outgoing Device User"
 						description=""
 						difficulty="0"
 						code-level="concept"
@@ -1972,8 +1968,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Outgoing Extra User"
+					<plugin	name="Outgoing Extra User"
 						description=""
 						difficulty="10"
 						code-level="production"
@@ -1990,8 +1985,7 @@
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Outgoing Intra Actor"
+					<plugin	name="Outgoing Intra Actor"
 						description=""
 						difficulty="10"
 						code-level="qa"
@@ -2008,8 +2002,7 @@
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Inter Account"
+					<plugin	name="Inter Account"
 						description=""
 						difficulty="0"
 						code-level="concept"
@@ -2017,6 +2010,34 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin name="Hold"
+						description=""
+						difficulty="6"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin name="Unhold"
+						description=""
+						difficulty="6"
+						code-level="development">
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -2192,8 +2213,6 @@
 					</plugin>
 				</plugins>
 			</layer>
-
-
 
 			<layer name="Network Service" language="java">
 				<plugins>
@@ -2662,7 +2681,7 @@
 
 		</platform>
 
-		<platform code="SHP" name="Shopping Platform" logo="SHP_logo.png" dependsOn="WPD">
+		<platform code="SHP" name="Shopping Platform" logo="SHP_logo.png" dependsOn="CCM">
 
 			<layer name="Reference Wallet">
 				<androids>
@@ -3124,7 +3143,7 @@
 
 		</platform>
 
-		<platform code="DAP" name="Digital Asset Platform" logo="DAP_logo.png" dependsOn="WPD">
+		<platform code="DAP" name="Digital Asset Platform" logo="DAP_logo.png" dependsOn="WPD, BCH">
 
 			<layer name="Reference Wallet">
 				<androids>
@@ -3895,7 +3914,7 @@
 			</layer>
 
 		</platform>
-
+ 
 		<platform code="MKT" name="Marketing Platform" logo="MKT_logo.png" dependsOn="DAP">
 
 			<layer name="Sub App" language="java-android">
@@ -5308,7 +5327,7 @@
 			
 			<layer name="Negotiation Transaction" language="java">
 				<plugins>
-					<plugin	name="New"
+					<plugin	name="Customer Broker New"
 						description=""
 						difficulty="8"
 						code-level="development">
@@ -5322,7 +5341,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Update"
+					<plugin	name="Customer Broker Update"
 						description=""
 						difficulty="8"
 						code-level="development">
@@ -5336,7 +5355,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin	name="Close"
+					<plugin	name="Customer Broker Close"
 						description=""
 						difficulty="8"
 						code-level="development">
@@ -5353,7 +5372,7 @@
 				</plugins>
 			</layer>
 			
-			<layer name="Stock Transaction" language="java">
+			<layer name="Stock Transactions" language="java">
 				<plugins>
 					<plugin	name="Crypto Money Restock"
 						description=""
@@ -5503,6 +5522,42 @@
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			
+			<layer name="Actor Connection" language="java">
+				<plugins>
+					<plugin
+						name="Crypto Broker"
+						description=""
+						difficulty="6"
+						code-level="qa"
+						>
+						<authors>
+							<author name="lnacosta" scope="architecture" percentage="100"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+
+					<plugin
+						name="Crypto Customer"
+						description=""
+						difficulty="6"
+						code-level="qa"
+						>
+						<authors>
+							<author name="lnacosta" scope="architecture" percentage="100"></author>
+							<author name="lnacosta" scope="design" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -6690,7 +6745,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="jorgeejgonzalez" scope="implementation" percentage="100"></author>
+							<author name="Rart3001" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="Rart3001"></mantainer>
@@ -6707,7 +6762,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="jorgeejgonzalez" scope="implementation" percentage="100"></author>
+							<author name="Rart3001" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="Rart3001"></mantainer>
@@ -6754,6 +6809,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="hendry19901990" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -7047,7 +7103,7 @@
 
 		</super_layer>
 
-		<super_layer code="OSA" name="Operating System API">
+		<super_layer code="OSA" name="Operating System API" dependsOn="COR">
 
 			<layer name="Multi OS" language="java">
 				<addons>
@@ -7258,7 +7314,7 @@
 		<layer name="User Level Business Transaction" language="java"></layer>
 		<layer name="Business Transaction" language="java"></layer>
 		<layer name="Negotiation Transaction" language="java"></layer>
-		<layer name="Stock Transaction" language="java"></layer>
+		<layer name="Stock Transactions" language="java"></layer>
 		<layer name="Digital Asset Transaction" language="java"></layer>
 		<layer name="Crypto Transaction" language="java"></layer>
 		<layer name="Cash Money Transaction" language="java"></layer>
@@ -7297,148 +7353,194 @@
 			description=""
 			previous=""
 			>
+
+			<step id="0"
+				type="start"
+				title="Asset Issuer - Reference Wallet"
+				description="Represents UI Android for job with wallet"
+				platform="DAP"
+				superlayer=""
+				layer="Reference Wallet"
+				name="Asset Issuer"
+				>
+				<next>
+					<step id="1" type="direct call"></step>
+				</next>
+	
+			</step>
+			<step id="1"
+				type="activity"
+				title="Asset Factory"
+				description="Represents UI Android for creation the Asset"
+				platform="DAP"
+				superlayer=""
+				layer="Sub App"
+				name="Asset Factory"
+				>
+				<next>
+					<step id="2" type="direct call"></step>
+				</next>
+	
+			</step>
+			<step id="2"
+				type="activity"
+				title="Asset Issuer - Wallet Module"
+				description=""
+				platform="DAP"
+				superlayer="Connection layer and the representation of the business layer"
+				component="Plugin"
+				layer="Wallet Module"
+				name="Asset Issuer"
+				>
+				<next>
+					<step id="3" type="direct call"></step>
+				</next>
+			</step>
+			<step id="3"
+				type="activity"
+				title="Asset Factory"
+				description=""
+				platform="DAP"
+				superlayer="Connection layer and the representation of the business layer"
+				component="Plugin"
+				layer="Sub App Module"
+				name="Asset Factory"
+				>
+				<next>
+					<step id="4" type="direct call"></step>
+				</next>
+			</step>
+			<step id="4"
+				type="activity"
+				title="Asset Issuer - Actor"
+				description=""
+				platform="DAP"
+				superlayer="Connection layer and the representation of the business layer"
+				component="Plugin"
+				layer="Actor"
+				name="Asset Issuer"
+				>
+				<next>
+					<step id="5" type="direct call"></step>
+				</next>
+			</step>
+			<step id="5"
+				type="activity"
+				title="Asset Factory"
+				description=""
+				platform="DAP"
+				superlayer="Interlayer for the implementation of the Asset Factory"
+				component="Plugin"
+				layer="Middleware"
+				name="Asset Factory"
+				>
+				<next>
+					<step id="6" type="direct call"></step>
+				</next>
+			</step>
+
+			<step id="6"
+				type="activity"
+				title="Asset Issuer - Wallet"
+				description=""
+				platform="DAP"
+				superlayer="Implementation Logic the Wallet"
+				component="Plugin"
+				layer="Wallet"
+				name="Asset Issuer Wallet"
+				>
+				<next>
+					<step id="7" type="direct call"></step>
+				</next>
+			</step>
+			<step id="7"
+				type="activity"
+				title="Asset Issuer - Identity"
+				description=""
+				platform="DAP"
+				superlayer="Implementation Logic the Identity"
+				component="Plugin"
+				layer="Identity"
+				name="Asset Issuer Identity"
+				>
+				<next>
+					<step id="8" type="direct call"></step>
+				</next>
+			</step>
+			<step id="8"
+				type="activity"
+				title="Asset Issuer - Actor Network Service"
+				description=""
+				platform="DAP"
+				superlayer="Layer comunication"
+				component="Plugin"
+				layer="Actor Network Service"
+				name="Asset Issuer Actor Network Service"
+				>
+				<next>
+					<step id="9" type="direct call"></step>
+				</next>
+			</step>
+			<step id="9"
+				type="activity"
+				title="Asset Transmission - Network Service"
+				description=""
+				platform="DAP"
+				superlayer="Layer comunication"
+				component="Plugin"
+				layer="Network Service"
+				name="Asset Transmission Network Service"
+				>
+				<next>
+					<step id="9" type="direct call"></step>
+				</next>
+			</step>
 		</process>
-		<step id="0"
-			type="start"
-			title="Asset Issuer - Reference Wallet"
-			description="Represents UI Android for job with wallet"
-			platform="DAP"
-			superlayer=""
-			layer="Reference Wallet"
-			name="Asset Issuer"
+		
+		<process platform="CBP"		name="Create Crypto Broker Identity"
+			description="Creates a Crypto Broker Identity."
+			previous=""
 			>
-			<next>
-				<step id="1" type="direct call"></step>
-			</next>
-
-		</step>
-		<step id="1"
-			type="activity"
-			title="Asset Factory"
-			description="Represents UI Android for creation the Asset"
-			platform="DAP"
-			superlayer=""
-			layer="Sub App"
-			name="Asset Factory"
-			>
-			<next>
-				<step id="2" type="direct call"></step>
-			</next>
-
-		</step>
-		<step id="2"
-			type="activity"
-			title="Asset Issuer - Wallet Module"
-			description=""
-			platform="DAP"
-			superlayer="Connection layer and the representation of the business layer"
-			component="Plugin"
-			layer="Wallet Module"
-			name="Asset Issuer"
-			>
-			<next>
-				<step id="3" type="direct call"></step>
-			</next>
-		</step>
-		<step id="3"
-			type="activity"
-			title="Asset Factory"
-			description=""
-			platform="DAP"
-			superlayer="Connection layer and the representation of the business layer"
-			component="Plugin"
-			layer="Sub App Module"
-			name="Asset Factory"
-			>
-			<next>
-				<step id="4" type="direct call"></step>
-			</next>
-		</step>
-		<step id="4"
-			type="activity"
-			title="Asset Issuer - Actor"
-			description=""
-			platform="DAP"
-			superlayer="Connection layer and the representation of the business layer"
-			component="Plugin"
-			layer="Actor"
-			name="Asset Issuer"
-			>
-			<next>
-				<step id="5" type="direct call"></step>
-			</next>
-		</step>
-		<step id="5"
-			type="activity"
-			title="Asset Factory"
-			description=""
-			platform="DAP"
-			superlayer="Interlayer for the implementation of the Asset Factory"
-			component="Plugin"
-			layer="Middleware"
-			name="Asset Factory"
-			>
-			<next>
-				<step id="6" type="direct call"></step>
-			</next>
-		</step>
-		//Aca las transacciones
-		<step id="6"
-			type="activity"
-			title="Asset Issuer - Wallet"
-			description=""
-			platform="DAP"
-			superlayer="Implementation Logic the Wallet"
-			component="Plugin"
-			layer="Wallet"
-			name="Asset Issuer Wallet"
-			>
-			<next>
-				<step id="7" type="direct call"></step>
-			</next>
-		</step>
-		<step id="7"
-			type="activity"
-			title="Asset Issuer - Identity"
-			description=""
-			platform="DAP"
-			superlayer="Implementation Logic the Identity"
-			component="Plugin"
-			layer="Identity"
-			name="Asset Issuer Identity"
-			>
-			<next>
-				<step id="8" type="direct call"></step>
-			</next>
-		</step>
-		<step id="8"
-			type="activity"
-			title="Asset Issuer - Actor Network Service"
-			description=""
-			platform="DAP"
-			superlayer="Layer comunication"
-			component="Plugin"
-			layer="Actor Network Service"
-			name="Asset Issuer Actor Network Service"
-			>
-			<next>
-				<step id="9" type="direct call"></step>
-			</next>
-		</step>
-		<step id="9"
-			type="activity"
-			title="Asset Transmission - Network Service"
-			description=""
-			platform="DAP"
-			superlayer="Layer comunication"
-			component="Plugin"
-			layer="Network Service"
-			name="Asset Transmission Network Service"
-			>
-			<next>
-				<step id="9" type="direct call"></step>
-			</next>
-		</step>
+			<steps>
+				<step id="0"	title="Start Crypto Broker Identity creation"
+					description="Start Crypto Broker Identity creation."
+					type="start"
+					platform="CBP"
+					name="Crypto Broker Identity"
+					superlayer=""
+					layer="Sub App"
+					component=""
+					>
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"	title="Process Crypto Broker Identity creation request"
+					description="Process Crypto Broker Identity creation request."
+					type="activity"
+					platform="CBP"
+					name="Crypto Broker Identity"
+					superlayer=""
+					layer="Sub App Module"
+					component="Plugin"
+					>
+					<next>
+						<step id="2" type="direct call"></step>
+					</next>
+				</step>
+				<step id="2"	title="Creates Crypto Broker Identity"
+					description="Creates Crypto Broker Identity."
+					type="end"
+					platform="CBP"
+					name="Crypto Broker"
+					superlayer=""
+					layer="Identity"
+					component=""
+					>
+				</step>
+			</steps>
+		</process>
+		
 		<process platform="CBP"
 			name="Connection request from customer to broker"
 			description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."

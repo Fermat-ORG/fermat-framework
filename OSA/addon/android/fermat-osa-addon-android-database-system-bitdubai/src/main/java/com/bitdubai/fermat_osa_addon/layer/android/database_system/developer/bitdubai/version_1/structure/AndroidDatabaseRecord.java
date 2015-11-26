@@ -2,6 +2,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bi
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseVariable;
@@ -293,14 +294,15 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
     }
 
     @Override
-    public void setStateValue(String columnName, WalletFactoryProjectState state) {
+    public void setFermatEnum(final String columnName,
+                              final FermatEnum fermatEnum) {
         if(values == null)
-            values = new ArrayList<DatabaseRecord>();
+            values = new ArrayList<>();
 
         DatabaseRecord record = new AndroidRecord();
 
         record.setName(columnName);
-        record.setValue(state.toString());
+        record.setValue(fermatEnum.getCode());
         // Set the field as modified to take in method after update
         record.setChange(true);
         values.add(record);

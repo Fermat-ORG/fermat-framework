@@ -1,18 +1,22 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by angel on 18/9/15.
+ * Updated by Manuel Perez on 23/11/2015
  */
  
 public enum ContractStatus implements FermatEnum {
+    CANCELLED ("CAN"),
+    COMPLETED("COM"),
     NEGOTIATION("NEG"),
     PAUSED("PAU"),
-    PENDING_PAYMENT("PEN"),
-    COMPLETED("COM"),
-    CANCELLED ("CAN");
+    PENDING_CONFIRMATION("PEC"),
+    PENDING_PAYMENT("PEN")
+
+    ;
 
     private String code;
 
@@ -27,11 +31,13 @@ public enum ContractStatus implements FermatEnum {
 
     public static ContractStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
+            case "CAN": return ContractStatus.CANCELLED;
+            case "COM": return ContractStatus.COMPLETED;
             case "NEG": return ContractStatus.NEGOTIATION;
             case "PAU": return ContractStatus.PAUSED;
+            case "PEC": return ContractStatus.PENDING_CONFIRMATION;
             case "PEN": return ContractStatus.PENDING_PAYMENT;
-            case "COM": return ContractStatus.COMPLETED;
-            case "CAN": return ContractStatus.CANCELLED;
+
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
         }
     }

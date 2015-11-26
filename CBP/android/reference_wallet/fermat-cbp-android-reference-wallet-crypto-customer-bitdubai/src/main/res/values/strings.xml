@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Crypto Customer Wallet</string>
     <string name="action_settings">Settings</string>
+    <string name="ccw_action_filter">Filter</string>
     <string name="action_start_negotiation">Start Negotiation</string>
     <string name="arrow" translatable="false">arrow</string>
     <string name="at">\@</string>
@@ -19,6 +20,18 @@
     <string name="ccw_unit_number">1</string>
     <string name="sell_text_and_price">Sell: %1$s</string>
     <string name="buy_text_and_price">Buy: %1$s</string>
-    <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
-    <string name="ccw_no_market_exchange_rates_to_show">No Market Exchange Rates to Show</string>
+    <string name="ccw_market_exchange_rate_market_exchange_rate">MARKET EXCHANGE RATE</string>
+    <string name="ccw_market_exchange_rate_no_market_exchange_rates_to_show">No Market Exchange Rates to Show</string>
+    <string name="ccw_contract_history_action_no_filter_text">No filter</string>
+    <string name="ccw_contract_history_action_filter_succeed_text">Succeed</string>
+    <string name="ccw_contract_history_action_filter_canceled_text">Canceled</string>
+    <string name="ccw_contract_history_exchange_rate_amount_and_currency">1 %1$s @ %2$s %3$s</string>
+    <string name="ccw_contract_history_sold_quantity_and_currency">%1$s %2$s %3$s</string>
+    <string name="no_contracts">No Contracts</string>
+    <string name="no_brokers">No Brokers</string>
+    <string name="sold">Sold</string>
+    <string name="sending">Sending</string>
+    <string name="receiving">Receiving</string>
+    <string name="ccw_selling_merchandise">Selling %1$s</string>
+    <string name="ccw_broker_exchange_rate_for_selling_item">%1$s/%2$s: %3$s</string>
 </resources>
