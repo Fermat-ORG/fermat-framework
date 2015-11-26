@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
  */
-public interface TransactionTransmissionManager extends TransactionProtocolManager<BusinessTransaction> {
+public interface TransactionTransmissionManager extends TransactionProtocolManager<BusinessTransactionMetadata> {
     /**
      * Method that send Contract hash
      *

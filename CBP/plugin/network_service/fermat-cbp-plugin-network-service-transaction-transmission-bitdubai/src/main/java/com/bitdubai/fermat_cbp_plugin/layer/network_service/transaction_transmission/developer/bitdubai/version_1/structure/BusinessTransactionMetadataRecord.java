@@ -4,14 +4,14 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransaction;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/11/15.
  */
-public class BusinessTransactionRecord implements BusinessTransaction {
+public class BusinessTransactionMetadataRecord implements BusinessTransactionMetadata {
 
     String contractHash;
     ContractStatus contractStatus;
@@ -27,19 +27,19 @@ public class BusinessTransactionRecord implements BusinessTransaction {
     TransactionTransmissionStates transactionTransmissionStates;
     boolean pendingFlag;
 
-    public BusinessTransactionRecord(String contractHash,
-                                     ContractStatus contractStatus,
-                                     String receiverId,
-                                     PlatformComponentType receiverType,
-                                     String senderId,
-                                     PlatformComponentType senderType,
-                                     String contractId,
-                                     String negotiationId,
-                                     BusinessTransactionTransactionType transactionType,
-                                     Long timestamp,
-                                     UUID transactionId,
-                                     TransactionTransmissionStates transactionTransmissionStates
-                                     ){
+    public BusinessTransactionMetadataRecord(String contractHash,
+                                             ContractStatus contractStatus,
+                                             String receiverId,
+                                             PlatformComponentType receiverType,
+                                             String senderId,
+                                             PlatformComponentType senderType,
+                                             String contractId,
+                                             String negotiationId,
+                                             BusinessTransactionTransactionType transactionType,
+                                             Long timestamp,
+                                             UUID transactionId,
+                                             TransactionTransmissionStates transactionTransmissionStates
+    ){
         this.contractHash=contractHash;
         this.contractStatus=contractStatus;
         this.receiverId=receiverId;

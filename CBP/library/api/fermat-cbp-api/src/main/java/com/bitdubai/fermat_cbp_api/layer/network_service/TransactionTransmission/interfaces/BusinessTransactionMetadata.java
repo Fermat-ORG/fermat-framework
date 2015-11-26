@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
  */
-public interface BusinessTransaction {
+public interface BusinessTransactionMetadata {
 
     /**
      * Get the Contract Hash

@@ -8,8 +8,10 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransaction;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingNewContractStatusUpdate;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionConnectionsDAO;
@@ -24,7 +26,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoMetadataEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
@@ -129,7 +130,7 @@ public class TransactionTransmissionAgent {
      *
      * publicKey  and transaccion metadata waiting to be a response
      */
-    Map<String,BusinessTransaction> poolConnectionsWaitingForResponse;
+    Map<String,BusinessTransactionMetadata> poolConnectionsWaitingForResponse;
 
 
     Map<String, FermatMessage> receiveMessage;
@@ -279,14 +280,14 @@ public class TransactionTransmissionAgent {
             filters.put(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME, TransactionTransmissionStates.PRE_PROCESSING_SEND.getCode());
 
          /*
-         * Read all pending BusinessTransaction from database
+         * Read all pending BusinessTransactionMetadata from database
          */
-            List<BusinessTransaction> businessTransactionList = transactionTransmissionContractHashDao.findAll(filters);
+            List<BusinessTransactionMetadata> businessTransactionMetadataList = transactionTransmissionContractHashDao.findAll(filters);
 
 
-            for (BusinessTransaction businessTransaction : businessTransactionList) {
+            for (BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList) {
 
-                String receiverPublicKey=businessTransaction.getReceiverId();
+                String receiverPublicKey= businessTransactionMetadata.getReceiverId();
 
                 if(!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
 
@@ -298,12 +299,12 @@ public class TransactionTransmissionAgent {
 
                             if (platformComponentProfile != null) {
 
-                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransaction.getSenderId(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
-                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransaction.getReceiverId(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
+                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getSenderId(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
+                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getReceiverId(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
                                 communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
 
-                                // pass the businessTransaction to a pool waiting for the response of the other peer or server failure
-                                poolConnectionsWaitingForResponse.put(receiverPublicKey, businessTransaction);
+                                // pass the businessTransactionMetadata to a pool waiting for the response of the other peer or server failure
+                                poolConnectionsWaitingForResponse.put(receiverPublicKey, businessTransactionMetadata);
                             }
 
                         }
@@ -315,7 +316,7 @@ public class TransactionTransmissionAgent {
                     if (communicationNetworkServiceLocal != null) {
 
                         try {
-                            businessTransaction.setState(TransactionTransmissionStates.SENT);
+                            businessTransactionMetadata.setState(TransactionTransmissionStates.SENT);
 
                             System.out.print("-----------------------\n" +
                                     "SENDING BUSINESS TRANSACTION RECORD -----------------------\n" +
@@ -323,17 +324,17 @@ public class TransactionTransmissionAgent {
 
                             // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
                             Gson gson = new Gson();
-                            String jsonBusinesTransaction =gson.toJson(businessTransaction);
+                            String jsonBusinesTransaction =gson.toJson(businessTransactionMetadata);
 
                             // Envio el mensaje a la capa de comunicacion
 
                             communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),receiverPublicKey,jsonBusinesTransaction);
 
-                            transactionTransmissionContractHashDao.changeState(businessTransaction);
+                            transactionTransmissionContractHashDao.changeState(businessTransactionMetadata);
 
                             System.out.print("-----------------------\n" +
                                     "BUSINES TRANSACTION -----------------------\n" +
-                                    "-----------------------\n STATE: " + businessTransaction.getState());
+                                    "-----------------------\n STATE: " + businessTransactionMetadata.getState());
 
                         } catch (CantUpdateRecordDataBaseException e) {
                             e.printStackTrace();
@@ -391,25 +392,25 @@ public class TransactionTransmissionAgent {
          /*
          * Read all pending CryptoTransmissionMetadata from database
          */
-            List<BusinessTransaction> businessTransactionList = transactionTransmissionContractHashDao.findAll(filters);
+            List<BusinessTransactionMetadata> businessTransactionMetadataList = transactionTransmissionContractHashDao.findAll(filters);
 
 
-            for(BusinessTransaction businessTransaction : businessTransactionList){
+            for(BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList){
 
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(businessTransaction.getSenderId());
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(businessTransactionMetadata.getSenderId());
 
                 if(communicationNetworkServiceLocal!=null){
 
                     System.out.print("-----------------------\n" +
                             "RECEIVING BUSINESS TRANSACTION-----------------------\n" +
-                            "-----------------------\n STATE: " + businessTransaction.getState());
+                            "-----------------------\n STATE: " + businessTransactionMetadata.getState());
 
                     // si no contiene la metadata, la tengo que guardar en la bd y notificar que llegó, tambien debería cargar ese caché cuando se lanza el evento de que llega la metadata de respuesta
                     // if( ! cacheResponseMetadataFromRemotes.containsKey(cryptoTransmissionMetadata.getDestinationPublicKey())){
 
                     try {
 
-                        switch (businessTransaction.getState()) {
+                        switch (businessTransactionMetadata.getState()) {
 
                             case SEEN_BY_DESTINATION_NETWORK_SERVICE:
                                 //TODO: revisar que se puede hacer acá
@@ -417,35 +418,35 @@ public class TransactionTransmissionAgent {
                                 break;
 
                             case CONFIRM_CONTRACT:
-                                System.out.print(businessTransaction.getSenderId()+" Transaction Transmission CONFIRM_CONTRACT");
+                                System.out.print(businessTransactionMetadata.getSenderId()+" Transaction Transmission CONFIRM_CONTRACT");
 
-                                this.poolConnectionsWaitingForResponse.remove(businessTransaction.getReceiverId());
+                                this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
                                 launchNotification();
-                                this.poolConnectionsWaitingForResponse.remove(businessTransaction.getReceiverId());
+                                this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
                                 break;
 
                             case CONFIRM_RESPONSE:
-                                System.out.print(businessTransaction.getSenderId()+" Transaction Transmission CONFIRM_RESPONSE");
+                                System.out.print(businessTransactionMetadata.getSenderId()+" Transaction Transmission CONFIRM_RESPONSE");
                                 launchNotification();
-                                this.poolConnectionsWaitingForResponse.remove(businessTransaction.getReceiverId());
+                                this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
                                 break;
                             // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
                             case SENT:
 
-                                businessTransaction.setState(TransactionTransmissionStates.SEEN_BY_OWN_NETWORK_SERVICE);
-                                businessTransaction.setBusinessTransactionTransactionType(businessTransaction.getType());
-                                transactionTransmissionContractHashDao.update(businessTransaction);
+                                businessTransactionMetadata.setState(TransactionTransmissionStates.SEEN_BY_OWN_NETWORK_SERVICE);
+                                businessTransactionMetadata.setBusinessTransactionTransactionType(businessTransactionMetadata.getType());
+                                transactionTransmissionContractHashDao.update(businessTransactionMetadata);
 
                                 System.out.print("-----------------------\n" +
                                         "RECEIVING BUSINESS TRANSACTION -----------------------\n" +
-                                        "-----------------------\n STATE: " + businessTransaction.getState());
+                                        "-----------------------\n STATE: " + businessTransactionMetadata.getState());
 
                                 launchNotification();
 
                                 TransactionTransmissionResponseMessage cryptoTransmissionResponseMessage = new TransactionTransmissionResponseMessage(
-                                        businessTransaction.getTransactionId(),
+                                        businessTransactionMetadata.getTransactionId(),
                                         TransactionTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE,
-                                        businessTransaction.getType());
+                                        businessTransactionMetadata.getType());
 
                                 Gson gson = new Gson();
 
@@ -454,12 +455,12 @@ public class TransactionTransmissionAgent {
                                 // El destination soy yo porque me lo estan enviando
                                 // El sender es el otro y es a quien le voy a responder
 
-                                communicationNetworkServiceLocal.sendMessage(businessTransaction.getReceiverId(),businessTransaction.getSenderId(), message);
+                                communicationNetworkServiceLocal.sendMessage(businessTransactionMetadata.getReceiverId(), businessTransactionMetadata.getSenderId(), message);
 
 
                                 System.out.print("-----------------------\n" +
                                         "SENDING ANSWER -----------------------\n" +
-                                        "-----------------------\n STATE: " + businessTransaction.getState());
+                                        "-----------------------\n STATE: " + businessTransactionMetadata.getState());
                                 break;
                             default:
                                 //TODO: handle with an exception
@@ -499,10 +500,10 @@ public class TransactionTransmissionAgent {
     }
 
     private void launchNotification(){
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_METADATA);
-        IncomingCryptoMetadataEvent incomingCryptoMetadataReceive = (IncomingCryptoMetadataEvent) fermatEvent;
-        incomingCryptoMetadataReceive.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
-        eventManager.raiseEvent(incomingCryptoMetadataReceive);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
+        IncomingNewContractStatusUpdate incomingNewContractStatusUpdate = (IncomingNewContractStatusUpdate) fermatEvent;
+        incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
+        eventManager.raiseEvent(incomingNewContractStatusUpdate);
     }
 
 
