@@ -668,7 +668,8 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                if(communicationNetworkServiceConnectionManager != null)
+                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
             }
 
@@ -685,7 +686,9 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             this.register = false;
-            communicationNetworkServiceConnectionManager.closeAllConnection();
+
+            if(communicationNetworkServiceConnectionManager != null)
+                communicationNetworkServiceConnectionManager.closeAllConnection();
         }
 
     }
