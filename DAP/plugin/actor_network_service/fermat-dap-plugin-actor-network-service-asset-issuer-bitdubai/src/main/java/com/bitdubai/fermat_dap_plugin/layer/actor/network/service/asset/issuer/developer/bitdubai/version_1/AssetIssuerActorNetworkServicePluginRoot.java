@@ -1150,7 +1150,8 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                if(communicationNetworkServiceConnectionManager != null)
+                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
             }
 
@@ -1167,7 +1168,9 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             this.register = false;
-            communicationNetworkServiceConnectionManager.closeAllConnection();
+
+            if(communicationNetworkServiceConnectionManager != null)
+                communicationNetworkServiceConnectionManager.closeAllConnection();
         }
 
     }
