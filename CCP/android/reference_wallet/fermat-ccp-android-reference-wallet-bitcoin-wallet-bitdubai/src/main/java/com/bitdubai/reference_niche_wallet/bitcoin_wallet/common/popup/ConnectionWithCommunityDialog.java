@@ -65,7 +65,7 @@ public class ConnectionWithCommunityDialog extends FermatDialog<ReferenceWalletS
         if(id == R.id.search_contact_btn){
             Object[] objects =new Object[2];
             objects[0] = getSession().getLastContactSelected();
-            ((FermatScreenSwapper) activity).connectWithOtherApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY,objects);
+            //TODO conect with community
         }
         else if(id == R.id.cancel_btn){
             dismiss();

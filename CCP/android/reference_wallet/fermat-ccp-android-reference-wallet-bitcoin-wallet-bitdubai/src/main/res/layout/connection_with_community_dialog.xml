@@ -20,7 +20,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
-            android:textColor="#fff"
+            android:textColor="#1d1d26"
             android:textStyle="bold"
             android:textSize="18sp"
             app:typeface="ROBOTO_REGULAR"
@@ -62,6 +62,7 @@
             android:background="#efefef"
             android:text="Cancel"
             android:textColor="#666666"
+            android:textStyle="bold"
             android:textSize="14sp"
             />
 
@@ -75,6 +76,7 @@
             android:text="Search"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
+            android:textStyle="bold"
             />
     </LinearLayout>
 
