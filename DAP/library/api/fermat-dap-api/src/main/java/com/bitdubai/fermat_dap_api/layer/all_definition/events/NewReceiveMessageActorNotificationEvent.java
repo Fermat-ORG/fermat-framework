@@ -1,18 +1,22 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
+package com.bitdubai.fermat_dap_api.layer.all_definition.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
 /**
- * Created by Nerio on 28/10/15.
+ * Created by Nerio on 25/11/15.
  */
-public class NewCryptoAddressReceiveAssetUserActorNotificationEvent extends AbstractFermatEvent{
+public class NewReceiveMessageActorNotificationEvent extends AbstractDAPEvent {
 
     private ActorAssetUser actorAssetUserSender;
     private ActorAssetIssuer actorAssetIssuerDestination;
     private CryptoAddress cryptoAddress;
+
+    public NewReceiveMessageActorNotificationEvent(EventType eventType) {
+        super(eventType);
+    }
 
     public ActorAssetUser getActorAssetUserSender() {
         return actorAssetUserSender;
@@ -30,9 +34,5 @@ public class NewCryptoAddressReceiveAssetUserActorNotificationEvent extends Abst
         this.actorAssetUserSender=actorAssetUserSender;
         this.actorAssetIssuerDestination=actorAssetIssuerDestination;
         this.cryptoAddress=cryptoAddress;
-    }
-
-    public NewCryptoAddressReceiveAssetUserActorNotificationEvent(EventType eventType) {
-        super(eventType);
     }
 }

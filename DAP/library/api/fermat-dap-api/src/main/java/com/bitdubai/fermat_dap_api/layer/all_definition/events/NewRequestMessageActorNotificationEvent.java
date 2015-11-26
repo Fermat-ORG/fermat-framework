@@ -1,17 +1,21 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
+package com.bitdubai.fermat_dap_api.layer.all_definition.events;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
 /**
- * Created by Nerio on 28/10/15.
+ * Created by Nerio on 25/11/15.
  */
-public class NewCryptoAddressRequestAssetUserActorNotificationEvent extends AbstractFermatEvent {
+public class NewRequestMessageActorNotificationEvent extends AbstractDAPEvent {
 
     private ActorAssetRedeemPoint actorAssetIssuerSender;
     private ActorAssetIssuer actorAssetUserDestination;
     private String message;
+
+    public NewRequestMessageActorNotificationEvent(EventType eventType) {
+        super(eventType);
+    }
 
     public ActorAssetRedeemPoint getActorAssetIssuerSender() {
         return actorAssetIssuerSender;
@@ -25,12 +29,10 @@ public class NewCryptoAddressRequestAssetUserActorNotificationEvent extends Abst
         return message;
     }
 
-    public void setNewCryptoAddressRequest(ActorAssetRedeemPoint actorRedeemPointSender, ActorAssetIssuer actorAssetIssuerDestination, String message) {
+    public void setNewRequestMessage(ActorAssetRedeemPoint actorRedeemPointSender, ActorAssetIssuer actorAssetIssuerDestination, String message) {
         this.actorAssetIssuerSender = actorRedeemPointSender;
         this.actorAssetUserDestination = actorAssetIssuerDestination;
+        this.message = message;
     }
 
-    public NewCryptoAddressRequestAssetUserActorNotificationEvent(EventType eventType) {
-        super(eventType);
-    }
 }

@@ -10,20 +10,16 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewRequestMessageActorNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.util.JsonAssetIssuerANSAttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.NewCryptoAddressReceiveAssetUserActorNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.NewCryptoAddressRequestAssetUserActorNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -48,9 +44,10 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
 //        super(assetIssuerActorNetworkServicePluginRoot);
 //    }
 
-    //    public NewReceiveMessagesNotificationEventHandler(AssetIssuerActorNetworkServicePluginRoot assetIssuerActorNetworkServicePluginRoot, EventManager eventManager){
-    public NewReceiveMessagesNotificationEventHandler(AssetIssuerActorNetworkServicePluginRoot assetIssuerActorNetworkServicePluginRoot) {
+    public NewReceiveMessagesNotificationEventHandler(AssetIssuerActorNetworkServicePluginRoot assetIssuerActorNetworkServicePluginRoot, EventManager eventManager) {
+//    public NewReceiveMessagesNotificationEventHandler(AssetIssuerActorNetworkServicePluginRoot assetIssuerActorNetworkServicePluginRoot) {
         this.pluginRoot = assetIssuerActorNetworkServicePluginRoot;
+        this.eventManager = eventManager;
     }
 
 
@@ -85,16 +82,15 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
 
                 if (fermatMessageReceive.getContent().contains(pblicKeyExtended)) {
 
-                    //TODO: Revisar si estos son los actores y si aplicara este metodo
                     ActorAssetRedeemPoint actorRedeemPointSender = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.REDEEM_POINT).getAsString(), RedeemPointActorRecord.class);
                     ActorAssetIssuer actorAssetIssuerDestination = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.ISSUER).getAsString(), AssetIssuerActorRecord.class);
                     String message = gson.fromJson(jsonObject.get(JsonAssetIssuerANSAttNamesConstants.PUBLICKEY_EXTENDED).getAsString(), String.class);
 
-                    System.out.println("Actor Asset User: SE LANZARA EVENTO PARA REQUEST CRYPTO ADDRESS");
+                    System.out.println("Actor Asset User: SE LANZARA EVENTO PARA REQUEST PUBLIC KEY EXTENDED");
 
-                    FermatEvent event = eventManager.getNewEvent(EventType.NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER);
+                    FermatEvent event = eventManager.getNewEvent(EventType.NEW_REQUEST_MESSAGE_ACTOR);
                     event.setSource(EventSource.ACTOR_ASSET_ISSUER);
-                    ((NewCryptoAddressRequestAssetUserActorNotificationEvent) event).setNewCryptoAddressRequest(actorRedeemPointSender, actorAssetIssuerDestination, message);
+                    ((NewRequestMessageActorNotificationEvent) event).setNewRequestMessage(actorRedeemPointSender, actorAssetIssuerDestination, message);
                     eventManager.raiseEvent(event);
 
                 }
