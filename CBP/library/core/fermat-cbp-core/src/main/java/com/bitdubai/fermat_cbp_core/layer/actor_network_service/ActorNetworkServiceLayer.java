@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_cbp_core.layer.actor_network_service.crypto_broker.CryptoBrokerPluginSubsystem;
+import com.bitdubai.fermat_cbp_core.layer.actor_network_service.crypto_customer.CryptoCustomerPluginSubsystem;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 21/11/2015.
@@ -22,7 +23,8 @@ public class ActorNetworkServiceLayer extends AbstractLayer {
 
         try {
 
-            registerPlugin(new CryptoBrokerPluginSubsystem());
+            registerPlugin(new CryptoBrokerPluginSubsystem()  );
+            registerPlugin(new CryptoCustomerPluginSubsystem());
 
         } catch(CantRegisterPluginException e) {
 

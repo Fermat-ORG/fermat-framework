@@ -433,6 +433,7 @@ public interface CryptoWallet extends Serializable {
                                    final CryptoAddress         cryptoAddress    ,
                                    final String                description      ,
                                    final long                  amount           ,
-                                   final BlockchainNetworkType networkType      ) throws CantSendCryptoPaymentRequestException;
+                                   final BlockchainNetworkType networkType      ,
+                                   final ReferenceWallet       referenceWallet) throws CantSendCryptoPaymentRequestException;
 
 }

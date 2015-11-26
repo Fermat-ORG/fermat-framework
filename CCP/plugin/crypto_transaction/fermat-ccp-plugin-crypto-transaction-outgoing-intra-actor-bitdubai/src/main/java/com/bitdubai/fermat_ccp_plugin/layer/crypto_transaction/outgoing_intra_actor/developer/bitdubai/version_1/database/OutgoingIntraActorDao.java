@@ -77,6 +77,7 @@ public class OutgoingIntraActorDao {
 
 
     public void registerNewTransaction( UUID            transactionId,
+                                        UUID            requestId,
                                         String          walletPublicKey,
                                         CryptoAddress   destinationAddress,
                                         long            cryptoAmount,
@@ -90,7 +91,7 @@ public class OutgoingIntraActorDao {
         try {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
-            loadRecordAsNew(recordToInsert, transactionId, walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet);
+            loadRecordAsNew(recordToInsert, transactionId, requestId,walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
             throw new OutgoingIntraActorCantInsertRecordException("An exception happened",e,"","");
@@ -197,6 +198,7 @@ public class OutgoingIntraActorDao {
 
     private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord,
                                  UUID                trxId,
+                                 UUID                requestId,
                                  String              walletPublicKey,
                                  CryptoAddress       destinationAddress,
                                  long                cryptoAmount,
@@ -211,6 +213,9 @@ public class OutgoingIntraActorDao {
         UUID transactionId = trxId;
 
         databaseTableRecord.setUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, transactionId);
+        if(requestId != null)
+            databaseTableRecord.setUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_REQUEST_ID_COLUMN_NAME, requestId);
+
         databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME, walletPublicKey);
 
         // TODO: This will be completed when the vault gives it to us
@@ -304,9 +309,16 @@ public class OutgoingIntraActorDao {
         String           transactionHash    = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME);
         long             amount             = record.getLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_AMOUNT_COLUMN_NAME);
         String           op_Return          = null;
+        UUID            requestId = null;
+
         if (record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_OP_RETURN_COLUMN_NAME) != null){
             op_Return          = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_OP_RETURN_COLUMN_NAME);
         }
+
+        if (record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_REQUEST_ID_COLUMN_NAME)!= null){
+            requestId          = record.getUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_REQUEST_ID_COLUMN_NAME);
+        }
+
         TransactionState state              = TransactionState.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME));
         long             timestamp          = record.getLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TIMESTAMP_COLUMN_NAME);
         String           memo               = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_DESCRIPTION_COLUMN_NAME);
@@ -328,6 +340,7 @@ public class OutgoingIntraActorDao {
 
         bitcoinTransaction.setWalletPublicKey(walletPublicKey);
         bitcoinTransaction.setIdTransaction(transactionId);
+        bitcoinTransaction.setIdRequest(requestId);
         bitcoinTransaction.setTransactionHash(transactionHash);
         bitcoinTransaction.setAddressFrom(addressFrom);
         bitcoinTransaction.setAddressTo(addressTo);

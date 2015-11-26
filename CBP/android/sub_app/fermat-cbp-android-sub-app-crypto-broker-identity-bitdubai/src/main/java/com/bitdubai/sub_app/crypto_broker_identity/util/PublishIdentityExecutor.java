@@ -64,16 +64,7 @@ public class PublishIdentityExecutor {
             moduleManager.publishIdentity(publicKey);
             return SUCCESS;
 
-        } catch (CantPublishCryptoBrokerException ex) {
-            if (errorManager != null){
-                errorManager.reportUnexpectedSubAppException(
-                        SubApps.CBP_CRYPTO_BROKER_IDENTITY,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                        ex);
-            }
-
-            return EXCEPTION_THROWN;
-        } catch (CryptoBrokerNotFoundException ex) {
+        } catch (CantPublishCryptoBrokerException | CryptoBrokerNotFoundException ex) {
             if (errorManager != null){
                 errorManager.reportUnexpectedSubAppException(
                         SubApps.CBP_CRYPTO_BROKER_IDENTITY,
@@ -90,17 +81,8 @@ public class PublishIdentityExecutor {
             moduleManager.hideIdentity(publicKey);
             return SUCCESS;
 
-        } catch (CantHideCryptoBrokerException ex) {
+        } catch (CantHideCryptoBrokerException | CryptoBrokerNotFoundException ex) {
             if(errorManager != null){
-                errorManager.reportUnexpectedSubAppException(
-                        SubApps.CBP_CRYPTO_BROKER_IDENTITY,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                        ex);
-            }
-
-            return EXCEPTION_THROWN;
-        } catch (CryptoBrokerNotFoundException ex) {
-            if (errorManager != null){
                 errorManager.reportUnexpectedSubAppException(
                         SubApps.CBP_CRYPTO_BROKER_IDENTITY,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,

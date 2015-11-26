@@ -171,13 +171,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * starts the monitoring
              */
+            peerGroup.setDownloadTxDependencies(true);
             peerGroup.start();
-            peerGroup.startBlockChainDownload(new AbstractPeerEventListener() {
-                @Override
-                public void onTransaction(Peer peer, Transaction t) {
-                    System.out.println("****Crypto Network Transaction from Peer: " + t.toString());
-                }
-            });
+            peerGroup.startBlockChainDownload(null);
         } catch (Exception e){
             e.printStackTrace();
         }

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
@@ -42,6 +43,10 @@ public class DepositBankMoneyTransactionDao {
         record.setStringValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_MEMO_COLUMN_NAME,bankTransactionParameters.getMemo());
         record.setStringValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_FIAT_CURRENCY_TYPE_COLUMN_NAME,bankTransactionParameters.getCurrency().getCode());
         record.setLongValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_TIMESTAMP_COLUMN_NAME,new Date().getTime());
-        table.insertRecord();
+        try {
+            table.insertRecord(record);
+        }catch (CantInsertRecordException e){
+
+        }
     }
 }
