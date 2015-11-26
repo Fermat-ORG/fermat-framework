@@ -5,10 +5,11 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Nerio on 02/11/15.
  */
-public class CantConnectToAssetIssuerException extends FermatException {
+public class CantConnectToActorAssetIssuerException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "There was an error connecting to the Actor Asset Issuer";
-    public CantConnectToAssetIssuerException(String message, Exception cause, String context, String possibleReason) {
+
+    public CantConnectToActorAssetIssuerException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
