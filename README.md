@@ -173,7 +173,7 @@ You can learn more, see some cool images of Fermat's architecture and its P2P ne
 * Any graphic / UX designer could provide skins to existing wallets.
 * Anyone could provide language packs to existing wallets.
 
-##### 8. Each developer must be compesated for their contribution to Fermat.
+##### 8. Each developer must be compensated for their contribution to Fermat.
 
 * Micro license concept.
 * Micro license structure concept.

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
@@ -31,7 +32,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
@@ -53,6 +53,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.RequestMessage;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerActorNetworkServiceManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerExecutorAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
@@ -61,6 +62,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -137,34 +139,23 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     @Override
     public void start() throws CantStartPluginException {
 
+        /*
+         * Validate required resources
+         */
+        validateInjectedResources();
+
         try {
+
             loadKeyPair(pluginFileSystem);
+
+
         } catch (CantLoadKeyPairException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, "", "Problem trying to load the key pair of the plugin.");
         }
 
-        /*
-         * Validate required resources
-         */
-        validateInjectedResources();
-
-
-        // initialize crypto payment request dao
-
-        try {
-
-            connectionNewsDao = new ConnectionNewsDao(pluginDatabaseSystem, pluginId);
-
-            connectionNewsDao.initialize();
-
-        } catch(final CantInitializeDatabaseException e) {
-
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, "", "Problem initializing crypto broker ans dao.");
-        }
-
+        // template stuff.
         try {
 
             /*
@@ -192,11 +183,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
 
-            /*
-             * Its all ok, set the new status
-            */
-            this.serviceStatus = ServiceStatus.STARTED;
-
         } catch (final CantInitializeNetworkServiceDatabaseException e) {
 
             String context = "Plugin ID: "     + pluginId + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR+
@@ -205,6 +191,40 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, context, "The Template Database triggered an unexpected problem that wasn't able to solve by itself");
         }
+
+        try {
+
+            connectionNewsDao = new ConnectionNewsDao(pluginDatabaseSystem, pluginId);
+
+            connectionNewsDao.initialize();
+
+            final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+
+            fermatManager = new CryptoBrokerActorNetworkServiceManager(
+                    communicationsClientConnection         ,
+                    connectionNewsDao                      ,
+                    errorManager                           ,
+                    getPluginVersionReference()
+            );
+
+
+        } catch(final CantInitializeDatabaseException e) {
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, "", "Problem initializing crypto broker ans dao.");
+        }
+
+        /*
+         * Its all ok, set the new status
+         */
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    private CryptoBrokerActorNetworkServiceManager fermatManager;
+
+    @Override
+    public FermatManager getManager() {
+        return fermatManager;
     }
 
     private void initializeListener(){
@@ -286,7 +306,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
     }
 
-
     /**
      * This method validate is all required resource are injected into
      * the plugin root by the platform
@@ -343,7 +362,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     public void stop() {
 
         // remove all listeners from the event manager and from the plugin.
-        for (FermatEventListener listener: listenersAdded)
+        for (final FermatEventListener listener: listenersAdded)
             eventManager.removeListener(listener);
 
         listenersAdded.clear();
@@ -354,9 +373,10 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         // set to not registered.
         register = Boolean.FALSE;
 
+        fermatManager.setPlatformComponentProfile(null);
+
         this.serviceStatus = ServiceStatus.STOPPED;
     }
-
 
     /**
      * (non-javadoc)
@@ -372,22 +392,26 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
      * @see NetworkService#requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters)
      */
     @Override
-    public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters){
+    public void requestRemoteNetworkServicesRegisteredList(final DiscoveryQueryParameters discoveryQueryParameters) {
+
         /*
          * Request the list of component registers
          */
         try {
 
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(this.getPlatformComponentProfilePluginRoot(), discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(
+                    this.getPlatformComponentProfilePluginRoot(),
+                    discoveryQueryParameters
+            );
 
         } catch (final CantRequestListException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
-
     }
+
     /**
-     * This method initialize the cryptoPaymentRequestNetworkServiceConnectionManager.
+     * This method initialize the CommunicationNetworkServiceConnectionManager.
      * IMPORTANT: Call this method only in the RegistrationProcessNetworkServiceAgent, when execute the registration process
      * because at this moment, is create the platformComponentProfile for this component
      */
@@ -424,30 +448,30 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
      * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(final PlatformComponentType    platformComponentType         ,
-                                                                         final NetworkServiceType       networkServiceType            ,
-                                                                         final String                   alias                         ,
-                                                                         final String                   identityPublicKey             ,
-                                                                         final Location                 location                      ,
-                                                                         final Double                   distance                      ,
-                                                                         final String                   name                          ,
-                                                                         final String                   extraData                     ,
-                                                                         final Integer                  firstRecord                   ,
-                                                                         final Integer                  numRegister                   ,
-                                                                         final PlatformComponentType    fromOtherPlatformComponentType,
-                                                                         final NetworkServiceType       fromOtherNetworkServiceType   ) {
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(final PlatformComponentType platformComponentType         ,
+                                                                         final NetworkServiceType    networkServiceType            ,
+                                                                         final String                alias                         ,
+                                                                         final String                identityPublicKey             ,
+                                                                         final Location              location                      ,
+                                                                         final Double                distance                      ,
+                                                                         final String                name                          ,
+                                                                         final String                extraData                     ,
+                                                                         final Integer               firstRecord                   ,
+                                                                         final Integer               numRegister                   ,
+                                                                         final PlatformComponentType fromOtherPlatformComponentType,
+                                                                         final NetworkServiceType    fromOtherNetworkServiceType   ) {
 
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
-                platformComponentType,
-                networkServiceType,
-                alias,
-                identityPublicKey,
-                location,
-                distance,
-                name,
-                extraData,
-                firstRecord,
-                numRegister,
+                platformComponentType         ,
+                networkServiceType            ,
+                alias                         ,
+                identityPublicKey             ,
+                location                      ,
+                distance                      ,
+                name                          ,
+                extraData                     ,
+                firstRecord                   ,
+                numRegister                   ,
                 fromOtherPlatformComponentType,
                 fromOtherNetworkServiceType
         );
@@ -461,10 +485,10 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         try {
 
             cryptoBrokerExecutorAgent = new CryptoBrokerExecutorAgent(
-                    this,
-                    errorManager,
-                    eventManager,
-                //    cryptoAddressesNetworkServiceDao,
+                    this                              ,
+                    errorManager                      ,
+                    eventManager                      ,
+                    connectionNewsDao                 ,
                     wsCommunicationsCloudClientManager
             );
 
@@ -491,6 +515,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             this.register = Boolean.TRUE;
 
             initializeAgent();
+
+            fermatManager.setPlatformComponentProfile(this.getPlatformComponentProfilePluginRoot());
+
         }
 
     }

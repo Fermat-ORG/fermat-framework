@@ -76,10 +76,6 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
     private DesktopAdapter adapter;
     private boolean isStartList;
 
-
-    private ProgressDialog mDialog;
-
-
     // recycler
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
@@ -144,14 +140,6 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
         try {
 
             rootView = inflater.inflate(R.layout.desktop_main, container, false);
-            /* adapt the image to the size of the display */
-//            Display display = getActivity().getWindowManager().getDefaultDisplay();
-//            Point size = new Point();
-//            display.getSize(size);
-//            Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-//                    getResources(), R.drawable.bg_xxhpdi),size.x,size.y,true);
-           // getActivity().getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(), bmp));
-
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 4, LinearLayoutManager.VERTICAL, false);
@@ -322,13 +310,13 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
             lstInstalledWallet = moduleManager.getUserWallets();
             List<Item> lstItemsWithIcon = new ArrayList<>();
-            Item[] arrItemsWithoutIcon = new Item[20];
+            Item[] arrItemsWithoutIcon = new Item[16];
 
 
             for(InstalledWallet installedWallet: lstInstalledWallet) {
                 Item item = new Item(installedWallet);
                 item.setIconResource(R.drawable.bitcoin_wallet);
-                item.setPosition(16);
+                item.setPosition(12);
                 lstItemsWithIcon.add(item);
             }
 
@@ -346,7 +334,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             lstItemsWithIcon.add(item1);
 
 
-            for(int i=0;i<20;i++){
+            for(int i=0;i<16;i++){
                 Item emptyItem = new Item(new EmptyItem(0,i));
                 arrItemsWithoutIcon[i] = emptyItem;
             }

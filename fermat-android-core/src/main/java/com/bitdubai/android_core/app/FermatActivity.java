@@ -16,6 +16,7 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -407,30 +408,43 @@ public abstract class FermatActivity extends AppCompatActivity
                 /**
                  * Set header
                  */
-                View view = navigationViewPainter.addNavigationViewHeader();
-                FrameLayout frameLayout = (FrameLayout) findViewById(R.id.navigation_view_header);
-                frameLayout.setVisibility(View.VISIBLE);
-                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                layoutParams.gravity = Gravity.CENTER_VERTICAL;
-                view.setLayoutParams(layoutParams);
-                frameLayout.addView(view);
-                /**
-                 * Set adapter
-                 */
-                FermatAdapter mAdapter = navigationViewPainter.addNavigationViewAdapter();
-                mAdapter.changeDataSet(getNavigationMenu());
-                mAdapter.setFermatListEventListener(this);
-                navigation_recycler_view.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
+                if(navigationViewPainter!=null) {
+                    View view = navigationViewPainter.addNavigationViewHeader();
+                    FrameLayout frameLayout = (FrameLayout) findViewById(R.id.navigation_view_header);
+                    frameLayout.setVisibility(View.VISIBLE);
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    layoutParams.gravity = Gravity.CENTER_VERTICAL;
+                    view.setLayoutParams(layoutParams);
+                    frameLayout.addView(view);
+                    /**
+                     * Set adapter
+                     */
+                    FermatAdapter mAdapter = navigationViewPainter.addNavigationViewAdapter();
+                    mAdapter.changeDataSet(getNavigationMenu());
+                    mAdapter.setFermatListEventListener(this);
+                    navigation_recycler_view.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
 
-                /**
-                 * Body
-                 */
-                ViewGroup viewGroup = navigationViewPainter.addNavigationViewBodyContainer();
-                RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.navigation_view_body_container);
-                relativeLayout.setBackground(viewGroup.getBackground());
+                    /**
+                     * Body
+                     */
+                    RelativeLayout navigation_view_footer = (RelativeLayout) findViewById(R.id.navigation_view_footer);
+                    ViewGroup viewGroup = navigationViewPainter.addNavigationViewBodyContainer(getLayoutInflater(), navigation_view_footer);
 
-                navigationView.invalidate();
+
+                    /**
+                     * Background color
+                     */
+                    RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
+                    if (navigationViewPainter.addBodyBackground() != null) {
+                        relativeLayout.setBackground(navigationViewPainter.addBodyBackground());
+                    } else if (navigationViewPainter.addBodyBackgroundColor() > 0) {
+                        relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
+                    }
+
+
+                    navigationView.invalidate();
+                }
 
             } else {
                 mToolbar.setNavigationIcon(R.drawable.ic_action_back);
@@ -533,6 +547,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 setActionBarProperties(title, activity);
                 paintToolbarIcon(titleBar);
             } else {
+                if(appBarLayout!=null)
                 appBarLayout.setVisibility(View.GONE);
                 if (collapsingToolbarLayout != null)
                     collapsingToolbarLayout.setVisibility(View.GONE);
@@ -713,7 +728,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
             if (mToolbar != null)
-                setSupportActionBar(mToolbar);
+                    setSupportActionBar(mToolbar);
 
             collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
@@ -1064,6 +1079,9 @@ public abstract class FermatActivity extends AppCompatActivity
 
             List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
 
+            navigationViewPainter = null;
+            elementsWithAnimation = new ArrayList<>();
+
             this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
             System.gc();
@@ -1211,14 +1229,20 @@ public abstract class FermatActivity extends AppCompatActivity
                     getWindow().setStatusBarColor(Color.TRANSPARENT);
                 }
                 final WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
-                final Drawable wallpaperDrawable = wallpaperManager.getDrawable();
+                Drawable wallpaperDrawable = null;
+                if(Build.VERSION.SDK_INT>19)
+                    wallpaperDrawable = wallpaperManager.getBuiltInDrawable();
 
                 Display display = getWindowManager().getDefaultDisplay();
                 Point size = new Point();
                 display.getSize(size);
-                Bitmap bmp = Bitmap.createScaledBitmap(((BitmapDrawable)wallpaperDrawable).getBitmap(), size.x, size.y, true);
+                Bitmap bmp = Bitmap.createScaledBitmap(((BitmapDrawable) wallpaperDrawable).getBitmap(), size.x + 300, size.y, true);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER,
+                        WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
 
-                getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(),bmp));
+                //getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(),bmp));
+
+                //getWindow().setBackgroundDrawable(scaleDrawable);
             }
 
 
@@ -2087,6 +2111,7 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     public void addNavigationView(NavigationViewPainter navigationViewPainter) {
         this.navigationViewPainter = navigationViewPainter;
+        invalidate();
     }
 
     /**

@@ -21,9 +21,8 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
-import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -48,9 +47,11 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.FragmentsCommons;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -69,9 +70,7 @@ import static android.widget.Toast.makeText;
  * @since 20/10/2015
  */
 public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem>
-        implements FermatListItemListeners<CryptoWalletTransaction>,
-        ElementsWithAnimation,
-        NavigationViewPainter {
+        implements FermatListItemListeners<CryptoWalletTransaction>{
 
 
     private int MAX_TRANSACTIONS = 20;
@@ -96,8 +95,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     ReferenceWalletSession referenceWalletSession;
     private long bookBalance;
     private LinearLayout emptyListViewsContainer;
-    private int[] emptyOriginalPos= new int[2];;
-
+    private AnimationManager animationManager;
 
 
     public static SendTransactionFragment2 newInstance() {
@@ -129,10 +127,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getPaintActivtyFeactures().addCollapseAnimation(this);
-        getPaintActivtyFeactures().addNavigationView(this);
-        invalidate();
+        try {
+            super.onActivityCreated(savedInstanceState);
+            animationManager = new AnimationManager(rootView,emptyListViewsContainer);
+            getPaintActivtyFeactures().addCollapseAnimation(animationManager);
+            getPaintActivtyFeactures().addNavigationView(new NavigationViewPainter(getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Nullable
@@ -156,7 +160,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
     private void setUpScreen(){
+        int[] emptyOriginalPos = new int[2];
         emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);
+        if(animationManager!=null)
+        animationManager.setEmptyOriginalPos(emptyOriginalPos);
 
     }
 
@@ -446,70 +453,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
 
-    @Override
-    public void startCollapseAnimation(int verticalOffset) {
-        moveViewToScreenCenter(emptyListViewsContainer);
-    }
 
-    @Override
-    public void startExpandAnimation(int verticalOffSet) {
-        moveViewToOriginalPosition(emptyListViewsContainer);
-    }
 
-    private void moveViewToOriginalPosition(View view) {
-        if(Build.VERSION.SDK_INT>17) {
-            int position[] = new int[2];
-            view.getLocationOnScreen(position);
-            float centreY = rootView.getY() + rootView.getHeight() / 2;
-            TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0  , centreY-250,0);
-            anim.setDuration(1000);
-            anim.setFillAfter(true);
-            view.startAnimation(anim);
-        }
-    }
 
-    private void moveViewToScreenCenter( View view ) {
-        if (Build.VERSION.SDK_INT > 17) {
-            DisplayMetrics dm = new DisplayMetrics();
-            rootView.getDisplay().getMetrics(dm);
-            int xDest = dm.widthPixels / 2;
-            xDest -= (view.getMeasuredWidth() / 2);
-            float centreY = rootView.getY() + rootView.getHeight() / 2;
-
-            TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
-            anim.setDuration(1000);
-            anim.setFillAfter(true);
-            view.startAnimation(anim);
-        }
-    }
-
-    @Override
-    public View addNavigationViewHeader() {
-        try {
-            return FragmentsCommons.setUpHeaderScreen(getActivity().getLayoutInflater(), getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
-        } catch (CantGetActiveLoginIdentityException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public FermatAdapter addNavigationViewAdapter() {
-        try {
-            NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null, referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
-            //setNavigationDrawer(navigationViewAdapter);
-            return navigationViewAdapter;
-        } catch (CantGetActiveLoginIdentityException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public ViewGroup addNavigationViewBodyContainer() {
-        RelativeLayout relativeLayout = new RelativeLayout(getActivity());
-        relativeLayout.setBackgroundResource(R.drawable.navigation_view_fondo);
-        return relativeLayout;
-    }
 }
 
