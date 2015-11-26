@@ -238,8 +238,6 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
 
     @Override
     public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantDistributeDigitalAssetsException {
-        printSomething("The Wallet public key is hardcoded");
-        walletPublicKey = "walletPublicKeyTest";
         try{
             startMonitorAgent();
             this.assetDistributionTransactionManager.distributeAssets(digitalAssetsToDistribute, walletPublicKey);
