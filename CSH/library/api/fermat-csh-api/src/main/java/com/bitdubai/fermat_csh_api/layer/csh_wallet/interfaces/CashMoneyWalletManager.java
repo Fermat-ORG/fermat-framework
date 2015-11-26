@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
@@ -10,7 +11,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoney
 /**
  * Created by Yordin Alayn on 26.09.15.
  */
-public interface CashMoneyWalletManager {
+public interface CashMoneyWalletManager extends FermatManager {
 
 
     /**
