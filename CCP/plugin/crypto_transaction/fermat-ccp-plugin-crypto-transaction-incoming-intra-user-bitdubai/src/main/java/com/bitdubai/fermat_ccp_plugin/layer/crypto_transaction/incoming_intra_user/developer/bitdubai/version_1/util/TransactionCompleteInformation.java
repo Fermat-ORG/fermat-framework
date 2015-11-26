@@ -42,6 +42,7 @@ public class TransactionCompleteInformation {
 
             return new IncomingIntraUserTransactionWrapper(
                     cryptoTransactionContainer.getTransactionID()            ,
+                    null,
                     cryptoAddressBookRecord   .getDeliveredByActorPublicKey(),
                     cryptoAddressBookRecord   .getDeliveredToActorPublicKey(),
                     cryptoAddressBookRecord   .getDeliveredByActorType()     ,
