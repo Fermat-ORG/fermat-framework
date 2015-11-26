@@ -212,9 +212,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @Override
     public void connectToActorAssetIssuer(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToAssetIssuerException {
         for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuers) {
-            DAPActor dapActor = (DAPActor) requester;
             try {
-                assetIssuerActorNetworkServiceManager.sendMessage(dapActor, actorAssetIssuer, " ");
+                assetIssuerActorNetworkServiceManager.sendMessage(requester, actorAssetIssuer, " ");
                 this.assetIssuerActorDao.updateAssetIssuerDAPConnectionStateRegistered(actorAssetIssuer.getActorPublicKey(), DAPConnectionState.CONNECTING);
 
             } catch (CantSendMessageException e) {

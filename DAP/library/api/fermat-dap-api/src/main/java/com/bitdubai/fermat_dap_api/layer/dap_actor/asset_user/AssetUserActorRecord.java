@@ -13,7 +13,7 @@ import java.util.Arrays;
 /**
  * Created by Nerio on 22/09/15.
  */
-public class AssetUserActorRecord implements ActorAssetUser, DAPActor {
+public class AssetUserActorRecord implements ActorAssetUser {
 
     private String              publicLinkedIdentity    ;
     private String              actorPublicKey          ;
@@ -158,16 +158,6 @@ public class AssetUserActorRecord implements ActorAssetUser, DAPActor {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * The method <code>getType</code> gives us the Enum of the represented a Actor
-     *
-     * @return Enum Actors
-     */
-    @Override
-    public Actors getType() {
-        return Actors.DAP_ASSET_USER;
     }
 
     /**
