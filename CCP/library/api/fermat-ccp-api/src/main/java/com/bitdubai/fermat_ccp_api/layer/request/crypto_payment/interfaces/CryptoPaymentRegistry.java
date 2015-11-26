@@ -11,6 +11,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantG
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantRejectCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGenerateCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantUpdateRequestPaymentStateException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException;
 
@@ -161,4 +162,19 @@ public interface CryptoPaymentRegistry {
                                                                 Integer            max            ,
                                                                 Integer            offset         ) throws CantListCryptoPaymentRequestsException;
 
+
+    /**
+     * Throw the method <code>acceptIncomingRequest</code> you can update request payment sent state to accepted.
+     *
+     * @param requestId
+     */
+    void acceptIncomingRequest(UUID requestId) throws CantUpdateRequestPaymentStateException;
+
+    /**
+     * Throw the method <code>revertIncomingRequest</code> you can update request payment sent state error revert.
+     *
+     * @param requestId
+     */
+
+    void revertOutgoingRequest(UUID requestId) throws CantUpdateRequestPaymentStateException;
 }

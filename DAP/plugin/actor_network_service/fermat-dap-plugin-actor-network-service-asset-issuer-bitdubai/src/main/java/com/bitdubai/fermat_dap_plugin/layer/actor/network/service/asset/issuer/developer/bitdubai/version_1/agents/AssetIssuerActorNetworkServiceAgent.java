@@ -190,7 +190,7 @@ public class AssetIssuerActorNetworkServiceAgent {
 
         }catch(InterruptedException e) {
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
         }
 
     }
@@ -214,12 +214,14 @@ public class AssetIssuerActorNetworkServiceAgent {
                             /*
                             * Create the sender basic profile
                             */
-                                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(fm.getSender(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
+                                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                                        constructBasicPlatformComponentProfileFactory(fm.getSender(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_REDEEM_POINT);
 
                             /*
                              * Create the receiver basic profile
                              */
-                                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(fm.getReceiver(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
+                                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                                        constructBasicPlatformComponentProfileFactory(fm.getReceiver(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
 
 
                             try {
@@ -244,7 +246,7 @@ public class AssetIssuerActorNetworkServiceAgent {
 
 
         } catch (CantReadRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send Message PENDING_TO_SEND"));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send Message PENDING_TO_SEND"));
         }
 
 

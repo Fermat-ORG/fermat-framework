@@ -13,6 +13,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantS
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.database.AppropriationStatsDAO;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -68,8 +69,9 @@ public class AppropriationStatsRecorderService implements AssetTransactionServic
 
         try {
 
-            //TODO ADD THE NEEDED LISTENERS!!
-
+            FermatEventListener onCryptoNetwork = eventManager.getNewListener(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
+            onCryptoNetwork.setEventHandler(new AppropriationStatsEventHandler(this));
+            addListener(onCryptoNetwork);
 
         } catch (Exception e) {
             throw new CantStartServiceException(e, context, "An unexpected exception happened while trying to start the AssetAppropriationRecordeService.");
