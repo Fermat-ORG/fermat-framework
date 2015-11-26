@@ -20,7 +20,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
-            android:textColor="#1d1d26"
+            android:textColor="#fff"
             android:textStyle="bold"
             android:textSize="18sp"
             app:typeface="ROBOTO_REGULAR"
@@ -40,6 +40,7 @@
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"
             android:paddingLeft="10dp"
+            android:textColor="#1d1d26"
             android:paddingRight="30dp"/>
 
 
