@@ -86,38 +86,38 @@ End Users pay with fermats to receive personalized technical support from Fermat
 
 The Fermat Network is structured as a peer-to-peer network architecture on top of the Internet. Fermat nodes are peers to each other, meaning that they are all equal and there are no "special" nodes. All the nodes share the burden of providing all services. The network nodes interconnect to each other only when they need to do so according to the Fermat P2P Protocol. There is no server, no centralized service, and no hierarchy within the network. 
 
-The term "Fermat Network" refers to the collection of nodes running the Fermat P2P Protocol. In addition to the Fermat P2P Protocol, there are other protocols such as the Fermat Consensus Protocol which allows the network to agree which transactions are going to be recorded on the blockchain, and the Fermat Client Protocol which is used for coomunicating Fermat Clients between each other and to Fermat Nodes. We use the term "Extended Fermat Network" to refer to the overall network that includes both Fermat Nodes and Clients.
+The term "Fermat Network" refers to the collection of nodes running the Fermat P2P Protocol. There are two other protocols such as the Fermat Consensus Protocol which allows the network to agree which transactions are going to be recorded on the blockchain, and the Fermat Client Protocol which is used for coomunicating Fermat Clients between each other and to Fermat Nodes. We use the term "Extended Fermat Network" to refer to the overall network that includes both Fermat Nodes and Clients.
+
+### Fermat Nodes Roles
+
+Fermat nodes performs several tasks at the same time. For each one of them, the protocol has it own set of rules:
+
+#### Mantains the Distributed Nodes Catalogue
+
+Each node mantains a full catalogue of all nodes registered in the network. This role is ruled by the Fermat P2P Protocol.
+
+#### Mantains an Identities Catalogue
+
+Each node mantains a part of a distributed catalogue of the End User identities. This catalogue is designed to facilitate End Users to find each other. This role is ruled by the Fermat Client Protocol.
+
+#### Act as Identities' Home
+
+Each node is home to a set of End Users identities. These identities can receive calls only through their home node. This role is also ruled by the Fermat Client Protocol.
+
+#### Acts as a Call Bridge
+
+Each node interconects clients between each other in order to let them freely transfer information between them. This role is ruled by the Fermat Client Protocol.
+
+#### Mantains the Fermat Blockchain
+
+Each node mantains the Fermat Blockchain: a public record of all coinbase transactions where the protocol issues new fermats. This role is ruled by the Fermat Consensus Protocol.
+
+### Fermat Clients
+
+Fermat clients run the Fermat Framework, which in turn run the Fermat Components (libraries, add-ons, plug-ins, GUIs, etc.). Clients adhere to the Fermat Client Protocol.
 
 
 <br>
 ## Fermat Protocol Version 1.0
 
 The Fermat Protocol spans through Fermat Nodes and Fermat Clients. It defines the internal rules on each of them and also the rules of engagement between each other.
-
-### Fermat Nodes
-
-Fermat nodes performs several tasks at the same time. For each one of them, the protocol has it own set of rules:
-
-#### Mantains the Distributed Nodes Catalogue
-
-Each node mantains a full catalogue of all nodes registered in the network.
-
-#### Mantains an Identities Catalogue
-
-Each node mantains a part of a distributed catalogue of the End User identities. This catalogue is designed to facilitate End Users to find each other.
-
-#### Act as Identities' Home
-
-Each node is home to a set of End Users identities. These identities can receive calls only through their home node.
-
-#### Acts as a Call Bridge
-
-Each node interconects clients between each other in order to let them freely transfer information between them.
-
-#### Mantains the Fermat Blockchain
-
-Each node mantains the Fermat Blockchain: a public record of all coinbase transactions where the protocol issues new fermats.
-
-### Fermat Clients
-
-Fermat clients run the Fermat Framework, which in turn run the Fermat Components (libraries, add-ons, plug-ins, GUIs, etc.). 
