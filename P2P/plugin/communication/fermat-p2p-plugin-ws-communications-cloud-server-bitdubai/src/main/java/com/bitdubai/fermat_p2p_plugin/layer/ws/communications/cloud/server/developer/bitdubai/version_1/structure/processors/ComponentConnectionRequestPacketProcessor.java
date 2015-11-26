@@ -104,7 +104,9 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
         }catch (Exception e){
 
             System.out.println("ComponentConnectionRequestPacketProcessor - requested connection is no possible ");
-           // e.printStackTrace();
+            System.out.println("ComponentConnectionRequestPacketProcessor - cause: "+e.getMessage());
+
+            // e.printStackTrace();
 
             /*
              * Get the client connection destination

@@ -12,12 +12,11 @@ import java.util.Arrays;
 /**
  * Created by Nerio on 22/09/15.
  */
-public class AssetIssuerActorRecord implements ActorAssetIssuer, DAPActor {
+public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
     private String              publicLinkedIdentity    ;
     private String              actorPublicKey          ;
     private String              name                    ;
-    private Actors              type = Actors.DAP_ASSET_ISSUER;
     private String              description             ;
     private long                registrationDate        ;
     private long                lastConnectionDate      ;
@@ -143,11 +142,6 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer, DAPActor {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public Actors getType() {
-        return type;
     }
 
     /**

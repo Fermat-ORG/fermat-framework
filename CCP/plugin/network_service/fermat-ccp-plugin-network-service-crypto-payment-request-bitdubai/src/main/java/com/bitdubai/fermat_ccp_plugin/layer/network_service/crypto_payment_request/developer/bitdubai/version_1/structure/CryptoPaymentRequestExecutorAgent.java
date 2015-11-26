@@ -403,7 +403,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                 cpr.getAmount()           ,
                 cpr.getStartTimeStamp()   ,
                 cpr.getAction()           ,
-                cpr.getNetworkType()
+                cpr.getNetworkType(),
+                cpr.getReferenceWallet()
         ).toJson();
     }
 

@@ -26,11 +26,13 @@ public enum NetworkServiceType implements FermatEnum {
     ASSET_TRANSMISSION               ("ASS_TRANS"),
     CRYPTO_ADDRESSES                 ("CADD"),
     CRYPTO_BROKER                    ("CRBR"),
+    CRYPTO_CUSTOMER                  ("CRCU"),
     CRYPTO_PAYMENT_REQUEST           ("CPR"),
     CRYPTO_TRANSMISSION              ("CRY_TRANS"),
     INTRA_USER                       ("INT_USR"),
     TEMPLATE                         ("TEMP"),
     TRANSACTION_TRANSMISSION         ("TRTX"),
+    NEGOTIATION_TRANSMISSION         ("NGTR"),
     UNDEFINED                        ("UNDEF"),
 
     ;
@@ -51,11 +53,13 @@ public enum NetworkServiceType implements FermatEnum {
             case "ASS_TRANS" : return ASSET_TRANSMISSION;
             case "CADD"      : return CRYPTO_ADDRESSES;
             case "CRBR"      : return CRYPTO_BROKER;
+            case "CRCU"      : return CRYPTO_CUSTOMER;
             case "CPR"       : return CRYPTO_PAYMENT_REQUEST;
             case "CRY_TRANS" : return CRYPTO_TRANSMISSION;
             case "INT_USR"   : return INTRA_USER;
             case "TEMP"      : return TEMPLATE;
             case "TRTX"      : return TRANSACTION_TRANSMISSION;
+            case "NGTR"   : return NEGOTIATION_TRANSMISSION;
             case "UNDEF"     : return UNDEFINED;
 
             default: throw new InvalidParameterException(

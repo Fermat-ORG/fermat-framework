@@ -75,7 +75,12 @@ public class NoIdentityFragment extends FermatWalletFragment {
         ((Button) rootView.findViewById(R.id.btn_create)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+                Toast.makeText(getActivity(),"Comming soon",Toast.LENGTH_SHORT).show();
+                try {
+                    changeActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -83,15 +88,15 @@ public class NoIdentityFragment extends FermatWalletFragment {
     @Override
     public void onResume() {
         super.onResume();
-        try {
-            if (referenceWalletSession.getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser().size()>0) {
-                changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-            }
-        } catch (CantListCryptoWalletIntraUserIdentityException e) {
-            e.printStackTrace();
-        } catch (CantGetCryptoWalletException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if (referenceWalletSession.getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser().size()>0) {
+//                changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+//            }
+//        } catch (CantListCryptoWalletIntraUserIdentityException e) {
+//            e.printStackTrace();
+//        } catch (CantGetCryptoWalletException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

@@ -148,7 +148,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         }catch (Exception e){
 
             System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - requested connection is no possible ");
-            //e.printStackTrace();
+            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - cause: "+e.getMessage());
 
             /*
              * Get the client connection destination

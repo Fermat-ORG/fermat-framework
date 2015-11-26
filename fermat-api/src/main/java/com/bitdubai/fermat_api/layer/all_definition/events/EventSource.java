@@ -18,6 +18,7 @@ public enum EventSource implements FermatEnum {
     ACTOR_ASSET_ISSUER                      ("AAI"),
     ACTOR_ASSET_REDEEM_POINT                ("AAR"),
     ACTOR_NETWORK_SERVICE_CRYPTO_BROKER     ("ACB"),
+    ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER   ("ACC"),
     COMMUNICATION_CLOUD_PLUGIN              ("CCL"),
     CRYPTO_ADDRESS_BOOK                     ("CAB"),
     CRYPTO_NETWORK_BITCOIN_PLUGIN           ("CNB"),
@@ -45,6 +46,7 @@ public enum EventSource implements FermatEnum {
     NETWORK_SERVICE_MONEY_PLUGIN            ("NSM"),
     NETWORK_SERVICE_TEMPLATE_PLUGIN         ("NTP"),
     NETWORK_SERVICE_TRANSACTION_TRANSMISSION("NTT"),
+    NETWORK_SERVICE_NEGOTIATION_TRANSMISSION("NNT"),
     NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN ("NWR"),
     NETWORK_SERVICE_WALLET_COMMUNITY_PLUGIN ("NWC"),
     USER_DEVICE_USER_PLUGIN                 ("UDU"),
@@ -70,6 +72,7 @@ public enum EventSource implements FermatEnum {
             case "AAI":    return ACTOR_ASSET_ISSUER;
             case "AAR":    return ACTOR_ASSET_REDEEM_POINT;
             case "ACB":    return ACTOR_NETWORK_SERVICE_CRYPTO_BROKER;
+            case "ACC":    return ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER;
             case "CCL":    return COMMUNICATION_CLOUD_PLUGIN;
             case "CAB":    return CRYPTO_ADDRESS_BOOK;
             case "CNB":    return CRYPTO_NETWORK_BITCOIN_PLUGIN;
@@ -97,6 +100,7 @@ public enum EventSource implements FermatEnum {
             case "NMR":    return NETWORK_SERVICE_MONEY_REQUEST_PLUGIN;
             case "NTP":    return NETWORK_SERVICE_TEMPLATE_PLUGIN;
             case "NTT":    return NETWORK_SERVICE_TRANSACTION_TRANSMISSION;
+            case "NNT":    return NETWORK_SERVICE_NEGOTIATION_TRANSMISSION;
             case "NWC":    return NETWORK_SERVICE_WALLET_COMMUNITY_PLUGIN;
             case "NWR":    return NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN;
             case "UDU":    return USER_DEVICE_USER_PLUGIN;
