@@ -88,6 +88,7 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_DATABASE_NAME);
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
+            System.out.println("******* Init Cash Money Restock ******");
             startMonitorAgent();
 
             database.closeDatabase();

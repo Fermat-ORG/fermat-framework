@@ -87,6 +87,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_DATABASE_NAME);
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
+            System.out.println("******* Init Cash Money Destock ******");
             startMonitorAgent();
 
             database.closeDatabase();
