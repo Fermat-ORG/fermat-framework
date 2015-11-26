@@ -121,3 +121,44 @@ Fermat clients run the Fermat Framework, which in turn run the Fermat Components
 ## Fermat Protocol Version 1.0
 
 The Fermat Protocol spans through Fermat Nodes and Fermat Clients. It defines the internal rules on each of them and also the rules of engagement between each other.
+
+### Fermat P2P Protocol
+
+#### Network Discovery
+
+##### New Fermat Node
+
+When a new node boots up for the first time, it must discover other Fermat nodes on the network in order to participate. To start this process, a new node must discover at least one existing node on the network and connect to it. The geographic location of other nodes is relevant; the Fermat network topology is geographically defined. But for the purpose of bootstraping, any existing Fermat node can be selected at random.
+
+A bootstrapping node that knows nothing of the network must be given the IP address of at least one Fermat node, after which it can establish connections through further introductions. The Fermat Node reference implementation contains the IPs and port numbers of several different stable Fermat Node seeds.
+
+Any of these IPs can be used to connect to one node just for introductions, using it as a seed. After the initial seed node is used to form introductions, the bootstrapping node will disconnect from it and use the newly discovered peers.
+
+##### Old Fermat Node
+
+To connect to a known peer, nodes establish a TCP connection, usually to port 9444 (the port generally known as the one used by Fermat), or an alternative port if one is provided. Upon establishing a connection, the node will start a "handshake" (see The initial handshake between peers) by transmitting a version message, which contains basic identifying information, including:
+
+*Protocol_Version*
+
+_A constant that defines the Fermat P2P Protocol version the client node "speaks"._
+
+*Local_Services*
+
+_A list of local services supported by the node._
+
+*Time*
+
+_The current time._
+
+*addrYou*
+
+_The IP address of the remote node as seen from this node._
+
+*addrMe*
+
+_The IP address of the local node, as discovered by the local node._
+
+*subver*
+
+_A sub-version showing the type of software running on this node (the name of the implementation)._
+
