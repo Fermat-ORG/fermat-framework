@@ -40,7 +40,7 @@ public class DAPMessage implements Serializable {
         this.messageType = Validate.verifySetter(messageType, "messageType is null");
     }
 
-    public Object getMessageContent() {
+    public DAPContentMessage getMessageContent() {
         return messageContent;
     }
 
