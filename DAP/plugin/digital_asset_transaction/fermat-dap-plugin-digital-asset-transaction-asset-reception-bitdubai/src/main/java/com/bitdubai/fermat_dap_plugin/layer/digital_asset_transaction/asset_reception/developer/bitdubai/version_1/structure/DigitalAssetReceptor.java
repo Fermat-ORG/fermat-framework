@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -37,12 +38,16 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
     //String digitalAssetMetadataFileStoragePath;
     AssetReceptionDao assetReceptionDao;
     DistributionStatus distributionStatus;
+    BitcoinNetworkManager bitcoinNetworkManager;
 
     DigitalAssetReceptionVault digitalAssetReceptionVault;
     //AssetVaultManager assetVaultManager;
 
-    public DigitalAssetReceptor(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
+    public DigitalAssetReceptor(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) throws CantExecuteDatabaseOperationException {
         super(/*assetVaultManager,*/  pluginId, pluginFileSystem);
+        this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.setBitcoinCryptoNetworkManager(this.bitcoinNetworkManager);
+
         this.errorManager=errorManager;
     }
 
