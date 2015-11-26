@@ -22,10 +22,6 @@ Fermat's tokes data and records are cryptographically stored in a public, decent
 
 Fermat blockchain only records the issuing of new fermats and outsources the transaction processing from the bitcoin network. 
 
-### Token 
-
-
-
 ### Token Generation & Distribution
 
 Fermat implement three different mechanisms for token distribution:
