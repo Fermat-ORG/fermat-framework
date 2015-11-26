@@ -10,6 +10,7 @@ This starts in the originating device and then both flows - value and meta data 
 ===
 image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 
+===
   
 ==== _Continue Reading ..._
 link:book-chapter-12.asciidoc[Crypto Currency Platform]

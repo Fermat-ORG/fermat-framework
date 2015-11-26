@@ -51,10 +51,12 @@ include::book-chapter-20.asciidoc[]
 
 include::book-chapter-21.asciidoc[]
 
+include::book-glossary.asciidoc[]
+
 ////
 include::conventions.asciidoc[]
 
-include::glossary.asciidoc[]
+
 ////
 
 include::index.asciidoc[]
