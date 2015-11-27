@@ -2,11 +2,13 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,6 +22,11 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
     private R resourceProviderManager;
     private ErrorManager errorManager;
     private Map<String,Object> data;
+
+    /**
+     * Map with subApps and public that wallet can connect
+     */
+    protected List<FermatApp> fermatAppsPosibleConnections;
 
 
     public AbstractFermatSession(String publicKey, A fermatApp, ErrorManager errorManager,M moduleManager,R resourceProviderManager) {
@@ -72,6 +79,14 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
 
     public R getResourceProviderManager() {
         return resourceProviderManager;
+    }
+
+    public void setFermatAppsPosibleConnections(List<FermatApp> fermatAppsPosibleConnections) {
+        this.fermatAppsPosibleConnections = fermatAppsPosibleConnections;
+    }
+
+    public List<FermatApp> getPosibleConnections(){
+        return fermatAppsPosibleConnections;
     }
 
 
