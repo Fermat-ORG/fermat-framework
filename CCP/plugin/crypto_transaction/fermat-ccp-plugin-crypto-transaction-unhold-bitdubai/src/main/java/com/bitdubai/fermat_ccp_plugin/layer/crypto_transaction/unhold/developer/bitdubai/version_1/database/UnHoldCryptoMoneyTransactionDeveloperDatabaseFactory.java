@@ -69,7 +69,7 @@ public class UnHoldCryptoMoneyTransactionDeveloperDatabaseFactory implements Dea
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -90,7 +90,7 @@ public class UnHoldCryptoMoneyTransactionDeveloperDatabaseFactory implements Dea
                   /*
                    * We create the new database
                    */
-                database = unHoldCryptoMoneyTransactionDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = unHoldCryptoMoneyTransactionDatabaseFactory.createDatabase(pluginId, UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.

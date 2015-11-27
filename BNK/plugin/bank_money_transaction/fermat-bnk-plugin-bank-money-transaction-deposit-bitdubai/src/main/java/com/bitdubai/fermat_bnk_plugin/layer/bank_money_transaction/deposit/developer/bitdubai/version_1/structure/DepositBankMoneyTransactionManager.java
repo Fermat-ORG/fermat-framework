@@ -40,6 +40,7 @@ public class DepositBankMoneyTransactionManager implements DepositManager {
         depositBankMoneyTransactionDao.registerDepositTransaction(parameters);
         try{
             bankMoneyWallet.getAvailableBalance().credit(bankMoneyTransactionRecord);
+            bankMoneyWallet.getBookBalance().credit(bankMoneyTransactionRecord);
         }catch (CantRegisterCreditException e){
             throw new CantMakeDepositTransactionException(CantRegisterCreditException.DEFAULT_MESSAGE,e,null,null);
         }
@@ -49,14 +50,6 @@ public class DepositBankMoneyTransactionManager implements DepositManager {
 
     public void setDepositBankMoneyTransactionDao(DepositBankMoneyTransactionDao dao){
         depositBankMoneyTransactionDao = dao;
-    }
-
-    public DepositBankMoneyTransactionDao getDepositBankMoneyTransactionDao() {
-        return depositBankMoneyTransactionDao;
-    }
-
-    public BankMoneyWallet getBankMoneyWallet() {
-        return bankMoneyWallet;
     }
 
     public void setBankMoneyWallet(BankMoneyWallet bankMoneyWallet) {

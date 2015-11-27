@@ -9,6 +9,6 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGe
  * Created by jorge on 26-10-2015.
  */
 public interface CryptoCustomerActorManager {
-    CryptoCustomerActorRecord createNewCryptoCustomerActor(String actorPublicKey, String actorName, byte[] actorPhoto) throws CantCreateCryptoCustomerActorException;
-    CryptoCustomerActorRecord getCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey) throws CantGetCryptoCustomerActorException;
+    CryptoCustomerActor createNewCryptoCustomerActor(String actorPublicKey, String actorName, byte[] actorPhoto) throws CantCreateCryptoCustomerActorException;
+    CryptoCustomerActor getCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey) throws CantGetCryptoCustomerActorException;
 }

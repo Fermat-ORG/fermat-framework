@@ -34,7 +34,6 @@ import java.util.List;
  */
 
 public class WalletCashMoneyPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
-    //CashMoneyWallet, CashMoneyWalletBalance, CashMoneyWalletManager {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -69,9 +68,9 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
             this.cashMoneyWalletManagerImpl = new CashMoneyWalletManagerImpl(pluginDatabaseSystem, pluginId, errorManager);
 
             this.serviceStatus = ServiceStatus.STARTED;
-        } catch (Exception e) {
+        } catch (CantStartPluginException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "WalletCashMoneyPluginRoot", null);
         }
     }
 
