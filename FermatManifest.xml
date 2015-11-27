@@ -7324,6 +7324,7 @@
 		<layer name="Wallet" language="java"></layer>
 		<layer name="World" language="java"></layer>
 		<layer name="Identity" language="java"></layer>
+		<layer name="Actor Connection" language="java"></layer>
 		<layer name="Actor Network Service" language="java"></layer>
 		<layer name="Network Service" language="java"></layer>
 		<!-- separator or empty layer -->
