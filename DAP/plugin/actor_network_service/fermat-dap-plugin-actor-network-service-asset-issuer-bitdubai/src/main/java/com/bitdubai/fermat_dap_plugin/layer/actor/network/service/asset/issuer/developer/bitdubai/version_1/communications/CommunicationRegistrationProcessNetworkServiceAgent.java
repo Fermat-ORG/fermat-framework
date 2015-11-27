@@ -10,8 +10,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread {
 
     /*
-* Represent the sleep time for the read or send (5000 milliseconds)
-*/
+     * Represent the sleep time for the read or send (5000 milliseconds)
+     */
     private static final long SLEEP_TIME = 5000;
     private static final long MAX_SLEEP_TIME = 20000;
 
@@ -48,8 +48,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     @Override
     public void run() {
 
-        while (active){
-
+        while (active) {
             try {
 
                 if (communicationsClientConnection.isRegister() && !assetIssuerActorNetworkServicePluginRoot.isRegister()){
@@ -106,7 +105,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     active = Boolean.FALSE;
                 }
             }
-
         }
     }
 
