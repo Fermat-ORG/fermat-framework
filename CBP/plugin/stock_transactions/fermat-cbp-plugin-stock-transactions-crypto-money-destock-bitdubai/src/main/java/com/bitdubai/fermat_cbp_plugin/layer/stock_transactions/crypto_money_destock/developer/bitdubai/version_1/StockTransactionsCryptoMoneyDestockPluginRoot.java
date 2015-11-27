@@ -52,7 +52,8 @@ import java.util.UUID;
  * Created by franklin on 16/11/15.
  */
 public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugin  implements
-        //TODO: Implementar DealsWiths de los modulos BNK y la Wallet CBP
+        //TODO: Documentar y manejo de excepciones.
+        //TODO: Manejo de Eventos
         CryptoMoneyDestockManager,
         DatabaseManagerForDevelopers {
 
@@ -75,7 +76,8 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
+    //TODO:Descomentar luego que esten arrancados estos Plugines: plugin = Plugins.CRYPTO_WALLET
+    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITCOIN_HOLD)
@@ -89,6 +91,7 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
             System.out.println("******* Init Crypto Money Destock ******");
+            testDestock();
             startMonitorAgent();
 
             database.closeDatabase();
@@ -143,7 +146,7 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
 
 
     @Override
-    public void createTransactionDestock(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, float amount, String memo) throws CantCreateCryptoMoneyDestockException {
+    public void createTransactionDestock(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey, float amount, String memo) throws CantCreateCryptoMoneyDestockException {
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         CryptoMoneyDestockTransactionImpl cryptoMoneyRestockTransaction = new CryptoMoneyDestockTransactionImpl(
@@ -151,10 +154,9 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
                 publicKeyActor,
                 cryptoCurrency,
                 cbpWalletPublicKey,
-                bankWalletPublicKey,
+                cryWalletPublicKey,
                 memo,
                 "INIT TRANSACTION",
-                bankAccount,
                 amount,
                 timestamp,
                 TransactionStatusRestockDestock.INIT_TRANSACTION);
@@ -185,5 +187,13 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
 
             stockTransactionsCryptoMoneyDestockMonitorAgent.start();
         }else stockTransactionsCryptoMoneyDestockMonitorAgent.start();
+    }
+
+    private void testDestock(){
+        try {
+            createTransactionDestock("publicKeyActor", CryptoCurrency.CHAVEZCOIN, "cbpWalletPublicKey", "cryWalletPublicKey", 250, "memo");
+        } catch (CantCreateCryptoMoneyDestockException e) {
+            e.printStackTrace();
+        }
     }
 }
