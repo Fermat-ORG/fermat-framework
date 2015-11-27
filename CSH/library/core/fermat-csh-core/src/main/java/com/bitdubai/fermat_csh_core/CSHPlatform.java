@@ -22,7 +22,7 @@ public class CSHPlatform extends AbstractPlatform {
 
         try {
 
-            //registerLayer(new WalletLayer()                 );
+            registerLayer(new WalletLayer()                 );
             registerLayer(new CashMoneyTransactionLayer()   );
 
 

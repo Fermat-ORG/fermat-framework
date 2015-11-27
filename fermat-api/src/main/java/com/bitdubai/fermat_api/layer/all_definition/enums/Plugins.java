@@ -228,7 +228,6 @@ public enum Plugins implements FermatEnum {
     //CBP
     BANK_MONEY_RESTOCK          ("BMRE"),
     BANK_MONEY_DESTOCK          ("BMDE"),
-    BITDUBAI_CBP_STOCK_TRANSACTIONS_BANK_MONEY_RESTOCK ("BCBPSTBMR"),
     CASH_MONEY_RESTOCK          ("CMDE"),
     CASH_MONEY_DESTOCK          ("CMRE"),
     CRYPTO_BROKER_WALLET        ("CBWA"),
