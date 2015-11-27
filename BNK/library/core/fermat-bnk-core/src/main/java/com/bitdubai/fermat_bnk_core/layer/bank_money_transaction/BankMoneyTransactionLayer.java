@@ -21,7 +21,7 @@ public class BankMoneyTransactionLayer extends AbstractLayer {
     @Override
     public void start() throws CantStartLayerException {
         try {
-            //registerPlugin(new DepositBankMoneyTransactionPluginSubsystem());
+            registerPlugin(new DepositBankMoneyTransactionPluginSubsystem());
             registerPlugin(new HoldBankMoneyTransactionPluginSubsystem());
             registerPlugin(new UnholdBankMoneyTransactionPluginSubsystem());
             //registerPlugin(new WithdrawBankMoneyTransactionPluginSubsystem());

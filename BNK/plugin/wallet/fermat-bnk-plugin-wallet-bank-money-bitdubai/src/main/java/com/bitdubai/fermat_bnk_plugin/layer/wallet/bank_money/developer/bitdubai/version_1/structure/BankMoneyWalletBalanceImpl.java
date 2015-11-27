@@ -17,14 +17,11 @@ public class BankMoneyWalletBalanceImpl implements BankMoneyWalletBalance{
 
     BankMoneyWalletDao bankMoneyWalletDao;
 
-    Database database;
-
     BalanceType balanceType;
 
-    public BankMoneyWalletBalanceImpl(Database database,BalanceType balanceType) {
-        this.database = database;
+    public BankMoneyWalletBalanceImpl(BankMoneyWalletDao bankMoneyWalletDao,BalanceType balanceType) {
         this.balanceType = balanceType;
-        bankMoneyWalletDao = new BankMoneyWalletDao(this.database);
+        this.bankMoneyWalletDao = bankMoneyWalletDao;
     }
 
     @Override

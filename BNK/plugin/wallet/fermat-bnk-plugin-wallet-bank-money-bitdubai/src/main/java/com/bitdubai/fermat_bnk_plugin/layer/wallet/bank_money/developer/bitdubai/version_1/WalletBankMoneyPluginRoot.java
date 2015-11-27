@@ -56,9 +56,7 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
     private PluginFileSystem pluginFileSystem;
 
 
-    private BankMoneyWalletDao bankMoneyWalletDao;
-
-    ImplementBankMoney implementBankMoney = new ImplementBankMoney();
+    BankMoneyWalletImpl bankMoneyWallet;
 
     public WalletBankMoneyPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -67,7 +65,9 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
 
     @Override
     public void start() throws CantStartPluginException {
+        System.out.println("platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_BNK_DEPOSIT_BANK_MONEY_TRANSACTION");
         try {
+            bankMoneyWallet = new BankMoneyWalletImpl(this.pluginId,this.pluginDatabaseSystem,this.errorManager);
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -79,23 +79,6 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-
-
-    @Override
-    public BankMoneyWallet loadBankMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyWalletException {
-        BankMoneyWalletImpl bankMoneyWallet= new BankMoneyWalletImpl(this.pluginId,this.pluginDatabaseSystem);
-        try {
-            bankMoneyWallet.initialize();
-        }catch (CantInitializeBankMoneyWalletDatabaseException e){
-            throw new CantLoadBankMoneyWalletException(CantInitializeBankMoneyWalletDatabaseException.DEFAULT_MESSAGE,e,"couldn't initialize bank wallet",null);
-        }
-        return bankMoneyWallet;
-    }
-
-    @Override
-    public void createBankMoneyWallet(String walletPublicKey) throws CantCreateBankMoneyWalletException {
-
-    }
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -122,5 +105,16 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
         }
         return tableRecordList;
     }
+
+    @Override
+    public BankMoneyWallet loadBankMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyWalletException {
+        return bankMoneyWallet;
+    }
+
+    /*@Override
+    public void createBankMoneyWallet(String walletPublicKey) throws CantCreateBankMoneyWalletException {
+
+    }*/
+
 
 }
