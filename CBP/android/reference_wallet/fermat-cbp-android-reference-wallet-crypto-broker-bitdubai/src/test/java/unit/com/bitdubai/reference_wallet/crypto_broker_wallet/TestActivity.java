@@ -15,15 +15,15 @@ public class TestActivity extends Activity implements WizardConfiguration {
     public static final int LAYOUT_ID = android.R.id.content;
 
     @Override
+    public void showWizard(String key, Object... args) {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         LinearLayout view = new LinearLayout(this);
         view.setId(LAYOUT_ID);
         setContentView(view);
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void showWizard(WizardTypes key, Object... args) {
-        // DO NOTHING...
     }
 }

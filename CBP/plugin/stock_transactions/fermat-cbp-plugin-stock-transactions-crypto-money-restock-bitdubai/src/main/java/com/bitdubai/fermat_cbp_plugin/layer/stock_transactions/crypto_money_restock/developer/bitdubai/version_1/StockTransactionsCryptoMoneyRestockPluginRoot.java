@@ -90,7 +90,7 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
             System.out.println("******* Init Crypto Money Restock ******");
-            testRestock();
+            //testRestock();
             startMonitorAgent();
 
             database.closeDatabase();

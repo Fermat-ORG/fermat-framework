@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_csh_core.layer.cash_money_transaction.hold.HoldPluginSubsystem;
 import com.bitdubai.fermat_csh_core.layer.wallet.cash_money.CashMoneyPluginSubsystem;
 
 /**
@@ -13,7 +12,7 @@ import com.bitdubai.fermat_csh_core.layer.wallet.cash_money.CashMoneyPluginSubsy
 public class WalletLayer extends AbstractLayer {
 
     public WalletLayer() {
-        super(Layers.TRANSACTION);
+        super(Layers.WALLET);
     }
 
     public void start() throws CantStartLayerException {
