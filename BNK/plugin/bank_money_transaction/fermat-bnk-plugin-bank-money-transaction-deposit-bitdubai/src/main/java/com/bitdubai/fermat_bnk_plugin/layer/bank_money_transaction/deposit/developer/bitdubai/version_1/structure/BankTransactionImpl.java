@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.deve
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 
 import java.util.UUID;
@@ -68,5 +69,10 @@ public class BankTransactionImpl implements BankTransaction {
     @Override
     public long getTimestamp() {
         return 0;
+    }
+
+    @Override
+    public BankTransactionStatus getBankTransactionStatus() {
+        return null;
     }
 }
