@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -20,8 +19,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
@@ -33,11 +30,7 @@ import org.java_websocket.WebSocketImpl;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communication.server.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot</code> is
@@ -48,22 +41,16 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implements
-        LogManagerForDevelopers,
-        WsCommunicationsCloudClientManager {
-
+public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implements WsCommunicationsCloudClientManager {
 
     /**
-     * Addons References definition...
+     * Addons References definition.
      */
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
     private LocationManager locationManager;
@@ -91,9 +78,10 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
-    //public static final String SERVER_IP = "52.34.94.176"; //AWS PAID INSTANCE
-    public static final String SERVER_IP = "52.11.156.16"; //AWS FREE INSTANCE
-    //public static final String SERVER_IP = "52.11.156.16";
+     //public static final String SERVER_IP = "52.34.94.176"; //AWS PAID INSTANCE
+     public static final String SERVER_IP = "52.11.156.16"; //AWS FREE INSTANCE
+    //public static final String SERVER_IP = "192.168.1.3";
+
 
     /**
      * Represent the DEFAULT_PORT
@@ -104,11 +92,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      * Represent the WEB_SERVICE_PORT
      */
     public static final int WEB_SERVICE_PORT = 8080;
-
-    /**
-     * Represent the newLoggingLevel
-     */
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     /*
      * Hold the list of event listeners
@@ -135,28 +118,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     }
 
     /**
-     * Static method to get the logging level from any class under root.
-     *
-     * @param className
-     * @return
-     */
-    public static LogLevel getLogLevelByClass(String className) {
-        try {
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return WsCommunicationsCloudClientPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e) {
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
-
-    /**
      * This method validate is all required resource are injected into
      * the plugin root by the platform
      *
@@ -167,25 +128,16 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
          /*
          * If all resources are inject
          */
-        if (eventManager == null            ||
-                logManager  == null         ||
-                    locationManager == null ||
-                        errorManager == null) {
+        if (eventManager    == null ||
+            locationManager == null ||
+            errorManager    == null ) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("logManager: " + logManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("locationManager: " + locationManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
+            String context = "Plugin ID: "       + pluginId        + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                             "eventManager: "    + eventManager    + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                             "locationManager: " + locationManager + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                             "errorManager: "    + errorManager;
 
-            String context = contextBuffer.toString();
-            String possibleCause = "No all required resource are injected";
-            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+            CantStartPluginException pluginStartException = new CantStartPluginException(context, "No all required resource are injected");
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
@@ -261,46 +213,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
          */
         this.serviceStatus = ServiceStatus.STOPPED;
 
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see LogManagerForDevelopers#getClassesFullPath()
-     */
-    @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair");
-        /**
-         * I return the values.
-         */
-        return returnedClasses;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see LogManagerForDevelopers#setLoggingLevelPerClass(Map<String, LogLevel>)
-     */
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        /**
-         * I will check the current values and update the LogLevel in those which is different
-         */
-
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            /**
-             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-             */
-            if (WsCommunicationsCloudClientPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                WsCommunicationsCloudClientPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                WsCommunicationsCloudClientPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                WsCommunicationsCloudClientPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            }
-        }
     }
 
     /**

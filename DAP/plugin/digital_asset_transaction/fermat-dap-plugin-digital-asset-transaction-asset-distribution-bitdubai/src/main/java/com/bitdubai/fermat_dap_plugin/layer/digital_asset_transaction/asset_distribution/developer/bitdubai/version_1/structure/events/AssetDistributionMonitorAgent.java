@@ -433,7 +433,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
         /*private ActorAssetUser getActorAssetUser(String senderId) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
             List<ActorAssetUser> actorAssetUserList=actorAssetUserManager.getAllAssetUserActorInTableRegistered();
             for(ActorAssetUser actorAssetUser : actorAssetUserList){
-                if(actorAssetUser.getPublicKey().equals(senderId)){
+                if(actorAssetUser.getActorPublicKey().equals(senderId)){
                     return actorAssetUser;
                 }
             }

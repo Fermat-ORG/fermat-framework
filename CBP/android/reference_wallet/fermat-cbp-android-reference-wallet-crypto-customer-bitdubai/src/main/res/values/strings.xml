@@ -32,4 +32,6 @@
     <string name="sold">Sold</string>
     <string name="sending">Sending</string>
     <string name="receiving">Receiving</string>
+    <string name="ccw_selling_merchandise">Selling %1$s</string>
+    <string name="ccw_broker_exchange_rate_for_selling_item">%1$s/%2$s: %3$s</string>
 </resources>

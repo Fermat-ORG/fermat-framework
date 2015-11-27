@@ -39,6 +39,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_dest
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.structure.CryptoMoneyDestockTransactionImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.structure.StockTransactionCryptoMoneyDestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.structure.events.StockTransactionsCryptoMoneyDestockMonitorAgent;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -77,10 +78,8 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    //TODO: Nompbre del plugin de la interfaz HoldManager, aca el HOLD del CCP que no existe aun
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.CRYPTO_WALLET)
-    //UnholdManager unHoldManager;
-
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITCOIN_HOLD)
+    CryptoHoldTransactionManager cryptoHoldTransactionManager;
 
     @Override
     public void start() throws CantStartPluginException {
@@ -89,6 +88,7 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_DATABASE_NAME);
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
+            System.out.println("******* Init Crypto Money Destock ******");
             startMonitorAgent();
 
             database.closeDatabase();
@@ -102,7 +102,7 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
             }
             catch(CantCreateDatabaseException cantCreateDatabaseException)
             {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             }catch (Exception exception) {
                 throw new CantStartPluginException("Cannot start stockTransactionBankMoneyRestockPlugin plugin.", FermatException.wrapException(exception), null, null);
@@ -179,8 +179,8 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
             stockTransactionsCryptoMoneyDestockMonitorAgent = new StockTransactionsCryptoMoneyDestockMonitorAgent(
                     errorManager,
                     stockTransactionCryptoMoneyDestockManager,
-                    cryptoBrokerWalletManager//,
-                    //unHoldManager
+                    cryptoBrokerWalletManager,
+                    cryptoHoldTransactionManager
             );
 
             stockTransactionsCryptoMoneyDestockMonitorAgent.start();

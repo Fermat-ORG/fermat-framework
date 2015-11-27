@@ -16,7 +16,17 @@ public class Actor extends AssetUserActorRecord
     }
 
     public Actor(AssetUserActorRecord record) {
-        super(record.getPublicKey(), record.getName(), record.getAge(), record.getGenders(), record.getDapConnectionState(), record.getLocationLatitude(), record.getLocationLongitude(),
-                record.getRegistrationDate(), record.getLastConnectionDate(), record.getProfileImage());
+        super(
+                record.getActorPublicKey(),
+                record.getName(),
+                record.getAge(),
+                record.getGenders(),
+                record.getDapConnectionState(),
+                record.getLocationLatitude(),
+                record.getLocationLongitude(),
+                record.getRegistrationDate(),
+                record.getLastConnectionDate(),
+                record.getProfileImage()
+        );
     }
 }

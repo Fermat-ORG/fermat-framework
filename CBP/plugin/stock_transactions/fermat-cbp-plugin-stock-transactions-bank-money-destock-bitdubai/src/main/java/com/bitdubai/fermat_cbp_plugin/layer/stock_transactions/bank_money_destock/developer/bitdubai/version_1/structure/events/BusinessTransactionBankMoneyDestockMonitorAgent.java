@@ -25,6 +25,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destoc
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -138,21 +139,19 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent{
                                     bankMoneyTransaction.getCbpWalletPublicKey(),
                                     bankMoneyTransaction.getActorPublicKey(),
                                     bankMoneyTransaction.getAmount(),
-                                    0,
+                                    new Date().getTime() / 1000,
                                     bankMoneyTransaction.getConcept());
 
                             cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
 
-                            bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
+                            bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                             stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
 
                         } catch (CantPerformTransactionException e) {
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                         } catch (CryptoBrokerWalletNotFoundException e) {
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                         }
-                        bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
-                        stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
                         break;
                     case IN_UNHOLD:
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
@@ -175,19 +174,24 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent{
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
                             stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
                         }
+                        if (BankTransactionStatus.REJECTED.getCode() == bankTransactionStatus.getCode())
+                        {
+                            bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
+                            stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
+                        }
                         break;
                 }
             }
         } catch (DatabaseOperationException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (InvalidParameterException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (MissingBankMoneyDestockDataException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (CantGetUnholdTransactionException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (CantMakeUnholdTransactionException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         }
     }
 }

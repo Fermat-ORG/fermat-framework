@@ -136,7 +136,9 @@ public class CashMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
         List<String> transactionsColumns = new ArrayList<String>();
 
         transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME);
+        transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME);
         transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_ACTOR_PUBLIC_KEY_COLUMN_NAME);
+        transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_PLUGIN_PUBLIC_KEY_COLUMN_NAME);
         transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME);
         transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_AMOUNT_COLUMN_NAME);
         transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_MEMO_COLUMN_NAME);

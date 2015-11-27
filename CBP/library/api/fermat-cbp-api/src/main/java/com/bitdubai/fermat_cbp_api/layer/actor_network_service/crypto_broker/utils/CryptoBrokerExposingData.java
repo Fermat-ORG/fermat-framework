@@ -13,17 +13,14 @@ import java.util.Arrays;
 public final class CryptoBrokerExposingData {
 
     private final String publicKey;
-    private final Actors actorType;
     private final String alias    ;
     private final byte[] image    ;
 
     public CryptoBrokerExposingData(final String publicKey,
-                                    final Actors actorType,
                                     final String alias    ,
                                     final byte[] image    ) {
 
         this.publicKey = publicKey;
-        this.actorType = actorType;
         this.alias     = alias    ;
         this.image     = image    ;
     }
@@ -33,13 +30,6 @@ public final class CryptoBrokerExposingData {
      */
     public final String getPublicKey() {
         return publicKey;
-    }
-
-    /**
-     * @return an element of actors enum representing the actor type of the sender.
-     */
-    public final Actors getActorType() {
-        return actorType;
     }
 
     /**
@@ -60,7 +50,6 @@ public final class CryptoBrokerExposingData {
     public String toString() {
         return "CryptoBrokerExposingData{" +
                 "publicKey='" + publicKey + '\'' +
-                ", actorType=" + actorType +
                 ", alias='" + alias + '\'' +
                 ", image=" + Arrays.toString(image) +
                 '}';

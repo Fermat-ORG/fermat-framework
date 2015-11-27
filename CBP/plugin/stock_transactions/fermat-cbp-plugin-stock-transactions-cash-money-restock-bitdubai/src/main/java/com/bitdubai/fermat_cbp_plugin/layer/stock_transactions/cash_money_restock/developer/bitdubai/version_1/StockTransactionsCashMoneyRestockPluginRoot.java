@@ -88,6 +88,7 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_DATABASE_NAME);
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
+            System.out.println("******* Init Cash Money Restock ******");
             startMonitorAgent();
 
             database.closeDatabase();
@@ -101,7 +102,7 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
             }
             catch(CantCreateDatabaseException cantCreateDatabaseException)
             {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             }catch (Exception exception) {
                 throw new CantStartPluginException("Cannot start stockTransactionBankMoneyRestockPlugin plugin.", FermatException.wrapException(exception), null, null);

@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorNetworkServicePluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.ConnectionNewsDao;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -39,33 +40,31 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
     private final CryptoBrokerActorNetworkServicePluginRoot cryptoBrokerActorNetworkServicePluginRoot;
     private final ErrorManager                            errorManager                           ;
     private final EventManager                            eventManager                           ;
-    //private final CryptoAddressesNetworkServiceDao        dao                                    ;
+    private final ConnectionNewsDao                       dao                                    ;
     private final WsCommunicationsCloudClientManager      wsCommunicationsCloudClientManager     ;
 
     public CryptoBrokerExecutorAgent(final CryptoBrokerActorNetworkServicePluginRoot cryptoBrokerActorNetworkServicePluginRoot,
-                                     final ErrorManager errorManager,
-                                     final EventManager eventManager,
-                                    // final CryptoAddressesNetworkServiceDao dao,
-                                     final WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
+                                     final ErrorManager                              errorManager                             ,
+                                     final EventManager                              eventManager                             ,
+                                     final ConnectionNewsDao                         dao                                      ,
+                                     final WsCommunicationsCloudClientManager        wsCommunicationsCloudClientManager       ) {
 
-        this.cryptoBrokerActorNetworkServicePluginRoot      = cryptoBrokerActorNetworkServicePluginRoot;
-        this.errorManager                                 = errorManager                           ;
-        this.eventManager                                 = eventManager                           ;
-      //  this.dao                                          = dao                                    ;
-        this.wsCommunicationsCloudClientManager           = wsCommunicationsCloudClientManager     ;
+        this.cryptoBrokerActorNetworkServicePluginRoot = cryptoBrokerActorNetworkServicePluginRoot;
+        this.errorManager                              = errorManager                             ;
+        this.eventManager                              = eventManager                             ;
+        this.dao                                       = dao                                      ;
+        this.wsCommunicationsCloudClientManager        = wsCommunicationsCloudClientManager       ;
 
-        this.status                                       = AgentStatus.CREATED                    ;
+        this.status                                    = AgentStatus.CREATED                      ;
 
         this.poolConnectionsWaitingForResponse = new HashMap<>();
 
-            //TODO: crypto address comentado porque no funciona
 //        Create a thread to send the messages
         this.agentThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (isRunning()) {
                     sendCycle();
-
                     receiveCycle();
                 }
             }
@@ -124,7 +123,6 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
             reportUnexpectedError(FermatException.wrapException(e));
         }
-
     }
 
     private void processSend() {

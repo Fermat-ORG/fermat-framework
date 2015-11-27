@@ -83,7 +83,7 @@
 
         <activity
             android:name="com.bitdubai.android_core.app.DesktopActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppThemeDesktop"
             >
         </activity>
 
@@ -98,6 +98,7 @@
         <activity
             android:name="com.bitdubai.android_core.app.WizardActivity"
             android:label="Wizard"
+            android:theme="@style/AppTheme.NoNavigation"
             android:screenOrientation="portrait" />
 
     </application>

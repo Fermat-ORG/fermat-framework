@@ -25,8 +25,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class HomeServlet extends HttpServlet {
 
-
-
     @Override
     public void init(final ServletConfig config) throws ServletException {
         super.init(config);
@@ -36,8 +34,8 @@ public class HomeServlet extends HttpServlet {
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
         writer.write("<html>\n" +
-                "<head><title>Fermat - Network Node Server</title></head>\n" +
-                "<body><h1>Your Network Node Server is running :)</h1></body>\n" +
+                "<head><title>Fermat - Network Node</title></head>\n" +
+                "<body><h1>Your Fermat - Network Node is running :)</h1></body>\n" +
                 "</html>");
         writer.close();
     }

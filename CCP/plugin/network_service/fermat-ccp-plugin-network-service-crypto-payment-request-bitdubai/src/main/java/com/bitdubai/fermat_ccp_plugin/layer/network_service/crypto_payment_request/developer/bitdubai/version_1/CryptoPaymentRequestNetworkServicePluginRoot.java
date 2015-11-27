@@ -12,6 +12,8 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory;
@@ -172,7 +174,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                                                final String                description      ,
                                                final long                  amount           ,
                                                final long                  startTimeStamp   ,
-                                               final BlockchainNetworkType networkType      ) throws CantSendRequestException {
+                                               final BlockchainNetworkType networkType      ,
+                                               final ReferenceWallet        referenceWallet) throws CantSendRequestException {
 
         System.out.println("********** Crypto Payment Request NS -> sending request. PROCESSING_SEND - REQUEST - SENT.");
 
@@ -195,7 +198,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     direction,
                     action,
                     protocolState,
-                    networkType
+                    networkType,
+                    referenceWallet
             );
 
             System.out.println("********** Crypto Payment Request NS -> sending request. PROCESSING_SEND - REQUEST - SENT - OK.");
@@ -801,6 +805,16 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
     }
 
+    @Override
+    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+    }
+
+    @Override
+    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+    }
+
     /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
      */
@@ -878,7 +892,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     direction,
                     action,
                     protocolState,
-                    requestMessage.getNetworkType()
+                    requestMessage.getNetworkType(),
+                    requestMessage.getReferenceWallet()
             );
 
         } catch(CantCreateCryptoPaymentRequestException e) {

@@ -43,23 +43,38 @@ public class AssetFactoryAdapter extends FermatAdapter<AssetFactory, AssetHolder
         switch (data.getState()) {
             case DRAFT:
                 renderDraf(holder, data, position);
+                holder.itemView.setLongClickable(true);
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        if (menuItemClick != null) {
+                            menuItemClick.onMenuItemClickListener(view, data, position);
+                        }
+                        return true;
+                    }
+                });
                 break;
             case FINAL:
                 renderFinal(holder, data, position);
+                holder.itemView.setLongClickable(false);
                 break;
             case PENDING_FINAL:
                 renderPendingFinal(holder, data, position);
+                holder.itemView.setLongClickable(false);
                 break;
             default:
                 holder.itemView.setVisibility(View.INVISIBLE);
+                holder.itemView.setLongClickable(false);
                 break;
         }
     }
 
     private void renderPendingFinal(AssetHolder holder, AssetFactory data, int position) {
         holder.rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+        holder.bottomLine.setVisibility(View.GONE);
         holder.state.setTextColor(ContextCompat.getColor(context, R.color.state_color_publishing));
         holder.state.setBackgroundResource(R.drawable.white);
+        holder.state.setVisibility(View.VISIBLE);
         holder.name.setTextColor(ContextCompat.getColor(context, R.color.white_asset_name));
         holder.amount.setTextColor(ContextCompat.getColor(context, R.color.white_amount));
         holder.bitcoins.setTextColor(ContextCompat.getColor(context, R.color.white_bitcoins));
@@ -70,12 +85,14 @@ public class AssetFactoryAdapter extends FermatAdapter<AssetFactory, AssetHolder
     }
 
     private void renderFinal(AssetHolder holder, AssetFactory data, int position) {
-        holder.rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+        holder.rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.dark_gray));
+        holder.bottomLine.setVisibility(View.VISIBLE);
         holder.state.setTextColor(ContextCompat.getColor(context, R.color.state_color_publishing));
+        holder.state.setVisibility(View.GONE);
         holder.state.setBackgroundResource(R.drawable.white);
-        holder.name.setTextColor(ContextCompat.getColor(context, R.color.white_asset_name));
-        holder.amount.setTextColor(ContextCompat.getColor(context, R.color.white_amount));
-        holder.bitcoins.setTextColor(ContextCompat.getColor(context, R.color.white_bitcoins));
+        holder.name.setTextColor(ContextCompat.getColor(context, R.color.white));
+        holder.amount.setTextColor(ContextCompat.getColor(context, R.color.black));
+        holder.bitcoins.setTextColor(ContextCompat.getColor(context, R.color.black));
         holder.name.setText(data.getName() != null ? data.getName() : context.getString(R.string.app_unnamed));
         holder.state.setText(R.string.home_asset_state_published);
         holder.amount.setText(String.format(context.getString(R.string.home_row_asset_amount), data.getQuantity()));
@@ -84,8 +101,10 @@ public class AssetFactoryAdapter extends FermatAdapter<AssetFactory, AssetHolder
 
     private void renderDraf(AssetHolder holder, AssetFactory data, int position) {
         holder.rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.blue));
+        holder.bottomLine.setVisibility(View.GONE);
         holder.state.setTextColor(ContextCompat.getColor(context, R.color.state_color_editable));
         holder.state.setBackgroundResource(R.drawable.blue);
+        holder.state.setVisibility(View.VISIBLE);
         holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue_asset_name));
         holder.amount.setTextColor(ContextCompat.getColor(context, R.color.blue_amount));
         holder.bitcoins.setTextColor(ContextCompat.getColor(context, R.color.blue_bitcoins));
@@ -93,5 +112,9 @@ public class AssetFactoryAdapter extends FermatAdapter<AssetFactory, AssetHolder
         holder.state.setText(R.string.home_asset_state_editable);
         holder.amount.setText(String.format(context.getString(R.string.home_row_asset_amount), data.getQuantity()));
         holder.bitcoins.setText(String.format(context.getString(R.string.home_row_asset_bitcoins), data.getAmount()));
+    }
+
+    public void setMenuItemClick(PopupMenu menuItemClick) {
+        this.menuItemClick = menuItemClick;
     }
 }

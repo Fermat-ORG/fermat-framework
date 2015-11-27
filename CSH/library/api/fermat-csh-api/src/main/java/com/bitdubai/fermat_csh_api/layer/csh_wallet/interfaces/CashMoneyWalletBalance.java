@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces;
 
+import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetBalanceException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterHoldException;
@@ -13,19 +15,26 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterUnhol
 
 public interface CashMoneyWalletBalance {
 
+    /**
+     * Allows the balance to be changed, so that the other methods of this class
+     * affect that balance.
+     */
+    public void changeBalanceTo(BalanceType balanceType);
+
 
     /**
      * Returns the Balance this CashMoneyWalletBalance belongs to. (Can be available or book)
      *
      * @return A double, containing the balance.
      */
-    double getBalance() throws CantGetBalanceException;
+    double getBalance ()throws CantGetCashMoneyWalletBalanceException;
 
     /**
      * Registers a debit on the Balance of this CashMoneyWalletBalance. (Can be available or book)
      *
      * @param cashMoneyWalletTransaction Contains the details of the debit transaction
      */
+
     void debit(CashMoneyWalletTransaction cashMoneyWalletTransaction) throws CantRegisterDebitException;
 
     /**
@@ -35,18 +44,6 @@ public interface CashMoneyWalletBalance {
      */
     void credit(CashMoneyWalletTransaction cashMoneyWalletTransaction) throws CantRegisterCreditException;
 
-    /**
-     * Registers a hold on the Available Balance of this CashMoneyWalletBalance.
-     *
-     * @param cashMoneyWalletTransaction Contains the details of the hold transaction
-     */
-    void hold(CashMoneyWalletTransaction cashMoneyWalletTransaction) throws CantRegisterHoldException;
 
-    /**
-     * Registers an unhold on the Availiable Balance of this CashMoneyWalletBalance.
-     *
-     * @param cashMoneyWalletTransaction Contains the details of the unhold transaction
-     */
-    void unhold(CashMoneyWalletTransaction cashMoneyWalletTransaction) throws CantRegisterUnholdException;
 
 }

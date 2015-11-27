@@ -18,7 +18,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDao;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDeveloperDatabaseFactory;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantInitializeCashMoneyWalletDatabaseException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure.CashMoneyWalletManagerImpl;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -30,7 +34,6 @@ import java.util.List;
  */
 
 public class WalletCashMoneyPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
-    //CashMoneyWallet, CashMoneyWalletBalance, CashMoneyWalletManager {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -47,7 +50,6 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
 
     CashMoneyWalletManagerImpl cashMoneyWalletManagerImpl;
 
-
     /*
      * PluginRoot Constructor
      */
@@ -56,54 +58,75 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
     }
 
 
+
+
+
     @Override
     public void start() throws CantStartPluginException {
-        try {
-            cashMoneyWalletManagerImpl = new CashMoneyWalletManagerImpl(pluginDatabaseSystem, pluginId, errorManager);
-        } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
-        }
 
-        serviceStatus = ServiceStatus.STARTED;
+        try {
+            this.cashMoneyWalletManagerImpl = new CashMoneyWalletManagerImpl(pluginDatabaseSystem, pluginId, errorManager);
+
+            this.serviceStatus = ServiceStatus.STARTED;
+        } catch (CantStartPluginException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "WalletCashMoneyPluginRoot", null);
+        }
     }
 
+
+
+
+
+
+
+    /*
+     * DatabaseManagerForDevelopers interface implementation
+     */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        CashMoneyWalletDeveloperDatabaseFactory factory = new CashMoneyWalletDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        return factory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        CashMoneyWalletDeveloperDatabaseFactory factory = new CashMoneyWalletDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        return factory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        CashMoneyWalletDeveloperDatabaseFactory factory = new CashMoneyWalletDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        List<DeveloperDatabaseTableRecord> tableRecordList = null;
+        try {
+            factory.initializeDatabase();
+            tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeCashMoneyWalletDatabaseException cantInitializeException) {
+            FermatException e = new CantDeliverDatabaseException("Database cannot be initialized", cantInitializeException, "WalletCashMoneyPluginRoot", "");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        return tableRecordList;
     }
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+    //TODO: Legacy code, review and decide fate.
 
 /*
-    TODO: Legacy code, review and decide fate.
-
-
-    /*
-    @Override
-    public void start() throws CantStartPluginException {
-        try {
-            this.cashMoneyWalletDao = new CashMoneyWalletDao(pluginDatabaseSystem);
-            cashMoneyWalletDao.initializeDatabase(pluginId);
-            this.serviceStatus = ServiceStatus.STARTED;
-        } catch (Exception exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-    }
-
 
     @Override
     public double getBookBalance(BalanceType balanceType) throws CantTransactionCashMoneyException {

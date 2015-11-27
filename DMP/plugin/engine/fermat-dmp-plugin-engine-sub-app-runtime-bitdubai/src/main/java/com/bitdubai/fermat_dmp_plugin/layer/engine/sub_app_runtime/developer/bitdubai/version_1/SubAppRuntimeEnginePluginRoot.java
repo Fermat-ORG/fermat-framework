@@ -249,7 +249,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_FACTORY_CREATE_STEP_2);
             runtimeWizard.addPage(runtimeWizardPage);
             /* Adding wizard */
-            runtimeActivity.addWizard(WizardTypes.CWP_WALLET_FACTORY_CREATE_NEW_PROJECT, runtimeWizard);
+            runtimeActivity.addWizard(WizardTypes.CWP_WALLET_FACTORY_CREATE_NEW_PROJECT.getKey(), runtimeWizard);
 
             /**
              *  Edit Activity
@@ -332,7 +332,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_3);
             runtimeWizard.addPage(runtimeWizardPage);
 
-            runtimeActivity.addWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT, runtimeWizard);
+            runtimeActivity.addWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT.getKey(), runtimeWizard);
 
             runtimeSideMenu = new SideMenu();
             runtimeMenuItem = new MenuItem();
@@ -665,6 +665,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //Activity 3
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
             subAppIntraUser.addActivity(runtimeActivity);
             runtimeActivity.setColor("#FF0B46F0");
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
@@ -685,6 +686,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS.getCode());
             runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
             runtimeActivity.setColor("#FF0B46F0");
 
             runtimeTitleBar = new TitleBar();
@@ -740,6 +742,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode());
             runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
             runtimeActivity.setColor("#FF0B46F0");
+            runtimeActivity.setBackPublicKey(communityPublicKey);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Request list");
@@ -792,6 +795,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL.getCode());
             runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
             runtimeActivity.setColor("#FF0B46F0");
 
             runtimeTitleBar = new TitleBar();
@@ -892,6 +896,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.DAP_ASSET_EDITOR_ACTIVITY);
+            runtimeActivity.setBackActivity(Activities.DAP_MAIN);
             runtimeActivity.setColor("#1d1d25");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
@@ -1024,7 +1029,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Intra user Identity");
+            runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setTitleColor("#a2b2da");
             runtimeTitleBar.setLabelSize(16);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 

@@ -232,7 +232,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                                 digitalAssetMetadata,
                                                 cryptoTransaction,
                                                 userPublicKey,
-                                                actorAssetRedeemPointManager.getActorAssetRedeemPoint().getPublicKey());
+                                                actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
 
                                         AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.BOOK);
 
@@ -268,7 +268,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                                 metadata,
                                                 cryptoTransaction,
                                                 userPublicKey,
-                                                actorAssetRedeemPointManager.getActorAssetRedeemPoint().getPublicKey());
+                                                actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
 
                                         //CREDIT ON AVAILABLE BALANCE.
                                         AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.AVAILABLE);

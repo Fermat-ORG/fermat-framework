@@ -6,7 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventLi
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionNewsEvent;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestNewsEvent;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestUpdatesEvent;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingNewContractStatusUpdate;
 
 /**
  * The enum <code>com.bitdubai.fermat_cbp_api.fermat_cbp_api.events.enums.EventType</code>
@@ -22,9 +24,15 @@ public enum EventType implements FermatEventEnum {
     /**
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
-    CRYPTO_BROKER_CONNECTION_NEWS("CBCNWS") {
-        public final FermatEvent getNewEvent() { return new CryptoBrokerConnectionNewsEvent(this); }
+    CRYPTO_BROKER_CONNECTION_REQUEST_NEWS("CBCRNWS") {
+        public final FermatEvent getNewEvent() { return new CryptoBrokerConnectionRequestNewsEvent(this); }
     },
+    CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES("CBCRUPD") {
+        public final FermatEvent getNewEvent() { return new CryptoBrokerConnectionRequestUpdatesEvent(this); }
+    },
+    INCOMING_NEW_CONTRACT_STATUS_UPDATE("INCSU") {
+        public final FermatEvent getNewEvent() { return new IncomingNewContractStatusUpdate(this);}
+    }
 
     ;
 

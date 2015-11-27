@@ -371,6 +371,16 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
                 PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.setContent(digitalAssetInnerXML);
                 pluginTextFile.persistToMedia();
+
+                /**
+                 * I'm also saving to file the DigitalAssetMetadata of this digital Asset.
+                 */
+                String digitalAssetMetadataFilename = assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey() + "_metadata";
+                String digitalAssetMetadataXML = assetIssuerWalletTransactionRecord.getDigitalAssetMetadata().toString();
+                pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, digitalAssetMetadataFilename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                pluginTextFile.setContent(digitalAssetMetadataXML);
+                pluginTextFile.persistToMedia();
+
             }else{
                 transaction.addRecordToUpdate(databaseTable, assetBalanceRecord);
             }
@@ -400,15 +410,18 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
     }
     private DatabaseTableRecord constructAssetIssuerWalletRecord(final AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance){
         DatabaseTableRecord record = getAssetIssuerWalletTable().getEmptyRecord();
-        record.setUUIDValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TABLE_ID_COLUMN_NAME                   , UUID.randomUUID());
+        record.setUUIDValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TABLE_ID_COLUMN_NAME, UUID.randomUUID());
         record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME           , assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_VERIFICATION_ID_COLUMN_NAME            , assetIssuerWalletTransactionRecord.getIdTransaction());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME                      , transactionType.getCode());
-        record.setLongValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_AMOUNT_COLUMN_NAME                    , assetIssuerWalletTransactionRecord.getAmount());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_MEMO_COLUMN_NAME                      , assetIssuerWalletTransactionRecord.getMemo());
-        record.setLongValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME                , assetIssuerWalletTransactionRecord.getTimestamp());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_VERIFICATION_ID_COLUMN_NAME, assetIssuerWalletTransactionRecord.getIdTransaction());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME, transactionType.getCode());
+        record.setLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_AMOUNT_COLUMN_NAME, assetIssuerWalletTransactionRecord.getAmount());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_MEMO_COLUMN_NAME, assetIssuerWalletTransactionRecord.getMemo());
+        record.setLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME, assetIssuerWalletTransactionRecord.getTimestamp());
         record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TRANSACTION_HASH_COLUMN_NAME          , assetIssuerWalletTransactionRecord.getDigitalAssetMetadataHash());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ADDRESS_FROM_COLUMN_NAME              , assetIssuerWalletTransactionRecord.getAddressFrom().getAddress());
+
+        if (assetIssuerWalletTransactionRecord.getAddressFrom() != null)
+            record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ADDRESS_FROM_COLUMN_NAME              , assetIssuerWalletTransactionRecord.getAddressFrom().getAddress());
+
         record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ADDRESS_TO_COLUMN_NAME                , assetIssuerWalletTransactionRecord.getAddressTo().getAddress());
         record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME              , balanceType.getCode());
         record.setLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, availableRunningBalance);

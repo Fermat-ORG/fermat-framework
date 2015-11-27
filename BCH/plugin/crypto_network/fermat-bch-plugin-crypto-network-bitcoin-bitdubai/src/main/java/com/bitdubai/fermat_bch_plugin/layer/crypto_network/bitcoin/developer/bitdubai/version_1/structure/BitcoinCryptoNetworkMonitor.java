@@ -9,13 +9,16 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 
+import org.bitcoinj.core.AbstractPeerEventListener;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
+import org.bitcoinj.core.FilteredBlock;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.Wallet;
@@ -44,6 +47,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     Wallet wallet;
     PeerGroup peerGroup;
     File walletFileName;
+    BlockChain blockChain;
     final NetworkParameters NETWORK_PARAMETERS;
 
 
@@ -77,16 +81,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         //todo move this to the correct new thread format.
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    doTheMainTask();
-                } catch (BlockchainException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        try {
+            doTheMainTask();
+        } catch (BlockchainException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -115,75 +114,71 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     private void doTheMainTask() throws BlockchainException {
         System.out.println("Crypto Network starting and connecting...");
 
-        /**
-         * creates the blockchain object for the specified network.
-         */
+        try{
+            /**
+             * creates the blockchain object for the specified network.
+             */
 //        BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS, wallet);
 //        BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
-        BlockStore blockStore = new MemoryBlockStore(NETWORK_PARAMETERS);
-        BlockChain blockChain = null;
-        try {
-            blockChain = new BlockChain(NETWORK_PARAMETERS, wallet, blockStore);
-        } catch (BlockStoreException e) {
+            BlockStore blockStore = new MemoryBlockStore(NETWORK_PARAMETERS);
+            try {
+                blockChain = new BlockChain(NETWORK_PARAMETERS, wallet, blockStore);
+            } catch (BlockStoreException e) {
+                e.printStackTrace();
+            }
+
+
+            /**
+             * creates the peerGroup object
+             */
+            peerGroup = new PeerGroup(NETWORK_PARAMETERS, blockChain);
+            peerGroup.addWallet(this.wallet);
+
+            /**
+             * add the events
+             */
+            BitcoinNetworkEvents events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId, this.walletFileName);
+            peerGroup.addEventListener(events);
+            this.wallet.addEventListener(events);
+            blockChain.addListener(events);
+
+
+            /**
+             * I will connect to the regTest server or search for peers if we are in a different network.
+             */
+            if (NETWORK_PARAMETERS == RegTestParams.get()){
+                /**
+                 * Peer 1
+                 */
+                InetSocketAddress inetSocketAddress1 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_PORT);
+                PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
+                peerGroup.addAddress(peerAddress1);
+
+                /**
+                 * Peer 2
+                 */
+                InetSocketAddress inetSocketAddress2 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_PORT);
+                PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
+                peerGroup.addAddress(peerAddress2);
+            } else
+                peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
+
+            /**
+             * Define internal agent information.
+             */
+            peerGroup.setUserAgent(BitcoinNetworkConfiguration.USER_AGENT_NAME, BitcoinNetworkConfiguration.USER_AGENT_VERSION);
+
+            /**
+             * starts the monitoring
+             */
+            peerGroup.setDownloadTxDependencies(true);
+            peerGroup.start();
+            peerGroup.startBlockChainDownload(null);
+        } catch (Exception e){
             e.printStackTrace();
         }
 
 
-        /**
-         * creates the peerGroup object
-         */
-        peerGroup = new PeerGroup(NETWORK_PARAMETERS, blockChain);
-        peerGroup.addWallet(this.wallet);
-
-        /**
-         * add the events
-         */
-        BitcoinNetworkEvents events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId, this.walletFileName);
-        peerGroup.addEventListener(events);
-        this.wallet.addEventListener(events);
-        blockChain.addListener(events);
-
-
-        /**
-         * I will connect to the regTest server or search for peers if we are in a different network.
-         */
-        if (NETWORK_PARAMETERS == RegTestParams.get()){
-            /**
-             * Peer 1
-             */
-            InetSocketAddress inetSocketAddress1 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_PORT);
-           PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
-            peerGroup.addAddress(peerAddress1);
-
-            /**
-             * Peer 2
-             */
-            InetSocketAddress inetSocketAddress2 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_PORT);
-            PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
-            peerGroup.addAddress(peerAddress2);
-        } else
-            peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
-
-        /**
-         * Define internal agent information.
-         */
-        peerGroup.setUserAgent(BitcoinNetworkConfiguration.USER_AGENT_NAME, BitcoinNetworkConfiguration.USER_AGENT_VERSION);
-
-        /**
-         * starts the monitoring
-         */
-        peerGroup.start();
-        peerGroup.downloadBlockChain();
-
-//        while (true){
-//            try {
-//                Thread.sleep(60000);
-//                System.out.println("*****CryptoNetwork isRunning: " + peerGroup.isRunning());
-//                System.out.println("****CryptoNetwork: connected peers " + peerGroup.getConnectedPeers().size());
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     /**
@@ -242,14 +237,20 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
 
     public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
+        /**
+         * I will check I don't get nulls in the parameters
+         */
+        if (txHash == null || blockHash == null)
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "TxHash or blocHash parameters can't be null", null);
+
+        /**
+         * I get the hash of the block
+         */
         Sha256Hash blockSha256Hash = Sha256Hash.wrap(blockHash);
 
-        /**
-         * I first need to find If I have the block already in my blockchain
-         */
 
         /**
-         * Will get the block from the peer
+         * If I don't have this block, then I will get the block from the peer
          */
         Block genesisBlock = getBlockFromPeer(blockSha256Hash);
 
@@ -257,7 +258,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * Will search all transactions from the block until I find my own.
           */
         for (Transaction transaction : genesisBlock.getTransactions()){
-            if (transaction.getHashAsString() == txHash){
+            if (transaction.getHashAsString().contentEquals(txHash)){
+                /**
+                 * I form the CryptoTransaction and return it.
+                 */
                 return getCryptoTransactionFromBitcoinTransaction(transaction);
             }
         }
@@ -266,8 +270,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * If I couldn't find it. then I will return null.
          * */
         return null;
-
-
     }
 
     /**
@@ -276,7 +278,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @return
      */
     private CryptoTransaction getCryptoTransactionFromBitcoinTransaction(Transaction transaction) {
-        return null;
+        return CryptoTransaction.getCryptoTransaction(transaction);
     }
 
     /**
