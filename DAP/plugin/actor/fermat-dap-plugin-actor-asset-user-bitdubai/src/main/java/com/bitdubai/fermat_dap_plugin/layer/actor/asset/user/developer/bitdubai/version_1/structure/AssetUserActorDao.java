@@ -35,6 +35,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupReco
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.database.AssetUserActorDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.database.AssetUserActorDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
@@ -903,20 +904,20 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public void createAssetUserGroup (AssetUserGroupRecord assetUserGroupRecord) throws CantCreateAssetUserGroupException {
+    public void createAssetUserGroup (ActorAssetUserGroup assetUserGroup) throws CantCreateAssetUserGroupException {
         try {
             DatabaseTable table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME);
 
             if (table == null) {
                 throw new CantGetAssetUserGroupTableExcepcion("CANT GET ASSET USER GROUP, TABLE NOT FOUND.", " ASSET USER GROUP", "");
             } else {
-                if (existsAssetUserGroup(assetUserGroupRecord.getGroupId())) {
-                    this.updateAssetUserGroup(assetUserGroupRecord);
+                if (existsAssetUserGroup(assetUserGroup.getGroupId())) {
+                    this.updateAssetUserGroup(assetUserGroup);
                 } else {
                     table.loadToMemory();
                     DatabaseTableRecord record = table.getEmptyRecord();
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME, assetUserGroupRecord.getGroupId());
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME, assetUserGroupRecord.getGroupName());
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME, assetUserGroup.getGroupId());
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME, assetUserGroup.getGroupName());
                     table.insertRecord(record);
                 }
             }
@@ -930,7 +931,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public void updateAssetUserGroup(AssetUserGroupRecord assetUserGroupRecord) throws CantUpdateAssetUserGroupException {
+    public void updateAssetUserGroup(ActorAssetUserGroup assetUserGroup) throws CantUpdateAssetUserGroupException {
         DatabaseTable table;
         try {
             /**
@@ -945,11 +946,11 @@ public class AssetUserActorDao implements Serializable {
                 throw new CantGetAssetUserGroupTableExcepcion("CANT GET ASSET USER GROUP, TABLE NOT FOUND.", " ASSET USER GROUP", "");
             }
 
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME, assetUserGroupRecord.getGroupId(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME, assetUserGroup.getGroupId(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             for (DatabaseTableRecord record : table.getRecords()) {
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME, assetUserGroupRecord.getGroupName());
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME, assetUserGroup.getGroupName());
                 table.updateRecord(record);
             }
 
@@ -999,7 +1000,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public void createAssetUserGroupMember (AssetUserGroupMemberRecord assetUserGroupMemberRecord) throws CantCreateAssetUserGroupException {
+    public void createAssetUserGroupMember (ActorAssetUserGroupMember assetUserGroupMemberRecord) throws CantCreateAssetUserGroupException {
         try {
             DatabaseTable table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_TABLE_NAME);
 
@@ -1024,7 +1025,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public void deleteAssetUserGroupMember (AssetUserGroupMemberRecord assetUserGroupMemberRecord) throws CantCreateAssetUserGroupException {
+    public void deleteAssetUserGroupMember (ActorAssetUserGroupMember assetUserGroupMemberRecord) throws CantCreateAssetUserGroupException {
         try {
             DatabaseTable table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_TABLE_NAME);
 
@@ -1051,7 +1052,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    private Boolean existsAssetUserGroupMember(AssetUserGroupMemberRecord assetUserGroupMemberRecord) throws CantCreateAssetUserGroupException {
+    private Boolean existsAssetUserGroupMember(ActorAssetUserGroupMember assetUserGroupMemberRecord) throws CantCreateAssetUserGroupException {
         try {
             DatabaseTable table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_TABLE_NAME);
 

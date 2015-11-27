@@ -41,8 +41,14 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorReco
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserGroupException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupExcepcion;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpdateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
@@ -258,6 +264,96 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         } catch (CantSendAddressExchangeRequestException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void createAssetUserGroup(ActorAssetUserGroup assetUserGroup) throws CantCreateAssetUserGroupException {
+        try {
+            this.assetUserActorDao.createAssetUserGroup(assetUserGroup);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantCreateAssetUserGroupException e) {
+           throw new CantCreateAssetUserGroupException("You can not create the group", e, "Error", "");
+        }
+    }
+
+    @Override
+    public void updateAssetUserGroup(ActorAssetUserGroup assetUserGroup) throws CantUpdateAssetUserGroupException {
+        try {
+            this.assetUserActorDao.updateAssetUserGroup(assetUserGroup);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserGroupException e) {
+            throw new CantUpdateAssetUserGroupException("You can not update the group", e, "Error", "");
+        }
+
+    }
+
+    @Override
+    public void deleteAssetUserGroup(String assetUserGroupId) throws CantDeleteAssetUserGroupException {
+        try {
+            this.assetUserActorDao.deleteAssetUserGroup(assetUserGroupId);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantDeleteAssetUserGroupException e) {
+            throw new CantDeleteAssetUserGroupException("You can not delete the group", e, "Error", "");
+        }
+    }
+
+    @Override
+    public void addAssetUserToGroup(ActorAssetUserGroupMember actorAssetUserGroupMember) throws CantCreateAssetUserGroupException {
+        try {
+            this.assetUserActorDao.createAssetUserGroupMember(actorAssetUserGroupMember);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantCreateAssetUserGroupException e) {
+            throw new CantCreateAssetUserGroupException("You can not add user to group", e, "Error", "");
+        }
+    }
+
+    @Override
+    public void removeAssetUserFromGroup(ActorAssetUserGroupMember assetUserGroupMember) throws CantCreateAssetUserGroupException {
+        try {
+            this.assetUserActorDao.deleteAssetUserGroupMember(assetUserGroupMember);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantCreateAssetUserGroupException e) {
+            throw new CantCreateAssetUserGroupException("You can not remove user from group", e, "Error", "");
+        }
+    }
+
+    @Override
+    public List<ActorAssetUserGroup> getAssetUserGroupsList() throws CantGetAssetUserGroupExcepcion {
+        List<ActorAssetUserGroup> list = null;
+        try {
+            list = this.assetUserActorDao.getAssetUserGroupsList();
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
+            throw new CantGetAssetUserGroupExcepcion("You can not get groups list", cantGetAssetUserGroupExcepcion, "Error", "");
+        }
+        return list;
+    }
+
+    @Override
+    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUserActorsException {
+        List<ActorAssetUser> list = null;
+        try {
+            list = this.assetUserActorDao.getListActorAssetUserByGroups(groupName);
+        } catch (CantGetAssetUsersListException ex) {
+            throw new CantGetAssetUserActorsException("You can not get users by group", ex, "Error", "");
+        }
+        return list;
+    }
+
+    @Override
+    public List<ActorAssetUserGroup> getListAssetUserGroupsByActorAssetUser(String actorAssetUserPublicKey) throws CantGetAssetUserGroupExcepcion {
+        List<ActorAssetUserGroup> list = null;
+        try {
+            list = this.assetUserActorDao.getListAssetUserGroupsByActorAssetUser(actorAssetUserPublicKey);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion ex) {
+            throw new CantGetAssetUserGroupExcepcion("You can not get groups by users", ex, "Error", "");
+        }
+        return list;
+    }
+
+    @Override
+    public ActorAssetUserGroup getAssetUserGroup(String groupId) throws CantGetAssetUserGroupExcepcion {
+        ActorAssetUserGroup actorAssetUserGroup = null;
+        try {
+            actorAssetUserGroup = this.assetUserActorDao.getAssetUserGroup(groupId);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion ex) {
+            throw new CantGetAssetUserGroupExcepcion("You can not get the group", ex, "Error", "");
+        }
+        return actorAssetUserGroup;
     }
 
     public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetUserException {
