@@ -23,7 +23,7 @@ import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 
 /**
- * Created by root on 12/11/15.
+ * Created by Joaquin C on 12/11/15.
  */
 public class AcceptDialog extends FermatDialog<SubAppsSession,SubAppResourcesProviderManager> implements
         View.OnClickListener {

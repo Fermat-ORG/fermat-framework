@@ -499,9 +499,31 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             this.register = false;
             communicationNetworkServiceConnectionManager.closeAllConnection();
         }
+    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+
+            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+
+                if(communicationNetworkServiceConnectionManager != null)
+                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        }
     }
 
     @Override
+    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+            this.register = false;
+
+            if(communicationNetworkServiceConnectionManager != null)
+                communicationNetworkServiceConnectionManager.closeAllConnection();
+        }
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
         if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
 
@@ -547,6 +569,23 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             /*
              * Initialize listeners
              */
+
+        /*
+         * Listen and handle VPN Connection Close Notification Event
+         */
+            FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
+            fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle Client Connection Close Notification Event
+         */
+            fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
+            fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
             initializeListeners();
 
 

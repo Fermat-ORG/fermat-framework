@@ -33,12 +33,12 @@ public class CBPPlatform extends AbstractPlatform {
 
             registerLayer(new ActorConnectionLayer());
             registerLayer(new ActorNetworkServiceLayer());
+            registerLayer(new BusinessTransactionLayer());
             registerLayer(new IdentityLayer());
+            registerLayer(new NetworkServiceLayer());
+            registerLayer(new StockTransactionsLayer());
             registerLayer(new SubAppModuleLayer());
             registerLayer(new WalletModuleLayer());
-            registerLayer(new StockTransactionsLayer());
-            registerLayer(new NetworkServiceLayer());
-            registerLayer(new BusinessTransactionLayer());
 
         } catch (CantRegisterLayerException e) {
 
