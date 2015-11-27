@@ -98,7 +98,7 @@ These application token are native to the Fermat system and are necessary for ac
 
 ### Token Records
 
-Fermat's tokes data and records are cryptographically stored in a public, decentralized blockchain in order to avoid any central points of failure. This blockchain is stored at Fermat nodes.
+Fermat's tokens data and records are cryptographically stored in a public, decentralized blockchain in order to avoid any central points of failure. This blockchain is stored at Fermat nodes.
 
 Fermat blockchain only records the issuing of new fermats and outsources the transaction processing from the bitcoin network. 
 
