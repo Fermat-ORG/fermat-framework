@@ -49,7 +49,7 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
 
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_BNK_DEPOSIT_BANK_MONEY_TRANSACTION");
+        System.out.println("platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET");
         try {
             bankMoneyWallet = new BankMoneyWalletImpl(this.pluginId,this.pluginDatabaseSystem,this.errorManager);
             this.serviceStatus = ServiceStatus.STARTED;

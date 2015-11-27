@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_bnk_core.layer.bank_money_transaction.deposit.DepositBankMoneyTransactionPluginSubsystem;
 import com.bitdubai.fermat_bnk_core.layer.bank_money_transaction.hold.HoldBankMoneyTransactionPluginSubsystem;
 import com.bitdubai.fermat_bnk_core.layer.bank_money_transaction.unhold.UnholdBankMoneyTransactionPluginSubsystem;
-import com.bitdubai.fermat_bnk_core.layer.bank_money_transaction.withdraw.WithdrawBankMoneyTransactionPluginSubsystem;
 
 /**
  * Created by memo on 25/11/15.
