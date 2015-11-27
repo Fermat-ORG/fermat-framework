@@ -15,8 +15,14 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserGroupException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupExcepcion;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpdateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -78,5 +84,63 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConnectToActorAssetUserException(CantConnectToActorAssetUserException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
         }
+    }
+
+    @Override
+    public void createGroup(ActorAssetUserGroup assetUserGroup) throws CantCreateAssetUserGroupException {
+        try {
+            actorAssetUserManager.createAssetUserGroup(assetUserGroup);
+        } catch (CantCreateAssetUserGroupException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        }
+    }
+
+    @Override
+    public void renameGroup(ActorAssetUserGroup assetUserGroup) throws CantUpdateAssetUserGroupException {
+        actorAssetUserManager.updateAssetUserGroup(assetUserGroup);
+    }
+
+    @Override
+    public void deleteGroup(String assetUserGroupId) throws CantDeleteAssetUserGroupException {
+        actorAssetUserManager.deleteAssetUserGroup(assetUserGroupId);
+    }
+
+    @Override
+    public void addActorAssetUserToGroup(ActorAssetUserGroupMember actorAssetUserGroupMember) throws CantCreateAssetUserGroupException {
+        actorAssetUserManager.addAssetUserToGroup(actorAssetUserGroupMember);
+    }
+
+    @Override
+    public void removeActorAssetUserFromGroup(ActorAssetUserGroupMember assetUserGroupMember) throws CantCreateAssetUserGroupException {
+        actorAssetUserManager.removeAssetUserFromGroup(assetUserGroupMember);
+    }
+
+    @Override
+    public List<ActorAssetUserGroup> getGroups() throws CantGetAssetUserGroupExcepcion {
+        List<ActorAssetUserGroup> groupList = new ArrayList<ActorAssetUserGroup>();
+        groupList = actorAssetUserManager.getAssetUserGroupsList();
+        return groupList;
+    }
+
+    @Override
+    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUserActorsException {
+        List<ActorAssetUser> assetUserList = new ArrayList<ActorAssetUser>();
+        assetUserList = actorAssetUserManager.getListActorAssetUserByGroups(groupName);
+        return assetUserList;
+    }
+
+    @Override
+    public List<ActorAssetUserGroup> getListGroupsByActorAssetUser(String actorAssetUserPublicKey) throws CantGetAssetUserGroupExcepcion {
+        List<ActorAssetUserGroup> actorAssetUserGroups = new ArrayList<ActorAssetUserGroup>();
+        actorAssetUserGroups = actorAssetUserManager.getListAssetUserGroupsByActorAssetUser(actorAssetUserPublicKey);
+        return actorAssetUserGroups;
+    }
+
+    @Override
+    public ActorAssetUserGroup getGroup(String groupId) throws CantGetAssetUserGroupExcepcion {
+        ActorAssetUserGroup actorAssetUserGroup = null;
+        actorAssetUserGroup = actorAssetUserManager.getAssetUserGroup(groupId);
+        return actorAssetUserGroup;
     }
 }
