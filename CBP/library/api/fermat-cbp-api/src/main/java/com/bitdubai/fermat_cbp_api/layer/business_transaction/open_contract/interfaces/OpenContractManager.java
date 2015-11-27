@@ -11,10 +11,16 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enum
 public interface OpenContractManager {
 
     /**
-     * This method opens a new contract by a negotiation Id
+     * This method opens a new contract for a Customer Broker Sale Transaction
      * @param negotiationId
      */
-    void openContract(String negotiationId);
+    void openSaleContract(String negotiationId);
+
+    /**
+     * This method opens a new contract for a Customer Broker Purchase Transaction
+     * @param negotiationId
+     */
+    void openPurchaseContract(String negotiationId);
 
     /**
      * This method returns the status from the Open Contract Business Transaction.
