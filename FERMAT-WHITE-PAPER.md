@@ -21,7 +21,7 @@ _www.fermat.org_
 
 A peer-to-peer financial application framework could allow standalone crypto wallets to evolve into any kind of peer-to-peer financial applications. 
 
-Developing peer-to-peer financial applications is challenging. Crypto networks provide part of the solution as a system of electronic cash, but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallets files or keys, manage identities, interface crypto networks or the legacy financial system.
+Developing peer-to-peer financial applications is challenging. Bitcoin provide part of the solution as a p2p system of electronic cash [1], but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallets files or keys, manage identities, interface crypto networks or the legacy financial system.
 
 We propose a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. A synchronization scheme running on top of it transform a standalone app into a distributed application across several devices still owned by the same user.
 
@@ -94,13 +94,11 @@ The core framework is in charge of initializing Add-ons and Plug-ins and managin
 
 Fermat generates its tokens, the fermats, with a predetermined algorithm that cannot be changed, and those tokens are necessary for Fermat to function. Fermat miners are rewarded with fermats for their contributions in running the Fermat network.
 
-These application token are native to the Fermat system and are necessary for access to the application. Contribution of value from miners are rewarded in the application’s tokens as well as developers which are rewarded with tokens for the Plug-ins they build for the system.
+These application token are native to the Fermat system and are necessary for access to the application. Contribution of value from miners are rewarded in the application’s tokens as well as developers which are rewarded with tokens for the Plug-ins they build for the system. Fermat's blockchain only records the issuing of new fermats and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]
 
 ### Token Records
 
 Fermat's tokens data and records are cryptographically stored in a public, decentralized blockchain in order to avoid any central points of failure. This blockchain is stored at Fermat nodes.
-
-Fermat blockchain only records the issuing of new fermats and outsources the transaction processing from the bitcoin network. 
 
 ### Token Generation & Distribution
 
@@ -278,7 +276,7 @@ The collection of system information for visualization and statistics uses hashe
 <br>
 ## Conclusion
 
-We have proposed a Framework for developing and running peer-to-peer financial applications. The Fermat Framework shows the way of how to keep the end user away from trusted third parties at a higher level. We propose a solution to several problems at the same time. The highlights of our work are:
+We have proposed a system for developing and running peer-to-peer financial applications. The Fermat Framework shows the way of how to keep the end user away from trusted third parties at a higher level. We propose a solution to several problems at the same time. The highlights of our work are:
 
 * How to exchange meta-data in a peer-to-peer way
 * How to prevent the loss of private keys (funds and identities)
@@ -291,4 +289,5 @@ With this system we allow for a new ecosystem of peer-to-peer financial applicat
 ## References
 
 [1] Satoshi Nakamoto, "Bitcoin: A Peer-to-Peer Electronic Cash System", https://bitcoin.org/bitcoin.pdf, 2008 
+[2] David Johnston & others, "The General Theory of Decentralized Applications, Dapps", https://github.com/DavidJohnstonCEO/DecentralizedApplications/blob/master/README.md
  
