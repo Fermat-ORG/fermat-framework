@@ -136,29 +136,29 @@ Any of these IPs can be used to connect to one node just for introductions, usin
 
 ##### Old Fermat Node
 
-To connect to a known peer, nodes establish a TCP connection, usually to port 9444 (the port generally known as the one used by Fermat), or an alternative port if one is provided. Upon establishing a connection, the node will start a "handshake" (see The initial handshake between peers) by transmitting a version message, which contains basic identifying information, including:
+To connect to a known peer, nodes establish a TCP connection, usually to port 9444 (the port generally known as the one used by Fermat), or an alternative port if one is provided. Upon establishing a connection, the node will start a "handshake".
 
-**Protocol_Version**
+##### Node to Node Dialogue 1: Node to Node Connection
 
-_A constant that defines the Fermat P2P Protocol version the client node "speaks"._
+| Node A        | Node B         | Notes  |
+|:-------------:|:-------------:|:-----|
+| Version       |               | Node A sends _Version_  message to Node B.|
+|               | Version ACK   | Node B answers with _Version ACK_  message to Node A.|
 
-**Local_Services**
 
-_A list of local services supported by the node._
 
-**Time**
+##### Message Definitions
 
-_The current time._
+###### Message: Version
 
-**addrYou**
+| Field        | Size          | Example  | Notes  |
+|:-------------:|-------------:|:---------|:-------|
+| Version       |               | FP2P v.1.0.0 | A constant that defines the Fermat P2P Protocol version the client node "speaks".|
+| Implementation   |               | bitDubai v.1.0.0 | A constant that defines the name and version of the implementation the client node is running.|
+| Your Address  |               | 123.32.45.31 | The IP address of the remote node as seen from this node.|
+| My Address    |               | 111.44.15.1  | The IP address of the local node, as discovered by the local node.|
 
-_The IP address of the remote node as seen from this node._
 
-**addrMe**
 
-_The IP address of the local node, as discovered by the local node._
 
-**subver**
-
-_A sub-version showing the type of software running on this node (the name of the implementation)._
 
