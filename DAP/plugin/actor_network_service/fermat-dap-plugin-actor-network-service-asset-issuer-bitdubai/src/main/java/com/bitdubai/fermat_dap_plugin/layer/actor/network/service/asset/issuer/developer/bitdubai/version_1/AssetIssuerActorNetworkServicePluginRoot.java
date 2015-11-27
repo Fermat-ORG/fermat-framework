@@ -43,6 +43,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantHandleDapNewMessagesException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageAccept;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageDeny;
@@ -50,8 +51,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.JsonANSNamesConstants;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantSendMessageException;
@@ -74,7 +74,6 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.d
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.util.JsonAssetIssuerANSAttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
@@ -311,69 +310,6 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
             throw pluginStartException;
         }
-    }
-
-
-    /**
-     * Initialize the event listener and configure
-     */
-    private void initializeListener() {
-                 /*
-         * Listen and handle Complete Component Registration Notification Event
-         */
-        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
-        fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-         /*
-         * Listen and handle Complete Request List Component Registered Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
-        fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-        /*
-         * Listen and handle Complete Request List Component Registered Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
-        fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-        /*
-         * Listen and handle new message sent
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewSentMessagesNotificationEventHandler());
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-        /*
-         * Listen and handle New Message Receive Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-        /*
-         * Listen and handle VPN Connection Close Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
-        fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-        /*
-         * Listen and handle Client Connection Close Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
-        fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
     }
 
     /**
@@ -613,9 +549,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         try {
 
             Gson gson = new Gson();
-
             String jsonMessage = fermatMessage.getContent();
-
             NetworkServiceMessage networkServiceDaoMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
 
             switch (networkServiceDaoMessage.getMessageType()) {
@@ -648,21 +582,21 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     }
 
     @Override
-    public void sendMessage(DAPActor actorSender, DAPActor actorDestination, String msjContent) throws CantSendMessageException {
-        if (actorSender instanceof ActorAssetIssuer) {
-            sendPublicKeyExtended(actorSender, actorDestination);
-        }
+    public void sendMessage(DAPActor actorSender, DAPActor actorDestination, DAPMessage dapMessage) throws CantSendMessageException {
+//        if (actorSender instanceof ActorAssetIssuer) {
+//            sendPublicKeyExtended(actorSender, actorDestination);
+//        }
+//
+//        if (actorSender instanceof ActorAssetUser) {
+//
+//        }
 
-        if (actorSender instanceof ActorAssetUser) {
-
-        }
-
-        if (actorSender instanceof ActorAssetRedeemPoint) {
-            requestPublicKeyExtended(actorSender, actorDestination, "GENERATE_PUBLIC_KEY_EXTENDED");
-        }
+//        if (actorSender instanceof ActorAssetRedeemPoint) {
+        requestPublicKeyExtended(actorSender, actorDestination, dapMessage);
+//        }
     }
 
-    private void requestPublicKeyExtended(DAPActor actorRedeemPointSender, DAPActor actorIssuerDestination, String msjContent) {
+    private void requestPublicKeyExtended(DAPActor actorRedeemPointSender, DAPActor actorIssuerDestination, DAPMessage dapMessage) {
 
         try {
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorIssuerDestination.getActorPublicKey());
@@ -670,9 +604,9 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             if (this.isRegister()) {
                 Gson gson = new Gson();
                 JsonObject packetContent = new JsonObject();
-                packetContent.addProperty(JsonAssetIssuerANSAttNamesConstants.REDEEM_POINT, gson.toJson(actorRedeemPointSender));
-                packetContent.addProperty(JsonAssetIssuerANSAttNamesConstants.ISSUER, gson.toJson(actorIssuerDestination));
-                packetContent.addProperty(JsonAssetIssuerANSAttNamesConstants.PUBLICKEY_EXTENDED, gson.toJson(msjContent));
+                packetContent.addProperty(JsonANSNamesConstants.REDEEM_POINT, gson.toJson(actorRedeemPointSender));
+                packetContent.addProperty(JsonANSNamesConstants.ISSUER, gson.toJson(actorIssuerDestination));
+                packetContent.addProperty(JsonANSNamesConstants.PUBLICKEY_EXTENDED, gson.toJson(dapMessage));
 
 
                 String messageContentIntoJson = gson.toJson(packetContent);
@@ -770,123 +704,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         }
     }
 
-    private void sendPublicKeyExtended(DAPActor actorAssetIssuerSender, DAPActor actorRedeemPointDestination) {
-        try {
-
-            if (this.isRegister()) {
-
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorRedeemPointDestination.getActorPublicKey());
-
-                Gson gson = new Gson();
-                JsonObject packetContent = new JsonObject();
-                packetContent.addProperty(JsonAssetIssuerANSAttNamesConstants.ISSUER, gson.toJson(actorAssetIssuerSender));
-                packetContent.addProperty(JsonAssetIssuerANSAttNamesConstants.REDEEM_POINT, gson.toJson(actorRedeemPointDestination));
-
-
-                String messageContentIntoJson = gson.toJson(packetContent);
-
-                if (communicationNetworkServiceLocal != null) {
-
-                    //Send the message
-                    communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getActorPublicKey(), actorRedeemPointDestination.getActorPublicKey(), messageContentIntoJson);
-
-                } else {
-
-                    /*
-                     * Created the message
-                     */
-                    FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(
-                            actorAssetIssuerSender.getActorPublicKey(),//Sender
-                            actorRedeemPointDestination.getActorPublicKey(), //Receiver
-                            messageContentIntoJson,                //Message Content
-                            FermatMessageContentType.TEXT);//Type
-
-                    /*
-                     * Configure the correct status
-                     */
-                    ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-
-                    /*
-                     * Save to the data base table
-                     */
-                    OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
-                    outgoingMessageDao.create(fermatMessage);
-
-                    /*
-                     * Create the sender basic profile
-                     */
-                    PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                            constructBasicPlatformComponentProfileFactory(
-                                    actorAssetIssuerSender.getActorPublicKey(),
-                                    NetworkServiceType.UNDEFINED,
-                                    PlatformComponentType.ACTOR_ASSET_ISSUER);
-
-                    /*
-                     * Create the receiver basic profile
-                     */
-                    PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                            constructBasicPlatformComponentProfileFactory(
-                                    actorRedeemPointDestination.getActorPublicKey(),
-                                    NetworkServiceType.UNDEFINED,
-                                    PlatformComponentType.ACTOR_ASSET_REDEEM_POINT);
-
-                    /*
-                     * Ask the client to connect
-                     */
-                    communicationNetworkServiceConnectionManager.connectTo(sender, getPlatformComponentProfilePluginRoot(), receiver);
-
-                }
-
-
-            } else {
-
-                StringBuffer contextBuffer = new StringBuffer();
-                contextBuffer.append("Plugin ID: " + pluginId);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("errorManager: " + errorManager);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("eventManager: " + eventManager);
-
-                String context = contextBuffer.toString();
-                String possibleCause = "Asset User Actor Network Service Not Registered";
-//
-//                CantRequestCryptoAddressException pluginStartException = new CantRequestCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
-//
-//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-//
-//                throw pluginStartException;
-
-            }
-
-        } catch (Exception e) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Cant Request Crypto Address";
-
-//            CantRequestCryptoAddressException pluginStartException = new CantRequestCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
-
-            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-//            throw pluginStartException;
-        }
-    }
-
-        @Override
+    @Override
     public List<ActorAssetIssuer> getListActorAssetIssuerRegistered() throws CantRequestListActorAssetIssuerRegisteredException {
 
         try {
@@ -1139,18 +957,19 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
     /**
      * Handles the events VPNConnectionCloseNotificationEvent
+     *
      * @param fermatEvent
      */
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+        if (fermatEvent instanceof VPNConnectionCloseNotificationEvent) {
 
             VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
 
-            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+            if (vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()) {
 
-                if(communicationNetworkServiceConnectionManager != null)
+                if (communicationNetworkServiceConnectionManager != null)
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
             }
@@ -1161,15 +980,16 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
     /**
      * Handles the events ClientConnectionCloseNotificationEvent
+     *
      * @param fermatEvent
      */
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+        if (fermatEvent instanceof ClientConnectionCloseNotificationEvent) {
             this.register = false;
 
-            if(communicationNetworkServiceConnectionManager != null)
+            if (communicationNetworkServiceConnectionManager != null)
                 communicationNetworkServiceConnectionManager.closeAllConnection();
         }
 
@@ -1237,5 +1057,67 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+    }
+
+    /**
+     * Initialize the event listener and configure
+     */
+    private void initializeListener() {
+                 /*
+         * Listen and handle Complete Component Registration Notification Event
+         */
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+         /*
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle new message sent
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewSentMessagesNotificationEventHandler());
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle New Message Receive Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this, eventManager));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle VPN Connection Close Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
+        fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle Client Connection Close Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
+        fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
     }
 }

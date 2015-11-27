@@ -10,17 +10,19 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerC
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetRedeemPointCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewReceiveMessageActorNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetIssuerCompleteRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetRedeemPointCompleteRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetUserRequestListRegisteredNetworksNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.NewReceiveMessageActorNotificationEventListener;
 
 /**
  * Created by Nerio on 27/10/15.
  */
 public enum EventType implements FermatEventEnum {
 
-    COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION("CL_RLAURN") {
+    COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION("CL_RLAIRN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new ActorAssetUserRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
         }
@@ -30,12 +32,12 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION("CL_RLAIRN") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+    COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION("CL_RLAURN") {
+    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new ActorAssetUserRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
         }
 
-        public FermatEvent getNewEvent() {
+    public FermatEvent getNewEvent() {
             return new ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent(this);
         }
     },
@@ -77,6 +79,20 @@ public enum EventType implements FermatEventEnum {
 
         public FermatEvent getNewEvent() {
             return new ActorAssetRedeemPointCompleteRegistrationNotificationEvent(this);
+        }
+
+
+    },
+
+    NEW_RECEIVE_MESSAGE_ACTOR("NEW_RECEIVE_MESSAGE") {
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new NewReceiveMessageActorNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return new NewReceiveMessageActorNotificationEvent(this);
         }
     };
 

@@ -13,6 +13,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantUpdateRequestPaymentStateException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantHandleTransactionException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
@@ -47,6 +49,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
     private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
     private CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager;
 
+
     private Thread                    agentThread;
     private TransactionProcessorAgent transactionProcessorAgent;
 
@@ -55,7 +58,8 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                                                        final BitcoinWalletManager bitcoinWalletManager,
                                                        final OutgoingIntraActorDao outgoingIntraActorDao,
                                                        final OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
-                                                       final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager) {
+                                                       final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager
+                                                       ) {
 
         this.errorManager                            = errorManager;
         this.cryptoVaultManager                      = cryptoVaultManager;
@@ -63,6 +67,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         this.outgoingIntraActorDao                   = outgoingIntraActorDao;
         this.transactionHandlerFactory               = transactionHandlerFactory;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
+
     }
 
 
@@ -95,6 +100,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         private CryptoVaultManager                         cryptoVaultManager;
         private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
         private CryptoTransmissionNetworkServiceManager    cryptoTransmissionManager;
+
 
 
         private static final int SLEEP_TIME = 5000;
@@ -251,10 +257,12 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         // TODO: Raise informative event
                         try {
                             dao.cancelTransaction(transaction);
+
                             Exception inconsistentFundsException = new OutgoingIntraActorInconsistentFundsException("Basic wallet balance and crypto vault funds are inconsistent", e, "", "");
                             reportUnexpectedException(inconsistentFundsException);
                         } catch (OutgoingIntraActorCantCancelTransactionException e1) {
                             reportUnexpectedException(e1);
+
                         } catch (Exception exception) {
                             reportUnexpectedException(FermatException.wrapException(exception));
                         }
