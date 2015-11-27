@@ -1,4 +1,4 @@
-package   com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.database;
+package   com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -13,16 +13,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.database.HoldBankMoneyTransactionDatabaseFactory</code>
+ *  The Class  <code>com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.version_1.database.UnholdCashMoneyTransactionDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
- * Created by Guillermo Gutierrez - (guillermo20@gmail.com) on 18/11/15.
+ * Created by Alejandro Bicelis - (abicelis@gmail.com) on 26/11/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class HoldBankMoneyTransactionDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class UnholdCashMoneyTransactionDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -35,7 +35,7 @@ public class HoldBankMoneyTransactionDatabaseFactory implements DealsWithPluginD
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public HoldBankMoneyTransactionDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public UnholdCashMoneyTransactionDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -70,23 +70,22 @@ public class HoldBankMoneyTransactionDatabaseFactory implements DealsWithPluginD
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
-             * Create Hold table.
+             * Create Unhold table.
              */
-            table = databaseFactory.newTableFactory(ownerId, HoldBankMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME);
 
-            table.addColumn(HoldBankMoneyTransactionDatabaseConstants.HOLD_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(HoldBankMoneyTransactionDatabaseConstants.HOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(HoldBankMoneyTransactionDatabaseConstants.HOLD_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(HoldBankMoneyTransactionDatabaseConstants.HOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(HoldBankMoneyTransactionDatabaseConstants.HOLD_ACCOUNT_NUMBER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(HoldBankMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(HoldBankMoneyTransactionDatabaseConstants.HOLD_CURRENCY_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(HoldBankMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(HoldBankMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(HoldBankMoneyTransactionDatabaseConstants.HOLD_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(HoldBankMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
+            table.addColumn(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
 
-            table.addIndex(HoldBankMoneyTransactionDatabaseConstants.HOLD_FIRST_KEY_COLUMN);
+            table.addIndex(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
