@@ -13,7 +13,7 @@ public interface CashMoneyRestockManager {
             String publicKeyActor,
             FiatCurrency fiatCurrency,
             String cbpWalletPublicKey,
-            String bankWalletPublicKey,
+            String cshWalletPublicKey,
             String cashReference,
             float amount,
             String memo

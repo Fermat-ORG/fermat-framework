@@ -13,8 +13,7 @@ public interface CryptoMoneyDestockManager {
             String publicKeyActor,
             CryptoCurrency cryptoCurrency,
             String cbpWalletPublicKey,
-            String bankWalletPublicKey,
-            String bankAccount,
+            String cryWalletPublicKey,
             float amount,
             String memo
     ) throws CantCreateCryptoMoneyDestockException;
