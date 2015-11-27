@@ -24,5 +24,5 @@ project(':fermat-p2p-plugin-communications-wifi-bitdubai').projectDir = new File
 include ':fermat-p2p-plugin-communications-network-node-bitdubai'
 project(':fermat-p2p-plugin-communications-network-node-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communications-network-node-bitdubai')
 
-include ':fermat-p2p-plugin-ws-communications-network-client-bitdubai'
-project(':fermat-p2p-plugin-ws-communications-network-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communications-network-client-bitdubai')
+include ':fermat-p2p-plugin-communications-network-client-bitdubai'
+project(':fermat-p2p-plugin-communications-network-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communications-network-client-bitdubai')
