@@ -45,6 +45,8 @@ dependencies {
     compile project(':fermat-cbp-plugin-stock-transactions-crypto-money-destock-bitdubai')
     compile project(':fermat-cbp-plugin-stock-transactions-crypto-money-restock-bitdubai')
 
+    compile project(':fermat-cbp-plugin-world-fiat-index-bitdubai')
+
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 

@@ -238,7 +238,8 @@ public enum Plugins implements FermatEnum {
     NEGOTIATION_TRANSMISSION    ("NGTR"),
     CUSTOMER_BROKER_NEW         ("CBNE"),
     CUSTOMER_BROKER_UPDATE      ("CBUP"),
-    CUSTOMER_BROKER_CLOSE       ("CBCL")
+    CUSTOMER_BROKER_CLOSE       ("CBCL"),
+    FIAT_INDEX                  ("FI")
 
     // End  new Plugins
 
@@ -321,6 +322,7 @@ public enum Plugins implements FermatEnum {
             case ("CRRE"):  return CRYPTO_MONEY_RESTOCK     ;
             case ("CRDE"):  return CRYPTO_MONEY_DESTOCK     ;
             case ("TRTX"):  return TRANSACTION_TRANSMISSION ;
+            case ("FI"):    return FIAT_INDEX               ;
             case "BBNKHMT": return BITDUBAI_BNK_HOLD_MONEY_TRANSACTION;
             case "BBNKUMT": return BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION;
             case "BBNKDMT": return BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION;
