@@ -6,6 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_cbp_core.layer.actor_connection.crypto_broker.CryptoBrokerPluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.actor_connection.crypto_customer.CryptoCustomerPluginSubsystem;
+import com.bitdubai.fermat_cbp_core.layer.negotiation_transaction.customer_broker_close.CustomerBrokerClosePluginSubsystem;
+import com.bitdubai.fermat_cbp_core.layer.negotiation_transaction.customer_broker_new.CustomerBrokerNewPluginSubsystem;
+import com.bitdubai.fermat_cbp_core.layer.negotiation_transaction.customer_broker_update.CustomerBrokerUpdatePluginSubsystem;
 
 /**
  * Created by Yordin Alayn on 22.11/15.
@@ -20,8 +23,9 @@ public class NegotiationTransactionLayer extends AbstractLayer {
 
         try {
 
-            registerPlugin(new CryptoBrokerPluginSubsystem());
-            registerPlugin(new CryptoCustomerPluginSubsystem());
+            registerPlugin(new CustomerBrokerNewPluginSubsystem());
+            registerPlugin(new CustomerBrokerUpdatePluginSubsystem());
+            registerPlugin(new CustomerBrokerClosePluginSubsystem());
 
         } catch(CantRegisterPluginException e) {
 
