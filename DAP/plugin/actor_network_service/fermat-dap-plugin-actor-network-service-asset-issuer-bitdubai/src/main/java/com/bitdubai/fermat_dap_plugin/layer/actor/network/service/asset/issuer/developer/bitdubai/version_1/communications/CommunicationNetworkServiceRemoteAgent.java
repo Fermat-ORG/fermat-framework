@@ -33,8 +33,8 @@ import java.util.Observable;
 public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
     /*
-* Represent the sleep time for the read or send (2000 milliseconds)
-*/
+     * Represent the sleep time for the read or send (2000 milliseconds)
+     */
     private static final long SLEEP_TIME = 2000;
 
     /**
@@ -119,7 +119,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                     processMessageToSend();
             }
         });
-
     }
 
     /**
@@ -277,7 +276,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                         String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
                         ((FermatMessageCommunication) message).setSignature(signature);
 
-
                             /*
                              * Send the message
                              */
@@ -286,7 +284,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Change the message and update in the data base
                              */
-
                         ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
                         outgoingMessageDao.update(message);
 

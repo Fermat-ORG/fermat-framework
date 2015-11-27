@@ -79,7 +79,6 @@ public interface ActorAssetUserManager extends FermatManager {
      * @throws CantConnectToActorAssetRedeemPointException
      */
     void connectToActorAssetRedeemPoint(ActorAssetUser requester, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantConnectToActorAssetRedeemPointException;
-    void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException;
 
     /**
      * The method <code>createAssetUserGroup</code> Register a group in database Actor Asset User
