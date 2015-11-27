@@ -30,7 +30,7 @@ public class NodesCatalogTransactionDao  extends AbstractBaseDao<NodesCatalogTra
      * @param dataBase
      */
     public NodesCatalogTransactionDao(Database dataBase) {
-        super(dataBase, "", "");
+        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_FIRST_KEY_COLUMN);
     }
 
     /**
