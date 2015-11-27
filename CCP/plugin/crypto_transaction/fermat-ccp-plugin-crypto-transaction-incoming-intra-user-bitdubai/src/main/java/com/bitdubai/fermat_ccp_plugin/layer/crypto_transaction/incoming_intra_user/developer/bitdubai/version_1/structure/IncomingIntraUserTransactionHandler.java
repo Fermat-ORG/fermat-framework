@@ -39,7 +39,7 @@ public class IncomingIntraUserTransactionHandler {
                 ReferenceWallet         referenceWallet         = cryptoAddressBookRecord.getWalletType();
                 String                  walletPublicKey         = cryptoAddressBookRecord.getWalletPublicKey();
 
-                com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserTransactionExecutorFactory executorFactory = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserTransactionExecutorFactory(this.bitcoinWalletManager, this.cryptoAddressBookManager);
+                com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserTransactionExecutorFactory executorFactory = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserTransactionExecutorFactory(this.bitcoinWalletManager, this.cryptoAddressBookManager,this.eventManager);
                 com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.interfaces.TransactionExecutor executor        = executorFactory.newTransactionExecutor(referenceWallet, walletPublicKey);
 
                 executor.executeTransaction(transaction);

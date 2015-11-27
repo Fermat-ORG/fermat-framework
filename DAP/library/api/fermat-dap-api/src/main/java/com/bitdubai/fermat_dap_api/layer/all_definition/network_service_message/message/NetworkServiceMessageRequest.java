@@ -1,14 +1,14 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.enums.NetworkServiceDaoMessageType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.enums.NetworkServiceMessageType;
 
 import java.util.UUID;
 
 /**
  * Created by Nerio on 23/11/15.
  */
-public class NetworkServiceMessageRequest extends NetworkServiceDaoMessage {
+public class NetworkServiceMessageRequest extends NetworkServiceMessage {
 
     private final UUID   requestId                  ;
     private final Actors identityTypeRequesting     ;
@@ -22,7 +22,7 @@ public class NetworkServiceMessageRequest extends NetworkServiceDaoMessage {
                                         final String identityPublicKeyRequesting,
                                         final String identityPublicKeyResponding) {
 
-        super(NetworkServiceDaoMessageType.REQUEST);
+        super(NetworkServiceMessageType.REQUEST);
 
         this.requestId                   = requestId                  ;
         this.identityTypeRequesting      = identityTypeRequesting     ;

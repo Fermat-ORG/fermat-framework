@@ -852,10 +852,9 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-                System.out.println("KKKKKKKKKKKKKKKKKKKKK SE CAYO LA VPN PUBLIC KEY  " + vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-
+                if(communicationNetworkServiceConnectionManager != null) {
+                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                }
             }
 
         }
@@ -871,9 +870,10 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
 
-            System.out.println("*( *( *( *( *( *( *( *( *(  SE CAYO LA CONEXION *( *( *( *( *( *( *( *( *( *( ");
             this.register = false;
-            communicationNetworkServiceConnectionManager.closeAllConnection();
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.closeAllConnection();
+            }
         }
 
     }

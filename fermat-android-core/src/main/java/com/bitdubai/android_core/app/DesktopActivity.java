@@ -281,7 +281,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     }
 
     @Override
-    public void connectWithOtherApp(Engine emgine, Object[] objectses) {
+    public void connectWithOtherApp(Engine emgine, String fermatAppPublicKey,Object[] objectses) {
 
     }
 

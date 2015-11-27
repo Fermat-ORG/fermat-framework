@@ -155,6 +155,33 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
 
 
         /**
+         * Asset User Group Table database columns.
+         */
+        List<String> assetUserGroupColumns = new ArrayList<String>();
+
+        assetUserGroupColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME);
+        assetUserGroupColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME);
+
+        /**
+         * Asset User Group database addition.
+         */
+        DeveloperDatabaseTable assetUserGroupTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME, assetUserGroupColumns);
+        tables.add(assetUserGroupTable);
+
+        /**
+         * Asset User Group Member Table database columns.
+         */
+        List<String> assetUserGroupMemberColumns = new ArrayList<String>();
+
+        assetUserGroupMemberColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_GROUP_ID_COLUMN_NAME);
+        assetUserGroupMemberColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME);
+
+        /**
+         * Asset User Group Member database addition.
+         */
+        DeveloperDatabaseTable assetUserGroupMemberTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_TABLE_NAME, assetUserGroupMemberColumns);
+        tables.add(assetUserGroupMemberTable);
+        /**
          * Asset User Relation Asset Issuer database columns.
          */
 //        List<String> assetUserRelationAssetIssuerColumns = new ArrayList<String>();

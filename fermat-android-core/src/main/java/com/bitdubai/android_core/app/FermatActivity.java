@@ -724,8 +724,12 @@ public abstract class FermatActivity extends AppCompatActivity
                 setContentView(R.layout.new_wallet_runtime);
             } else {
                 setContentView(R.layout.base_layout_without_collapse);
+                if(activityType.equals(ActivityType.ACTIVITY_TYPE_DESKTOP)){
+                    ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.VISIBLE);
+                }else{
+                    ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.GONE);
+                }
             }
-
 
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
