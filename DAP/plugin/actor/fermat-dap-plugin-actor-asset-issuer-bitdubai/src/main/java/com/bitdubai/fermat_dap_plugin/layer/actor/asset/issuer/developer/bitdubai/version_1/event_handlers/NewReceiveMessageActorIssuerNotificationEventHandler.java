@@ -2,10 +2,10 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdub
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewReceiveMessageActorNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewRequestMessageActorNotificationEvent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorPluginRoot;
 
 /**
@@ -22,15 +22,20 @@ public class NewReceiveMessageActorIssuerNotificationEventHandler implements Fer
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        System.out.println("ACTOR ASSET ISSUER RECEIVE MESSAGE REGISTER - handleEvent = " + fermatEvent);
-
         if (this.assetActorIssuerPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            NewReceiveMessageActorNotificationEvent newReceiveMessageActorNotificationEvent = (NewReceiveMessageActorNotificationEvent) fermatEvent;
+            if(fermatEvent.getSource() == EventSource.ACTOR_ASSET_REDEEM_POINT) {
+                System.out.println("ACTOR ASSET ISSUER RECEIVE MESSAGE REGISTER - handleEvent = " + fermatEvent);
+
+                NewReceiveMessageActorNotificationEvent newReceiveMessageActorNotificationEvent = (NewReceiveMessageActorNotificationEvent) fermatEvent;
              /*
-             *  Actor Asset Issuer make the job
-             */
-            this.assetActorIssuerPluginRoot.handleNewReceiveMessageActorNotificationEvent(newReceiveMessageActorNotificationEvent.getActorAssetSender(), newReceiveMessageActorNotificationEvent.getMessage());
+              *  Actor Asset Issuer make the job
+              */
+                this.assetActorIssuerPluginRoot.handleNewReceiveMessageActorNotificationEvent(
+                        newReceiveMessageActorNotificationEvent.getActorAssetSender(),
+                        newReceiveMessageActorNotificationEvent.getActorAssetDestination(),
+                        newReceiveMessageActorNotificationEvent.getMessage());
+            }
         }
     }
 }

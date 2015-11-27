@@ -25,7 +25,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
  */
 public class NewSentMessagesNotificationEventHandler implements FermatEventHandler {
 
-
     /**
      * Constructor with parameter
      *
@@ -54,7 +53,5 @@ public class NewSentMessagesNotificationEventHandler implements FermatEventHandl
             FermatMessage fermatMessage = (FermatMessage) newNetworkServiceMessageSentNotificationEvent.getData();
 
         }
-
     }
-
 }
