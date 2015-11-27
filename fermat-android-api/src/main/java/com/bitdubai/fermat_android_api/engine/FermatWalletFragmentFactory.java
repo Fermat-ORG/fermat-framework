@@ -3,6 +3,7 @@ package com.bitdubai.fermat_android_api.engine;
 import android.app.Fragment;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
@@ -31,7 +32,7 @@ public abstract class FermatWalletFragmentFactory <S extends WalletSession,J ext
 
         fermatFragment = getFermatFragment(fragments);
 
-        fermatFragment.setWalletSession(walletSession);
+        fermatFragment.setWalletSession((WalletSession) walletSession);
         fermatFragment.setWalletSettings(walletSettings);
         fermatFragment.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return fermatFragment;

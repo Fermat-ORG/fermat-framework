@@ -57,7 +57,7 @@ public enum SubApps {
                 return SubApps.CWP_DEVELOPER_APP;
             case "CWP":
                 return SubApps.CWP_WALLET_PUBLISHER;
-            case "CIU":
+            case "CIUI":
                 return SubApps.CWP_INTRA_USER_IDENTITY;
             case "CBPC":
                 return SubApps.CBP_CUSTOMERS;
@@ -72,6 +72,8 @@ public enum SubApps {
                 return SubApps.DAP_ASSETS_COMMUNITY_USER;
             case "DAPCRP":
                 return SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT;
+            case "CCPIUC":
+                return SubApps.CCP_INTRA_USER_COMMUNITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the SubApps enum");
 

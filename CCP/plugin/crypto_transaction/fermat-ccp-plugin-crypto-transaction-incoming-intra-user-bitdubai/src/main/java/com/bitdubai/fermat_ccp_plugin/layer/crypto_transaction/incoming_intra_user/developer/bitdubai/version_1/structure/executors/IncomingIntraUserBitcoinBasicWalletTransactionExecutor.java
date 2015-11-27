@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure.executors;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantProcessRequestAcceptedException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
@@ -18,6 +21,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_us
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantGenerateTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.interfaces.TransactionExecutor;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.TransactionCompleteInformation;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingIntraUserTransactionDebitNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.UUID;
 
@@ -28,10 +34,12 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
 
     private BitcoinWalletWallet      bitcoinWallet;
     private CryptoAddressBookManager cryptoAddressBookManager;
+    private EventManager             eventManager;
 
-    public IncomingIntraUserBitcoinBasicWalletTransactionExecutor(final BitcoinWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager){
+    public IncomingIntraUserBitcoinBasicWalletTransactionExecutor(final BitcoinWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager, final EventManager eventManager){
         this.bitcoinWallet            = bitcoinWallet;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
+        this.eventManager             = eventManager;
 
     }
 
@@ -119,22 +127,19 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
     }
 
     private void processPaymentRequest(UUID requestId) throws CantProcessRequestAcceptedException {
-       /* try
+       try
         {
             //Hay que disparar un evento para que escuche el Crypto Payment
-           // cryptoPaymentManager.getCryptoPaymentRegistry().acceptIncomingRequest(requestId);
-        }
-        catch(CantGetCryptoPaymentRegistryException e)
-        {
-            throw new CantProcessRequestAcceptedException("I couldn't update request payment accepted",e,"","");
-        }
-        catch(CantUpdateRequestPaymentStateException e)
-        {
-            throw new CantProcessRequestAcceptedException("I couldn't update request payment accepted",e,"","");
+            FermatEvent platformEvent  = eventManager.getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_INTRA_USER_DEBIT_TRANSACTION);
+            IncomingIntraUserTransactionDebitNotificationEvent incomingDebitNotificationEvent = (IncomingIntraUserTransactionDebitNotificationEvent) platformEvent;
+            incomingDebitNotificationEvent.setSource(EventSource.INCOMING_INTRA_USER);
+            incomingDebitNotificationEvent.setRequestId(requestId);
+
+            eventManager.raiseEvent(platformEvent);
         }
         catch(Exception e)
         {
             throw new CantProcessRequestAcceptedException("I couldn't update request payment accepted",FermatException.wrapException(e),"","unknown error");
-        }*/
+        }
     }
 }
