@@ -221,11 +221,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdu
                     System.out.println("TTF - EXTRA USER RELAY: TRANSACTION APPLIED");
                 } catch (Exception e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-                    try {
-                         registry.setToApplied(transaction.getTransactionID());
-                    } catch (Exception e1) {
 
-                    }
                 }
             }
 

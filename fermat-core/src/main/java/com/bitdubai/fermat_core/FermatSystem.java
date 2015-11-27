@@ -90,7 +90,7 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new BCHPlatform());
             fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
-            fermatSystemContext.registerPlatform(new DAPPlatform());
+            //fermatSystemContext.registerPlatform(new DAPPlatform()); //se comento porque dio un errror y tiro la APP
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
