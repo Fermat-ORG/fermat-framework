@@ -40,6 +40,44 @@ OS dependent GUI components are built on top of the multi-layered plug-in struct
 
 A built-in _wallet-factory_ allows developers to reuse the highest level components and create niche-wallets or niche-financial-apps by combining existing functionality and adding their own code to the combo. A built-in _wallet-editor_ allows non-developers to reuse any of these niche-wallets to build new branded-wallets just by changing their look and feel. A built-in _p2p-wallet-store_ allows end users to choose which wallets or financial apps to install from the ever growing catalogue.
 
+<br> 
+## The Fermat Network
+
+### Peer-to-Peer Network Architecture
+
+The Fermat Network is structured as a peer-to-peer network architecture on top of the Internet. Fermat nodes are peers to each other, meaning that they are all equal and there are no "special" nodes. All the nodes share the burden of providing all services. The network nodes interconnect to each other only when they need to do so according to the Fermat P2P Protocol. There is no server, no centralized service, and no hierarchy within the network. 
+
+The term "Fermat Network" refers to the collection of nodes running the Fermat P2P Protocol. There are two other protocols such as the Fermat Consensus Protocol which allows the network to agree which transactions are going to be recorded on the blockchain, and the Fermat Client Protocol which is used for coomunicating Fermat Clients between each other and to Fermat Nodes. We use the term "Extended Fermat Network" to refer to the overall network that includes both Fermat Nodes and Clients.
+
+### Fermat Nodes Roles
+
+Fermat nodes performs several tasks at the same time. For each one of them, the protocol has it own set of rules:
+
+#### Mantains the Distributed Nodes Catalogue
+
+Each node mantains a full catalogue of all nodes registered in the network. This role is ruled by the Fermat P2P Protocol.
+
+#### Mantains an Identities Catalogue
+
+Each node mantains a part of a distributed catalogue of the End User identities. This catalogue is designed to facilitate End Users to find each other. This role is ruled by the Fermat Client Protocol.
+
+#### Act as Identities' Home
+
+Each node is home to a set of End Users identities. These identities can receive calls only through their home node. This role is also ruled by the Fermat Client Protocol.
+
+#### Acts as a Call Bridge
+
+Each node interconects clients between each other in order to let them freely transfer information between them. This role is ruled by the Fermat Client Protocol.
+
+#### Mantains the Fermat Blockchain
+
+Each node mantains the Fermat Blockchain: a public record of all coinbase transactions where the protocol issues new fermats. This role is ruled by the Fermat Consensus Protocol.
+
+### Fermat Clients
+
+Fermat clients run the Fermat Framework, which in turn run the Fermat Components (libraries, add-ons, plug-ins, GUIs, etc.). Clients adhere to the Fermat Client Protocol.
+
+
 <br>
 ## The Fermat Framework
 
@@ -48,13 +86,6 @@ The solution we propose begins with a Framework that must be portable into diffe
 We identify 3 different kind of components that we arbitrarily call **Add-ons**, **Plug-ins**, and **GUI** components. We define Add-ons as low level components that do not need to identify themselves to consume services from other components. They have broad access to the file system and databases. Plug-ins have their own identity and must identify themselves to other components to use their services which in return restrict the scope of their services based on the caller's identity (for example the filesystem add-on would only give access to the Plug-ins own folder structure, the database system add-on would only give access to the plugins own databases, and so on). In this way we handle the problem of plug-ins accessing the infromation of other plug-ins.
 
 The core framework is in charge of initializing Add-ons and Plug-ins and managing Plug-ins identities. An internal API library defines the public interfaces that each component exposes to the rest of the components within the same device in order to allow them to use their services locally. This provides a strong encapsulation of each components business logic allowing them to freely define their internal structure and data model.
-
-<br>
-## Crypto Networks
-
-A set of Plug-ins is needed for each crypto network to be supported. One for interfacing the network, pushing outgoing transactions and monitoring incoming transactions. Another couple being the digital vaults where the crypto currency value and digital assets are stored.
-
-Wallets are higher level abstractions and have their own set of Plug-ins to keep each kind of accounting. This means that we split the accounting from the handling of the value by having components on different layers to handle each activity.
 
 <br>
 ## Fermat Application Tokens
@@ -125,43 +156,13 @@ End Users pay Fermat Component's developers with fermats to be able to use their
 
 End Users pay with fermats to receive personalized technical support from Fermat Component's developers.
 
+<br>
+## Crypto Networks
 
-<br> 
-## The Fermat Network
+A set of Plug-ins is needed for each crypto network to be supported. One for interfacing the network, pushing outgoing transactions and monitoring incoming transactions. Another couple being the digital vaults where the crypto currency value and digital assets are stored.
 
-### Peer-to-Peer Network Architecture
+Wallets are higher level abstractions and have their own set of Plug-ins to keep each kind of accounting. This means that we split the accounting from the handling of the value by having components on different layers to handle each activity.
 
-The Fermat Network is structured as a peer-to-peer network architecture on top of the Internet. Fermat nodes are peers to each other, meaning that they are all equal and there are no "special" nodes. All the nodes share the burden of providing all services. The network nodes interconnect to each other only when they need to do so according to the Fermat P2P Protocol. There is no server, no centralized service, and no hierarchy within the network. 
-
-The term "Fermat Network" refers to the collection of nodes running the Fermat P2P Protocol. There are two other protocols such as the Fermat Consensus Protocol which allows the network to agree which transactions are going to be recorded on the blockchain, and the Fermat Client Protocol which is used for coomunicating Fermat Clients between each other and to Fermat Nodes. We use the term "Extended Fermat Network" to refer to the overall network that includes both Fermat Nodes and Clients.
-
-### Fermat Nodes Roles
-
-Fermat nodes performs several tasks at the same time. For each one of them, the protocol has it own set of rules:
-
-#### Mantains the Distributed Nodes Catalogue
-
-Each node mantains a full catalogue of all nodes registered in the network. This role is ruled by the Fermat P2P Protocol.
-
-#### Mantains an Identities Catalogue
-
-Each node mantains a part of a distributed catalogue of the End User identities. This catalogue is designed to facilitate End Users to find each other. This role is ruled by the Fermat Client Protocol.
-
-#### Act as Identities' Home
-
-Each node is home to a set of End Users identities. These identities can receive calls only through their home node. This role is also ruled by the Fermat Client Protocol.
-
-#### Acts as a Call Bridge
-
-Each node interconects clients between each other in order to let them freely transfer information between them. This role is ruled by the Fermat Client Protocol.
-
-#### Mantains the Fermat Blockchain
-
-Each node mantains the Fermat Blockchain: a public record of all coinbase transactions where the protocol issues new fermats. This role is ruled by the Fermat Consensus Protocol.
-
-### Fermat Clients
-
-Fermat clients run the Fermat Framework, which in turn run the Fermat Components (libraries, add-ons, plug-ins, GUIs, etc.). Clients adhere to the Fermat Client Protocol.
 
 
 <br>
