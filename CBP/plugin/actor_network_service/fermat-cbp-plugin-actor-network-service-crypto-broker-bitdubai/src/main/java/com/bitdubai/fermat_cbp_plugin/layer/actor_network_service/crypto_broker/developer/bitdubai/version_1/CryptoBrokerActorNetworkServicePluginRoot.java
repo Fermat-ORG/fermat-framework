@@ -143,6 +143,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
      */
     @Override
     public void start() throws CantStartPluginException {
+        System.out.println("************** che, pase por aca eh");
 
         /*
          * Validate required resources
@@ -203,6 +204,8 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
             connectionNewsDao.initialize();
 
+            System.out.println("************** por aca tambien");
+
             final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
             fermatManager = new CryptoBrokerActorNetworkServiceManager(
@@ -212,6 +215,13 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     getPluginVersionReference()
             );
 
+            System.out.println("************** que miras nabo");
+
+            /*
+             * Its all ok, set the new status
+             */
+            this.serviceStatus = ServiceStatus.STARTED;
+
 
         } catch(final CantInitializeDatabaseException e) {
 
@@ -219,10 +229,8 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             throw new CantStartPluginException(e, "", "Problem initializing crypto broker ans dao.");
         }
 
-        /*
-         * Its all ok, set the new status
-         */
-        this.serviceStatus = ServiceStatus.STARTED;
+        System.out.println("************** y aca soy fermat manager: "+fermatManager);
+
     }
 
     private CryptoBrokerActorNetworkServiceManager fermatManager;

@@ -499,35 +499,15 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+
+        if (fermatEvent instanceof ClientConnectionCloseNotificationEvent) {
             this.register = false;
-            communicationNetworkServiceConnectionManager.closeAllConnection();
-        }
-    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
-
-            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-
-            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-
-                if(communicationNetworkServiceConnectionManager != null)
-                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-
-            }
-
+            if (communicationNetworkServiceConnectionManager != null)
+                communicationNetworkServiceConnectionManager.closeAllConnection();
         }
     }
 
-    @Override
-    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-
-        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
-            this.register = false;
-
-            if(communicationNetworkServiceConnectionManager != null)
-                communicationNetworkServiceConnectionManager.closeAllConnection();
-        }
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
         if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
 
