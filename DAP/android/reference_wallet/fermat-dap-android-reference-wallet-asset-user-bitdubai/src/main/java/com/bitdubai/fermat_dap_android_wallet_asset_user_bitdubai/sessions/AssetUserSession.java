@@ -57,6 +57,11 @@ public class AssetUserSession extends AbstractFermatSession<InstalledWallet,Asse
     }
 
     @Override
+    public String getIdentityConnection() {
+        return null;
+    }
+
+    @Override
     public Object getData(String key) {
         return data;
     }

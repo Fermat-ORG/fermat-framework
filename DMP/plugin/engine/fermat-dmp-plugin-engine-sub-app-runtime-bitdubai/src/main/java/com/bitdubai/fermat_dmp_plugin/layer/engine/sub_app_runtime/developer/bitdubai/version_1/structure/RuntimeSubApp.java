@@ -97,6 +97,11 @@ public class RuntimeSubApp implements SubApp {
     }
 
     @Override
+    public String getAppName() {
+        return type.getCode();
+    }
+
+    @Override
     public String getAppPublicKey() {
         return publicKey;
     }

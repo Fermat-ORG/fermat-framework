@@ -3,9 +3,12 @@ package com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pr
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.script.ScriptChunk;
 
 import java.util.Map;
@@ -23,6 +26,8 @@ public class CryptoTransaction{
     private long cryptoAmount;
     private CryptoStatus cryptoStatus;
     private String op_Return;
+
+
 
 
     /**
@@ -69,8 +74,63 @@ public class CryptoTransaction{
         cryptoTransaction.setOp_Return(getOpReturn(transaction));
         cryptoTransaction.setBlockHash(getBlockHash(transaction));
         cryptoTransaction.setCryptoStatus(getTransactionCryptoStatus(transaction));
+        cryptoTransaction.setAddressTo(getAddressTo(transaction));
+        cryptoTransaction.setAddressFrom(getAddressFrom(transaction));
 
         return cryptoTransaction;
+    }
+
+    /**
+     * gets the address From of this transaction
+     * @param transaction
+     * @return
+     */
+    private static CryptoAddress getAddressFrom(Transaction transaction) {
+        CryptoAddress cryptoAddress= null;
+        try{
+            Address address = null;
+
+            for (TransactionInput input : transaction.getInputs()){
+                if (input.getFromAddress() != null)
+                    address = input.getFromAddress();
+            }
+
+            cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
+        } catch (Exception e){
+            /**
+             * if there is an error, because this may not always be possible to get.
+             */
+            cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.BITCOIN);
+        }
+        return cryptoAddress;
+    }
+
+    /**
+     * Gets the address to of this transaction
+     * @param transaction
+     * @return
+     */
+    private static CryptoAddress getAddressTo(Transaction transaction) {
+        CryptoAddress cryptoAddress = null;
+        try{
+            Address address = null;
+            /**
+             * I will loop from the outputs that include keys that are in my wallet
+             */
+            for (TransactionOutput output : transaction.getOutputs()){
+                /**
+                 * get the address from the output
+                 */
+                //todo this needs to be fixed!
+                address = output.getScriptPubKey().getToAddress(RegTestParams.get());
+            }
+
+            cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
+            return cryptoAddress;
+        } catch (Exception e){
+            return cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.BITCOIN);
+        }
+
     }
 
 

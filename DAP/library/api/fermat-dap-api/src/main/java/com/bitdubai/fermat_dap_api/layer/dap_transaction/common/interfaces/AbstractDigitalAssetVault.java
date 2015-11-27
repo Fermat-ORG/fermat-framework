@@ -61,7 +61,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
     public PluginFileSystem pluginFileSystem;
     public String digitalAssetFileStoragePath;
     public AssetIssuerWalletManager assetIssuerWalletManager;
-    public String walletPublicKey;
+    public String walletPublicKey = "walletPublicKeyTest";
     public ActorAssetIssuerManager actorAssetIssuerManager;
     public ActorAssetUserManager actorAssetUserManager;
     BitcoinNetworkManager bitcoinNetworkManager;
@@ -262,7 +262,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         if(walletPublicKey==null){
             throw new CantSetObjectException("walletPublicKey is null");
         }
-        this.walletPublicKey=walletPublicKey;
+        this.walletPublicKey="walletPublicKeyTest"; //TODO hardcoded value
         System.out.println("The wallet public key in vault is "+this.walletPublicKey);
     }
 

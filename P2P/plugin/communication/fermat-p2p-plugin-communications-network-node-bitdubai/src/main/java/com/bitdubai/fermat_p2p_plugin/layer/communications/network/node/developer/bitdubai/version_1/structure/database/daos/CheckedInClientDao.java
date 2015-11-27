@@ -9,7 +9,10 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInClient;
+
+import java.sql.Timestamp;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.CheckedInClientDao</code>
@@ -27,7 +30,9 @@ public class CheckedInClientDao  extends AbstractBaseDao<CheckedInClient> {
      * @param dataBase
      */
     public CheckedInClientDao(Database dataBase) {
-        super(dataBase, "", "");
+        super(dataBase,
+                CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_TABLE_NAME,
+                CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_FIRST_KEY_COLUMN);
     }
 
     /**
@@ -36,7 +41,24 @@ public class CheckedInClientDao  extends AbstractBaseDao<CheckedInClient> {
      */
     @Override
     protected CheckedInClient getEntityFromDatabaseTableRecord(DatabaseTableRecord record) throws InvalidParameterException {
-        return null;
+
+        CheckedInClient checkedInClient = new CheckedInClient();
+
+        try{
+
+            checkedInClient.setUuid(record.getUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_UUID_COLUMN_NAME));
+            checkedInClient.setIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
+            checkedInClient.setLatitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_LATITUDE_COLUMN_NAME));
+            checkedInClient.setLongitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_LONGITUDE_COLUMN_NAME));
+            checkedInClient.setDeviceType(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_DEVICE_TYPE_COLUMN_NAME));
+            checkedInClient.setCheckedInTimestamp(new Timestamp(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_CHECKED_IN_TIMESTAMP_COLUMN_NAME)));
+
+        }catch (Exception e){
+            return null;
+        }
+
+        return checkedInClient;
+
     }
 
     /**
@@ -45,7 +67,20 @@ public class CheckedInClientDao  extends AbstractBaseDao<CheckedInClient> {
      */
     @Override
     protected DatabaseTableRecord getDatabaseTableRecordFromEntity(CheckedInClient entity) {
-        return null;
+
+         /*
+         * Create the record to the entity
+         */
+        DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
+
+        databaseTableRecord.setUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_UUID_COLUMN_NAME,entity.getUuid());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getIdentityPublicKey());
+        databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_LATITUDE_COLUMN_NAME, entity.getLatitude());
+        databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_LONGITUDE_COLUMN_NAME, entity.getLongitude());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_DEVICE_TYPE_COLUMN_NAME, entity.getDeviceType());
+        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_CHECKED_IN_TIMESTAMP_COLUMN_NAME, entity.getCheckedInTimestamp().getTime());
+
+        return databaseTableRecord;
     }
 }
 
