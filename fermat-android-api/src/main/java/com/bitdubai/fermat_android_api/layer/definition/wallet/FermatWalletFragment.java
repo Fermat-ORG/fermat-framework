@@ -21,9 +21,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+
+import java.util.Map;
 
 /**
  * Created by Matias Furszyfer on 2015.26.21..
@@ -161,8 +164,8 @@ public class FermatWalletFragment<M extends ModuleManager> extends Fragment impl
         return getPaintActivtyFeactures().getToolbar();
     }
 
-    protected void changeApp(Engine emgine, Object[] objects) {
-        getFermatScreenSwapper().connectWithOtherApp(emgine, objects);
+    protected void changeApp(Engine emgine,String fermatAppToConnectPublicKey, Object[] objects) {
+        getFermatScreenSwapper().connectWithOtherApp(emgine,fermatAppToConnectPublicKey, objects);
     }
 
     protected FermatScreenSwapper getFermatScreenSwapper() {
