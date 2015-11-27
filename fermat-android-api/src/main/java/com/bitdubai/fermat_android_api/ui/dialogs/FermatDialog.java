@@ -99,4 +99,8 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
     protected FermatScreenSwapper getFermatScreenSwapper(){
         return (FermatScreenSwapper) activity;
     }
+
+    protected Activity getActivity(){
+        return activity;
+    }
 }
