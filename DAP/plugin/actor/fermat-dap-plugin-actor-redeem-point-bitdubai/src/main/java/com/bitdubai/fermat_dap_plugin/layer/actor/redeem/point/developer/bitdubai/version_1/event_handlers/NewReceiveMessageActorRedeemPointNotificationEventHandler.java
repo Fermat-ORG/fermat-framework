@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdub
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewReceiveMessageActorNotificationEvent;
@@ -21,15 +22,19 @@ public class NewReceiveMessageActorRedeemPointNotificationEventHandler implement
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        System.out.println("ACTOR ASSET REDEEM POINT RECEIVE MESSAGE REGISTER - handleEvent = " + fermatEvent);
-
         if (this.redeemPointActorPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            NewReceiveMessageActorNotificationEvent newReceiveMessageActorNotificationEvent = (NewReceiveMessageActorNotificationEvent) fermatEvent;
+            if(fermatEvent.getSource() == EventSource.ACTOR_ASSET_ISSUER) {
+                System.out.println("ACTOR ASSET REDEEM POINT RECEIVE MESSAGE REGISTER - handleEvent = " + fermatEvent);
+                NewReceiveMessageActorNotificationEvent newReceiveMessageActorNotificationEvent = (NewReceiveMessageActorNotificationEvent) fermatEvent;
              /*
-             *  Actor Asset Issuer make the job
-             */
-            this.redeemPointActorPluginRoot.handleNewReceiveMessageActorNotificationEvent(newReceiveMessageActorNotificationEvent.getActorAssetSender(), newReceiveMessageActorNotificationEvent.getMessage());
+              *  Actor Asset Issuer make the job
+              */
+                this.redeemPointActorPluginRoot.handleNewReceiveMessageActorNotificationEvent(
+                        newReceiveMessageActorNotificationEvent.getActorAssetSender(),
+                        newReceiveMessageActorNotificationEvent.getActorAssetDestination(),
+                        newReceiveMessageActorNotificationEvent.getMessage());
+            }
         }
     }
 }
