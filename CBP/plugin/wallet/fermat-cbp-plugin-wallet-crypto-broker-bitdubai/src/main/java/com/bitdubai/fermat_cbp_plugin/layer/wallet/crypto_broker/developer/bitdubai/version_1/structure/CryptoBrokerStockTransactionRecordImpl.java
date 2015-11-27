@@ -51,6 +51,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
         this.transactionType = transactionType;
         this.amount = amount;
         this.currencyType = currencyType;
+        this.merchandise = merchandise;
         this.runningBookBalance = runningBookBalance;
         this.runningAvailableBalance = runningAvailableBalance;
         this.timeStamp = timeStamp;

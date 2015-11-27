@@ -7,6 +7,8 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyW
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletTransactionsException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetHeldFundsException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterHoldException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterUnholdException;
 
 import java.util.List;
 
@@ -57,6 +59,21 @@ public interface CashMoneyWallet {
      *
      * @return A double containing the amount of cash held
      */
-    double getHeldFunds(String publicKeyActor) throws CantGetHeldFundsException;
+    double getHeldFunds(String actorPublicKey) throws CantGetHeldFundsException;
+
+
+    /**
+     * Registers a hold on the Available Balance of this CashMoneyWalletBalance.
+     *
+     * @param cashMoneyWalletTransaction Contains the details of the hold transaction
+     */
+    void hold(CashMoneyWalletTransaction cashMoneyWalletTransaction) throws CantRegisterHoldException;
+
+    /**
+     * Registers an unhold on the Availiable Balance of this CashMoneyWalletBalance.
+     *
+     * @param cashMoneyWalletTransaction Contains the details of the unhold transaction
+     */
+    void unhold(CashMoneyWalletTransaction cashMoneyWalletTransaction) throws CantRegisterUnholdException;
 
 }
