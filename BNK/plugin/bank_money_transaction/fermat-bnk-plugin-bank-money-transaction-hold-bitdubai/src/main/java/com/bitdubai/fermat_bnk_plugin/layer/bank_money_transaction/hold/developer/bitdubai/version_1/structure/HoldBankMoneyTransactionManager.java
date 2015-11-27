@@ -37,8 +37,8 @@ public class HoldBankMoneyTransactionManager implements HoldManager {
         try{
             holdBankMoneyTransactionDao.initialize();
         } catch (CantInitializeHoldBankMoneyTransactionDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION);
         } catch (Exception e) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }

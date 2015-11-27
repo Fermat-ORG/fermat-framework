@@ -20,7 +20,6 @@ import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.develo
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantInitializeUnholdBankMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.structure.UnholdBankMoneyTransactionManager;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.structure.UnholdBankMoneyTransactionProcessorAgent;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -55,6 +54,7 @@ public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin impleme
 
     @Override
     public void start() throws CantStartPluginException {
+        System.out.println("platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_BNK_UNHOLD_BANK_MONEY_TRANSACTION");
         try {
             unholdTransactionManager = new UnholdBankMoneyTransactionManager(pluginDatabaseSystem, pluginId, errorManager);
         } catch (Exception e) {
@@ -105,7 +105,7 @@ public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin impleme
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch(CantInitializeUnholdBankMoneyTransactionDatabaseException cantInitializeException) {
-            FermatException e = new CantDeliverDatabaseException("Database cannot be initialized", cantInitializeException, "CashMoneyTransactionHoldPluginRoot", "");
+            FermatException e = new CantInitializeUnholdBankMoneyTransactionDatabaseException("Database cannot be initialized", cantInitializeException, "CashMoneyTransactionHoldPluginRoot", "");
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         return tableRecordList;
