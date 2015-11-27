@@ -30,6 +30,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendConfirmToCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendConfirmToCryptoCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
@@ -37,11 +44,16 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
+/*import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServiceDatabaseException;*/
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeNegotiationTransmissionNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -50,29 +62,36 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Yordin Alayn on 16.09.15.
  */
 
-public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNetworkService implements DatabaseManagerForDevelopers {
+public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNetworkService implements NegotiationTransmissionManager, DatabaseManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    protected PluginFileSystem pluginFileSystem        ;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.WS_CLOUD_CLIENT)
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION,       plugin = Plugins.WS_CLOUD_CLIENT)
+    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
+
+    /*Represent the dataBase*/
+    private Database dataBase;
+
+    /*Represent DAO Database Transmission*/
+    private NegotiationTransmissionNetworkServiceDatabaseDao databaseDao;
+    /*Represent the listeners*/
     private List<FermatEventListener> listenersAdded;
 
     /*Represent the remoteNetworkServicesRegisteredList*/
@@ -81,60 +100,49 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*Represent the cryptoPaymentRequestNetworkServiceConnectionManager*/
     private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
-    /*Represent the dataBase*/
-    private Database dataBase;
-
     /*Represent CommunicationRegistrationProcessNetworkServiceAgent*/
     private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
 
-
-
-
-
-
-
     /*CONSTRUCTOR*/
-
     public NetworkServiceNegotiationTransmissionPluginRoot() {
         super(
-                new PluginVersionReference(new Version()),
-                PlatformComponentType.NETWORK_SERVICE,
-                NetworkServiceType.NEGOTIATION_TRANSMISSION,
-                "Negotiation Transmission Network Service",
-                "NegotiationTransmissionNetworkService",
-                null,
-                EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION
+            new PluginVersionReference(new Version()),
+            PlatformComponentType.NETWORK_SERVICE,
+            NetworkServiceType.NEGOTIATION_TRANSMISSION,
+            "Negotiation Transmission Network Service",
+            "NegotiationTransmissionNetworkService",
+            null,
+            EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION
         );
     }
 
     /*SERVICE*/
 
     @Override
-    public void start(){
-//        System.out.println("Starting Transaction Transmission Network Service");
-//        this.serviceStatus = ServiceStatus.STARTED;
+    public void start() throws CantStartPluginException{
+
         /*Load KeyPair*/
-        /*try {
+        try {
             loadKeyPair(pluginFileSystem);
         } catch (CantLoadKeyPairException e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, "", "Problem trying to load the key pair of the plugin.");
-        }*/
+        }
         System.out.println("********* Crypto Addresses: Starting. ");
 
         /*Validate required resources*/
-        //validateInjectedResources();
+        validateInjectedResources();
 
 
         /*Initialize crypto payment request dao*/
-        /*try {
-            cryptoAddressesNetworkServiceDao = new CryptoAddressesNetworkServiceDao(pluginDatabaseSystem, pluginId);
-            cryptoAddressesNetworkServiceDao.initialize();
-        } catch(CantInitializeNetworkServiceDatabaseException e) {
+        try {
+            databaseDao = new NegotiationTransmissionNetworkServiceDatabaseDao(pluginDatabaseSystem, pluginId);
+            databaseDao.initialize();
+        } catch(CantInitializeNegotiationTransmissionNetworkServiceDatabaseException e) {
             CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
-        }*/
+        }
 
         try {
             /*Initialize the data base*/
@@ -167,10 +175,10 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            /*errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-            throw pluginStartException;*/
-        }
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
 
+        }
         System.out.println("********* Crypto Addresses: Successful start. ");
 
     }
@@ -180,7 +188,6 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         // pause connections manager.
         communicationNetworkServiceConnectionManager.pause();
-
         this.serviceStatus = ServiceStatus.PAUSED;
     }
 
@@ -189,7 +196,6 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         // resume connections manager.
         communicationNetworkServiceConnectionManager.resume();
-
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -212,6 +218,27 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     }
 
     /*END SERVICE*/
+
+    /*NEGOTIATIONTRANSMISSIONMANAGER*/
+    public void sendNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, Negotiation negotiation) throws CantSendNegotiationToCryptoCustomerException{
+
+    }
+
+    /*Crypto Customer Send negotiation To Crypto Broker*/
+    public void sendNegotiatioToCryptoBroker(NegotiationTransaction negotiationTransaction, Negotiation negotiation) throws CantSendNegotiationToCryptoBrokerException{
+
+    }
+
+    /*Crypto Customer Confirm that receive Negotiation from Cryto Broker*/
+    public void sendConfirmToCryptoCustomer(UUID transactionId) throws CantSendConfirmToCryptoCustomerException{
+
+    }
+
+    /*Crypto Customer Confirm that receive Negotiation from Cryto Broker*/
+    public void sendConfirmToCryptoBroker(UUID transactionId) throws CantSendConfirmToCryptoBrokerException{
+
+    }
+    /*END NEGOTIATIONTRANSMISSIONMANAGER*/
 
     /*DATABASEMANAGERFORDEVELOPERS.*/
 
