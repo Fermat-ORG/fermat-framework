@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.Platform
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_cbp_core.layer.actor_connection.ActorConnectionLayer;
 import com.bitdubai.fermat_cbp_core.layer.actor_network_service.ActorNetworkServiceLayer;
+import com.bitdubai.fermat_cbp_core.layer.business_transaction.BusinessTransactionLayer;
 import com.bitdubai.fermat_cbp_core.layer.identity.IdentityLayer;
 import com.bitdubai.fermat_cbp_core.layer.network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_cbp_core.layer.stock_transactions.StockTransactionsLayer;
@@ -32,6 +33,7 @@ public class CBPPlatform extends AbstractPlatform {
 
             registerLayer(new ActorConnectionLayer());
             registerLayer(new ActorNetworkServiceLayer());
+            registerLayer(new BusinessTransactionLayer());
             registerLayer(new IdentityLayer());
             registerLayer(new NetworkServiceLayer());
             registerLayer(new StockTransactionsLayer());
