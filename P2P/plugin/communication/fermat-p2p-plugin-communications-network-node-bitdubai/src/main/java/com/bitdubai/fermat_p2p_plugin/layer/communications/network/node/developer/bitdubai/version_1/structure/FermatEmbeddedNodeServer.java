@@ -180,8 +180,9 @@ public class FermatEmbeddedNodeServer {
          */
         DeploymentInfo restAppDeploymentInfo = undertowJaxrsServer.undertowDeployment(restEasyDeploymentInfo, "/rest/api/v1");
         restAppDeploymentInfo.setClassLoader(FermatEmbeddedNodeServer.class.getClassLoader())
-                .setContextPath(APP_NAME)
-                             .setDeploymentName("FermatRestApi.war");
+                             .setContextPath(APP_NAME)
+                             .setDeploymentName("FermatRestApi.war")
+                             .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
 
         /*
          * Deploy the app
