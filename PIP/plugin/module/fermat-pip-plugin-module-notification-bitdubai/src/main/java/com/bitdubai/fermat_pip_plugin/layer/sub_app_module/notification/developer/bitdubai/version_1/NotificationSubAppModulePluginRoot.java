@@ -197,26 +197,40 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     private com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification createNotification(EventSource eventSource,String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) throws CantCreateNotification {
         try {
 
+            Actor actor = null;
+            try{
+                actor = getActor(intraUserIdentityPublicKey,actorId,actorType);
+            } catch ( IntraUserNotFoundException e) {
 
-            Actor actor = getActor(intraUserIdentityPublicKey,actorId,actorType);
+            }
+
 
             com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
             notification.setAlertTitle(getSourceString(eventSource) + " " + WalletUtils.formatBalanceString(amount));
 
-            notification.setImage(actor.getPhoto());
+            if(actor != null)
+            {
+                notification.setImage(actor.getPhoto());
+                notification.setTextBody(actor.getName() + makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in " + cryptoCurrency.getCode());
+
+            }
+            else
+            {
+                notification.setTextBody( makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in " + cryptoCurrency.getCode());
+
+            }
+
 
             notification.setTextTitle(getTextTitleBySource(eventSource));
 
             notification.setWalletPublicKey(walletPublicKey);
 
-            notification.setTextBody(actor.getName() + makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in " + cryptoCurrency.getCode());
 
             return notification;
 
         } catch (CantGetExtraUserException e) {
             e.printStackTrace();
-        } catch ( IntraUserNotFoundException e) {
-            e.printStackTrace();
+
         } catch (CantGetIntraUserException e) {
             e.printStackTrace();
         } catch (ExtraUserNotFoundException e) {
