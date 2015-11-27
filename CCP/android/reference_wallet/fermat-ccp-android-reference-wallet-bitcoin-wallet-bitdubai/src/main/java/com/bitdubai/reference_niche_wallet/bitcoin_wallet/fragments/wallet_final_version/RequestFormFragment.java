@@ -23,6 +23,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -202,7 +203,9 @@ public class RequestFormFragment extends FermatWalletFragment implements View.On
                         cryptoWalletWalletContact.getReceivedCryptoAddress().get(0),
                         txt_notes.getText().toString(),
                         Long.valueOf(editTextAmount.getText().toString()),
-                        BlockchainNetworkType.DEFAULT
+                        BlockchainNetworkType.DEFAULT,
+                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+
                 );
             }
 

@@ -11,6 +11,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
@@ -99,7 +101,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
         holder.getTxt_amount().setTypeface(tf);
 
-        holder.getTxt_contactName().setText("Mati");//data.getContact().getActorName());
+        holder.getTxt_contactName().setText(data.getContact().getActorName());
         holder.getTxt_contactName().setTypeface(tf);
 
         holder.getTxt_notes().setText(data.getReason());
@@ -109,19 +111,39 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         holder.getTxt_time().setText(data.getDate());
         holder.getTxt_time().setTypeface(tf);
 
-        //TOOD: sacado para mostrar
-//        if(data.getState() != null) {
-//            holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
-//            holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
-//            holder.getTxt_state().setText(data.getState());
-//            holder.getTxt_state().setTypeface(tf);
-//        }else{
-//            holder.getLinear_layour_container_state().setVisibility(View.GONE);
-//            holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
-//        }
+        if(data.getType() == 0) //SEND
+        {
+            if(data.getState() != null) {
+                holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
+                holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+                holder.getTxt_state().setText(data.getState().name());
+                holder.getTxt_state().setTypeface(tf);
+            }
+        }
+        else
+        {
+            if(data.getState().equals(CryptoPaymentState.APPROVED) || data.getState().equals(CryptoPaymentState.REFUSED)) {
+                holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
+                holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+                holder.getTxt_state().setText(data.getState().name());
+                holder.getTxt_state().setTypeface(tf);
+            }
+        }
+
+
+
+      /*  if(data.getState() != null) {
+          holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
+            holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+            holder.getTxt_state().setText(data.getState());
+            holder.getTxt_state().setTypeface(tf);
+        }else{
+           holder.getLinear_layour_container_state().setVisibility(View.GONE);
+            holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
+        }*/
         referenceWalletSession.setLastRequestSelected(data);
-        holder.getBtn_accept_request().setOnClickListener(mOnClickListener);
-        holder.getBtn_refuse_request().setOnClickListener(mOnClickListener);
+            holder.getBtn_accept_request().setOnClickListener(mOnClickListener);
+            holder.getBtn_refuse_request().setOnClickListener(mOnClickListener);
 
 
     }

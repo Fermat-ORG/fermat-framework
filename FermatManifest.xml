@@ -5597,7 +5597,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="lnacosta" scope="implementation" percentage="10"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5606,12 +5606,12 @@
 					</plugin>
 					<plugin	name="Crypto Customer"
 						description=""
-						difficulty="8"
+						difficulty="6"
 						code-level="development">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="lnacosta" scope="implementation" percentage="10"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -6745,7 +6745,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="jorgeejgonzalez" scope="implementation" percentage="100"></author>
+							<author name="Rart3001" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="Rart3001"></mantainer>
@@ -6762,7 +6762,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="jorgeejgonzalez" scope="implementation" percentage="100"></author>
+							<author name="Rart3001" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="Rart3001"></mantainer>
@@ -6809,6 +6809,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="hendry19901990" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>

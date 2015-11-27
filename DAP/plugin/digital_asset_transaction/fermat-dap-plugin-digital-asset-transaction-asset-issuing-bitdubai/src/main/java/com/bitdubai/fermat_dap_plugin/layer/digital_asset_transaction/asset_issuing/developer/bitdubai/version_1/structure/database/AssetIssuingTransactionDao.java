@@ -638,6 +638,9 @@ public class AssetIssuingTransactionDao {
             if (databaseTableRecords.size() > 1) {
                 this.database.closeDatabase();
                 throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", "Transaction ID:" + outgoingTransactionID + " Genesis Bloc:" + genesisBlock);
+            } else if (databaseTableRecords.size() == 0) {
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. No value returned.", "Transaction ID:" + outgoingTransactionID + " Genesis Bloc:" + genesisBlock);
             } else {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
@@ -902,7 +905,7 @@ public class AssetIssuingTransactionDao {
             for (DatabaseTableRecord databaseTableRecord : databaseTableRecords) {
                 String genesisTransaction = databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
                 genesisTransactionsFromDigitalAssetReceived.add(genesisTransaction);
-                databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, TransactionStatus.DELIVERED.getCode());
+                databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.DELIVERED.getCode());
                 databaseTable.updateRecord(databaseTableRecord);
             }
             this.database.closeDatabase();
