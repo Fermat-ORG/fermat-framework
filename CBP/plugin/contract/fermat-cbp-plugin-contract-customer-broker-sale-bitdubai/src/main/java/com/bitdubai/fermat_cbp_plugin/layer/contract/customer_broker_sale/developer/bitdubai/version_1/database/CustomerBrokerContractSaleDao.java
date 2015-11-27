@@ -217,7 +217,7 @@ public class CustomerBrokerContractSaleDao {
                                      long paymentExpirationDate,
                                      long merchandiseDeliveryExpirationDate) {
 
-            databaseTableRecord.setUUIDValue(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME, contractID);
+            databaseTableRecord.setStringValue(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME, contractID);
             databaseTableRecord.setStringValue(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKeyCustomer);
             databaseTableRecord.setStringValue(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
             databaseTableRecord.setFloatValue(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_MERCHANDISE_AMOUNT_COLUMN_NAME, merchandiseAmount);
