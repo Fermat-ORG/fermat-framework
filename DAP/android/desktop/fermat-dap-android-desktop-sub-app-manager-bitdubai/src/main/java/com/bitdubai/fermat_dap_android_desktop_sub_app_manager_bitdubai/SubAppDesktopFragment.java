@@ -199,7 +199,7 @@ public class SubAppDesktopFragment extends Fragment {
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.sub_apps);
             switch (installedSubApp.getSubAppIcon()) {
                 case "sub-app-asset-identity-redeem-point":
-                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setImageResource(R.drawable.redeem_point_identity);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
