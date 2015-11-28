@@ -86,9 +86,9 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
             try {
                 this.customerBrokerSaleNegotiationDao = new CustomerBrokerSaleNegotiationDao(pluginDatabaseSystem, pluginId);
                 this.customerBrokerSaleNegotiationDao.initializeDatabase();
-            } catch (CantInitializeCustomerBrokerSaleNegotiationDatabaseException cantInitializeExtraUserRegistryException) {
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
-                throw new CantStartPluginException(cantInitializeExtraUserRegistryException, this.getPluginVersionReference());
+            } catch (CantInitializeCustomerBrokerSaleNegotiationDatabaseException e) {
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantStartPluginException();
             }
         }
 
