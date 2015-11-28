@@ -19,7 +19,6 @@ public class CryptoMoneyDestockTransactionImpl implements CryptoMoneyTransaction
     String                          cryWalletPublicKey;
     String                          memo;
     String                          concept;
-    String                          bankAccount;
     float                           amount;
     Timestamp                       timeStamp;
     TransactionStatusRestockDestock transactionStatus;
@@ -35,7 +34,6 @@ public class CryptoMoneyDestockTransactionImpl implements CryptoMoneyTransaction
                                              String cryWalletPublicKey,
                                              String memo,
                                              String concept,
-                                             String bankAccount,
                                              float amount,
                                              Timestamp timeStamp,
                                              TransactionStatusRestockDestock transactionStatus){
@@ -46,7 +44,6 @@ public class CryptoMoneyDestockTransactionImpl implements CryptoMoneyTransaction
         this.cryWalletPublicKey = cryWalletPublicKey;
         this.memo               = memo;
         this.concept            = concept;
-        this.bankAccount        = bankAccount;
         this.amount             = amount;
         this.timeStamp          = timeStamp;
         this.transactionStatus  = transactionStatus;

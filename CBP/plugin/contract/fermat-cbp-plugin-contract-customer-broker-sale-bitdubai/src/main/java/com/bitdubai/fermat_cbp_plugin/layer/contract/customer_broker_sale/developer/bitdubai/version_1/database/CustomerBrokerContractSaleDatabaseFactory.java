@@ -74,7 +74,7 @@ public class CustomerBrokerContractSaleDatabaseFactory implements DealsWithPlugi
              */
             table = databaseFactory.newTableFactory(ownerId, CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerContractSaleDatabaseConstants.CONTRACT_SALE_PAYMENT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
