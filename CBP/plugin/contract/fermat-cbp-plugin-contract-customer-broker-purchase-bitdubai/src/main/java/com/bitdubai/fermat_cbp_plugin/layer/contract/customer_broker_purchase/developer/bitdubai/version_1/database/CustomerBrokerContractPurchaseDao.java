@@ -67,6 +67,7 @@ public class CustomerBrokerContractPurchaseDao {
     }
 
     public CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(
+            String contractID,
             String publicKeyCustomer,
             String publicKeyBroker,
             float merchandiseAmount,
@@ -82,8 +83,6 @@ public class CustomerBrokerContractPurchaseDao {
         try {
             DatabaseTable PurchaseTable = this.database.getTable(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
             DatabaseTableRecord recordToInsert = PurchaseTable.getEmptyRecord();
-
-            UUID contractID = UUID.randomUUID();
 
             loadRecordAsNew(
                     recordToInsert,
@@ -117,13 +116,13 @@ public class CustomerBrokerContractPurchaseDao {
     }
 
     public void updateCustomerBrokerContractPurchase(
-            UUID contractId,
+            String contractID,
             ContractStatus status
     ) throws CantupdateCustomerBrokerContractPurchaseException {
 
         try {
             DatabaseTable PurchaseTable = this.database.getTable(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
-            PurchaseTable.setUUIDFilter(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractId, DatabaseFilterType.EQUAL);
+            PurchaseTable.setStringFilter(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
 
             DatabaseTableRecord recordToUpdate = PurchaseTable.getEmptyRecord();
             recordToUpdate.setStringValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_STATUS_COLUMN_NAME, status.getCode());
@@ -136,14 +135,14 @@ public class CustomerBrokerContractPurchaseDao {
     }
 
     public void deleteCustomerBrokerContractPurchase(
-            UUID contractId
+            String contractID
     ) throws CantDeleteCustomerBrokerContractPurchaseException {
 
         try {
             DatabaseTable PurchaseTable = this.database.getTable(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
             DatabaseTableRecord recordToDelete = PurchaseTable.getEmptyRecord();
 
-            recordToDelete.setUUIDValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractId);
+            recordToDelete.setStringValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractID);
 
             PurchaseTable.deleteRecord(recordToDelete);
         } catch (CantDeleteRecordException e) {
@@ -176,9 +175,9 @@ public class CustomerBrokerContractPurchaseDao {
         return Purchases;
     }
 
-    public CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(UUID ContractId) throws CantGetListCustomerBrokerContractPurchaseException {
+    public CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForcontractID(String contractID) throws CantGetListCustomerBrokerContractPurchaseException {
         DatabaseTable identityTable = this.database.getTable(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
-        identityTable.setUUIDFilter(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, ContractId, DatabaseFilterType.EQUAL);
+        identityTable.setStringFilter(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
         try {
             identityTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -206,7 +205,7 @@ public class CustomerBrokerContractPurchaseDao {
      */
 
     private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord,
-                                 UUID contractId,
+                                 String contractID,
                                  String publicKeyCustomer,
                                  String publicKeyBroker,
                                  float merchandiseAmount,
@@ -218,7 +217,7 @@ public class CustomerBrokerContractPurchaseDao {
                                  long paymentExpirationDate,
                                  long merchandiseDeliveryExpirationDate) {
 
-        databaseTableRecord.setUUIDValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractId);
+        databaseTableRecord.setStringValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractID);
         databaseTableRecord.setStringValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKeyCustomer);
         databaseTableRecord.setStringValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
         databaseTableRecord.setFloatValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_AMOUNT_COLUMN_NAME, merchandiseAmount);
@@ -234,7 +233,7 @@ public class CustomerBrokerContractPurchaseDao {
 
     private CustomerBrokerContractPurchase constructCustomerBrokerContractPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
-        UUID contractId = record.getUUIDValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME);
+        String contractID = record.getStringValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME);
         String customerPublicKey = record.getStringValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         String brokerPublicKey = record.getStringValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_BROKER_PUBLIC_KEY_COLUMN_NAME);
         CurrencyType paymentCurrency = CurrencyType.getByCode(record.getStringValue(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_CURRENCY_COLUMN_NAME));
@@ -249,7 +248,7 @@ public class CustomerBrokerContractPurchaseDao {
 
 
         return new CustomerBrokerContractPurchaseInformation(
-                contractId,
+                contractID,
                 customerPublicKey,
                 brokerPublicKey,
                 paymentCurrency,
