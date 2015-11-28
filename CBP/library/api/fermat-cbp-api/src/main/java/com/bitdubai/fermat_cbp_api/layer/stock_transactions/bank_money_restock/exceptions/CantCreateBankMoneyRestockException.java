@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.cash_money_restock.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by franklin on 16/11/15.
  */
-public class CantCreateCashMoneyRestockException extends FermatException {
+public class CantCreateBankMoneyRestockException extends FermatException {
     public static final String DEFAULT_MESSAGE = "CAN'T CREATE BANK MONEY RESTOCK TRANSACTION";
 
     /**
@@ -16,7 +16,7 @@ public class CantCreateCashMoneyRestockException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCreateCashMoneyRestockException(String message, Exception cause, String context, String possibleReason) {
+    public CantCreateBankMoneyRestockException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.bank_money_destock.interfaces;
+package com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
-import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
 
 
 /**

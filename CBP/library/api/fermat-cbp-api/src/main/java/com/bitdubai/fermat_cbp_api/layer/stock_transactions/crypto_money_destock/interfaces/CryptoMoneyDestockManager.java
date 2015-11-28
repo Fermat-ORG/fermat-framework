@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.exceptions.CantCreateCryptoMoneyDestockException;
 
 
@@ -15,6 +16,8 @@ public interface CryptoMoneyDestockManager {
             String cbpWalletPublicKey,
             String cryWalletPublicKey,
             float amount,
-            String memo
+            String memo,
+            float priceReference,
+            OriginTransaction originTransaction
     ) throws CantCreateCryptoMoneyDestockException;
 }

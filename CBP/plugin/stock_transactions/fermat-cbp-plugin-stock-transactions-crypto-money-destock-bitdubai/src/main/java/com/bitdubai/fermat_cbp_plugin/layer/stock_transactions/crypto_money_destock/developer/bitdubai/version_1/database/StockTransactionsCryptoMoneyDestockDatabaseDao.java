@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CryptoMoneyTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.exceptions.MissingCryptoMoneyDestockDataException;
@@ -69,7 +70,7 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
         return database;
     }
 
-    private DatabaseTableRecord getBankMoneyRestockRecord(CryptoMoneyTransaction cryptoMoneyTransaction
+    private DatabaseTableRecord getBankMoneyDestockRecord(CryptoMoneyTransaction cryptoMoneyTransaction
                                                           ) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
@@ -84,6 +85,8 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
         record.setStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_MEMO_COLUMN_NAME, cryptoMoneyTransaction.getMemo());
         record.setFloatValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_AMOUNT_COLUMN_NAME, cryptoMoneyTransaction.getAmount());
         record.setStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cryptoMoneyTransaction.getTransactionStatus().getCode());
+        record.setFloatValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME, cryptoMoneyTransaction.getPriceReference());
+        record.setStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cryptoMoneyTransaction.getOriginTransaction().getCode());
 
         return record;
     }
@@ -97,7 +100,7 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
             return false;
     }
 
-    private List<DatabaseTableRecord> getCryptoMoneyRestockData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
+    private List<DatabaseTableRecord> getCryptoMoneyDestockData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TABLE_NAME);
 
         if (filter != null)
@@ -122,11 +125,13 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
         cryptoMoneyDestockTransaction.setTimeStamp(Timestamp.valueOf(bankMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TIMESTAMP_COLUMN_NAME)));
         cryptoMoneyDestockTransaction.setMemo(bankMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_MEMO_COLUMN_NAME));
         cryptoMoneyDestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(bankMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
+        cryptoMoneyDestockTransaction.setPriceReference(bankMoneyRestockTransactionRecord.getFloatValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME));
+        cryptoMoneyDestockTransaction.setOriginTransaction(OriginTransaction.getByCode(bankMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
 
         return cryptoMoneyDestockTransaction;
     }
 
-    public void saveCryptoMoneyRestockTransactionData(CryptoMoneyTransaction cryptoMoneyTransaction) throws DatabaseOperationException, MissingCryptoMoneyDestockDataException {
+    public void saveCryptoMoneyDestockTransactionData(CryptoMoneyTransaction cryptoMoneyTransaction) throws DatabaseOperationException, MissingCryptoMoneyDestockDataException {
 
         try
         {
@@ -134,7 +139,7 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
             DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseTable(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TABLE_NAME);
-            DatabaseTableRecord bankMoneyRestockRecord = getBankMoneyRestockRecord(cryptoMoneyTransaction);
+            DatabaseTableRecord bankMoneyRestockRecord = getBankMoneyDestockRecord(cryptoMoneyTransaction);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(cryptoMoneyTransaction.getTransactionId().toString());
@@ -165,7 +170,7 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
             database = openDatabase();
             List<CryptoMoneyTransaction> cryptoMoneyTransactions = new ArrayList<>();
             // I will add the Asset Factory information from the database
-            for (DatabaseTableRecord cryptoMoneyRestockRecord : getCryptoMoneyRestockData(filter)) {
+            for (DatabaseTableRecord cryptoMoneyRestockRecord : getCryptoMoneyDestockData(filter)) {
                 final CryptoMoneyTransaction cryptoMoneyTransaction = getCryptoMoneyRestockTransaction(cryptoMoneyRestockRecord);
 
                 cryptoMoneyTransactions.add(cryptoMoneyTransaction);

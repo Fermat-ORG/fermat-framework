@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.bank_money_destock.interfaces;
+package com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces;
 
 
 
