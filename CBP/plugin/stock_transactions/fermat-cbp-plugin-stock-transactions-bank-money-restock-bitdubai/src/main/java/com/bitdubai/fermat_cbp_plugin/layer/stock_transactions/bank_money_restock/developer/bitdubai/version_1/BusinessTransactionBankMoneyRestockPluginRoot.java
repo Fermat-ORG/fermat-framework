@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfaces.HoldManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.bank_money_restock.interfaces.BankMoneyRestockManager;
@@ -142,7 +143,7 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
     }
 
     @Override
-    public void createTransactionRestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, float amount, String memo) throws CantCreateBankMoneyRestockException {
+    public void createTransactionRestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, float amount, String memo, float priceReference, OriginTransaction originTransaction) throws CantCreateBankMoneyRestockException {
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         BankMoneyRestockTransactionImpl bankMoneyRestockTransaction = new BankMoneyRestockTransactionImpl(
@@ -156,7 +157,9 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
                 bankAccount,
                 amount,
                 timestamp,
-                TransactionStatusRestockDestock.INIT_TRANSACTION);
+                TransactionStatusRestockDestock.INIT_TRANSACTION,
+                priceReference,
+                originTransaction);
 
         try {
             stockTransactionBankMoneyRestockManager.saveBankMoneyRestockTransactionData(bankMoneyRestockTransaction);
@@ -187,7 +190,7 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
 
     private void testRestock(){
         try {
-            createTransactionRestock("publicKeyActor", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpWalletPublicKey", "bnkWalletPublicKey", "account", 250, "memo");
+            createTransactionRestock("publicKeyActor", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpWalletPublicKey", "bnkWalletPublicKey", "account", 250, "memo", 250, OriginTransaction.STOCK_INITIAL);
         } catch (CantCreateBankMoneyRestockException e) {
             e.printStackTrace();
         }
