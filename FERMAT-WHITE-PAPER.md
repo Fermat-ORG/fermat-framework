@@ -297,3 +297,7 @@ With this system we allow for a new ecosystem of peer-to-peer financial applicat
 
 * [2] David Johnston & others, "The General Theory of Decentralized Applications, Dapps", https://github.com/DavidJohnstonCEO/DecentralizedApplications/blob/master/README.md
  
+<br>
+## Further Reading
+
+* DRAFT: Fermat Book - https://github.com/bitDubai/fermat/tree/master/fermat-book
