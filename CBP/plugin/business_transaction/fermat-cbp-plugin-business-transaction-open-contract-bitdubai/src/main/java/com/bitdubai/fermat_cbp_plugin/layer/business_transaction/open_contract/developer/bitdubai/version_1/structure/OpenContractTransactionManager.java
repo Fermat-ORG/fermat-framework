@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 26/11/15.
@@ -35,6 +36,8 @@ public class OpenContractTransactionManager implements OpenContractManager{
      */
     private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
+    FiatIndexManager fiatIndexManager;
+
     /**
      * Represents the negotiation ID.
      */
@@ -50,12 +53,14 @@ public class OpenContractTransactionManager implements OpenContractManager{
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
             CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
             CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+            FiatIndexManager fiatIndexManager,
             TransactionTransmissionManager transactionTransmissionManager){
 
         this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
         this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
         this.customerBrokerPurchaseNegotiationManager=customerBrokerPurchaseNegotiationManager;
         this.customerBrokerSaleNegotiationManager=customerBrokerSaleNegotiationManager;
+        this.fiatIndexManager=fiatIndexManager;
         this.transactionTransmissionManager=transactionTransmissionManager;
 
     }
@@ -71,6 +76,7 @@ public class OpenContractTransactionManager implements OpenContractManager{
         OpenContractBrokerContractManager openContractCustomerContractManager=new OpenContractBrokerContractManager(
                 customerBrokerContractSaleManager,
                 customerBrokerSaleNegotiationManager,
+                fiatIndexManager,
                 transactionTransmissionManager);
         openContractCustomerContractManager.openContract(negotiationId);
         //openContract(negotiationId);
@@ -81,6 +87,7 @@ public class OpenContractTransactionManager implements OpenContractManager{
         OpenContractCustomerContractManager openContractCustomerContractManager =new OpenContractCustomerContractManager(
                 customerBrokerContractPurchaseManager,
                 customerBrokerPurchaseNegotiationManager,
+                fiatIndexManager,
                 transactionTransmissionManager);
         openContractCustomerContractManager.openContract(negotiationId);
 

@@ -7,8 +7,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 
-import java.util.UUID;
-
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 27/11/15.
  */
@@ -17,6 +15,7 @@ public class ContractRecord implements Contract {
     CurrencyType merchandiseCurrency;
     float merchandiseAmount;
     long merchandiseDeliveryExpirationDate;
+    String negotiationId;
     float paymentAmount;
     CurrencyType paymentCurrency;
     long paymentExpirationDate;
@@ -34,15 +33,16 @@ public class ContractRecord implements Contract {
      */
     @Override
     public String getContractId() {
-        return null;
+        return contractHash;
     }
 
+    /**
+     * This method generate a hash that contains the all the encrypted contract in XML.
+     * This hash is used as the contract Id
+     * @return
+     */
     public String generateContractHash(){
         this.contractHash=CryptoHasher.performSha256(this.toString());
-        return this.contractHash;
-    }
-
-    public String getContractHash(){
         return this.contractHash;
     }
 
@@ -59,6 +59,10 @@ public class ContractRecord implements Contract {
     @Override
     public long getMerchandiseDeliveryExpirationDate() {
         return this.merchandiseDeliveryExpirationDate;
+    }
+
+    public String getNegotiationId(){
+        return this.negotiationId;
     }
 
     @Override
@@ -111,6 +115,15 @@ public class ContractRecord implements Contract {
 
     public void setMerchandiseDeliveryExpirationDate(long merchandiseDeliveryExpirationDate) {
         this.merchandiseDeliveryExpirationDate=merchandiseDeliveryExpirationDate;
+    }
+
+    /**
+     * The negotiationId is used to link this contract with the genesis negotiation.
+     * Also, this negotiation id helps to create an unique contract hash (id) for this contract record.
+     * @param negotiationId
+     */
+    public void setNegotiationId(String negotiationId){
+        this.negotiationId=negotiationId;
     }
 
     public void setPaymentAmount(float paymentAmount) {

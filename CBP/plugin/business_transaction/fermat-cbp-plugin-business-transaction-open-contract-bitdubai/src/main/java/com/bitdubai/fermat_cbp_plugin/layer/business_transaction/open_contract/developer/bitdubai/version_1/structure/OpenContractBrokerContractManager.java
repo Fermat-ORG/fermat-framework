@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interf
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CantGetNegotiationStatusException;
 
 import java.util.Collection;
@@ -31,6 +32,11 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
     private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     /**
+     * Represents the Fiat index.
+     */
+    private FiatIndexManager fiatIndexManager;
+
+    /**
      * Represents the negotiation ID.
      */
     //private String negotiationId;
@@ -41,10 +47,12 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
     private TransactionTransmissionManager transactionTransmissionManager;
 
     public OpenContractBrokerContractManager(CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-                                          CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
-                                          TransactionTransmissionManager transactionTransmissionManager){
+                                             CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+                                             FiatIndexManager fiatIndexManager,
+                                             TransactionTransmissionManager transactionTransmissionManager){
         this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
         this.customerBrokerSaleNegotiationManager=customerBrokerSaleNegotiationManager;
+        this.fiatIndexManager=fiatIndexManager;
         this.transactionTransmissionManager=transactionTransmissionManager;
 
     }

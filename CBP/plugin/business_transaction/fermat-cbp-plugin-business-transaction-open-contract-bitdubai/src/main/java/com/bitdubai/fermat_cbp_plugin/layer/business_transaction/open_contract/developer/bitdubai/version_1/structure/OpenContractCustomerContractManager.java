@@ -17,6 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CantGetNegotiationStatusException;
 
 import java.util.Collection;
@@ -37,16 +38,23 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
     private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     /**
+     * Represents the Fiat index.
+     */
+    private FiatIndexManager fiatIndexManager;
+
+    /**
      * Represents the transaction transmission manager
      */
     private TransactionTransmissionManager transactionTransmissionManager;
 
     public OpenContractCustomerContractManager(CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
                                                CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
+                                               FiatIndexManager fiatIndexManager,
                                                TransactionTransmissionManager transactionTransmissionManager) {
 
         customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
         customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
+        fiatIndexManager=fiatIndexManager;
         transactionTransmissionManager = transactionTransmissionManager;
     }
 
