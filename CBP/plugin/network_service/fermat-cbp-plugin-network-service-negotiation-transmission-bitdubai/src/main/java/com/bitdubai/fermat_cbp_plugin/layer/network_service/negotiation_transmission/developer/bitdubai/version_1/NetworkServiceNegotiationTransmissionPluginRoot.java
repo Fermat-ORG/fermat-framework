@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmi
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
@@ -49,6 +48,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServiceDatabaseException;*/
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeNegotiationTransmissionNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseFactory;
@@ -56,12 +56,16 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -107,13 +111,13 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*CONSTRUCTOR*/
     public NetworkServiceNegotiationTransmissionPluginRoot() {
         super(
-            new PluginVersionReference(new Version()),
-            PlatformComponentType.NETWORK_SERVICE,
-            NetworkServiceType.NEGOTIATION_TRANSMISSION,
-            "Negotiation Transmission Network Service",
-            "NegotiationTransmissionNetworkService",
-            null,
-            EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION
+                new PluginVersionReference(new Version()),
+                PlatformComponentType.NETWORK_SERVICE,
+                NetworkServiceType.NEGOTIATION_TRANSMISSION,
+                "Negotiation Transmission Network Service",
+                "NegotiationTransmissionNetworkService",
+                null,
+                EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION
         );
     }
 
@@ -160,7 +164,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             }
 
             /*List Network Service Register*/
-            remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
+//            remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
 
             /*Initilize service*/
             this.serviceStatus = ServiceStatus.STARTED;
@@ -206,16 +210,13 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         // remove all listeners from the event manager and from the plugin.
         for (FermatEventListener listener: listenersAdded)
             eventManager.removeListener(listener);
-
         listenersAdded.clear();
-
         // close all connections.
         communicationNetworkServiceConnectionManager.closeAllConnection();
-
         // set to not registered.
         register = Boolean.FALSE;
-
         this.serviceStatus = ServiceStatus.STOPPED;
+
     }
 
     /*END SERVICE*/
@@ -242,86 +243,212 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*END NEGOTIATIONTRANSMISSIONMANAGER*/
 
     /*DATABASEMANAGERFORDEVELOPERS.*/
-
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        try{
+            return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ArrayList<>();
+        }
     }
     /*END DATABASEMANAGERFORDEVELOPERS*/
 
     @Override
-    public FermatManager getManager() {
-        return null;
-    }
-
-    @Override
     public String getIdentityPublicKey() {
-        return null;
+        return this.identity.getPublicKey();
     }
 
     @Override
     public void initializeCommunicationNetworkServiceConnectionManager() {
-
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
+            this.getPlatformComponentProfilePluginRoot(),
+            identity,
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
+            dataBase,
+            errorManager,
+            eventManager,
+            this.getEventSource(),
+            getPluginVersionReference()
+        );
     }
 
     @Override
     public List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList() {
-        return null;
+        return remoteNetworkServicesRegisteredList;
     }
 
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters) {
+        System.out.println(" TemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList");
 
+         /*
+         * Request the list of component registers
+         */
+        try {
+
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(this.getPlatformComponentProfilePluginRoot(), discoveryQueryParameters);
+
+        } catch (CantRequestListException e) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+
+        }
     }
 
     @Override
     public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
-        return null;
+        return communicationNetworkServiceConnectionManager;
     }
 
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        return null;
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(
+            PlatformComponentType platformComponentType,
+            NetworkServiceType networkServiceType,
+            String alias,
+            String identityPublicKey,
+            Location location,
+            Double distance,
+            String name,
+            String extraData,
+            Integer firstRecord,
+            Integer numRegister,
+            PlatformComponentType fromOtherPlatformComponentType,
+            NetworkServiceType fromOtherNetworkServiceType) {
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
+                platformComponentType,
+                networkServiceType,
+                alias,
+                identityPublicKey,
+                location,
+                distance,
+                name,
+                extraData,
+                firstRecord,
+                numRegister,
+                fromOtherPlatformComponentType,
+                fromOtherNetworkServiceType
+        );
     }
 
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
+        /*
+         * If the component registered have my profile and my identity public key
+         */
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.CRYPTO_ADDRESSES &&
+                platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
+            System.out.print("-----------------------\n" +
+                    "TRANSACTION TRANSMISSION REGISTERED  -----------------------\n" +
+                    "-----------------------\n TO: " + getName());
+
+            /*Mark as register*/
+            this.register = Boolean.TRUE;
+
+            //TODO AGENTE
+//            initializeAgent();
+        }
     }
 
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteNetworkService) {
-
+        //TODO AGENTE
+//        System.out.println("----------------------------------\n" +
+//                "FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
+//                "--------------------------------------------------------");
+//        cryptoAddressesExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
     }
 
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
+        System.out.println("TransactionTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
+        System.out.print("-----------------------\n" +
+                "TRANSACTION TRANSMISSION: SUCCESSFUL CONNECTION!  -----------------------\n" +
+                "-----------------------\n A: " + getName());
+
+        /*
+         * save into the cache
+         */
+        remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);;
+        //TODO AGENTE: si hace falta
+        //cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
     }
 
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
+        /*
+         * Tell the manager to handler the new connection established
+         */
 
+        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+
+        System.out.print("-----------------------\n" +
+                "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
+                "-----------------------\n A: " + remoteComponentProfile.getAlias());
+
+        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
+
+            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
+
+
+            System.out.print("-----------------------\n" +
+                    "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
+                    "-----------------------\n A: " + remoteComponentProfile.getAlias());
+        }
     }
 
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
 
+            System.out.println("*( *( *( *( *( *( *( *( *(  SE CAYO LA CONEXION *( *( *( *( *( *( *( *( *( *( ");
+            this.register = false;
+            communicationNetworkServiceConnectionManager.closeAllConnection();
+        }
     }
 
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-
+//        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+//
+//            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+//
+//            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+//
+//                System.out.println("KKKKKKKKKKKKKKKKKKKKK SE CAYO LA VPN PUBLIC KEY  " + vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+//
+//                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+//
+//            }
+//
+//        }
     }
 
     public void handleNewMessages(final FermatMessage message){
