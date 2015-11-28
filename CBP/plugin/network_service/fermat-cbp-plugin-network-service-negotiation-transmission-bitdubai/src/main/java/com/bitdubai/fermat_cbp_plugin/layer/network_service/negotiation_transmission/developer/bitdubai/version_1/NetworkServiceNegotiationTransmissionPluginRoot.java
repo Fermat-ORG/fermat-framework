@@ -122,7 +122,6 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     }
 
     /*SERVICE*/
-
     @Override
     public void start() throws CantStartPluginException{
 
@@ -164,7 +163,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             }
 
             /*List Network Service Register*/
-//            remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
+            remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
             /*Initilize service*/
             this.serviceStatus = ServiceStatus.STARTED;
@@ -245,22 +244,25 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*DATABASEMANAGERFORDEVELOPERS.*/
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+//        return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+        return null;
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+//        return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        return null;
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        try{
-            return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (Exception e) {
-            System.out.println(e);
-            return new ArrayList<>();
-        }
+//        try{
+//            return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+//        } catch (Exception e) {
+//            System.out.println(e);
+//            return new ArrayList<>();
+//        }
+        return null;
     }
     /*END DATABASEMANAGERFORDEVELOPERS*/
 
@@ -271,7 +273,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     @Override
     public void initializeCommunicationNetworkServiceConnectionManager() {
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
+        /*this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
             this.getPlatformComponentProfilePluginRoot(),
             identity,
             wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
@@ -280,7 +282,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             eventManager,
             this.getEventSource(),
             getPluginVersionReference()
-        );
+        );*/
     }
 
     @Override
@@ -290,11 +292,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters) {
+        /*
         System.out.println(" TemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList");
-
-         /*
-         * Request the list of component registers
-         */
+         //Request the list of component registers
         try {
 
             wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(this.getPlatformComponentProfilePluginRoot(), discoveryQueryParameters);
@@ -318,11 +318,13 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
         }
+        */
     }
 
     @Override
     public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
-        return communicationNetworkServiceConnectionManager;
+//        return communicationNetworkServiceConnectionManager;
+        return null;
     }
 
     @Override
@@ -339,7 +341,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             Integer numRegister,
             PlatformComponentType fromOtherPlatformComponentType,
             NetworkServiceType fromOtherNetworkServiceType) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
+        /*return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
                 platformComponentType,
                 networkServiceType,
                 alias,
@@ -352,14 +354,14 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 numRegister,
                 fromOtherPlatformComponentType,
                 fromOtherNetworkServiceType
-        );
+        );*/
+        return null;
     }
 
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
         /*
-         * If the component registered have my profile and my identity public key
-         */
+        //If the component registered have my profile and my identity public key
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.CRYPTO_ADDRESSES &&
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
@@ -368,12 +370,13 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                     "TRANSACTION TRANSMISSION REGISTERED  -----------------------\n" +
                     "-----------------------\n TO: " + getName());
 
-            /*Mark as register*/
+            //Mark as register
             this.register = Boolean.TRUE;
 
             //TODO AGENTE
 //            initializeAgent();
         }
+        */
     }
 
     @Override
@@ -387,27 +390,24 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
-        System.out.println("TransactionTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
+        /*System.out.println("TransactionTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
         System.out.print("-----------------------\n" +
                 "TRANSACTION TRANSMISSION: SUCCESSFUL CONNECTION!  -----------------------\n" +
                 "-----------------------\n A: " + getName());
 
-        /*
-         * save into the cache
-         */
+        //save into the cache
         remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);;
         //TODO AGENTE: si hace falta
         //cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
+        */
     }
 
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
-        /*
-         * Tell the manager to handler the new connection established
-         */
+        //Tell the manager to handler the new connection established
 
-        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+        /*communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
         System.out.print("-----------------------\n" +
                 "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
@@ -421,45 +421,44 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             System.out.print("-----------------------\n" +
                     "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
                     "-----------------------\n A: " + remoteComponentProfile.getAlias());
-        }
+        }*/
     }
 
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+        /*if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
 
             System.out.println("*( *( *( *( *( *( *( *( *(  SE CAYO LA CONEXION *( *( *( *( *( *( *( *( *( *( ");
             this.register = false;
             communicationNetworkServiceConnectionManager.closeAllConnection();
-        }
+        }*/
     }
 
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-//        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
-//
-//            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-//
-//            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-//
-//                System.out.println("KKKKKKKKKKKKKKKKKKKKK SE CAYO LA VPN PUBLIC KEY  " + vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-//
-//                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-//
-//            }
-//
-//        }
+        /*if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+
+            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+
+                System.out.println("KKKKKKKKKKKKKKKKKKKKK SE CAYO LA VPN PUBLIC KEY  " + vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        }*/
     }
 
     public void handleNewMessages(final FermatMessage message){
 
     }
-
     /*PRIVATE*/
 
-    /*This method validate is all required resource are injected into the plugin root by the platform*/
+    //This method validate is all required resource are injected into the plugin root by the platform
     private void validateInjectedResources() throws CantStartPluginException {
-         /*If all resources are inject*/
+        //If all resources are inject
         if (wsCommunicationsCloudClientManager == null ||
             pluginDatabaseSystem               == null ||
             errorManager                       == null ||
@@ -496,35 +495,36 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     }
 
     private void initializeListener(){
-         /*Listen and handle Complete Component Registration Notification Event*/
+         //Listen and handle Complete Component Registration Notification Event
         FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-         /*Listen and handle Complete Request List Component Registered Notification Event*/
+         //Listen and handle Complete Request List Component Registered Notification Event
         fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /*Listen and handle Complete Request List Component Registered Notification Event*/
+        //Listen and handle Complete Request List Component Registered Notification Event
         fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /*failure connection*/
+        //failure connection
         fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /*new message*/
+        //new message
         fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
         fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
     }
     /*END PRIVATE*/
 }
