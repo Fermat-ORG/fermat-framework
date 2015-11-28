@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="300dp"
+    android:layout_height="275dp"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="#ffffff"
-    style="@android:style/Theme.Translucent.NoTitleBar">
+    android:background="#CCffffff"
+    >
 
     <View
         android:layout_width="match_parent"

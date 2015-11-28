@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
@@ -388,7 +390,12 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
                 case EMPTY:
                     break;
                 case FOLDER:
-                    FolderDialog folderDialog = new FolderDialog(getActivity(),desktopSession,null,((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
+                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,desktopSession,null,((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
+//                    folderDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//                    folderDialog.getWindow().setFormat(PixelFormat.TRANSLUCENT);
+//                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();
+//                    lp.dimAmount=0.0f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
+//                    folderDialog.getWindow().setAttributes(lp);
                     folderDialog.show();
                     break;
                 default:
