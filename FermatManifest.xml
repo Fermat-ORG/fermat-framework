@@ -235,16 +235,18 @@
 			<layer name="Actor Network Service" language="java"></layer>
 			<layer name="Network Service" language="java"></layer>
 			<layer name="empty layer 2"></layer>
-			<layer super_layer="P2P"></layer>
+			<layer super_layer="CER"></layer>
 			<layer name="empty layer 3"></layer>
-			<layer super_layer="BCH"></layer>
+			<layer super_layer="P2P"></layer>
 			<layer name="empty layer 4"></layer>
+			<layer super_layer="BCH"></layer>
+			<layer name="empty layer 5"></layer>
 			<layer name="License" language="java"></layer>
 			<layer name="Plugin" language="java"></layer>
 			<layer name="User" language="java"></layer>
 			<layer name="Hardware" language="java"></layer>
 			<layer name="Platform Service" language="java"></layer>
-			<layer name="empty layer 5"></layer>
+			<layer name="empty layer 6"></layer>
 			<layer super_layer="OSA"></layer>
 
 
