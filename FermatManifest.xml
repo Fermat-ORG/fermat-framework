@@ -5485,7 +5485,8 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="50"></author>
+							<author name="yalayn" scope="implementation" percentage="20"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="25"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -6734,6 +6735,43 @@
 
 	<super_layers>
 
+		<super_layer code="CER" name="Currency Exchange Rates" dependsOn="COR">
+
+			<layer name="Provider" language="java">
+				<plugins>
+					<plugin	name="SurBitcoin"
+						description=""
+						difficulty="10"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Coinbase"
+						description=""
+						difficulty="10"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+		</super_layer>
+
 		<super_layer code="P2P" name="Peer to Peer Network" dependsOn="OSA">
 
 			<layer name="Communication" language="java">
@@ -7329,6 +7367,8 @@
 		<layer name="Actor Connection" language="java"></layer>
 		<layer name="Actor Network Service" language="java"></layer>
 		<layer name="Network Service" language="java"></layer>
+		<!-- separator or empty layer -->
+		<layer name="Provider" language="java" super_layer="CER"></layer>
 		<!-- separator or empty layer -->
 		<layer name="Communication" language="java" super_layer="P2P"></layer>
 		<!-- separator or empty layer -->
