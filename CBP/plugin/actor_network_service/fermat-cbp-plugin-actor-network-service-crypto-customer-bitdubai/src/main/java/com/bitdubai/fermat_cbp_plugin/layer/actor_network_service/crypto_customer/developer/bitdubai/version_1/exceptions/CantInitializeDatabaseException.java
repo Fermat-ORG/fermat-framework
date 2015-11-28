@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public final class CantInitializeDatabaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE CRYPTO BROKER ACTOR NETWORK SERVICE DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE CRYPTO CUSTOMER ACTOR NETWORK SERVICE DATABASE EXCEPTION";
 
     public CantInitializeDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

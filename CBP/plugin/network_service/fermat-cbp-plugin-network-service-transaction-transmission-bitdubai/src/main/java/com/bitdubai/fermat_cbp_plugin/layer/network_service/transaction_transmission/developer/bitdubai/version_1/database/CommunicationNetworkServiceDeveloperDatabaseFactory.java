@@ -126,7 +126,6 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
          */
         List<String> contractHashColumns = new ArrayList<>();
 
-
         contractHashColumns.add(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME);
         contractHashColumns.add(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME);
         contractHashColumns.add(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME);
@@ -145,6 +144,21 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
          */
         DeveloperDatabaseTable contractHashTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME, contractHashColumns);
         tables.add(contractHashTable);
+
+        /**
+         * Table COMPONENT VERSIONS DETAILS columns.
+         */
+        List<String> componentVersionsDetailsColumns = new ArrayList<String>();
+
+        componentVersionsDetailsColumns.add(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_IPK_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME);
+        /**
+         * Table COMPONENT VERSIONS DETAILS addition.
+         */
+        DeveloperDatabaseTable componentVersionsDetailsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME, componentVersionsDetailsColumns);
+        tables.add(componentVersionsDetailsTable);
 
         return tables;
     }

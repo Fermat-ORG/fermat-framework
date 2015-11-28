@@ -278,12 +278,15 @@ public class CryptoTransmissionAgent {
                 discountWaitTime();
             }
 
-            //Sleep for a time
-            toSend.sleep(CryptoTransmissionAgent.SLEEP_TIME);
+            if(toReceive.isInterrupted() == Boolean.FALSE){
+                //Sleep for a time
+                toSend.sleep(CryptoTransmissionAgent.SLEEP_TIME);
+            }
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
-        }
+            toSend.interrupt();
+            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            return;        }
 
     }
 
@@ -505,12 +508,15 @@ public class CryptoTransmissionAgent {
         try {
             // function to process metadata received
             processReceive();
-            //Sleep for a time
-            toSend.sleep(CryptoTransmissionAgent.RECEIVE_SLEEP_TIME);
+
+            if(toSend.isInterrupted() == Boolean.FALSE){
+                toReceive.sleep(CryptoTransmissionAgent.RECEIVE_SLEEP_TIME);
+            }
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
-        }
+            toReceive.interrupt();
+            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            return;        }
 
     }
 
@@ -564,7 +570,14 @@ public class CryptoTransmissionAgent {
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
                                     System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
 
-                                    //registerEvent(EventType.INCOMING_CRYPTO_METADATA, new IncomingCryptoMetadataEventHandler(this));
+                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                                    cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
+                                    cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
+
+                                    System.out.print("-----------------------\n" +
+                                            "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
+                                            "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
+
                                     lauchNotification();
                                     break;
 
@@ -574,6 +587,17 @@ public class CryptoTransmissionAgent {
                                             "ACA DEBERIA LANZAR EVENTO NO CREO -----------------------\n" +
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
                                     // deberia ver si tengo que lanzar un evento acá
+                                    //para el outgoing intra user
+
+                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                                    cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
+                                    cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
+
+                                    System.out.print("-----------------------\n" +
+                                            "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
+                                            "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
+
+
                                     System.out.print("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
                                     this.poolConnectionsWaitingForResponse.remove(cryptoTransmissionMetadata.getDestinationPublicKey());
                                     break;

@@ -146,9 +146,14 @@ task fatJar(type: Jar
             it.isDirectory() ? it : zipTree(it)
         }
     }
+    zip64 true
 
     with jar
 }
+
+
+
+
 
 
 check.mustRunAfter clean
