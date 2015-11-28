@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -69,15 +70,15 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot extends AbstractPlugin 
     private CustomerBrokerPurchaseNegotiationDao customerBrokerPurchaseNegotiationDao;
 
     /*
-        Plugin Interface implementation.
+       Builder
     */
 
-        public CustomerBrokerPurchaseNegotiationPluginRoot(PluginVersionReference pluginVersionReference) {
-            super(pluginVersionReference);
+        public CustomerBrokerPurchaseNegotiationPluginRoot() {
+            super(new PluginVersionReference(new Version()));
         }
 
     /*
-        CryptoBrokerIdentityManager Interface implementation.
+        Plugin Interface implementation.
     */
 
         @Override
