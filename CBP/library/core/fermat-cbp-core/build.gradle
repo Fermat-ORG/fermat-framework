@@ -51,7 +51,9 @@ dependencies {
 
     //Wallet Module
     compile project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai')
-    compile project(':fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai')
+
+    //World Layer
+    compile project(':fermat-cbp-plugin-world-fiat-index-bitdubai')
 
 
 

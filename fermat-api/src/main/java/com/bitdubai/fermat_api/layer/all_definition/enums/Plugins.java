@@ -160,7 +160,6 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT("BCSHMTD"),
     BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAW("BCSHMTW"),
     BITDUBAI_CSH_WALLET_CASH_MONEY("BCSHWCM"),
-
     // End CSH Plugins
 
     // Init new Plugins
@@ -236,7 +235,8 @@ public enum Plugins implements FermatEnum {
     CRYPTO_MONEY_RESTOCK        ("CRRE"),
     CUSTOMER_BROKER_CLOSE       ("CBCL"),
     CUSTOMER_BROKER_NEW         ("CBNE"),
-    CUSTOMER_BROKER_UPDATE      ("CBUP"),   
+    CUSTOMER_BROKER_UPDATE      ("CBUP"),
+    FIAT_INDEX                  ("FI"),
     NEGOTIATION_PURCHASE        ("NGP"),
     NEGOTIATION_SALE            ("NGS"),
     NEGOTIATION_TRANSMISSION    ("NGTR"),
@@ -325,11 +325,17 @@ public enum Plugins implements FermatEnum {
             case ("CRRE"):  return CRYPTO_MONEY_RESTOCK     ;
             case ("CRDE"):  return CRYPTO_MONEY_DESTOCK     ;
             case ("TRTX"):  return TRANSACTION_TRANSMISSION ;
+            case ("FI"):    return FIAT_INDEX               ;
             case "BBNKHMT": return BITDUBAI_BNK_HOLD_MONEY_TRANSACTION;
             case "BBNKUMT": return BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION;
             case "BBNKDMT": return BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION;
             case "BBNKWMT": return BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION;
             case "BBNKBMW": return BITDUBAI_BNK_BANK_MONEY_WALLET;
+            case "BCSHMTH": return BITDUBAI_CSH_MONEY_TRANSACTION_HOLD;
+            case "BCSHMTU": return BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD;
+            case "BCSHMTD": return BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT;
+            case "BCSHMTW": return BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAW;
+            case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
             case ("NGTR"):  return NEGOTIATION_TRANSMISSION ;
             case ("CBNE"):  return CUSTOMER_BROKER_NEW      ;
             case ("CBUP"):  return CUSTOMER_BROKER_UPDATE   ;
