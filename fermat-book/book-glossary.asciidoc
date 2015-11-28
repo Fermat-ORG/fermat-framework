@@ -1,5 +1,7 @@
 [glossary]
 :numbered!:
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
+
 == Quick Glossary
 
 This quick glossary contains many of the terms used in relation to *Fermat*, *blockchain technology* and *cryptoworld*.
@@ -29,3 +31,6 @@ In simple terms, a transfer of crypto currency from one address to another. More
 
 wallet::
 Software that holds all your crypto addresses and secret keys. Use it to send, receive, and store your crypto currency.
+
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+
