@@ -1937,6 +1937,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         walletNavigationStructureOpen = runtimeWalletNavigationStructure;
 
         runtimeActivity = new Activity();
+        runtimeActivity.setActivityType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setColor("#12aca1");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);

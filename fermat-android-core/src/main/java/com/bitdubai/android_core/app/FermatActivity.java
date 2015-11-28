@@ -16,7 +16,6 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ScaleDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,6 +59,7 @@ import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionMana
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
+import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory;
 import com.bitdubai.fermat.R;
@@ -101,7 +101,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
@@ -133,6 +132,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
+import com.bitdubai.sub_app.wallet_manager.structure.Item;
+import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -723,8 +724,12 @@ public abstract class FermatActivity extends AppCompatActivity
                 setContentView(R.layout.new_wallet_runtime);
             } else {
                 setContentView(R.layout.base_layout_without_collapse);
+                if(activityType.equals(ActivityType.ACTIVITY_TYPE_DESKTOP)){
+                    ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.VISIBLE);
+                }else{
+                    ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.GONE);
+                }
             }
-
 
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
@@ -1262,6 +1267,38 @@ public abstract class FermatActivity extends AppCompatActivity
         //      new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
         getActionBar().setListNavigationCallbacks(adapter, listener);
         adapter.notifyDataSetChanged();
+    }
+
+    protected void bottomNavigationEnabled(boolean enabled){
+        if(enabled) {
+            List<Item> lst = new ArrayList<>();
+            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Identity", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            Item item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_01);
+            item2.setPosition(1);
+            lst.add(item2);
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Community", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_02);
+            item2.setPosition(2);
+            lst.add(item2);
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Scanner", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_04);
+            item2.setPosition(3);
+            lst.add(item2);
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Store", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_03);
+            item2.setPosition(4);
+            lst.add(item2);
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Support", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_05);
+            item2.setPosition(5);
+            lst.add(item2);
+            BottomNavigation bottomNavigation = new BottomNavigation(this, lst);
+        }
     }
 
 

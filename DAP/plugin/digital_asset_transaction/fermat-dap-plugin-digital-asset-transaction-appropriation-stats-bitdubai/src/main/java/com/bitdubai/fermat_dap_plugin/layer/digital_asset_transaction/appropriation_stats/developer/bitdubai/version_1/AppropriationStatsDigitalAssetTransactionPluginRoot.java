@@ -22,9 +22,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
@@ -101,6 +105,8 @@ public class AppropriationStatsDigitalAssetTransactionPluginRoot extends Abstrac
                 "pluginDatabaseSystem : " + pluginDatabaseSystem + "\n" +
                 "pluginFileSystem : " + pluginFileSystem + "\n" +
                 "logManager : " + logManager + "\n" +
+                "assetIssuerActorNetworkServiceManager : " + assetIssuerActorNetworkServiceManager + "\n" +
+                "actorAssetUserManager : " + actorAssetUserManager + "\n" +
                 "eventManager : " + eventManager + "\n" +
                 "recorderService : " + recorderService + "\n";
 
@@ -112,7 +118,7 @@ public class AppropriationStatsDigitalAssetTransactionPluginRoot extends Abstrac
             }
             recorderService = new AppropriationStatsRecorderService(pluginId, eventManager, pluginDatabaseSystem);
             recorderService.start();
-            monitorAgent = new AppropriationStatsMonitorAgent(pluginDatabaseSystem, logManager, errorManager, pluginId);
+            monitorAgent = new AppropriationStatsMonitorAgent(pluginDatabaseSystem, logManager, errorManager, pluginId, assetIssuerActorNetworkServiceManager);
             monitorAgent.start();
         } catch (Exception e) {
             throw new CantStartPluginException(FermatException.wrapException(e), context, e.getMessage());
@@ -149,55 +155,119 @@ public class AppropriationStatsDigitalAssetTransactionPluginRoot extends Abstrac
             dao.assetAppropriated(assetAppropriated, userThatAppropriated);
 
             //TODO SEND MESSAGE THROUGH ISSUER NETWORK SERVICE
-//            ActorAssetIssuer actorAssetIssuer = new ActorAssetIssuer() {
-//                @Override
-//                public String getPublicKey() {
-//                    return assetAppropriated.getIdentityAssetIssuer().getPublicKey();
-//                }
-//
-//                @Override
-//                public String getName() {
-//                    return assetAppropriated.getIdentityAssetIssuer().getAlias();
-//                }
-//
-//                @Override
-//                public long getRegistrationDate() {
-//                    return 0;
-//                }
-//
-//                @Override
-//                public byte[] getProfileImage() {
-//                    return new byte[0];
-//                }
-//
-//                @Override
-//                public DAPConnectionState getDapConnectionState() {
-//                    return DAPConnectionState.CONNECTED_OFFLINE;
-//                }
-//
-//                @Override
-//                public String getDescription() {
-//                    return null;
-//                }
-//
-//                @Override
-//                public Location getLocation() {
-//                    return null;
-//                }
-//
-//                @Override
-//                public Double getLocationLatitude() {
-//                    return null;
-//                }
-//
-//                @Override
-//                public Double getLocationLongitude() {
-//                    return null;
-//                }
-//            };
-//            ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser(); //The user of this device, whom appropriate the asset.
-//            String message = new AssetAppropriationContentMessage(assetAppropriated, userThatAppropriated).toString();
-//            assetIssuerActorNetworkServiceManager.sendMessage(actorAssetIssuer,message);
+            ActorAssetIssuer actorAssetIssuer = new ActorAssetIssuer() {
+                /**
+                 * The method <code>getActorPublicKey</code> gives us the public key of the represented a Actor
+                 *
+                 * @return the publicKey
+                 */
+                @Override
+                public String getActorPublicKey() {
+                    return assetAppropriated.getIdentityAssetIssuer().getPublicKey();
+                }
+
+                /**
+                 * The method <code>getName</code> gives us the name of the represented a Actor
+                 *
+                 * @return the name of the intra user
+                 */
+                @Override
+                public String getName() {
+                    return assetAppropriated.getIdentityAssetIssuer().getAlias();
+                }
+
+                /**
+                 * The method <coda>getProfileImage</coda> gives us the profile image of the represented a Actor
+                 *
+                 * @return the image
+                 */
+                @Override
+                public byte[] getProfileImage() {
+                    return assetAppropriated.getIdentityAssetIssuer().getProfileImage();
+                }
+
+                /**
+                 * The method <code>getRegistrationDate</code> gives us the date when both Asset Issuers
+                 * exchanged their information and accepted each other as contacts.
+                 *
+                 * @return the date
+                 */
+                @Override
+                public long getRegistrationDate() {
+                    return 0;
+                }
+
+                /**
+                 * The method <code>getLastConnectionDate</code> gives us the Las Connection Date of the represented
+                 * Asset Issuer
+                 *
+                 * @return the Connection Date
+                 */
+                @Override
+                public long getLastConnectionDate() {
+                    return 0;
+                }
+
+                /**
+                 * The method <code>getConnectionState</code> gives us the connection state of the represented
+                 * Asset Issuer
+                 *
+                 * @return the Connection state
+                 */
+                @Override
+                public DAPConnectionState getDapConnectionState() {
+                    return DAPConnectionState.REGISTERED_OFFLINE;
+                }
+
+                /**
+                 * Método {@code getDescription}
+                 * The Method return a description about Issuer
+                 * acerca de él mismo.
+                 *
+                 * @return {@link String} con la descripción del {@link ActorAssetIssuer}
+                 */
+                @Override
+                public String getDescription() {
+                    return null;
+                }
+
+                /**
+                 * The method <code>getLocation</code> gives us the Location of the represented
+                 * Asset Issuer
+                 *
+                 * @return the Location
+                 */
+                @Override
+                public Location getLocation() {
+                    return null;
+                }
+
+                /**
+                 * The method <code>getLocationLatitude</code> gives us the Location of the represented
+                 * Asset Issuer
+                 *
+                 * @return the Location Latitude
+                 */
+                @Override
+                public Double getLocationLatitude() {
+                    return null;
+                }
+
+                /**
+                 * The method <code>getLocationLongitude</code> gives us the Location of the represented
+                 * Asset Issuer
+                 *
+                 * @return the Location Longitude
+                 */
+                @Override
+                public Double getLocationLongitude() {
+                    return null;
+                }
+            };
+            ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser(); //The user of this device, whom appropriate the asset.
+            String message = new AssetAppropriationContentMessage(assetAppropriated, userThatAppropriated).toString();
+//            DAPMessage message = new DAPMessage(DAPMessageType.ASSET_APPROPRIATION, new AssetAppropriationContentMessage(assetAppropriated, userThatAppropriated));
+            assetIssuerActorNetworkServiceManager.sendMessage(actorAssetUser, actorAssetIssuer, message); //FROM: USER. TO:ISSUER.
         } catch (Exception e) {
             throw new CantStartAppropriationStatsException(FermatException.wrapException(e), context, null);
         }

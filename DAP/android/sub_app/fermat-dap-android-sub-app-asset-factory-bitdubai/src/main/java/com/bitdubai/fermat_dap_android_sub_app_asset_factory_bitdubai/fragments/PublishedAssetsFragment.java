@@ -59,7 +59,7 @@ public class PublishedAssetsFragment extends FermatFragment implements
     private ViewInflater viewInflater;
 
 
-    private boolean isRefreshing;
+    private boolean isRefreshing = false;
 
 
     public static PublishedAssetsFragment newInstance() {
@@ -90,8 +90,14 @@ public class PublishedAssetsFragment extends FermatFragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        swipeRefreshLayout.setRefreshing(true);
-        onRefresh();
+        if (swipeRefreshLayout != null && !isRefreshing) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+                }
+            });
+        }
     }
 
     @Override
@@ -184,7 +190,8 @@ public class PublishedAssetsFragment extends FermatFragment implements
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
+            if (swipeRefreshLayout != null)
+                swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 dataSet = (ArrayList<AssetFactory>) result[0];
                 adapter.changeDataSet(dataSet);
@@ -203,7 +210,8 @@ public class PublishedAssetsFragment extends FermatFragment implements
     public void onErrorOccurred(Exception ex) {
         isRefreshing = false;
         if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
+            if (swipeRefreshLayout != null)
+                swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -215,6 +223,8 @@ public class PublishedAssetsFragment extends FermatFragment implements
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
+            if (swipeRefreshLayout != null)
+                swipeRefreshLayout.setRefreshing(true);
             FermatWorker worker = new FermatWorker(getActivity(), this) {
                 @Override
                 protected Object doInBackground() throws Exception {

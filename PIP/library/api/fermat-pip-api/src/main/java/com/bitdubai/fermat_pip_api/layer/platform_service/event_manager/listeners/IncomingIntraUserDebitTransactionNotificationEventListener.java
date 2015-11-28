@@ -1,20 +1,22 @@
 package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
+import java.util.UUID;
+
 /**
- * Created by Nerio on 28/10/15.
+ * Created by natalia on 26/11/15.
  */
-public class NewCryptoAddressRequestAssetUserActorNotificationEventListener implements FermatEventListener {
+public class IncomingIntraUserDebitTransactionNotificationEventListener implements FermatEventListener {
 
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
+
     /**
      * Constructor with parameters
      *
@@ -22,7 +24,7 @@ public class NewCryptoAddressRequestAssetUserActorNotificationEventListener impl
      * @param fermatEventMonitor
      */
 
-    public NewCryptoAddressRequestAssetUserActorNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
+    public IncomingIntraUserDebitTransactionNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }

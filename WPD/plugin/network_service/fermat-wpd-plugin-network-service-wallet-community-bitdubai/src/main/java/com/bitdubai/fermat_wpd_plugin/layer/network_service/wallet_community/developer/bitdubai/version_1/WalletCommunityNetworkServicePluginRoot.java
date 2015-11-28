@@ -196,7 +196,8 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                 if(communicationNetworkServiceConnectionManager != null)
+                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
             }
 
@@ -213,6 +214,7 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
 
       /*  if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             this.register = false;
+             if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.closeAllConnection();
         }
         */

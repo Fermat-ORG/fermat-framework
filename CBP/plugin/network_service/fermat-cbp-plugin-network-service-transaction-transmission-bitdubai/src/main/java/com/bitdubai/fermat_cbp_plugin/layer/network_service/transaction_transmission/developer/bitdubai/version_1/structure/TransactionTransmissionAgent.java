@@ -324,16 +324,16 @@ public class TransactionTransmissionAgent {
 
                             // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
                             Gson gson = new Gson();
-                            String jsonBusinesTransaction =gson.toJson(businessTransactionMetadata);
+                            String jsonBusinessTransaction =gson.toJson(businessTransactionMetadata);
 
                             // Envio el mensaje a la capa de comunicacion
 
-                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),receiverPublicKey,jsonBusinesTransaction);
+                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),receiverPublicKey,jsonBusinessTransaction);
 
                             transactionTransmissionContractHashDao.changeState(businessTransactionMetadata);
 
                             System.out.print("-----------------------\n" +
-                                    "BUSINES TRANSACTION -----------------------\n" +
+                                    "BUSINESS TRANSACTION -----------------------\n" +
                                     "-----------------------\n STATE: " + businessTransactionMetadata.getState());
 
                         } catch (CantUpdateRecordDataBaseException e) {
@@ -420,7 +420,7 @@ public class TransactionTransmissionAgent {
                             case CONFIRM_CONTRACT:
                                 System.out.print(businessTransactionMetadata.getSenderId()+" Transaction Transmission CONFIRM_CONTRACT");
 
-                                this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
+                                //this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
                                 launchNotification();
                                 this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
                                 break;
@@ -502,7 +502,7 @@ public class TransactionTransmissionAgent {
     private void launchNotification(){
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
         IncomingNewContractStatusUpdate incomingNewContractStatusUpdate = (IncomingNewContractStatusUpdate) fermatEvent;
-        incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
+        incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
         eventManager.raiseEvent(incomingNewContractStatusUpdate);
     }
 
