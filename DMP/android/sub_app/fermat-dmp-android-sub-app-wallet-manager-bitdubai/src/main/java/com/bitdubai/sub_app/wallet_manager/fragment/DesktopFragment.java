@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -328,21 +329,17 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             Item item2 = new Item(installedSubApp);
             item2.setIconResource(R.drawable.intra_user_image);
             item2.setPosition(5);lstItemsWithIcon.add(item2);
-
             installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
             Item item1 = new Item(installedSubApp);
-            item1.setIconResource(R.drawable.intra_user);
-            item1.setPosition(1);
             item1.setIconResource(R.drawable.intra_user_2);
             item1.setPosition(7);
             lstItemsWithIcon.add(item1);
-
             List<Item> lstFolderItems = new ArrayList<>();
             lstFolderItems.add(item1);
             lstFolderItems.add(item2);
             FermatFolder folder = new FermatFolder("things",lstFolderItems,11);
             Item itemFolder = new Item(folder);
-            itemFolder.setIconResource(R.drawable.wallet_1);
+            itemFolder.setIconResource(R.drawable.bg_launcher_folder);
             itemFolder.setPosition(11);
             lstItemsWithIcon.add(itemFolder);
 
@@ -397,6 +394,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 //                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();
 //                    lp.dimAmount=0.0f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
 //                    folderDialog.getWindow().setAttributes(lp);
+                    folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                     folderDialog.show();
                     break;
                 default:
