@@ -20,11 +20,11 @@ import javax.ws.rs.core.MediaType;
  * @since Java JDK 1.7
  */
 @Path("/hello")
-public class HelloResource {
+public class HelloResource implements RestFulServices {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String sayHello(){
-        return "Hello World";
+        return "Hello World, esta funcionando : )";
     }
 }

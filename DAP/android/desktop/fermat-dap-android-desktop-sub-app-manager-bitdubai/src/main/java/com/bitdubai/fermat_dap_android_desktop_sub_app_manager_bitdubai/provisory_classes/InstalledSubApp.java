@@ -85,6 +85,11 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
         return walletIcon;
     }
 
+    @Override
+    public String getAppName() {
+        return getSubAppType().getCode();
+    }
+
     /**
      * This method gives us the public key of the wallet in this device. It is used as identifier of
      * the wallet

@@ -90,10 +90,10 @@ public final class FermatSystem {
         try {
 
             fermatSystemContext.registerPlatform(new BCHPlatform());
-            fermatSystemContext.registerPlatform(new BNKPlatform());
-            fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
+            fermatSystemContext.registerPlatform(new BNKPlatform());
             fermatSystemContext.registerPlatform(new CSHPlatform());
+            fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());

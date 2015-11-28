@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces;
 
 import com.bitdubai.fermat_api.layer.DAPException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -75,11 +76,11 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
         String hashFromCryptoTransaction = cryptoTransaction.getOp_Return();
         System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Crypto Transaction OP_return:" + hashFromCryptoTransaction);
 
+
         /**
          * I will compare the OP_Return value of the GenesisTransaction against the Hash of the digital Asset Metadata recieved from the issuer
          */
         return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
-
     }
 
     private CryptoTransaction getCryptoTransactionFromCryptoNetwork(String genesisTransaction) throws DAPException {

@@ -72,11 +72,11 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
+    //TODO:Descomentar luego que esten arrancados estos Plugines: plugin = Plugins.CRYPTO_WALLET, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD
+    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    //TODO: Nompbre del plugin de la interfaz HoldManager
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.CRYPTO_WALLET)
+    //@NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.CRYPTO_WALLET)
     HoldManager holdManager;
 
 
@@ -88,6 +88,7 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
             System.out.println("******* Init Bank Money Restock ******");
+            //testRestock();
             startMonitorAgent();
 
             database.closeDatabase();
@@ -182,5 +183,13 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
 
             businessTransactionBankMoneyRestockMonitorAgent.start();
         }else businessTransactionBankMoneyRestockMonitorAgent.start();
+    }
+
+    private void testRestock(){
+        try {
+            createTransactionRestock("publicKeyActor", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpWalletPublicKey", "bnkWalletPublicKey", "account", 250, "memo");
+        } catch (CantCreateBankMoneyRestockException e) {
+            e.printStackTrace();
+        }
     }
 }

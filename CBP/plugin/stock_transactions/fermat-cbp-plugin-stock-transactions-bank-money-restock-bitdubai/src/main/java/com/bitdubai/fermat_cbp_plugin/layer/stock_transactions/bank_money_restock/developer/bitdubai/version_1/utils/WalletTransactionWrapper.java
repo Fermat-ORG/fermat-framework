@@ -51,10 +51,7 @@ public class WalletTransactionWrapper implements StockTransaction {
     }
 
     @Override
-    public UUID getTransactionId() {
-        return transactionId;
-    }
-
+    public UUID getTransactionId() { return transactionId; }
 
     @Override
     public BalanceType getBalanceType() {

@@ -40,6 +40,7 @@ public class CryptoBrokerWalletDatabaseConstants {
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME = "crypto_broker_stock_transactions";
 
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
+    static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_CONTRACT_ID_COLUMN_NAME = "contract_id";
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key";
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME = "balance_type";

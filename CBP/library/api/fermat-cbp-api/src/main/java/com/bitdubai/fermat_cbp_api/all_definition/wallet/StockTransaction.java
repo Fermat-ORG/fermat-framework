@@ -14,6 +14,8 @@ public interface StockTransaction {
 
     UUID getTransactionId();
 
+//    UUID getContractId();
+
     BalanceType getBalanceType();
 
     TransactionType getTransactionType();

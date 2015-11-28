@@ -129,7 +129,7 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "identity_public_key";
     public static final String CHECKED_IN_NETWORK_SERVICE_LATITUDE_COLUMN_NAME = "latitude";
     public static final String CHECKED_IN_NETWORK_SERVICE_LONGITUDE_COLUMN_NAME = "longitude";
-    public static final String CHECKED_IN_NETWORK_SERVICE_CLIENT_IDENTITY_PUBLICKEY_COLUMN_NAME = "client_identity_publickey";
+    public static final String CHECKED_IN_NETWORK_SERVICE_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
     public static final String CHECKED_IN_NETWORK_SERVICE_NETWORK_SERVICE_TYPE_COLUMN_NAME = "network_service_type";
     public static final String CHECKED_IN_NETWORK_SERVICE_CHECKED_IN_TIMESTAMP_COLUMN_NAME = "checked_in_timestamp";
 
@@ -179,7 +179,7 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String CHECKED_NETWORK_SERVICE_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "identity_public_key";
     public static final String CHECKED_NETWORK_SERVICE_HISTORY_LAST_LATITUDE_COLUMN_NAME = "last_latitude";
     public static final String CHECKED_NETWORK_SERVICE_HISTORY_LAST_LONGITUDE_COLUMN_NAME = "last_longitude";
-    public static final String CHECKED_NETWORK_SERVICE_HISTORY_CLIENT_IDENTITY_PUBLICKEY_COLUMN_NAME = "client_identity_publickey";
+    public static final String CHECKED_NETWORK_SERVICE_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
     public static final String CHECKED_NETWORK_SERVICE_HISTORY_NETWORK_SERVICE_TYPE_COLUMN_NAME = "network_service_type";
     public static final String CHECKED_NETWORK_SERVICE_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME = "checked_timestamp";
     public static final String CHECKED_NETWORK_SERVICE_HISTORY_CHECK_TYPE_COLUMN_NAME = "check_type";
@@ -223,7 +223,7 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String METHOD_CALLS_HISTORY_TABLE_NAME = "method_calls_history";
 
     public static final String METHOD_CALLS_HISTORY_UUID_COLUMN_NAME = "uuid";
-    public static final String METHOD_CALLS_HISTORY_METHODNAME_COLUMN_NAME = "methodname";
+    public static final String METHOD_CALLS_HISTORY_METHOD_NAME_COLUMN_NAME = "method_name";
     public static final String METHOD_CALLS_HISTORY_PARAMETERS_COLUMN_NAME = "parameters";
     public static final String METHOD_CALLS_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
     public static final String METHOD_CALLS_HISTORY_CREATE_TIMESTAMP_COLUMN_NAME = "create_timestamp";
