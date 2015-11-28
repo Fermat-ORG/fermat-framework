@@ -68,11 +68,6 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
     private final Thread toSend;
 
     /**
-     * Represent the eccKeyPair
-     */
-
-
-    /**
      * Constructor with parameters.
      */
     public CommunicationNetworkServiceRemoteAgent(final ECCKeyPair eccKeyPair,

@@ -36,9 +36,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
 
-    private static final int HASH_PRIME_NUMBER_PRODUCT = 5147;
-    private static final int HASH_PRIME_NUMBER_ADD = 4789;
-
     private final KeyPair walletKeyPair;
     private final String ownerPublicKey;
     private final ConcurrentHashMap<CurrencyType, Stock> stockMap;
@@ -181,18 +178,4 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         return record;
     }
 
-    public boolean equals(Object o){
-        if(!(o instanceof CryptoBrokerStockTransactionRecord))
-            return false;
-        CryptoBrokerStockTransactionRecord compare = (CryptoBrokerStockTransactionRecord) o;
-        return ownerPublicKey.equals(compare.getOwnerPublicKey()) && walletKeyPair.getPublicKey().equals(compare.getWalletPublicKey());
-    }
-
-    @Override
-    public int hashCode(){
-        int c = 0;
-        c += ownerPublicKey.hashCode();
-        c += walletKeyPair.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
-    }
 }

@@ -116,6 +116,22 @@ public final class CommunicationNetworkServiceDatabaseFactory {
 
             table.addIndex(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_FIRST_KEY_COLUMN);
 
+            /**
+             * COMPONENT VERSIONS DETAILS database table definition.
+             */
+
+            /*
+             * Create transaction hash table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME);
+
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME                  , DatabaseDataType.STRING,        36, Boolean.TRUE );
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME    , DatabaseDataType.STRING,        100, Boolean.TRUE );
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_IPK_COLUMN_NAME                 , DatabaseDataType.STRING,        100, Boolean.TRUE );
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME     , DatabaseDataType.STRING,        30, Boolean.TRUE );
+
+            table.addIndex(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FIRST_KEY_COLUMN);
+
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);

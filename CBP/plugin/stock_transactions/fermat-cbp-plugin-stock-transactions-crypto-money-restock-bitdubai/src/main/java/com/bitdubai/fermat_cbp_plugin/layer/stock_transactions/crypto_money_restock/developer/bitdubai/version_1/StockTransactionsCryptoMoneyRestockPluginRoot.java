@@ -87,6 +87,7 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_DATABASE_NAME);
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
+            System.out.println("******* Init Crypto Money Restock ******");
             startMonitorAgent();
 
             database.closeDatabase();
