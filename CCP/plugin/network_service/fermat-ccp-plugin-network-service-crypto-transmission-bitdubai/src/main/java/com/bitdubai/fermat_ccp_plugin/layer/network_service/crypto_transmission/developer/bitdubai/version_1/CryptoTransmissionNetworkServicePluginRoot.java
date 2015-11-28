@@ -1080,13 +1080,31 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     }
 
     @Override
-    public void informTransactionCreditedInWallet(UUID transmissionId) throws CantSetToCreditedInWalletException {
+    public void informTransactionCreditedInWallet(UUID transaction_id) throws CantSetToCreditedInWalletException {
+
+        try
+        {
+            cryptoTransmissionMetadataDAO.changeState(transaction_id, CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+        }
+        catch(CantUpdateRecordDataBaseException e)
+        {
+            throw  new CantSetToCreditedInWalletException("Can't Set Metadata To Credited In Wallet Exception",e,"","Can't update record");
+        }
+
 
     }
 
     @Override
-    public void informTransactionSeenByVault(UUID transmissionId) throws CantSetToSeenByCryptoVaultException {
+    public void informTransactionSeenByVault(UUID transaction_id) throws CantSetToSeenByCryptoVaultException {
 
+        try
+        {
+            cryptoTransmissionMetadataDAO.changeState(transaction_id, CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
+        }
+        catch(CantUpdateRecordDataBaseException e)
+        {
+            throw  new CantSetToSeenByCryptoVaultException("Can't Set Metadata To Seen By Crypto Vault Exception",e,"","Can't update record");
+        }
     }
 
     @Override
