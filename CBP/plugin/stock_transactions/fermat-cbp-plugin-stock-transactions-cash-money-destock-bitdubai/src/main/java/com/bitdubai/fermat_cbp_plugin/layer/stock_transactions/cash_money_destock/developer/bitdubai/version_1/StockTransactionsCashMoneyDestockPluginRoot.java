@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
@@ -142,7 +143,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
     }
 
     @Override
-    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, float amount, String memo) throws CantCreateCashMoneyDestockException {
+    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, float amount, String memo, float priceReference, OriginTransaction originTransaction) throws CantCreateCashMoneyDestockException {
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         CashMoneyDestockTransactionImpl cashMoneyRestockTransaction = new CashMoneyDestockTransactionImpl(
@@ -156,7 +157,9 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
                 cashReference,
                 amount,
                 timestamp,
-                TransactionStatusRestockDestock.INIT_TRANSACTION);
+                TransactionStatusRestockDestock.INIT_TRANSACTION,
+                priceReference,
+                originTransaction);
 
         try {
             stockTransactionCashMoneyDestockManager.saveCashMoneyDestockTransactionData(cashMoneyRestockTransaction);
@@ -187,7 +190,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
 
     private void testDestock(){
         try {
-            createTransactionDestock("publicKeyActor", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpWalletPublicKey", "cshWalletPublicKey", "cashReference", 250, "memo");
+            createTransactionDestock("publicKeyActor", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpWalletPublicKey", "cshWalletPublicKey", "cashReference", 250, "memo", 250, OriginTransaction.STOCK_INITIAL);
         } catch (CantCreateCashMoneyDestockException e) {
             e.printStackTrace();
         }

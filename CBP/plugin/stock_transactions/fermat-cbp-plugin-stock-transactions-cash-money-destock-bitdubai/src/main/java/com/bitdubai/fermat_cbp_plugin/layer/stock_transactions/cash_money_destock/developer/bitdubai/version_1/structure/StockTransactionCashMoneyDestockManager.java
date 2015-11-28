@@ -39,7 +39,7 @@ public class StockTransactionCashMoneyDestockManager {
     }
 
     public void saveCashMoneyDestockTransactionData(CashMoneyTransaction cashMoneyTransaction) throws DatabaseOperationException, MissingCashMoneyDestockDataException {
-        getStockTransactionCashMoneyDestockDao().saveCashMoneyRestockTransactionData(cashMoneyTransaction);
+        getStockTransactionCashMoneyDestockDao().saveCashMoneyDestockTransactionData(cashMoneyTransaction);
     }
 
     public List<CashMoneyTransaction> getCashMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException{
