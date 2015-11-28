@@ -47,7 +47,7 @@ public class NetworkNodeMainRunner {
             System.out.println("***********************************************************************");
             System.out.println("*FERMAT - ERROR NETWORK NODE *");
             System.out.println("***********************************************************************");
-            LOG.error(e);
+            e.printStackTrace();
         }
 
     }

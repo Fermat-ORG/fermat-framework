@@ -109,7 +109,7 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
                 "Crypto Customer Actor Network Service",
                 "CryptoCustomerActorNetworkService",
                 null,
-                EventSource.ACTOR_NETWORK_SERVICE_CRYPTO_BROKER
+                EventSource.ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER
         );
 
         this.listenersAdded = new ArrayList<>();
