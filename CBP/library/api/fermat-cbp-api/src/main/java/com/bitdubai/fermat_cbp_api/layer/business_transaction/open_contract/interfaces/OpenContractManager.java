@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.OpenContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 
@@ -9,7 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exce
  * <p>
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 19/11/15.
  */
-public interface OpenContractManager {
+public interface OpenContractManager extends FermatManager {
 
     /**
      * This method opens a new contract for a Customer Broker Sale Transaction
