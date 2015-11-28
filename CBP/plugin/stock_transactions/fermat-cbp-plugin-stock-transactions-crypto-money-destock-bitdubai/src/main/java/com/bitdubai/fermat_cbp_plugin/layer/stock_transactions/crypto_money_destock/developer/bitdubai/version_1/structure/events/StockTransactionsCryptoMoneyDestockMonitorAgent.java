@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  * Created by franklin on 17/11/15.
  */
 public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
-    //TODO: Documentar y manejo de excepciones. Inicializar los manager del Hold Crypto que no existe esos plugines en CCP y Wallet CBP para que seteados en el constructor
+    //TODO: Documentar y manejo de excepciones.
     //TODO: Manejo de Eventos
 
     private Thread agentThread;

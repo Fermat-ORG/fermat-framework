@@ -28,12 +28,14 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.OpenContractStatus;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContractManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure.OpenContractTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ import java.util.regex.Pattern;
  */
 
 public class OpenContractPluginRoot extends AbstractPlugin implements
-        OpenContractManager,
+        //OpenContractManager,
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers{
 
@@ -76,6 +78,8 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
 
     //TODO: Need reference to contract plugin
     private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+
+    private OpenContractTransactionManager openContractTransactionManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -138,7 +142,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
 
     @Override
     public FermatManager getManager() {
-        return null;
+        return openContractTransactionManager;
     }
 
     @Override
@@ -156,20 +160,20 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
         return null;
     }
 
-    @Override
-    public void openPurchaseContract(String negotiationId) {
+    /*@Override
+    public void openPurchaseContract(String negotiationId) throws CantOpenContractException {
 
     }
 
     @Override
-    public void openSaleContract(String negotiationId) {
+    public void openSaleContract(String negotiationId) throws CantOpenContractException {
 
     }
 
     @Override
     public OpenContractStatus getOpenContractStatus(String negotiationId) {
         return null;
-    }
+    }*/
 
     public static LogLevel getLogLevelByClass(String className) {
         try{
