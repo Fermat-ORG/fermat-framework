@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.DeveloperBitDubai;
 
 /**
- * Created by Yordin Alayn on 22.11/15.
+ * Created by Angel on 28/11/15.
  */
 public class CustomerBrokerSalePluginSubsystem extends AbstractPluginSubsystem {
 

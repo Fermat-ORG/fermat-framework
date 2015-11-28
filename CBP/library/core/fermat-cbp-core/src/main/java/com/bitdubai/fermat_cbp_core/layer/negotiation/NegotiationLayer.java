@@ -8,7 +8,7 @@ import com.bitdubai.fermat_cbp_core.layer.negotiation.customer_broker_purchase.C
 import com.bitdubai.fermat_cbp_core.layer.negotiation.customer_broker_sale.CustomerBrokerSalePluginSubsystem;
 
 /**
- * Created by Yordin Alayn on 22.11/15.
+ * Created by Angel on 28/11/15.
  */
 public class NegotiationLayer extends AbstractLayer {
 
