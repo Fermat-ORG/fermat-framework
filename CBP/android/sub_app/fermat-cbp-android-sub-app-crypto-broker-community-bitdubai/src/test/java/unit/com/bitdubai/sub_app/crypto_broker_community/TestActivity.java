@@ -17,7 +17,7 @@ public class TestActivity extends Activity implements WizardConfiguration {
     }
 
     @Override
-    public void showWizard(WizardTypes key, Object... args) {
+    public void showWizard(String key, Object... args) {
         // DO NOTHING...
     }
 }

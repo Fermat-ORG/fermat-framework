@@ -185,12 +185,15 @@ public class AssetIssuerActorNetworkServiceAgent {
                 processMetadata();
             }
 
-            //Sleep for a time
-            toSend.sleep(AssetIssuerActorNetworkServiceAgent.SLEEP_TIME);
+            if(toSend.isInterrupted() == Boolean.FALSE){
+                //Sleep for a time
+                Thread.sleep(AssetIssuerActorNetworkServiceAgent.SLEEP_TIME);
+            }
 
         }catch(InterruptedException e) {
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            toSend.interrupt();
+            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            return;
         }
 
     }
