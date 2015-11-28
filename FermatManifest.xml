@@ -4349,7 +4349,7 @@
 					<plugin	name="Wallet Manager"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4399,12 +4399,12 @@
 					<plugin name="Hold"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="abicelis" scope="implementation" percentage="10"></author>
+							<author name="abicelis" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4414,12 +4414,12 @@
 					<plugin name="Unhold"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="abicelis" scope="implementation" percentage="10"></author>
+							<author name="abicelis" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4434,12 +4434,13 @@
 					<plugin name="Cash Money"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="laderuner" scope="implementation" percentage="40"></author>
+							<author name="abicelis" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4518,7 +4519,7 @@
 					<plugin	name="Wallet Manager"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4609,6 +4610,7 @@
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="laderuner" scope="implementation" percentage="10"></author>
+							<author name="guillermo20" scope="implementation" percentage="20"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4626,13 +4628,13 @@
 				<androids>
 					<android name="Crypto Broker"
 						description=""
-						difficulty="8"
+						difficulty="10"
 						code-level="development"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nelsonalfo" scope="implementation" percentage="20"></author>
+							<author name="nelsonalfo" scope="implementation" percentage="35"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4647,7 +4649,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nelsonalfo" scope="implementation" percentage="20"></author>
+							<author name="nelsonalfo" scope="implementation" percentage="40"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4783,7 +4785,7 @@
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="vlzangel" scope="implementation" percentage="10"></author>
-							<author name="nelsonalfo" scope="implementation" percentage="20"></author>
+							<author name="nelsonalfo" scope="implementation" percentage="40"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4799,7 +4801,7 @@
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="vlzangel" scope="implementation" percentage="10"></author>
-							<author name="nelsonalfo" scope="implementation" percentage="20"></author>
+							<author name="nelsonalfo" scope="implementation" percentage="40"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4930,13 +4932,13 @@
 					<plugin	name="Crypto Broker"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="jorgeejgonzalez" scope="implementation" percentage="10"></author>
-							<author name="vlzangel" scope="implementation" percentage="15"></author>
+							<author name="vlzangel" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5377,7 +5379,7 @@
 					<plugin	name="Crypto Money Restock"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -5393,13 +5395,13 @@
 					<plugin	name="Cash Money Restock"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5409,13 +5411,13 @@
 					<plugin name="Bank Money Restock"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5425,13 +5427,13 @@
 					<plugin	name="Crypto Money Destock"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5441,13 +5443,13 @@
 					<plugin	name="Cash Money Destock"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5457,13 +5459,13 @@
 					<plugin	name="Bank Money Destock"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5626,11 +5628,11 @@
 					<plugin	name="Transaction Transmission"
 						description=""
 						difficulty="8"
-						code-level="development">
+						code-level="qa">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="darkestpriest" scope="implementation" percentage="10"></author>
+							<author name="darkestpriest" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
