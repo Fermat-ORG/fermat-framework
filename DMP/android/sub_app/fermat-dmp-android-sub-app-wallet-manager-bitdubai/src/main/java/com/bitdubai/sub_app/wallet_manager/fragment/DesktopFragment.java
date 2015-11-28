@@ -192,12 +192,12 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
         InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
         Item item = new Item(installedSubApp);
-        item.setIconResource(R.drawable.intra_user);
+        item.setIconResource(R.drawable.intra_user_image);
         lstItems.add(item);
 
         installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
         Item item1 = new Item(installedSubApp);
-        item1.setIconResource(R.drawable.intra_user);
+        item1.setIconResource(R.drawable.intra_user_2);
         lstItems.add(item1);
     }
 
@@ -326,14 +326,15 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
             InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
             Item item2 = new Item(installedSubApp);
-            item2.setIconResource(R.drawable.intra_user);
-            item2.setPosition(2);
-            lstItemsWithIcon.add(item2);
+            item2.setIconResource(R.drawable.intra_user_image);
+            item2.setPosition(5);lstItemsWithIcon.add(item2);
 
             installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
             Item item1 = new Item(installedSubApp);
             item1.setIconResource(R.drawable.intra_user);
             item1.setPosition(1);
+            item1.setIconResource(R.drawable.intra_user_2);
+            item1.setPosition(7);
             lstItemsWithIcon.add(item1);
 
             List<Item> lstFolderItems = new ArrayList<>();
