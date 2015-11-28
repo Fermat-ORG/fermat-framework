@@ -19,7 +19,7 @@ You can also get a nice visualization of the project and real-time Fermat Networ
 [fermat.org](http://www.fermat.org).
 
 
-For installation instructions and running from the source code, see the [documentation](https://raw.githubusercontent.com/bitDubai/fermat/tree/master/fermat-documentation/documentation.asciidoc)
+For installation instructions and running from the source code, see the [Installation Guide](https://github.com/bitDubai/fermat/blob/master/README-INSTALLATION.md)
 
 Welcome to Fermat !
 
