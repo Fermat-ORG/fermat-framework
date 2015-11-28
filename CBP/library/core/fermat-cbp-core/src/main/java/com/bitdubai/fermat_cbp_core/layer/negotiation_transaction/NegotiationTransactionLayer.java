@@ -16,7 +16,7 @@ import com.bitdubai.fermat_cbp_core.layer.negotiation_transaction.customer_broke
 public class NegotiationTransactionLayer extends AbstractLayer {
 
     public NegotiationTransactionLayer() {
-        super(Layers.TRANSACTION);
+        super(Layers.NEGOTIATION_TRANSACTION);
     }
 
     public void start() throws CantStartLayerException {

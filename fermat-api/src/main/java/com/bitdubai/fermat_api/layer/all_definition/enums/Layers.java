@@ -16,8 +16,10 @@ public enum Layers implements FermatEnum {
     ACTOR                      ("ACT"),
     ACTOR_CONNECTION           ("ACC"),
     ACTOR_NETWORK_SERVICE      ("ANS"),
+    BANK_MONEY_TRANSACTION     ("BMT"),
     BASIC_WALLET               ("BSW"),
     BUSINESS_TRANSACTION       ("BTX"),
+    CASH_MONEY_TRANSACTION     ("CMT"),
     COMMUNICATION              ("COM"),
     CRYPTO_MODULE              ("CRM"),
     CRYPTO_NETWORK             ("CRN"),
@@ -31,9 +33,11 @@ public enum Layers implements FermatEnum {
     IDENTITY                   ("IDT"),
     MIDDLEWARE                 ("MID"),
     NEGOTIATION                ("NEG"),
+    NEGOTIATION_TRANSACTION    ("NTR"),
     NETWORK_SERVICE            ("NTS"),
     PLATFORM_SERVICE           ("PMS"),
     REQUEST                    ("REQ"),
+    STOCK_TRANSACTIONS         ("STR"),
     SUB_APP_MODULE             ("SAM"),
     SYSTEM                     ("SYS"),
     TRANSACTION                ("TRA"),
@@ -78,6 +82,8 @@ public enum Layers implements FermatEnum {
             case "SAM":  return SUB_APP_MODULE;
             case "SYS":  return SYSTEM;
             case "TRA":  return TRANSACTION;
+            case "NTR":  return NEGOTIATION_TRANSACTION;
+            case "STR":  return STOCK_TRANSACTIONS;
             case "USR":  return USER;
             case "WAL":  return WALLET;
             case "WAM":  return WALLET_MODULE;

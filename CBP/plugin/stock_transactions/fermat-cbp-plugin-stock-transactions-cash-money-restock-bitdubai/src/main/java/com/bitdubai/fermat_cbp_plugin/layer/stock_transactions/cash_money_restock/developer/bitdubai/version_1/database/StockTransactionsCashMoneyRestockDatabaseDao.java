@@ -77,13 +77,13 @@ public class StockTransactionsCashMoneyRestockDatabaseDao {
         record.setUUIDValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_ID_COLUMN_NAME, cashMoneyTransaction.getTransactionId());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME, cashMoneyTransaction.getActorPublicKey());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_FIAT_CURRENCY_COLUMN_NAME, cashMoneyTransaction.getFiatCurrency().getCode());
-        record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME, cashMoneyTransaction.getCashWalletPublicKey());
-        record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CSH_WALLET_PUBLIC_KEY_COLUMN_NAME, cashMoneyTransaction.getCbpWalletPublicKey());
+        record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME, cashMoneyTransaction.getCbpWalletPublicKey());
+        record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CSH_WALLET_PUBLIC_KEY_COLUMN_NAME, cashMoneyTransaction.getCashWalletPublicKey());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CASH_REFERENCE_COLUMN_NAME, cashMoneyTransaction.getCashReference());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CONCEPT_COLUMN_NAME, cashMoneyTransaction.getConcept());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME, cashMoneyTransaction.getTimeStamp().toString());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_MEMO_COLUMN_NAME, cashMoneyTransaction.getMemo());
-        record.setFloatValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_MEMO_COLUMN_NAME, cashMoneyTransaction.getAmount());
+        record.setFloatValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_AMOUNT_COLUMN_NAME, cashMoneyTransaction.getAmount());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cashMoneyTransaction.getTransactionStatus().getCode());
 
         return record;

@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.OpenContractStatus;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContractManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
@@ -157,12 +158,12 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void openPurchaseContract(String negotiationId) {
+    public void openPurchaseContract(String negotiationId) throws CantOpenContractException {
 
     }
 
     @Override
-    public void openSaleContract(String negotiationId) {
+    public void openSaleContract(String negotiationId) throws CantOpenContractException {
 
     }
 

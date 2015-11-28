@@ -53,7 +53,7 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
 
             this.cashMoneyWalletBalanceImpl = new CashMoneyWalletBalanceImpl(pluginDatabaseSystem, pluginId, errorManager);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetCashMoneyWalletException(CantGetCashMoneyWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }
@@ -64,7 +64,7 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
         if (dao.walletExists(walletPublicKey))
             this.walletPublicKey = walletPublicKey;
         else {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, new CantChangeCashMoneyWalletException());
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, new CantChangeCashMoneyWalletException());
             throw new CantChangeCashMoneyWalletException(CantChangeCashMoneyWalletException.DEFAULT_MESSAGE, null, "CashMoneyWalletImpl", "This wallet is not registered. Public key" + walletPublicKey);
         }
     }
