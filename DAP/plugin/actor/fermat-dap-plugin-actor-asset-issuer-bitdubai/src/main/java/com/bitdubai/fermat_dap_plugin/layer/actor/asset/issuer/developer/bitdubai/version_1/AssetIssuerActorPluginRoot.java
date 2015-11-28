@@ -39,6 +39,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.agent.ActorAssetIssuerMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.developerUtils.AssetIssuerActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.event_handlers.ActorAssetIssuerCompleteRegistrationNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.event_handlers.NewRequestMessageActorNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantAddPendingAssetIssuerException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantGetAssetIssuersListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuerActorDatabaseException;
@@ -212,9 +213,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @Override
     public void connectToActorAssetIssuer(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToAssetIssuerException {
         for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuers) {
-            DAPActor dapActor = (DAPActor) requester;
             try {
-                assetIssuerActorNetworkServiceManager.sendMessage(dapActor, actorAssetIssuer, " ");
+                assetIssuerActorNetworkServiceManager.sendMessage(requester, actorAssetIssuer, " ");
                 this.assetIssuerActorDao.updateAssetIssuerDAPConnectionStateRegistered(actorAssetIssuer.getActorPublicKey(), DAPConnectionState.CONNECTING);
 
             } catch (CantSendMessageException e) {
@@ -254,6 +254,21 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         } catch (CantUpdateAssetIssuerException e) {
             e.printStackTrace();
         }
+        System.out.println("***************************************************************");
+    }
+
+    public void handleNewRequestMessageActorNotificationEvent(ActorAssetRedeemPoint actorAssetRedeemPoint, String message) {
+        System.out.println("***************************************************************");
+        System.out.println("Actor Asset Redeem Point name: " + actorAssetRedeemPoint.getName());
+        System.out.println("Actor Asset Redeem Point message: " + message);
+//        try {
+//            this.assetIssuerActorDao.updateAssetIssuerDAPConnectionState(
+//                    actorAssetIssuer.getActorPublicKey(),
+//                    actorAssetIssuer.getActorPublicKey(),
+//                    DAPConnectionState.REGISTERED_ONLINE);
+//        } catch (CantUpdateAssetIssuerException e) {
+//            e.printStackTrace();
+//        }
         System.out.println("***************************************************************");
     }
 
@@ -322,5 +337,9 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
+        fermatEventListener = eventManager.getNewListener(EventType.NEW_REQUEST_MESSAGE_ACTOR);
+        fermatEventListener.setEventHandler(new NewRequestMessageActorNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 }

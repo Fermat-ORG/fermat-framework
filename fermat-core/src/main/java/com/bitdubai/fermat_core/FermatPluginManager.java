@@ -135,7 +135,10 @@ public final class FermatPluginManager {
 
             startPlugin(abstractPlugin);
 
-            return (FermatManager) abstractPlugin;
+            if (abstractPlugin.getManager() != null)
+                return abstractPlugin.getManager();
+            else
+                return (FermatManager) abstractPlugin;
 
         } catch (CantListNeededReferencesException e) {
 

@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
@@ -68,10 +69,12 @@ public class AppropriationStatsRecorderService implements AssetTransactionServic
 
         try {
 
-            //TODO ADD THE NEEDED LISTENERS!!
-
+            FermatEventListener newNetworkServiceMessageListener = eventManager.getNewListener(EventType.NEW_RECEIVE_MESSAGE_ACTOR);
+            newNetworkServiceMessageListener.setEventHandler(new AppropriationStatsEventHandler(this));
+            addListener(newNetworkServiceMessageListener);
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new CantStartServiceException(e, context, "An unexpected exception happened while trying to start the AssetAppropriationRecordeService.");
         }
         serviceStatus = ServiceStatus.STARTED;

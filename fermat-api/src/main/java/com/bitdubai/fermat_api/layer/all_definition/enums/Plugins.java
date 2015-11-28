@@ -146,11 +146,21 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE("BWPDWSSAM"),
     // End  WPD Plugins
 
+    //Init BNK Plugins
+    BITDUBAI_BNK_HOLD_MONEY_TRANSACTION("BBNKHMT"),
+    BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION("BBNKUMT"),
+    BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION("BBNKDMT"),
+    BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION("BBNKWMT"),
+    BITDUBAI_BNK_BANK_MONEY_WALLET("BBNKBMW"),
+    // End BNK Plugins
+
     //Init CSH Plugins
     BITDUBAI_CSH_MONEY_TRANSACTION_HOLD("BCSHMTH"),
     BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD("BCSHMTU"),
     BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT("BCSHMTD"),
     BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAW("BCSHMTW"),
+    BITDUBAI_CSH_WALLET_CASH_MONEY("BCSHWCM"),
+
     // End CSH Plugins
 
     // Init new Plugins
@@ -218,10 +228,22 @@ public enum Plugins implements FermatEnum {
     //CBP
     BANK_MONEY_RESTOCK          ("BMRE"),
     BANK_MONEY_DESTOCK          ("BMDE"),
-    CASH_MONEY_RESTOCK          ("CMRE"),
-    CASH_MONEY_DESTOCK          ("CMRE"),
     BITDUBAI_CBP_STOCK_TRANSACTIONS_BANK_MONEY_RESTOCK ("BCBPSTBMR"),
-    TRANSACTION_TRANSMISSION    ("TRTX")
+    CASH_MONEY_RESTOCK          ("CMDE"),
+    CASH_MONEY_DESTOCK          ("CMRE"),
+    CUSTOMER_BROKER_CLOSE       ("CBCL"),
+    CUSTOMER_BROKER_NEW         ("CBNE"),
+    CUSTOMER_BROKER_UPDATE      ("CBUP"),
+    CRYPTO_BROKER_WALLET        ("CBWA"),
+    CRYPTO_CUSTOMER_ACTOR       ("CCAC"),
+    CRYPTO_MONEY_RESTOCK        ("CRDE"),
+    CRYPTO_MONEY_DESTOCK        ("CRRE"),
+    NEGOTIATION_PURCHASE        ("NGP"),
+    NEGOTIATION_SALE            ("NGS"),
+    NEGOTIATION_TRANSMISSION    ("NGTR"),
+    OPEN_CONTRACT               ("OPC"),
+    TRANSACTION_TRANSMISSION    ("TRTX"),
+
 
     // End  new Plugins
 
@@ -295,11 +317,27 @@ public enum Plugins implements FermatEnum {
             case "WSTA" :   return WALLET_STATISTICS        ;
             case "WST"  :   return WALLET_STORE             ;
             case "WCL"  :   return WS_CLOUD_CLIENT          ;
+            case ("CCAC"):  return CRYPTO_CUSTOMER_ACTOR    ;
+            case ("CBWA"):  return CRYPTO_BROKER_WALLET     ;
             case ("BMRE"):  return BANK_MONEY_RESTOCK       ;
             case ("BMDE"):  return BANK_MONEY_DESTOCK       ;
             case ("CMRE"):  return CASH_MONEY_RESTOCK       ;
             case ("CMDE"):  return CASH_MONEY_DESTOCK       ;
+            case ("CRRE"):  return CRYPTO_MONEY_RESTOCK     ;
+            case ("CRDE"):  return CRYPTO_MONEY_DESTOCK     ;
             case ("TRTX"):  return TRANSACTION_TRANSMISSION ;
+            case "BBNKHMT": return BITDUBAI_BNK_HOLD_MONEY_TRANSACTION;
+            case "BBNKUMT": return BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION;
+            case "BBNKDMT": return BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION;
+            case "BBNKWMT": return BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION;
+            case "BBNKBMW": return BITDUBAI_BNK_BANK_MONEY_WALLET;
+            case ("NGTR"):  return NEGOTIATION_TRANSMISSION ;
+            case ("CBNE"):  return CUSTOMER_BROKER_NEW      ;
+            case ("CBUP"):  return CUSTOMER_BROKER_UPDATE   ;
+            case ("CBCL"):  return CUSTOMER_BROKER_CLOSE    ;
+            case ("NGS"):   return NEGOTIATION_SALE         ;
+            case ("NGP"):   return NEGOTIATION_PURCHASE     ;
+            case ("OPC"):   return OPEN_CONTRACT            ;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

@@ -112,7 +112,8 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         }catch (Exception e){
 
             System.out.println("ComponentRegistrationRequestPacketProcessor - requested registration is no possible ");
-            //e.printStackTrace();
+            System.out.println("ComponentRegistrationRequestPacketProcessor - cause: "+e.getMessage());
+
 
             /*
              * Get the client connection destination

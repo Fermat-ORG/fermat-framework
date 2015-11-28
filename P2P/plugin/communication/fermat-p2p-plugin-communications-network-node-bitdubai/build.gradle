@@ -53,18 +53,22 @@ dependencies {
 
     compile 'org.jboss.resteasy:resteasy-undertow:3.0.13.Final'
     compile 'org.jboss.resteasy:resteasy-cdi:3.0.13.Final'
+    compile 'org.jboss.resteasy:resteasy-jaxrs:3.0.13.Final'
+
     compile 'org.jboss.weld.servlet:weld-servlet:2.3.1.Final'
+    compile 'org.jboss.weld.se:weld-se-core:2.3.1.Final'
 
     compile 'javax:javaee-api:7.0'
-
     compile 'org.slf4j:slf4j-log4j12:1.7.13'
+    compile 'com.google.android:android:4.1.1.4'
 
-    compile 'org.xerial:sqlite-jdbc:3.7.2'
-    compile 'net.kemitix:sqlite-dialect:0.1.0'
+   // compile 'org.xerial:sqlite-jdbc:3.7.2'
+   // compile 'net.kemitix:sqlite-dialect:0.1.0'
 
-    compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
-    compile 'org.hibernate:hibernate-validator:5.2.2.Final'
-    compile 'javax.validation:validation-api:1.0.0.GA'
+   // compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
+   // compile 'org.hibernate:hibernate-validator:5.2.2.Final'
+   // compile 'javax.validation:validation-api:1.0.0.GA'
+   // complie 'org.javassist:javassist:3.20.0-GA'
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
@@ -142,9 +146,14 @@ task fatJar(type: Jar
             it.isDirectory() ? it : zipTree(it)
         }
     }
+    zip64 true
 
     with jar
 }
+
+
+
+
 
 
 check.mustRunAfter clean

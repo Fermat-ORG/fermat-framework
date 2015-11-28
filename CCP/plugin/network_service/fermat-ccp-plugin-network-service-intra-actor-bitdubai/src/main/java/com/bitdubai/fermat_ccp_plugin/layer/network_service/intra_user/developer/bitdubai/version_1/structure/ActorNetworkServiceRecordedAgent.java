@@ -148,7 +148,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     case ACCEPTED:
                     case DISCONNECTED:
                     case RECEIVED:
-
+                    case DENIED:
                         sendMessageToActor(
                                 cpr
                         );
@@ -179,7 +179,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
             if(actorNetworkServicePluginRoot.isRegister()) {
 
-                // function to process and send the rigth message to the counterparts.
+                // function to process and send the right message to the counterparts.
                 processReceive();
             }
 
@@ -297,7 +297,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                                     remoteParticipant
                             );
 
-                            // i put the actor in the pool of connections waiting for response-
+                            // I put the actor in the pool of connections waiting for response-
                             poolConnectionsWaitingForResponse.put(actorNetworkServiceRecord.getActorDestinationPublicKey(), actorNetworkServiceRecord);
                         }
 

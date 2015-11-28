@@ -82,53 +82,24 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_weight="0.5"
-            android:layout_marginBottom="12dp"
-            android:orientation="horizontal"
-            android:id="@+id/icons_container">
-
-            <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:id="@+id/image_view_icon_1"
-                android:layout_weight="1"
-                android:padding="7dp"
-                android:src="@drawable/ic_001" />
-
-            <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:id="@+id/image_view_icon_2"
-                android:layout_weight="1"
-                android:padding="7dp"
-                android:src="@drawable/ic_002" />
-
-            <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:id="@+id/image_view_icon_4"
-                android:layout_weight="1"
-                android:padding="7dp"
-                android:src="@drawable/ic_004" />
-
-            <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:id="@+id/image_view_icon_3"
-                android:layout_weight="1"
-                android:padding="7dp"
-                android:src="@drawable/ic_003" />
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:paddingBottom="2dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="1dp"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:paddingStart="1dp"
+            android:id="@+id/bottom_navigation_container">
 
 
-            <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:id="@+id/image_view_icon_5"
-                android:layout_weight="1"
-                android:padding="7dp"
-                android:src="@drawable/ic_005" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/bottom_navigation_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"/>
+
+
 
         </LinearLayout>
 

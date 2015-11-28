@@ -4,11 +4,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 
 /**
  * Created by Nerio on 10/09/15.
  */
-public interface ActorAssetUser {
+public interface ActorAssetUser extends DAPActor {
 
     /**
      * The method <code>getPubliclinkedIdentity</code> gives us the public Linked Identity of the represented Asset User
@@ -16,20 +17,6 @@ public interface ActorAssetUser {
      * @return the Public Linked Identity
      */
     String getPublicLinkedIdentity();
-
-    /**
-     * The method <code>getActorPublicKey</code> gives us the public key of the represented Asset User
-     *
-     * @return the public key
-     */
-     String getActorPublicKey();
-
-    /**
-     * The method <code>getName</code> gives us the name of the represented Asset User
-     *
-     * @return the name of the intra user
-     */
-    String getName();
 
     /**
      * The method <code>getAge</code> gives us the Age of the represented Asset user
@@ -92,14 +79,6 @@ public interface ActorAssetUser {
      * @return the Location Longitude of the Asset user
      */
     Double getLocationLongitude();
-
-    /**
-     * The method <coda>getProfileImage</coda> gives us the profile image of the represented
-     * Asset User
-     *
-     * @return the image
-     */
-    byte[] getProfileImage();
 
     /**
      * returns the crypto address to which it belongs

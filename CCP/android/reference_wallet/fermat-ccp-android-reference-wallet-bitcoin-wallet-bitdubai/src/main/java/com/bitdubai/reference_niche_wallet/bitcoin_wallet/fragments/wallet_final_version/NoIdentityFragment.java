@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -75,24 +76,16 @@ public class NoIdentityFragment extends FermatWalletFragment {
         ((Button) rootView.findViewById(R.id.btn_create)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+                try {
+                    Object[] object = new Object[2];
+                    changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY, walletSession.getIdentityConnection(), object);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        try {
-            if (referenceWalletSession.getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser().size()>0) {
-                changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-            }
-        } catch (CantListCryptoWalletIntraUserIdentityException e) {
-            e.printStackTrace();
-        } catch (CantGetCryptoWalletException e) {
-            e.printStackTrace();
-        }
-    }
 
 }
 

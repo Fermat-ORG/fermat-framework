@@ -326,7 +326,8 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         else if (id == R.id.btn_expand_send_form){
             Object[] objects = new Object[1];
             objects[0]= walletContact;
-            changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY,objects);
+            changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY,
+                    referenceWalletSession.getCommunityConnection(),objects);
         }
 
 

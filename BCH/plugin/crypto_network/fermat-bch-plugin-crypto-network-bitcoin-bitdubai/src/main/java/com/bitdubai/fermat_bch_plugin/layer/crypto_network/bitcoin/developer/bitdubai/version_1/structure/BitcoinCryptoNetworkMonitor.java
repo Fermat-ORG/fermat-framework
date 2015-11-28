@@ -171,13 +171,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * starts the monitoring
              */
+            peerGroup.setDownloadTxDependencies(true);
             peerGroup.start();
-            peerGroup.startBlockChainDownload(new AbstractPeerEventListener() {
-                @Override
-                public void onTransaction(Peer peer, Transaction t) {
-                    System.out.println("****Crypto Network Transaction from Peer: " + t.toString());
-                }
-            });
+            peerGroup.startBlockChainDownload(null);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -247,33 +243,37 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         if (txHash == null || blockHash == null)
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "TxHash or blocHash parameters can't be null", null);
 
-        /**
-         * I get the hash of the block
-         */
-        Sha256Hash blockSha256Hash = Sha256Hash.wrap(blockHash);
+        try{
+            /**
+             * I get the hash of the block
+             */
+            Sha256Hash blockSha256Hash = Sha256Hash.wrap(blockHash);
 
 
-        /**
-         * If I don't have this block, then I will get the block from the peer
-         */
-        Block genesisBlock = getBlockFromPeer(blockSha256Hash);
+            /**
+             * If I don't have this block, then I will get the block from the peer
+             */
+            Block genesisBlock = getBlockFromPeer(blockSha256Hash);
 
-        /**
-         * Will search all transactions from the block until I find my own.
-          */
-        for (Transaction transaction : genesisBlock.getTransactions()){
-            if (transaction.getHashAsString().contentEquals(txHash)){
-                /**
-                 * I form the CryptoTransaction and return it.
-                 */
-                return getCryptoTransactionFromBitcoinTransaction(transaction);
+            /**
+             * Will search all transactions from the block until I find my own.
+             */
+            for (Transaction transaction : genesisBlock.getTransactions()){
+                if (transaction.getHashAsString().contentEquals(txHash)){
+                    /**
+                     * I form the CryptoTransaction and return it.
+                     */
+                    return getCryptoTransactionFromBitcoinTransaction(transaction);
+                }
             }
-        }
 
-        /**
-         * If I couldn't find it. then I will return null.
-         * */
-        return null;
+            /**
+             * If I couldn't find it. then I will return null.
+             * */
+            return null;
+        } catch (Exception e){
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 
     /**

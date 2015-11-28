@@ -19,10 +19,14 @@ import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+
+import java.util.Map;
 
 /**
  * Created by Matias Furszyfer on 2015.26.21..
@@ -60,6 +64,18 @@ public class FermatWalletFragment<M extends ModuleManager> extends Fragment impl
             viewInflater = new ViewInflater(getActivity(), walletResourcesProviderManager);
         } catch (Exception ex) {
             throw new ClassCastException("cannot convert the current context to FermatActivity");
+        }
+    }
+
+    /**
+     * Start a configuration Wizard
+     *
+     * @param key  Enum Wizard registered type
+     * @param args Object[] where you're be able to passing arguments like session, settings, resources, module, etc...
+     */
+    protected void startWizard(String key, Object... args) {
+        if (context != null && isAttached) {
+            context.showWizard(key, args);
         }
     }
 
@@ -148,8 +164,8 @@ public class FermatWalletFragment<M extends ModuleManager> extends Fragment impl
         return getPaintActivtyFeactures().getToolbar();
     }
 
-    protected void changeApp(Engine emgine, Object[] objects) {
-        getFermatScreenSwapper().connectWithOtherApp(emgine, objects);
+    protected void changeApp(Engine emgine,String fermatAppToConnectPublicKey, Object[] objects) {
+        getFermatScreenSwapper().connectWithOtherApp(emgine,fermatAppToConnectPublicKey, objects);
     }
 
     protected FermatScreenSwapper getFermatScreenSwapper() {

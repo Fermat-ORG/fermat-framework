@@ -16,7 +16,6 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ScaleDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,10 +59,12 @@ import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionMana
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
+import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
+import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
@@ -101,7 +102,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
@@ -133,6 +134,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
+import com.bitdubai.sub_app.wallet_manager.structure.Item;
+import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -140,6 +143,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import java.util.Vector;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -177,7 +181,7 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * WizardTypes
      */
-    private Map<WizardTypes, Wizard> wizards;
+    private Map<String, Wizard> wizards;
 
     /**
      * Activity type
@@ -207,8 +211,12 @@ public abstract class FermatActivity extends AppCompatActivity
     private CoordinatorLayout coordinatorLayout;
     private boolean flag=false;
 
+    /**
+     * This code will be in a manager in the new core
+     */
     private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
     private NavigationViewPainter navigationViewPainter;
+    private FooterViewPainter footerViewPainter;
 
     /**
      * Called when the activity is first created
@@ -373,11 +381,13 @@ public abstract class FermatActivity extends AppCompatActivity
 
             paintSideMenu(sideMenu);
 
+            paintFooter(activity.getFooter());
+
             setScreen(activity);
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    LENGTH_LONG).show();
+                    LENGTH_SHORT).show();
         }
         // rendering wizards components
         try {
@@ -390,6 +400,17 @@ public abstract class FermatActivity extends AppCompatActivity
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
+        }
+    }
+
+    private void paintFooter(FermatFooter footer) {
+        if(footer!=null){
+            FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
+            RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
+            if( footer_container!=null && footerViewPainter!=null && slide_container!=null ){
+                footerViewPainter.addNavigationViewFooterElementVisible(getLayoutInflater(),slide_container);
+                footerViewPainter.addFooterViewContainer(getLayoutInflater(),footer_container);
+            }
         }
     }
 
@@ -436,10 +457,12 @@ public abstract class FermatActivity extends AppCompatActivity
                      * Background color
                      */
                     RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
-                    if (navigationViewPainter.addBodyBackground() != null) {
-                        relativeLayout.setBackground(navigationViewPainter.addBodyBackground());
-                    } else if (navigationViewPainter.addBodyBackgroundColor() > 0) {
-                        relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
+                    if(relativeLayout!=null) {
+                        if (navigationViewPainter.addBodyBackground() != null) {
+                            relativeLayout.setBackground(navigationViewPainter.addBodyBackground());
+                        } else if (navigationViewPainter.addBodyBackgroundColor() > 0) {
+                            relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
+                        }
                     }
 
 
@@ -720,8 +743,12 @@ public abstract class FermatActivity extends AppCompatActivity
                 setContentView(R.layout.new_wallet_runtime);
             } else {
                 setContentView(R.layout.base_layout_without_collapse);
+                if(activityType.equals(ActivityType.ACTIVITY_TYPE_DESKTOP)){
+                    ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.VISIBLE);
+                }else{
+                    ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.GONE);
+                }
             }
-
 
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
@@ -1259,6 +1286,38 @@ public abstract class FermatActivity extends AppCompatActivity
         //      new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
         getActionBar().setListNavigationCallbacks(adapter, listener);
         adapter.notifyDataSetChanged();
+    }
+
+    protected void bottomNavigationEnabled(boolean enabled){
+        if(enabled) {
+            List<Item> lst = new ArrayList<>();
+            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Identity", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            Item item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_01);
+            item2.setPosition(1);
+            lst.add(item2);
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Community", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_02);
+            item2.setPosition(2);
+            lst.add(item2);
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Scanner", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_04);
+            item2.setPosition(3);
+            lst.add(item2);
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Store", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_03);
+            item2.setPosition(4);
+            lst.add(item2);
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Support", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_05);
+            item2.setPosition(5);
+            lst.add(item2);
+            BottomNavigation bottomNavigation = new BottomNavigation(this, lst);
+        }
     }
 
 
@@ -1825,7 +1884,7 @@ public abstract class FermatActivity extends AppCompatActivity
      *
      * @param wizards
      */
-    public void setWizards(Map<WizardTypes, Wizard> wizards) {
+    public void setWizards(Map<String, Wizard> wizards) {
         if (wizards != null && wizards.size() > 0) {
             if (this.wizards == null)
                 this.wizards = new HashMap<>();
@@ -1840,10 +1899,13 @@ public abstract class FermatActivity extends AppCompatActivity
      * @param args Object... arguments to passing to the wizard fragment
      */
     @Override
-    public void showWizard(WizardTypes key, Object... args) {
+    public void showWizard(String key, Object... args) {
         try {
             if (wizards == null)
                 throw new NullPointerException("the wizard is null");
+
+            Set<String> keys = wizards.keySet();
+            System.out.println(keys);
             Wizard wizard = wizards.get(key);
             if (wizard != null) {
             /* Starting Wizard Activity */
@@ -1993,6 +2055,12 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void addFooterView(FooterViewPainter footerViewPainter){
+        this.footerViewPainter = footerViewPainter;
+        invalidate();
+    }
+
 
 
     public RelativeLayout getToolbarHeader() {
@@ -2001,7 +2069,21 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void invalidate() {
-        paintSideMenu(getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu());
+        switch (activityType){
+            case ACTIVITY_TYPE_DESKTOP:
+                break;
+            case ACTIVITY_TYPE_WALLET:
+                Activity activity = getWalletRuntimeManager().getLastWallet().getLastActivity();
+                paintSideMenu(activity.getSideMenu());
+                paintFooter(activity.getFooter());
+                break;
+            case ACTIVITY_TYPE_SUB_APP:
+                break;
+            default:
+                break;
+        }
+
+
     }
 
     @Override
