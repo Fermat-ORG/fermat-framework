@@ -255,7 +255,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
             }
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep to RECEIVE - CCP NS CRYPTO TRANSMISSION"));
         } catch (CantInsertRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
@@ -331,11 +331,11 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
             if(!toSend.isInterrupted()){
                 //Sleep for a time
-                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                toSend.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep to SEND - CCP NS CRYPTO TRANSMISSION"));
         }
 
     }

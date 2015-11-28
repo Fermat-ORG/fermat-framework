@@ -53,6 +53,11 @@ public class RedeemPointSession extends AbstractFermatSession<InstalledWallet,As
     }
 
     @Override
+    public String getIdentityConnection() {
+        return null;
+    }
+
+    @Override
     public Object getData(String key) {
         return data;
     }

@@ -112,6 +112,11 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     }
 
     @Override
+    public String getIdentityConnection() {
+        return null;
+    }
+
+    @Override
     public Object getData(String key) {
         return data.get(key);
     }

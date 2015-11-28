@@ -441,7 +441,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     @Override
-    public void connectWithOtherApp(Engine emgine, Object[] objectses) {
+    public void connectWithOtherApp(Engine emgine, String fermatAppPublicKey,Object[] objectses) {
 
     }
 
@@ -535,24 +535,36 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         try {
             Bundle bundle = getIntent().getExtras();
             InstalledSubApp installedSubApp=null;
+            String subAppPublicKey=null;
+            SubApps subAppType=null;
             if(bundle!=null){
                 if(bundle.containsKey(INSTALLED_SUB_APP)){
                     installedSubApp  = ((InstalledSubApp) bundle.getSerializable(INSTALLED_SUB_APP));
                 }else if(bundle.containsKey(ConnectionConstants.SUB_APP_CONNECTION)){
-                    //installedSubApp =  bundle.getSerializable(ConnectionConstants.SUB_APP_CONNECTION);
+                    subAppPublicKey =  bundle.getSerializable(ConnectionConstants.SUB_APP_CONNECTION).toString();
+                    subAppType = (SubApps) bundle.getSerializable(ConnectionConstants.SUB_APP_CONNECTION_TYPE);
                 }
             }
+            ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatSystem());
             if(installedSubApp!=null){
                 if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getAppPublicKey())) {
                     subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getAppPublicKey());
                 } else {
-                    ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatSystem());
-                    subAppSession = getSubAppSessionManager().openSubAppSession(
-                            installedSubApp,
-                            getErrorManager(),
-                            managerFactory.getModuleManagerFactory(installedSubApp.getSubAppType())
-                    );
+                        subAppSession = getSubAppSessionManager().openSubAppSession(
+                                installedSubApp,
+                                installedSubApp.getSubAppType().getCode(),
+                                getErrorManager(),
+                                managerFactory.getModuleManagerFactory(installedSubApp.getSubAppType())
+                        );
                 }
+            }else {
+                //TODO:deberiamos tener el subAppManager por eso va en null
+                subAppSession = getSubAppSessionManager().openSubAppSession(
+                        null,
+                        subAppType.getCode(),
+                        getErrorManager(),
+                        managerFactory.getModuleManagerFactory(subAppType)
+                );
             }
 
         } catch (NullPointerException nullPointerException){
