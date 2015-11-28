@@ -213,7 +213,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-identity-user":
-                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setImageResource(R.drawable.asset_user_identity);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -227,7 +227,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-identity-issuer":
-                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setImageResource(R.drawable.asset_identity_issuer);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -298,7 +298,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-community-redeem-point":
-                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setImageResource(R.drawable.reddem_point_community);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
