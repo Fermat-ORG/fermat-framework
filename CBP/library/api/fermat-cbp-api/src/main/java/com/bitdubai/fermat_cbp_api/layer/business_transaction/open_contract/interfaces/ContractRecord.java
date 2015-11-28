@@ -33,7 +33,7 @@ public class ContractRecord implements Contract {
      * @return
      */
     @Override
-    public UUID getContractId() {
+    public String getContractId() {
         return null;
     }
 
