@@ -40,7 +40,7 @@ public class CashMoneyWalletManagerImpl implements CashMoneyWalletManager {
 
             this.cashMoneyWalletImpl = new CashMoneyWalletImpl(pluginDatabaseSystem, pluginId, errorManager);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), "CashMoneyWalletManagerImpl", null);
         }
     }
@@ -52,7 +52,7 @@ public class CashMoneyWalletManagerImpl implements CashMoneyWalletManager {
             cashMoneyWalletImpl.changeWalletTo(walletPublicKey);
             return cashMoneyWalletImpl;
         } catch (CantChangeCashMoneyWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantLoadCashMoneyException(CantLoadCashMoneyException.DEFAULT_MESSAGE, e, "CashMoneyWalletManagerImpl", null);
         }
     }
@@ -62,7 +62,7 @@ public class CashMoneyWalletManagerImpl implements CashMoneyWalletManager {
         try {
             dao.createCashMoneyWallet(walletPublicKey, fiatCurrency);
         } catch (CantCreateCashMoneyWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateCashMoneyWalletException(CantCreateCashMoneyWalletException.DEFAULT_MESSAGE, e, "CashMoneyWalletManagerImpl", null);
         }
     }

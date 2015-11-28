@@ -14,6 +14,7 @@ import com.bitdubai.fermat_cbp_core.layer.network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_cbp_core.layer.stock_transactions.StockTransactionsLayer;
 import com.bitdubai.fermat_cbp_core.layer.sub_app_module.SubAppModuleLayer;
 import com.bitdubai.fermat_cbp_core.layer.wallet_module.WalletModuleLayer;
+import com.bitdubai.fermat_cbp_core.layer.world.WorldLayer;
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_core.CBPPlatform</code>
@@ -31,7 +32,7 @@ public class CBPPlatform extends AbstractPlatform {
     public void start() throws CantStartPlatformException {
 
         try {
-
+            registerLayer(new WorldLayer());
             registerLayer(new ActorConnectionLayer());
             registerLayer(new ActorNetworkServiceLayer());
             registerLayer(new BusinessTransactionLayer());

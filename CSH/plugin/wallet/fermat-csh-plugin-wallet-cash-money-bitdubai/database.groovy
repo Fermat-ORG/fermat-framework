@@ -1,7 +1,7 @@
 String developerName = "Alejandro Bicelis"
 String developerMail = "abicelis@gmail.com"
-String pluginName = "Hold"
-String layerName = "Cash Money Transaction"
+String pluginName = "Cash Money"
+String layerName = "Wallet"
 String packageRoot = "com.bitdubai.fermat_csh_plugin"
 String jdkVersion = "1.7"
 

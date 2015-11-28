@@ -1,18 +1,19 @@
-package com.bitdubai.fermat_csh_core.layer.cash_money_transaction.unhold;
+package com.bitdubai.fermat_cbp_core.layer.world.fiat_index;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.DeveloperBitDubai;
+
 
 /**
- * Created by Alejandro Bicelis on 11/26/2015.
+ * Created by Alejandro Bicelis on 11/27/2015.
  */
-public class UnholdPluginSubsystem  extends AbstractPluginSubsystem {
+public class FiatIndexPluginSubsystem extends AbstractPluginSubsystem {
 
-    public UnholdPluginSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD));
+    public FiatIndexPluginSubsystem() {
+        super(new PluginReference(Plugins.FIAT_INDEX));
     }
 
     @Override
@@ -25,7 +26,3 @@ public class UnholdPluginSubsystem  extends AbstractPluginSubsystem {
         }
     }
 }
-
-
-
-
