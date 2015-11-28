@@ -545,6 +545,14 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
 
 
+
+
+
+
+
+
+
+
     public CustomerBrokerPurchaseNegotiation updateCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         try {
 

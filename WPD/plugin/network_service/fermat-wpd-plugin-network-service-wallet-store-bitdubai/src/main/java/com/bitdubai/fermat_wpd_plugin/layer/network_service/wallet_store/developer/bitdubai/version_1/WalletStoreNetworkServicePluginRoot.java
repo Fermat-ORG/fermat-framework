@@ -445,6 +445,7 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                if(communicationNetworkServiceConnectionManager != null)
                 communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
             }
@@ -462,6 +463,7 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
 
       /*  if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             this.register = false;
+            if(communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.closeAllConnection();
         }
         */

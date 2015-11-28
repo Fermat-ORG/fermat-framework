@@ -31,12 +31,12 @@ public class WebSocketClientChannelServerEndpoint {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(WebSocketNodeChannelServerEndpoint.class.getName());
-
+    private final Logger LOG = Logger.getLogger(WebSocketClientChannelServerEndpoint.class.getName());
 
     @OnOpen
     public void onConnect(Session session) throws IOException {
         LOG.info("New connection stablished: " + session.getId());
+        LOG.info(".... ClientsSessionMemoryCache = " + ClientsSessionMemoryCache.getInstance());
     }
 
     @OnMessage

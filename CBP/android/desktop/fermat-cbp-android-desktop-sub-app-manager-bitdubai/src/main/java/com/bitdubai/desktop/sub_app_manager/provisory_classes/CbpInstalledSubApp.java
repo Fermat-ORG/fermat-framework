@@ -115,6 +115,11 @@ public class CbpInstalledSubApp implements InstalledSubApp {
 
 
     @Override
+    public String getAppName() {
+        return subApps.getCode();
+    }
+
+    @Override
     public String getAppPublicKey() {
         return publicKey;
     }

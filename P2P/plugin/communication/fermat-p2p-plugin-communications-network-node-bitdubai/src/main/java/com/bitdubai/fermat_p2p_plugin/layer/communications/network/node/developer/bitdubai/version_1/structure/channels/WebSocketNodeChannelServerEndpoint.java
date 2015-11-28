@@ -33,7 +33,6 @@ public class WebSocketNodeChannelServerEndpoint {
      */
     private final Logger LOG = Logger.getLogger(WebSocketNodeChannelServerEndpoint.class.getName());
 
-
     @OnOpen
     public void onConnect(Session session) throws IOException {
         LOG.info("New connection stablished: " + session.getId());
@@ -42,7 +41,7 @@ public class WebSocketNodeChannelServerEndpoint {
     @OnMessage
     public void onMessage(String message, Session session) {
 
-        LOG.info("Closed connection: " + session.getId() + " message = " + message + ")");
+        LOG.info("On Message: " + session.getId() + " message = " + message + ")");
 
         for (Session s : session.getOpenSessions()) {
             s.getAsyncRemote().sendText(message);

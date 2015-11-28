@@ -6,7 +6,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/11/15.
  */
-public class CompleteComponentConnectionRequestNotificationEventHandler extends com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.event_handlers.AbstractCompleteComponentConnectionRequestNotificationEventHandler {
+public class CompleteComponentConnectionRequestNotificationEventHandler extends AbstractCompleteComponentConnectionRequestNotificationEventHandler {
     /**
      * Constructor with parameter.
      *

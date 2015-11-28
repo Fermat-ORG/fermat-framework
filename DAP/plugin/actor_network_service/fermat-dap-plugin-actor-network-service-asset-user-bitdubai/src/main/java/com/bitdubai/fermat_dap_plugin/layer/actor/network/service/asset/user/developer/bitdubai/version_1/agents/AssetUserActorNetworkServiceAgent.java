@@ -186,12 +186,15 @@ public class AssetUserActorNetworkServiceAgent {
                 processMetadata();
             }
 
-            //Sleep for a time
-            toSend.sleep(AssetUserActorNetworkServiceAgent.SLEEP_TIME);
+            if(toSend.isInterrupted() == Boolean.FALSE){
+                //Sleep for a time
+                Thread.sleep(AssetUserActorNetworkServiceAgent.SLEEP_TIME);
+            }
 
         }catch(InterruptedException e) {
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            toSend.interrupt();
+            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            return;
         }
 
     }
@@ -215,12 +218,20 @@ public class AssetUserActorNetworkServiceAgent {
                             /*
                             * Create the sender basic profile
                             */
-                                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(fm.getSender(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+                                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                                        constructBasicPlatformComponentProfileFactory(
+                                                fm.getSender(),
+                                                NetworkServiceType.UNDEFINED,
+                                                PlatformComponentType.ACTOR_ASSET_USER);
 
                             /*
                              * Create the receiver basic profile
                              */
-                                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(fm.getReceiver(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+                                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                                        constructBasicPlatformComponentProfileFactory(
+                                                fm.getReceiver(),
+                                                NetworkServiceType.UNDEFINED,
+                                                PlatformComponentType.ACTOR_ASSET_USER);
 
 
                             try {

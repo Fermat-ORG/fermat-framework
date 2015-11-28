@@ -11,6 +11,7 @@ repositories {
     mavenCentral()
 }
 
+//noinspection GroovyAssignabilityCheck
 dependencies {
 
     /**
@@ -27,23 +28,34 @@ dependencies {
     compile project(':fermat-cbp-plugin-actor-connection-crypto-broker-bitdubai')
     compile project(':fermat-cbp-plugin-actor-connection-crypto-customer-bitdubai')
 
+    //Business Transaction
+    compile project(':fermat-cbp-plugin-business-transaction-open-contract-bitdubai')
+
+    //Identity
     compile project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai')
     compile project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai')
 
+    //Network Service
     compile project(':fermat-cbp-plugin-network-service-transaction-transmission-bitdubai')
 
-    compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
-    compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
-
-    compile project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai')
-    compile project(':fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai')
-
+    //Stock Transactions
     compile project(':fermat-cbp-plugin-stock-transactions-bank-money-destock-bitdubai')
     compile project(':fermat-cbp-plugin-stock-transactions-bank-money-restock-bitdubai')
     compile project(':fermat-cbp-plugin-stock-transactions-cash-money-restock-bitdubai')
     compile project(':fermat-cbp-plugin-stock-transactions-cash-money-destock-bitdubai')
     compile project(':fermat-cbp-plugin-stock-transactions-crypto-money-destock-bitdubai')
     compile project(':fermat-cbp-plugin-stock-transactions-crypto-money-restock-bitdubai')
+
+    //Sub App Module
+    compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
+    compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
+
+    //Wallet Module
+    compile project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai')
+    compile project(':fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai')
+
+    //World Layer
+    compile project(':fermat-cbp-plugin-world-fiat-index-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

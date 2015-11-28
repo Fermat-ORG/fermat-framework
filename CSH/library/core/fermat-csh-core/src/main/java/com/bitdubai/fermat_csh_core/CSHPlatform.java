@@ -21,11 +21,8 @@ public class CSHPlatform extends AbstractPlatform {
     public void start() throws CantStartPlatformException {
 
         try {
-
-            //registerLayer(new WalletLayer()                 );
             registerLayer(new CashMoneyTransactionLayer()   );
-
-
+            registerLayer(new WalletLayer()                 );
         } catch (CantRegisterLayerException e) {
 
             throw new CantStartPlatformException(

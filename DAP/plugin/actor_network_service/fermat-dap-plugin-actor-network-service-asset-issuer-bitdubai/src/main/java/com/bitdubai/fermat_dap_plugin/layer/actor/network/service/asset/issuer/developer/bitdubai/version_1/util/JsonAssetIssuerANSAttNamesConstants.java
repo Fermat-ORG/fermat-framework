@@ -16,8 +16,8 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.
  */
 public class JsonAssetIssuerANSAttNamesConstants {
 
-    public  static  final String ISSUER="issuer";
-    public  static  final String USER="user";
-    public  static  final String CRYPTOADDRES="crypto-address";
+    public static final String ISSUER = "issuer";
+    public static final String REDEEM_POINT = "redeem-point";
+    public static final String PUBLICKEY_EXTENDED = "publicKey-extended";
 
 }
