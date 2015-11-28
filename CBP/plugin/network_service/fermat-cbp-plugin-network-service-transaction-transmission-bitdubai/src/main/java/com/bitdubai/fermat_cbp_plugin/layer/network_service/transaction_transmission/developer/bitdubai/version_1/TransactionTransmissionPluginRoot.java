@@ -61,8 +61,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionConnectionsDAO;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionContractHashDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantGetTransactionTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
@@ -495,6 +495,12 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         }
     }
 
+    /*@Override
+    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+            this.register = false;
+            communicationNetworkServiceConnectionManager.closeAllConnection();
+        }
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
@@ -504,6 +510,22 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
                 if(communicationNetworkServiceConnectionManager != null)
+                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        }
+    }*/
+
+    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+        if (fermatEvent instanceof VPNConnectionCloseNotificationEvent) {
+
+            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+
+            if (vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()) {
+
+                if (communicationNetworkServiceConnectionManager != null)
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
             }
@@ -520,6 +542,18 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             if (communicationNetworkServiceConnectionManager != null)
                 communicationNetworkServiceConnectionManager.closeAllConnection();
         }
+    /*public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+
+            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+
+                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        }*/
     }
 
     @Override
@@ -667,12 +701,12 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     public void stop() {
 
         //Clear all references of the event listeners registered with the event manager.
-        listenersAdded.clear();
+            listenersAdded.clear();
 
         /*
          * Stop all connection on the managers
          */
-        communicationNetworkServiceConnectionManager.closeAllConnection();
+            communicationNetworkServiceConnectionManager.closeAllConnection();
 
         //Clear all references
 
