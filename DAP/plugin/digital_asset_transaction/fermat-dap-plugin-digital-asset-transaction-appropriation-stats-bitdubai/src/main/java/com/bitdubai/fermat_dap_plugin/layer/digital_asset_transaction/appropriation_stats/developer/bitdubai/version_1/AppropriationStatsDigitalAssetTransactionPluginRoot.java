@@ -105,6 +105,8 @@ public class AppropriationStatsDigitalAssetTransactionPluginRoot extends Abstrac
                 "pluginDatabaseSystem : " + pluginDatabaseSystem + "\n" +
                 "pluginFileSystem : " + pluginFileSystem + "\n" +
                 "logManager : " + logManager + "\n" +
+                "assetIssuerActorNetworkServiceManager : " + assetIssuerActorNetworkServiceManager + "\n" +
+                "actorAssetUserManager : " + actorAssetUserManager + "\n" +
                 "eventManager : " + eventManager + "\n" +
                 "recorderService : " + recorderService + "\n";
 

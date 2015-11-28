@@ -69,7 +69,7 @@ public class HoldCryptoMoneyTransactionDeveloperDatabaseFactory implements Deals
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId,  HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -90,7 +90,7 @@ public class HoldCryptoMoneyTransactionDeveloperDatabaseFactory implements Deals
                   /*
                    * We create the new database
                    */
-                database = holdCryptoMoneyTransactionDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = holdCryptoMoneyTransactionDatabaseFactory.createDatabase(pluginId,  HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.

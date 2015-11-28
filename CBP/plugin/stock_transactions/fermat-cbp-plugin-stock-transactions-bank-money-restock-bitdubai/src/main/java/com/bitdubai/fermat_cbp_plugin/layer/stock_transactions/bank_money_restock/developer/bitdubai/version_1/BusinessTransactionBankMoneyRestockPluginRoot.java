@@ -87,6 +87,7 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
             Database database = pluginDatabaseSystem.openDatabase(pluginId, BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_STOCK_DATABASE_NAME);
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
+            System.out.println("******* Init Bank Money Restock ******");
             startMonitorAgent();
 
             database.closeDatabase();

@@ -33,7 +33,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 public class DepositBankMoneyTransactionPluginRoot extends AbstractPlugin implements DepositManager{
 
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
+    @NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.WALLET, plugin = Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET)
     BankMoneyWallet bankMoneyWallet;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
@@ -68,6 +68,7 @@ public class DepositBankMoneyTransactionPluginRoot extends AbstractPlugin implem
             this.depositBankMoneyTransactionDao = new DepositBankMoneyTransactionDao(pluginId,pluginDatabaseSystem);
             this.depositBankMoneyTransactionManager = new DepositBankMoneyTransactionManager(pluginId,pluginDatabaseSystem);
             this.depositBankMoneyTransactionManager.setDepositBankMoneyTransactionDao(depositBankMoneyTransactionDao);
+            this.depositBankMoneyTransactionManager.setBankMoneyWallet(bankMoneyWallet);
         }catch (CantExecuteDatabaseOperationException innerException){
             throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Deposit Bank Transaction  plugin - "+this.pluginId, "Cannot open or create the plugin database");
         }

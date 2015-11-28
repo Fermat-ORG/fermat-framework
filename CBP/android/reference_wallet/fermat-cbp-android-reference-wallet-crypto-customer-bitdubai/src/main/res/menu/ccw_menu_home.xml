@@ -4,5 +4,5 @@
         android:id="@+id/action_start_negotiation"
         android:orderInCategory="100"
         android:title="@string/action_start_negotiation"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 </menu>
