@@ -85,6 +85,7 @@
             android:layout_height="100dp"
             android:orientation="vertical"
             android:paddingBottom="2dp"
+            android:paddingTop="5dp"
             android:paddingEnd="1dp"
             android:paddingLeft="1dp"
             android:paddingRight="1dp"

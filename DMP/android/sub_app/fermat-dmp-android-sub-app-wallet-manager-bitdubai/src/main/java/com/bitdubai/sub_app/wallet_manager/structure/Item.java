@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.interface_objects.FermatInterfaceObject;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 
+import java.util.List;
+
 /**
  * Created by Matas Furszyfer on 2015.11.01..
  */
@@ -19,7 +21,7 @@ public class Item<I extends FermatInterfaceObject> implements FermatInterfaceObj
 
     @Override
     public InterfaceType getType() {
-        return (object instanceof InstalledWallet) ? InterfaceType.WALLET : InterfaceType.SUB_APP;
+        return object.getType();
     }
 
     @Override

@@ -198,7 +198,7 @@ public class SubAppDesktopFragment extends Fragment {
             switch (installedSubApp.getSubAppIcon())
             {
                 case "developer_sub_app":
-                    holder.imageView.setImageResource(R.drawable.developer_image);
+                    holder.imageView.setImageResource(R.drawable.developer);
                   holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +212,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "wallet_factory":
-                    holder.imageView.setImageResource(R.drawable.factory);
+                    holder.imageView.setImageResource(R.drawable.wallet_factory_icon);
                     holder.imageView.setTag("FactoryActivity|1");
                     linearLayout.setTag("FactoryActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -225,7 +225,7 @@ public class SubAppDesktopFragment extends Fragment {
                     break;
 
                 case "wallet_publisher":
-                    holder.imageView.setImageResource(R.drawable.publisher_image);
+                    holder.imageView.setImageResource(R.drawable.wallet_publisher_icon);
                     holder.imageView.setTag("PublisherActivity|1");
                     linearLayout.setTag("PublisherActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -239,7 +239,7 @@ public class SubAppDesktopFragment extends Fragment {
                     break;
 
                 case "wallet_store":
-                    holder.imageView.setImageResource(R.drawable.store_image);
+                    holder.imageView.setImageResource(R.drawable.wallet_store_icon);
                     holder.imageView.setTag("StoreFrontActivity|1");
                     linearLayout.setTag("StoreFrontActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {

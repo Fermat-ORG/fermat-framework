@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
@@ -42,6 +44,7 @@ import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.OnStartDragListener;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.SimpleItemTouchHelperCallback;
 import com.bitdubai.sub_app.wallet_manager.holder.DesktopHolderClickCallback;
+import com.bitdubai.sub_app.wallet_manager.popup.FolderDialog;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
 import com.bitdubai.sub_app.wallet_manager.structure.Item;
 import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
@@ -144,7 +147,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 4, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-            adapter = new DesktopAdapter(getActivity(), lstItems,this);
+            adapter = new DesktopAdapter(getActivity(), lstItems,this,DesktopAdapter.DEKSTOP);
             recyclerView.setAdapter(adapter);
             rootView.setBackgroundColor(Color.TRANSPARENT);
 
@@ -189,12 +192,12 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
         InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
         Item item = new Item(installedSubApp);
-        item.setIconResource(R.drawable.intra_user);
+        item.setIconResource(R.drawable.intra_user_image);
         lstItems.add(item);
 
         installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
         Item item1 = new Item(installedSubApp);
-        item1.setIconResource(R.drawable.intra_user);
+        item1.setIconResource(R.drawable.intra_user_2);
         lstItems.add(item1);
     }
 
@@ -323,15 +326,25 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
             InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
             Item item2 = new Item(installedSubApp);
-            item2.setIconResource(R.drawable.intra_user);
-            item2.setPosition(5);
-            lstItemsWithIcon.add(item2);
+            item2.setIconResource(R.drawable.intra_user_image);
+            item2.setPosition(5);lstItemsWithIcon.add(item2);
 
             installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
             Item item1 = new Item(installedSubApp);
             item1.setIconResource(R.drawable.intra_user);
+            item1.setPosition(1);
+            item1.setIconResource(R.drawable.intra_user_2);
             item1.setPosition(7);
             lstItemsWithIcon.add(item1);
+
+            List<Item> lstFolderItems = new ArrayList<>();
+            lstFolderItems.add(item1);
+            lstFolderItems.add(item2);
+            FermatFolder folder = new FermatFolder("things",lstFolderItems,11);
+            Item itemFolder = new Item(folder);
+            itemFolder.setIconResource(R.drawable.wallet_1);
+            itemFolder.setPosition(11);
+            lstItemsWithIcon.add(itemFolder);
 
 
             for(int i=0;i<16;i++){
@@ -376,6 +389,15 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
                     selectWallet((InstalledWallet) data.getInterfaceObject());
                     break;
                 case EMPTY:
+                    break;
+                case FOLDER:
+                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,desktopSession,null,((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
+//                    folderDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//                    folderDialog.getWindow().setFormat(PixelFormat.TRANSLUCENT);
+//                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();
+//                    lp.dimAmount=0.0f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
+//                    folderDialog.getWindow().setAttributes(lp);
+                    folderDialog.show();
                     break;
                 default:
                     break;
