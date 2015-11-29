@@ -18,6 +18,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CantGetNegotiationStatusException;
 
@@ -36,12 +37,12 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
     /**
      * Represents the purchase negotiation
      */
-    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    //private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     /**
      * Represents the Fiat index.
      */
-    private FiatIndexManager fiatIndexManager;
+    //private FiatIndexManager fiatIndexManager;
 
     /**
      * Represents the transaction transmission manager
@@ -49,18 +50,14 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
     private TransactionTransmissionManager transactionTransmissionManager;
 
     public OpenContractCustomerContractManager(CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-                                               CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
-                                               FiatIndexManager fiatIndexManager,
                                                TransactionTransmissionManager transactionTransmissionManager) {
 
         this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
-        this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
-        this.fiatIndexManager=fiatIndexManager;
         this.transactionTransmissionManager = transactionTransmissionManager;
     }
 
 
-    private CustomerBrokerPurchaseNegotiation findPurchaseNegotiation(String negotiationId) throws CantGetNegotiationStatusException {
+    /*private CustomerBrokerPurchaseNegotiation findPurchaseNegotiation(String negotiationId) throws CantGetNegotiationStatusException {
 
         try{
             Collection<CustomerBrokerPurchaseNegotiation> negotiationCollection= customerBrokerPurchaseNegotiationManager.getNegotiations(NegotiationStatus.CLOSED);
@@ -79,27 +76,24 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
                     "Cannot get the Purchase Negotiation list");
         }
 
-    }
+    }*/
 
-    public void openContract(String negotiationId)throws CantOpenContractException {
+    public void openContract(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
+                             FiatIndex fiatIndex)throws CantOpenContractException {
 
         contractType= ContractType.PURCHASE;
         try{
-            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation= findPurchaseNegotiation(negotiationId);
+            //CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation= findPurchaseNegotiation(negotiationId);
             Collection<Clause> negotiationClauses=customerBrokerPurchaseNegotiation.getClauses();
             ContractRecord contractRecord=createPurchaseContractRecord(
                     negotiationClauses,
                     customerBrokerPurchaseNegotiation,
-                    fiatIndexManager);
+                    fiatIndex);
         } catch (CantGetListClauseException exception) {
             throw new CantOpenContractException(exception,
                     "Opening a new contract",
                     "Cannot get the negotiation clauses list");
-        } catch(CantGetNegotiationStatusException exception){
-            throw new CantOpenContractException(exception,
-                    "Opening a new contract",
-                    "Cannot get the negotiation status");
-        } catch (InvalidParameterException exception) {
+        }  catch (InvalidParameterException exception) {
             throw new CantOpenContractException(exception,
                     "Opening a new contract",
                     "An invalid parameter has detected");

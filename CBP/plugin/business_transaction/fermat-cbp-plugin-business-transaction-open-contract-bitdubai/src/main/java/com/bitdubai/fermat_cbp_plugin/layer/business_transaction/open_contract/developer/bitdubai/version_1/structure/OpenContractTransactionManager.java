@@ -6,9 +6,12 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exce
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContractManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 
 /**
@@ -29,14 +32,14 @@ public class OpenContractTransactionManager implements OpenContractManager{
     /**
      * Represents the purchase negotiation
      */
-    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    //private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     /**
      * Represents the sale negotiation
      */
-    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    //private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
-    FiatIndexManager fiatIndexManager;
+    //FiatIndexManager fiatIndexManager;
 
     /**
      * Represents the negotiation ID.
@@ -49,18 +52,12 @@ public class OpenContractTransactionManager implements OpenContractManager{
     private TransactionTransmissionManager transactionTransmissionManager;
 
     public OpenContractTransactionManager(
-            //CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-            //CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-            //CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
-            //CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
-            FiatIndexManager fiatIndexManager,
+            CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
+            CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
             TransactionTransmissionManager transactionTransmissionManager){
 
         this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
         this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
-        this.customerBrokerPurchaseNegotiationManager=customerBrokerPurchaseNegotiationManager;
-        this.customerBrokerSaleNegotiationManager=customerBrokerSaleNegotiationManager;
-        this.fiatIndexManager=fiatIndexManager;
         this.transactionTransmissionManager=transactionTransmissionManager;
 
     }
@@ -72,24 +69,22 @@ public class OpenContractTransactionManager implements OpenContractManager{
     }
 
     @Override
-    public void openSaleContract(String negotiationId) throws CantOpenContractException{
+    public void openSaleContract(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
+                                 FiatIndex fiatIndex) throws CantOpenContractException{
         OpenContractBrokerContractManager openContractCustomerContractManager=new OpenContractBrokerContractManager(
                 customerBrokerContractSaleManager,
-                customerBrokerSaleNegotiationManager,
-                fiatIndexManager,
                 transactionTransmissionManager);
-        openContractCustomerContractManager.openContract(negotiationId);
+        openContractCustomerContractManager.openContract(customerBrokerSaleNegotiation, fiatIndex);
         //openContract(negotiationId);
     }
 
     @Override
-    public void openPurchaseContract(String negotiationId) throws CantOpenContractException{
+    public void openPurchaseContract(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
+                                     FiatIndex fiatIndex) throws CantOpenContractException{
         OpenContractCustomerContractManager openContractCustomerContractManager =new OpenContractCustomerContractManager(
                 customerBrokerContractPurchaseManager,
-                customerBrokerPurchaseNegotiationManager,
-                fiatIndexManager,
                 transactionTransmissionManager);
-        openContractCustomerContractManager.openContract(negotiationId);
+        openContractCustomerContractManager.openContract(customerBrokerPurchaseNegotiation, fiatIndex);
 
         //openContract(negotiationId);
     }

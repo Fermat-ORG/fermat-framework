@@ -83,10 +83,10 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
     private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     //TODO: Need reference to contract plugin
-    //private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
+    private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
 
     //TODO: Need reference to contract plugin
-    //private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+    private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
     /**
      * Represent the database
@@ -202,11 +202,11 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
              */
             System.out.println("OPEN_CONTRACT Man");
             openContractTransactionManager=new OpenContractTransactionManager(
-                    //customerBrokerContractPurchaseManager,
-                    //customerBrokerContractSaleManager,
+                    customerBrokerContractPurchaseManager,
+                    customerBrokerContractSaleManager,
                     //customerBrokerPurchaseNegotiationManager,
                     //customerBrokerSaleNegotiationManager,
-                    fiatIndexManager,
+                    //fiatIndexManager,
                     transactionTransmissionManager);
 
             this.serviceStatus = ServiceStatus.STARTED;

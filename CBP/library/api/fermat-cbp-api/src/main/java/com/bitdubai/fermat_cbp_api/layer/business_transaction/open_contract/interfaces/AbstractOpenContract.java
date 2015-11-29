@@ -12,6 +12,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enum
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 
 import java.util.Collection;
@@ -30,7 +31,7 @@ public abstract class AbstractOpenContract {
 
     private ContractRecord createContractRecordFromNegotiationClauses(
             Collection<Clause> negotiationClauses,
-            FiatIndexManager fiatIndexManager,
+            FiatIndex fiatIndex,
             String brokerPublicKey,
             String customerPublicKey,
             String negotiationId)
@@ -76,7 +77,7 @@ public abstract class AbstractOpenContract {
             }
         }
         //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
-        float referencePrice = (float) fiatIndexManager.getCurrentIndex(FiatCurrency.US_DOLLAR).getPurchasePrice();
+        float referencePrice = (float) fiatIndex.getPurchasePrice();
         contractRecord.setNegotiationId(negotiationId);
         contractRecord.setPublicKeyBroker(brokerPublicKey);
         contractRecord.setPublicKeyCustomer(customerPublicKey);
@@ -97,7 +98,7 @@ public abstract class AbstractOpenContract {
      */
     public ContractRecord createPurchaseContractRecord(Collection<Clause> negotiationClauses,
                                                CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-                                               FiatIndexManager fiatIndexManager)
+                                               FiatIndex fiatIndex)
             throws InvalidParameterException,
             CantGetIndexException {
 
@@ -106,7 +107,7 @@ public abstract class AbstractOpenContract {
         String negotiationId=customerBrokerPurchaseNegotiation.getNegotiationId().toString();
         ContractRecord contractRecord= createContractRecordFromNegotiationClauses(
                 negotiationClauses,
-                fiatIndexManager,
+                fiatIndex,
                 brokerPublicKey,
                 customerPublicKey,
                 negotiationId);
@@ -123,7 +124,7 @@ public abstract class AbstractOpenContract {
      */
     public ContractRecord createSaleContractRecord(Collection<Clause> negotiationClauses,
                                                        CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
-                                                       FiatIndexManager fiatIndexManager)
+                                                       FiatIndex fiatIndex)
             throws InvalidParameterException,
             CantGetIndexException {
 
@@ -132,7 +133,7 @@ public abstract class AbstractOpenContract {
         String negotiationId=customerBrokerSaleNegotiation.getNegotiationId().toString();
         ContractRecord contractRecord= createContractRecordFromNegotiationClauses(
                 negotiationClauses,
-                fiatIndexManager,
+                fiatIndex,
                 brokerPublicKey,
                 customerPublicKey,
                 negotiationId);
@@ -146,7 +147,7 @@ public abstract class AbstractOpenContract {
      * @param negotiationId
      * @throws CantOpenContractException
      */
-    public abstract void openContract(String negotiationId)throws CantOpenContractException;
+    //public abstract void openContract(String negotiationId)throws CantOpenContractException;
 
     /**
      * This method parse a String object to a float object
