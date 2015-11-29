@@ -73,14 +73,14 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
 
     //This reference is broken the start of this plugin.
     //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WORLD, plugin = Plugins.FIAT_INDEX)
-    private FiatIndexManager fiatIndexManager;
+    //private FiatIndexManager fiatIndexManager;
 
     //This references were commented because this plugins are not started right now, please uncommented when are working
     //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
-    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    //private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
-    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    //private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     //TODO: Need reference to contract plugin
     private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
@@ -187,20 +187,20 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
             /**
              * Initialize database
              */
-            System.out.println("OPEN_CONTRACT DB");
+            //System.out.println("OPEN_CONTRACT DB");
             initializeDb();
 
             /*
              * Initialize Developer Database Factory
              */
-            System.out.println("OPEN_CONTRACT Facti");
+            //System.out.println("OPEN_CONTRACT Facti");
             openContractBusinessTransactionDeveloperDatabaseFactory = new OpenContractBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             openContractBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
 
             /**
              * Initialize manager
              */
-            System.out.println("OPEN_CONTRACT Man");
+            //System.out.println("OPEN_CONTRACT Man");
             openContractTransactionManager=new OpenContractTransactionManager(
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
