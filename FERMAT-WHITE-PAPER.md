@@ -181,7 +181,7 @@ A transaction at the Fermat Blockchain is considered "irreversible" as soon as i
 
 Miners receive two types of rewards for mining: new tokens created with each new block, and subscription fees from all the network clients that use that node as a home. 
 
-#### New minted fermats
+#### New Minted fermats
 
 To earn this reward, the miners compete to sell incoming bandwith to network clients, i.e. being their home node. Network Clients are free to choose which node to use as their home and at some point they pay in fermats to these nodes for their services. Fermat "proof of work" consist on nodes proving that have received payments for being a home node. 
 
