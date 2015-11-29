@@ -10,7 +10,6 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by angel on 16/9/15.
@@ -19,11 +18,12 @@ public interface CustomerBrokerContractSaleManager {
 
     List<CustomerBrokerContractSale> getAllCustomerBrokerContractSaleFromCurrentDeviceUser() throws CantGetListCustomerBrokerContractSaleException;
 
-    CustomerBrokerContractSale getCustomerBrokerContractSaleForContractId(final UUID ContractId) throws CantGetListCustomerBrokerContractSaleException;
+    CustomerBrokerContractSale getCustomerBrokerContractSaleForContractId(final String ContractId) throws CantGetListCustomerBrokerContractSaleException;
 
     DatabaseTableRecord getCustomerBrokerContractSaleTable();
 
-    public CustomerBrokerContractSale createCustomerBrokerContractSale(
+    CustomerBrokerContractSale createCustomerBrokerContractSale(
+            String ContractId,
             String publicKeyCustomer,
             String publicKeyBroker,
             Float merchandiseAmount,
@@ -35,7 +35,7 @@ public interface CustomerBrokerContractSaleManager {
             long paymentExpirationDate,
             long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerContractSaleException;
 
-    public void updateCustomerBrokerContractSale(UUID contractId, ContractStatus status) throws CantupdateCustomerBrokerContractSaleException;
+    void updateCustomerBrokerContractSale(String contractId, ContractStatus status) throws CantupdateCustomerBrokerContractSaleException;
 
-    void deleteCustomerBrokerContractSale(UUID contractID) throws CantDeleteCustomerBrokerContractSaleException;
+    void deleteCustomerBrokerContractSale(String contractID) throws CantDeleteCustomerBrokerContractSaleException;
 }
