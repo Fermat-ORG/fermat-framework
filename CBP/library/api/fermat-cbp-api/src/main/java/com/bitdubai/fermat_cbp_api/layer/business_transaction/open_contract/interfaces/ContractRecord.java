@@ -24,11 +24,9 @@ public class ContractRecord implements Contract {
     ReferenceCurrency referenceCurrency;
     float referencePrice;
     ContractStatus status;
-
-    //TODO: change for contractId when the contractId is set as a String object
     String contractHash;
     /**
-     * TODO: Change the method return when the contract change.
+     * Represents the contract id/hash
      * @return
      */
     @Override

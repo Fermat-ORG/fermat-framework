@@ -1,10 +1,13 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.AbstractOpenContract;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
@@ -85,6 +88,9 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
         try{
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation= findSaleNegotiation(negotiationId);
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
+            ContractRecord contractRecord=createSaleContractRecord(
+                    negotiationClauses,customerBrokerSaleNegotiation,fiatIndexManager
+                    );
         } catch (CantGetListClauseException exception) {
             throw new CantOpenContractException(exception,
                     "Opening a new contract",
@@ -93,6 +99,14 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
             throw new CantOpenContractException(exception,
                     "Opening a new contract",
                     "Cannot get the negotiation status");
+        } catch (InvalidParameterException exception) {
+            throw new CantOpenContractException(exception,
+                    "Opening a new contract",
+                    "An invalid parameter has detected");
+        } catch (CantGetIndexException exception) {
+            throw new CantOpenContractException(exception,
+                    "Opening a new contract",
+                    "Cannot get the fiat index");
         }
 
     }

@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 
 import java.util.Collection;
@@ -27,40 +28,13 @@ public abstract class AbstractOpenContract {
      */
     public ContractType contractType;
 
-    /**
-     * This method creates a ContractRecord with given Negotiation clauses.
-     * @param negotiationClauses
-     * @return
-     * @throws InvalidParameterException
-     */
-    public ContractRecord createPurchaseContractRecord(Collection<Clause> negotiationClauses,
-                                               CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-                                               FiatIndexManager fiatIndexManager)
-            throws InvalidParameterException,
-            CantGetIndexException {
-
-        String brokerPublicKey=customerBrokerPurchaseNegotiation.getBrokerPublicKey();
-        String customerPublicKey=customerBrokerPurchaseNegotiation.getCustomerPublicKey();
-        String negotiationId=customerBrokerPurchaseNegotiation.getNegotiationId().toString();
-        //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
-        float referencePrice = (float) fiatIndexManager.getCurrentIndex(FiatCurrency.US_DOLLAR).getPurchasePrice();
-        ContractRecord contractRecord= createPurchaseContractRecordFromNegotiationClauses(negotiationClauses);
-        contractRecord.setNegotiationId(negotiationId);
-        contractRecord.setPublicKeyBroker(brokerPublicKey);
-        contractRecord.setPublicKeyCustomer(customerPublicKey);
-        //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
-        contractRecord.setReferenceCurrency(ReferenceCurrency.DOLLAR);
-        contractRecord.setReferencePrice(referencePrice);
-        contractRecord.setStatus(ContractStatus.CREATING_CONTRACT);
-        //Sets the contractId (hash)
-        contractRecord.generateContractHash();
-        return contractRecord;
-
-    }
-
-    private ContractRecord createPurchaseContractRecordFromNegotiationClauses(
-            Collection<Clause> negotiationClauses)
-            throws InvalidParameterException {
+    private ContractRecord createContractRecordFromNegotiationClauses(
+            Collection<Clause> negotiationClauses,
+            FiatIndexManager fiatIndexManager,
+            String brokerPublicKey,
+            String customerPublicKey,
+            String negotiationId)
+            throws InvalidParameterException, CantGetIndexException {
 
         ContractRecord contractRecord=new ContractRecord();
         CurrencyType merchandiseCurrency;
@@ -101,7 +75,70 @@ public abstract class AbstractOpenContract {
                     break;
             }
         }
+        //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
+        float referencePrice = (float) fiatIndexManager.getCurrentIndex(FiatCurrency.US_DOLLAR).getPurchasePrice();
+        contractRecord.setNegotiationId(negotiationId);
+        contractRecord.setPublicKeyBroker(brokerPublicKey);
+        contractRecord.setPublicKeyCustomer(customerPublicKey);
+        //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
+        contractRecord.setReferenceCurrency(ReferenceCurrency.DOLLAR);
+        contractRecord.setReferencePrice(referencePrice);
+        contractRecord.setStatus(ContractStatus.CREATING_CONTRACT);
+        //Sets the contractId (hash)
+        contractRecord.generateContractHash();
         return contractRecord;
+    }
+
+    /**
+     * This method creates a ContractRecord for purchase with given Negotiation clauses.
+     * @param negotiationClauses
+     * @return
+     * @throws InvalidParameterException
+     */
+    public ContractRecord createPurchaseContractRecord(Collection<Clause> negotiationClauses,
+                                               CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
+                                               FiatIndexManager fiatIndexManager)
+            throws InvalidParameterException,
+            CantGetIndexException {
+
+        String brokerPublicKey=customerBrokerPurchaseNegotiation.getBrokerPublicKey();
+        String customerPublicKey=customerBrokerPurchaseNegotiation.getCustomerPublicKey();
+        String negotiationId=customerBrokerPurchaseNegotiation.getNegotiationId().toString();
+        ContractRecord contractRecord= createContractRecordFromNegotiationClauses(
+                negotiationClauses,
+                fiatIndexManager,
+                brokerPublicKey,
+                customerPublicKey,
+                negotiationId);
+
+        return contractRecord;
+
+    }
+
+    /**
+     * This method creates a ContractRecord for purchase with given Negotiation clauses.
+     * @param negotiationClauses
+     * @return
+     * @throws InvalidParameterException
+     */
+    public ContractRecord createSaleContractRecord(Collection<Clause> negotiationClauses,
+                                                       CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
+                                                       FiatIndexManager fiatIndexManager)
+            throws InvalidParameterException,
+            CantGetIndexException {
+
+        String brokerPublicKey=customerBrokerSaleNegotiation.getBrokerPublicKey();
+        String customerPublicKey=customerBrokerSaleNegotiation.getCustomerPublicKey();
+        String negotiationId=customerBrokerSaleNegotiation.getNegotiationId().toString();
+        ContractRecord contractRecord= createContractRecordFromNegotiationClauses(
+                negotiationClauses,
+                fiatIndexManager,
+                brokerPublicKey,
+                customerPublicKey,
+                negotiationId);
+
+        return contractRecord;
+
     }
 
     /**

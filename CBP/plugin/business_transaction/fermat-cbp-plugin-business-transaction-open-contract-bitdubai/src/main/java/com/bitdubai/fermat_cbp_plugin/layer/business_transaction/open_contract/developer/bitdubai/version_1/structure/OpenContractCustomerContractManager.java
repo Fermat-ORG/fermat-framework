@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -52,10 +53,10 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
                                                FiatIndexManager fiatIndexManager,
                                                TransactionTransmissionManager transactionTransmissionManager) {
 
-        customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
-        customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
-        fiatIndexManager=fiatIndexManager;
-        transactionTransmissionManager = transactionTransmissionManager;
+        this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
+        this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
+        this.fiatIndexManager=fiatIndexManager;
+        this.transactionTransmissionManager = transactionTransmissionManager;
     }
 
 
@@ -86,6 +87,10 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
         try{
             CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation= findPurchaseNegotiation(negotiationId);
             Collection<Clause> negotiationClauses=customerBrokerPurchaseNegotiation.getClauses();
+            ContractRecord contractRecord=createPurchaseContractRecord(
+                    negotiationClauses,
+                    customerBrokerPurchaseNegotiation,
+                    fiatIndexManager);
         } catch (CantGetListClauseException exception) {
             throw new CantOpenContractException(exception,
                     "Opening a new contract",
@@ -94,6 +99,14 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
             throw new CantOpenContractException(exception,
                     "Opening a new contract",
                     "Cannot get the negotiation status");
+        } catch (InvalidParameterException exception) {
+            throw new CantOpenContractException(exception,
+                    "Opening a new contract",
+                    "An invalid parameter has detected");
+        } catch (CantGetIndexException exception) {
+            throw new CantOpenContractException(exception,
+                    "Opening a new contract",
+                    "Cannot get the fiat index");
         }
 
     }
