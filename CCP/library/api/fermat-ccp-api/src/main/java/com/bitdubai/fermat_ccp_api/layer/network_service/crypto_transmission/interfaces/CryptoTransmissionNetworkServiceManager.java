@@ -26,20 +26,20 @@ public interface CryptoTransmissionNetworkServiceManager extends TransactionSend
      * The method <code>informTransactionCreditedInWallet</code> informs the peer network service
      * that sent the transaction that the said transaction has been credited in its destination wallet.
      *
-     * @param transmissionId an identifier of the transmission
+     * @param transaction_id an identifier of the transaction
      * @throws CantSetToCreditedInWalletException
      */
-    public void informTransactionCreditedInWallet(UUID transmissionId) throws CantSetToCreditedInWalletException;
+    public void informTransactionCreditedInWallet(UUID transaction_id) throws CantSetToCreditedInWalletException;
 
     /**
      * The method <code>informTransactionSeenByVault</code> informs the peer network service that sent
      * the identified transaction that the transaction has been registered by the crypto vault in
      * this device
      *
-     * @param transmissionId an identifier of the transmission
+     * @param transaction_id an identifier of the transaction
      * @throws CantSetToSeenByCryptoVaultException
      */
-    public void informTransactionSeenByVault(UUID transmissionId) throws CantSetToSeenByCryptoVaultException;
+    public void informTransactionSeenByVault(UUID transaction_id) throws CantSetToSeenByCryptoVaultException;
 
     /**
      * The method <code>getState</code> returns the status of the transmission sent.

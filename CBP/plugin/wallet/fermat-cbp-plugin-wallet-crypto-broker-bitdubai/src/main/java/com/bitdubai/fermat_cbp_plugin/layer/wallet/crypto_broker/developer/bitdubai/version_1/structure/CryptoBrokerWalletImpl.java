@@ -46,7 +46,6 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         this.ownerPublicKey = ownerPublicKey;
         this.databaseDao = databaseDao;
         stockMap = new ConcurrentHashMap<>();
-
     }
 
     @Override
@@ -142,6 +141,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         KeyPair walletKeyPair = AsymmetricCryptography.createKeyPair(transaction.getWalletPublicKey());
         StockTransaction record = new CryptoBrokerStockTransactionRecordImpl(
                 transaction.getTransactionId(),
+//                transaction.getContractId(),
                 walletKeyPair,
                 transaction.getOwnerPublicKey(),
                 transaction.getBalanceType(),
@@ -163,6 +163,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         String memo = "";
         StockTransaction record = new CryptoBrokerStockTransactionRecordImpl(
                 transactionId,
+//                null,
                 this.walletKeyPair,
                 this.ownerPublicKey,
                 balanceType,

@@ -58,7 +58,7 @@ public class IndexHelper {
         for(FiatIndex index: indexList){
 
             if(index.getPurchasePrice() == 0 || index.getSalePrice() == 0) {
-                System.out.println("Found INVALID INDEX: " + index.getProviderDescription());
+                System.out.println("FIATINDEX - Found INVALID INDEX: " + index.getProviderDescription());
                 toRemove.add(index);
             }
         }
@@ -78,10 +78,10 @@ public class IndexHelper {
 
             double purchaseSaleAverage = (index.getPurchasePrice() + index.getSalePrice()) / 2;
             if( (purchaseSaleAverage >= extremeHigh) || (purchaseSaleAverage <= extremeLow)) {
-                System.out.println("Found EXTREME INDEX: " + index.getProviderDescription());
-                System.out.println("mean=" + mean + "  stdDev=" + standardDeviation);
-                System.out.println("extremeHigh=" + extremeHigh + "  extremeLow=" + extremeLow);
-                System.out.println("purchasePrice=" + index.getPurchasePrice() + "  salePrice= " + index.getSalePrice() + ". Average of purchase/sale (" + purchaseSaleAverage + ") outside of extremes!");
+                System.out.println("FIATINDEX - Found EXTREME INDEX: " + index.getProviderDescription());
+                System.out.println("FIATINDEX - mean=" + mean + "  stdDev=" + standardDeviation);
+                System.out.println("FIATINDEX - extremeHigh=" + extremeHigh + "  extremeLow=" + extremeLow);
+                System.out.println("FIATINDEX - purchasePrice=" + index.getPurchasePrice() + "  salePrice= " + index.getSalePrice() + ". Average of purchase/sale (" + purchaseSaleAverage + ") outside of extremes!");
 
                 toRemove.add(index);
             }
