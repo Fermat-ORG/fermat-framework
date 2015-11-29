@@ -570,7 +570,14 @@ public class CryptoTransmissionAgent {
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
                                     System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
 
-                                    //registerEvent(EventType.INCOMING_CRYPTO_METADATA, new IncomingCryptoMetadataEventHandler(this));
+                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                                    cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
+                                    cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
+
+                                    System.out.print("-----------------------\n" +
+                                            "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
+                                            "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
+
                                     lauchNotification();
                                     break;
 
@@ -580,6 +587,17 @@ public class CryptoTransmissionAgent {
                                             "ACA DEBERIA LANZAR EVENTO NO CREO -----------------------\n" +
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
                                     // deberia ver si tengo que lanzar un evento acá
+                                    //para el outgoing intra user
+
+                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                                    cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
+                                    cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
+
+                                    System.out.print("-----------------------\n" +
+                                            "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
+                                            "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
+
+
                                     System.out.print("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
                                     this.poolConnectionsWaitingForResponse.remove(cryptoTransmissionMetadata.getDestinationPublicKey());
                                     break;
