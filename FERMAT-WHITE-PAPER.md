@@ -231,12 +231,6 @@ The sum of the amounts of all these transactions must not exceed the amount of f
 
 By using the fees payed by network clients as "proof of work" we discorage dishonest nodes to lie to the rest of the network about the value added. Network Clients will often pay after the service is delivered. Of course node operators can create fake fees to quilify for the race, but they will need to pay bitcoin mining fees for this and they are not guaranteed that they will win the race to the blockchain. In fact to have better chances to win the race they will have to invest in higher bitcoin miner's fees in order to be included first, again without any guarantee of being among the first 10%.
 
-<br>
-## Crypto Networks
-
-A set of Plug-ins is needed for each crypto network to be supported. One for interfacing the network, pushing outgoing transactions and monitoring incoming transactions. Another couple being the digital vaults where the crypto currency value and digital assets are stored.
-
-Wallets are higher level abstractions and have their own set of Plug-ins to keep each kind of accounting. This means that we split the accounting from the handling of the value by having components on different layers to handle each activity.
 
 <br>
 ## Incentive
@@ -251,12 +245,13 @@ The Framework is responsible to charge the end user and distribute the payments 
 
 Network clients establish a _Home Node_ where they check themselves and their actors in so as to be found by other network clients. They must pay a subscription fee to their _Home Node_ for its services. Finding and calling other clients through other nodes is free for the caller. The nodes income is covered by those network clients for whom they act as their _Home Node_.
 
+
 <br>
-## Platforms
+## Crypto Networks
 
-We define as _Platform_ a set of interrelated functionality. _Platforms_ may consume services from other _platforms_ and their dependencies form a hierarchical stack. 
+A set of Plug-ins is needed for each crypto network to be supported. One for interfacing the network, pushing outgoing transactions and monitoring incoming transactions. Another couple being the digital vaults where the crypto currency value and digital assets are stored.
 
-Each _Platform_ may introduce new workflows to the system , Add-ons, Plug-ins, GUI components (Apps, wallets) and Actors. This enables the system to target different use cases with different actors involved. 
+Wallets are higher level abstractions and have their own set of Plug-ins to keep each kind of accounting. This means that we split the accounting from the handling of the value by having components on different layers to handle each activity.
 
 <br>
 ## Identities
@@ -282,6 +277,14 @@ b. _Network Services_ to encrypt the communication between each other.
 c. Network Clients to encrypt the communication with nodes.
 
 d. Nodes to recognize each other even when their IP location or other profile information changes.
+
+<br>
+## Platforms
+
+We define as _Platform_ a set of interrelated functionality. _Platforms_ may consume services from other _platforms_ and their dependencies form a hierarchical stack. 
+
+Each _Platform_ may introduce new workflows to the system , Add-ons, Plug-ins, GUI components (Apps, wallets) and Actors. This enables the system to target different use cases with different actors involved. 
+
 
 <br>
 ## Workflows
