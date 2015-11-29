@@ -60,16 +60,43 @@ Each block within the blockchain:
 * Is identified by a hash, generated using the SHA256 cryptographic hash algorithm on the header of the block. 
 * References a previous block, known as the parent block, through the "previous block hash" field in the block header. 
 
-## Mining and Consensus
+## Mining
 
 Mining is the process by which new fermats are added to the token supply. Mining also serves to the main purpose of the Fermat Network: enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidh to the Fermat network in exchange for the opportunity to be rewarded fermats.
 
 Miners inter-connect devices and acts as a bridge relaying everything from one device to the other. A new block, containing transactions that occurred since the last block, is "mined" every 1 hour, thereby adding those transactions to the blockchain. Transactions that become part of a block and added to the blockchain are considered "confirmed," which allows the new owners of fermats to spend the fermats they received in those transactions.
 
-Miners receive two types of rewards for mining: new tokens created with each new block, and subscription fees from all the network clients that use that node as a home. To earn this reward, the miners compete to sell bandwith to network clients, i.e. being their home node. Network Clients are free to choose which node to use as their home and at some point they pay in fermats to these nodes for their services. Fermat proof of work consist on a node proving that has received payments for being the home node. 
+Miners receive two types of rewards for mining: new tokens created with each new block, and subscription fees from all the network clients that use that node as a home. To earn this reward, the miners compete to sell incoming bandwith to network clients, i.e. being their home node. Network Clients are free to choose which node to use as their home and at some point they pay in fermats to these nodes for their services. Fermat proof of work consist on nodes proving that have received payments for being home node. 
 
 The amount of newly created fermats that can be added to a block decreases approximately every two years. It starts at 10,000 fermat per block and halves by 2 every 2 years. Based on this formula, fermat mining rewards decrease exponentially until when all fermats (350,000,000 million) have been issued. After that, no new fermats will be issued.
 
+## Decentralized Consensus
 
+The Fermat blockchain is not created by a central authority, but is assembled independently by every node in the network. Fermat defines a set of rules that defines which coinbase transactions are going to be added to the blockchain. As Fermat outsources the transaction processing features of the bitcoin network, it is easier for Fermat to arrive at a consensus. 
 
+### Proof of Work
+
+This are the rules to be followed:
+
+* Each node scans the bitcoin blockchain for the last 6 block counting from the chain head - 6. 
+* They search for fermat transactions and add all the ones that are payments to nodes in their node catalog.
+* If they are between the 25% of the nodes that:
+
+a. Received the biggest amount payed by adding all payments.
+b. Have been payed by the biggest number of different transactions.
+c. The sum of the bitcoin mining fees is the greatest.
+
+Then they are allowed to propose themselves as canditates to receive new fermats by participating in the following race.
+
+### Race to the Blockchain
+
+All qualifying nodes creates a coinbase transaction racing between each other to be incorporated first by a bitcoin miner into the bitcoin blockchain. The three first 10 % of valid transactions to be incorporated at the bitcoin blockchain will be the ones recorded by every Fermat Node on the Fermat blockchain by adding them on a new block.
+
+The sum of the amounts of all these transactions must not exceed the amount of fermats per block allowed by the Fermat Protocol.
+
+As every node is reading confirmed bitcoin transactions and they all share a syncronized copy of the node catalogue, the Proof of Work algorithm should give exactly the same result to every node in the network. This means every node knows how many nodes are going to be part of the race, and how many fermats they should add on their own coinbase transaction in order for the 10% of all these nodes not to exceed the amount of fermats per block.
+
+### Rationale
+
+By using the fees payed by network clients as proof of works we discorage dishonest nodes to lie to the rest of the network about the work done. Of course a node operators can create fake fees to quilify for the race, but this will be at a cost and they are not guarantee that they will win the race. In fact to have better chances to win the race they will have to invest in bitcoin miners fees in order to be included first, again without any guarantee of being among the first 10%.
 
