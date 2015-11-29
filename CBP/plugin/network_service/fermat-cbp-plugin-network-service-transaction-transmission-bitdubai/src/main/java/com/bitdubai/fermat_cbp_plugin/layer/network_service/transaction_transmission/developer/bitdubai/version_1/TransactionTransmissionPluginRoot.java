@@ -332,7 +332,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     @Override
     public FermatManager getManager() {
-        return null;
+        return transactionTransmissionNetworkServiceManager;
     }
 
     @Override
