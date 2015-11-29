@@ -169,6 +169,7 @@ Each block within the blockchain:
 * Is identified by a hash, generated using the SHA256 cryptographic hash algorithm on the header of the block. 
 * References a previous block, known as the parent block, through the "previous block hash" field in the block header. 
 
+<br>
 ## Mining
 
 Mining is the process by which new fermats are added to the token supply. Mining also serves to the main purpose of the Fermat Network: enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidh to the Fermat network in exchange for the opportunity to be rewarded fermats.
@@ -191,6 +192,7 @@ The amount of newly created fermats that can be added to a block decreces approx
 
 Network clients will try to establish their home base at a nearby Node. This will help end users to find the end user behind the network client by knowing approximatelly where he or she lives (city & country). But the network client will scan all nearby nodes and finally decide where to stablish its home base on the plans and tariffs each node is charging for their services. 
 
+<br>
 ## Decentralized Consensus
 
 The Fermat blockchain is not created by a central authority, but is assembled independently by every node in the network. The Fermat Protocol provides a set of rules that defines which coinbase transactions are going to be added to the blockchain. As Fermat outsources the transaction processing features of the bitcoin network, it is easier for Fermat to arrive to a consensus. 
