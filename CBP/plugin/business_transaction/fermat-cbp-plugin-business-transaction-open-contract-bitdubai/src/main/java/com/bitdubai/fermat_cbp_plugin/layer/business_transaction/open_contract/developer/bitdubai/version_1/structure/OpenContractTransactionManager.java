@@ -49,10 +49,10 @@ public class OpenContractTransactionManager implements OpenContractManager{
     private TransactionTransmissionManager transactionTransmissionManager;
 
     public OpenContractTransactionManager(
-            CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-            CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-            CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
-            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+            //CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
+            //CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
+            //CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
+            //CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
             FiatIndexManager fiatIndexManager,
             TransactionTransmissionManager transactionTransmissionManager){
 
