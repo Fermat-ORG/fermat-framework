@@ -160,7 +160,7 @@ End Users pay Fermat Component's developers with fermats to be able to use their
 End Users pay with fermats to receive personalized technical support from Fermat Component's developers.
 
 <br>
-## Blockchain
+## Fermat Blockchain
 
 Fermat's blockchain inherits many of the characteristics of the bitcoin blockchain and it is highly coupled with it. The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are coinbase transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back," each referring to the previous block in the chain. 
 
