@@ -98,7 +98,9 @@ According to the Fermat Protocol these are the rules to be followed:
 * If they are between the 25% of the nodes that:
 
 a. Received the biggest amount payed by adding all payments.
+
 b. Have been payed with the biggest number of different transactions.
+
 c. The sum of the bitcoin mining fees is the greatest.
 
 Then they are allowed to propose themselves as canditates to receive new fermats by participating in the Race to the Blockchain.
