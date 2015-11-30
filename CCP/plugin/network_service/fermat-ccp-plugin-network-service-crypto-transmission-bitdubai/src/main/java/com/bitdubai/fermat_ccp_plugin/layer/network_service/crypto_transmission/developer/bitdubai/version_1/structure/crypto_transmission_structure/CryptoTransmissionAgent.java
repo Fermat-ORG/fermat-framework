@@ -550,6 +550,7 @@ public class CryptoTransmissionAgent {
                         try {
                             // lo cambio directo porque la metadata viene con un mensaje de estado distinto, actualizado
 
+
                             switch (cryptoTransmissionMetadata.getCryptoTransmissionStates()) {
 
                                 case SEEN_BY_DESTINATION_NETWORK_SERVICE:
@@ -570,7 +571,7 @@ public class CryptoTransmissionAgent {
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
                                     System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
 
-                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
                                     cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
                                     cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
 
@@ -618,7 +619,7 @@ public class CryptoTransmissionAgent {
                                     CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(
                                             cryptoTransmissionMetadata.getTransactionId(),
                                             CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE,
-                                            CryptoTransmissionMetadataType.METADATA_SEND);
+                                            CryptoTransmissionMetadataType.METADATA_RECEIVE);
 
                                     Gson gson = new Gson();
 
