@@ -33,8 +33,8 @@ import java.util.Observable;
 public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
     /*
-* Represent the sleep time for the read or send (2000 milliseconds)
-*/
+     * Represent the sleep time for the read or send (2000 milliseconds)
+     */
     private static final long SLEEP_TIME = 2000;
 
     /**
@@ -119,7 +119,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                     processMessageToSend();
             }
         });
-
     }
 
     /**
@@ -223,16 +222,12 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      */
                     setChanged();
                     notifyObservers(message);
-
                 }
-
             }
-
             //Sleep for a time
             if (!toReceive.isInterrupted()) {
-                toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
-
         } catch (InterruptedException e) {
             toReceive.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
@@ -240,7 +235,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         } catch (CantInsertRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
-
     }
 
     /**
@@ -281,7 +275,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                         String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
                         ((FermatMessageCommunication) message).setSignature(signature);
 
-
                             /*
                              * Send the message
                              */
@@ -290,7 +283,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Change the message and update in the data base
                              */
-
                         ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
                         outgoingMessageDao.update(message);
 
@@ -321,9 +313,5 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
             return;
         }
-
     }
-
-
-
 }

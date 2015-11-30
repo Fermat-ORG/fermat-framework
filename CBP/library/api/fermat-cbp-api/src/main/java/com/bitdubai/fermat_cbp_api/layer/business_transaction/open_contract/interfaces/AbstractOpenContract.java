@@ -84,7 +84,7 @@ public abstract class AbstractOpenContract {
         //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
         contractRecord.setReferenceCurrency(ReferenceCurrency.DOLLAR);
         contractRecord.setReferencePrice(referencePrice);
-        contractRecord.setStatus(ContractStatus.CREATING_CONTRACT);
+        contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
         //Sets the contractId (hash)
         contractRecord.generateContractHash();
         return contractRecord;
