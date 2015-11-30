@@ -235,6 +235,28 @@ By using the fees payed by network clients as "proof of work" we discorage disho
 
 
 <br>
+## Independent Verification of Transactions
+
+In Fermat, coinbase transactions are recorded on the Fermat Blockchain. Previously, nodes recorded the candidate coinbase transactions on the bitcoin network. Those transactions includes the transaction hash on the OP_RETURN field that later is going to be crytical to recognize the satoshis present on the other outputs as fermats by Fermat wallets.
+
+### Fermat Genesis Transactions
+
+We call a _Fermat Genesis Transaction_ to each coinbase transaction recorded on the bitcoin blockchain that has also been included on the Fermat blockchain. The structure of that transaction is the following:
+
+
+| Input # | Contains | Output # | Contains |
+|:-------:|:--------:|:--------:|:--------:|
+| 1 | bitcoins | 1 | fermats |
+| 2 | bitcoins | 1 | fermats |
+| 3 | bitcoins | 1 | fermats |
+| ... | ........ | ... | ....... |
+| n | bitcoins | m - 1 | bitcoins |
+|   |  | m | OP_RETURN |
+
+Note that the _Genesis Transaction_ can have _n_ number of UTXO as INPUTS, all of them bitcoins (or satoshis to be precise). It can also have _m_ number of OUTPUTS where all of them will represent fermats except _m - 1_ which is reserved for bitcoin change and the _m_ which is used to place the Fermat Coinbase Transaction hash on the OP_RETURN field.
+
+
+<br>
 ## Incentive
 
 ### For developers
