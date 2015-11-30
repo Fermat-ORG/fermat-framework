@@ -35,6 +35,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendConfirmToCryptoBrokerException;
@@ -241,13 +242,14 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 PlatformComponentType.ACTOR_CRYPTO_BROKER,
                 negotiationTransaction.getPublicKeyCustomer(),
                 PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                NegotiationTransmissionType.TRANSMISSION_SEND,
                 NegotiationTransmissionState.PROCESSING_SEND,
                 timestamp
         );
         try{
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
         } catch (CantRegisterSendNegotiationTransmissionException e){
-            throw new CantSendNegotiationToCryptoCustomerException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", e, "ERROR CREATE REGISTER ", "");
+            throw new CantSendNegotiationToCryptoCustomerException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", e, "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER", "");
         }
 
     }
@@ -266,24 +268,65 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
                 negotiationTransaction.getPublicKeyBroker(),
                 PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                NegotiationTransmissionType.TRANSMISSION_SEND,
                 NegotiationTransmissionState.PROCESSING_SEND,
                 timestamp
         );
         try{
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
         } catch (CantRegisterSendNegotiationTransmissionException e){
-            throw new CantSendNegotiationToCryptoBrokerException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", e, "ERROR CREATE REGISTER ", "");
+            throw new CantSendNegotiationToCryptoBrokerException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", e, "ERROR SEND NEGOTIATION TO CRYPTO BROKER", "");
         }
     }
 
     //Crypto Customer Confirm that receive Negotiation from Cryto Broker
-    public void sendConfirmToCryptoCustomer(NegotiationTransaction negotiationTransaction) throws CantSendConfirmToCryptoCustomerException{
-
+    public void sendConfirmToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType TransactionType) throws CantSendConfirmToCryptoCustomerException{
+        UUID transmissionId = UUID.randomUUID();
+        Date time = new Date();
+        long timestamp = time.getTime();
+        NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
+                transmissionId,
+                negotiationTransaction.getTransactionId(),
+                negotiationTransaction.getNegotiationId(),
+                TransactionType,
+                negotiationTransaction.getPublicKeyBroker(),
+                PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                negotiationTransaction.getPublicKeyCustomer(),
+                PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                NegotiationTransmissionType.TRANSMISSION_CONFIRM,
+                NegotiationTransmissionState.PROCESSING_SEND,
+                timestamp
+        );
+        try{
+            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
+        } catch (CantRegisterSendNegotiationTransmissionException e){
+            throw new CantSendConfirmToCryptoCustomerException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", e, "ERROR SEND CONFIRM TO CRYPTO CUSTOMER", "");
+        }
     }
 
     //Crypto Customer Confirm that receive Negotiation from Cryto Broker
-    public void sendConfirmToCryptoBroker(NegotiationTransaction negotiationTransaction) throws CantSendConfirmToCryptoBrokerException{
-
+    public void sendConfirmToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType TransactionType) throws CantSendConfirmToCryptoBrokerException{
+        UUID transmissionId = UUID.randomUUID();
+        Date time = new Date();
+        long timestamp = time.getTime();
+        NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
+                transmissionId,
+                negotiationTransaction.getTransactionId(),
+                negotiationTransaction.getNegotiationId(),
+                TransactionType,
+                negotiationTransaction.getPublicKeyCustomer(),
+                PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                negotiationTransaction.getPublicKeyBroker(),
+                PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                NegotiationTransmissionType.TRANSMISSION_CONFIRM,
+                NegotiationTransmissionState.PROCESSING_SEND,
+                timestamp
+        );
+        try{
+            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
+        } catch (CantRegisterSendNegotiationTransmissionException e){
+            throw new CantSendConfirmToCryptoBrokerException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
+        }
     }
     /*END IMPLEMENTATION NEGOTIATION TRANSMISSION MANAGER*/
 
