@@ -74,7 +74,7 @@ public class CustomerBrokerContractPurchaseDatabaseFactory implements DealsWithP
              */
             table = databaseFactory.newTableFactory(ownerId, CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerContractPurchaseDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);

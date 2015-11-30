@@ -14,7 +14,7 @@ import com.bitdubai.fermat_csh_core.layer.cash_money_transaction.unhold.UnholdPl
 public class CashMoneyTransactionLayer extends AbstractLayer {
 
     public CashMoneyTransactionLayer() {
-        super(Layers.TRANSACTION);
+        super(Layers.CASH_MONEY_TRANSACTION);
     }
 
     public void start() throws CantStartLayerException {

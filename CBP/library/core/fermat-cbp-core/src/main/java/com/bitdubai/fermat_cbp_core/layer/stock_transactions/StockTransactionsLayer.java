@@ -16,7 +16,7 @@ import com.bitdubai.fermat_cbp_core.layer.stock_transactions.crypto_money_restoc
  */
 public class StockTransactionsLayer  extends AbstractLayer {
     public StockTransactionsLayer() {
-        super(Layers.TRANSACTION);
+        super(Layers.STOCK_TRANSACTIONS);
     }
 
     public void start() throws CantStartLayerException {
