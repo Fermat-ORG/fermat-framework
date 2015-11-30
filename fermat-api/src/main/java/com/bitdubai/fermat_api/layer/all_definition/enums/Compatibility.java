@@ -4,9 +4,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
+ * The enum <code>com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility</code>
  * Enums the types of Compatibility in Fermat.
+ * <p/>
  * Created by Leon Acosta (laion.cj91@gmail.com) on 24/09/2015.
- * Updated by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
+ * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
  */
 public enum Compatibility implements FermatEnum {
 

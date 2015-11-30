@@ -3,11 +3,11 @@ package com.bitdubai.fermat_api.layer.all_definition.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
 /**
- * * The enum <code>com.bitdubai.fermat_api.layer.all_definition.enums</code>
- * represent the different Network Types in Fermat.<p/>
+ * * The enum <code>com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType</code>
+ * Represents the different Network Types available in Fermat.
  * <p/>
  * Created by rodrigo on 9/21/15.
- * Updated by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
+ * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
  */
 public enum BlockchainNetworkType implements FermatEnum {
 

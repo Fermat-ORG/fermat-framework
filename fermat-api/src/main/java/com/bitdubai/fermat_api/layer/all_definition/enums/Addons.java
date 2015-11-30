@@ -4,9 +4,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
+ * The enum <code>com.bitdubai.fermat_api.layer.all_definition.enums.Addons</code>
+ * Contains the different addons available on Fermat.
+ * <p/>
  * Created by ciencias on 2/13/15.
  * Modified by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
- * Updated by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
+ * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
  */
 public enum Addons implements FermatEnum {
 
