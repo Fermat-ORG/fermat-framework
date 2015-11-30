@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database;
 
 /**
- * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
@@ -10,7 +10,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmi
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NegotiationTransmissionNetworkServiceDatabaseConstants {
+public class CommunicationNetworkServiceDatabaseConstants {
 
     /**
      * Negotiation Transmission Network Service database table definition.

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory</code> have
+ * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
@@ -32,7 +32,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class CommunicationNetworkServiceDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -53,7 +53,7 @@ public class NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory imple
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public CommunicationNetworkServiceDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
@@ -84,13 +84,13 @@ public class NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory imple
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            NegotiationTransmissionNetworkServiceDatabaseFactory negotiationTransmissionNetworkServiceDatabaseFactory = new NegotiationTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = negotiationTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -119,20 +119,20 @@ public class NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory imple
          */
         List<String> negotiationTransmissionNetworkServiceColumns = new ArrayList<String>();
 
-        negotiationTransmissionNetworkServiceColumns.add(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME);
-        negotiationTransmissionNetworkServiceColumns.add(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_ID_COLUMN_NAME);
-        negotiationTransmissionNetworkServiceColumns.add(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_STATUS_COLUMN_NAME);
-        negotiationTransmissionNetworkServiceColumns.add(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TRANSACTION_TYPE_COLUMN_NAME);
-        negotiationTransmissionNetworkServiceColumns.add(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_SEND_COLUMN_NAME);
-        negotiationTransmissionNetworkServiceColumns.add(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_SEND_TYPE_COLUMN_NAME);
-        negotiationTransmissionNetworkServiceColumns.add(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_RECEIVE_COLUMN_NAME);
-        negotiationTransmissionNetworkServiceColumns.add(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_RECEIVE_TYPE_COLUMN_NAME);
-        negotiationTransmissionNetworkServiceColumns.add(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_STATE_COLUMN_NAME);
-        negotiationTransmissionNetworkServiceColumns.add(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TIMESTAMP_COLUMN_NAME);
+        negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME);
+        negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_ID_COLUMN_NAME);
+        negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_STATUS_COLUMN_NAME);
+        negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TRANSACTION_TYPE_COLUMN_NAME);
+        negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_SEND_COLUMN_NAME);
+        negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_SEND_TYPE_COLUMN_NAME);
+        negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_RECEIVE_COLUMN_NAME);
+        negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_RECEIVE_TYPE_COLUMN_NAME);
+        negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_STATE_COLUMN_NAME);
+        negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TIMESTAMP_COLUMN_NAME);
         /**
          * Table Negotiation Transmission Network Service addition.
          */
-        DeveloperDatabaseTable negotiationTransmissionNetworkServiceTable = developerObjectFactory.getNewDeveloperDatabaseTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME, negotiationTransmissionNetworkServiceColumns);
+        DeveloperDatabaseTable negotiationTransmissionNetworkServiceTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME, negotiationTransmissionNetworkServiceColumns);
         tables.add(negotiationTransmissionNetworkServiceTable);
 
 
