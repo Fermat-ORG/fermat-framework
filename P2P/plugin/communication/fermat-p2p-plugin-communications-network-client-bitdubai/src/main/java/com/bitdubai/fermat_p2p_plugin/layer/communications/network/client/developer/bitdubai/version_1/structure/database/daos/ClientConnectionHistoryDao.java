@@ -67,7 +67,7 @@ public class ClientConnectionHistoryDao {
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable() {
-        return getDataBase().getTable(NetworkClientP2PDatabaseConstants.DATA_BASE_NAME);
+        return getDataBase().getTable(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_TABLE_NAME);
     }
 
     /**
@@ -91,7 +91,7 @@ public class ClientConnectionHistoryDao {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable table = getDatabaseTable();
-            table.setStringFilter(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_TABLE_NAME, id, DatabaseFilterType.EQUAL);
+            table.setStringFilter(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             /*

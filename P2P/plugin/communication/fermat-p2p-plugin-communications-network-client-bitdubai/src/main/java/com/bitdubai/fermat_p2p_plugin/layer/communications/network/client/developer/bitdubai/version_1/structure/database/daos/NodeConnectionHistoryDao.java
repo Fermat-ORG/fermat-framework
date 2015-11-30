@@ -65,7 +65,7 @@ public class NodeConnectionHistoryDao {
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable(){
-        return getDataBase().getTable(NetworkClientP2PDatabaseConstants.DATA_BASE_NAME);
+        return getDataBase().getTable(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_TABLE_NAME);
     }
 
     public NodeConnectionHistory findById(String id) throws CantReadRecordDataBaseException {
@@ -83,7 +83,7 @@ public class NodeConnectionHistoryDao {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable table = getDatabaseTable();
-            table.setStringFilter(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_TABLE_NAME, id, DatabaseFilterType.EQUAL);
+            table.setStringFilter(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
                 /*
