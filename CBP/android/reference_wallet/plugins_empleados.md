@@ -27,6 +27,7 @@
     - El plugin tiene un metodo que me devuelve las clausulas con los datos ingresados en el orden correcto, una clausula a la vez
     - Deberia existir un metod que me devuelva todas esas clausulas ya ordenadas
   - **(A) Enviar Datos** >> `Customer Broker Update Negotiation Transmition`
+  - **(?) Cancelar Negociacion** >> No se a que plugin debo consumir en este caso...
 
 #### Contract Details
   - **(A) Datos ingresados** >> `CustomerBrokerSale Contract` usando `Customer Broker Sale Negotiation` para obtener el detalle de la negociacion y terminar de armar la data a mostrar
@@ -138,8 +139,11 @@ No usa plugins, es solo Android
     - El plugin tiene un metodo que me devuelve las clausulas con los datos ingresados en el orden correcto, una clausula a la vez
     - Deberia existir un metod que me devuelva todas esas clausulas ya ordenadas
   - **(A) Enviar Datos** >> `Customer Broker Update Negotiation Transmition`
+  - **(?) Cancelar Negociacion** >> No se a que plugin debo consumir en este caso...
 
 #### Contract Details
+  - **Estado del contrato** >> `Customer Broker Purchase Contract`
+    - este me devuelve un `ContractStatus` que me indica en que paso del contrato nos encontramos, y asi puedo tildar aquellos pasos que ya se procesaron, o sencillamente mostrar informacion resumida sobre el contrato en caso de que este haya sido completado o cancelado (este cancelado, hasta donde tengo entendido, se refiere a una negociacion que se cancela)
   - **(A) Datos ingresados** >> `Customer Broker Purchase Contract` usando `Customer Broker Purchase Negotiation` para obtener el detalle de la negociacion y terminar de armar la data a mostrar
   - **(A) Referencia a la negociation** >> `Customer Broker Purchase Contract`
   - **(A) Enviar Pago** >> `Customer Online Payment Business Transaction` o `Customer Offline Payment Business Transaction` dependiendo de la moneda de pago
@@ -147,7 +151,16 @@ No usa plugins, es solo Android
     - En el caso de `Customer Ack Online Merchandise Transaction` el module no lo ejecuta directamente
 
 #### Start Negotiation
-
+A esta pantalla le falta algo mas de analisis, porque con los que nos sugirió Luis con respecto a como obtener parte de la data de la negociacion (donde el broker selecciona que modo de pago quiere aceptar y esa informacion junto con las opciones de esa clausula van en la negociacion, asi mismo con los datos del customer), me cuesta ver como encajar lo que esta en el Issue https://github.com/bitDubai/fermat-graphic-design/issues/252
+  - **(A) Mostrar Mercancia a comprar** >> `Crypto Customer Module`
+    - Cuando se selecciona un broker de la lista de broker, automaticamente se selecciones la mercancia a comprar
+  - **(A) Mostrar Moneda de pago** >> `Crypto Customer Module`
+    - Ya este valor se obtuvo de la lista lista de brokers y fue registrado en el module
+  - **(A) Mostrar Precio de Cotizacion** >> `Crypto Customer Module`
+    - Ya este valor se obtuvo de la lista lista de brokers y fue registrado en el module
+  - **(A) Crear Nueva negociacion** >> `Crypto Customer New Negotiation Transaction`
+    - Debe permitirme registrar la siguiente data: Mercancia a comprar (Moneda), cantidad a comprar, moneda de pago, tasa de cambio a pagar, publicKeyCustomer, publicKeyBroker
+    - Me deberia devolver un registro `NegotiationInformation` con los datos de esta nueva negociacion
 
 #### Market Rates
   - **(A) Lista de Tasas de Cambio actual por pares de mercancia** >> `Crypto Index` y `Fiat Index` 
