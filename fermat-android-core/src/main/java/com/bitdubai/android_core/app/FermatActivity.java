@@ -526,17 +526,19 @@ public abstract class FermatActivity extends AppCompatActivity
                     if (collapsingToolbarLayout != null) {
                         collapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
                         collapsingToolbarLayout.setCollapsedTitleTypeface(typeface);
+                        collapsingToolbarLayout.setTitle(title);
+                    }
                         //if (titleBar.getLabelSize() != -1) {
                         //collapsingToolbarLayout.setCollapsedTitleTex(titleBar.getLabelSize());
 
                         //}
-                        collapsingToolbarLayout.setTitle(title);
 
-
-                    } else {
+//
+//
+//                    } else {
                         mToolbar.setTitle(title);
-
-                    }
+//
+//                    }
                 }
 
                 if (titleBar.getColor() != null) {
