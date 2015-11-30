@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.
 
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.OpenContractStatus;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContractManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
@@ -13,12 +14,6 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 26/11/15.
  */
 public class OpenContractTransactionManager implements OpenContractManager{
-
-    /**
-     * Represents the contract Type, this type will use to select the actors involved in the
-     * contract generation and the network service communication
-     */
-    ContractType contractType;
 
     /**
      * Represents the purchase contract
@@ -57,11 +52,11 @@ public class OpenContractTransactionManager implements OpenContractManager{
             CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
             TransactionTransmissionManager transactionTransmissionManager){
 
-        customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
-        customerBrokerContractSaleManager=customerBrokerContractSaleManager;
-        customerBrokerPurchaseNegotiationManager=customerBrokerPurchaseNegotiationManager;
-        customerBrokerSaleNegotiationManager=customerBrokerSaleNegotiationManager;
-        transactionTransmissionManager=transactionTransmissionManager;
+        this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
+        this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
+        this.customerBrokerPurchaseNegotiationManager=customerBrokerPurchaseNegotiationManager;
+        this.customerBrokerSaleNegotiationManager=customerBrokerSaleNegotiationManager;
+        this.transactionTransmissionManager=transactionTransmissionManager;
 
     }
 
@@ -71,35 +66,25 @@ public class OpenContractTransactionManager implements OpenContractManager{
         return null;
     }
 
-    private boolean isNegotiationClosed(String negotiationId){
-        switch (this.contractType){
-
-            case PURCHASE:
-                //TODO: to implement
-                //customerBrokerPurchaseNegotiationManager.getNegotiations(NegotiationStatus.CLOSED);
-                break;
-            case SALE:
-                //TODO: to implement
-                break;
-
-        }
-        return false;
-    }
-
-    private void openContract(String negotiationId){
-
+    @Override
+    public void openSaleContract(String negotiationId) throws CantOpenContractException{
+        OpenContractBrokerContractManager openContractCustomerContractManager=new OpenContractBrokerContractManager(
+                customerBrokerContractSaleManager,
+                customerBrokerSaleNegotiationManager,
+                transactionTransmissionManager);
+        openContractCustomerContractManager.openContract(negotiationId);
+        //openContract(negotiationId);
     }
 
     @Override
-    public void openSaleContract(String negotiationId) {
-        contractType=contractType.SALE;
-        openContract(negotiationId);
-    }
+    public void openPurchaseContract(String negotiationId) throws CantOpenContractException{
+        OpenContractCustomerContractManager openContractCustomerContractManager =new OpenContractCustomerContractManager(
+                customerBrokerContractPurchaseManager,
+                customerBrokerPurchaseNegotiationManager,
+                transactionTransmissionManager);
+        openContractCustomerContractManager.openContract(negotiationId);
 
-    @Override
-    public void openPurchaseContract(String negotiationId) {
-        contractType=contractType.PURCHASE;
-        openContract(negotiationId);
+        //openContract(negotiationId);
     }
 
 }

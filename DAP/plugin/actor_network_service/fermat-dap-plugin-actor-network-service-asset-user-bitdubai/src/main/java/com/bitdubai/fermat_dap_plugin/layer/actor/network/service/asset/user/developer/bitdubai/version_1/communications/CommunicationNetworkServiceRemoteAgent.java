@@ -139,9 +139,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                     processMessageToSend();
             }
         });
-
-//        ExecutorService executorService =
-
     }
 
     /**
@@ -215,7 +212,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
 
-
                     /*
                      * Validate the message signature
                      */
@@ -263,7 +259,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         } catch (CantInsertRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
-
     }
 
     /**
@@ -342,7 +337,5 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
             return;
         }
-
     }
-
 }

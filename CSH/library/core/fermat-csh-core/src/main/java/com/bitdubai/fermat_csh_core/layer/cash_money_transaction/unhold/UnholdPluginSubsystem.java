@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by Alejandro Bicelis on 11/26/2015.

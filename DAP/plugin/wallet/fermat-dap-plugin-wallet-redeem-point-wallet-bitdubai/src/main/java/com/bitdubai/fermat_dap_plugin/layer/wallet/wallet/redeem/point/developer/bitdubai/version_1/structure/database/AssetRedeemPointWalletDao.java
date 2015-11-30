@@ -318,9 +318,9 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         }
     }
 
-    /*
-* Add a new debit transaction.
-*/
+   /*
+    * Add a new debit transaction.
+    */
     public void addDebit(final AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, final BalanceType balanceType) throws CantRegisterDebitException{
         try {
             System.out.println("Agregando Debito-----------------------------------------------------------");
@@ -332,8 +332,10 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
             long availableRunningBalance = calculateAvailableRunningBalanceByAsset(-availableAmount, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
             long bookRunningBalance = calculateBookRunningBalanceByAsset(-bookAmount, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
-            long quantityAvailableRunningBalance = calculateQuantityAvailableRunningBalanceByAsset(-1, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
-            long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(-1, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
+            long quantityAvailableAmount = balanceType.equals(BalanceType.AVAILABLE) ? 1 : 0L;
+            long quantityBookAmount = balanceType.equals(BalanceType.BOOK) ? 1 : 0L;
+            long quantityAvailableRunningBalance = calculateQuantityAvailableRunningBalanceByAsset(-quantityAvailableAmount, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
+            long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(-quantityBookAmount, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
             executeTransaction(assetRedeemPointWalletTransactionRecord,TransactionType.DEBIT ,balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
         }catch(CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteAssetRedeemPointTransactionException exception){
@@ -343,9 +345,9 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         }
     }
 
-    /*
-* Add a new credit transaction.
-*/
+   /*
+    * Add a new credit transaction.
+    */
     public void addCredit(final AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, final BalanceType balanceType) throws CantRegisterCreditException {
 
         try {
@@ -358,8 +360,10 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
             long availableRunningBalance = calculateAvailableRunningBalanceByAsset(availableAmount, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
             long bookRunningBalance = calculateBookRunningBalanceByAsset(bookAmount, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
-            long quantityAvailableRunningBalance = calculateQuantityAvailableRunningBalanceByAsset(1, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
-            long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(1, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
+            long quantityAvailableAmount = balanceType.equals(BalanceType.AVAILABLE) ? 1 : 0L;
+            long quantityBookAmount = balanceType.equals(BalanceType.BOOK) ? 1 : 0L;
+            long quantityAvailableRunningBalance = calculateQuantityAvailableRunningBalanceByAsset(quantityAvailableAmount, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
+            long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(quantityBookAmount, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
             executeTransaction(assetRedeemPointWalletTransactionRecord, TransactionType.CREDIT, balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
 
