@@ -158,7 +158,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithRegistry, Transac
 
 
 
-        private static final int SLEEP_TIME = 5000;
+        private static final int SLEEP_TIME = 10000;
 
         /**
          *DealsWithRegistry Interface implementation.

@@ -130,7 +130,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdu
         private final IncomingExtraUserRegistry registry;
         private IncomingExtraUserTransactionHandler transactionHandler;
 
-        private static final int SLEEP_TIME = 5000;
+        private static final int SLEEP_TIME = 10000;
 
         public RelayAgent(final BitcoinWalletManager bitcoinWalletManager, final CryptoAddressBookManager cryptoAddressBookManager, final ErrorManager errorManager,EventManager eventManager, final IncomingExtraUserRegistry registry){
             this.bitcoinWalletManager = bitcoinWalletManager;
@@ -222,7 +222,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdu
                 } catch (Exception e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
 
-
+//TODO temporal por el error que da de que vuelve a aplica la transaccion
                     try {
 
                         registry.setToApplied(transaction.getTransactionID());
