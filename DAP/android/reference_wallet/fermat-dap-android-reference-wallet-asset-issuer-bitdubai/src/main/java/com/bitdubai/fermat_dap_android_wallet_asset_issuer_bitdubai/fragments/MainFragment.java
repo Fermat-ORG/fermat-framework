@@ -152,7 +152,6 @@ public class MainFragment extends FermatWalletFragment
 //                    );
                     //TODO: Solo para la prueba del Distribution
                     manager.distributionAssets(asset.getAssetPublicKey(), null, null);
-                    System.out.println("PRUEBA DE VÍCTOR - ASSET WALLET PUBLIC KEY VALE: " + asset.getWalletPublicKey());
                     return true;
                 }
             };

@@ -37,6 +37,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
@@ -275,13 +276,10 @@ public class EditableAssetsFragment extends FermatFragment implements
                         @Override
                         protected Object doInBackground() throws Exception {
                             // for test
-//                            for (InstalledWallet wallet : manager.getInstallWallets()) {
-//                                selectedAsset.setWalletPublicKey(wallet.getWalletPublicKey());
-//                                break;
-//                            }
-                            //TODO REMOVE HARDCODE WHEN WALLET MANAGER IS READY.
-                            selectedAsset.setWalletPublicKey("walletPublicKeyTest");
-
+                            for (InstalledWallet wallet : manager.getInstallWallets()) {
+                                selectedAsset.setWalletPublicKey(wallet.getWalletPublicKey());
+                                break;
+                            }
                             manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.TEST);
                             selectedAsset = null;
                             return true;

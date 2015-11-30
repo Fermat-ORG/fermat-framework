@@ -262,6 +262,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         if(walletPublicKey==null){
             throw new CantSetObjectException("walletPublicKey is null");
         }
+        this.walletPublicKey="walletPublicKeyTest"; //TODO hardcoded value
         System.out.println("The wallet public key in vault is "+this.walletPublicKey);
     }
 

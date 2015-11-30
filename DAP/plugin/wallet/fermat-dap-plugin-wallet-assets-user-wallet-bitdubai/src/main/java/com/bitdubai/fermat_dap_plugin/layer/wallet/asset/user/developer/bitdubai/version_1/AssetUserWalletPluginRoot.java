@@ -68,14 +68,13 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
 
     private static final String WALLET_USER_FILE_NAME = "walletsIds";
     private Map<String, UUID> walletUser = new HashMap<>();
-    String walletPublicKey = "walletPublicKeyTest";
 
     @Override
     public void start() throws CantStartPluginException {
         try{
             loadWalletIssuerMap();
-            createAssetUserWallet(walletPublicKey);
-            loadAssetUserWallet(walletPublicKey);
+            createAssetUserWallet("walletPublicKeyTest");
+            loadAssetUserWallet("walletPublicKeyTest");
             System.out.println("Star Plugin AssetWalletUser");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(CantStartPluginException exception){
@@ -144,7 +143,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
         UUID walletId = null;
         try {
             loadWalletIssuerMap();
-            walletId = walletUser.get(walletPublicKey);
+            walletId = walletUser.get("walletPublicKeyTest");
             Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
             databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
             database.closeDatabase();
