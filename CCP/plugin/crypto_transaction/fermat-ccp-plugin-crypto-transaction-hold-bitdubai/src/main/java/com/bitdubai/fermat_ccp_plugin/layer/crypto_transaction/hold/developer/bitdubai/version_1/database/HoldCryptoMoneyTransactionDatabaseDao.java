@@ -13,14 +13,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransaction;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.MissingHoldCryptoDataException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.utils.HoldCryptoMoneyTransactionImpl;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,40 +29,43 @@ import java.util.UUID;
  * Created by Franklin Marcano on 23/11/15.
  */
 public class HoldCryptoMoneyTransactionDatabaseDao {
-    Database database;
-    UUID pluginId;
-    /**
-     * DealsWithPluginDatabaseSystem interface variable and implementation
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
 
-    /**
-     * DealsWithPluginFileSystem interface member variables
-     */
-    PluginFileSystem pluginFileSystem;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final UUID                 pluginId            ;
+
+    private Database database;
 
     /**
      * Constructor
      */
-    public HoldCryptoMoneyTransactionDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public HoldCryptoMoneyTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem,
+                                                 final UUID                 pluginId            ) {
+
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
+        this.pluginId             = pluginId            ;
     }
 
-    private DatabaseTable getDatabaseTable(String tableName) {
+    private DatabaseTable getDatabaseTable(final String tableName) {
 
         return database.getTable(tableName);
     }
 
     private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
+
+        if (database != null)
+            return database;
+
         try {
+
             database = pluginDatabaseSystem.openDatabase(this.pluginId, HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME);
+            return database;
 
         } catch (DatabaseNotFoundException e) {
             HoldCryptoMoneyTransactionDatabaseFactory holdCryptoMoneyTransactionDatabaseFactory = new HoldCryptoMoneyTransactionDatabaseFactory(this.pluginDatabaseSystem);
             database = holdCryptoMoneyTransactionDatabaseFactory.createDatabase(this.pluginId, HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME);
+            return database;
         }
-        return database;
+
     }
 
     private DatabaseTableRecord getHoldCryptoRecord(CryptoHoldTransaction cryptoHoldTransaction) throws DatabaseOperationException {
@@ -88,10 +89,8 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
-        if (table.getRecords().isEmpty())
-            return true;
-        else
-            return false;
+
+        return table.getRecords().isEmpty();
     }
 
     private List<DatabaseTableRecord> getHoldCryptoData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
@@ -146,18 +145,14 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
 
             //I execute the transaction and persist the database side of the asset.
             database.executeTransaction(transaction);
-            database.closeDatabase();
 
         }catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Hold Crypto Transaction in the database.", null);
         }
     }
 
     public List<CryptoHoldTransaction> getHoldCryptoTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException
     {
-        Database database = null;
         try {
             database = openDatabase();
             List<CryptoHoldTransaction> cryptoHoldTransactions = new ArrayList<>();
@@ -168,13 +163,9 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
                 cryptoHoldTransactions.add(cryptoHoldTransaction);
             }
 
-            database.closeDatabase();
-
             return cryptoHoldTransactions;
         }
         catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Hold Crypto Transaction from the database with filter: " + filter.toString(), null);
         }
     }

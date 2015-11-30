@@ -21,7 +21,10 @@ import java.util.List;
 
 public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> implements ItemTouchHelperAdapter {
 
+    public static final int DEKSTOP = 1;
+    public static final int FOLDER = 2;
 
+    private int fragmentWhoUseThisAdapter;
     private DesktopHolderClickCallback desktopHolderClickCallback;
     private AdapterChangeListener adapterChangeListener;
 
@@ -29,9 +32,10 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
             super(context);
         }
 
-        public DesktopAdapter(Context context, List<Item> dataSet,DesktopHolderClickCallback desktopHolderClickCallback) {
+        public DesktopAdapter(Context context, List<Item> dataSet,DesktopHolderClickCallback desktopHolderClickCallback,int fragmentWhoUseThisAdapter) {
             super(context, dataSet);
             this.desktopHolderClickCallback = desktopHolderClickCallback;
+            this.fragmentWhoUseThisAdapter = fragmentWhoUseThisAdapter;
         }
 
         @Override
@@ -42,7 +46,9 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
 
         @Override
         protected int getCardViewResource() {
+            if(DEKSTOP==fragmentWhoUseThisAdapter)
             return R.layout.shell_wallet_desktop_front_grid_item;
+            else return R.layout.grid_folder;
         }
 
         @Override
