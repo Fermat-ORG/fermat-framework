@@ -30,6 +30,7 @@ dependencies {
 
     //Business Transaction
     compile project(':fermat-cbp-plugin-business-transaction-open-contract-bitdubai')
+    compile project(':fermat-cbp-plugin-business-transaction-close-contract-bitdubai')
 
     //Identity
     compile project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai')

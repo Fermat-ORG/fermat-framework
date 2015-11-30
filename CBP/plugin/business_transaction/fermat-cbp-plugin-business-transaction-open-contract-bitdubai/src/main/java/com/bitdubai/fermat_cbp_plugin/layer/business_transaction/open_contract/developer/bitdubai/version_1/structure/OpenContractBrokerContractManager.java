@@ -1,16 +1,21 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.AbstractOpenContract;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CantGetNegotiationStatusException;
 
 import java.util.Collection;
@@ -28,7 +33,12 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
     /**
      * Represents the sale negotiation
      */
-    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    //private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+
+    /**
+     * Represents the Fiat index.
+     */
+    //private FiatIndexManager fiatIndexManager;
 
     /**
      * Represents the negotiation ID.
@@ -41,15 +51,13 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
     private TransactionTransmissionManager transactionTransmissionManager;
 
     public OpenContractBrokerContractManager(CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-                                          CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
-                                          TransactionTransmissionManager transactionTransmissionManager){
+                                             TransactionTransmissionManager transactionTransmissionManager){
         this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
-        this.customerBrokerSaleNegotiationManager=customerBrokerSaleNegotiationManager;
         this.transactionTransmissionManager=transactionTransmissionManager;
 
     }
 
-    private CustomerBrokerSaleNegotiation findSaleNegotiation(String negotiationId) throws CantGetNegotiationStatusException {
+    /*private CustomerBrokerSaleNegotiation findSaleNegotiation(String negotiationId) throws CantGetNegotiationStatusException {
 
         try{
             Collection<CustomerBrokerSaleNegotiation> negotiationCollection= customerBrokerSaleNegotiationManager.getNegotiations(NegotiationStatus.CLOSED);
@@ -68,23 +76,30 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
                     "Cannot get the Purchase Negotiation list");
         }
 
-    }
+    }*/
 
-    @Override
-    public void openContract(String negotiationId) throws CantOpenContractException {
+    //@Override
+    public void openContract(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation, FiatIndex fiatIndex) throws CantOpenContractException {
 
         contractType= ContractType.SALE;
         try{
-            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation= findSaleNegotiation(negotiationId);
+            //CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation= findSaleNegotiation(negotiationId);
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
+            ContractRecord contractRecord=createSaleContractRecord(
+                    negotiationClauses,customerBrokerSaleNegotiation,fiatIndex
+                    );
         } catch (CantGetListClauseException exception) {
             throw new CantOpenContractException(exception,
                     "Opening a new contract",
                     "Cannot get the negotiation clauses list");
-        } catch(CantGetNegotiationStatusException exception){
+        } catch (InvalidParameterException exception) {
             throw new CantOpenContractException(exception,
                     "Opening a new contract",
-                    "Cannot get the negotiation status");
+                    "An invalid parameter has detected");
+        } catch (CantGetIndexException exception) {
+            throw new CantOpenContractException(exception,
+                    "Opening a new contract",
+                    "Cannot get the fiat index");
         }
 
     }
