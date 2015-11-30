@@ -44,6 +44,6 @@ public interface AssetTransmissionNetworkServiceManager extends TransactionProto
      * @param transactionId (GenesisTransaction)
      * @param newDistributionStatus
      */
-    void sendTransactionNewStatusNotification(ActorAssetUser actorAssetUserSender,  ActorAssetIssuer actorAssetIssuerReceiver, String transactionId, DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException;
+    void sendTransactionNewStatusNotification(ActorAssetUser actorAssetUserSender,  String actorAssetIssuerReceiverPublicKey, String transactionId, DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException;
 
 }
