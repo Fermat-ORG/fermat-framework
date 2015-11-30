@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActor;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActor;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
@@ -54,7 +55,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         Timestamp timestamp=new Timestamp(date.getTime());
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
                 transactionHash,
-                ContractStatus.PENDING_CONFIRMATION,
+                ContractTransactionStatus.PENDING_CONFIRMATION,
                 cryptoCustomerActorReceiver.getIdentity().getPublicKey(),
                 PlatformComponentType.NETWORK_SERVICE,
                 cryptoBrokerActorSender.getIdentity().getPublicKey(),
@@ -86,7 +87,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         Timestamp timestamp=new Timestamp(date.getTime());
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
                 transactionHash,
-                ContractStatus.PENDING_CONFIRMATION,
+                ContractTransactionStatus.PENDING_CONFIRMATION,
                 cryptoCustomerActorSender.getIdentity().getPublicKey(),
                 PlatformComponentType.NETWORK_SERVICE,
                 cryptoCustomerBrokerReceiver.getIdentity().getPublicKey(),
@@ -109,7 +110,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     public void sendContractNewStatusNotification(CryptoBrokerActor cryptoBrokerActorSender,
                                                   CryptoCustomerActor cryptoCustomerActorReceiver,
                                                   String transactionId,
-                                                  ContractStatus contractStatus) throws CantSendBusinessTransactionHashException {
+                                                  ContractTransactionStatus contractStatus) throws CantSendBusinessTransactionHashException {
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
@@ -136,7 +137,10 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     }
 
     @Override
-    public void sendTransactionNewStatusNotification(CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionId, ContractStatus contractStatus) throws CantSendBusinessTransactionHashException {
+    public void sendTransactionNewStatusNotification(CryptoCustomerActor cryptoCustomerActorSender,
+                                                     CryptoBrokerActor cryptoCustomerBrokerReceiver,
+                                                     String transactionId,
+                                                     ContractTransactionStatus contractStatus) throws CantSendBusinessTransactionHashException {
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
