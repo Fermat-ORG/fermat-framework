@@ -55,18 +55,13 @@ public class CustomerBrokerSaleNegotiationInformation implements CustomerBrokerS
     }
 
     @Override
-    public long getStartDate() {
+    public Long getStartDate() {
         return this.startDataTime;
     }
 
     @Override
     public NegotiationStatus getStatus() {
         return this.statusNegotiation;
-    }
-
-    @Override
-    public void setStatus(NegotiationStatus status) {
-        this.statusNegotiation = status;
     }
 
     @Override

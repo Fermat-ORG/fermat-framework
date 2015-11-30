@@ -50,4 +50,9 @@ public class CustomerBrokerSaleClause implements Clause{
     public String getProposedBy() {
         return this.proposedBy;
     }
+
+    @Override
+    public short getIndexOrdery() {
+        return 0;
+    }
 }
