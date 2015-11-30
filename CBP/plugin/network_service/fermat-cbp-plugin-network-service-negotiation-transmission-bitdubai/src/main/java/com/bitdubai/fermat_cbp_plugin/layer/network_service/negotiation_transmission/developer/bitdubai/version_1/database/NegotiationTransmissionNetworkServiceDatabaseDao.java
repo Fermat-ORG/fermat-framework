@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeNegotiationTransmissionNetworkServiceDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 
 import java.util.UUID;
 
@@ -26,7 +26,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
     Database database;
 
     /*INITIALIZE DATABASE*/
-    public void initialize() throws CantInitializeNegotiationTransmissionNetworkServiceDatabaseException {
+    public void initialize() throws CantInitializeDatabaseException {
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
         } catch (DatabaseNotFoundException e) {
@@ -34,14 +34,14 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
                 CommunicationNetworkServiceDatabaseFactory databaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException f) {
-                throw new CantInitializeNegotiationTransmissionNetworkServiceDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
+                throw new CantInitializeDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {
-                throw new CantInitializeNegotiationTransmissionNetworkServiceDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
+                throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
             }
         } catch (CantOpenDatabaseException e) {
-            throw new CantInitializeNegotiationTransmissionNetworkServiceDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+            throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (Exception e) {
-            throw new CantInitializeNegotiationTransmissionNetworkServiceDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
+            throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 }

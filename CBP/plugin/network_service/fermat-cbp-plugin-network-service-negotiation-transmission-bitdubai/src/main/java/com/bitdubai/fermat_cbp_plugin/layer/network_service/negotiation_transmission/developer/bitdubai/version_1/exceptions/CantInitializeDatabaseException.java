@@ -12,27 +12,27 @@ import com.bitdubai.fermat_api.FermatException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantInitializeNegotiationTransmissionNetworkServiceDatabaseException extends FermatException {
+public class CantInitializeDatabaseException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE NEGOTIATION TRANSACTION NETWORK SERVICE DATABASE EXCEPTION";
 
-    public CantInitializeNegotiationTransmissionNetworkServiceDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantInitializeDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
-    public CantInitializeNegotiationTransmissionNetworkServiceDatabaseException(final String message, final Exception cause) {
+    public CantInitializeDatabaseException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
-    public CantInitializeNegotiationTransmissionNetworkServiceDatabaseException(final Exception cause) {
+    public CantInitializeDatabaseException(final Exception cause) {
         this(null, cause);
     }
 
-    public CantInitializeNegotiationTransmissionNetworkServiceDatabaseException(final String message) {
+    public CantInitializeDatabaseException(final String message) {
         this(message, null);
     }
 
-    public CantInitializeNegotiationTransmissionNetworkServiceDatabaseException() {
+    public CantInitializeDatabaseException() {
         this(DEFAULT_MESSAGE);
     }
 }
