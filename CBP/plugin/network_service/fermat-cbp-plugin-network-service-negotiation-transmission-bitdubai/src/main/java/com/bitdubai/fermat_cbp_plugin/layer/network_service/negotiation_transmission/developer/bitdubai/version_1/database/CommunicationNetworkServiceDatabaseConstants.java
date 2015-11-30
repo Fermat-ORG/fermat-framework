@@ -66,4 +66,16 @@ public class CommunicationNetworkServiceDatabaseConstants {
 
     static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_FIRST_KEY_COLUMN = "transmission_id";
 
+    /**
+     * COMPONENT VERSIONS DETAILS database table definition.
+     */
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_TABLE_NAME = "negotiation_transmission_network_service_version_details";
+
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ID_COLUMN_NAME = "id";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME = "actor_public_key";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_IPK_COLUMN_NAME = "ipk";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_LAST_CONNECTION_COLUMN_NAME = "last_connection";
+
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_FIRST_KEY_COLUMN = "id";
+
 }
