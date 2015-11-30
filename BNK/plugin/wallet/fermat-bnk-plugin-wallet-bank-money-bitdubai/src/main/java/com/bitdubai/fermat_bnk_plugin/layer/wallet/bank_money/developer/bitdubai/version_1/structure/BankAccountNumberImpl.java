@@ -20,16 +20,16 @@ public class BankAccountNumberImpl implements BankAccountNumber {
 
     @Override
     public String getAlias() {
-        return null;
+        return alias;
     }
 
     @Override
     public String getAccount() {
-        return null;
+        return Account;
     }
 
     @Override
     public FiatCurrency getCurrencyType() {
-        return null;
+        return currency;
     }
 }
