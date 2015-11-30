@@ -11,7 +11,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmi
  */
 public final class CommunicationNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "template_network_service_data_base";
+    public static final String DATA_BASE_NAME  = "transaction_transmission_database";
 
     /**
      * incoming messages database table definition.
