@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_cbp_core.layer.business_transaction.close_conctract.CloseContractPluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.business_transaction.open_contract.OpenContractPluginSubsystem;
 
 /**
@@ -20,6 +21,7 @@ public class BusinessTransactionLayer extends AbstractLayer {
         try {
 
             registerPlugin(new OpenContractPluginSubsystem());
+            registerPlugin(new CloseContractPluginSubsystem());
 
         } catch(CantRegisterPluginException e) {
 

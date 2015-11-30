@@ -245,6 +245,7 @@ public enum Plugins implements FermatEnum {
     NEGOTIATION_TRANSMISSION    ("NGTR"),
     OPEN_CONTRACT               ("OPC"),
     TRANSACTION_TRANSMISSION    ("TRTX"),
+    CLOSE_CONTRACT              ("CLC"),
 
 
     // End  new Plugins
@@ -330,7 +331,7 @@ public enum Plugins implements FermatEnum {
             case ("CMDE"):  return CASH_MONEY_DESTOCK       ;
             case ("CRRE"):  return CRYPTO_MONEY_RESTOCK     ;
             case ("CRDE"):  return CRYPTO_MONEY_DESTOCK     ;
-            case ("TRTX"):  return TRANSACTION_TRANSMISSION ;
+            case "TRTX":    return TRANSACTION_TRANSMISSION ;
             case ("FI"):    return FIAT_INDEX               ;
             case "BBNKHMT": return BITDUBAI_BNK_HOLD_MONEY_TRANSACTION;
             case "BBNKUMT": return BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION;
@@ -348,7 +349,8 @@ public enum Plugins implements FermatEnum {
             case ("CBCL"):  return CUSTOMER_BROKER_CLOSE    ;
             case ("NGS"):   return NEGOTIATION_SALE         ;
             case ("NGP"):   return NEGOTIATION_PURCHASE     ;
-            case ("OPC"):   return OPEN_CONTRACT            ;
+            case "OPC":     return OPEN_CONTRACT            ;
+            case "CLC":     return CLOSE_CONTRACT           ;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

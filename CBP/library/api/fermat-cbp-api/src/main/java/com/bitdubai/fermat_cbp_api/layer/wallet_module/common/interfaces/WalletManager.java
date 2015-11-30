@@ -1,18 +1,21 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotConfirmNegotiationException;
 
 import java.util.Collection;
 
 /**
  * Created by nelson on 21/11/15.
  */
-public interface WalletManager {
+public interface WalletManager extends ModuleManager {
 
     /**
      * Add a new clause to the negotiation
@@ -31,6 +34,21 @@ public interface WalletManager {
      * @return the {@link CustomerBrokerNegotiationInformation} with modified clause
      */
     CustomerBrokerNegotiationInformation changeClause(CustomerBrokerNegotiationInformation negotiation, ClauseInformation clause);
+
+    /**
+     * Cancel a current negotiation
+     *
+     * @param negotiation the negotiation to cancel
+     * @param reason      the reason to cancel
+     */
+    CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) throws CouldNotCancelNegotiationException;
+
+    /**
+     * Confirm the given negotiation to create a contract based on this
+     *
+     * @param negotiation the negotiation to confirm
+     */
+    CustomerBrokerNegotiationInformation confirmNegotiation(CustomerBrokerNegotiationInformation negotiation) throws CouldNotConfirmNegotiationException;
 
     /**
      * Return as much as "max" results from the list of Contract Basic Info in this wallet,
