@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.SizeUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
@@ -61,7 +63,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
     private static final String WALLET_PUBLIC_KEY = "crypto_customer_wallet";
-    private static final String TAG = "ContractsHistoryActivityFragment";
+    private static final String TAG = "OpenNegotiationsTab";
 
     // Fermat Managers
     private CryptoCustomerWalletModuleManager moduleManager;
@@ -143,6 +145,16 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         toolbarHeader.setVisibility(View.VISIBLE);
         View container = layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int dpToPixels = SizeUtils.convertDpToPixels(100, getActivity());
+            int pixelsToDp = SizeUtils.convertPixelsToDp(100, getActivity());
+            Log.d(TAG, "container.getLayoutParams().height = " + container.getLayoutParams().height
+                    + " | 100 pixelsToDp = " + pixelsToDp
+                    + " | 100 dpToPixels = " + dpToPixels);
+
+            container.getLayoutParams().height = Math.max(dpToPixels, pixelsToDp);
+        }
+
         if (marketExchangeRateSummaryList.isEmpty()) {
             FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.ccw_no_market_rate);
             noMarketRateTextView.setVisibility(View.VISIBLE);
@@ -174,7 +186,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_start_negotiation) {
-            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST,walletSession.getAppPublicKey());
+            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST, walletSession.getAppPublicKey());
         }
 
         return true;
@@ -280,7 +292,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     @Override
     public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
         walletSession.setData("negotiation_data", data);
-        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS,walletSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS, walletSession.getAppPublicKey());
     }
 
     @Override
