@@ -55,7 +55,9 @@ import java.util.UUID;
 
 /**
  * Created by jorge on 12-10-2015.
+ * Update by Angel on 30/11/2015
  */
+
 public class CustomerBrokerPurchaseNegotiationPluginRoot extends AbstractPlugin implements CustomerBrokerPurchaseNegotiationManager, DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -126,203 +128,81 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot extends AbstractPlugin 
     */
 
         @Override
-        public CustomerBrokerPurchaseNegotiation createCustomerBrokerPurchaseNegotiation(String publicKeyCustomer, String publicKeyBroker, Collection<Clause> clauses) throws CantCreateCustomerBrokerPurchaseNegotiationException {
-            return customerBrokerPurchaseNegotiationDao.createCustomerBrokerPurchaseNegotiation(publicKeyCustomer, publicKeyBroker, clauses);
+        public void createCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException {
+            this.customerBrokerPurchaseNegotiationDao.createCustomerBrokerPurchaseNegotiation(negotiation);
         }
 
         @Override
-        public CustomerBrokerPurchaseNegotiation updateCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
-            return customerBrokerPurchaseNegotiationDao.updateCustomerBrokerPurchaseNegotiation(negotiation);
+        public void updateCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+            this.customerBrokerPurchaseNegotiationDao.updateCustomerBrokerPurchaseNegotiation(negotiation);
         }
 
         @Override
         public void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
-            try {
-                customerBrokerPurchaseNegotiationDao.cancelNegotiation(negotiation);
-            } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
-                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
-            }
+            this.customerBrokerPurchaseNegotiationDao.cancelNegotiation(negotiation);
         }
 
         @Override
-        public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        public boolean closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             try {
-                if(verifyStatusClause(customerBrokerPurchaseNegotiationDao.getClauses(negotiation.getNegotiationId()))){
-                    customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
-                }else{
-                    throw new CantUpdateCustomerBrokerPurchaseNegotiationException();
+                if(verifyStatusClause(negotiation.getClauses())) {
+                    this.customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
+                    return true;
                 }
-            } catch (CantGetListClauseException e) {
-                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
-            } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e){
-                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        private boolean verifyStatusClause(Collection<Clause> clausules) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
-            Map<ClauseType, String> clausesAgreed = new HashMap<ClauseType, String>();
-
-            for(Clause clause : clausules) {
-                if(clause.getStatus() == ClauseStatus.AGREED){
-                    clausesAgreed.put(clause.getType(), clause.getValue());
-                }
-            }
-
-            if(
-                    ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_CURRENCY) ) &&
-                    ( !clausesAgreed.containsKey(ClauseType.EXCHANGE_RATE) ) &&
-                    ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_CURRENCY_QUANTITY) ) &&
-                    ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_PAYMENT_METHOD) )
-            ){
                 return false;
-            }
-
-            if( clausesAgreed.containsValue(CurrencyType.CRYPTO_MONEY.getCode()) ){
-                if( !clausesAgreed.containsKey(ClauseType.CUSTOMER_CRYPTO_ADDRESS) ){
-                    return false;
-                }
-            }
-
-            if( clausesAgreed.containsValue(CurrencyType.BANK_MONEY.getCode()) ){
-                if(
-                        ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_BANK) ) &&
-                        ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_BANK_ACCOUNT) )
-                ){
-                    return false;
-                }
-            }
-
-            if( clausesAgreed.containsValue(CurrencyType.CASH_ON_HAND_MONEY.getCode()) ){
-                if(
-                        ( !clausesAgreed.containsKey(ClauseType.PLACE_TO_MEET) ) &&
-                        ( !clausesAgreed.containsKey(ClauseType.DATE_TIME_TO_MEET) )
-                ){
-                    return false;
-                }
-            }
-
-            if( clausesAgreed.containsValue(CurrencyType.CASH_DELIVERY_MONEY.getCode()) ){
-                if(
-                        ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_PLACE_TO_DELIVER) ) &&
-                        ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) )
-                ){
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        @Override
-        public CustomerBrokerPurchaseNegotiation sendToBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
-            return customerBrokerPurchaseNegotiationDao.sendToBroker(negotiation);
-        }
-
-        @Override
-        public CustomerBrokerPurchaseNegotiation waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
-            return customerBrokerPurchaseNegotiationDao.waitForBroker(negotiation);
-        }
-
-
-        @Override
-        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantGetListPurchaseNegotiationsException{
-            try {
-                Collection<CustomerBrokerPurchaseNegotiation> negotiations = new ArrayList<CustomerBrokerPurchaseNegotiation>();
-                negotiations = customerBrokerPurchaseNegotiationDao.getNegotiations();
-                return negotiations;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
             }
+        }
+
+        @Override
+        public void sendToBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+            this.customerBrokerPurchaseNegotiationDao.sendToBroker(negotiation);
+        }
+
+        @Override
+        public void waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+            this.customerBrokerPurchaseNegotiationDao.waitForBroker(negotiation);
+        }
+
+        @Override
+        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantGetListPurchaseNegotiationsException {
+            return this.customerBrokerPurchaseNegotiationDao.getNegotiations();
         }
 
         @Override
         public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations(NegotiationStatus status) throws CantGetListPurchaseNegotiationsException {
-            try {
-                Collection<CustomerBrokerPurchaseNegotiation> negotiations = new ArrayList<CustomerBrokerPurchaseNegotiation>();
-                negotiations = customerBrokerPurchaseNegotiationDao.getNegotiations(status);
-                return negotiations;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            } catch (CantGetListClauseException e) {
-                throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
+            return this.customerBrokerPurchaseNegotiationDao.getNegotiations(status);
+        }
+
+        @Override
+        public ClauseType getNextClauseType(ClauseType type) throws CantGetNextClauseTypeException {
+            switch (type) {
+                case CUSTOMER_CURRENCY:
+                    return ClauseType.EXCHANGE_RATE;
+
+                case EXCHANGE_RATE:
+                    return ClauseType.CUSTOMER_CURRENCY_QUANTITY;
+
+                case CUSTOMER_CURRENCY_QUANTITY:
+                    return ClauseType.CUSTOMER_PAYMENT_METHOD;
+
+                case CUSTOMER_BANK:
+                    return ClauseType.CUSTOMER_BANK_ACCOUNT;
+
+                case PLACE_TO_MEET:
+                    return ClauseType.DATE_TIME_TO_MEET;
+
+                case CUSTOMER_PLACE_TO_DELIVER:
+                    return ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER;
+
+                default:
+                    throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
             }
         }
 
         @Override
-        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsByCustomer(ActorIdentity customer) throws CantGetListPurchaseNegotiationsException {
-            try {
-                Collection<CustomerBrokerPurchaseNegotiation> negotiations = new ArrayList<CustomerBrokerPurchaseNegotiation>();
-                negotiations = customerBrokerPurchaseNegotiationDao.getNegotiationsByCustomer(customer);
-                return negotiations;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            } catch (CantGetListClauseException e) {
-                throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        @Override
-        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsByBroker(ActorIdentity broker) throws CantGetListPurchaseNegotiationsException {
-            try {
-                Collection<CustomerBrokerPurchaseNegotiation> negotiations = new ArrayList<CustomerBrokerPurchaseNegotiation>();
-                negotiations = customerBrokerPurchaseNegotiationDao.getNegotiationsByBroker(broker);
-                return negotiations;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            } catch (CantGetListClauseException e) {
-                throw new CantGetListPurchaseNegotiationsException(CantGetListPurchaseNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-    // Clauses
-
-        public ClauseType getNextClauseType(UUID negotiation) throws CantGetNextClauseTypeException {
-
-            try {
-                ClauseType type = this.customerBrokerPurchaseNegotiationDao.getNextClauseType(negotiation);
-
-                switch (type) {
-                    case CUSTOMER_CURRENCY:
-                        return ClauseType.EXCHANGE_RATE;
-
-                    case EXCHANGE_RATE:
-                        return ClauseType.CUSTOMER_CURRENCY_QUANTITY;
-
-                    case CUSTOMER_CURRENCY_QUANTITY:
-                        return ClauseType.CUSTOMER_PAYMENT_METHOD;
-
-                    case CUSTOMER_PAYMENT_METHOD:
-                        CurrencyType paymentMethod = CurrencyType.getByCode(this.customerBrokerPurchaseNegotiationDao.getPaymentMethod(negotiation));
-                        return getNextClauseTypeByCurrencyType(paymentMethod);
-
-                    case CUSTOMER_BANK:
-                        return ClauseType.CUSTOMER_BANK_ACCOUNT;
-
-                    case PLACE_TO_MEET:
-                        return ClauseType.DATE_TIME_TO_MEET;
-
-                    case CUSTOMER_PLACE_TO_DELIVER:
-                        return ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER;
-
-                    default:
-                        throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
-                }
-            } catch (InvalidParameterException e) {
-                throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
-            }
-        }
-
-        private ClauseType getNextClauseTypeByCurrencyType(CurrencyType paymentMethod) throws CantGetNextClauseTypeException {
+        public ClauseType getNextClauseTypeByCurrencyType(CurrencyType paymentMethod) throws CantGetNextClauseTypeException {
             switch (paymentMethod) {
                 case CRYPTO_MONEY:
                     return ClauseType.CUSTOMER_CRYPTO_ADDRESS;
@@ -339,5 +219,63 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot extends AbstractPlugin 
                 default:
                     throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
             }
+        }
+
+    /*
+    *   Private Methods
+    * */
+
+        private boolean verifyStatusClause(Collection<Clause> clausules) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+            Map<ClauseType, String> clausesAgreed = new HashMap<ClauseType, String>();
+
+            for(Clause clause : clausules) {
+                if(clause.getStatus() == ClauseStatus.AGREED){
+                    clausesAgreed.put(clause.getType(), clause.getValue());
+                }
+            }
+
+            if(
+                    ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_CURRENCY) ) &&
+                            ( !clausesAgreed.containsKey(ClauseType.EXCHANGE_RATE) ) &&
+                            ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_CURRENCY_QUANTITY) ) &&
+                            ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_PAYMENT_METHOD) )
+                    ){
+                return false;
+            }
+
+            if( clausesAgreed.containsValue(CurrencyType.CRYPTO_MONEY.getCode()) ){
+                if( !clausesAgreed.containsKey(ClauseType.CUSTOMER_CRYPTO_ADDRESS) ){
+                    return false;
+                }
+            }
+
+            if( clausesAgreed.containsValue(CurrencyType.BANK_MONEY.getCode()) ){
+                if(
+                        ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_BANK) ) &&
+                                ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_BANK_ACCOUNT) )
+                        ){
+                    return false;
+                }
+            }
+
+            if( clausesAgreed.containsValue(CurrencyType.CASH_ON_HAND_MONEY.getCode()) ){
+                if(
+                        ( !clausesAgreed.containsKey(ClauseType.PLACE_TO_MEET) ) &&
+                                ( !clausesAgreed.containsKey(ClauseType.DATE_TIME_TO_MEET) )
+                        ){
+                    return false;
+                }
+            }
+
+            if( clausesAgreed.containsValue(CurrencyType.CASH_DELIVERY_MONEY.getCode()) ){
+                if(
+                        ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_PLACE_TO_DELIVER) ) &&
+                                ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) )
+                        ){
+                    return false;
+                }
+            }
+
+            return true;
         }
 }

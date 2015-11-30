@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_cbp_api.all_definition.contract;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 

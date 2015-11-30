@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_cbp_api.all_definition.contract;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 
 import java.util.Collection;
 
