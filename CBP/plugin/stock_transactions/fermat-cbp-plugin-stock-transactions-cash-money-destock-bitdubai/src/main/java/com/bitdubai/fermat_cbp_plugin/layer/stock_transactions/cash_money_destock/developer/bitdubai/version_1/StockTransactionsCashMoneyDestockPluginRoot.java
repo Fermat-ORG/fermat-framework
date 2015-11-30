@@ -72,11 +72,11 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
+    //TODO:Descomentar luego que esten arrancados estos Plugines: plugin = Plugins.CRYPTO_WALLET, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD
+    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    //TODO: Nompbre del plugin de la interfaz HoldManager
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.CRYPTO_WALLET)
+    //@NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD)
     CashHoldTransactionManager cashHoldTransactionManager;
 
 
@@ -87,6 +87,8 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_DATABASE_NAME);
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
+            System.out.println("******* Init Cash Money Destock ******");
+            //testDestock();
             startMonitorAgent();
 
             database.closeDatabase();
@@ -140,7 +142,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
     }
 
     @Override
-    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, float amount, String memo) throws CantCreateCashMoneyDestockException {
+    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, float amount, String memo) throws CantCreateCashMoneyDestockException {
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         CashMoneyDestockTransactionImpl cashMoneyRestockTransaction = new CashMoneyDestockTransactionImpl(
@@ -148,10 +150,10 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
                 publicKeyActor,
                 fiatCurrency,
                 cbpWalletPublicKey,
-                bankWalletPublicKey,
+                cshWalletPublicKey,
                 memo,
                 "INIT TRANSACTION",
-                bankAccount,
+                cashReference,
                 amount,
                 timestamp,
                 TransactionStatusRestockDestock.INIT_TRANSACTION);
@@ -181,6 +183,14 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
 
             stockTransactionsCashMoneyDestockMonitorAgent.start();
         }else stockTransactionsCashMoneyDestockMonitorAgent.start();
+    }
+
+    private void testDestock(){
+        try {
+            createTransactionDestock("publicKeyActor", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpWalletPublicKey", "cshWalletPublicKey", "cashReference", 250, "memo");
+        } catch (CantCreateCashMoneyDestockException e) {
+            e.printStackTrace();
+        }
     }
 
 }

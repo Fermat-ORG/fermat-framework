@@ -8,6 +8,12 @@ import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 public class InstalledDesktop implements FermatApp {
 
     String publicKey;
+    String dekstopName;
+
+    @Override
+    public String getAppName() {
+        return dekstopName;
+    }
 
     @Override
     public String getAppPublicKey() {

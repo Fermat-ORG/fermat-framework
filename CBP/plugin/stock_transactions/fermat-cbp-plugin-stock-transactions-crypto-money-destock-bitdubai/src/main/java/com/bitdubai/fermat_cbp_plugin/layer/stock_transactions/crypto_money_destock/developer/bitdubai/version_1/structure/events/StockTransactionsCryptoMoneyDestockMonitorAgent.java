@@ -25,6 +25,7 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.Cryp
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
  * Created by franklin on 17/11/15.
  */
 public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
-    //TODO: Documentar y manejo de excepciones. Inicializar los manager del Hold Crypto que no existe esos plugines en CCP y Wallet CBP para que seteados en el constructor
+    //TODO: Documentar y manejo de excepciones.
     //TODO: Manejo de Eventos
 
     private Thread agentThread;
@@ -106,7 +107,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
                 try {
                     doTheMainTask();
                 } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
 
             }
@@ -133,15 +134,15 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
                                     cryptoMoneyTransaction.getCbpWalletPublicKey(),
                                     cryptoMoneyTransaction.getActorPublicKey(),
                                     cryptoMoneyTransaction.getAmount(),
-                                    0,
+                                    new Date().getTime() / 1000,
                                     cryptoMoneyTransaction.getConcept());
 
                             cryptoBrokerWalletManager.getCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
 
                         } catch (CantPerformTransactionException e) {
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                         } catch (CryptoBrokerWalletNotFoundException e) {
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                         }
                         cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                         stockTransactionCryptoMoneyDestockManager.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
@@ -162,19 +163,24 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
                             stockTransactionCryptoMoneyDestockManager.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
                         }
+                        if (CryptoTransactionStatus.REJECTED.getCode() == cryptoTransactionStatus.getCode()) {
+                            cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
+                            stockTransactionCryptoMoneyDestockManager.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
+                        }
                         break;
                 }
             }
         } catch (DatabaseOperationException e) {
-                e.printStackTrace();
-            } catch (InvalidParameterException e) {
-                e.printStackTrace();
-            } catch (MissingCryptoMoneyDestockDataException e) {
-                e.printStackTrace();
-            } catch (CantCreateHoldTransactionException e) {
-                e.printStackTrace();
-            } catch (CantGetHoldTransactionException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+        } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+        } catch (MissingCryptoMoneyDestockDataException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+        } catch (CantCreateHoldTransactionException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+        } catch (CantGetHoldTransactionException e) {
+        errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            ;
         }
     }
 }

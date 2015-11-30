@@ -158,7 +158,7 @@ public abstract class FermatFragment extends AbstractFermatFragment implements F
     }
 
     protected void changeApp(Engine emgine,Object[] objects){
-        getFermatScreenSwapper().connectWithOtherApp(emgine, objects);
+        //getFermatScreenSwapper().connectWithOtherApp(emgine, objects);
     }
 
     protected void selectSubApp(InstalledSubApp installedSubApp){

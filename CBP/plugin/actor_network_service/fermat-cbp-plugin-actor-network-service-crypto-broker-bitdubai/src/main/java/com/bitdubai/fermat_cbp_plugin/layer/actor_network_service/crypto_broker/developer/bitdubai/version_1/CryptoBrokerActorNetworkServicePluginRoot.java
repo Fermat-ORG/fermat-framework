@@ -212,17 +212,17 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     getPluginVersionReference()
             );
 
+            /*
+             * Its all ok, set the new status
+             */
+            this.serviceStatus = ServiceStatus.STARTED;
+
 
         } catch(final CantInitializeDatabaseException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, "", "Problem initializing crypto broker ans dao.");
         }
-
-        /*
-         * Its all ok, set the new status
-         */
-        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     private CryptoBrokerActorNetworkServiceManager fermatManager;

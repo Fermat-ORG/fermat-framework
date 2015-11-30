@@ -126,8 +126,8 @@ public class CustomerBrokerContractPurchasePluginRoot implements CustomerBrokerC
         }
 
         @Override
-        public CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(UUID ContractId) throws CantGetListCustomerBrokerContractPurchaseException {
-            return this.CustomerBrokerContractPurchaseDao.getCustomerBrokerContractPurchaseForContractId(ContractId);
+        public CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(String ContractId) throws CantGetListCustomerBrokerContractPurchaseException {
+            return this.CustomerBrokerContractPurchaseDao.getCustomerBrokerContractPurchaseForcontractID(ContractId);
         }
 
         @Override
@@ -136,8 +136,9 @@ public class CustomerBrokerContractPurchasePluginRoot implements CustomerBrokerC
         }
 
         @Override
-        public CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(String publicKeyCustomer, String publicKeyBroker, Float merchandiseAmount, CurrencyType merchandiseCurrency, Float referencePrice, ReferenceCurrency referenceCurrency, Float paymentAmount, CurrencyType paymentCurrency, long paymentExpirationDate, long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerContractPurchaseException {
+        public CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(String contractID, String publicKeyCustomer, String publicKeyBroker, Float merchandiseAmount, CurrencyType merchandiseCurrency, Float referencePrice, ReferenceCurrency referenceCurrency, Float paymentAmount, CurrencyType paymentCurrency, long paymentExpirationDate, long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerContractPurchaseException {
             return this.CustomerBrokerContractPurchaseDao.createCustomerBrokerContractPurchase(
+                    contractID,
                     publicKeyCustomer,
                     publicKeyBroker,
                     merchandiseAmount,
@@ -152,12 +153,12 @@ public class CustomerBrokerContractPurchasePluginRoot implements CustomerBrokerC
         }
 
         @Override
-        public void updateCustomerBrokerContractPurchase(UUID contractId, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException {
+        public void updateCustomerBrokerContractPurchase(String contractId, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException {
             this.CustomerBrokerContractPurchaseDao.updateCustomerBrokerContractPurchase(contractId, status);
         }
 
         @Override
-        public void deleteCustomerBrokerContractPurchase(UUID contractID) throws CantDeleteCustomerBrokerContractPurchaseException {
+        public void deleteCustomerBrokerContractPurchase(String contractID) throws CantDeleteCustomerBrokerContractPurchaseException {
             this.CustomerBrokerContractPurchaseDao.deleteCustomerBrokerContractPurchase(contractID);
         }
 }

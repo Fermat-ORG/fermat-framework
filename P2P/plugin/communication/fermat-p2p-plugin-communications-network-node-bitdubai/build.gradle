@@ -145,10 +145,16 @@ task fatJar(type: Jar
         configurations.compile.collect {
             it.isDirectory() ? it : zipTree(it)
         }
+        zip64 true
     }
+    zip64 true
 
     with jar
 }
+
+
+
+
 
 
 check.mustRunAfter clean

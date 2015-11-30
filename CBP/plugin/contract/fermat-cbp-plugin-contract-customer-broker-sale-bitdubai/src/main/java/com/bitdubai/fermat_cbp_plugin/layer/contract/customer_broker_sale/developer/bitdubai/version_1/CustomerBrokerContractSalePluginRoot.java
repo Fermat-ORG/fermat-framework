@@ -126,8 +126,8 @@ public class CustomerBrokerContractSalePluginRoot implements CustomerBrokerContr
         }
 
         @Override
-        public CustomerBrokerContractSale getCustomerBrokerContractSaleForContractId(UUID ContractId) throws CantGetListCustomerBrokerContractSaleException {
-            return this.CustomerBrokerContractSaleDao.getCustomerBrokerContractSaleForContractId(ContractId);
+        public CustomerBrokerContractSale getCustomerBrokerContractSaleForContractId(String ContractId) throws CantGetListCustomerBrokerContractSaleException {
+            return this.CustomerBrokerContractSaleDao.getCustomerBrokerContractSaleForcontractID(ContractId);
         }
 
         @Override
@@ -136,8 +136,9 @@ public class CustomerBrokerContractSalePluginRoot implements CustomerBrokerContr
         }
 
         @Override
-        public CustomerBrokerContractSale createCustomerBrokerContractSale(String publicKeyCustomer, String publicKeyBroker, Float merchandiseAmount, CurrencyType merchandiseCurrency, Float referencePrice, ReferenceCurrency referenceCurrency, Float paymentAmount, CurrencyType paymentCurrency, long paymentExpirationDate, long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerContractSaleException {
+        public CustomerBrokerContractSale createCustomerBrokerContractSale(String ContractId, String publicKeyCustomer, String publicKeyBroker, Float merchandiseAmount, CurrencyType merchandiseCurrency, Float referencePrice, ReferenceCurrency referenceCurrency, Float paymentAmount, CurrencyType paymentCurrency, long paymentExpirationDate, long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerContractSaleException {
             return this.CustomerBrokerContractSaleDao.createCustomerBrokerContractSale(
+                    ContractId,
                     publicKeyCustomer,
                     publicKeyBroker,
                     merchandiseAmount,
@@ -152,12 +153,12 @@ public class CustomerBrokerContractSalePluginRoot implements CustomerBrokerContr
         }
 
         @Override
-        public void updateCustomerBrokerContractSale(UUID contractId, ContractStatus status) throws CantupdateCustomerBrokerContractSaleException {
+        public void updateCustomerBrokerContractSale(String contractId, ContractStatus status) throws CantupdateCustomerBrokerContractSaleException {
             this.CustomerBrokerContractSaleDao.updateCustomerBrokerContractSale(contractId, status);
         }
 
         @Override
-        public void deleteCustomerBrokerContractSale(UUID contractID) throws CantDeleteCustomerBrokerContractSaleException {
+        public void deleteCustomerBrokerContractSale(String contractID) throws CantDeleteCustomerBrokerContractSaleException {
             this.CustomerBrokerContractSaleDao.deleteCustomerBrokerContractSale(contractID);
         }
 }
