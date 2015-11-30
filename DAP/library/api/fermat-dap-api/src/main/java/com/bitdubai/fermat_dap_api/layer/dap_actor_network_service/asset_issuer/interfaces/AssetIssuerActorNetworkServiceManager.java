@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
@@ -25,11 +26,11 @@ public interface AssetIssuerActorNetworkServiceManager extends FermatManager {
      *
      * @param actorSender who send the message
      * @param actorDestination who recibe the message
-     * @param msjContent  the message content
+     * @param dapMessage  Object message content
      *
      * @throws CantSendMessageException
      */
-    public void sendMessage(DAPActor actorSender, DAPActor actorDestination, String msjContent)  throws CantSendMessageException;
+    public void sendMessage(DAPActor actorSender, DAPActor actorDestination, DAPMessage dapMessage)  throws CantSendMessageException;
 
     /**
      * Get the content of the list previously requested, this method have to call after the
