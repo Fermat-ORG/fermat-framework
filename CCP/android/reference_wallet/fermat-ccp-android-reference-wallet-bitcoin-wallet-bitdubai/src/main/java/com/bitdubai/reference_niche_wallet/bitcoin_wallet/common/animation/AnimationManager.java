@@ -52,10 +52,7 @@ public class AnimationManager implements ElementsWithAnimation{
         if (Build.VERSION.SDK_INT > 17) {
             DisplayMetrics dm = new DisplayMetrics();
             rootView.getDisplay().getMetrics(dm);
-            int xDest = dm.widthPixels / 2;
-            xDest -= (view.getMeasuredWidth() / 2);
             float centreY = rootView.getY() + rootView.getHeight() / 2;
-
             TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
             anim.setDuration(1000);
             anim.setFillAfter(true);
