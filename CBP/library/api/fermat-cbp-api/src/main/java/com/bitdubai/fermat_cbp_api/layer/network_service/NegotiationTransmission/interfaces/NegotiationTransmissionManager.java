@@ -26,4 +26,5 @@ public interface NegotiationTransmissionManager {
 
     /*Crypto Customer Confirm that receive Negotiation from Cryto Broker*/
     void sendConfirmToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType TransactionType) throws CantSendConfirmToCryptoBrokerException;
+
 }
