@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmissio
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActor;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActor;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendBusinessTransactionHashException;
@@ -43,7 +44,7 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
      * @param transactionId
      * @param contractStatus
      */
-    void sendContractNewStatusNotification(CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionId, ContractStatus contractStatus) throws CantSendBusinessTransactionHashException;
+    void sendContractNewStatusNotification(CryptoBrokerActor cryptoBrokerActorSender, CryptoCustomerActor cryptoCustomerActorReceiver, String transactionId, ContractTransactionStatus contractStatus) throws CantSendBusinessTransactionHashException;
 
     /**
      * Method that send the a Contract New Status Notification
@@ -51,7 +52,7 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
      * @param transactionId
      * @param contractStatus
      */
-    void sendTransactionNewStatusNotification(CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionId, ContractStatus contractStatus) throws CantSendBusinessTransactionHashException;
+    void sendTransactionNewStatusNotification(CryptoCustomerActor cryptoCustomerActorSender, CryptoBrokerActor cryptoCustomerBrokerReceiver, String transactionId, ContractTransactionStatus contractStatus) throws CantSendBusinessTransactionHashException;
 
     /**
      * Method that send the Contract New Status Notification

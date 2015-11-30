@@ -1108,6 +1108,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             navigationViewPainter = null;
             elementsWithAnimation = new ArrayList<>();
+            footerViewPainter = null;
 
             this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
