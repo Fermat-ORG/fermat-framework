@@ -12,6 +12,8 @@ import java.util.UUID;
  */
 public interface NegotiationTransmission {
 
+    UUID getTransmissionId();
+
     UUID getTransactionId();
 
     UUID getNegotiationId();
@@ -20,7 +22,7 @@ public interface NegotiationTransmission {
 
     String getPublicKeyActorSend();
 
-    String getActorSendType();
+    PlatformComponentType getActorSendType();
 
     String getPublicKeyActorReceive();
 
