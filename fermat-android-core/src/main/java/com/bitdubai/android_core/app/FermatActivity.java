@@ -507,6 +507,9 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void paintTitleBar(TitleBar titleBar, Activity activity) {
         try {
             if (titleBar != null) {
+                getSupportActionBar().setWindowTitle("");
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
+                mToolbar.setTitleTextColor(Color.TRANSPARENT);
                 Typeface typeface = null;
                 if(titleBar.getFont()!=null)
                 typeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/"+titleBar.getFont());
