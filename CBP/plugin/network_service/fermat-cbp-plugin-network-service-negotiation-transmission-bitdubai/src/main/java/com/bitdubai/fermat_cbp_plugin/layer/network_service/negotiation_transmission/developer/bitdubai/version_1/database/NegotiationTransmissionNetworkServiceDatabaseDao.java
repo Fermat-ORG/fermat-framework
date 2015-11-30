@@ -44,5 +44,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
+
+
 }
 
