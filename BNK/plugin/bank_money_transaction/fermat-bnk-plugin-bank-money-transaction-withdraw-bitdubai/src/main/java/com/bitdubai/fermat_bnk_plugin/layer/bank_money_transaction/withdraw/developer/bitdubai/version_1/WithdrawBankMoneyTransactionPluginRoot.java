@@ -49,14 +49,14 @@ public class WithdrawBankMoneyTransactionPluginRoot extends AbstractPlugin imple
 
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION");
+        System.out.println("platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION");
         try {
             this.withdrawBankMoneyTransactionManager = new WithdrawBankMoneyTransactionManager(pluginId,pluginDatabaseSystem,errorManager);
             this.withdrawBankMoneyTransactionManager.setBankMoneyWallet(bankMoneyWalletManager.loadBankMoneyWallet("13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv"));
         }catch (CantStartPluginException innerException){
-            throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Deposit Bank Transaction  plugin - "+this.pluginId, "Cannot open or create the plugin database");
+            throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Withdraw Bank Transaction  plugin - "+this.pluginId, "Cannot open or create the plugin database");
         }catch (CantLoadBankMoneyWalletException innerException){
-            throw new CantStartPluginException(CantLoadBankMoneyWalletException.DEFAULT_MESSAGE, innerException,"Starting Deposit Bank Transaction  plugin - "+this.pluginId, "Cannot open or create the plugin database");
+            throw new CantStartPluginException(CantLoadBankMoneyWalletException.DEFAULT_MESSAGE, innerException,"Starting Withdraw Bank Transaction  plugin - "+this.pluginId, "Cannot open or create the plugin database");
         }
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -87,8 +87,8 @@ public class WithdrawBankMoneyTransactionPluginRoot extends AbstractPlugin imple
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch(CantInitializeWithdrawBankMoneyTransactionDatabaseException cantInitializeException) {
-            FermatException e = new CantInitializeWithdrawBankMoneyTransactionDatabaseException("Database cannot be initialized", cantInitializeException, "CashMoneyTransactionHoldPluginRoot", "");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            FermatException e = new CantInitializeWithdrawBankMoneyTransactionDatabaseException("Database cannot be initialized", cantInitializeException, "WithdrawBankMoneyTransactionPluginRoot", "");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         return tableRecordList;
     }

@@ -92,8 +92,8 @@ public class DepositBankMoneyTransactionPluginRoot extends AbstractPlugin implem
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch(CantInitializeDepositBankMoneyTransactionDatabaseException cantInitializeException) {
-            FermatException e = new CantInitializeDepositBankMoneyTransactionDatabaseException("Database cannot be initialized", cantInitializeException, "CashMoneyTransactionHoldPluginRoot", "");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            FermatException e = new CantInitializeDepositBankMoneyTransactionDatabaseException("Database cannot be initialized", cantInitializeException, "DepositBankMoneyTransactionPluginRoot", "");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         return tableRecordList;
     }

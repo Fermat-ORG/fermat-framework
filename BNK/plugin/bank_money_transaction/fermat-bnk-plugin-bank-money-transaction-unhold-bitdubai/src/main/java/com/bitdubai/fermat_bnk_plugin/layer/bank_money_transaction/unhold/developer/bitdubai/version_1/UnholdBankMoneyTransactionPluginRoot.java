@@ -105,8 +105,8 @@ public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin impleme
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch(CantInitializeUnholdBankMoneyTransactionDatabaseException cantInitializeException) {
-            FermatException e = new CantInitializeUnholdBankMoneyTransactionDatabaseException("Database cannot be initialized", cantInitializeException, "CashMoneyTransactionHoldPluginRoot", "");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            FermatException e = new CantInitializeUnholdBankMoneyTransactionDatabaseException("Database cannot be initialized", cantInitializeException, "UnholdBankMoneyTransactionPluginRoot", "");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         return tableRecordList;
     }
