@@ -146,20 +146,14 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         View container = layoutInflater.inflate(R.layout.ccw_header_layout, toolbarHeader, true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int dpToPixels = SizeUtils.convertDpToPixels(100, getActivity());
-            int pixelsToDp = SizeUtils.convertPixelsToDp(100, getActivity());
-            Log.d(TAG, "container.getLayoutParams().height = " + container.getLayoutParams().height
-                    + " | 100 pixelsToDp = " + pixelsToDp
-                    + " | 100 dpToPixels = " + dpToPixels);
-
-            container.getLayoutParams().height = Math.max(dpToPixels, pixelsToDp);
+            container.getLayoutParams().height = SizeUtils.convertDpToPixels(156, getActivity());
         }
 
         if (marketExchangeRateSummaryList.isEmpty()) {
             FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.ccw_no_market_rate);
             noMarketRateTextView.setVisibility(View.VISIBLE);
             View marketRateViewPagerContainer = container.findViewById(R.id.ccw_market_rate_view_pager_container);
-            marketRateViewPagerContainer.setVisibility(View.VISIBLE);
+            marketRateViewPagerContainer.setVisibility(View.GONE);
         } else {
             ViewPager viewPager = (ViewPager) container.findViewById(R.id.ccw_exchange_rate_view_pager);
             viewPager.setOffscreenPageLimit(3);
