@@ -82,9 +82,9 @@ public class NetworkClientP2PDatabaseFactory implements DealsWithPluginDatabaseS
             table.addColumn(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
             table.addColumn(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_IP_COLUMN_NAME, DatabaseDataType.STRING, 19, Boolean.FALSE);
             table.addColumn(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_DEFAULT_PORT_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.FALSE);
-            table.addColumn(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LATITUDE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LONGITUDE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LATITUDE_COLUMN_NAME, DatabaseDataType.REAL, 50, Boolean.FALSE);
+            table.addColumn(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LONGITUDE_COLUMN_NAME, DatabaseDataType.REAL, 50, Boolean.FALSE);
+            table.addColumn(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
             table.addIndex(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_FIRST_KEY_COLUMN);
 
@@ -98,10 +98,10 @@ public class NetworkClientP2PDatabaseFactory implements DealsWithPluginDatabaseS
             table.addColumn(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_COMPONENT_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_NETWORK_SERVICE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_LATITUDE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_LONGITUDE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_LATITUDE_COLUMN_NAME, DatabaseDataType.REAL, 50, Boolean.FALSE);
+            table.addColumn(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_LONGITUDE_COLUMN_NAME, DatabaseDataType.REAL, 50, Boolean.FALSE);
             table.addColumn(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_EXTRA_DATA_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
             table.addIndex(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_FIRST_KEY_COLUMN);
 

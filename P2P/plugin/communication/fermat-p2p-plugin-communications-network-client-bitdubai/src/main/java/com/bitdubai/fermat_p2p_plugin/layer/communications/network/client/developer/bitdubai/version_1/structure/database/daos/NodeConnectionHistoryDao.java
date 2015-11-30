@@ -481,9 +481,9 @@ public class NodeConnectionHistoryDao {
         entityRecord.setStringValue(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME,nodeConnectionHistory.getIdentityPublicKey());
         entityRecord.setStringValue(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_IP_COLUMN_NAME,nodeConnectionHistory.getIp());
         entityRecord.setIntegerValue(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_DEFAULT_PORT_COLUMN_NAME, nodeConnectionHistory.getDefaultPort());
-        entityRecord.setStringValue(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LATITUDE_COLUMN_NAME, nodeConnectionHistory.getLatitude().toString());
-        entityRecord.setStringValue(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LONGITUDE_COLUMN_NAME, nodeConnectionHistory.getLongitude().toString());
-        entityRecord.setStringValue(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, nodeConnectionHistory.getLastConnectionTimestamp().toString());
+        entityRecord.setDoubleValue(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LATITUDE_COLUMN_NAME, nodeConnectionHistory.getLatitude());
+        entityRecord.setDoubleValue(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LONGITUDE_COLUMN_NAME, nodeConnectionHistory.getLongitude());
+        entityRecord.setLongValue(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, nodeConnectionHistory.getLastConnectionTimestamp().getTime());
 
           /*
          * return the new table record

@@ -512,10 +512,10 @@ public class ClientConnectionHistoryDao {
         entityRecord.setStringValue(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_ALIAS_COLUMN_NAME, clientConnectionHistory.getAlias());
         entityRecord.setStringValue(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_COMPONENT_TYPE_COLUMN_NAME, clientConnectionHistory.getComponentType());
         entityRecord.setStringValue(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_NETWORK_SERVICE_TYPE_COLUMN_NAME, clientConnectionHistory.getNetworkServiceType());
-        entityRecord.setStringValue(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_LATITUDE_COLUMN_NAME, clientConnectionHistory.getLastLatitude().toString());
-        entityRecord.setStringValue(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_LONGITUDE_COLUMN_NAME, clientConnectionHistory.getLastLongitude().toString());
+        entityRecord.setDoubleValue(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_LATITUDE_COLUMN_NAME, clientConnectionHistory.getLastLatitude());
+        entityRecord.setDoubleValue(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_LONGITUDE_COLUMN_NAME, clientConnectionHistory.getLastLongitude());
         entityRecord.setStringValue(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_EXTRA_DATA_COLUMN_NAME, clientConnectionHistory.getExtraData());
-        entityRecord.setStringValue(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, clientConnectionHistory.getLastConnectionTimestamp().toString());
+        entityRecord.setLongValue(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, clientConnectionHistory.getLastConnectionTimestamp().getTime());
 
 
         /*
