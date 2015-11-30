@@ -265,8 +265,8 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                                 System.out.println("ASSET DISTRIBUTION User Id: " + userId);
                                 String genesisTransaction = digitalAssetMetadataTransaction.getGenesisTransaction();
                                 System.out.println("ASSET DISTRIBUTION Genesis Transaction: " + genesisTransaction);
-                                if (assetDistributionDao.isGenesisTransactionRegistered(genesisTransaction)) {
-                                    System.out.println("ASSET RECEPTION This genesisTransaction is already registered in database: " + genesisTransaction);
+                                if (!assetDistributionDao.isGenesisTransactionRegistered(genesisTransaction)) {
+                                    System.out.println("ASSET RECEPTION This genesisTransaction is not registered in database: " + genesisTransaction);
                                     continue;
                                 }
                                 String registeredUserActorId = assetDistributionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);

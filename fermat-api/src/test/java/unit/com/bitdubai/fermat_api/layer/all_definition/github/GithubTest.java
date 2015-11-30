@@ -19,20 +19,20 @@ public class GithubTest {
 
     @Ignore
     @Test
-    public void testCreateFile() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
+    public void testCreateFile() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException, com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException, com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException {
         GitHubConnection gitHubConnection = new GitHubConnection(REPOSITORY, USERNAME, PASSWORD);
         gitHubConnection.createGitHubTextFile("bitdubai/reference_wallet/testNuevoString-PathE", "test2 content", "test2 commit message");
     }
 
     @Ignore
     @Test
-    public void testCreateImage() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
+    public void testCreateImage() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException, com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException, com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException {
         GitHubConnection gitHubConnection = new GitHubConnection(REPOSITORY, USERNAME, PASSWORD);
         gitHubConnection.createGitHubImageFile("NuevaImage3", new byte[]{3,4}, "commit message");
     }
     @Ignore
     @Test
-    public void getFile()throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException, IOException{
+    public void getFile() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException, IOException, com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException, com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException {
         GitHubConnection gitHubConnection = new GitHubConnection(REPOSITORY, USERNAME, PASSWORD);
         String result = gitHubConnection.getFile("bitdubai/reference_wallet/testNuevoString-PathE");
         System.out.println(result);
