@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
 
 import java.util.UUID;
@@ -11,17 +12,17 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 29.11.15.
  */
-public class NegotiationTransmissionImpl implements NegotiationTransmission{
+public class NegotiationTransmissionImpl implements NegotiationTransmission {
 
     private final UUID transmissionId;
     private final UUID transactionId;
     private final UUID negotiationId;
-    private final NegotiationStatus negotiationStatus;
     private final NegotiationTransactionType negotiationTansactionType;
     private final String publicKeyActorSend;
     private final PlatformComponentType actorSendType;
     private final String publicKeyActorReceive;
     private final PlatformComponentType actorReceiveType;
+    private final NegotiationTransmissionType transmissionType;
     private final NegotiationTransmissionState transmissionState;
     private final long timestamp;
 
@@ -29,24 +30,24 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission{
             final UUID transmissionId,
             final UUID transactionId,
             final UUID negotiationId,
-            final NegotiationStatus negotiationStatus,
             final NegotiationTransactionType negotiationTansactionType,
             final String publicKeyActorSend,
             final PlatformComponentType actorSendType,
             final String publicKeyActorReceive,
             final PlatformComponentType actorReceiveType,
+            final NegotiationTransmissionType transmissionType,
             final NegotiationTransmissionState transmissionState,
             final long timestamp
     ){
         this.transmissionId = transmissionId;
         this.transactionId = transactionId;
         this.negotiationId = negotiationId;
-        this.negotiationStatus = negotiationStatus;
         this.negotiationTansactionType = negotiationTansactionType;
         this.publicKeyActorSend = publicKeyActorSend;
         this.actorSendType = actorSendType;
         this.publicKeyActorReceive = publicKeyActorReceive;
         this.actorReceiveType = actorReceiveType;
+        this.transmissionType = transmissionType;
         this.transmissionState = transmissionState;
         this.timestamp = timestamp;
     }
@@ -57,8 +58,6 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission{
 
     public UUID getNegotiationId(){ return negotiationId; }
 
-    public NegotiationStatus getNegotiationStatus(){ return negotiationStatus; }
-
     public NegotiationTransactionType getNegotiationTansactionType(){ return negotiationTansactionType; }
 
     public String getPublicKeyActorSend(){ return publicKeyActorSend; }
@@ -68,6 +67,8 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission{
     public String getPublicKeyActorReceive(){ return publicKeyActorReceive;}
 
     public PlatformComponentType getActorReceiveType(){ return actorReceiveType; }
+
+    public NegotiationTransmissionType getTransmissionType(){ return transmissionType; }
 
     public NegotiationTransmissionState getTransmissionState(){ return transmissionState; }
 

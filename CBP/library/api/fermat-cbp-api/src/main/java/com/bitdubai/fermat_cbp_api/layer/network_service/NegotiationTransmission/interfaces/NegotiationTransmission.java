@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 
 import java.util.UUID;
 
@@ -28,7 +28,10 @@ public interface NegotiationTransmission {
 
     PlatformComponentType getActorReceiveType();
 
+    NegotiationTransmissionType getTransmissionType();
+
     NegotiationTransmissionState getTransmissionState();
+
 
     long getTimestamp();
 
