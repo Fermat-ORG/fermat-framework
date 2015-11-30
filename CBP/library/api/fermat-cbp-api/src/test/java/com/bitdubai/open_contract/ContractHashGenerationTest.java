@@ -26,6 +26,7 @@ public class ContractHashGenerationTest {
         contractRecord.setReferenceCurrency(ReferenceCurrency.DOLLAR);
         contractRecord.setReferencePrice(245);
         contractRecord.setStatus(ContractStatus.CREATING_CONTRACT);
+        contractRecord.setNegotiationId("negotiationId");
         return contractRecord;
     }
 
@@ -35,7 +36,7 @@ public class ContractHashGenerationTest {
         System.out.println("Contract XML\n" + contractRecord);
         String generatedHash=contractRecord.generateContractHash();
         System.out.println("Generated Hash:\n" + generatedHash);
-        String innerHash=contractRecord.getContractHash();
+        String innerHash=contractRecord.getContractId();
         System.out.println("Inner Hash:\n" + innerHash);
         System.out.println("Contract XML with contract hash\n" + contractRecord);
         Assert.assertEquals(innerHash, generatedHash);
@@ -51,7 +52,21 @@ public class ContractHashGenerationTest {
         String newContractHash=contractRecord.generateContractHash();
         System.out.println("New XML\n" + contractRecord);
         System.out.println("New Hash\n" + newContractHash);
-        Assert.assertNotEquals(generatedHash,newContractHash);
+        Assert.assertNotEquals(generatedHash, newContractHash);
+    }
+
+    @Test
+    public void changeNegotiationIdTest() throws Exception{
+        System.out.println("changeNegotiationIdTest");
+        ContractRecord contractRecord=generateMockedContractRecord();
+        System.out.println("Contract XML\n" + contractRecord);
+        String generatedHash=contractRecord.generateContractHash();
+        System.out.println("Generated Hash:\n" + generatedHash);
+        contractRecord.setNegotiationId("negotiationid");
+        String newGeneratedHash=contractRecord.generateContractHash();
+        System.out.println("Contract XML\n" + contractRecord);
+        System.out.println("Generated Hash:\n" + newGeneratedHash);
+        Assert.assertNotEquals(generatedHash, newGeneratedHash);
     }
 
 }

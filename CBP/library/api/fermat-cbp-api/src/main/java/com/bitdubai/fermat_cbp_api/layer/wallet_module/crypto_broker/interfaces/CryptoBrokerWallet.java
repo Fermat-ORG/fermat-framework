@@ -25,21 +25,6 @@ public interface CryptoBrokerWallet extends WalletManager {
     boolean associateIdentity(UUID brokerId);
 
     /**
-     * Cancel a current negotiation
-     *
-     * @param negotiation the negotiation ID
-     * @param reason      the reason to cancel
-     */
-    CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason);
-
-    /**
-     * Confirm the given negotiation to create a contract based on this negotiation
-     *
-     * @param negotiation the negotiation ID
-     */
-    CustomerBrokerNegotiationInformation confirmNegotiation(CustomerBrokerNegotiationInformation negotiation);
-
-    /**
      * @return a summary of the current market rate for the different currencies the broker have as stock
      */
     Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies() throws CantGetCurrentIndexSummaryForStockCurrenciesException;
