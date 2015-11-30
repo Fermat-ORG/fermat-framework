@@ -60,6 +60,7 @@ dependencies {
 
     compile 'javax:javaee-api:7.0'
     compile 'org.slf4j:slf4j-log4j12:1.7.13'
+    compile 'com.google.android:android:4.1.1.4'
 
    // compile 'org.xerial:sqlite-jdbc:3.7.2'
    // compile 'net.kemitix:sqlite-dialect:0.1.0'
@@ -145,9 +146,14 @@ task fatJar(type: Jar
             it.isDirectory() ? it : zipTree(it)
         }
     }
+    zip64 true
 
     with jar
 }
+
+
+
+
 
 
 check.mustRunAfter clean

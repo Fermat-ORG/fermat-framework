@@ -23,20 +23,13 @@ public interface AssetIssuerActorNetworkServiceManager extends FermatManager {
 
     /**
      *
-     * @param dapActor who send the message
-     * @param actorAssetIssuerDestination who recibe the message
+     * @param actorSender who send the message
+     * @param actorDestination who recibe the message
      * @param msjContent  the message content
      *
      * @throws CantSendMessageException
      */
-    public void sendMessage(DAPActor dapActor, ActorAssetIssuer actorAssetIssuerDestination, String msjContent)  throws CantSendMessageException;
-
-    /**
-     * Request the list of the actorAssetUser register in the server
-     *
-     * @throws CantRequestListActorAssetIssuerRegisteredException
-     */
-    public void requestListActorAssetIssuerRegistered()  throws CantRequestListActorAssetIssuerRegisteredException;
+    public void sendMessage(DAPActor actorSender, DAPActor actorDestination, String msjContent)  throws CantSendMessageException;
 
     /**
      * Get the content of the list previously requested, this method have to call after the

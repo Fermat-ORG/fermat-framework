@@ -626,7 +626,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                         //eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
                         break;
                     case DENIED:
-                        this.denyConnection(intraUserSendingPublicKey, intraUserToConnectPublicKey);
+                        this.denyConnection(intraUserToConnectPublicKey, intraUserSendingPublicKey);
                         break;
                     default:
                         break;

@@ -212,17 +212,17 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     getPluginVersionReference()
             );
 
+            /*
+             * Its all ok, set the new status
+             */
+            this.serviceStatus = ServiceStatus.STARTED;
+
 
         } catch(final CantInitializeDatabaseException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, "", "Problem initializing crypto broker ans dao.");
         }
-
-        /*
-         * Its all ok, set the new status
-         */
-        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     private CryptoBrokerActorNetworkServiceManager fermatManager;
@@ -577,7 +577,8 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                if(communicationNetworkServiceConnectionManager != null)
+                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
             }
 
@@ -594,7 +595,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             this.register = false;
-            communicationNetworkServiceConnectionManager.closeAllConnection();
+
+            if(communicationNetworkServiceConnectionManager != null)
+                communicationNetworkServiceConnectionManager.closeAllConnection();
         }
 
     }

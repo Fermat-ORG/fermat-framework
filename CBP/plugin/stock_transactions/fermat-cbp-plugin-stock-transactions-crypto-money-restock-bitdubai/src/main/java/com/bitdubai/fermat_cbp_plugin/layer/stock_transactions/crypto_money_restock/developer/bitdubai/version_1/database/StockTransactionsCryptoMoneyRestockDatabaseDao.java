@@ -81,7 +81,7 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CONCEPT_COLUMN_NAME, cryptoMoneyTransaction.getConcept());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME, cryptoMoneyTransaction.getTimeStamp().toString());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_MEMO_COLUMN_NAME, cryptoMoneyTransaction.getMemo());
-        record.setFloatValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_MEMO_COLUMN_NAME, cryptoMoneyTransaction.getAmount());
+        record.setFloatValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_AMOUNT_COLUMN_NAME, cryptoMoneyTransaction.getAmount());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cryptoMoneyTransaction.getTransactionStatus().getCode());
 
         return record;

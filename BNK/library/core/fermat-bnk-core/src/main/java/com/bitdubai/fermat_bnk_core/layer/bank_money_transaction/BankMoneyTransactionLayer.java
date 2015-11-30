@@ -14,7 +14,7 @@ import com.bitdubai.fermat_bnk_core.layer.bank_money_transaction.unhold.UnholdBa
 public class BankMoneyTransactionLayer extends AbstractLayer {
 
     public BankMoneyTransactionLayer() {
-        super(Layers.TRANSACTION);
+        super(Layers.BANK_MONEY_TRANSACTION);
     }
 
     @Override

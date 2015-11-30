@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_csh_core.layer.cash_money_transaction.hold.HoldPluginSubsystem;
+import com.bitdubai.fermat_csh_core.layer.cash_money_transaction.unhold.UnholdPluginSubsystem;
 
 /**
  * Created by Alejandro Bicelis on 11/25/2015.
@@ -13,13 +14,14 @@ import com.bitdubai.fermat_csh_core.layer.cash_money_transaction.hold.HoldPlugin
 public class CashMoneyTransactionLayer extends AbstractLayer {
 
     public CashMoneyTransactionLayer() {
-        super(Layers.TRANSACTION);
+        super(Layers.CASH_MONEY_TRANSACTION);
     }
 
     public void start() throws CantStartLayerException {
 
         try {
             registerPlugin(new HoldPluginSubsystem());
+            registerPlugin(new UnholdPluginSubsystem());
 
         } catch (CantRegisterPluginException e) {
 

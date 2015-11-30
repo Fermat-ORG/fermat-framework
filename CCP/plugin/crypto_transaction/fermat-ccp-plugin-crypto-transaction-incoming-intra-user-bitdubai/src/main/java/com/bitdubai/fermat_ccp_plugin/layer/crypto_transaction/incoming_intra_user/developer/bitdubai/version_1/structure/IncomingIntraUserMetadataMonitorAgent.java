@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantSetToSeenByCryptoVaultException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.EventWrapper;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserMetadataSourceAdministrator;
@@ -175,13 +176,23 @@ public class IncomingIntraUserMetadataMonitorAgent {
                         source.confirmReception(transaction.getTransactionID());
                         System.out.println("TTF - INTRA USER MONITOR METADATA: TRANSACTION RESPONSIBILITY ACQUIRED");
                         registry.acquireFermatCryptoTransactionResponsibility(transaction);
+
+                        //notified Transmission NS that transaction Seen By Vault
+                        cryptoTransmissionNetworkServiceManager.informTransactionSeenByVault(transaction.getTransactionID());
+
                     } catch (CantConfirmTransactionException | com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantAcquireResponsibilityException exception) {
                         // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
                         //       la transacción
                         // We will inform the exception and try again in the next round
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                     }
+                    catch(CantSetToSeenByCryptoVaultException e){
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+
+                    }
                 }
+
+
 
                 registry.disableEvent(eventWrapper.getEventId());
                 System.out.println("TTF - INTRA USER METADATA MONITOR: EVENT DISABLED");

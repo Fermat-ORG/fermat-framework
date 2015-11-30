@@ -169,7 +169,8 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
                     this.errorManager,
                     this.pluginId,
                     this.pluginDatabaseSystem,
-                    this.pluginFileSystem);
+                    this.pluginFileSystem,
+                    this.bitcoinNetworkManager);
             this.assetDistributionTransactionManager.setAssetVaultManager(assetVaultManager);
             this.assetDistributionTransactionManager.setDigitalAssetDistributionVault(this.digitalAssetDistributionVault);
             this.assetDistributionTransactionManager.setAssetDistributionDatabaseDao(assetDistributionDao);

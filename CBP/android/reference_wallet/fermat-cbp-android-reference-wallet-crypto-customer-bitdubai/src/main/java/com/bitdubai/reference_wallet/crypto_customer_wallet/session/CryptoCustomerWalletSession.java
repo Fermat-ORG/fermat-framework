@@ -59,6 +59,11 @@ public class CryptoCustomerWalletSession extends AbstractFermatSession<Installed
         data.put(key, object);
     }
 
+    @Override
+    public String getIdentityConnection() {
+        return null;
+    }
+
     /**
      * Return the data referenced by the key
      *

@@ -183,7 +183,7 @@ public class WalletDesktopFragment extends Fragment {
             switch (installedWallet.getIcon()) {
 
                 case "crypto_broker":
-                    holder.imageView.setImageResource(R.drawable.crypto_broker_wallet_icon);
+                    holder.imageView.setImageResource(R.drawable.crypto_broker_wallet);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     linearLayout.setTag("WalletBitcoinActivity|4");
 
@@ -209,7 +209,7 @@ public class WalletDesktopFragment extends Fragment {
 
                     break;
                 case "crypto_customer":
-                    holder.imageView.setImageResource(R.drawable.crypto_customer_wallet_icon);
+                    holder.imageView.setImageResource(R.drawable.crypto_customer_wallet);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     linearLayout.setTag("WalletBitcoinActivity|4");
 

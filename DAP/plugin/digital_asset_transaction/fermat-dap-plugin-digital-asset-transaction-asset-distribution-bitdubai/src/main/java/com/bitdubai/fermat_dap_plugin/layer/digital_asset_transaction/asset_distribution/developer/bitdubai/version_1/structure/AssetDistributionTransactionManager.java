@@ -37,7 +37,8 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
                                                ErrorManager errorManager,
                                                UUID pluginId,
                                                PluginDatabaseSystem pluginDatabaseSystem,
-                                               PluginFileSystem pluginFileSystem) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+                                               PluginFileSystem pluginFileSystem,
+                                               BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
         setAssetVaultManager(assetVaultManager);
         setPluginId(pluginId);
         setPluginDatabaseSystem(pluginDatabaseSystem);
@@ -45,7 +46,8 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         this.digitalAssetDistributor=new DigitalAssetDistributor(/*assetVaultManager,*/
                 errorManager,
                 pluginId,
-                pluginFileSystem);
+                pluginFileSystem,
+                bitcoinNetworkManager);
         this.digitalAssetDistributor.setAssetVaultManager(assetVaultManager);
     }
 
