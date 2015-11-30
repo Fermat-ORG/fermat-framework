@@ -15,35 +15,43 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUserInformationHolder> {
-        
-        
-        public AppListAdapter(Context context) {
-            super(context);
-        }
 
-        public AppListAdapter(Context context, List<IntraUserInformation> dataSet) {
-            super(context, dataSet);
-        }
 
-        @Override
-        protected IntraUserInformationHolder createHolder(View itemView, int type) {
-            return new IntraUserInformationHolder(itemView);
-        }
-
-        @Override
-        protected int getCardViewResource() {
-            return R.layout.world_frament_row;
-        }
-
-        @Override
-        protected void bindHolder(IntraUserInformationHolder holder, IntraUserInformation data, int position) {
-
-            holder.name.setText(data.getName());
-            byte[] profileImage = data.getProfileImage();
-            if (profileImage != null) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-                holder.thumbnail.setImageBitmap(bitmap);
-            }
-        }
-
+    public AppListAdapter(Context context) {
+        super(context);
     }
+
+    public AppListAdapter(Context context, List<IntraUserInformation> dataSet) {
+        super(context, dataSet);
+    }
+
+    @Override
+    protected IntraUserInformationHolder createHolder(View itemView, int type) {
+        return new IntraUserInformationHolder(itemView);
+    }
+
+    @Override
+    protected int getCardViewResource() {
+        return R.layout.world_frament_row;
+    }
+
+    @Override
+    protected void bindHolder(IntraUserInformationHolder holder, IntraUserInformation data, int position) {
+
+        holder.name.setText(data.getName());
+        /*if (!data.getCity().isEmpty())
+            holder.city.setText(data.getCity());
+        else
+            holder.city.setText("");
+        if (!data.getCountry().isEmpty())
+            holder.country.setText(data.getCountry());
+        else
+            holder.country.setText("");*/
+        byte[] profileImage = data.getProfileImage();
+        if (profileImage != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+            holder.thumbnail.setImageBitmap(bitmap);
+        }
+    }
+
+}
