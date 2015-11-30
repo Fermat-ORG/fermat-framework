@@ -211,18 +211,18 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
      * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeleteDigitalAssetFromLocalStorageException
      */
     public void deleteDigitalAssetMetadataFromLocalStorage(String internalId) throws CantDeleteDigitalAssetFromLocalStorageException {
-        String digitalAssetMetadataFileName = "no-file-name-assigned";
-        try {
-            digitalAssetMetadataFileName = internalId + ".xml";
-            PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, this.LOCAL_STORAGE_PATH + "digital-asset-metadata", digitalAssetMetadataFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
-            digitalAssetMetadataFile.delete();
-        } catch (FileNotFoundException exception) {
-            throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage", "Cannot find " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
-        } catch (CantCreateFileException exception) {
-            throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage", "Cannot create " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
-        } catch (Exception exception) {
-            throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage", "Unexpected exception getting '" + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
-        }
+//        String digitalAssetMetadataFileName = "no-file-name-assigned";
+//        try {
+//            digitalAssetMetadataFileName = internalId + ".xml";
+//            PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, this.LOCAL_STORAGE_PATH + "digital-asset-metadata", digitalAssetMetadataFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
+//            digitalAssetMetadataFile.delete();
+//        } catch (FileNotFoundException exception) {
+//            throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage", "Cannot find " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+//        } catch (CantCreateFileException exception) {
+//            throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage", "Cannot create " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+//        } catch (Exception exception) {
+//            throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage", "Unexpected exception getting '" + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+//        }
     }
 
     public void setDigitalAssetLocalFilePath(String digitalAssetFileStoragePath) {
