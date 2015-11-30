@@ -19,6 +19,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restoc
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.utils.CashTransactionParametersWrapper;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.utils.WalletTransactionWrapper;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantCreateHoldTransactionException;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantGetHoldTransactionException;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionManager;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.exceptions.CantCreateUnholdTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionManager;
@@ -42,17 +45,17 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent{
     private final ErrorManager errorManager;
     private final StockTransactionCashMoneyRestockManager stockTransactionCashMoneyRestockManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
-    private final CashUnholdTransactionManager cashUnHoldTransactionManager;
+    private final CashHoldTransactionManager cashHoldTransactionManager;
 
     public StockTransactionsCashMoneyRestockMonitorAgent(ErrorManager errorManager,
                                                          StockTransactionCashMoneyRestockManager stockTransactionCashMoneyRestockManager,
                                                          CryptoBrokerWalletManager cryptoBrokerWalletManager,
-                                                         CashUnholdTransactionManager cashUnHoldTransactionManager) {
+                                                         CashHoldTransactionManager cashHoldTransactionManager) {
 
         this.errorManager                            = errorManager;
         this.stockTransactionCashMoneyRestockManager = stockTransactionCashMoneyRestockManager;
         this.cryptoBrokerWalletManager               = cryptoBrokerWalletManager;
-        this.cashUnHoldTransactionManager              = cashUnHoldTransactionManager;
+        this.cashHoldTransactionManager              = cashHoldTransactionManager;
     }
     @Override
     public void start() throws CantStartAgentException {
@@ -136,8 +139,8 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent{
                                 cashMoneyTransaction.getCashReference(),
                                 cashMoneyTransaction.getMemo());
                         //"pluginId");
-                        cashUnHoldTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
-                        CashTransactionStatus castTransactionStatus =  cashUnHoldTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
+                        cashHoldTransactionManager.createCashHoldTransaction(cashTransactionParametersWrapper);
+                        CashTransactionStatus castTransactionStatus =  cashHoldTransactionManager.getCashHoldTransactionStatus(cashMoneyTransaction.getTransactionId());
                         if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode())
                         {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
@@ -184,15 +187,15 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent{
                 }
             }
         } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (MissingCashMoneyRestockDataException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-        } catch (CantGetUnholdTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-        } catch (CantCreateUnholdTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantGetHoldTransactionException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantCreateHoldTransactionException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 }

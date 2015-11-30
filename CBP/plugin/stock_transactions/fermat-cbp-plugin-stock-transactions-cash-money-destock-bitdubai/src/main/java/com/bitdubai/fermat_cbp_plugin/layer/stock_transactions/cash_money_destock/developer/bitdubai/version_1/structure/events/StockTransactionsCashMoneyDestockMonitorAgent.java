@@ -23,6 +23,9 @@ import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.excepti
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantGetHoldTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionManager;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionParameters;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.exceptions.CantCreateUnholdTransactionException;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
@@ -43,17 +46,17 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
     private final ErrorManager errorManager;
     private final StockTransactionCashMoneyDestockManager stockTransactionCashMoneyDestockManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
-    private final CashHoldTransactionManager cashHoldTransactionManager;
+    private final CashUnholdTransactionManager cashUnholdTransactionManager;
 
     public StockTransactionsCashMoneyDestockMonitorAgent(ErrorManager errorManager,
                                                          StockTransactionCashMoneyDestockManager stockTransactionCashMoneyDestockManager,
                                                          CryptoBrokerWalletManager cryptoBrokerWalletManager,
-                                                         CashHoldTransactionManager cashHoldTransactionManager) {
+                                                         CashUnholdTransactionManager cashUnholdTransactionManager) {
 
         this.errorManager                            = errorManager;
         this.stockTransactionCashMoneyDestockManager = stockTransactionCashMoneyDestockManager;
         this.cryptoBrokerWalletManager               = cryptoBrokerWalletManager;
-        this.cashHoldTransactionManager              = cashHoldTransactionManager;
+        this.cashUnholdTransactionManager            = cashUnholdTransactionManager;
     }
     @Override
     public void start() throws CantStartAgentException {
@@ -168,8 +171,8 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                                 cashMoneyTransaction.getCashReference(),
                                 cashMoneyTransaction.getMemo());
                                 //"pluginId");
-                        cashHoldTransactionManager.createCashHoldTransaction(cashTransactionParametersWrapper);
-                        CashTransactionStatus castTransactionStatus =  cashHoldTransactionManager.getCashHoldTransactionStatus(cashMoneyTransaction.getTransactionId());
+                        cashUnholdTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
+                        CashTransactionStatus castTransactionStatus =  cashUnholdTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
                         if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode())
                         {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
@@ -189,9 +192,9 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
             errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         } catch (MissingCashMoneyDestockDataException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-        } catch (CantCreateHoldTransactionException e) {
+        } catch (CantCreateUnholdTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-        } catch (CantGetHoldTransactionException e) {
+        } catch (CantGetUnholdTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
         }
     }
