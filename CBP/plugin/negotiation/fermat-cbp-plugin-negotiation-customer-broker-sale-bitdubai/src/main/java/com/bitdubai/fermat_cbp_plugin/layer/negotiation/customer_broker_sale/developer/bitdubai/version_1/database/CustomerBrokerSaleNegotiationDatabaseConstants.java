@@ -35,6 +35,7 @@ public class CustomerBrokerSaleNegotiationDatabaseConstants {
     static final String CLAUSES_SALE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME = "crypto_customer_public_key";
     static final String CLAUSES_SALE_TYPE_COLUMN_NAME = "type";
     static final String CLAUSES_SALE_VALUE_COLUMN_NAME = "value";
+    static final String CLAUSES_SALE_STATUS_COLUMN_NAME = "status";
     static final String CLAUSES_SALE_PROPOSED_BY_COLUMN_NAME = "proposed_by";
     static final String CLAUSES_SALE_INDEX_ORDER_COLUMN_NAME = "index_order";
 

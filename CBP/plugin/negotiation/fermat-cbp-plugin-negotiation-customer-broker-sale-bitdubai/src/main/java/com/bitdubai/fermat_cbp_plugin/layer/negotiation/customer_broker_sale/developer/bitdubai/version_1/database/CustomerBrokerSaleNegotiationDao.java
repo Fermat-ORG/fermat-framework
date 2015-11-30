@@ -19,11 +19,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationClauseManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantAddNewClausesException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleClause;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleNegotiationInformation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -201,7 +204,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             SaleNegotiationTable.clearAllFilters();
             Collection<CustomerBrokerSaleNegotiation> resultados = new ArrayList<>();
             for (DatabaseTableRecord record : records) {
-                resultados.add(constructCustomerBrokerPurchaseFromRecord(record));
+                resultados.add(constructCustomerBrokerSaleFromRecord(record));
             }
             return resultados;
         } catch (CantLoadTableToMemoryException e) {
@@ -222,7 +225,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             SaleNegotiationTable.clearAllFilters();
             Collection<CustomerBrokerSaleNegotiation> resultados = new ArrayList<>();
             for (DatabaseTableRecord record : records) {
-                resultados.add(constructCustomerBrokerPurchaseFromRecord(record));
+                resultados.add(constructCustomerBrokerSaleFromRecord(record));
             }
             return resultados;
         } catch (InvalidParameterException e) {
@@ -243,7 +246,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             SaleNegotiationTable.clearAllFilters();
             Collection<CustomerBrokerSaleNegotiation> resultados = new ArrayList<>();
             for (DatabaseTableRecord record : records) {
-                resultados.add(constructCustomerBrokerPurchaseFromRecord(record));
+                resultados.add(constructCustomerBrokerSaleFromRecord(record));
             }
             return resultados;
         } catch (InvalidParameterException e) {
@@ -269,7 +272,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             PurchaseClauseTable.clearAllFilters();
             Collection<Clause> resultados = new ArrayList<>();
             for (DatabaseTableRecord record : records) {
-                resultados.add(constructCustomerBrokerPurchaseClauseFromRecord(record));
+                resultados.add(constructCustomerBrokerSaleClauseFromRecord(record));
             }
             return resultados;
         } catch (CantLoadTableToMemoryException e) {
@@ -319,16 +322,16 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
         );
     }
 
-    private CustomerBrokerSaleNegotiation constructCustomerBrokerPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException, CantGetListClauseException {
+    private CustomerBrokerSaleNegotiation constructCustomerBrokerSaleFromRecord(DatabaseTableRecord record) throws InvalidParameterException, CantGetListClauseException {
         UUID    negotiationId     = record.getUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME);
         String  publicKeyCustomer = record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         String  publicKeyBroker   = record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
-        long    startDataTime     = record.getLongValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATETIME_COLUMN_NAME);
+        long    startDataTime     = record.getLongValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME);
         NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
         return newCustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation, getClauses(negotiationId));
     }
 
-    private CustomerBrokerPurchaseClause newCustomerBrokerPurchaseClause(
+    private CustomerBrokerSaleClause newCustomerBrokerSaleClause(
             UUID            clauseId,
             ClauseType      type,
             String          value,
@@ -336,16 +339,16 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             String          proposedBy,
             short           indexOrder
     ){
-        return new CustomerBrokerPurchaseClause(clauseId, type, value, status, proposedBy, indexOrder);
+        return new CustomerBrokerSaleClause(clauseId, type, value, status, proposedBy, indexOrder);
     }
 
-    private CustomerBrokerPurchaseClause constructCustomerBrokerPurchaseClauseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
+    private CustomerBrokerSaleClause constructCustomerBrokerSaleClauseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
         UUID            clauseId            = record.getUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CLAUSE_ID_COLUMN_NAME);
         ClauseType      type                = ClauseType.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TYPE_COLUMN_NAME));
         String          value               = record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_VALUE_COLUMN_NAME);
         ClauseStatus    status              = ClauseStatus.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME));
         String          proposedBy          = record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_PROPOSED_BY_COLUMN_NAME);
         int             indexOrder          = record.getIntegerValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_INDEX_ORDER_COLUMN_NAME);
-        return newCustomerBrokerPurchaseClause(clauseId, type, value, status, proposedBy, (short) indexOrder);
+        return newCustomerBrokerSaleClause(clauseId, type, value, status, proposedBy, (short) indexOrder);
     }
 }

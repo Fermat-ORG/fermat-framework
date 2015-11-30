@@ -140,6 +140,7 @@ public class CustomerBrokerSaleNegotiationDeveloperDatabaseFactory implements De
         clausesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         clausesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TYPE_COLUMN_NAME);
         clausesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_VALUE_COLUMN_NAME);
+        clausesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME);
         clausesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_PROPOSED_BY_COLUMN_NAME);
         clausesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_INDEX_ORDER_COLUMN_NAME);
         /**

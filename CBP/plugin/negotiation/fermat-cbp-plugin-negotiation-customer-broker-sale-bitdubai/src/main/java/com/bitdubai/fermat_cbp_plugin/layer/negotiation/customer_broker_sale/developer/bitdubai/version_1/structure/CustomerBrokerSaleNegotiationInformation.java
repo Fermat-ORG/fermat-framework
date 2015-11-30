@@ -3,8 +3,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.de
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDao;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -20,23 +18,22 @@ public class CustomerBrokerSaleNegotiationInformation implements CustomerBrokerS
     private final String publicKeyBroker;
     private final long   startDataTime;
     private NegotiationStatus statusNegotiation;
-
-    private CustomerBrokerSaleNegotiationDao customerBrokerSaleNegotiationDao;
+    private final Collection<Clause> clauses;
 
     public CustomerBrokerSaleNegotiationInformation(
-            UUID negotiationId,
+            UUID   negotiationId,
             String publicKeyCustomer,
             String publicKeyBroker,
             long startDataTime,
             NegotiationStatus statusNegotiation,
-            CustomerBrokerSaleNegotiationDao customerBrokerSaleNegotiationDao
+            Collection<Clause> clauses
     ){
         this.negotiationId = negotiationId;
         this.publicKeyCustomer = publicKeyCustomer;
         this.publicKeyBroker = publicKeyBroker;
         this.startDataTime = startDataTime;
         this.statusNegotiation = statusNegotiation;
-        this.customerBrokerSaleNegotiationDao = customerBrokerSaleNegotiationDao;
+        this.clauses = clauses;
     }
 
     @Override
@@ -65,128 +62,9 @@ public class CustomerBrokerSaleNegotiationInformation implements CustomerBrokerS
     }
 
     @Override
-    public Collection<Clause> getClauses() throws CantGetListClauseException {
-        return this.customerBrokerSaleNegotiationDao.getClauses(this.negotiationId);
+    public Collection<Clause> getClauses() {
+        return this.clauses;
     }
 
-    /*
-    @Override
-    public Clause addNewBrokerClause(ClauseType type, String value) throws CantAddNewClausesException {
-        return this.customerBrokerSaleNegotiationDao.addNewClause(this.negotiationId, type, value, this.getBrokerPublicKey());
-    }
 
-    @Override
-    public Clause addNewCustomerClause(ClauseType type, String value) throws CantAddNewClausesException {
-        return this.customerBrokerSaleNegotiationDao.addNewClause(this.negotiationId, type, value, this.getCustomerPublicKey());
-    }
-
-    @Override
-    public Clause modifyClause(Clause clause, String value) throws CantUpdateClausesException {
-        Clause clauseRejected = modifyClauseStatus(clause, ClauseStatus.REJECTED);
-
-        if( clause.getType() == ClauseType.BROKER_PAYMENT_METHOD ){
-            try {
-                ClauseType type = getNextClauseTypeByCurrencyType( CurrencyType.getByCode(clause.getValue() ) );
-
-                switch (type){
-                    case BROKER_CRYPTO_ADDRESS:
-                        rejectClauseByType(ClauseType.BROKER_CRYPTO_ADDRESS);
-
-                    case BROKER_BANK:
-                        rejectClauseByType(ClauseType.CUSTOMER_BANK);
-                        rejectClauseByType(ClauseType.CUSTOMER_BANK_ACCOUNT);
-
-                    case PLACE_TO_MEET:
-                        rejectClauseByType(ClauseType.PLACE_TO_MEET);
-                        rejectClauseByType(ClauseType.DATE_TIME_TO_MEET);
-
-                    case BROKER_PLACE_TO_DELIVER:
-                        rejectClauseByType(ClauseType.BROKER_PLACE_TO_DELIVER);
-                        rejectClauseByType(ClauseType.BROKER_DATE_TIME_TO_DELIVER);
-
-                }
-
-            } catch (CantGetNextClauseTypeException e) {
-                throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        try {
-            if (clause.getProposedBy() == this.getBrokerPublicKey()){
-                return addNewBrokerClause(clauseRejected.getType(), value);
-            }else{
-                return addNewCustomerClause(clauseRejected.getType(), value);
-            }
-        } catch (CantAddNewClausesException e) {
-            throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
-        }
-    }
-
-    @Override
-    public Clause modifyClauseStatus(Clause clause, ClauseStatus status) throws CantUpdateClausesException {
-        return this.customerBrokerSaleNegotiationDao.modifyClauseStatus(this.negotiationId, clause, status);
-    }
-
-    @Override
-    public void rejectClauseByType(ClauseType type) throws CantUpdateClausesException {
-        this.customerBrokerSaleNegotiationDao.rejectClauseByType(this.negotiationId, type);
-    }
-
-    @Override
-    public ClauseType getNextClauseType() throws CantGetNextClauseTypeException {
-        try {
-            ClauseType type = this.customerBrokerSaleNegotiationDao.getNextClauseType(this.negotiationId);
-
-            switch (type) {
-                case BROKER_CURRENCY:
-                    return ClauseType.EXCHANGE_RATE;
-
-                case EXCHANGE_RATE:
-                    return ClauseType.BROKER_CURRENCY_QUANTITY;
-
-                case BROKER_CURRENCY_QUANTITY:
-                    return ClauseType.BROKER_PAYMENT_METHOD;
-
-                case BROKER_PAYMENT_METHOD:
-                    CurrencyType paymentMethod = CurrencyType.getByCode(this.customerBrokerSaleNegotiationDao.getPaymentMethod(this.negotiationId));
-                    return getNextClauseTypeByCurrencyType(paymentMethod);
-
-                case BROKER_BANK:
-                    return ClauseType.BROKER_BANK_ACCOUNT;
-
-                case PLACE_TO_MEET:
-                    return ClauseType.DATE_TIME_TO_MEET;
-
-                case BROKER_PLACE_TO_DELIVER:
-                    return ClauseType.BROKER_DATE_TIME_TO_DELIVER;
-
-                default:
-                    throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
-            }
-        } catch (InvalidParameterException e) {
-            throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
-        }
-    }
-
-    private ClauseType getNextClauseTypeByCurrencyType(CurrencyType paymentMethod) throws CantGetNextClauseTypeException {
-        switch (paymentMethod) {
-            case CRYPTO_MONEY:
-                return ClauseType.BROKER_CRYPTO_ADDRESS;
-
-            case BANK_MONEY:
-                return ClauseType.BROKER_BANK;
-
-            case CASH_ON_HAND_MONEY:
-                return ClauseType.PLACE_TO_MEET;
-
-            case CASH_DELIVERY_MONEY:
-                return ClauseType.BROKER_PLACE_TO_DELIVER;
-
-            default:
-                throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
-        }
-    }
-    */
 }

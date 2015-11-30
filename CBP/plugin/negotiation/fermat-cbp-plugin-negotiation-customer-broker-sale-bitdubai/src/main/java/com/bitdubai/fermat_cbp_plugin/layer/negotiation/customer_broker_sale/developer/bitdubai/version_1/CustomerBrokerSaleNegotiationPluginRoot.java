@@ -1,35 +1,24 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
@@ -37,11 +26,11 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.except
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetNextClauseTypeException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
@@ -54,6 +43,7 @@ import java.util.UUID;
 
 /**
  * Created by jorge on 12-10-2015.
+ * Update by Angel on 30/11/2015
  */
 public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin implements CustomerBrokerSaleNegotiationManager, DatabaseManagerForDevelopers {
 
@@ -101,13 +91,13 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
             CustomerBrokerSaleNegotiationDeveloperDatabaseFactory dbFactory = new CustomerBrokerSaleNegotiationDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
             return dbFactory.getDatabaseList(developerObjectFactory);
         }
-    
+
         @Override
         public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
             CustomerBrokerSaleNegotiationDeveloperDatabaseFactory dbFactory = new CustomerBrokerSaleNegotiationDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
             return dbFactory.getDatabaseTableList(developerObjectFactory);
         }
-    
+
         @Override
         public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
             try {
@@ -125,35 +115,107 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
     */
 
         @Override
-        public CustomerBrokerSaleNegotiation createNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerSaleNegotiationException {
-            return customerBrokerSaleNegotiationDao.createCustomerBrokerSaleNegotiation(publicKeyCustomer, publicKeyBroker);
+        public void createCustomerBrokerSaleNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantCreateCustomerBrokerSaleNegotiationException {
+            this.customerBrokerSaleNegotiationDao.createCustomerBrokerSaleNegotiation(negotiation);
+        }
+
+        @Override
+        public void updateCustomerBrokerSaleNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+            this.customerBrokerSaleNegotiationDao.updateCustomerBrokerSaleNegotiation(negotiation);
         }
 
         @Override
         public void cancelNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+            this.customerBrokerSaleNegotiationDao.cancelNegotiation(negotiation);
+        }
+
+        @Override
+        public boolean closeNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
             try {
-                customerBrokerSaleNegotiationDao.cancelNegotiation(negotiation);
-            } catch (CantUpdateCustomerBrokerSaleException e) {
+                if(verifyStatusClause(negotiation.getClauses())) {
+                    this.customerBrokerSaleNegotiationDao.closeNegotiation(negotiation);
+                    return true;
+                }
+                return false;
+            } catch (CantGetListClauseException e) {
                 throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
         @Override
-        public void closeNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
-            try {
+        public void sendToBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+            this.customerBrokerSaleNegotiationDao.sendToBroker(negotiation);
+        }
 
-                if(verifyStatusClause(customerBrokerSaleNegotiationDao.getClauses(negotiation.getNegotiationId()))){
-                    customerBrokerSaleNegotiationDao.closeNegotiation(negotiation);
-                }else{
-                    throw new CantUpdateCustomerBrokerSaleException();
-                }
+        @Override
+        public void waitForBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+            this.customerBrokerSaleNegotiationDao.waitForBroker(negotiation);
+        }
 
-            } catch (CantGetListClauseException e) {
-                throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
-            } catch (CantUpdateCustomerBrokerSaleException e){
-                throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
+        @Override
+        public Collection<CustomerBrokerSaleNegotiation> getNegotiations() throws CantGetListSaleNegotiationsException {
+            return this.customerBrokerSaleNegotiationDao.getNegotiations();
+        }
+
+        @Override
+        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByContractId(UUID negotiationId) throws CantGetListSaleNegotiationsException {
+            return this.customerBrokerSaleNegotiationDao.getNegotiationsByContractId(negotiationId);
+        }
+
+        @Override
+        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByStatus(NegotiationStatus status) throws CantGetListSaleNegotiationsException {
+            return this.customerBrokerSaleNegotiationDao.getNegotiations(status);
+        }
+
+        @Override
+        public ClauseType getNextClauseType(ClauseType type) throws CantGetNextClauseTypeException {
+            switch (type) {
+                case BROKER_CURRENCY:
+                    return ClauseType.EXCHANGE_RATE;
+
+                case EXCHANGE_RATE:
+                    return ClauseType.BROKER_CURRENCY_QUANTITY;
+
+                case BROKER_CURRENCY_QUANTITY:
+                    return ClauseType.BROKER_PAYMENT_METHOD;
+
+                case BROKER_BANK:
+                    return ClauseType.BROKER_BANK_ACCOUNT;
+
+                case PLACE_TO_MEET:
+                    return ClauseType.DATE_TIME_TO_MEET;
+
+                case BROKER_PLACE_TO_DELIVER:
+                    return ClauseType.BROKER_DATE_TIME_TO_DELIVER;
+
+                default:
+                    throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
             }
         }
+
+        @Override
+        public ClauseType getNextClauseTypeByCurrencyType(CurrencyType paymentMethod) throws CantGetNextClauseTypeException {
+            switch (paymentMethod) {
+                case CRYPTO_MONEY:
+                    return ClauseType.BROKER_CRYPTO_ADDRESS;
+
+                case BANK_MONEY:
+                    return ClauseType.BROKER_BANK;
+
+                case CASH_ON_HAND_MONEY:
+                    return ClauseType.PLACE_TO_MEET;
+
+                case CASH_DELIVERY_MONEY:
+                    return ClauseType.BROKER_PLACE_TO_DELIVER;
+
+                default:
+                    throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
+            }
+        }
+
+    /*
+    *   Private Methods
+    * */
 
         private boolean verifyStatusClause(Collection<Clause> clausules) throws CantUpdateCustomerBrokerSaleException {
             Map<ClauseType, String> clausesAgreed = new HashMap<ClauseType, String>();
@@ -166,10 +228,10 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
 
             if(
                     ( !clausesAgreed.containsKey(ClauseType.BROKER_CURRENCY) ) &&
-                    ( !clausesAgreed.containsKey(ClauseType.EXCHANGE_RATE) ) &&
-                    ( !clausesAgreed.containsKey(ClauseType.BROKER_CURRENCY_QUANTITY) ) &&
-                    ( !clausesAgreed.containsKey(ClauseType.BROKER_PAYMENT_METHOD) )
-            ){
+                            ( !clausesAgreed.containsKey(ClauseType.EXCHANGE_RATE) ) &&
+                            ( !clausesAgreed.containsKey(ClauseType.BROKER_CURRENCY_QUANTITY) ) &&
+                            ( !clausesAgreed.containsKey(ClauseType.BROKER_PAYMENT_METHOD) )
+                    ){
                 return false;
             }
 
@@ -182,8 +244,8 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
             if( clausesAgreed.containsValue(CurrencyType.BANK_MONEY.getCode()) ){
                 if(
                         ( !clausesAgreed.containsKey(ClauseType.BROKER_BANK) ) &&
-                        ( !clausesAgreed.containsKey(ClauseType.BROKER_BANK_ACCOUNT) )
-                ){
+                                ( !clausesAgreed.containsKey(ClauseType.BROKER_BANK_ACCOUNT) )
+                        ){
                     return false;
                 }
             }
@@ -191,8 +253,8 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
             if( clausesAgreed.containsValue(CurrencyType.CASH_ON_HAND_MONEY.getCode()) ){
                 if(
                         ( !clausesAgreed.containsKey(ClauseType.PLACE_TO_MEET) ) &&
-                        ( !clausesAgreed.containsKey(ClauseType.DATE_TIME_TO_MEET) )
-                 ){
+                                ( !clausesAgreed.containsKey(ClauseType.DATE_TIME_TO_MEET) )
+                        ){
                     return false;
                 }
             }
@@ -200,75 +262,12 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
             if( clausesAgreed.containsValue(CurrencyType.CASH_DELIVERY_MONEY.getCode()) ){
                 if(
                         ( !clausesAgreed.containsKey(ClauseType.BROKER_PLACE_TO_DELIVER) ) &&
-                        ( !clausesAgreed.containsKey(ClauseType.BROKER_DATE_TIME_TO_DELIVER) )
-                ){
+                                ( !clausesAgreed.containsKey(ClauseType.BROKER_DATE_TIME_TO_DELIVER) )
+                        ){
                     return false;
                 }
             }
 
             return true;
         }
-
-        @Override
-        public CustomerBrokerSaleNegotiation sendToCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
-            return customerBrokerSaleNegotiationDao.sendToCustomer(negotiation);
-        }
-
-        @Override
-        public CustomerBrokerSaleNegotiation waitForCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
-            return customerBrokerSaleNegotiationDao.waitForCustomer(negotiation);
-        }
-
-        @Override
-        public Collection<CustomerBrokerSaleNegotiation> getNegotiations() throws CantGetListSaleNegotiationsException {
-            try {
-                Collection<CustomerBrokerSaleNegotiation> negotiations = new ArrayList<CustomerBrokerSaleNegotiation>();
-                negotiations = customerBrokerSaleNegotiationDao.getNegotiations();
-                return negotiations;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        @Override
-        public Collection<CustomerBrokerSaleNegotiation> getNegotiations(NegotiationStatus status) throws CantGetListSaleNegotiationsException {
-            try {
-                Collection<CustomerBrokerSaleNegotiation> negotiations = new ArrayList<CustomerBrokerSaleNegotiation>();
-                negotiations = customerBrokerSaleNegotiationDao.getNegotiations(status);
-                return negotiations;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        @Override
-        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByCustomer(ActorIdentity customer) throws CantGetListSaleNegotiationsException {
-            try {
-                Collection<CustomerBrokerSaleNegotiation> negotiations = new ArrayList<CustomerBrokerSaleNegotiation>();
-                negotiations = customerBrokerSaleNegotiationDao.getNegotiationsByCustomer(customer);
-                return negotiations;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        @Override
-        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByBroker(ActorIdentity broker) throws CantGetListSaleNegotiationsException {
-            try {
-                Collection<CustomerBrokerSaleNegotiation> negotiations = new ArrayList<CustomerBrokerSaleNegotiation>();
-                negotiations = customerBrokerSaleNegotiationDao.getNegotiationsByBroker(broker);
-                return negotiations;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
 }
