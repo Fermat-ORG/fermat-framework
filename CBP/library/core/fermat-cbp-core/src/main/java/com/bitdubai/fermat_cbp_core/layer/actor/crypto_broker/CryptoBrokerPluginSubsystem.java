@@ -4,10 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.DeveloperBitDubai;
 
 /**
- * Created by Yordin Alayn on 22.11/15.
+ * Created by Angel on 22.11/15.
  */
 public class CryptoBrokerPluginSubsystem extends AbstractPluginSubsystem {
 
