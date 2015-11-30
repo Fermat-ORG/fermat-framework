@@ -18,6 +18,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private static final int HASH_PRIME_NUMBER_ADD = 7213;
 
     private UUID transactionId;
+//    private UUID contractId;
     private KeyPair walletKeyPair;
     private String ownerPublicKey;
     private BalanceType balanceType;
@@ -32,6 +33,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
 
     public CryptoBrokerStockTransactionRecordImpl(
             UUID transactionId,
+//            UUID contractId,
             KeyPair walletKeyPair,
             String ownerPublicKey,
             BalanceType balanceType,
@@ -45,22 +47,32 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             String memo
     ){
         this.transactionId = transactionId;
+//        this.contractId      = contractId;
         this.walletKeyPair = walletKeyPair;
         this.ownerPublicKey = ownerPublicKey;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
         this.amount = amount;
         this.currencyType = currencyType;
+        this.merchandise = merchandise;
         this.runningBookBalance = runningBookBalance;
         this.runningAvailableBalance = runningAvailableBalance;
         this.timeStamp = timeStamp;
         this.memo = memo;
     }
 
+    @Override
     public UUID getTransactionId() { return this.transactionId; }
 
+//    @Override
+//    public UUID getContractId() {
+//        return contractId;
+//    }
+
+    @Override
     public BalanceType getBalanceType() { return this.balanceType; }
 
+    @Override
     public TransactionType getTransactionType() { return this.transactionType; }
 
     @Override
@@ -69,18 +81,25 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     @Override
     public String getOwnerPublicKey() { return this.ownerPublicKey; }
 
+    @Override
     public CurrencyType getCurrencyType() { return this.currencyType; }
 
+    @Override
     public FermatEnum getMerchandise() { return this.merchandise; }
 
+    @Override
     public float getAmount() { return this.amount; }
 
+    @Override
     public float getRunningBookBalance() { return this.runningBookBalance; }
 
+    @Override
     public float getRunningAvailableBalance() { return this.runningAvailableBalance; }
 
+    @Override
     public long getTimestamp() { return this.timeStamp; }
 
+    @Override
     public String getMemo() { return this.memo; }
 
     public boolean equals(Object o){

@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  
 public enum ContractStatus implements FermatEnum {
     CANCELLED ("CAN"),
+    CREATING_CONTRACT("CRC"),
     COMPLETED("COM"),
     NEGOTIATION("NEG"),
     PAUSED("PAU"),
@@ -33,6 +34,7 @@ public enum ContractStatus implements FermatEnum {
         switch (code) {
             case "CAN": return ContractStatus.CANCELLED;
             case "COM": return ContractStatus.COMPLETED;
+            case "CRC": return ContractStatus.CREATING_CONTRACT;
             case "NEG": return ContractStatus.NEGOTIATION;
             case "PAU": return ContractStatus.PAUSED;
             case "PEC": return ContractStatus.PENDING_CONFIRMATION;

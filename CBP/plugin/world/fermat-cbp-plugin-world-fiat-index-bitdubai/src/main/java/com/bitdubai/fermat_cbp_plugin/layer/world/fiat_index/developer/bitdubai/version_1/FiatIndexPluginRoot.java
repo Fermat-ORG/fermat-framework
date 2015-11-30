@@ -62,11 +62,7 @@ public class FiatIndexPluginRoot extends AbstractPlugin implements DatabaseManag
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-
-
     FiatIndexWorldDao dao;
-
-
 
     /*
      * PluginRoot Constructor
@@ -76,19 +72,52 @@ public class FiatIndexPluginRoot extends AbstractPlugin implements DatabaseManag
     }
 
 
+    /*
+     *  TESTING STUFFS
+     */
+
+    public void testGetCurrentIndex(){
+        System.out.println("FIATINDEX - testGetCurrentIndex CALLED");
+
+        FiatIndex index = null;
+        try{
+            index = getCurrentIndex(FiatCurrency.CANADIAN_DOLLAR);
+        } catch (CantGetIndexException e){
+            System.out.println("FIATINDEX - testGetCurrentIndex DAO EXCEPTION");
+        }
+        System.out.println("");
+        System.out.println("");
+        System.out.println("FIATINDEX - PROVIDER DESC: " + index.getProviderDescription());
+        System.out.println("FIATINDEX - CURRENCY: " + index.getCurrency().getCode());
+        System.out.println("FIATINDEX - REFERENCE CURRENCY: " + index.getReferenceCurrency().getCode());
+        System.out.println("FIATINDEX - TIMESTAMP: " + index.getTimestamp());
+        System.out.println("FIATINDEX - PURCHASE: " + index.getPurchasePrice());
+        System.out.println("FIATINDEX - SALE: " + index.getSalePrice());
+
+    }
+
+
+
+
+
 
     /*
      * Service interface implementation
      */
     @Override
     public void start() throws CantStartPluginException {
+        System.out.println("FIATINDEX - PluginRoot START");
+
         try {
             dao = new FiatIndexWorldDao(pluginDatabaseSystem, pluginId, errorManager);
+            dao.initialize();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
+
+        testGetCurrentIndex();
     }
 
 
@@ -111,12 +140,12 @@ public class FiatIndexPluginRoot extends AbstractPlugin implements DatabaseManag
         IndexProvider ip = FiatIndexProviders.valueOf(currencyCode).getProviderInstance();
         FiatIndex fiatIndex = ip.getCurrentIndex(currency);
 
-       /* try {
+       try {
             dao.saveFiatIndex(fiatIndex);
 
         } catch(CantCreateFiatIndexException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        }*/
+        }
 
         return fiatIndex;
     }

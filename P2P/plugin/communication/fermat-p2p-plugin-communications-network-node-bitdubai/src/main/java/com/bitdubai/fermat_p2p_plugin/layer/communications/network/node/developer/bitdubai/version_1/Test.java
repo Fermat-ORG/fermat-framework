@@ -6,31 +6,38 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketClientChannelServerEndpoint;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketNodeChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.DeveloperBitDubai;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.JaxRsActivator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.servlets.HomeServlet;
 
-import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
+import org.jboss.resteasy.cdi.CdiInjectorFactory;
+
+import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
-import org.jboss.weld.environment.util.Reflections;
-import org.xnio.BufferAllocator;
-import org.xnio.ByteBufferSlicePool;
+import org.jboss.weld.environment.servlet.Listener;
 
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.security.Provider;
-import java.util.Set;
+
+
+
+import java.util.ArrayList;
+
 
 import javax.servlet.ServletException;
 
+import io.undertow.Handlers;
 import io.undertow.Undertow;
+import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.server.handlers.PathHandler;
+import io.undertow.server.handlers.resource.ClassPathResourceManager;
+import io.undertow.server.handlers.resource.ResourceHandler;
+import io.undertow.server.handlers.resource.ResourceManager;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
-import io.undertow.servlet.api.ServletInfo;
-import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
+import io.undertow.util.Headers;
+
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.Test</code>
@@ -42,53 +49,60 @@ import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
  */
 public class Test {
 
-    private static Undertow server;
-    public static void main( String[] args ) throws ServletException, IllegalArgumentException, IOException {
-
-        ServletInfo restEasyServlet = Servlets.servlet("ResteasyServlet", HttpServlet30Dispatcher.class)
-                .setAsyncSupported(true)
-                .setLoadOnStartup(1)
-                .addMapping("/fermat/rest/api/v1/hello");
-
-         /*
-         * Create the App WebSocketDeploymentInfo and configure
-         */
-        WebSocketDeploymentInfo appWebSocketDeploymentInfo = new WebSocketDeploymentInfo();
-        appWebSocketDeploymentInfo.setBuffers(new ByteBufferSlicePool(BufferAllocator.BYTE_BUFFER_ALLOCATOR, 17000, 17000 * 16));
-        appWebSocketDeploymentInfo.addEndpoint(WebSocketNodeChannelServerEndpoint.class);
-        appWebSocketDeploymentInfo.addEndpoint(WebSocketClientChannelServerEndpoint.class);
-
-        /*
-         * Create the App ResteasyDeployment and configure
-         */
-        ResteasyDeployment deployment = new ResteasyDeployment();
-        deployment.setApplicationClass(JaxRsActivator.class.getName());
-        deployment.setInjectorFactoryClass("org.jboss.resteasy.cdi.CdiInjectorFactory");
-
-        /*
-         * Create the App DeploymentInfo and configure
-         */
-        DeploymentInfo appDeploymentInfo  = new DeploymentInfo();
-        appDeploymentInfo.setClassLoader(Test.class.getClassLoader())
-                .setContextPath("fermat")
-                .setDeploymentName("test.war")
-                .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, appWebSocketDeploymentInfo)
-                .addServlets(Servlets.servlet("HomeServlet", HomeServlet.class).addMapping("/home"))
-                .addServlet(restEasyServlet).setDeploymentName("ResteasyUndertow")
-                .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
-
-        DeploymentManager deploymentManager = Servlets.defaultContainer().addDeployment(appDeploymentInfo);
-        deploymentManager.deploy();
-        Undertow server = null;
-        try {
-            server = Undertow.builder()
-                    .addHttpListener(8080, "0.0.0.0")
-                    .setHandler(deploymentManager.start())
-                    .build();
-        } catch (ServletException e) {
-            e.printStackTrace();
-        }
+    public static void main(String[] args) throws Exception {
+        Undertow server = Undertow.builder()
+                .addHttpListener(8080, "localhost")
+                .setHandler(Handlers.path()
+                                .addPrefixPath("/webapp", createStaticResourceHandler())
+                                .addPrefixPath("/api", new InternalRestHandler())
+                                .addPrefixPath("/serv", createServletHandler())
+                                .addPrefixPath("/fermat", createRestApiHandler())
+                ).build();
         server.start();
+    }
 
+    private static HttpHandler createStaticResourceHandler() {
+        final ResourceManager staticResources = new ClassPathResourceManager(Test.class.getClassLoader(),"webapp");
+        final ResourceHandler resourceHandler = new ResourceHandler(staticResources);
+        resourceHandler.setWelcomeFiles("index.html");
+        return resourceHandler;
+    }
+
+    private static class InternalRestHandler implements HttpHandler {
+        @Override
+        public void handleRequest(final HttpServerExchange exchange) throws Exception {
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+            exchange.getResponseSender().send("Hello World U");
+        }
+    }
+
+    private static HttpHandler createServletHandler() throws Exception {
+        DeploymentInfo di = Servlets.deployment()
+                .setClassLoader(Test.class.getClassLoader())
+                .setContextPath("/serv")
+                .setDeploymentName("My Servlets")
+                .addServlets(
+                        Servlets.servlet("helloServlet", HomeServlet.class).addMapping("/home")
+                );
+        DeploymentManager manager = Servlets.defaultContainer().addDeployment(di);
+        manager.deploy();
+        HttpHandler servletHandler = manager.start();
+        return servletHandler;
+    }
+
+    private static HttpHandler createRestApiHandler() throws Exception {
+        final UndertowJaxrsServer server = new UndertowJaxrsServer();
+
+        ResteasyDeployment deployment = new ResteasyDeployment();
+        deployment.setApplicationClass(JaxRsActivator.class.getName() );
+        DeploymentInfo di = server.undertowDeployment(deployment, "/rest/api/v1")
+                .setClassLoader(Test.class.getClassLoader())
+                .setContextPath("/fermat")
+                .setDeploymentName("My API");
+        DeploymentManager manager = Servlets.defaultContainer().addDeployment(di);
+        manager.deploy();
+        HttpHandler servletHandler = manager.start();
+        return servletHandler;
     }
 }
+

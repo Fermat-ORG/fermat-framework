@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActor;
@@ -13,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
  */
-public interface TransactionTransmissionManager extends TransactionProtocolManager<BusinessTransaction> {
+public interface TransactionTransmissionManager extends FermatManager, TransactionProtocolManager<BusinessTransactionMetadata> {
     /**
      * Method that send Contract hash
      *

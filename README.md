@@ -53,7 +53,7 @@ We believe the open source community collectively has more influence than any of
 
 We are asking each of you to help lead the way.  Because we’re already connected with you as we are also developers and designers, and we want to build our relationship with you into a network of developers across the world to share new ideas and forge new collaborations. Working together, we can build the tools and technology that people need to become financially independent, have access from any country to financial products and be safe of nasty third parties spying on them or trying to tell them what they can and can not do with their money. We believe in financial freedom.
 
-We want to hear from you on how we can build this network. We are by now about 30 developers working full time on Fermat and our goal is to reach 300. To learn more about how to join, just read the [how-to-participate-guide](https://github.com/bitDubai/participate-now). We hope at every single one of you will join us.  Because Fermat and the world need you.  We need your skills, imagination and optimism.  And with this new network, we're sure we can be partners for decades to come.
+We want to hear from you on how we can build this network. We are by now about 35 developers / designers working full time on Fermat and our goal is to reach 300. To learn more about how to join, just read the [how-to-participate-guide](https://github.com/bitDubai/participate-now). We hope at every single one of you will join us.  Because Fermat and the world need you.  We need your skills, imagination and optimism.  And with this new network, we're sure we can be partners for decades to come.
 
 We believe in people with passion who are crazy enough to think they can change the world. With a lot of hard work, we believe we can accomplish this.
 
@@ -249,7 +249,7 @@ Take a look at the [Fermat Book](https://github.com/bitDubai/fermat/tree/master/
 
 As of November 2015 the project status is the following:
 
-**Code state** : Under development for 6 months. No realeses yet. 30+ full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
+**Code state** : Under development for 6 months. No realeses yet. Many full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
 **Future path of development** : Active (First release with very limited features scheduled for December 2015).
 

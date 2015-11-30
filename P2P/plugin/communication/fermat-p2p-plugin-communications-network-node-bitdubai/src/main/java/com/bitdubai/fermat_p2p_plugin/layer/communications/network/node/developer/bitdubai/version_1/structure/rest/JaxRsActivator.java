@@ -8,7 +8,9 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.enterprise.inject.Instance;
 
+import javax.inject.Inject;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
@@ -23,11 +25,19 @@ import javax.ws.rs.core.Application;
 @ApplicationPath("/rest/api/v1")
 public class JaxRsActivator extends Application {
 
+    @Inject
+    private Instance<RestFulServices> services;
+
     @Override
     public Set<Class<?>> getClasses() {
-        Set<Class<?>> resources = new LinkedHashSet<>();
-        resources.add(HelloResource.class);
-        return resources;
+
+        final Set<Class<?>> resourceList = new LinkedHashSet<Class<?>>();
+
+        for (RestFulServices restFulServices: services) {
+            resourceList.add(restFulServices.getClass());
+        }
+
+        return resourceList;
     }
 
 }

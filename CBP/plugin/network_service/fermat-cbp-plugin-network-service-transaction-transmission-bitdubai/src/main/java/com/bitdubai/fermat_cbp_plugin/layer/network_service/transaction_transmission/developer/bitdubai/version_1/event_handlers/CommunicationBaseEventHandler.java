@@ -19,6 +19,7 @@ public class CommunicationBaseEventHandler extends AbstractCommunicationBaseEven
 
     @Override
     public void processEvent(CompleteComponentConnectionRequestNotificationEvent event) {
-
+        //TODO: to process
+        System.out.println("Transaction Transmission - CommunicationBaseEventHandler:\n"+event);
     }
 }

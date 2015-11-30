@@ -29,4 +29,6 @@ public interface PaintActivityFeatures {
 
     public void addNavigationView(NavigationViewPainter navigationViewPainter);
 
+    public void addFooterView(FooterViewPainter footerViewPainter);
+
 }

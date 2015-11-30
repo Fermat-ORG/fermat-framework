@@ -135,7 +135,10 @@ public final class FermatPluginManager {
 
             startPlugin(abstractPlugin);
 
-            return (FermatManager) abstractPlugin;
+            if (abstractPlugin.getManager() != null)
+                return abstractPlugin.getManager();
+            else
+                return (FermatManager) abstractPlugin;
 
         } catch (CantListNeededReferencesException e) {
 
@@ -166,8 +169,6 @@ public final class FermatPluginManager {
 
             final FermatPluginIdsManager pluginIdsManager = getPluginIdsManager();
 
-
-
             if (!abstractPlugin.isStarted()) {
 
                 final List<AddonVersionReference> neededAddons = abstractPlugin.getNeededAddons();
@@ -187,7 +188,10 @@ public final class FermatPluginManager {
 
                     startPluginAndReferences(pvr);
 
-                    abstractPlugin.assignPluginReference(reference);
+                    if (reference.getManager() != null)
+                        abstractPlugin.assignPluginReference(pvr, reference.getManager());
+                    else
+                        abstractPlugin.assignPluginReference(reference);
                 }
 
                 abstractPlugin.setId(pluginIdsManager.getPluginId(pluginVersionReference));
