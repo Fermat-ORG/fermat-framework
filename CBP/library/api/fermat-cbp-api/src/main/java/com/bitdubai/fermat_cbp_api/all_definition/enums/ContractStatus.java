@@ -12,6 +12,7 @@ public enum ContractStatus implements FermatEnum {
     CANCELLED ("CAN"),
     COMPLETED("COM"),
     MERCHANDISE_SUBMIT("MES"),
+    PAUSED("PSD"),
     PENDING_MERCHANDISE("PEM"),
     PENDING_PAYMENT("PEN"),
     PAYMENT_SUBMIT("PYS"),
@@ -33,6 +34,7 @@ public enum ContractStatus implements FermatEnum {
             case "CAN": return ContractStatus.CANCELLED;
             case "COM": return ContractStatus.COMPLETED;
             case "MES": return ContractStatus.MERCHANDISE_SUBMIT;
+            case "PSD": return ContractStatus.PAUSED;
             case "PEM": return ContractStatus.PENDING_MERCHANDISE;
             case "PEN": return ContractStatus.PENDING_PAYMENT;
             case "PYS": return ContractStatus.PAYMENT_SUBMIT;
