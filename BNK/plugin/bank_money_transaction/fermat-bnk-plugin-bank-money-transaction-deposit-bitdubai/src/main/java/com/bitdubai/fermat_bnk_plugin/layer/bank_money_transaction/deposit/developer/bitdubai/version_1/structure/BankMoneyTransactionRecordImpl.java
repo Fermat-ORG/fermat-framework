@@ -12,8 +12,6 @@ import java.util.UUID;
 public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecord {
 
     UUID bankTransactionId;
-    String publicKeyBroker;
-    String publicKeyCustomer;
     String balanceType;
     String transactionType;
     float amount;

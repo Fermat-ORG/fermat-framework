@@ -6,6 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.exceptions.CantMakeWithdrawTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.interfaces.WithdrawManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
@@ -17,6 +20,7 @@ import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.withdraw.deve
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -52,10 +56,10 @@ public class WithdrawBankMoneyTransactionManager implements WithdrawManager {
 
 
     @Override
-    public BankTransaction makeWithdraw(BankTransactionParameters parameters) throws CantMakeWithdrawTransactionException {
-        withdrawBankMoneyTransactionDao.registerWithdrawTransaction(parameters);
+    public BankTransaction makeWithdraw(BankTransactionParameters bankTransactionParameters) throws CantMakeWithdrawTransactionException {
+        withdrawBankMoneyTransactionDao.registerWithdrawTransaction(bankTransactionParameters);
         try{
-            if(parameters.getAmount()<bankMoneyWallet.getAvailableBalance().getBalance(parameters.getAccount())&& parameters.getAmount()<bankMoneyWallet.getBookBalance().getBalance(parameters.getAccount())){
+            if(bankTransactionParameters.getAmount()<bankMoneyWallet.getAvailableBalance().getBalance(bankTransactionParameters.getAccount())&& bankTransactionParameters.getAmount()<bankMoneyWallet.getBookBalance().getBalance(bankTransactionParameters.getAccount())){
                 bankMoneyWallet.getAvailableBalance().debit(bankMoneyTransactionRecord);
                 bankMoneyWallet.getBookBalance().debit(bankMoneyTransactionRecord);
             }
@@ -65,8 +69,8 @@ public class WithdrawBankMoneyTransactionManager implements WithdrawManager {
         }catch (CantRegisterDebitException |CantCalculateBalanceException e){
             throw new CantMakeWithdrawTransactionException(CantRegisterDebitException.DEFAULT_MESSAGE,e,null,null);
         }
-        //TODO: retornar objeto de bank transaction
-        return null;
+        return new BankTransactionImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),
+                bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(), BankOperationType.WITHDRAW, TransactionType.DEBIT,new Date().getTime(), BankTransactionStatus.CONFIRMED);
     }
     public void setBankMoneyWallet(BankMoneyWallet bankMoneyWallet) {
         this.bankMoneyWallet = bankMoneyWallet;

@@ -20,7 +20,6 @@ public class BankTransactionImpl implements BankTransaction {
 
     private String publicKeyWallet;
 
-    private String publicKeyActor;
 
     private float amount;
 
@@ -38,11 +37,10 @@ public class BankTransactionImpl implements BankTransaction {
 
     private BankTransactionStatus status;
 
-    public BankTransactionImpl(UUID transactionId, String publicKeyPlugin, String publicKeyWallet, String publicKeyActor, float amount, String accountNumber, FiatCurrency fiatCurrency, String memo, BankOperationType bankOperationType, TransactionType transactionType, long timestamp, BankTransactionStatus status) {
+    public BankTransactionImpl(UUID transactionId, String publicKeyPlugin, String publicKeyWallet, float amount, String accountNumber, FiatCurrency fiatCurrency, String memo, BankOperationType bankOperationType, TransactionType transactionType, long timestamp, BankTransactionStatus status) {
         this.transactionId = transactionId;
         this.publicKeyPlugin = publicKeyPlugin;
         this.publicKeyWallet = publicKeyWallet;
-        this.publicKeyActor = publicKeyActor;
         this.amount = amount;
         this.accountNumber = accountNumber;
         this.fiatCurrency = fiatCurrency;
@@ -70,8 +68,9 @@ public class BankTransactionImpl implements BankTransaction {
 
     @Override
     public String getPublicKeyActor() {
-        return publicKeyActor;
+        return null;
     }
+
 
     @Override
     public float getAmount() {
