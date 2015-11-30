@@ -629,7 +629,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
 
             runtimeSideMenu = new SideMenu();
-
+            runtimeSideMenu.setBackgroundColor("#0072bb");
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Explore");
@@ -705,6 +705,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT.getKey());
 
             runtimeSideMenu = new SideMenu();
+            runtimeSideMenu.setBackgroundColor("#0072bb");
 
 
             runtimeMenuItem = new MenuItem();
@@ -760,7 +761,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey());
 
             runtimeSideMenu = new SideMenu();
-
+            runtimeSideMenu.setBackgroundColor("#0072bb");
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Explore");
@@ -814,7 +815,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL_FRAGMENT.getKey());
 
             runtimeSideMenu = new SideMenu();
-
+            runtimeSideMenu.setBackgroundColor("#0072bb");
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Explore");
