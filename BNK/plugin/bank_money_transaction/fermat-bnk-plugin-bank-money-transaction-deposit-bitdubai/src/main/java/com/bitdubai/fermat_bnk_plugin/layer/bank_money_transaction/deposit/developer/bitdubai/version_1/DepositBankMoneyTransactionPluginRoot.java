@@ -44,7 +44,6 @@ public class DepositBankMoneyTransactionPluginRoot extends AbstractPlugin implem
     private PluginDatabaseSystem pluginDatabaseSystem;
 
 
-    Database depositTransactionDatabase;
     DepositBankMoneyTransactionManager depositBankMoneyTransactionManager;
 
     public DepositBankMoneyTransactionPluginRoot() {

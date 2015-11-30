@@ -59,7 +59,6 @@ public class DepositBankMoneyTransactionDao {
         record.setStringValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_PLUGIN_PUBLIC_KEY_COLUMN_NAME,bankTransactionParameters.getPublicKeyPlugin());
         record.setStringValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_ACCOUNT_NUMBER_COLUMN_NAME,bankTransactionParameters.getAccount());
         record.setStringValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_MEMO_COLUMN_NAME,bankTransactionParameters.getMemo());
-        record.setStringValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_FIAT_CURRENCY_TYPE_COLUMN_NAME,bankTransactionParameters.getCurrency().getCode());
         record.setLongValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_TIMESTAMP_COLUMN_NAME,new Date().getTime());
         try {
             table.insertRecord(record);
