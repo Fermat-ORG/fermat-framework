@@ -244,11 +244,11 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 NegotiationTransmissionState.PROCESSING_SEND,
                 timestamp
         );
-        try{
-
-        } catch (){
-
-        }
+//        try{
+//
+//        } catch (){
+//
+//        }
 
     }
 
