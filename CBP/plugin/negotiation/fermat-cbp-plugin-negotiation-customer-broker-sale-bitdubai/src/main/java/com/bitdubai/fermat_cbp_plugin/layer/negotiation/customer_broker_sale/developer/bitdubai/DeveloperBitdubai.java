@@ -15,9 +15,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.dev
  * Update by Angel on 28-11-2015
  */
 
-public class DeveloperBitdubai extends AbstractPluginDeveloper implements PluginLicensor {
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
-    public DeveloperBitdubai() {
+    public DeveloperBitDubai() {
         super(new PluginDeveloperReference(Developers.BITDUBAI));
     }
 
