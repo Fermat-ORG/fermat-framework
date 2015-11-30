@@ -120,8 +120,6 @@ public class BankMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
         List<String> bankMoneyColumns = new ArrayList<String>();
 
         bankMoneyColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME);
-        bankMoneyColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
-        bankMoneyColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME);
         bankMoneyColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_BALANCE_TYPE_COLUMN_NAME);
         bankMoneyColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME);
         bankMoneyColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_AMOUNT_COLUMN_NAME);

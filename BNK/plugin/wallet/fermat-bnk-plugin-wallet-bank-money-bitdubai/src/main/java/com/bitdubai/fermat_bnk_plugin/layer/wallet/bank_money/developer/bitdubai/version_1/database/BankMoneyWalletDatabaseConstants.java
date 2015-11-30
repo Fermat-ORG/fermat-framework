@@ -23,8 +23,6 @@ public class BankMoneyWalletDatabaseConstants {
     public static final String BANK_MONEY_TRANSACTIONS_TABLE_NAME = "bank_money_transactions";
 
     public static final String BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME = "bank_transaction_id";
-    public static final String BANK_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME = "public_key_customer";
-    public static final String BANK_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME = "public_key_broker";
     public static final String BANK_MONEY_BALANCE_TYPE_COLUMN_NAME = "balance_type";
     public static final String BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
     public static final String BANK_MONEY_AMOUNT_COLUMN_NAME = "amount";

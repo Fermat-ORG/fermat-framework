@@ -101,8 +101,7 @@ public class DepositBankMoneyTransactionPluginRoot extends AbstractPlugin implem
 
     @Override
     public BankTransaction makeDeposit(BankTransactionParameters parameters) throws CantMakeDepositTransactionException {
-        depositBankMoneyTransactionManager.makeDeposit(parameters);
-        return null;
+        return depositBankMoneyTransactionManager.makeDeposit(parameters);
     }
 }
 
