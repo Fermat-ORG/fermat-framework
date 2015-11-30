@@ -255,6 +255,13 @@ We call a _Fermat Genesis Transaction_ to each coinbase transaction recorded on 
 
 Note that the _Genesis Transaction_ can have _n_ number of UTXO as INPUTS, all of them bitcoins (or satoshis to be precise). It can also have _m_ number of OUTPUTS where all of them will represent fermats except _m - 1_ which is reserved for bitcoin change and the _m_ which is used to place the Fermat Coinbase Transaction hash on the OP_RETURN field.
 
+As usual any difference between the sum of all OUTPUTS and the sum of all INPUTS are the bitcoin miner's fees. 
+
+So the amount of satoshis on each OUTPUT from _1_ to _m - 2_ are turned into _fers_ that is how we call a ten thousand part of a fermat.
+
+1 fermat = 10,000 fers
+
+We know that by doing this, 1 fermat has a minimun market value of 0.0001 bitcoins. 
 
 <br>
 ## Incentive
