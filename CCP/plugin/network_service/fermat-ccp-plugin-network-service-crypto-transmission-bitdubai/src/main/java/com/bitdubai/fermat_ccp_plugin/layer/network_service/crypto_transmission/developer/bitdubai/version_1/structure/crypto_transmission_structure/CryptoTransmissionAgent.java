@@ -590,9 +590,9 @@ public class CryptoTransmissionAgent {
                                     // deberia ver si tengo que lanzar un evento acá
                                     //para el outgoing intra user
 
-                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
-                                    cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
-                                    cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
+                                  //  cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                                  //  cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
+                                  //  cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
 
                                     System.out.print("-----------------------\n" +
                                             "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
@@ -619,8 +619,7 @@ public class CryptoTransmissionAgent {
                                     CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(
                                             cryptoTransmissionMetadata.getTransactionId(),
                                             CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE,
-                                            CryptoTransmissionMetadataType.METADATA_RECEIVE);
-
+                                            CryptoTransmissionMetadataType.METADATA_SEND);
                                     Gson gson = new Gson();
 
                                     String message = gson.toJson(cryptoTransmissionResponseMessage);
