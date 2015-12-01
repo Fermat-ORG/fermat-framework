@@ -1,4 +1,4 @@
-package   com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database;
+package   com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -13,16 +13,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.Customer Broker SaleNegotiationDatabaseFactory</code>
+ *  The Class  <code>com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database.Customer Broker PurchaseContractDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
- * Created by Angel Veloz - (vlzangel91@gmail.com) on 30/11/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 29/11/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CustomerBrokerSaleNegotiationDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class CustomerBrokerPurchaseContractDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -35,7 +35,7 @@ public class CustomerBrokerSaleNegotiationDatabaseFactory implements DealsWithPl
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public CustomerBrokerSaleNegotiationDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public CustomerBrokerPurchaseContractDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -70,17 +70,18 @@ public class CustomerBrokerSaleNegotiationDatabaseFactory implements DealsWithPl
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
-             * Create Negotiations Sale table.
+             * Create Contracts Purchase table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CONTRACT_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATA_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
 
-            table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_FIRST_KEY_COLUMN);
+            table.addIndex(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -88,20 +89,17 @@ public class CustomerBrokerSaleNegotiationDatabaseFactory implements DealsWithPl
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }           /**
-             * Create Clauses Sale table.
+             * Create Clause Contract table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CLAUSE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_VALUE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_PROPOSED_BY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_INDEX_ORDER_COLUMN_NAME, DatabaseDataType.INTEGER, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_CLAUSE_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_CONTRACT_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_EXECUTION_ORDER_COLUMN_NAME, DatabaseDataType.INTEGER, 11, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_CURRENT_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
 
-            table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_FIRST_KEY_COLUMN);
+            table.addIndex(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -109,16 +107,17 @@ public class CustomerBrokerSaleNegotiationDatabaseFactory implements DealsWithPl
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }           /**
-             * Create Changes Sale table.
+             * Create Clause Status Log table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_CHANGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_CLAUSE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_START_DATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_LOG_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_CLAUSE_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_DATA_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_CHANGE_BY_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
 
-            table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_FIRST_KEY_COLUMN);
+            table.addIndex(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
