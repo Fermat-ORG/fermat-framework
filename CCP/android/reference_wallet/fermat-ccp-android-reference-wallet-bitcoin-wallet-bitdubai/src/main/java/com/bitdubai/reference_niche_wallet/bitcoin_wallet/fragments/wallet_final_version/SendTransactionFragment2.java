@@ -117,11 +117,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             IntraUserLoginIdentity lst = referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity();
             if(lst==null){
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.profile_image);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
-                byte[] byteArray = stream.toByteArray();
-                referenceWalletSession.getIntraUserModuleManager().createIntraUser("John Doe",byteArray);
+//                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.profile_image);
+//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                byte[] byteArray = stream.toByteArray();
+                referenceWalletSession.getIntraUserModuleManager().createIntraUser("John Doe",null);
             }
 //            if(lst==null){
 //                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),walletSession, walletSettings, walletResourcesProviderManager, null);
