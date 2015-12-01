@@ -56,7 +56,7 @@ public class NegotiationTransmissionNetworkServiceConnectionsDatabaseDao {
         } catch (Exception e) {
             throw new CantInitializeDatabaseException(CantInitializeDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
-        
+
     }
 
     public void saveCryptoTransmissionConnection(NegotiationTransmissionConnectionRecord transactionTransmissionConnectionRecord) throws CantRegisterSendNegotiationTransmissionException {

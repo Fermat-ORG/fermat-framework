@@ -49,22 +49,22 @@ public class CommunicationNetworkServiceDatabaseConstants {
     /**
      * Negotiation Transmission Network Service database table definition.
      */
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME = "negotiation_transmission_network_service";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME = "negotiation_transmission_network_service";
 
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME = "transmission_id";
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_ID_COLUMN_NAME = "negotiation_id";
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_STATUS_COLUMN_NAME = "negotiation_status";
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TRANSACTION_TYPE_COLUMN_NAME = "negotiation_transaction_type";
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_SEND_COLUMN_NAME = "public_key_actor_send";
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_SEND_TYPE_COLUMN_NAME = "actor_send_type";
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_RECEIVE_COLUMN_NAME = "public_key_actor_receive";
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_RECEIVE_TYPE_COLUMN_NAME = "actor_receive_type";
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_TYPE_COLUMN_NAME = "transmissionType";
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME = "transmissionstate";
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TIMESTAMP_COLUMN_NAME = "timestamp";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME = "transmission_id";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_ID_COLUMN_NAME = "negotiation_id";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_STATUS_COLUMN_NAME = "negotiation_status";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TRANSACTION_TYPE_COLUMN_NAME = "negotiation_transaction_type";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_SEND_COLUMN_NAME = "public_key_actor_send";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_SEND_TYPE_COLUMN_NAME = "actor_send_type";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_RECEIVE_COLUMN_NAME = "public_key_actor_receive";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_RECEIVE_TYPE_COLUMN_NAME = "actor_receive_type";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_TYPE_COLUMN_NAME = "transmissionType";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME = "transmissionstate";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TIMESTAMP_COLUMN_NAME = "timestamp";
 
-    static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_FIRST_KEY_COLUMN = "transmission_id";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_FIRST_KEY_COLUMN = "transmission_id";
 
     /**
      * COMPONENT VERSIONS DETAILS database table definition.

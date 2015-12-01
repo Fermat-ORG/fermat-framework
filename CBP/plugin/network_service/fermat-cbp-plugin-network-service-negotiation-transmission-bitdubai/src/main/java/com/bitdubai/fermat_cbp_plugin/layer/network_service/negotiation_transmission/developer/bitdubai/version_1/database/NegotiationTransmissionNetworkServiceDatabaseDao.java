@@ -1,19 +1,38 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.PendingRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -52,6 +71,10 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         }
     }
 
+    Database getDataBase() {
+        return database;
+    }
+
     /*REGISTER NEW SEND NEGOTIATION TRANSMISSION*/
     public void registerSendNegotiatioTransmission(NegotiationTransmission negotiationTransmission) throws CantRegisterSendNegotiationTransmissionException{
         try {
@@ -66,7 +89,133 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         }
     }
 
+    /**
+     * Method that list the all entities on the data base. The valid value of
+     * the key are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
+     *
+     * @param filters
+     * @return List<FermatMessage>
+     * @throws CantRegisterSendNegotiationTransmissionException
+     */
+    public List<NegotiationTransmission> findAll(Map<String, Object> filters) throws CantRegisterSendNegotiationTransmissionException {
+
+        if (filters == null || filters.isEmpty()) {
+            throw new IllegalArgumentException("The filters are required, can not be null or empty");
+        }
+
+        List<NegotiationTransmission> list = null;
+        List<DatabaseTableFilter> filtersTable = new ArrayList<>();
+
+        try {
+            DatabaseTable templateTable = this.database.getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);;
+
+            for (String key : filters.keySet()) {
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.EQUAL);
+                newFilter.setColumn(key);
+                newFilter.setValue((String) filters.get(key));
+                filtersTable.add(newFilter);
+            }
+
+            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
+            templateTable.loadToMemory();
+            List<DatabaseTableRecord> records = templateTable.getRecords();
+
+            list = new ArrayList<>();
+            list.clear();
+
+            for (DatabaseTableRecord record : records) {
+                NegotiationTransmission outgoingTemplateNetworkServiceMessage = constructNegotiationTransmission(record);
+                list.add(outgoingTemplateNetworkServiceMessage);
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "The data no exist");
+        } catch (InvalidParameterException e) {
+            throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, "", "Invalid parameter");
+        }
+
+        return list;
+    }
+
+    /**
+     * Method that update an CryptoTransmissionMetadata in the data base.
+     *
+     * @throws CantRegisterSendNegotiationTransmissionException
+     */
+    public void changeState(UUID transaction_id, TransactionTransmissionStates transactionTransmissionStates) throws CantRegisterSendNegotiationTransmissionException {
+
+        if (transaction_id == null) {
+            throw new IllegalArgumentException("The entity is required, can not be null");
+        }
+
+        try {
+
+            BusinessTransactionMetadata businessTransactionMetadata = getMetadata(transaction_id);
+            businessTransactionMetadata.setState(transactionTransmissionStates);
+
+
+            DatabaseTable addressExchangeRequestTable = database.getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
+            /*
+             * 1- Create the record to the entity
+             */
+            DatabaseTableRecord cryptoTransmissionMetadataRecord = buildDatabaseRecord(entityRecord, businessTransactionMetadata);
+
+            /*
+             * 2.- Create a new transaction and execute
+             */
+            DatabaseTransaction transaction = getDataBase().newTransaction();
+            transaction.addRecordToUpdate(getDatabaseTable(), cryptoTransmissionMetadataRecord);
+            getDataBase().executeTransaction(transaction);
+
+        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, databaseTransactionFailedException, contextBuffer.toString(), "The data no exist");
+        } catch (PendingRequestNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantGetTransactionTransmissionException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /*PRIVATE*/
+    private NegotiationTransmission constructNegotiationTransmission(DatabaseTableRecord record) throws InvalidParameterException{
+        NegotiationTransmission negotiationTransmission = null;
+        UUID                            transmissionId          =   record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME);
+        UUID                            transactionId           =   record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSACTION_ID_COLUMN_NAME);
+        UUID                            negotiationId           =   record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_ID_COLUMN_NAME);
+        NegotiationTransactionType      transactionType         =   NegotiationTransactionType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_NEGOTIATION_TRANSACTION_TYPE_COLUMN_NAME));
+        String                          publicKeyActorSend      =   record.getStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_SEND_COLUMN_NAME);
+        PlatformComponentType           actorSendType           =   PlatformComponentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_SEND_TYPE_COLUMN_NAME));
+        String                          publicKeyActorReceive   =   record.getStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_RECEIVE_COLUMN_NAME);
+        PlatformComponentType           actorReceiveType        =   PlatformComponentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_RECEIVE_TYPE_COLUMN_NAME));
+        NegotiationTransmissionType     transmissionType        =   NegotiationTransmissionType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_TYPE_COLUMN_NAME));
+        NegotiationTransmissionState    transmissionState       =   NegotiationTransmissionState.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME));
+        long                            timestamp               = record.getLongValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TIMESTAMP_COLUMN_NAME);
+
+        negotiationTransmission = new NegotiationTransmissionImpl(
+                transmissionId,
+                transactionId,
+                negotiationId,
+                transactionType,
+                publicKeyActorSend,
+                actorSendType,
+                publicKeyActorReceive,
+                actorReceiveType,
+                transmissionType,
+                transmissionState,
+                timestamp
+        );
+
+        return negotiationTransmission;
+    }
+
     private void loadRecordAsSendNegotiatioTransmission(DatabaseTableRecord record, NegotiationTransmission negotiationTransmission) {
         record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME, negotiationTransmission.getTransmissionId());
         record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSACTION_ID_COLUMN_NAME, negotiationTransmission.getTransactionId());
