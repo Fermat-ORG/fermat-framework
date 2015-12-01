@@ -115,7 +115,7 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void start() throws CantStartPluginException {
         this.serviceStatus = ServiceStatus.STARTED;
-        System.out.println("Init Crypto Broker Wallet");
+        System.out.println("******* Init Crypto Broker Wallet *******");
 //        try{
 //
 //        }catch(CantStartPluginException exception){
