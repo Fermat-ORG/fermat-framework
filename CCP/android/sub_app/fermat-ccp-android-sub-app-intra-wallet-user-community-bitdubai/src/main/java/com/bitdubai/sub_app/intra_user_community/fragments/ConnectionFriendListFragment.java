@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppFriendsListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
@@ -38,6 +40,8 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
     private AppFriendsListAdapter adapter;
     private IntraUserSubAppSession intraUserSubAppSession;
     private LinearLayout emptyView;
+    private IntraUserModuleManager moduleManager;
+    private ErrorManager errorManager;
 
     /**
      * Create a new instance of this fragment
@@ -46,6 +50,16 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
      */
     public static ConnectionFriendListFragment newInstance() {
         return new ConnectionFriendListFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // setting up  module
+        intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
+        moduleManager = intraUserSubAppSession.getModuleManager();
+        errorManager = subAppsSession.getErrorManager();
     }
 
     @Override
