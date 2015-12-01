@@ -547,7 +547,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
     private void groupTest (){
         List<ActorAssetUserGroup> groupList = GroupTest.getGroupList();
-        System.out.println("Cant groups: " + groupList.size());
+        System.out.println("Cantidad de grupos: " + groupList.size());
         List<ActorAssetUserGroupMember> groupMemberList = GroupTest.getGroupMemberList();
         for(ActorAssetUserGroup group: groupList){
             try {
