@@ -10,7 +10,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 27/11/15.
  */
-public class ContractRecord implements Contract {
+public class ContractRecord /*implements Contract*/ {
 
     CurrencyType merchandiseCurrency;
     float merchandiseAmount;
@@ -29,7 +29,7 @@ public class ContractRecord implements Contract {
      * Represents the contract id/hash
      * @return
      */
-    @Override
+    //@Override
     public String getContractId() {
         return contractHash;
     }
@@ -44,17 +44,17 @@ public class ContractRecord implements Contract {
         return this.contractHash;
     }
 
-    @Override
+    //@Override
     public float getMerchandiseAmount() {
         return this.merchandiseAmount;
     }
 
-    @Override
+    //@Override
     public CurrencyType getMerchandiseCurrency() {
         return this.merchandiseCurrency;
     }
 
-    @Override
+    //@Override
     public long getMerchandiseDeliveryExpirationDate() {
         return this.merchandiseDeliveryExpirationDate;
     }
@@ -63,42 +63,42 @@ public class ContractRecord implements Contract {
         return this.negotiationId;
     }
 
-    @Override
+    //@Override
     public float getPaymentAmount() {
         return this.paymentAmount;
     }
 
-    @Override
+    //@Override
     public CurrencyType getPaymentCurrency() {
         return this.paymentCurrency;
     }
 
-    @Override
+    //@Override
     public long getPaymentExpirationDate() {
         return this.paymentExpirationDate;
     }
 
-    @Override
+    //@Override
     public String getPublicKeyBroker() {
         return this.publicKeyBroker;
     }
 
-    @Override
+    //@Override
     public String getPublicKeyCustomer() {
         return this.publicKeyCustomer;
     }
 
-    @Override
+    //@Override
     public ReferenceCurrency getReferenceCurrency() {
         return this.referenceCurrency;
     }
 
-    @Override
+    //@Override
     public float getReferencePrice() {
         return this.referencePrice;
     }
 
-    @Override
+    //@Override
     public ContractStatus getStatus() {
         return status;
     }
@@ -162,7 +162,7 @@ public class ContractRecord implements Contract {
      * I generate an XML with the class structure.
      * @return
      */
-    @Override
+    //@Override
     public String toString() {
         return XMLParser.parseObject(this);
     }
