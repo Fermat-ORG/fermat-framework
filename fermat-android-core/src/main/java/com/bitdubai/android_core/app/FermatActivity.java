@@ -1289,25 +1289,25 @@ public abstract class FermatActivity extends AppCompatActivity
             //Identities
             List<Item> lstIdentities = new ArrayList<>();
 
-            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Crypto Wallet\nUsers","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Wallet Users","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
             item2 = new Item(installedSubApp);
             item2.setIconResource(R.drawable.intra_user_image);
             item2.setPosition(0);
             lstIdentities.add(item2);
 
-            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_ISSUER, null, null, "sub-app-asset-identity-issuer", "Digital Asset\nIssuers", "public_key_dap_asset_issuer_identity", "sub-app-asset-identity-issuer", new Version(1, 0, 0));
+            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_ISSUER, null, null, "sub-app-asset-identity-issuer", "Asset Issuers", "public_key_dap_asset_issuer_identity", "sub-app-asset-identity-issuer", new Version(1, 0, 0));
             item2 = new Item(installedSubApp);
-            item2.setIconResource(R.drawable.intra_user_image);
+            item2.setIconResource(R.drawable.asset_identity_issuer);
             item2.setPosition(1);
             lstIdentities.add(item2);
-            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_USER, null, null, "sub-app-asset-identity-user", "Digital Asset\nUsers", "public_key_dap_asset_user_identity", "sub-app-asset-identity-user", new Version(1, 0, 0));
+            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_USER, null, null, "sub-app-asset-identity-user", "Asset Users", "public_key_dap_asset_user_identity", "sub-app-asset-identity-user", new Version(1, 0, 0));
             item2 = new Item(installedSubApp);
-            item2.setIconResource(R.drawable.intra_user_image);
+            item2.setIconResource(R.drawable.asset_user_identity);
             item2.setPosition(2);
             lstIdentities.add(item2);
-            installedSubApp = new InstalledSubApp(SubApps.DAP_REDEEM_POINT_IDENTITY, null, null, "sub-app-asset-identity-redeem-point", "Digital Asset\nRedeem Points", "public_key_dap_redeem_point_identity", "sub-app-asset-identity-redeem-point", new Version(1, 0, 0));
+            installedSubApp = new InstalledSubApp(SubApps.DAP_REDEEM_POINT_IDENTITY, null, null, "sub-app-asset-identity-redeem-point", "Redeem Points", "public_key_dap_redeem_point_identity", "sub-app-asset-identity-redeem-point", new Version(1, 0, 0));
             item2 = new Item(installedSubApp);
-            item2.setIconResource(R.drawable.intra_user_image);
+            item2.setIconResource(R.drawable.redeem_point_identity);
             item2.setPosition(3);
             lstIdentities.add(item2);
 
@@ -1321,7 +1321,7 @@ public abstract class FermatActivity extends AppCompatActivity
             lst.add(identityFolder);
 
             //store
-            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Wallet Store", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","Wallet store","public_key_store","wallet_store",new Version(1,0,0));
             item2 = new Item(installedSubApp);
             item2.setIconResource(R.drawable.ic_03);
             item2.setPosition(4);
@@ -1330,7 +1330,7 @@ public abstract class FermatActivity extends AppCompatActivity
             //communities
             List<Item> lstCommunities = new ArrayList<>();
 
-            installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Crypto Wallet\nUsers","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
+            installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Wallet Users","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
             Item item1 = new Item(installedSubApp);
             item1.setIconResource(R.drawable.intra_user_2);
             item1.setPosition(0);
@@ -1347,9 +1347,9 @@ public abstract class FermatActivity extends AppCompatActivity
             item1.setIconResource(R.drawable.intra_user_2);
             item1.setPosition(2);
             lstCommunities.add(item1);
-            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Asset Redeem Points", "public_key_dap_reedem_point_community", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
+            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Redeem Points", "public_key_dap_reedem_point_community", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
             item1 = new Item(installedSubApp);
-            item1.setIconResource(R.drawable.intra_user_2);
+            item1.setIconResource(R.drawable.reddem_point_community);
             item1.setPosition(3);
             lstCommunities.add(item1);
 

@@ -142,26 +142,13 @@ public class SubAppDesktopFragment extends Fragment {
 
         public String description;
 
-        public String picture;
-
-        public String company;
-
-
         public String Address;
-
-
-
-        public float rate;
 
         public int value;
 
         public float favorite;
 
         public float sale;
-
-        public float timetoarraive;
-
-        public boolean installed;
 
     }
 
@@ -192,7 +179,7 @@ public class SubAppDesktopFragment extends Fragment {
             }
 
             holder.companyTextView.setText(installedSubApp.getSubAppName());
-            holder.companyTextView.setTypeface(tf, Typeface.BOLD);
+            holder.companyTextView.setTypeface(tf);
 
             LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.sub_apps);
             switch (installedSubApp.getSubAppIcon())

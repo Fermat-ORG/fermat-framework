@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="16dp"
                 android:paddingLeft="5dp">
 
 
@@ -69,7 +69,7 @@
                     android:background="@drawable/round_corner_line_dialog"/>
 
                 <android.support.v7.widget.RecyclerView
-                    android:layout_marginRight="54dp"
+                    android:layout_marginRight="24dp"
                     android:isScrollContainer="false"
                     android:id="@+id/gridView"
                     android:layout_width="wrap_content"
