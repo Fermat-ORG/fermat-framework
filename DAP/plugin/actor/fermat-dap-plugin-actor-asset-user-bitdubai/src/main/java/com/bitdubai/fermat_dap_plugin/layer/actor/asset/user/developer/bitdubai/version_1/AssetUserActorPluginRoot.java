@@ -270,6 +270,31 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantConnectToActorAssetRedeemPointException {
+        try {
+//            for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
+//                try {
+                    cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(
+                            null,
+                            CryptoCurrency.BITCOIN,
+                            Actors.DAP_ASSET_USER,
+                            Actors.DAP_ASSET_REDEEM_POINT,
+                            requester.getActorPublicKey(),
+                            actorAssetRedeemPoint.getActorPublicKey(),
+                            CryptoAddressDealers.DAP_ASSET,
+                            BlockchainNetworkType.DEFAULT);
+
+//                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
+//                } catch (CantUpdateAssetUserConnectionException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+        } catch (CantSendAddressExchangeRequestException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void createAssetUserGroup(ActorAssetUserGroup assetUserGroup) throws CantCreateAssetUserGroupException {
         try {
             this.assetUserActorDao.createAssetUserGroup(assetUserGroup);
@@ -357,19 +382,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             throw new CantGetAssetUserGroupExcepcion("You can not get the group", ex, "Error", "");
         }
         return actorAssetUserGroup;
-    }
-
-    /**
-     * The method <code>connectToActorAssetRedeemPoint</code> Enable Connection
-     * with Requester and Deliver Redeem Point to Reddem Asset
-     *
-     * @param requester
-     * @param actorAssetRedeemPoint
-     * @throws CantConnectToActorAssetRedeemPointException
-     */
-    @Override
-    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantConnectToActorAssetRedeemPointException {
-        System.out.println("NOT IMPLEMENT YET - ACTOR ASSET USER");
     }
 
     public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetUserException {
