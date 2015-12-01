@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.OpenContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContractManager;
@@ -76,7 +77,11 @@ public class OpenContractTransactionManager implements OpenContractManager{
                 customerBrokerContractSaleManager,
                 transactionTransmissionManager,
                 openContractBusinessTransactionDao);
-        openContractCustomerContractManager.openContract(customerBrokerSaleNegotiation, fiatIndex);
+        try {
+            openContractCustomerContractManager.openContract(customerBrokerSaleNegotiation, fiatIndex);
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new CantOpenContractException(e,"Creating a new contract","Unexpected result from database");
+        }
         //openContract(negotiationId);
     }
 
@@ -85,8 +90,13 @@ public class OpenContractTransactionManager implements OpenContractManager{
                                      FiatIndex fiatIndex) throws CantOpenContractException{
         OpenContractCustomerContractManager openContractCustomerContractManager =new OpenContractCustomerContractManager(
                 customerBrokerContractPurchaseManager,
-                transactionTransmissionManager);
-        openContractCustomerContractManager.openContract(customerBrokerPurchaseNegotiation, fiatIndex);
+                transactionTransmissionManager,
+                openContractBusinessTransactionDao);
+        try {
+            openContractCustomerContractManager.openContract(customerBrokerPurchaseNegotiation, fiatIndex);
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new CantOpenContractException(e,"Creating a new contract","Unexpected result from database");
+        }
 
         //openContract(negotiationId);
     }

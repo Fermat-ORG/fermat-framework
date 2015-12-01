@@ -11,7 +11,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.AbstractOpenContract;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractPurchaseRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractSaleRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
@@ -90,24 +91,13 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
         try{
             //CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation= findPurchaseNegotiation(negotiationId);
             Collection<Clause> negotiationClauses=customerBrokerPurchaseNegotiation.getClauses();
-            ContractRecord contractRecord=createPurchaseContractRecord(
+            ContractPurchaseRecord contractRecord=createPurchaseContractRecord(
                     negotiationClauses,
                     customerBrokerPurchaseNegotiation,
                     fiatIndex);
             contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
             this.openContractBusinessTransactionDao.persistContractRecord(contractRecord);
-            customerBrokerContractPurchaseManager.createCustomerBrokerContractPurchase(
-                    contractRecord.getContractId(),
-                    contractRecord.getPublicKeyCustomer(),
-                    contractRecord.getPublicKeyBroker(),
-                    contractRecord.getMerchandiseAmount(),
-                    contractRecord.getMerchandiseCurrency(),
-                    contractRecord.getReferencePrice(),
-                    contractRecord.getReferenceCurrency(),
-                    contractRecord.getPaymentAmount(),
-                    contractRecord.getPaymentCurrency(),
-                    contractRecord.getPaymentExpirationDate(),
-                    contractRecord.getMerchandiseDeliveryExpirationDate());
+            customerBrokerContractPurchaseManager.createCustomerBrokerContractPurchase(contractRecord);
             this.openContractBusinessTransactionDao.updateContractTransactionStatus(
                     contractRecord.getContractId(),
                     ContractTransactionStatus.PENDING_SUBMIT);

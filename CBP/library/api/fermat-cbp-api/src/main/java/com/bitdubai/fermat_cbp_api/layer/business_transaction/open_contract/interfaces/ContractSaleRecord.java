@@ -3,15 +3,22 @@ package com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.int
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
+
+import java.util.Collection;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 27/11/15.
  */
-public class ContractRecord /*implements Contract*/ {
+public class ContractSaleRecord implements CustomerBrokerContractSale {
 
+    Collection<ContractClause> contractClauses;
+    long dayTime;
     CurrencyType merchandiseCurrency;
     float merchandiseAmount;
     long merchandiseDeliveryExpirationDate;
@@ -32,6 +39,11 @@ public class ContractRecord /*implements Contract*/ {
     //@Override
     public String getContractId() {
         return contractHash;
+    }
+
+    @Override
+    public String getNegotiatiotId() {
+        return null;
     }
 
     /**
@@ -83,6 +95,11 @@ public class ContractRecord /*implements Contract*/ {
         return this.publicKeyBroker;
     }
 
+    @Override
+    public long getDateTime() {
+        return this.dayTime;
+    }
+
     //@Override
     public String getPublicKeyCustomer() {
         return this.publicKeyCustomer;
@@ -101,6 +118,19 @@ public class ContractRecord /*implements Contract*/ {
     //@Override
     public ContractStatus getStatus() {
         return status;
+    }
+
+    @Override
+    public Collection<ContractClause> getContractClause() {
+        return this.contractClauses;
+    }
+
+    public void setContractClauses(Collection<ContractClause> contractClauses){
+        this.contractClauses=contractClauses;
+    }
+
+    public void setDayTime(long dayTime){
+        this.dayTime=dayTime;
     }
 
     public void setMerchandiseAmount(float merchandiseAmount) {
@@ -157,14 +187,15 @@ public class ContractRecord /*implements Contract*/ {
     }
 
     /**
-     * The string of the ContractRecord will be used to generate a unique Hash.
+     * The string of the ContractSaleRecord will be used to generate a unique Hash.
      * This hash will be used as Id.
      * I generate an XML with the class structure.
      * @return
      */
     //@Override
     public String toString() {
-        return XMLParser.parseObject(this);
+        //TODO: create a better to string
+        return XMLParser.parseObject((Contract)this);
     }
 
 }
