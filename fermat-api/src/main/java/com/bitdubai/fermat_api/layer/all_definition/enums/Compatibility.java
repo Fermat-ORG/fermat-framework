@@ -26,18 +26,15 @@ public enum Compatibility implements FermatEnum {
     }
 
     public static Compatibility getByCode(String code) throws InvalidParameterException {
-
-        switch (code) {
-            case "COMP":    return Compatibility.COMPATIBLE;
-            case "INCO":    return Compatibility.INCOMPATIBLE;
-            case "NONE":    return Compatibility.NONE;
-            default:
-                throw new InvalidParameterException(
-                        "Code Received: " + code,
-                        "This code is not valid for the Compatibility enum."
-                );
+        for (Compatibility vault : Compatibility.values()) {
+            if (vault.getCode().equals(code))
+                return vault;
+            }
+        throw new InvalidParameterException(
+                "Code Received: " + code,
+                "This code is not valid for the Compatibility enum."
+            );
         }
-    }
 
     @Override
     public String getCode() {
