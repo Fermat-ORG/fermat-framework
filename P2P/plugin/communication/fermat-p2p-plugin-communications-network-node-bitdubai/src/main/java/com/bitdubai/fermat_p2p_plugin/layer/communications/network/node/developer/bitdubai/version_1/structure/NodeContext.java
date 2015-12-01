@@ -32,7 +32,7 @@ public class NodeContext {
      * @param key of the reference
      * @param value of the reference
      */
-    public void add(String key, Object value){
+    public static void add(String key, Object value){
         references.put(key, value);
     }
 
@@ -41,7 +41,7 @@ public class NodeContext {
      * @param key of the reference
      * @return reference
      */
-    public Object get(String key){
+    public static Object get(String key){
         return references.get(key);
     }
 
@@ -50,7 +50,7 @@ public class NodeContext {
      * @param key of the reference
      * @return reference remove
      */
-    public Object remove(String key){
+    public static Object remove(String key){
         return references.remove(key);
     }
 
