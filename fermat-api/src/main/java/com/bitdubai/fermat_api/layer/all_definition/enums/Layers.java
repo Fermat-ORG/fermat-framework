@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum Layers implements FermatEnum {
     /**
-     * In order to do make code more readable, please keep the elements in the Enum sorted alphabetically.
+     * To do make code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     ACTOR                      ("ACT"),
     ACTOR_CONNECTION           ("ACC"),
