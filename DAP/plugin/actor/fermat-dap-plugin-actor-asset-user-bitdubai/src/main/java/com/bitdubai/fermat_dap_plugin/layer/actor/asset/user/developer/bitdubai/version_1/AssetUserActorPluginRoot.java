@@ -270,9 +270,9 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantConnectToActorAssetRedeemPointException {
+    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint>  actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException {
         try {
-//            for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
+            for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
 //                try {
                     cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(
                             null,
@@ -288,7 +288,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 //                } catch (CantUpdateAssetUserConnectionException e) {
 //                    e.printStackTrace();
 //                }
-//            }
+            }
         } catch (CantSendAddressExchangeRequestException e) {
             e.printStackTrace();
         }
