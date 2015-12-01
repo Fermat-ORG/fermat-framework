@@ -30,6 +30,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatab
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDeveloperDatabaseFactory;
@@ -191,6 +192,13 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
             openContractBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
 
             /**
+             * Initialize Dao
+             */
+            OpenContractBusinessTransactionDao openContractBusinessTransactionDao=
+                    new OpenContractBusinessTransactionDao(pluginDatabaseSystem,
+                            pluginId,
+                            database);
+            /**
              * Initialize manager
              */
             //System.out.println("OPEN_CONTRACT Man");
@@ -200,7 +208,8 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     //customerBrokerPurchaseNegotiationManager,
                     //customerBrokerSaleNegotiationManager,
                     //fiatIndexManager,
-                    transactionTransmissionManager);
+                    transactionTransmissionManager,
+                    openContractBusinessTransactionDao);
 
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.println("Starting Open Contract Business Transaction");
