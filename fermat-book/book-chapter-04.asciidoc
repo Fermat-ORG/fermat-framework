@@ -28,10 +28,11 @@ The components are similar to the other _OS layers_.
 ////
 File System :: access to the file system
 Database System :: access to plug-in proprietary databases +
+////
 
 === _I-OS_ layer
-(for further development) ...
-////
+(open for further development) ...
+
 
 :numbered!:
 

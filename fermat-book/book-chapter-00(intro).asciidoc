@@ -8,14 +8,14 @@ Fermat is a set of services facing the end user and based on the existing blockc
 In order to bridge the existing gap between the underlying crypto technology and the end user, Fermat offers a first layer of _reference wallets_ that are developed to address different use cases, one per wallet. + 
 A second layer of _niche wallets_ combine reference wallets functionalities and add their own touch. + 
 This both enables a third layer of *_branded wallets_* that can be generated just by changing the look and feel and navigation structure of niche wallets without the need of a developer. +
-The goal is to allow any company big or small, brand or institution to have their own digital wallet with *any* subset of the whole functionality built for the entire user community.+
+The goal is to allow any company big or small, brand or institution to have their own digital wallet with *any* subset of the whole functionality built for the entire user community. +
 Fermat's architecture includes the possibility of interconnecting the trust-less financial applications developed within its framework to the existent legacy financial system. 
 
 === Fermat Community
 
 Fermat is an Open Source project and there is an active community of developers, designers and academics contributing to it. The project's maintainer community is bitDubai, a joint venture of some of them.
 
-The project started on August 2014 and the early first version of its core was written from January to May 2015 by a handful of people. From there many more developers joined in.
+The project started on August 2014 and the early first version of its core was written from January to May 2015 by a handful of people. From there many more developers joined in. It is *code base portable* because mostly of it is written in *JAVA*.
 
 Today Fermat is a vibrant community spanning several countries and disciplines.
 
