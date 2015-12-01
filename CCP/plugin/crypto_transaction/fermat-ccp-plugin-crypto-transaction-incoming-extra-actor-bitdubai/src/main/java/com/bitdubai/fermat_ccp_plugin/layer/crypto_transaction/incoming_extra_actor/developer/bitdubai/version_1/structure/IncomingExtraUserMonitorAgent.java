@@ -108,17 +108,14 @@ public class IncomingExtraUserMonitorAgent implements DealsWithRegistry, Transac
 
     }
 
-    @Override
     public void stop(){
-        //this.agentThread.interrupt();
-
-           this.monitorAgent.stop();
-
+        this.monitorAgent.stop();
     }
 
     public boolean isRunning(){
         return this.monitorAgent.isRunning();
     }
+
 
 
 
@@ -161,7 +158,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithRegistry, Transac
 
 
 
-        private static final int SLEEP_TIME = 5000;
+        private static final int SLEEP_TIME = 10000;
 
         /**
          *DealsWithRegistry Interface implementation.
@@ -218,8 +215,8 @@ public class IncomingExtraUserMonitorAgent implements DealsWithRegistry, Transac
             IncomingExtraUserRegistry.EventWrapper eventWrapper = null;
             try {
                 // TODO (lnacosta) change this for processing all pending events and not to wait until the next agent wake up
-                eventWrapper = this.registry.getNextPendingEvent();
-                while(eventWrapper != null) {
+                 eventWrapper     = this.registry.getNextPendingEvent();
+                while(thisIsAPendingEvent(eventWrapper)) {
                     processEvent(eventWrapper);
                     eventWrapper = this.registry.getNextPendingEvent();
                 }
@@ -231,6 +228,10 @@ public class IncomingExtraUserMonitorAgent implements DealsWithRegistry, Transac
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 return;
             }
+        }
+
+        private boolean thisIsAPendingEvent(IncomingExtraUserRegistry.EventWrapper eventWrapper){
+            return eventWrapper != null;
         }
 
         private void processEvent(IncomingExtraUserRegistry.EventWrapper eventWrapper) {

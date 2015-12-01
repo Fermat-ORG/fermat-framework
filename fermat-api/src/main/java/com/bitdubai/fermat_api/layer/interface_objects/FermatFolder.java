@@ -1,8 +1,10 @@
-package com.bitdubai.sub_app.wallet_manager.fragment;
+package com.bitdubai.fermat_api.layer.interface_objects;
 
+import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.interface_objects.FermatInterfaceObject;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
-import com.bitdubai.sub_app.wallet_manager.structure.Item;
+
+
 
 import java.util.List;
 
