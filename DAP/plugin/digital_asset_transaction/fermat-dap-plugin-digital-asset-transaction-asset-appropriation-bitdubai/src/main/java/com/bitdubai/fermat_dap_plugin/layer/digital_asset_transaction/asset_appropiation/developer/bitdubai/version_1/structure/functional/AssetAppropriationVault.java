@@ -25,7 +25,7 @@ public class AssetAppropriationVault {
 
     private final UUID pluginId;
     private final PluginFileSystem pluginFileSystem;
-    private static final String STORAGE_PATH = "digital-asset-appropriation/";
+    private static final String STORAGE_PATH = "digital-asset-appropriation";
     private static final FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
     //TODO CHANGE PRIVACY TO PRIVATE
     private static final FilePrivacy FILE_PRIVACY = FilePrivacy.PUBLIC;
