@@ -18,7 +18,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 /**
  * Created by josemanueldsds on 29/11/15.
  */
-public class OtherProfileFragment extends FermatFragment {
+public class ConnectionOtherProfileFragment extends FermatFragment {
 
     private View rootView;
     private IntraUserSubAppSession intraUserSubAppSession;
@@ -31,8 +31,8 @@ public class OtherProfileFragment extends FermatFragment {
      *
      * @return InstalledFragment instance object
      */
-    public static OtherProfileFragment newInstance() {
-        return new OtherProfileFragment();
+    public static ConnectionOtherProfileFragment newInstance() {
+        return new ConnectionOtherProfileFragment();
     }
 
     @Nullable
