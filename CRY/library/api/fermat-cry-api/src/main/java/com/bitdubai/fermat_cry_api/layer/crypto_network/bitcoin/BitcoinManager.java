@@ -40,7 +40,7 @@ public interface BitcoinManager extends FermatManager {
     //public final String REGTEST_SERVER_1_ADDRESS = "52.27.201.67";
     //public final int REGTEST_SERVER_1_PORT = 18444;
 
-    public final String REGTEST_SERVER_1_ADDRESS = "192.168.1.4";
+    public final String REGTEST_SERVER_1_ADDRESS = "192.168.0.111";
 
 
     public final int REGTEST_SERVER_1_PORT = 19000;
@@ -50,7 +50,7 @@ public interface BitcoinManager extends FermatManager {
 
     //public final String REGTEST_SERVER_2_ADDRESS = "192.168.0.111";
 
-    public final String REGTEST_SERVER_2_ADDRESS = "192.168.1.4";
+    public final String REGTEST_SERVER_2_ADDRESS = "192.168.0.111";
 
     public final int REGTEST_SERVER_2_PORT = 19010;
 

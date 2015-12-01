@@ -3,8 +3,6 @@ package com.bitdubai.fermat_api.layer.desktop;
 import com.bitdubai.fermat_api.layer.interface_objects.FermatInterfaceObject;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 
-
-
 import java.util.List;
 
 /**
