@@ -60,7 +60,6 @@ public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements Crypt
 
             @Override
             public void start() throws CantStartPluginException {
-
                 try {
                     this.customerBrokerPurchaseNegotiationDao = new CryptoBrokerActorDao(pluginDatabaseSystem, pluginId);
                     this.customerBrokerPurchaseNegotiationDao.initializeDatabase();
@@ -72,9 +71,8 @@ public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements Crypt
             }
 
         /*
-            CryptoBrokerIdentityManager Interface implementation.
+            CryptoBrokerActorManager Interface implementation.
         */
-
 
             @Override
             public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException {
