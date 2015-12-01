@@ -7,8 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
@@ -85,7 +85,7 @@ public class NegotiationTransmissionAgent {
     Map<String, NegotiationTransmissionPlatformComponentProfilePlusWaitTime> waitingPlatformComponentProfile;
 
     //Pool connections requested waiting for peer or server response. PublicKey  and transaccion metadata waiting to be a response
-    Map<String,BusinessTransactionMetadata> poolConnectionsWaitingForResponse;
+    Map<String,NegotiationTransmission> poolConnectionsWaitingForResponse;
 
     //
     Map<String, FermatMessage> receiveMessage;
@@ -186,21 +186,21 @@ public class NegotiationTransmissionAgent {
             Map<String, Object> filters = new HashMap<>();
             filters.put(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode());
 
-            //Read all pending BusinessTransactionMetadata from database
-            List<BusinessTransactionMetadata> businessTransactionMetadataList = databaseDao.findAll(filters);
+            //Read all pending NegotiationTransmission from database
+            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
 
-            for (BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList) {
-                String receiverPublicKey= businessTransactionMetadata.getReceiverId();
+            for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
+                String receiverPublicKey= negotiationTransmission.getPublicKeyActorReceive();
                 if(!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
                     //TODO: hacer un filtro por aquellas que se encuentran conectadas
                     if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(receiverPublicKey) == null) {
                         if (wsCommunicationsCloudClientManager != null) {
                             if (platformComponentProfile != null) {
-                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getSenderId(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
-                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getReceiverId(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
+                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorSend(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
+                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorReceive(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
                                 communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
-                                // pass the businessTransactionMetadata to a pool waiting for the response of the other peer or server failure
-                                poolConnectionsWaitingForResponse.put(receiverPublicKey, businessTransactionMetadata);
+                                // pass the negotiationTransmission to a pool waiting for the response of the other peer or server failure
+                                poolConnectionsWaitingForResponse.put(receiverPublicKey, negotiationTransmission);
                             }
                         }
                     }
@@ -208,20 +208,20 @@ public class NegotiationTransmissionAgent {
                     NetworkServiceLocal communicationNetworkServiceLocal = networkServiceNegotiationTransmissionPluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(receiverPublicKey);
                     if (communicationNetworkServiceLocal != null) {
                         try {
-                            businessTransactionMetadata.setState(TransactionTransmissionStates.SENT);
+                            negotiationTransmission.setTransmissionState(NegotiationTransmissionState.DONE);
                             System.out.print("-----------------------\n" +
-                                    "SENDING BUSINESS TRANSACTION RECORD -----------------------\n" +
+                                    "SENDING NEGOTIATION TRANSACTION RECORD -----------------------\n" +
                                     "-----------------------\n To: " + receiverPublicKey);
 
                             // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
                             Gson gson = new Gson();
-                            String jsonBusinessTransaction =gson.toJson(businessTransactionMetadata);
+                            String jsonBusinessTransaction =gson.toJson(negotiationTransmission);
                             // Envio el mensaje a la capa de comunicacion
                             communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),receiverPublicKey,jsonBusinessTransaction);
-                            databaseDao.changeState(businessTransactionMetadata);
+                            databaseDao.changeState(negotiationTransmission);
                             System.out.print("-----------------------\n" +
-                                    "BUSINESS TRANSACTION -----------------------\n" +
-                                    "-----------------------\n STATE: " + businessTransactionMetadata.getState());
+                                    "NEGOTIATION TRANSACTION -----------------------\n" +
+                                    "-----------------------\n STATE: " + negotiationTransmission.getTransmissionState());
                         } catch (CantRegisterSendNegotiationTransmissionException e) {
                             e.printStackTrace();
                         } catch (Exception e) {
@@ -237,20 +237,16 @@ public class NegotiationTransmissionAgent {
         }
     }
 
-    private void discountWaitTime(){
-
-    }
-
     public void addRemoteNetworkServicesRegisteredList(List<PlatformComponentProfile> list){
-
+        remoteNetworkServicesRegisteredList = list;
     }
 
     public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile){
-
+        this.platformComponentProfile = platformComponentProfile;
     }
 
     public void connectionFailure(String identityPublicKey){
-
+        this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
     }
 
     public boolean isConnection(String publicKey){
@@ -286,6 +282,18 @@ public class NegotiationTransmissionAgent {
 
     private void launchNotification(){
 
+    }
+
+    private void discountWaitTime(){
+        if(!waitingPlatformComponentProfile.isEmpty()) {
+            for (NegotiationTransmissionPlatformComponentProfilePlusWaitTime negotiationTransmissionPlatformComponentProfilePlusWaitTime : waitingPlatformComponentProfile.values()) {
+                negotiationTransmissionPlatformComponentProfilePlusWaitTime.WaitTimeDown();
+                if (negotiationTransmissionPlatformComponentProfilePlusWaitTime.getWaitTime() <= 0) {
+                    remoteNetworkServicesRegisteredList.add(negotiationTransmissionPlatformComponentProfilePlusWaitTime.getPlatformComponentProfile());
+                    waitingPlatformComponentProfile.remove(negotiationTransmissionPlatformComponentProfilePlusWaitTime);
+                }
+            }
+        }
     }
 
     private void receiveCycle(){

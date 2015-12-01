@@ -26,9 +26,11 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,10 +77,14 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         return database;
     }
 
+    DatabaseTable getDatabaseTable() {
+        return getDataBase().getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+    }
+
     /*REGISTER NEW SEND NEGOTIATION TRANSMISSION*/
     public void registerSendNegotiatioTransmission(NegotiationTransmission negotiationTransmission) throws CantRegisterSendNegotiationTransmissionException{
         try {
-            DatabaseTable table = this.database.getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            DatabaseTable table = getDatabaseTable();
             DatabaseTableRecord record = table.getEmptyRecord();
             loadRecordAsSendNegotiatioTransmission(record,negotiationTransmission);
             table.insertRecord(record);
@@ -97,7 +103,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
      * @return List<FermatMessage>
      * @throws CantRegisterSendNegotiationTransmissionException
      */
-    public List<NegotiationTransmission> findAll(Map<String, Object> filters) throws CantRegisterSendNegotiationTransmissionException {
+    public List<NegotiationTransmission> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null || filters.isEmpty()) {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
@@ -107,19 +113,18 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
-            DatabaseTable templateTable = this.database.getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);;
-
+            DatabaseTable table = getDatabaseTable();
             for (String key : filters.keySet()) {
-                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                DatabaseTableFilter newFilter = table.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.EQUAL);
                 newFilter.setColumn(key);
                 newFilter.setValue((String) filters.get(key));
                 filtersTable.add(newFilter);
             }
 
-            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
-            templateTable.loadToMemory();
-            List<DatabaseTableRecord> records = templateTable.getRecords();
+            table.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
 
             list = new ArrayList<>();
             list.clear();
@@ -132,9 +137,9 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         } catch (CantLoadTableToMemoryException e) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
-            throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "The data no exist");
+            throw new CantReadRecordDataBaseException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "The data no exist");
         } catch (InvalidParameterException e) {
-            throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, "", "Invalid parameter");
+            throw new CantReadRecordDataBaseException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, "", "Invalid parameter");
         }
 
         return list;
@@ -145,43 +150,93 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
      *
      * @throws CantRegisterSendNegotiationTransmissionException
      */
-    public void changeState(UUID transaction_id, TransactionTransmissionStates transactionTransmissionStates) throws CantRegisterSendNegotiationTransmissionException {
+    public void changeState(UUID transmissionId, NegotiationTransmissionState negotiationTransmissionState) throws CantRegisterSendNegotiationTransmissionException {
 
-        if (transaction_id == null) {
+        if (transmissionId == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
         try {
 
-            BusinessTransactionMetadata businessTransactionMetadata = getMetadata(transaction_id);
-            businessTransactionMetadata.setState(transactionTransmissionStates);
+            NegotiationTransmission negotiationTransmission = getNegotiationTransmissionRecord(transmissionId);
+            negotiationTransmission.setTransmissionState(negotiationTransmissionState);
 
+            DatabaseTable table = getDatabaseTable();
+            DatabaseTableRecord record = table.getEmptyRecord();
+            
+            //1- Create the record to the entity
+            loadRecordAsSendNegotiatioTransmission(record, negotiationTransmission);
 
-            DatabaseTable addressExchangeRequestTable = database.getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
-            DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
-            /*
-             * 1- Create the record to the entity
-             */
-            DatabaseTableRecord cryptoTransmissionMetadataRecord = buildDatabaseRecord(entityRecord, businessTransactionMetadata);
-
-            /*
-             * 2.- Create a new transaction and execute
-             */
+            //2.- Create a new transaction and execute
             DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), cryptoTransmissionMetadataRecord);
+            transaction.addRecordToUpdate(getDatabaseTable(), record);
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
             throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, databaseTransactionFailedException, contextBuffer.toString(), "The data no exist");
         } catch (PendingRequestNotFoundException e) {
             e.printStackTrace();
-        } catch (CantGetTransactionTransmissionException e) {
+        } catch (CantGetNegotiationTransmissionException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public void changeState(NegotiationTransmission negotiationTransmission) throws CantRegisterSendNegotiationTransmissionException {
+
+        if (negotiationTransmission == null) {
+            throw new IllegalArgumentException("The entity is required, can not be null");
+        }
+
+        try {
+
+            DatabaseTable table = getDatabaseTable();
+            DatabaseTableRecord record = table.getEmptyRecord();
+            /*
+             * 1- Create the record to the entity
+             */
+            loadRecordAsSendNegotiatioTransmission(record, negotiationTransmission);
+
+            /*
+             * 2.- Create a new transaction and execute
+             */
+            DatabaseTransaction transaction = getDataBase().newTransaction();
+            transaction.addRecordToUpdate(getDatabaseTable(), record);
+            getDataBase().executeTransaction(transaction);
+
+        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, databaseTransactionFailedException, contextBuffer.toString(), "The data no exist");
+        }
+
+    }
+
+    public NegotiationTransmission getNegotiationTransmissionRecord(UUID transmissionId) throws CantGetNegotiationTransmissionException,
+            PendingRequestNotFoundException {
+
+        if (transmissionId == null)
+            throw new CantGetNegotiationTransmissionException("",null, "requestId, can not be null","");
+
+        try {
+
+            DatabaseTable databaseTable = getDatabaseTable();
+            databaseTable.setUUIDFilter(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+
+            if (!records.isEmpty())
+                return constructNegotiationTransmission(records.get(0));
+            else
+                throw new PendingRequestNotFoundException(null, "RequestID: "+transmissionId, "Cannot find an address exchange request with the given request id.");
+
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantGetNegotiationTransmissionException("",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch (InvalidParameterException exception) {
+            throw new CantGetNegotiationTransmissionException("",exception, "Check the cause.","");
+        }
     }
 
     /*PRIVATE*/

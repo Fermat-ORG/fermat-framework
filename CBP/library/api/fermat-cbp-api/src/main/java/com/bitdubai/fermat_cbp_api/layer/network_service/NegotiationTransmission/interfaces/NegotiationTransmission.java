@@ -32,7 +32,8 @@ public interface NegotiationTransmission {
 
     NegotiationTransmissionState getTransmissionState();
 
-
     long getTimestamp();
+
+    void setTransmissionState(NegotiationTransmissionState negotiationTransmissionState);
 
 }

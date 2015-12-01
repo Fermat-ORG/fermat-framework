@@ -23,7 +23,7 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     private final String publicKeyActorReceive;
     private final PlatformComponentType actorReceiveType;
     private final NegotiationTransmissionType transmissionType;
-    private final NegotiationTransmissionState transmissionState;
+    private NegotiationTransmissionState transmissionState;
     private final long timestamp;
 
     public NegotiationTransmissionImpl(
@@ -73,4 +73,6 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     public NegotiationTransmissionState getTransmissionState(){ return transmissionState; }
 
     public long getTimestamp(){ return timestamp; }
+
+    public void setTransmissionState(NegotiationTransmissionState state){  this.transmissionState = state; }
 }
