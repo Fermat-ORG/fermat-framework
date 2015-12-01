@@ -34,9 +34,11 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.d
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.event_handler.OpenContractRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure.OpenContractTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +57,9 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     LogManager logManager;
@@ -210,6 +215,14 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     //fiatIndexManager,
                     transactionTransmissionManager,
                     openContractBusinessTransactionDao);
+
+            /**
+             * Init event recorder service.
+             */
+            OpenContractRecorderService openContractRecorderService=new OpenContractRecorderService(
+                    openContractBusinessTransactionDao,
+                    eventManager);
+            openContractRecorderService.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.println("Starting Open Contract Business Transaction");
