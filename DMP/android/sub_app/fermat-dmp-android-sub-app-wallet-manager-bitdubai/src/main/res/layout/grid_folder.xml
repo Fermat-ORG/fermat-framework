@@ -22,26 +22,23 @@
             <ImageView
                 android:id="@+id/image_view"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:scaleType="centerCrop"
-                android:textColor="@color/black_overlay"
-                android:textSize="13sp"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"
-                android:layout_alignParentTop="true"
-                android:layout_column="2"
+                android:layout_gravity="center_horizontal"
                 android:clickable="true"
                 android:src="@drawable/mati_profile"
                 />
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:text="App Name"
-                android:layout_width="fill_parent"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/company_text_view"
                 android:gravity="center"
                 android:textStyle="bold"
+                android:paddingTop="2dp"
+                android:layout_gravity="center_horizontal"
                 android:textSize="13sp"
-                app:typeface="CAVIAR_DREAMS_BOLD"
+                app:typeface="CAVIAR_DREAMS"
                 android:textColor="#000" />
         </LinearLayout>
     </RelativeLayout>

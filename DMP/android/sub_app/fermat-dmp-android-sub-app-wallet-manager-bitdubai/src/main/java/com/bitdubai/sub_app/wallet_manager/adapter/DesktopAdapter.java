@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.wallet_manager.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.AdapterChangeListener;
@@ -23,6 +24,7 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
     public static final int DEKSTOP = 1;
     public static final int FOLDER = 2;
     public static final int DESKTOP_FOLDER = 3;
+    private Typeface tf;
     private Item parentItem;
 
     private int fragmentWhoUseThisAdapter;
@@ -46,6 +48,7 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
         this.fragmentWhoUseThisAdapter = fragmentWhoUseThisAdapter;
         this.isChild=isChild;
         this.parentItem = parent;
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
     }
 
 
@@ -58,7 +61,7 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
         @Override
         protected int getCardViewResource() {
             if(DEKSTOP==fragmentWhoUseThisAdapter)
-            return R.layout.shell_wallet_desktop_front_grid_item;
+            return R.layout.shell_sub_app_desktop_fragment_grid_item;
             else if(FOLDER==fragmentWhoUseThisAdapter) return R.layout.grid_folder;
             else if (DESKTOP_FOLDER==fragmentWhoUseThisAdapter) return R.layout.desktop_grid_item;
 
@@ -97,6 +100,7 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
 
                 if(!isChild) {
                     holder.name.setText(data.getName());
+                    //holder.name.setTypeface(tf);
 //                    holder.thumbnail.setOnClickListener(new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View view) {
@@ -122,7 +126,6 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
                 }else {
                     Bitmap bm = BitmapFactory.decodeResource(context.getResources(), data.getIconResource());
                     Bitmap bt=Bitmap.createScaledBitmap(bm, 50, 50, false);
-                    holder.thumbnail.setImageBitmap(bt);
                     View.OnClickListener onClickListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

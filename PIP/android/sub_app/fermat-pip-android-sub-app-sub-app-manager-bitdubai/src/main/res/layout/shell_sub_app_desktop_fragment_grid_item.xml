@@ -14,34 +14,34 @@
             android:id="@+id/sub_apps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
             android:orientation="vertical"
             android:clickable="true"
-          >
+            >
             <ImageView
                 android:id="@+id/image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                android:textColor="@color/black_overlay"
-                android:textStyle="bold"
                 android:textSize="13sp"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"
+                android:layout_gravity="center_horizontal"
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="match_parent"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/company_text_view"
+                android:paddingTop="5dp"
                 android:gravity="center"
+                android:paddingRight="5dp"
                 android:textColor="#ffffff"
-                app:typeface="CAVIAR_DREAMS_BOLD"
+                app:typeface="CAVIAR_DREAMS"
                 android:textStyle="bold"
                 android:textSize="13sp"/>
+
+
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
