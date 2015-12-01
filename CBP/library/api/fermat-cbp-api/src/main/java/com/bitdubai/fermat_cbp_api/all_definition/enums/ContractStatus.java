@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by angel on 18/9/15.
  * Updated by Manuel Perez on 23/11/2015
  */
- 
+
 public enum ContractStatus implements FermatEnum {
     CANCELLED ("CAN"),
     COMPLETED("COM"),
