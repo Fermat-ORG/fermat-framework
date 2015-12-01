@@ -584,8 +584,10 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
                 @Override
                 public void onClick(View view) {
                     try {
-                        intraUserModuleManager.denyConnection(intraUser.getPublicKey());
+                        intraUserModuleManager.denyConnection(intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(), intraUser.getPublicKey());
                     } catch (IntraUserConectionDenegationFailedException e) {
+                        e.printStackTrace();
+                    } catch (CantGetActiveLoginIdentityException e) {
                         e.printStackTrace();
                     }
                 }
