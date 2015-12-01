@@ -17,7 +17,7 @@ import java.util.UUID;
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 13/10/15.
+ * Created by Alejandro Bicelis - (abicelis@gmail.com) on 23/11/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -47,7 +47,7 @@ public class CashMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected  Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database;
 
         /**
@@ -70,26 +70,17 @@ public class CashMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
-             * Create Cash Money table.
+             * Create Wallets table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CashMoneyWalletDatabaseConstants.CASH_MONEY_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CashMoneyWalletDatabaseConstants.WALLETS_TABLE_NAME);
 
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_WALLET_KEY_BROKER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_AMOUNT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_REFERENCE_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.WALLETS_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.WALLETS_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.WALLETS_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.WALLETS_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.WALLETS_TIMESTAMP_WALLET_CREATION_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
-            table.addIndex(CashMoneyWalletDatabaseConstants.CASH_MONEY_FIRST_KEY_COLUMN);
+            table.addIndex(CashMoneyWalletDatabaseConstants.WALLETS_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -97,19 +88,20 @@ public class CashMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }           /**
-             * Create Cash Money Total Balances table.
+             * Create Transactions table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME);
 
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_WALLET_KEY_BROKER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_PUBLIC_KEY_BROKER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_CASH_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.TRANSACTIONS_ACTOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.TRANSACTIONS_PLUGIN_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.TRANSACTIONS_AMOUNT_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.TRANSACTIONS_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
-            table.addIndex(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_FIRST_KEY_COLUMN);
+            table.addIndex(CashMoneyWalletDatabaseConstants.TRANSACTIONS_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -117,27 +109,6 @@ public class CashMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
-            table = databaseFactory.newTableFactory(ownerId,CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_TABLE_NAME );
-
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_CASH_TRANSACTION_ID_COLUMN_NAME,DatabaseDataType.STRING,100,Boolean.TRUE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_PUBLIC_KEY_ACTOR_FROM,DatabaseDataType.STRING,100,Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_PUBLIC_KEY_ACTOR_TO,DatabaseDataType.STRING,100,Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_STATUS,DatabaseDataType.STRING,100,Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_BALANCE_TYPE,DatabaseDataType.STRING,100,Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_TRANSACTION_TYPE,DatabaseDataType.STRING,100,Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_AMAUNT,DatabaseDataType.STRING,100,Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_CASH_CURRENCY_TYPE,DatabaseDataType.STRING,100,Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_CASH_REFERENCE,DatabaseDataType.STRING,100,Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_TIME_STAMP,DatabaseDataType.STRING,100,Boolean.FALSE);
-            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_MEMO,DatabaseDataType.STRING,100,Boolean.FALSE);
-
-            table.addIndex(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD__FIRST_KEY_COLUMN);
-            try {
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException e) {
-                e.printStackTrace();
-            }
-
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

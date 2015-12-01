@@ -844,19 +844,19 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         paymentRecord.getAmount(),
                         cryptoWalletWalletContact,
                         PaymentRequest.SEND_PAYMENT,
-                        paymentRecord.getState().name());
+                        paymentRecord.getState());
                 lst.add(cryptoWalletPaymentRequest);
             }
 
 
             //TODO: Harcoder
-            if(lst.size() == 0){
+            /*if(lst.size() == 0){
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
                 lst.add(cryptoWalletPaymentRequest);
                 cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
 
                 lst.add(cryptoWalletPaymentRequest);
-            }
+            }*/
 
 
             return lst;
@@ -904,20 +904,20 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         paymentRecord.getAmount(),
                         cryptoWalletWalletContact,
                         PaymentRequest.RECEIVE_PAYMENT,
-                        paymentRecord.getState().name()
+                        paymentRecord.getState()
                 );
 
                 lst.add(cryptoWalletPaymentRequest);
             }
 
             //TODO: Harcoder
-            if(lst.size() == 0) {
+           /* if(lst.size() == 0) {
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"1 hour ago", "Starbucks coffe", 500000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
                 lst.add(cryptoWalletPaymentRequest);
                 cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"2 hour ago", "Hamburguer from MC donald", 100000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
 
                 lst.add(cryptoWalletPaymentRequest);
-            }
+            }*/
 
             return lst;
         } catch (Exception e) {
@@ -1143,7 +1143,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                 case DEBIT:
                     try {
                         involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(),intraUserLoggedInPublicKey);
-                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 
@@ -1193,7 +1193,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                                final CryptoAddress         cryptoAddress    ,
                                                final String                description      ,
                                                final long                  amount           ,
-                                               final BlockchainNetworkType networkType      ) throws CantSendCryptoPaymentRequestException {
+                                               final BlockchainNetworkType networkType      ,
+                                               final ReferenceWallet       referenceWallet) throws CantSendCryptoPaymentRequestException {
 
         try {
 
@@ -1206,7 +1207,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                     cryptoAddress,
                     description,
                     amount,
-                    networkType
+                    networkType,
+                    referenceWallet
             );
         } catch (CantGenerateCryptoPaymentRequestException e) {
 

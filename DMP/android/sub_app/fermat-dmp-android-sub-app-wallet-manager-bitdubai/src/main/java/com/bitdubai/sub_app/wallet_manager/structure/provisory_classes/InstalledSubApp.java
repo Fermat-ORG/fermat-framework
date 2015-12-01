@@ -23,6 +23,9 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     private String publicKey;
     private String walletPlatformIdentifier;
     private Version version;
+    private int iconResource;
+    private int position;
+
 
     public InstalledSubApp(SubApps subApps, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.subApps = subApps;
@@ -33,6 +36,10 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
         this.publicKey = publicKey;
         this.walletPlatformIdentifier = walletPlatformIdentifier;
         this.version = version;
+    }
+
+    public void setIconResource(int iconResource) {
+        this.iconResource = iconResource;
     }
 
     /**
@@ -131,7 +138,27 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     }
 
     @Override
+    public int getIconResource() {
+        return iconResource;
+    }
+
+    @Override
+    public String getAppName() {
+        return subApps.getCode();
+    }
+
+    @Override
     public String getAppPublicKey() {
         return publicKey;
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

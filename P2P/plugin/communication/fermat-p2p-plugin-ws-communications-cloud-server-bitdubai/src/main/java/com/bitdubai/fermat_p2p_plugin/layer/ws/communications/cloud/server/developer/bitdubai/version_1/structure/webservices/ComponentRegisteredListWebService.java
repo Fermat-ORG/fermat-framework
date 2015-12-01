@@ -20,10 +20,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
-import org.restlet.data.MediaType;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
@@ -62,7 +60,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
     }
 
     @Post("application/json")
-    public Representation getList(Representation entity){
+    public String getList(Representation entity){
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("ComponentRegisteredListWebService - Starting getList");
@@ -70,6 +68,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
 
         try{
 
+            System.out.println("ComponentRegisteredListWebService - entity = "+entity);
             wsCommunicationCloudServer = (WsCommunicationCloudServer) getContext().getAttributes().get(WebServicesApplication.PLUGIN_ROOT_ATT_NAME);
 
             /*
@@ -77,7 +76,6 @@ public class ComponentRegisteredListWebService extends ServerResource {
              */
             JSONObject requestParametersJsonObject = (new JsonRepresentation(entity)).getJsonObject();
 
-            System.out.println("ComponentRegisteredListWebService - requestParametersJsonObject = "+requestParametersJsonObject);
 
             String clientIdentityPublicKey = requestParametersJsonObject.getString(JsonAttNamesConstants.NAME_IDENTITY);
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(requestParametersJsonObject.getString(JsonAttNamesConstants.DISCOVERY_PARAM));
@@ -119,10 +117,13 @@ public class ComponentRegisteredListWebService extends ServerResource {
         }
 
         String jsonString = gson.toJson(jsonObjectRespond);
-        System.out.println("ComponentRegisteredListWebService - json response length ="+jsonString.length());
 
-        return  new StringRepresentation(jsonString, MediaType.APPLICATION_JSON);
-        //return new org.restlet.engine.application.EncodeRepresentation(org.restlet.data.Encoding.ZIP, (new StringRepresentation(jsonString, MediaType.APPLICATION_JSON)));
+        JsonRepresentation jsonRepresentationRespond = new JsonRepresentation(jsonString.trim());
+
+        System.out.println("ComponentRegisteredListWebService - jsonString.length() = "+jsonString.length());
+        System.out.println("ComponentRegisteredListWebService - jsonRepresentationRespond.getSize() = "+jsonRepresentationRespond.getSize());
+
+        return  jsonString;
     }
 
     /**
@@ -183,6 +184,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
                 iterator.remove();
             }
         }
+
 
         return list;
     }

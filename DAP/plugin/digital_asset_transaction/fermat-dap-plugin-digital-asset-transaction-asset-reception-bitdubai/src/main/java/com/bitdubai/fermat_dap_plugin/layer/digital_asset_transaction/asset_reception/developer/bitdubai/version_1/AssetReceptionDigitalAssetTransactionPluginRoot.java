@@ -210,7 +210,7 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
             digitalAssetReceptionVault.setAssetUserWalletManager(this.assetUserWalletManager);
             printSomething("The wallet public key is hardcoded");
             digitalAssetReceptionVault.setWalletPublicKey("walletPublicKeyTest");
-            digitalAssetReceptor = new DigitalAssetReceptor(this.errorManager, this.pluginId, this.pluginFileSystem);
+            digitalAssetReceptor = new DigitalAssetReceptor(this.errorManager, this.pluginId, this.pluginFileSystem, this.bitcoinNetworkManager);
             digitalAssetReceptor.setDigitalAssetReceptionVault(digitalAssetReceptionVault);
 
             AssetReceptionDao assetReceptionDao = new AssetReceptionDao(this.pluginDatabaseSystem, this.pluginId);

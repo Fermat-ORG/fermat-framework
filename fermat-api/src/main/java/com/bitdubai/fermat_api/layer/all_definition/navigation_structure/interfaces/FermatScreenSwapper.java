@@ -24,7 +24,7 @@ public interface FermatScreenSwapper {
 
     public void onCallbackViewObserver(FermatCallback fermatCallback);
 
-    void connectWithOtherApp(Engine emgine,Object[] objectses);
+    void connectWithOtherApp(Engine emgine,String fermatAppPublicKey,Object[] objectses);
 
     Object[] connectBetweenAppsData();
 }

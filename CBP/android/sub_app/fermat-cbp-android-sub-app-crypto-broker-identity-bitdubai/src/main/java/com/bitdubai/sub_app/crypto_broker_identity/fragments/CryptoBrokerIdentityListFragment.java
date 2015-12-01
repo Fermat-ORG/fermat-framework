@@ -17,7 +17,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -111,7 +111,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
 
-        if (identityInformationList.isEmpty()) {
+        if (identityInformationList == null || identityInformationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
@@ -160,8 +160,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
 
         try {
-            data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
-        } catch (CantGetCryptoBrokerListException ex) {
+            data = moduleManager.listIdentities(0, 0);
+        } catch (CantListCryptoBrokersException ex) {
             errorManager.reportUnexpectedSubAppException(
                     SubApps.CBP_CRYPTO_BROKER_IDENTITY,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,

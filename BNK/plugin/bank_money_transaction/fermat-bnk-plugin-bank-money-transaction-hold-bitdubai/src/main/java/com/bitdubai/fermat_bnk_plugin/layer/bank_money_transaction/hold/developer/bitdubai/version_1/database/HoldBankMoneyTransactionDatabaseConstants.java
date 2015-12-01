@@ -23,9 +23,12 @@ public class HoldBankMoneyTransactionDatabaseConstants {
     static final String HOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME = "actor_public_key";
     static final String HOLD_ACCOUNT_NUMBER_COLUMN_NAME = "account_number";
     static final String HOLD_AMOUNT_COLUMN_NAME = "amount";
-    static final String HOLD_TIMESTAMP_COLUMN_NAME = "timestamp";
+    static final String HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME = "hold_timestamp_acknowledge_colunm_name";
     static final String HOLD_MEMO_COLUMN_NAME = "memo";
     static final String HOLD_STATUS_COLUMN_NAME = "status";
+    static final String HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME = "hold_timestamp_confirm_reject_colunm_name";
+    static final String HOLD_CURRENCY_COLUMN_NAME = "hold_currency_colunm_name";
+
 
     static final String HOLD_FIRST_KEY_COLUMN = "id";
 

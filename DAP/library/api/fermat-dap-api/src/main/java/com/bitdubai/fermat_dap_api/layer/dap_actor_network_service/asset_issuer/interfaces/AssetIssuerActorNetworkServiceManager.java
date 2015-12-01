@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
@@ -10,7 +13,7 @@ import java.util.List;
 /**
  * Created by franklin on 15/10/15.
  */
-public interface AssetIssuerActorNetworkServiceManager {
+public interface AssetIssuerActorNetworkServiceManager extends FermatManager {
     /**
      * Register the ActorAssetUser in the cloud server like online
      *
@@ -21,20 +24,13 @@ public interface AssetIssuerActorNetworkServiceManager {
 
     /**
      *
-     * @param actorAssetIssuerSender who send the message
-     * @param actorAssetIssuerDestination who recibe the message
-     * @param msjContent  the message content
+     * @param actorSender who send the message
+     * @param actorDestination who recibe the message
+     * @param dapMessage  Object message content
      *
      * @throws CantSendMessageException
      */
-    public void sendMessage(ActorAssetIssuer actorAssetIssuerSender, ActorAssetIssuer actorAssetIssuerDestination, String msjContent)  throws CantSendMessageException;
-
-    /**
-     * Request the list of the actorAssetUser register in the server
-     *
-     * @throws CantRequestListActorAssetIssuerRegisteredException
-     */
-    public void requestListActorAssetIssuerRegistered()  throws CantRequestListActorAssetIssuerRegisteredException;
+    public void sendMessage(DAPActor actorSender, DAPActor actorDestination, DAPMessage dapMessage)  throws CantSendMessageException;
 
     /**
      * Get the content of the list previously requested, this method have to call after the

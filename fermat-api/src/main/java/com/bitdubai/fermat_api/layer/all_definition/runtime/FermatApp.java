@@ -5,6 +5,8 @@ package com.bitdubai.fermat_api.layer.all_definition.runtime;
  */
 public interface FermatApp {
 
+    String getAppName();
+
     String getAppPublicKey();
 
 }

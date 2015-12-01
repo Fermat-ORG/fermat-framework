@@ -84,6 +84,7 @@ public class DepositBankMoneyTransactionDatabaseFactory implements DealsWithPlug
             table.addColumn(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
+
             table.addIndex(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_FIRST_KEY_COLUMN);
 
             try {

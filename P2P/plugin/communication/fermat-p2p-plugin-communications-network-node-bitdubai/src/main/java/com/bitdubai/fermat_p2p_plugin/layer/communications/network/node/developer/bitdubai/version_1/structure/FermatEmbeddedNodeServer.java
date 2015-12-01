@@ -8,24 +8,29 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketClientChannelServerEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketNodeChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.JaxRsActivator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.servlets.HomeServlet;
 
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.cdi.CdiInjectorFactory;
+import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
+import org.jboss.resteasy.spi.ResteasyDeployment;
 import org.xnio.BufferAllocator;
 import org.xnio.ByteBufferSlicePool;
 
-import java.io.File;
-
-import javax.servlet.ServletException;
-
 import io.undertow.Handlers;
 import io.undertow.Undertow;
+import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
-import io.undertow.server.handlers.resource.FileResourceManager;
+import io.undertow.server.handlers.resource.ResourceHandler;
+import io.undertow.server.handlers.resource.ResourceManager;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
+import io.undertow.servlet.api.ServletContainer;
+import io.undertow.util.Headers;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
 
 /**
@@ -64,9 +69,14 @@ public class FermatEmbeddedNodeServer {
     public static final String DEFAULT_IP = "0.0.0.0";
 
     /**
-     * Represent the deploymentManager instance
+     * Represent the serverBuilder instance
      */
-    private DeploymentManager deploymentManager;
+    private final Undertow.Builder serverBuilder;
+
+    /**
+     * Represent the servletContainer instance
+     */
+    private final ServletContainer servletContainer;
 
     /**
      * Represent the pathHandler instance
@@ -74,69 +84,139 @@ public class FermatEmbeddedNodeServer {
     private PathHandler pathHandler;
 
     /**
-     * Represent the undertowServer instance
+     * Represent the server instance
      */
-    private Undertow undertowServer;
+    private Undertow server;
 
     /**
      * Constructor
      */
     public FermatEmbeddedNodeServer(){
        super();
+       this.serverBuilder = Undertow.builder().addHttpListener(DEFAULT_PORT, DEFAULT_IP);
+       this.servletContainer = Servlets.defaultContainer();
+
     }
 
+    /**
+     * Method that create a InternalHandler
+     */
+    private class InternalHandler implements HttpHandler {
 
-    private void init() throws ServletException {
+        @Override
+        public void handleRequest(final HttpServerExchange exchange) throws Exception {
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+            exchange.getResponseSender().send("Fermat - Network Node running....");
+        }
+    }
+
+    /**
+     * Method that create a HttpHandler for manage the resources of the
+     * web app
+     */
+    private static HttpHandler createWebAppResourceHandler() {
+
+        final ResourceManager staticResources = new ClassPathResourceManager(FermatEmbeddedNodeServer.class.getClassLoader(),"web");
+        final ResourceHandler resourceHandler = new ResourceHandler(staticResources);
+        resourceHandler.setWelcomeFiles("index.html");
+        return resourceHandler;
+    }
+
+    /**
+     * Method that create a HttpHandler for manage the web socket app and the
+     * Servlet Handler
+     */
+    private HttpHandler createWebSocketAppServletHandler() throws Exception {
 
         /*
-         * Create the  appWebSocketDeploymentInfo and configure
+         * Create the App WebSocketDeploymentInfo and configure
          */
         WebSocketDeploymentInfo appWebSocketDeploymentInfo = new WebSocketDeploymentInfo();
         appWebSocketDeploymentInfo.setBuffers(new ByteBufferSlicePool(BufferAllocator.BYTE_BUFFER_ALLOCATOR, 17000, 17000 * 16));
         appWebSocketDeploymentInfo.addEndpoint(WebSocketNodeChannelServerEndpoint.class);
         appWebSocketDeploymentInfo.addEndpoint(WebSocketClientChannelServerEndpoint.class);
 
-        /*
-         * Create the  appDeploymentInfo and configure
+         /*
+         * Create the App DeploymentInfo and configure
          */
-        DeploymentInfo appDeploymentInfo = Servlets.deployment()
-                                        .setClassLoader(FermatEmbeddedNodeServer.class.getClassLoader())
-                                        .setContextPath(APP_NAME)
-                                        .setDeploymentName(WAR_APP_NAME)
-                                        .setResourceManager(new FileResourceManager(new File("src/main/webapp"), 1024))
-                                        .addServlets(Servlets.servlet("HomeServlet", HomeServlet.class).addMapping("/home"))
-                                        .setResourceManager(new ClassPathResourceManager(FermatEmbeddedNodeServer.class.getClassLoader(), FermatEmbeddedNodeServer.class.getPackage()))
-                                        .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, appWebSocketDeploymentInfo);
+        DeploymentInfo appDeploymentInfo = Servlets.deployment();
+        appDeploymentInfo.setClassLoader(FermatEmbeddedNodeServer.class.getClassLoader())
+                        .setContextPath(APP_NAME)
+                        .setDeploymentName(WAR_APP_NAME)
+                        .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, appWebSocketDeploymentInfo)
+                        .addServlets(Servlets.servlet("HomeServlet", HomeServlet.class).addMapping("/home"))
+                        .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
 
-        /*
-         * Create the deploymentManager
-         */
-        deploymentManager = Servlets.defaultContainer().addDeployment(appDeploymentInfo);
 
         /*
          * Deploy the app
          */
-        deploymentManager.deploy();
+        DeploymentManager manager = servletContainer.addDeployment(appDeploymentInfo);
+        manager.deploy();
 
-        /*
-         * Create the path handle
-         */
-        pathHandler = Handlers.path(Handlers.redirect("/fermat/home")).addPrefixPath(APP_NAME, deploymentManager.start());
 
-        /*
-         * Create the server
-         */
-        undertowServer = Undertow.builder().addHttpListener(DEFAULT_PORT, DEFAULT_IP).setHandler(pathHandler).build();
-
+        return manager.start();
     }
+
+    /**
+     * Method that create a HttpHandler for manage the Restful app api
+     */
+    private HttpHandler createRestAppApiHandler() throws Exception {
+
+        /*
+         * Instantiate the undertowJaxrsServer
+         */
+        UndertowJaxrsServer undertowJaxrsServer = new UndertowJaxrsServer();
+
+        /*
+         * Create the App RestEasyDeployment and configure
+         */
+        ResteasyDeployment restEasyDeploymentInfo = new ResteasyDeployment();
+        restEasyDeploymentInfo.setApplicationClass(JaxRsActivator.class.getName());
+        restEasyDeploymentInfo.setInjectorFactoryClass(CdiInjectorFactory.class.getName());
+
+        /*
+         * Create the restAppDeploymentInfo and configure
+         */
+        DeploymentInfo restAppDeploymentInfo = undertowJaxrsServer.undertowDeployment(restEasyDeploymentInfo, "/rest/api/v1");
+        restAppDeploymentInfo.setClassLoader(FermatEmbeddedNodeServer.class.getClassLoader())
+                             .setContextPath(APP_NAME)
+                             .setDeploymentName("FermatRestApi.war")
+                             .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
+
+        /*
+         * Deploy the app
+         */
+        DeploymentManager manager = servletContainer.addDeployment(restAppDeploymentInfo);
+        manager.deploy();
+
+        return manager.start();
+    }
+
+    /**
+     * Method tha configure the server
+     * @throws Exception
+     */
+    private void configure() throws Exception {
+
+        serverBuilder.setHandler(Handlers.path()
+                        .addPrefixPath("/", createWebAppResourceHandler())
+                        .addPrefixPath("/api", new InternalHandler())
+                        .addPrefixPath(APP_NAME+"/ws", createWebSocketAppServletHandler())
+                        .addPrefixPath(APP_NAME, createRestAppApiHandler())
+        );
+
+        this.server = serverBuilder.build();
+    }
+
 
     /**
      * Method tha initialize and start the
      * Embedded server
      */
-    public void start() throws ServletException {
+    public void start() throws Exception {
 
-        init();
-        undertowServer.start();
+        configure();
+        server.start();
     }
 }

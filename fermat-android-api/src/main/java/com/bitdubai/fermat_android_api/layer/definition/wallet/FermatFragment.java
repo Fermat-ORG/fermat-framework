@@ -1,14 +1,13 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
+import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -17,6 +16,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 
@@ -27,7 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.Su
  * @author Francisco Vasquez
  * @version 1.1
  */
-public abstract class FermatFragment extends Fragment implements FermatFragments {
+public abstract class FermatFragment extends AbstractFermatFragment implements FermatFragments {
 
     /**
      * FLAGS
@@ -68,7 +69,7 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
      * @param key  Enum Wizard registered type
      * @param args Object[] where you're be able to passing arguments like session, settings, resources, module, etc...
      */
-    protected void startWizard(WizardTypes key, Object... args) {
+    protected void startWizard(String key, Object... args) {
         if (context != null && isAttached) {
             context.showWizard(key, args);
         }
@@ -143,8 +144,8 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
         return getPaintActivtyFeactures().getToolbarHeader();
     }
 
-    protected PaintActivtyFeactures getPaintActivtyFeactures(){
-        return ((PaintActivtyFeactures)getActivity());
+    protected PaintActivityFeatures getPaintActivtyFeactures(){
+        return ((PaintActivityFeatures)getActivity());
     }
 
     protected void setNavigationDrawer(FermatAdapter adapter){
@@ -157,7 +158,15 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
     }
 
     protected void changeApp(Engine emgine,Object[] objects){
-        getFermatScreenSwapper().connectWithOtherApp(emgine,objects);
+        //getFermatScreenSwapper().connectWithOtherApp(emgine, objects);
+    }
+
+    protected void selectSubApp(InstalledSubApp installedSubApp){
+        getFermatScreenSwapper().selectSubApp(installedSubApp);
+    }
+
+    protected void selectWallet(InstalledWallet installedWallet){
+        getFermatScreenSwapper().selectWallet(installedWallet);
     }
 
     protected FermatScreenSwapper getFermatScreenSwapper(){

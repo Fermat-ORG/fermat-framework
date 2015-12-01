@@ -22,7 +22,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -40,12 +39,20 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserGroupException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupExcepcion;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpdateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.Agent.AssetUserActorMonitorAgent;
@@ -178,7 +185,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
             if (actorAssetUser != null) {
                 System.out.println("*****************Actor Asset User************************");
-                System.out.println("Actor Asset PublicKey: " + actorAssetUser.getPublicKey());
+                System.out.println("Actor Asset PublicKey: " + actorAssetUser.getActorPublicKey());
                 System.out.println("Actor Asset Name: " + actorAssetUser.getName());
                 System.out.println("**********************************************************");
             }
@@ -237,7 +244,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException {
+    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetUserException {
         try {
             for (ActorAssetUser actorAssetUser : actorAssetUsers) {
                 try {
@@ -246,12 +253,12 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                             CryptoCurrency.BITCOIN,
                             Actors.DAP_ASSET_ISSUER,
                             Actors.DAP_ASSET_USER,
-                            requester.getPublicKey(),
-                            actorAssetUser.getPublicKey(),
+                            requester.getActorPublicKey(),
+                            actorAssetUser.getActorPublicKey(),
                             CryptoAddressDealers.DAP_ASSET,
                             BlockchainNetworkType.DEFAULT);
 
-                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
+                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
                 } catch (CantUpdateAssetUserConnectionException e) {
                     e.printStackTrace();
                 }
@@ -259,6 +266,109 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         } catch (CantSendAddressExchangeRequestException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void createAssetUserGroup(ActorAssetUserGroup assetUserGroup) throws CantCreateAssetUserGroupException {
+        try {
+            this.assetUserActorDao.createAssetUserGroup(assetUserGroup);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantCreateAssetUserGroupException e) {
+           throw new CantCreateAssetUserGroupException("You can not create the group", e, "Error", "");
+        }
+    }
+
+    @Override
+    public void updateAssetUserGroup(ActorAssetUserGroup assetUserGroup) throws CantUpdateAssetUserGroupException {
+        try {
+            this.assetUserActorDao.updateAssetUserGroup(assetUserGroup);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserGroupException e) {
+            throw new CantUpdateAssetUserGroupException("You can not update the group", e, "Error", "");
+        }
+
+    }
+
+    @Override
+    public void deleteAssetUserGroup(String assetUserGroupId) throws CantDeleteAssetUserGroupException {
+        try {
+            this.assetUserActorDao.deleteAssetUserGroup(assetUserGroupId);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantDeleteAssetUserGroupException e) {
+            throw new CantDeleteAssetUserGroupException("You can not delete the group", e, "Error", "");
+        }
+    }
+
+    @Override
+    public void addAssetUserToGroup(ActorAssetUserGroupMember actorAssetUserGroupMember) throws CantCreateAssetUserGroupException {
+        try {
+            this.assetUserActorDao.createAssetUserGroupMember(actorAssetUserGroupMember);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantCreateAssetUserGroupException e) {
+            throw new CantCreateAssetUserGroupException("You can not add user to group", e, "Error", "");
+        }
+    }
+
+    @Override
+    public void removeAssetUserFromGroup(ActorAssetUserGroupMember assetUserGroupMember) throws CantCreateAssetUserGroupException {
+        try {
+            this.assetUserActorDao.deleteAssetUserGroupMember(assetUserGroupMember);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantCreateAssetUserGroupException e) {
+            throw new CantCreateAssetUserGroupException("You can not remove user from group", e, "Error", "");
+        }
+    }
+
+    @Override
+    public List<ActorAssetUserGroup> getAssetUserGroupsList() throws CantGetAssetUserGroupExcepcion {
+        List<ActorAssetUserGroup> list = null;
+        try {
+            list = this.assetUserActorDao.getAssetUserGroupsList();
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
+            throw new CantGetAssetUserGroupExcepcion("You can not get groups list", cantGetAssetUserGroupExcepcion, "Error", "");
+        }
+        return list;
+    }
+
+    @Override
+    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUserActorsException {
+        List<ActorAssetUser> list = null;
+        try {
+            list = this.assetUserActorDao.getListActorAssetUserByGroups(groupName);
+        } catch (CantGetAssetUsersListException ex) {
+            throw new CantGetAssetUserActorsException("You can not get users by group", ex, "Error", "");
+        }
+        return list;
+    }
+
+    @Override
+    public List<ActorAssetUserGroup> getListAssetUserGroupsByActorAssetUser(String actorAssetUserPublicKey) throws CantGetAssetUserGroupExcepcion {
+        List<ActorAssetUserGroup> list = null;
+        try {
+            list = this.assetUserActorDao.getListAssetUserGroupsByActorAssetUser(actorAssetUserPublicKey);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion ex) {
+            throw new CantGetAssetUserGroupExcepcion("You can not get groups by users", ex, "Error", "");
+        }
+        return list;
+    }
+
+    @Override
+    public ActorAssetUserGroup getAssetUserGroup(String groupId) throws CantGetAssetUserGroupExcepcion {
+        ActorAssetUserGroup actorAssetUserGroup = null;
+        try {
+            actorAssetUserGroup = this.assetUserActorDao.getAssetUserGroup(groupId);
+        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion ex) {
+            throw new CantGetAssetUserGroupExcepcion("You can not get the group", ex, "Error", "");
+        }
+        return actorAssetUserGroup;
+    }
+
+    /**
+     * The method <code>connectToActorAssetRedeemPoint</code> Enable Connection
+     * with Requester and Deliver Redeem Point to Reddem Asset
+     *
+     * @param requester
+     * @param actorAssetRedeemPoint
+     * @throws CantConnectToActorAssetRedeemPointException
+     */
+    @Override
+    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantConnectToActorAssetRedeemPointException {
+        System.out.println("NOT IMPLEMENT YET - ACTOR ASSET USER");
     }
 
     public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetUserException {
@@ -286,7 +396,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             //TODO Cambiar luego por la publicKey Linked proveniente de Identity
             this.assetUserActorDao.updateAssetUserDAPConnectionStateOrCrpytoAddress(
-                    actorAssetUser.getPublicKey(),
+                    actorAssetUser.getActorPublicKey(),
                     DAPConnectionState.REGISTERED_ONLINE,
                     actorAssetUser.getCryptoAddress());
         } catch (CantUpdateAssetUserConnectionException e) {
@@ -334,7 +444,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
                 if (!actorAssetUser.isEmpty()) {
                     for (ActorAssetUser actorAssetUser1 : actorAssetUser) {
-                        System.out.println("Actor Asset User: " + actorAssetUser1.getPublicKey());
+                        System.out.println("Actor Asset User: " + actorAssetUser1.getActorPublicKey());
                         System.out.println("Actor Asset User: " + actorAssetUser1.getName());
                         if (actorAssetUser1.getCryptoAddress() != null) {
                             System.out.println("Actor Asset User: " + actorAssetUser1.getCryptoAddress().getAddress());
@@ -397,7 +507,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantStartAgentException {
         if (this.assetUserActorMonitorAgent == null) {
-//            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+//            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getActorPublicKey();
             this.assetUserActorMonitorAgent = new AssetUserActorMonitorAgent(
                     this.eventManager,
                     this.pluginDatabaseSystem,

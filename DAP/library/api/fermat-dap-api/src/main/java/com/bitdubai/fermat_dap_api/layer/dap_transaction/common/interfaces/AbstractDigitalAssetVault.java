@@ -61,7 +61,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
     public PluginFileSystem pluginFileSystem;
     public String digitalAssetFileStoragePath;
     public AssetIssuerWalletManager assetIssuerWalletManager;
-    public String walletPublicKey;
+    public String walletPublicKey = "walletPublicKeyTest";
     public ActorAssetIssuerManager actorAssetIssuerManager;
     public ActorAssetUserManager actorAssetUserManager;
     BitcoinNetworkManager bitcoinNetworkManager;
@@ -262,7 +262,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         if(walletPublicKey==null){
             throw new CantSetObjectException("walletPublicKey is null");
         }
-        this.walletPublicKey=walletPublicKey;
+        this.walletPublicKey="walletPublicKeyTest"; //TODO hardcoded value
         System.out.println("The wallet public key in vault is "+this.walletPublicKey);
     }
 
@@ -307,7 +307,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         if(dapTransactionType.getCode().equals(DAPTransactionType.DISTRIBUTION.getCode())){
             AssetIssuerWallet assetWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
             AssetIssuerWalletBalance assetIssuerWalletBalance= assetWallet.getBookBalance(balanceType);
-            actorFromPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
+            actorFromPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
             System.out.println("ASSET DISTRIBUTION Actor Issuer public key:"+actorFromPublicKey);
             System.out.println("ASSET Distribution Transaction to deliver: "+genesisTransaction.getTransactionHash());
             AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(
@@ -329,7 +329,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         if(dapTransactionType.getCode().equals(DAPTransactionType.RECEPTION.getCode())){
             AssetUserWallet assetWallet=this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
             AssetUserWalletBalance assetUserWalletBalance= assetWallet.getBookBalance(balanceType);
-            actorToPublicKey=this.actorAssetUserManager.getActorAssetUser().getPublicKey();
+            actorToPublicKey=this.actorAssetUserManager.getActorAssetUser().getActorPublicKey();
             System.out.println("ASSET RECEPTION Actor Issuer public key:"+actorToPublicKey);
             System.out.println("ASSET RECEPTION Transaction to deliver: "+genesisTransaction.getTransactionHash());
             AssetUserWalletTransactionRecordWrapper assetUserWalletTransactionRecordWrapper=new AssetUserWalletTransactionRecordWrapper(

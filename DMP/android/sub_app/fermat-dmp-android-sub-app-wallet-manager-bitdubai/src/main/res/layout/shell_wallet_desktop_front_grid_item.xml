@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/grid_container">
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,27 +20,34 @@
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
             android:orientation="vertical"
-            android:clickable="true"
-
-
             >
             <ImageView
                 android:id="@+id/image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
                 android:textColor="@color/black_overlay"
-                android:textStyle="bold"
-                android:textSize="13sp"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"
-                android:src="@drawable/wallet_1"
+
                 android:layout_alignParentTop="true"
                 android:layout_column="2"
                 android:clickable="true"
-
                />
-            <TextView android:text="App Name"
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+
+                <com.bitdubai.sub_app.wallet_manager.commons.custom_view.CustomFolder
+                    android:id="@+id/folder"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentTop="true"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:clickable="true"/>
+            </RelativeLayout>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView android:text="App Name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/company_text_view"
@@ -48,7 +57,9 @@
                 android:gravity="center"
                 android:textStyle="bold"
                 android:textSize="13sp"
-                android:textColor="@color/black_overlay" />
+                android:singleLine="true"
+                app:typeface="ROBOTO_REGULAR"
+                android:textColor="#ffffff" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

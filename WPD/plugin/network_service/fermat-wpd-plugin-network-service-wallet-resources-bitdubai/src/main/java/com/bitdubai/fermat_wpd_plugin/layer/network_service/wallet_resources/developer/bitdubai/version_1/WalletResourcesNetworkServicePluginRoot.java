@@ -206,6 +206,22 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
+              /*
+         * Listen and handle VPN Connection Close Notification Event
+         */
+            //   fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
+            //   fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
+            //  eventManager.addListener(fermatEventListener);
+            //  listenersAdded.add(fermatEventListener);
+
+              /*
+         * Listen and handle Client Connection Close Notification Event
+         */
+            //  fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
+            //  fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
+            //  eventManager.addListener(fermatEventListener);
+            //  listenersAdded.add(fermatEventListener);
+
             /**
              *  Create repository in database
              */
@@ -307,6 +323,43 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
      */
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
+
+    }
+
+    /**
+     * Handles the events VPNConnectionCloseNotificationEvent
+     * @param fermatEvent
+     */
+    @Override
+    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+      /*  if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+
+            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+
+                if(communicationNetworkServiceConnectionManager != null)
+                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        } */
+
+    }
+
+    /**
+     * Handles the events ClientConnectionCloseNotificationEvent
+     * @param fermatEvent
+     */
+    @Override
+    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+      /*  if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+            this.register = false;
+            if(communicationNetworkServiceConnectionManager != null)
+            communicationNetworkServiceConnectionManager.closeAllConnection();
+        } */
 
     }
 

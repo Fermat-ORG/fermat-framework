@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 13/10/15.
+ * Created by Alejandro Bicelis - (abicelis@gmail.com) on 23/11/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -115,47 +115,39 @@ public class CashMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
-         * Table Cash Money columns.
+         * Table Wallets columns.
          */
-        List<String> cashMoneyColumns = new ArrayList<String>();
+        List<String> walletsColumns = new ArrayList<String>();
 
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_TRANSACTION_ID_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_WALLET_KEY_BROKER_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_TYPE_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TRANSACTION_TYPE_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_AMOUNT_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_CURRENCY_TYPE_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_REFERENCE_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TIMESTAMP_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_MEMO_COLUMN_NAME);
-        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_STATUS_COLUMN_NAME);
+        walletsColumns.add(CashMoneyWalletDatabaseConstants.WALLETS_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        walletsColumns.add(CashMoneyWalletDatabaseConstants.WALLETS_AVAILABLE_BALANCE_COLUMN_NAME);
+        walletsColumns.add(CashMoneyWalletDatabaseConstants.WALLETS_BOOK_BALANCE_COLUMN_NAME);
+        walletsColumns.add(CashMoneyWalletDatabaseConstants.WALLETS_CURRENCY_COLUMN_NAME);
+        walletsColumns.add(CashMoneyWalletDatabaseConstants.WALLETS_TIMESTAMP_WALLET_CREATION_COLUMN_NAME);
         /**
-         * Table Cash Money addition.
+         * Table Wallets addition.
          */
-        DeveloperDatabaseTable cashMoneyTable = developerObjectFactory.getNewDeveloperDatabaseTable(CashMoneyWalletDatabaseConstants.CASH_MONEY_TABLE_NAME, cashMoneyColumns);
-        tables.add(cashMoneyTable);
+        DeveloperDatabaseTable walletsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CashMoneyWalletDatabaseConstants.WALLETS_TABLE_NAME, walletsColumns);
+        tables.add(walletsTable);
 
         /**
-         * Table Cash Money Total Balances columns.
+         * Table Transactions columns.
          */
-        List<String> cashMoneyTotalBalancesColumns = new ArrayList<String>();
+        List<String> transactionsColumns = new ArrayList<String>();
 
-        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_WALLET_KEY_BROKER_COLUMN_NAME);
-        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_PUBLIC_KEY_BROKER_COLUMN_NAME);
-        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_CASH_CURRENCY_TYPE_COLUMN_NAME);
-        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_NAME_COLUMN_NAME);
-        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_DESCRIPTION_COLUMN_NAME);
-        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME);
-        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME);
+        transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME);
+        transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_ACTOR_PUBLIC_KEY_COLUMN_NAME);
+        transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_PLUGIN_PUBLIC_KEY_COLUMN_NAME);
+        transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME);
+        transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_AMOUNT_COLUMN_NAME);
+        transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_MEMO_COLUMN_NAME);
+        transactionsColumns.add(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TIMESTAMP_COLUMN_NAME);
         /**
-         * Table Cash Money Total Balances addition.
+         * Table Transactions addition.
          */
-        DeveloperDatabaseTable cashMoneyTotalBalancesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_TABLE_NAME, cashMoneyTotalBalancesColumns);
-        tables.add(cashMoneyTotalBalancesTable);
+        DeveloperDatabaseTable transactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME, transactionsColumns);
+        tables.add(transactionsTable);
 
 
 
@@ -168,43 +160,43 @@ public class CashMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
          * Will get the records for the given table
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
+
+
         /**
          * I load the passed table name from the SQLite database.
          */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
-            List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
-                List<String> developerRow = new ArrayList<String>();
-                /**
-                 * for each row in the table list
-                 */
-                for (DatabaseRecord field : row.getValues()){
-                    /**
-                     * I get each row and save them into a List<String>
-                     */
-                    developerRow.add(field.getValue());
-                }
-                /**
-                 * I create the Developer Database record
-                 */
-                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-            }
-            /**
-             * return the list of DeveloperRecords for the passed table.
-             */
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
-            database.closeDatabase();
-            return returnedRecords;
-        } catch (Exception e){
-            database.closeDatabase();
             return returnedRecords;
         }
-        database.closeDatabase();
+
+        List<DatabaseTableRecord> records = selectedTable.getRecords();
+        for (DatabaseTableRecord row : records) {
+            List<String> developerRow = new ArrayList<String>();
+            /**
+             * for each row in the table list
+             */
+            for (DatabaseRecord field : row.getValues()) {
+                /**
+                 * I get each row and save them into a List<String>
+                 */
+                developerRow.add(field.getValue().toString());
+            }
+            /**
+             * I create the Developer Database record
+             */
+            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+        }
+
+
+        /**
+         * return the list of DeveloperRecords for the passed table.
+         */
         return returnedRecords;
     }
 

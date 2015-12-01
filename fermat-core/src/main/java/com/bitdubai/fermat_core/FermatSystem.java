@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Mod
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ResourcesManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.RuntimeManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -36,8 +37,10 @@ import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
+import com.bitdubai.fermat_bnk_core.BNKPlatform;
 import com.bitdubai.fermat_cbp_core.CBPPlatform;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
+import com.bitdubai.fermat_csh_core.CSHPlatform;
 import com.bitdubai.fermat_dap_core.DAPPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -87,8 +90,10 @@ public final class FermatSystem {
         try {
 
             fermatSystemContext.registerPlatform(new BCHPlatform());
-            fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
+            fermatSystemContext.registerPlatform(new BNKPlatform());
+            fermatSystemContext.registerPlatform(new CSHPlatform());
+            fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
@@ -139,7 +144,7 @@ public final class FermatSystem {
 
         try {
 
-            final AbstractPlugin resourcesManager = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
+            final FermatManager resourcesManager = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
 
             if (resourcesManager instanceof ResourcesManager)
                 return (ResourcesManager) resourcesManager;
@@ -171,7 +176,7 @@ public final class FermatSystem {
 
         try {
 
-            final AbstractPlugin moduleManager = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
+            final FermatManager moduleManager = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
 
             if (moduleManager instanceof ModuleManager)
                 return (ModuleManager) moduleManager;
@@ -205,7 +210,7 @@ public final class FermatSystem {
 
         try {
 
-            final AbstractPlugin runtimeManager = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
+            final FermatManager runtimeManager = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
 
             if (runtimeManager instanceof RuntimeManager)
                 return (RuntimeManager) runtimeManager;
@@ -239,7 +244,7 @@ public final class FermatSystem {
 
         try {
 
-            final AbstractAddon errorManager = fermatAddonManager.startAddonAndReferences(addonVersionReference);
+            final FermatManager errorManager = fermatAddonManager.startAddonAndReferences(addonVersionReference);
 
             if (errorManager instanceof ErrorManager)
                 return (ErrorManager) errorManager;
@@ -313,7 +318,7 @@ public final class FermatSystem {
         }
 
         try {
-            AbstractPlugin developerModule = startAndGetPluginVersion(new PluginVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.SUB_APP_MODULE, Plugins.DEVELOPER, Developers.BITDUBAI, new Version()));
+            FermatManager developerModule = startAndGetPluginVersion(new PluginVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.SUB_APP_MODULE, Plugins.DEVELOPER, Developers.BITDUBAI, new Version()));
 
             ((DealWithDatabaseManagers) developerModule).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
             ((DealsWithLogManagers) developerModule).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
@@ -325,7 +330,7 @@ public final class FermatSystem {
 
     // TODO TEMPORAL METHOD UNTIL ALL THE ADD-ONS COULD BE REQUESTED BY ITS OWN METHODS.
     @Deprecated
-    public final AbstractAddon startAndGetAddon(final AddonVersionReference addonVersionReference) throws VersionNotFoundException,
+    public final FermatManager startAndGetAddon(final AddonVersionReference addonVersionReference) throws VersionNotFoundException,
                                                                                                           CantGetAddonException   {
 
         try {
@@ -343,7 +348,7 @@ public final class FermatSystem {
 
     // TODO TEMPORAL METHOD UNTIL ALL THE PLUG-INS COULD BE REQUESTED THROUGH GET RESOURCES MANAGER OR GET MODULE MANAGER METHODS.
     @Deprecated
-    public final AbstractPlugin startAndGetPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException ,
+    public final FermatManager startAndGetPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException ,
                                                                                                                      CantStartPluginException {
 
         return fermatPluginManager.startPluginAndReferences(pluginVersionReference);

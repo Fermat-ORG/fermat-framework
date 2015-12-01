@@ -620,6 +620,46 @@ public class AssetIssuingTransactionDao {
         }
     }
 
+    /**
+     * Added by Rodrigo Acosta. Updates the table by adding the Genesis Block hash
+     * @param outgoingTransactionID
+     * @param genesisBlock
+     * @throws CantPersistsGenesisTransactionException
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public void persistGenesisBlock(String outgoingTransactionID, String genesisBlock) throws CantPersistsGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException {
+        try {
+            this.database = openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, outgoingTransactionID, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            DatabaseTableRecord databaseTableRecord;
+            List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+            if (databaseTableRecords.size() > 1) {
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", "Transaction ID:" + outgoingTransactionID + " Genesis Bloc:" + genesisBlock);
+            } else if (databaseTableRecords.size() == 0) {
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. No value returned.", "Transaction ID:" + outgoingTransactionID + " Genesis Bloc:" + genesisBlock);
+            } else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_BLOCK_COLUMN_NAME, genesisBlock);
+            databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.DELIVERED.getCode());
+            databaseTable.updateRecord(databaseTableRecord);
+            this.database.closeDatabase();
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantPersistsGenesisTransactionException(exception, "Persisting Genesis Block in database", "Cannot open or find the database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantPersistsGenesisTransactionException(exception, "Persisting Genesis Block in database", "Cannot load the database into memory");
+        } catch (Exception exception) {
+            this.database.closeDatabase();
+            throw new CantPersistsGenesisTransactionException(FermatException.wrapException(exception), "Persisting Genesis Block in database", "Unexpected exception");
+        }
+    }
+
     public void persistDigitalAssetHash(String transactionID, String digitalAssetHash) throws CantPersistsGenesisTransactionException {
         try {
             this.database = openDatabase();
@@ -865,7 +905,7 @@ public class AssetIssuingTransactionDao {
             for (DatabaseTableRecord databaseTableRecord : databaseTableRecords) {
                 String genesisTransaction = databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
                 genesisTransactionsFromDigitalAssetReceived.add(genesisTransaction);
-                databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, TransactionStatus.DELIVERED.getCode());
+                databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.DELIVERED.getCode());
                 databaseTable.updateRecord(databaseTableRecord);
             }
             this.database.closeDatabase();

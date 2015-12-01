@@ -1,5 +1,5 @@
 :numbered!: 
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
 
 == Appendix 03: Money and Crypto Currency 
 
@@ -21,10 +21,10 @@ TIP: Taking Bitcoin as "the" paradigmatic model of every cryptocurrency, we need
 * A decentralized mathematical and deterministic currency issuance (distributed mining) +
 * A decentralized transaction verification system (transaction script) +
 
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 :numbered!:
 
-=== _Continue Reading ..._
+==== _Continue Reading ..._
 
 link:book-chapter-00(intro).asciidoc[Back to Intro]
 

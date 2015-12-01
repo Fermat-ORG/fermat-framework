@@ -1,10 +1,17 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -12,12 +19,23 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.appropriation_stats.exceptions.CantCheckAppropriationStatsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.appropriation_stats.exceptions.CantStartAppropriationStatsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.exceptions.CantLoadAppropriationStatsEventListException;
 
 import java.io.Closeable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -62,9 +80,85 @@ public class AppropriationStatsDAO implements AutoCloseable {
 
             databaseTable.insertRecord(eventRecord);
         } catch (CantInsertRecordException exception) {
-            throw new CantSaveEventException(exception, context, "Cannot insert a record in Asset Appropriation Event Table");
+            throw new CantSaveEventException(exception, context, "Cannot insert a record in Asset Appropriation Stats Event Table");
         } catch (Exception exception) {
             throw new CantSaveEventException(FermatException.wrapException(exception), context, "Unexpected exception");
+        }
+    }
+
+    public void assetAppropriated(DigitalAsset asset, ActorAssetUser user) throws CantStartAppropriationStatsException {
+        String context = "Asset: " + asset + " \n"
+                + " User: " + user;
+        try {
+            DatabaseTable databaseTable = this.database.getTable(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_TABLE_NAME);
+            DatabaseTableRecord appropriatedRecord = databaseTable.getEmptyRecord();
+            UUID recordId = UUID.randomUUID();
+
+            appropriatedRecord.setUUIDValue(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_ID_COLUMN_NAME, recordId);
+            appropriatedRecord.setStringValue(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_ASSET_COLUMN_NAME, XMLParser.parseObject(asset));
+            appropriatedRecord.setStringValue(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_USER_COLUMN_NAME, XMLParser.parseObject(user));
+            appropriatedRecord.setLongValue(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_TIME_COLUMN_NAME, System.currentTimeMillis());
+
+            databaseTable.insertRecord(appropriatedRecord);
+        } catch (CantInsertRecordException exception) {
+            throw new CantStartAppropriationStatsException(exception, context, "Cannot insert a record in Asset Appropriation Stats Appropriated Table");
+        } catch (Exception exception) {
+            throw new CantStartAppropriationStatsException(FermatException.wrapException(exception), context, "Unexpected exception");
+        }
+    }
+
+    public List<ActorAssetUser> usersThatAppropriatedAsset(DigitalAsset assetAppropriated) throws CantCheckAppropriationStatsException {
+        String context = "Asset: " + assetAppropriated;
+        try {
+            DatabaseTable appropriatedTable = database.getTable(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_TABLE_NAME);
+            appropriatedTable.setStringFilter(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_ASSET_COLUMN_NAME, XMLParser.parseObject(assetAppropriated), DatabaseFilterType.EQUAL);
+            appropriatedTable.loadToMemory();
+            List<ActorAssetUser> listToReturn = new ArrayList<>();
+            if (appropriatedTable.getRecords().isEmpty()) return Collections.EMPTY_LIST;
+
+            for (DatabaseTableRecord record : appropriatedTable.getRecords()) {
+                listToReturn.add((AssetUserActorRecord) XMLParser.parseXML(record.getStringValue(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_USER_COLUMN_NAME), new AssetUserActorRecord()));
+            }
+            return listToReturn;
+        } catch (Exception e) {
+            throw new CantCheckAppropriationStatsException(FermatException.wrapException(e), context, "Unknown");
+        }
+    }
+
+    public List<DigitalAsset> assetsAppropriatedByUser(ActorAssetUser userThatAppropriated) throws CantCheckAppropriationStatsException {
+        String context = "ActorAssetUser: " + userThatAppropriated;
+        try {
+            DatabaseTable appropriatedTable = database.getTable(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_TABLE_NAME);
+            appropriatedTable.setStringFilter(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_USER_COLUMN_NAME, XMLParser.parseObject(userThatAppropriated), DatabaseFilterType.EQUAL);
+            appropriatedTable.loadToMemory();
+            List<DigitalAsset> listToReturn = new ArrayList<>();
+            if (appropriatedTable.getRecords().isEmpty()) return Collections.EMPTY_LIST;
+
+            for (DatabaseTableRecord record : appropriatedTable.getRecords()) {
+                listToReturn.add((DigitalAsset) XMLParser.parseXML(record.getStringValue(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_ASSET_COLUMN_NAME), new DigitalAsset()));
+            }
+            return listToReturn;
+        } catch (Exception e) {
+            throw new CantCheckAppropriationStatsException(FermatException.wrapException(e), context, "Unknown");
+        }
+    }
+
+    public Map<ActorAssetUser, DigitalAsset> allAppropriationStats() throws CantCheckAppropriationStatsException {
+        try {
+            DatabaseTable appropriatedTable = database.getTable(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_TABLE_NAME);
+            appropriatedTable.loadToMemory();
+
+            Map<ActorAssetUser, DigitalAsset> mapToReturn = new HashMap<>();
+            if (appropriatedTable.getRecords().isEmpty()) return Collections.EMPTY_MAP;
+
+            for (DatabaseTableRecord record : appropriatedTable.getRecords()) {
+                DigitalAsset asset = (DigitalAsset) XMLParser.parseXML(record.getStringValue(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_ASSET_COLUMN_NAME), new DigitalAsset());
+                ActorAssetUser user = (ActorAssetUser) XMLParser.parseXML(record.getStringValue(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_USER_COLUMN_NAME), new AssetUserActorRecord());
+                mapToReturn.put(user, asset);
+            }
+            return mapToReturn;
+        } catch (Exception e) {
+            throw new CantCheckAppropriationStatsException(FermatException.wrapException(e), "SELECT ALL.", "Unknown");
         }
     }
 
@@ -138,7 +232,72 @@ public class AppropriationStatsDAO implements AutoCloseable {
         }
     }
 
+    private String getStringFieldByEventId(String columnName, String id) throws CantLoadAppropriationStatsEventListException, RecordsNotFoundException {
+        try {
+            String context = "Column Name: " + columnName + " - Id: " + id;
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_TABLE_NAME);
+            databaseTable.setStringFilter(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            databaseTable.setFilterOrder(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable.loadToMemory();
+
+            for (DatabaseTableRecord record : databaseTable.getRecords()) {
+                return record.getStringValue(columnName);
+            }
+            throw new RecordsNotFoundException(null, context, "");
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAppropriationStatsEventListException(exception, "Getting pending events.", "Cannot load table to memory.");
+        }
+    }
+
+    private List<String> getPendingEventsBySource(EventSource eventSource) throws CantLoadAppropriationStatsEventListException {
+        try {
+            DatabaseTable eventsRecordedTable;
+            eventsRecordedTable = database.getTable(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_TABLE_NAME);
+
+            DatabaseTableFilter statusFilter = eventsRecordedTable.getEmptyTableFilter();
+            statusFilter.setColumn(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_STATUS_COLUMN_NAME);
+            statusFilter.setValue(EventStatus.PENDING.getCode());
+            statusFilter.setType(DatabaseFilterType.EQUAL);
+
+            DatabaseTableFilter sourceFilter = eventsRecordedTable.getEmptyTableFilter();
+            sourceFilter.setColumn(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_SOURCE_COLUMN_NAME);
+            sourceFilter.setValue(eventSource.getCode());
+            sourceFilter.setType(DatabaseFilterType.EQUAL);
+
+            List<DatabaseTableFilter> filters = new ArrayList<>();
+            filters.add(statusFilter);
+            filters.add(sourceFilter);
+
+            eventsRecordedTable.setFilterGroup(
+                    eventsRecordedTable.getNewFilterGroup(filters,
+                            new ArrayList<DatabaseTableFilterGroup>(),
+                            DatabaseFilterOperator.AND));
+
+            eventsRecordedTable.setFilterOrder(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+
+            eventsRecordedTable.loadToMemory();
+            List<String> eventIdList = new ArrayList<>();
+            for (DatabaseTableRecord record : eventsRecordedTable.getRecords()) {
+                eventIdList.add(record.getStringValue(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_ID_COLUMN_NAME));
+            }
+            return eventIdList;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAppropriationStatsEventListException(exception, "Getting pending events.", "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAppropriationStatsEventListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
+    }
+
     //GETTER AND SETTERS
 
+    public List<String> getPendingIssuerNetworkServiceEvents() throws CantLoadAppropriationStatsEventListException {
+        return getPendingEventsBySource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER);
+    }
+
+
+    public EventType getEventTypeById(String id) throws CantLoadAppropriationStatsEventListException, InvalidParameterException, RecordsNotFoundException {
+        return EventType.getByCode(getStringFieldByEventId(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
+    }
     //INNER CLASSES
 }

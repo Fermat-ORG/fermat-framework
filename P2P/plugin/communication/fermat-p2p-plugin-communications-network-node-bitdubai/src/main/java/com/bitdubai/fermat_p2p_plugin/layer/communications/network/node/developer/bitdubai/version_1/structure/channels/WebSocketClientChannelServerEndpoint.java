@@ -25,18 +25,18 @@ import javax.websocket.server.ServerEndpoint;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@ServerEndpoint("/fermat/client-channel")
+@ServerEndpoint("/client-channel")
 public class WebSocketClientChannelServerEndpoint {
 
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(WebSocketNodeChannelServerEndpoint.class.getName());
-
+    private final Logger LOG = Logger.getLogger(WebSocketClientChannelServerEndpoint.class.getName());
 
     @OnOpen
     public void onConnect(Session session) throws IOException {
         LOG.info("New connection stablished: " + session.getId());
+        LOG.info(".... ClientsSessionMemoryCache = " + ClientsSessionMemoryCache.getInstance());
     }
 
     @OnMessage

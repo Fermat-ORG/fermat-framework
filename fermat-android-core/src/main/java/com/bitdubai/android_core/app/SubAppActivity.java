@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppNavigationStructure;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 
 import android.view.View;
@@ -242,7 +243,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             }else if(activity!=null && activity.getBackActivity()!=null){
 
                 //todo: hacer
-                //changeActivity(activity.getBackActivity().getCode());
+                changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
 
             } else {
                 // set Desktop current activity
@@ -349,6 +350,41 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             }else{
                 try {
+
+
+                    boolean isConnectionWithOtherApp = false;
+                    Activity lastActivity = null;
+                    Activity nextActivity = null;
+                    SubApp subApp = null;
+                    try {
+                        SubApp subAppNavigationStructure = getSubAppRuntimeMiddleware().getLastSubApp();
+                        if(subAppNavigationStructure.getPublicKey().equals(appBackPublicKey)) {
+                            lastActivity = subAppNavigationStructure.getLastActivity();
+                            nextActivity = subAppNavigationStructure.getActivity(Activities.getValueFromString(activityName));
+                        }else{
+                            subApp= getSubAppRuntimeMiddleware().getSubAppByPublicKey(appBackPublicKey);
+                            if(subApp!=null){
+                                isConnectionWithOtherApp = true;
+                                subApp.getActivity(Activities.getValueFromString(activityName));
+                            }
+                        }
+                        if(!isConnectionWithOtherApp) {
+                            if (!nextActivity.equals(lastActivity)) {
+                                resetThisActivity();
+                                loadUI(getSubAppSessionManager().getSubAppsSession(subAppNavigationStructure.getAppPublicKey()));
+                            }
+                        }else{
+                            //connectWithSubApp(null,objects,subApp.getPublicKey());
+                        }
+
+                    } catch (Exception e) {
+                        getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
+                        Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+                    } catch (Throwable throwable) {
+                        Toast.makeText(getApplicationContext(), "Oooops! recovering from system error. Throwable", Toast.LENGTH_LONG).show();
+                        throwable.printStackTrace();
+                    }
+
                     //resetThisActivity();
 
                     Activity a =  getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.getValueFromString(activityName));
@@ -366,6 +402,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             e.printStackTrace();
         }
     }
+
+
 
 
     @Override
@@ -403,7 +441,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     @Override
-    public void connectWithOtherApp(Engine emgine, Object[] objectses) {
+    public void connectWithOtherApp(Engine emgine, String fermatAppPublicKey,Object[] objectses) {
 
     }
 
@@ -427,6 +465,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Activity activity = getActivityUsedType();
 
             loadBasicUI(activity);
+
+            hideBottonIcons();
 
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
@@ -495,24 +535,36 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         try {
             Bundle bundle = getIntent().getExtras();
             InstalledSubApp installedSubApp=null;
+            String subAppPublicKey=null;
+            SubApps subAppType=null;
             if(bundle!=null){
                 if(bundle.containsKey(INSTALLED_SUB_APP)){
                     installedSubApp  = ((InstalledSubApp) bundle.getSerializable(INSTALLED_SUB_APP));
                 }else if(bundle.containsKey(ConnectionConstants.SUB_APP_CONNECTION)){
-                    //installedSubApp =  bundle.getSerializable(ConnectionConstants.SUB_APP_CONNECTION);
+                    subAppPublicKey =  bundle.getSerializable(ConnectionConstants.SUB_APP_CONNECTION).toString();
+                    subAppType = (SubApps) bundle.getSerializable(ConnectionConstants.SUB_APP_CONNECTION_TYPE);
                 }
             }
+            ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatSystem());
             if(installedSubApp!=null){
                 if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getAppPublicKey())) {
                     subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getAppPublicKey());
                 } else {
-                    ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatSystem());
-                    subAppSession = getSubAppSessionManager().openSubAppSession(
-                            installedSubApp,
-                            getErrorManager(),
-                            managerFactory.getModuleManagerFactory(installedSubApp.getSubAppType())
-                    );
+                        subAppSession = getSubAppSessionManager().openSubAppSession(
+                                installedSubApp,
+                                installedSubApp.getSubAppType().getCode(),
+                                getErrorManager(),
+                                managerFactory.getModuleManagerFactory(installedSubApp.getSubAppType())
+                        );
                 }
+            }else {
+                //TODO:deberiamos tener el subAppManager por eso va en null
+                subAppSession = getSubAppSessionManager().openSubAppSession(
+                        null,
+                        subAppType.getCode(),
+                        getErrorManager(),
+                        managerFactory.getModuleManagerFactory(subAppType)
+                );
             }
 
         } catch (NullPointerException nullPointerException){

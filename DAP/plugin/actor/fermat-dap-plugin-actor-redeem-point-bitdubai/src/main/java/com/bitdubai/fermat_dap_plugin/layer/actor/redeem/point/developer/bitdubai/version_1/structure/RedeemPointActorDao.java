@@ -131,13 +131,13 @@ public class RedeemPointActorDao implements Serializable {
              * if Redeem Point exist on table
              * change status
              */
-            if (redeemPointExists(redeemPoint.getPublicKey())) {
-                this.updateRedeemPointDAPConnectionState(redeemPoint.getPublicKey(), redeemPoint.getDapConnectionState());
+            if (redeemPointExists(redeemPoint.getActorPublicKey())) {
+                this.updateRedeemPointDAPConnectionState(redeemPoint.getActorPublicKey(), redeemPoint.getDapConnectionState());
             } else {
                 DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
 
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPoint.getPublicKey());
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPoint.getActorPublicKey());
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
 //                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey);
 
@@ -147,7 +147,7 @@ public class RedeemPointActorDao implements Serializable {
                 /**
                  * Persist profile image on a file
                  */
-                persistNewRedeemPointProfileImage(redeemPoint.getPublicKey(), redeemPoint.getProfileImage());
+                persistNewRedeemPointProfileImage(redeemPoint.getActorPublicKey(), redeemPoint.getProfileImage());
             }
         } catch (CantInsertRecordException e) {
             throw new CantAddPendingRedeemPointException("CAN'T INSERT REDEEM POINT", e, "", "Cant create new REDEEM POINT, insert database problems.");
@@ -167,8 +167,8 @@ public class RedeemPointActorDao implements Serializable {
              * if Redeem Point exist on table
              * change status
              */
-            if (redeemPointExists(redeemPoint.getPublicKey())) {
-                updateRedeemPointRegisteredDAPConnectionState(redeemPoint.getPublicKey(), DAPConnectionState.REGISTERED_ONLINE);
+            if (redeemPointExists(redeemPoint.getActorPublicKey())) {
+                updateRedeemPointRegisteredDAPConnectionState(redeemPoint.getActorPublicKey(), DAPConnectionState.REGISTERED_ONLINE);
             } else {
 
                 DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
@@ -176,7 +176,7 @@ public class RedeemPointActorDao implements Serializable {
 
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, redeemPoint.getPublicKey());
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, redeemPoint.getActorPublicKey());
 
                 setValuesToRecordRegistered(record, redeemPoint);
 
@@ -184,7 +184,7 @@ public class RedeemPointActorDao implements Serializable {
                 /**
                  * Persist profile image on a file
                  */
-                persistNewRedeemPointProfileImage(redeemPoint.getPublicKey(), redeemPoint.getProfileImage());
+                persistNewRedeemPointProfileImage(redeemPoint.getActorPublicKey(), redeemPoint.getProfileImage());
             }
         } catch (CantInsertRecordException e) {
             throw new CantAddPendingRedeemPointException("CAN'T INSERT REDEEM POINT", e, "", "Cant create new REDEEM POINT, insert database problems.");
@@ -216,18 +216,18 @@ public class RedeemPointActorDao implements Serializable {
             }
 
             // 2) Find the Redeem Point , filter by keys.
-            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPoint.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPoint.getActorPublicKey(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
             if (table.getRecords().isEmpty()) {
-                throw new RedeemPointNotFoundException("The following public key was not found: " + redeemPoint.getPublicKey());
+                throw new RedeemPointNotFoundException("The following public key was not found: " + redeemPoint.getActorPublicKey());
             }
 
             // 3) Get Redeem Point record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
                 setValuesToRecord(record, redeemPoint);
-                updateRedeemPointProfileImage(redeemPoint.getPublicKey(), redeemPoint.getProfileImage());
+                updateRedeemPointProfileImage(redeemPoint.getActorPublicKey(), redeemPoint.getProfileImage());
                 table.updateRecord(record);
             }
 
@@ -330,8 +330,8 @@ public class RedeemPointActorDao implements Serializable {
              */
 
             for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetIssuerRecord) {
-                if (redeemPointRegisteredExists(actorAssetRedeemPoint.getPublicKey())) {
-                    this.updateAssetRedeemPointDAPConnectionStateActorNetworService(actorAssetRedeemPoint.getPublicKey(), actorAssetRedeemPoint.getDapConnectionState());
+                if (redeemPointRegisteredExists(actorAssetRedeemPoint.getActorPublicKey())) {
+                    this.updateAssetRedeemPointDAPConnectionStateActorNetworService(actorAssetRedeemPoint.getActorPublicKey(), actorAssetRedeemPoint.getDapConnectionState());
                 } else {
                     /**
                      * Get actual date
@@ -351,7 +351,7 @@ public class RedeemPointActorDao implements Serializable {
                     DatabaseTableRecord record = table.getEmptyRecord();
 
                     record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
-                    record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetRedeemPoint.getPublicKey());
+                    record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetRedeemPoint.getActorPublicKey());
                     record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME, actorAssetRedeemPoint.getName());
 
                     record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
@@ -376,7 +376,7 @@ public class RedeemPointActorDao implements Serializable {
                     /**
                      * Persist profile image on a file
                      */
-                    persistNewRedeemPointProfileImage(actorAssetRedeemPoint.getPublicKey(), actorAssetRedeemPoint.getProfileImage());
+                    persistNewRedeemPointProfileImage(actorAssetRedeemPoint.getActorPublicKey(), actorAssetRedeemPoint.getProfileImage());
                 }
             }
             if(actorAssetIssuerRecord.isEmpty()){

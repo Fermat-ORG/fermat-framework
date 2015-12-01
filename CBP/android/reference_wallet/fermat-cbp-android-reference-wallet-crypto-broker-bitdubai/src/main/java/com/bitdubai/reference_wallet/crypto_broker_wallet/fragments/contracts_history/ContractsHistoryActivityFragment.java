@@ -60,11 +60,11 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     // Data
     private ArrayList<ContractBasicInformation> contractHistoryList;
+    private CryptoBrokerWallet walletManager;
     private ContractStatus filterContractStatus = null;
 
     //UI
     private View noContractsView;
-
 
     public static ContractsHistoryActivityFragment newInstance() {
         return new ContractsHistoryActivityFragment();
@@ -76,6 +76,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         try {
             moduleManager = ((CryptoBrokerWalletSession) walletSession).getModuleManager();
+            walletManager = moduleManager.getCryptoBrokerWallet(walletSession.getAppPublicKey());
             errorManager = walletSession.getErrorManager();
 
             contractHistoryList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -184,8 +185,6 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
     }
 
     private void configureNavigationDrawer() {
@@ -226,8 +225,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         if (moduleManager != null) {
             try {
-                CryptoBrokerWallet wallet = moduleManager.getCryptoBrokerWallet(walletSession.getAppPublicKey());
-                data.addAll(wallet.getContractsHistory(filterContractStatus, 0, 20));
+                data.addAll(walletManager.getContractsHistory(filterContractStatus, 0, 20));
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

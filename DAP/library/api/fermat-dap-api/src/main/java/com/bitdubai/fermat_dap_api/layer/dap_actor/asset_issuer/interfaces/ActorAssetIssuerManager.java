@@ -1,18 +1,18 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantConnectToAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 
 import java.util.List;
 
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface ActorAssetIssuerManager {
+public interface ActorAssetIssuerManager extends FermatManager {
 
     /**
      * The method <code>getActorByPublicKey</code> shows the information associated with the actorPublicKey
@@ -57,10 +57,10 @@ public interface ActorAssetIssuerManager {
     List<ActorAssetIssuer> getAllAssetIssuerActorConnected() throws CantGetAssetIssuerActorsException;
 
     /**
-     * The method <code>connectToActorAssetRedeemPoint</code> Stablish Connection
-     * with Issuer (Requester) and Lists Redeem Point by associate
+     * The method <code>sendMessage</code> Stablish Connection
+     * with Requester and Lists Redeem Point associate
      *
-     * @throws CantConnectToAssetIssuerException
+     * @throws CantConnectToActorAssetRedeemPointException
      */
-    void connectToActorAssetIssuer(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToAssetIssuerException;
+    void sendMessage(ActorAssetIssuer requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException;
 }

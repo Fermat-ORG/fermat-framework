@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -77,6 +78,24 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
         fermatEventListener.setEventHandler(fermatEventHandler);
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
+         /*
+         * Listen and handle VPN Connection Close Notification Event
+         */
+     //   fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
+     //   fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
+      //  eventManager.addListener(fermatEventListener);
+      //  listenersAdded.add(fermatEventListener);
+
+              /*
+         * Listen and handle Client Connection Close Notification Event
+         */
+      //  fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
+      //  fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
+      //  eventManager.addListener(fermatEventListener);
+      //  listenersAdded.add(fermatEventListener);
+
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -160,6 +179,45 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
      */
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
+
+    }
+
+
+    /**
+     * Handles the events VPNConnectionCloseNotificationEvent
+     * @param fermatEvent
+     */
+    @Override
+    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+       /* if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+
+            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+
+                 if(communicationNetworkServiceConnectionManager != null)
+                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        } */
+
+    }
+
+    /**
+     * Handles the events ClientConnectionCloseNotificationEvent
+     * @param fermatEvent
+     */
+    @Override
+    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+      /*  if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+            this.register = false;
+             if(communicationNetworkServiceConnectionManager != null)
+            communicationNetworkServiceConnectionManager.closeAllConnection();
+        }
+        */
 
     }
 

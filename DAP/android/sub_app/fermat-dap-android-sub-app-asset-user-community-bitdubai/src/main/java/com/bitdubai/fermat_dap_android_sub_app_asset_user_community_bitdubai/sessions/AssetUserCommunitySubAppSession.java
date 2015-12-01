@@ -18,13 +18,11 @@ import java.util.Map;
  */
 public class AssetUserCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,AssetUserCommunitySubAppModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
 
-
     private AssetUserCommunitySubAppModuleManager manager;
 
     private ErrorManager errorManager;
     private SubApps sessionType;
     private Map<String, Object> data;
-
 
     public AssetUserCommunitySubAppSession(InstalledSubApp subApp, ErrorManager errorManager, AssetUserCommunitySubAppModuleManager manager) {
         super(subApp.getAppPublicKey(),subApp,errorManager,manager,null);

@@ -72,11 +72,11 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
+    //TODO:Descomentar luego que esten arrancados estos Plugines: plugin = Plugins.CRYPTO_WALLET, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD
+    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    //TODO: Nompbre del plugin de la interfaz HoldManager
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.CRYPTO_WALLET)
+    //@NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.CRYPTO_WALLET)
     UnholdManager unHoldManager;
 
 
@@ -87,6 +87,8 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
             Database database = pluginDatabaseSystem.openDatabase(pluginId, BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME);
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
+            System.out.println("******* Init Bank Money Destock ******");
+            //testDestock();
             startMonitorAgent();
 
             database.closeDatabase();
@@ -100,7 +102,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
             }
             catch(CantCreateDatabaseException cantCreateDatabaseException)
             {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             }catch (Exception exception) {
                 throw new CantStartPluginException("Cannot start stockTransactionBankMoneyRestockPlugin plugin.", FermatException.wrapException(exception), null, null);
@@ -183,5 +185,12 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
         }else businessTransactionBankMoneyDestockMonitorAgent.start();
     }
 
+    private void testDestock(){
+        try {
+            createTransactionDestock("actorPublicKey", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpwalletPublicKey", "bnkWalletPublicKey","account", 250, "memo");
+        } catch (CantCreateBankMoneyDestockException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

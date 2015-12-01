@@ -1,163 +1,131 @@
 package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantDeleteCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerContractPurchaseDao;
-import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerContractPurchaseDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseContractDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseContractDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by angel on 02/11/15.
  */
-public class CustomerBrokerContractPurchasePluginRoot implements CustomerBrokerContractPurchaseManager, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Service, Plugin {
+public class CustomerBrokerContractPurchasePluginRoot extends AbstractPlugin implements CustomerBrokerContractPurchaseManager, DatabaseManagerForDevelopers {
 
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
-    private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
+    private DeviceUserManager deviceUserManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
+
     private CustomerBrokerContractPurchaseDao CustomerBrokerContractPurchaseDao;
-    private UUID pluginId;
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.CustomerBrokerContractPurchasePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerContractPurchaseInformation");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerContractPurchaseDao");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerContractPurchaseDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerContractPurchaseDatabaseConstants");
-        return returnedClasses;
-    }
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-
-    }
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    @Override
-    public FermatManager getManager() {
-        return null;
-    }
-
-    @Override
-    public void start() throws CantStartPluginException {
-        this.serviceStatus = ServiceStatus.STARTED;
-        try {
-            this.CustomerBrokerContractPurchaseDao = new CustomerBrokerContractPurchaseDao(pluginDatabaseSystem, this.pluginId);
-            this.CustomerBrokerContractPurchaseDao.initializeDatabase();
-        } catch (CantInitializeCustomerBrokerContractPurchaseDatabaseException cantInitializeCustomerBrokerContractPurchaseDaoException) {
-            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DESIGNER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
-            // throw new CantStartPluginException(cantInitializeExtraUserRegistryException, Plugins.BITDUBAI_ACTOR_DEVELOPER);
-        }
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
 
     /*
-    *   Methods of Menager
-    * */
+       Builder
+    */
+
+        public CustomerBrokerContractPurchasePluginRoot() {
+            super(new PluginVersionReference(new Version()));
+        }
+
+    /*
+        Plugin Interface implementation.
+    */
+
+        @Override
+        public void start() throws CantStartPluginException {
+            this.serviceStatus = ServiceStatus.STARTED;
+            try {
+                this.CustomerBrokerContractPurchaseDao = new CustomerBrokerContractPurchaseDao(pluginDatabaseSystem, this.pluginId);
+                this.CustomerBrokerContractPurchaseDao.initializeDatabase();
+            } catch (CantInitializeCustomerBrokerPurchaseContractDatabaseException e) {
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantStartPluginException();
+            }
+        }
+
+    /*
+        DatabaseManagerForDevelopers Interface implementation.
+    */
+
+        @Override
+        public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+            CustomerBrokerPurchaseContractDeveloperDatabaseFactory dbFactory = new CustomerBrokerPurchaseContractDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            return dbFactory.getDatabaseList(developerObjectFactory);
+        }
+
+        @Override
+        public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+            CustomerBrokerPurchaseContractDeveloperDatabaseFactory dbFactory = new CustomerBrokerPurchaseContractDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            return dbFactory.getDatabaseTableList(developerObjectFactory);
+        }
+
+        @Override
+        public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+            try {
+                CustomerBrokerPurchaseContractDeveloperDatabaseFactory dbFactory = new CustomerBrokerPurchaseContractDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+                dbFactory.initializeDatabase();
+                return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+            } catch (CantInitializeCustomerBrokerPurchaseContractDatabaseException e) {
+                this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
+            return new ArrayList<>();
+        }
+
+    /*
+        CustomerBrokerContractPurchase Interface implementation.
+    */
 
         @Override
         public List<CustomerBrokerContractPurchase> getAllCustomerBrokerContractPurchaseFromCurrentDeviceUser() throws CantGetListCustomerBrokerContractPurchaseException {
-            return this.CustomerBrokerContractPurchaseDao.getAllCustomerBrokerContractPurchaseFromCurrentDeviceUser();
+            return this.CustomerBrokerContractPurchaseDao.getAllCustomerBrokerPurchaseContractFromCurrentDeviceUser();
         }
 
         @Override
-        public CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(UUID ContractId) throws CantGetListCustomerBrokerContractPurchaseException {
-            return this.CustomerBrokerContractPurchaseDao.getCustomerBrokerContractPurchaseForContractId(ContractId);
+        public CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(String ContractId) throws CantGetListCustomerBrokerContractPurchaseException {
+            return this.CustomerBrokerContractPurchaseDao.getCustomerBrokerPurchaseContractForcontractID(ContractId);
         }
 
         @Override
-        public DatabaseTableRecord getCustomerBrokerPurchaseContractTable() {
-            return this.CustomerBrokerContractPurchaseDao.getCustomerBrokerContractPurchaseTable();
+        public CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(CustomerBrokerContractPurchase contract) throws CantCreateCustomerBrokerContractPurchaseException {
+            return this.CustomerBrokerContractPurchaseDao.createCustomerBrokerPurchaseContract(contract);
         }
 
         @Override
-        public CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(String publicKeyCustomer, String publicKeyBroker, Float merchandiseAmount, CurrencyType merchandiseCurrency, Float referencePrice, ReferenceCurrency referenceCurrency, Float paymentAmount, CurrencyType paymentCurrency, long paymentExpirationDate, long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerContractPurchaseException {
-            return this.CustomerBrokerContractPurchaseDao.createCustomerBrokerContractPurchase(
-                    publicKeyCustomer,
-                    publicKeyBroker,
-                    merchandiseAmount,
-                    merchandiseCurrency,
-                    referencePrice,
-                    referenceCurrency,
-                    paymentAmount,
-                    paymentCurrency,
-                    paymentExpirationDate,
-                    merchandiseDeliveryExpirationDate
-            );
+        public void updateStatusCustomerBrokerPurchaseContractStatus(String contractId, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException {
+            this.CustomerBrokerContractPurchaseDao.updateStatusCustomerBrokerPurchaseContract(contractId, status);
         }
 
         @Override
-        public void updateCustomerBrokerContractPurchase(UUID contractId, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException {
-            this.CustomerBrokerContractPurchaseDao.updateCustomerBrokerContractPurchase(contractId, status);
-        }
-
-        @Override
-        public void deleteCustomerBrokerContractPurchase(UUID contractID) throws CantDeleteCustomerBrokerContractPurchaseException {
-            this.CustomerBrokerContractPurchaseDao.deleteCustomerBrokerContractPurchase(contractID);
+        public void updateStatusCustomerBrokerPurchaseContractClauseStatus(String contractId, ContractClause clause) throws CantupdateCustomerBrokerContractPurchaseException {
+            this.CustomerBrokerContractPurchaseDao.updateStatusCustomerBrokerPurchaseContractClauseStatus(contractId, clause);
         }
 }

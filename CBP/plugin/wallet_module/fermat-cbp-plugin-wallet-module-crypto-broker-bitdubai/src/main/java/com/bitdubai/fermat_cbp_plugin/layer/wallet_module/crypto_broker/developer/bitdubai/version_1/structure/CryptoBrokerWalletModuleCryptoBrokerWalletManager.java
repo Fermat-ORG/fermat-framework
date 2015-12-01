@@ -4,8 +4,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotConfirmNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
@@ -20,7 +21,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Contrac
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockStatistics;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +35,8 @@ import java.util.UUID;
  * @since 05/11/15
  */
 public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements CryptoBrokerWallet {
+    private List<ContractBasicInformation> contractsHistory;
+
 
     @Override
     public CustomerBrokerNegotiationInformation addClause(CustomerBrokerNegotiationInformation negotiation, ClauseInformation clause) {
@@ -49,8 +51,30 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public Collection<ContractBasicInformation> getContractsHistory(ContractStatus status, int max, int offset) throws CantGetContractHistoryException {
         try {
+            List<ContractBasicInformation> contractsHistory;
+
+            contractsHistory = getContractHistoryTestData();
+
+            if (status != null) {
+                List<ContractBasicInformation> filteredList = new ArrayList<>();
+                for (ContractBasicInformation item : contractsHistory) {
+                    if (item.getStatus().equals(status))
+                        filteredList.add(item);
+                }
+                contractsHistory = filteredList;
+            }
+
+            return contractsHistory;
+
+        } catch (Exception ex) {
+            throw new CantGetContractHistoryException(ex);
+        }
+    }
+
+    private List<ContractBasicInformation> getContractHistoryTestData() {
+        if (contractsHistory == null) {
             ContractBasicInformation contract;
-            List<ContractBasicInformation> contractsHistory = new ArrayList<>();
+            contractsHistory = new ArrayList<>();
 
             contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
             contractsHistory.add(contract);
@@ -92,21 +116,9 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
             contractsHistory.add(contract);
-
-            if (status != null) {
-                List<ContractBasicInformation> filteredList = new ArrayList<>();
-                for (ContractBasicInformation item : contractsHistory) {
-                    if (item.getStatus() == status)
-                        filteredList.add(item);
-                }
-                contractsHistory = filteredList;
-            }
-
-            return contractsHistory;
-
-        } catch (Exception ex) {
-            throw new CantGetContractHistoryException(ex);
         }
+
+        return contractsHistory;
     }
 
     @Override
@@ -191,12 +203,12 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) {
+    public CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) throws CouldNotCancelNegotiationException {
         return null;
     }
 
     @Override
-    public CustomerBrokerNegotiationInformation confirmNegotiation(CustomerBrokerNegotiationInformation negotiation) {
+    public CustomerBrokerNegotiationInformation confirmNegotiation(CustomerBrokerNegotiationInformation negotiation) throws CouldNotConfirmNegotiationException {
         return null;
     }
 
