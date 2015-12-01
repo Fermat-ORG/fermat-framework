@@ -99,7 +99,9 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
                     fiatIndex
                     );
             contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
-            this.openContractBusinessTransactionDao.persistContractRecord(contractRecord);
+            this.openContractBusinessTransactionDao.persistContractRecord(
+                    contractRecord,
+                    contractType);
             customerBrokerContractSaleManager.createCustomerBrokerContractSale(contractRecord);
             this.openContractBusinessTransactionDao.updateContractTransactionStatus(
                     contractRecord.getContractId(),

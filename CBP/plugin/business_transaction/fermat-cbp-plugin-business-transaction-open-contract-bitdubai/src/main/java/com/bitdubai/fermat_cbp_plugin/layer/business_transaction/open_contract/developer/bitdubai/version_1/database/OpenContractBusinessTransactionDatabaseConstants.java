@@ -24,6 +24,7 @@ public class OpenContractBusinessTransactionDatabaseConstants {
     public static final String OPEN_CONTRACT_CONTRACT_STATUS_COLUMN_NAME = "contract_status";
     public static final String OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME = "transaction_status";
     public static final String OPEN_CONTRACT_TRANSMISSION_STATUS_COLUMN_NAME = "transmission_status";
+    public static final String OPEN_CONTRACT_CONTRACT_TYPE_COLUMN_NAME= "contract_type";
 
     public static final String OPEN_CONTRACT_FIRST_KEY_COLUMN = "transaction_id";
 

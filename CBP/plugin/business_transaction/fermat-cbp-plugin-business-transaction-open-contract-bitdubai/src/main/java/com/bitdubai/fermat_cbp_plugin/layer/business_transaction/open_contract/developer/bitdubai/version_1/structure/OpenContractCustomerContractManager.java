@@ -96,7 +96,9 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
                     customerBrokerPurchaseNegotiation,
                     fiatIndex);
             contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
-            this.openContractBusinessTransactionDao.persistContractRecord(contractRecord);
+            this.openContractBusinessTransactionDao.persistContractRecord(
+                    contractRecord,
+                    contractType);
             customerBrokerContractPurchaseManager.createCustomerBrokerContractPurchase(contractRecord);
             this.openContractBusinessTransactionDao.updateContractTransactionStatus(
                     contractRecord.getContractId(),
