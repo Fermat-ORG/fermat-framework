@@ -2,6 +2,7 @@ package com.bitdubai.android_core.app.common.version_1.bottom_navigation;
 
 import android.app.Activity;
 
+import android.graphics.Typeface;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
