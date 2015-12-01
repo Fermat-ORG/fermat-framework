@@ -25,9 +25,9 @@ import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 /**
  * Created by josemanueldsds on 29/11/15.
  */
-public class NotificationsFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener{
+public class ConnectionNotificationsFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener{
 
-    protected final String TAG = "NotificationsFragment";
+    protected final String TAG = "ConnectionNotificationsFragment";
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
@@ -43,8 +43,8 @@ public class NotificationsFragment extends FermatFragment implements SwipeRefres
      *
      * @return InstalledFragment instance object
      */
-    public static ConnectionsFragment newInstance() {
-        return new ConnectionsFragment();
+    public static ConnectionNotificationsFragment newInstance() {
+        return new ConnectionNotificationsFragment();
     }
 
     @Override
