@@ -222,14 +222,6 @@ public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdu
                 } catch (Exception e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
 
-//TODO temporal por el error que da de que vuelve a aplica la transaccion
-                    try {
-
-                        registry.setToApplied(transaction.getTransactionID());
-
-                    } catch (Exception e1) {
-
-                    }
                 }
             }
 
