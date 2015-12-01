@@ -140,7 +140,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             rootView = inflater.inflate(R.layout.desktop_main, container, false);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+            layoutManager = new GridLayoutManager(getActivity(), 4, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             adapter = new DesktopAdapter(getActivity(), lstItems,this,DesktopAdapter.DEKSTOP);
             recyclerView.setAdapter(adapter);
@@ -382,7 +382,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.asset_user_wallet);
-            item.setPosition(5);
+            item.setPosition(4);
             lstItemsWithIcon.add(item);
 
             installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
@@ -397,30 +397,30 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.redeem_point1);
-            item.setPosition(6);
+            item.setPosition(5);
             lstItemsWithIcon.add(item);
 
 
 
             //subApps
-            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
-            Item item2 = new Item(installedSubApp);
-            item2.setIconResource(R.drawable.intra_user_image);
-            item2.setPosition(1);
-            //lstItemsWithIcon.add(item2);
-            installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
-            Item item1 = new Item(installedSubApp);
-            item1.setIconResource(R.drawable.intra_user_2);
-            item1.setPosition(0);
-            //lstItemsWithIcon.add(item1);
-            List<Item> lstFolderItems = new ArrayList<>();
-            lstFolderItems.add(item1);
-            lstFolderItems.add(item2);
-            FermatFolder folder = new FermatFolder("things",lstFolderItems,11);
-            Item itemFolder = new Item(folder);
-            itemFolder.setIconResource(R.drawable.bg_launcher_folder);
-            itemFolder.setPosition(4);
-            lstItemsWithIcon.add(itemFolder);
+//            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
+//            Item item2 = new Item(installedSubApp);
+//            item2.setIconResource(R.drawable.intra_user_image);
+//            item2.setPosition(1);
+//            //lstItemsWithIcon.add(item2);
+//            installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
+//            Item item1 = new Item(installedSubApp);
+//            item1.setIconResource(R.drawable.intra_user_2);
+//            item1.setPosition(0);
+//            //lstItemsWithIcon.add(item1);
+//            List<Item> lstFolderItems = new ArrayList<>();
+//            lstFolderItems.add(item1);
+//            lstFolderItems.add(item2);
+//            FermatFolder folder = new FermatFolder("things",lstFolderItems,11);
+//            Item itemFolder = new Item(folder);
+//            itemFolder.setIconResource(R.drawable.bg_launcher_folder);
+//            itemFolder.setPosition(4);
+//            lstItemsWithIcon.add(itemFolder);
 
 
             for(int i=0;i<12;i++){
