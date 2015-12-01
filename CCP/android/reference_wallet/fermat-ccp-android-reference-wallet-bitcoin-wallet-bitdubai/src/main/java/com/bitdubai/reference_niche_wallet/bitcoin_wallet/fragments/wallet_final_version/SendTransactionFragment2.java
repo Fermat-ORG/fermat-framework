@@ -1,5 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -59,6 +61,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Fragments
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,8 +125,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             IntraUserLoginIdentity lst = referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity();
             if(lst==null){
-                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),walletSession, walletSettings, walletResourcesProviderManager, null);
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.profile_image);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+                referenceWalletSession.getIntraUserModuleManager().createIntraUser("John Doe",byteArray);
             }
+//            if(lst==null){
+//                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),walletSession, walletSettings, walletResourcesProviderManager, null);
+//            }
         } catch (Exception ex) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
