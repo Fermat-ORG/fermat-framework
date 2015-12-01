@@ -107,7 +107,7 @@ public class CryptoBrokerWalletDatabaseDao {
             record.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_BROKER_PUBLIC_KEY_COLUMN_NAME, walletKeys.getPublicKey());
             table.insertRecord(record);
 
-            return new CryptoBrokerWalletImpl(walletKeys, ownerPublicKey, this);
+            return null;//new CryptoBrokerWalletImpl(walletKeys, ownerPublicKey, this);
         } catch (CantInsertRecordException e) {
             throw new CantCreateNewCryptoBrokerWalletException(e.getMessage(), e, "Crypto Broker Wallet", "Cant create new Crypto Broker Wallet, insert database problems.");
         } catch (CantPersistPrivateKeyException e) {
@@ -128,7 +128,7 @@ public class CryptoBrokerWalletDatabaseDao {
             String publicKey = getCryptoBrokerWalletPublicKey(ownerPublicKey);
             String privateKey = getCryptoBrokerWalletPrivateKey(publicKey);
             KeyPair walletKeys = AsymmetricCryptography.createKeyPair(privateKey);
-            return new CryptoBrokerWalletImpl(walletKeys, ownerPublicKey, this);
+            return null;//new CryptoBrokerWalletImpl(walletKeys, ownerPublicKey, this);
         } catch (CantGetCryptoBrokerWalletPublicKeyException e) {
             throw new CantGetCryptoBrokerWalletException(e.getMessage(), e, "Crypto Broker Wallet", "Cant Get Wallet Public Key");
         } catch (CantGetCryptoBrokerWalletPrivateKeyException e) {
