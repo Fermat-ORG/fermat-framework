@@ -1,27 +1,20 @@
 package com.bitdubai.sub_app.wallet_manager.commons.custom_view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
-import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
-import com.bitdubai.sub_app.wallet_manager.holder.DesktopHolderClickCallback;
 import com.bitdubai.sub_app.wallet_manager.holder.FermatAppHolder;
-import com.bitdubai.sub_app.wallet_manager.structure.Item;
+import com.bitdubai.fermat_api.layer.desktop.Item;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**

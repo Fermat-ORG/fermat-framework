@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center_horizontal|center_vertical"
         android:layout_marginTop="32dp"
         android:background="@drawable/bg_circular_other_profile">
 
@@ -18,10 +18,10 @@
             android:id="@+id/img_user_avatar"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:layout_centerInParent="true"
             android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/profile_image_round" />
+            android:src="@drawable/profile_image" />
 
     </RelativeLayout>
 
@@ -42,8 +42,8 @@
             android:paddingRight="18dp"
             android:text="Conected"
             android:textAllCaps="true"
-            android:visibility="visible"
             android:textColor="#ffffff"
+            android:visibility="visible"
             tools:ignore="HardcodedText,RtlHardcoded"/>
 
         <Button
@@ -57,8 +57,8 @@
             android:paddingRight="18dp"
             android:text="Conect"
             android:textAllCaps="true"
-            android:visibility="gone"
             android:textColor="#0072bc"
+            android:visibility="gone"
             tools:ignore="HardcodedText,RtlHardcoded" />
 
     </RelativeLayout>
@@ -75,22 +75,22 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="32dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:text="Name"
             android:textColor="#0072bc"
             android:textSize="12sp"
-            android:paddingRight="6dp"
-            android:paddingLeft="6dp"
             tools:ignore="HardcodedText" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:text="Janeth Williams"
             android:textColor="#292929"
             android:textSize="14sp"
-            android:paddingRight="6dp"
-            android:paddingLeft="6dp"
             tools:ignore="HardcodedText" />
 
         <View
@@ -113,9 +113,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="32dp"
-            android:text="Email"
-            android:paddingRight="6dp"
             android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="Email"
             android:textColor="#0072bc"
             android:textSize="12sp"
             tools:ignore="HardcodedText" />
@@ -124,10 +124,10 @@
             android:id="@+id/email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:text="janethwilliams@gmail.com"
             android:textColor="#292929"
-            android:paddingRight="6dp"
-            android:paddingLeft="6dp"
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
 

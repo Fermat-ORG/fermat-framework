@@ -8,9 +8,9 @@ import com.bitdubai.fermat_android_api.ui.adapters.AdapterChangeListener;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.ItemTouchHelperAdapter;
-import com.bitdubai.sub_app.wallet_manager.holder.DesktopHolderClickCallback;
+import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.sub_app.wallet_manager.holder.FermatAppHolder;
-import com.bitdubai.sub_app.wallet_manager.structure.Item;
+import com.bitdubai.fermat_api.layer.desktop.Item;
 
 import java.util.Collections;
 import java.util.List;
@@ -91,6 +91,9 @@ public class BottomNavigationAdapter extends FermatAdapter<Item, FermatAppHolder
         notifyDataSetChanged();
     }
 
+    public void setDesktopHolderClickCallback(DesktopHolderClickCallback desktopHolderClickCallback) {
+        this.desktopHolderClickCallback = desktopHolderClickCallback;
+    }
 
     public void setAdapterChangeListener(AdapterChangeListener adapterChangeListener) {
         this.adapterChangeListener = adapterChangeListener;

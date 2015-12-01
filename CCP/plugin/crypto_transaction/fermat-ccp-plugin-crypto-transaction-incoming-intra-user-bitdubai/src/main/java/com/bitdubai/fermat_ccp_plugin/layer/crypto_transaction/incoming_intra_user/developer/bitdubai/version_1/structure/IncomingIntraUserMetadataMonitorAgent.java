@@ -92,7 +92,7 @@ public class IncomingIntraUserMetadataMonitorAgent {
         private IncomingIntraUserMetadataSourceAdministrator sourceAdministrator;
 
 
-        private static final int SLEEP_TIME = 5000;
+        private static final int SLEEP_TIME = 10000;
 
         /**
          * MonitorAgent methods.

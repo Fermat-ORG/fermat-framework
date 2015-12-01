@@ -3,22 +3,17 @@ package com.bitdubai.sub_app.wallet_manager.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.AdapterChangeListener;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.ItemTouchHelperAdapter;
-import com.bitdubai.sub_app.wallet_manager.fragment.FermatFolder;
-import com.bitdubai.sub_app.wallet_manager.holder.DesktopHolderClickCallback;
+import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
+import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.sub_app.wallet_manager.holder.FermatAppHolder;
-import com.bitdubai.sub_app.wallet_manager.structure.Item;
+import com.bitdubai.fermat_api.layer.desktop.Item;
 
 import java.util.Collections;
 import java.util.List;

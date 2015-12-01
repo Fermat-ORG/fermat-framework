@@ -7,10 +7,8 @@ import android.graphics.Color;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,10 +42,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.utils.FernatAnimationUtils;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
+import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
+import com.bitdubai.sub_app.intra_user_community.common.utils.FernatAnimationUtils;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
@@ -70,19 +68,14 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
 
+    private static final int MAX = 20;
     /**
      * MANAGERS
      */
     private static IntraUserModuleManager moduleManager;
     private static ErrorManager errorManager;
-
-    private List<IntraUserInformation> lstIntraUserInformations;
-
-
     protected final String TAG = "Recycler Base";
-
-    private static final int MAX = 20;
-
+    private List<IntraUserInformation> lstIntraUserInformations;
     private int offset = 0;
 
     private int mNotificationsCount = 0;
@@ -165,7 +158,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+            layoutManager = new GridLayoutManager(getActivity(),3,GridLayoutManager.VERTICAL,false);
             recyclerView.setLayoutManager(layoutManager);
             adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
             recyclerView.setAdapter(adapter);
@@ -437,6 +430,20 @@ Updates the count of notifications in the ActionBar.
 
     }
 
+    public void showEmpty(boolean show, View emptyView) {
+        Animation anim = AnimationUtils.loadAnimation(getActivity(),
+                show ? android.R.anim.fade_in : android.R.anim.fade_out);
+        if (show &&
+                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.VISIBLE);
+            if (adapter != null)
+                adapter.changeDataSet(null);
+        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.GONE);
+        }
+    }
 
     /*
     Sample AsyncTask to fetch the notifications count
@@ -453,22 +460,6 @@ Updates the count of notifications in the ActionBar.
         @Override
         public void onPostExecute(Integer count) {
             updateNotificationsBadge(count);
-        }
-    }
-
-
-    public void showEmpty(boolean show, View emptyView) {
-        Animation anim = AnimationUtils.loadAnimation(getActivity(),
-                show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show &&
-                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
-            if (adapter != null)
-                adapter.changeDataSet(null);
-        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
         }
     }
 

@@ -49,9 +49,13 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUse
             holder.country.setText("");*/
         byte[] profileImage = data.getProfileImage();
         if (profileImage != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-            holder.thumbnail.setImageBitmap(bitmap);
-        }
+            if(profileImage.length>0) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+                holder.thumbnail.setImageBitmap(bitmap);
+            }
+            else Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
+        } else  Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
+
     }
 
 }

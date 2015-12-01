@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -52,15 +51,15 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserS
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.CheckBoxListItem;
 import com.bitdubai.sub_app.intra_user_community.adapters.ListAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.utils.FernatAnimationUtils;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.adapters.IntraUserConnectionsAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.models.IntraUserConnectionListItem;
+import com.bitdubai.sub_app.intra_user_community.common.utils.FernatAnimationUtils;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
-import com.bitdubai.sub_app.intra_user_community.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,8 +95,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
     private ProgressDialog dialog;
 
     public static ConnectionsListFragment newInstance(){
-        ConnectionsListFragment fragment = new ConnectionsListFragment();
-        return fragment;
+        return new ConnectionsListFragment();
     }
 
     @Override
@@ -481,37 +479,6 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
         return false;
     }
 
-    /*
-    Sample AsyncTask to fetch the notifications count
-    */
-    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
-
-        @Override
-        protected Integer doInBackground(Void... params) {
-            // example count. This is where you'd
-            // query your data store for the actual count.
-            return mNotificationsCount;
-        }
-
-        @Override
-        public void onPostExecute(Integer count) {
-            updateNotificationsBadge(count);
-        }
-    }
-
-//    private static final String TITLE = "title";
-//    private static final String ICON = "icon";
-//
-//    private List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
-//
-//    // Use this to add items to the list that the ListPopupWindow will use
-//    private void addItem(String title, int iconResourceId) {
-//        HashMap<String, Object> map = new HashMap<String, Object>();
-//        map.put(TITLE, title);
-//        map.put(ICON, iconResourceId);
-//        data.add(map);
-//    }
-
     // Call this when you want to show the ListPopupWindow
     private void showListMenu(View anchor,List<IntraUserInformation> lstIntraUserRequestWaiting) {
         ListPopupWindow popupWindow = new ListPopupWindow(getActivity());
@@ -540,6 +507,38 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
         }); // the callback for when a list item is selected
         popupWindow.show();
     }
+
+//    private static final String TITLE = "title";
+//    private static final String ICON = "icon";
+//
+//    private List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
+//
+//    // Use this to add items to the list that the ListPopupWindow will use
+//    private void addItem(String title, int iconResourceId) {
+//        HashMap<String, Object> map = new HashMap<String, Object>();
+//        map.put(TITLE, title);
+//        map.put(ICON, iconResourceId);
+//        data.add(map);
+//    }
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
+    }
+
     public class CustomListAdapter extends ArrayAdapter<IntraUserInformation> {
 
         private final Activity context;
@@ -584,8 +583,10 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
                 @Override
                 public void onClick(View view) {
                     try {
-                        intraUserModuleManager.denyConnection(intraUser.getPublicKey());
+                        intraUserModuleManager.denyConnection(intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(), intraUser.getPublicKey());
                     } catch (IntraUserConectionDenegationFailedException e) {
+                        e.printStackTrace();
+                    } catch (CantGetActiveLoginIdentityException e) {
                         e.printStackTrace();
                     }
                 }
