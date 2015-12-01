@@ -470,9 +470,7 @@ public class AssetUserActorDao implements Serializable {
 
             // 3) Get Asset User record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
-                    dapConnectionState = DAPConnectionState.CONNECTED_ONLINE;
-                }else {
+                if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) == null) {
                     dapConnectionState = DAPConnectionState.REGISTERED_ONLINE;
                 }
 
