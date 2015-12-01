@@ -156,28 +156,28 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent{
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
-                        try {
-                            WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(cashMoneyTransaction.getTransactionId(),
-                                    null, //FermatEnum revisar
-                                    BalanceType.AVAILABLE,
-                                    TransactionType.CREDIT,
-                                    CurrencyType.BANK_MONEY,
-                                    cashMoneyTransaction.getCbpWalletPublicKey(),
-                                    cashMoneyTransaction.getActorPublicKey(),
-                                    cashMoneyTransaction.getAmount(),
-                                    new Date().getTime() / 1000,
-                                    cashMoneyTransaction.getConcept());
-
-                            cryptoBrokerWalletManager.getCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
-
-                            cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
-                            stockTransactionCashMoneyRestockManager.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
-
-                        } catch (CantPerformTransactionException e) {
-                            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-                        } catch (CryptoBrokerWalletNotFoundException e) {
-                            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-                        }
+//                        try {
+//                            WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(cashMoneyTransaction.getTransactionId(),
+//                                    null, //FermatEnum revisar
+//                                    BalanceType.AVAILABLE,
+//                                    TransactionType.CREDIT,
+//                                    CurrencyType.BANK_MONEY,
+//                                    cashMoneyTransaction.getCbpWalletPublicKey(),
+//                                    cashMoneyTransaction.getActorPublicKey(),
+//                                    cashMoneyTransaction.getAmount(),
+//                                    new Date().getTime() / 1000,
+//                                    cashMoneyTransaction.getConcept());
+//
+//                            cryptoBrokerWalletManager.getCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
+//
+//                            cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
+//                            stockTransactionCashMoneyRestockManager.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
+//
+//                        } catch (CantPerformTransactionException e) {
+//                            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+//                        } catch (CryptoBrokerWalletNotFoundException e) {
+//                            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+//                        }
 
                         break;
                     case IN_WALLET:
