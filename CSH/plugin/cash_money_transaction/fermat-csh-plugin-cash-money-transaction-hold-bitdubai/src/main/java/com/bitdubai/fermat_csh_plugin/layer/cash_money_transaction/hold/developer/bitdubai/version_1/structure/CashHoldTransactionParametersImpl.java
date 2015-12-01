@@ -25,6 +25,7 @@ public class CashHoldTransactionParametersImpl implements CashHoldTransactionPar
         this.transactionId = transactionId;
         this.publicKeyWallet = publicKeyWallet;
         this.publicKeyActor = publicKeyActor;
+        this.publicKeyPlugin = publicKeyPlugin;
         this.amount = amount;
         this.currency = currency;
         this.memo = memo;

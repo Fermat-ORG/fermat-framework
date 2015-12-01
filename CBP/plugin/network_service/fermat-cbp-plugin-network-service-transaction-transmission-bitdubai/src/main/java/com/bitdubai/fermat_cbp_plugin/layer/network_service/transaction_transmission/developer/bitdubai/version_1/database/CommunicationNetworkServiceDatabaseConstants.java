@@ -11,7 +11,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmi
  */
 public final class CommunicationNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "template_network_service_data_base";
+    public static final String DATA_BASE_NAME  = "transaction_transmission_database";
 
     /**
      * incoming messages database table definition.
@@ -65,5 +65,17 @@ public final class CommunicationNetworkServiceDatabaseConstants {
     public static final String TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME = "pending_flag";
 
     public static final String TRANSACTION_TRANSMISSION_HASH_FIRST_KEY_COLUMN = "transmission_id";
+
+    /**
+     * COMPONENT VERSIONS DETAILS database table definition.
+     */
+    public static final String COMPONENT_VERSIONS_DETAILS_TABLE_NAME = "component_versions_details";
+
+    public static final String COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME = "id";
+    public static final String COMPONENT_VERSIONS_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME = "actor_public_key";
+    public static final String COMPONENT_VERSIONS_DETAILS_IPK_COLUMN_NAME = "ipk";
+    public static final String COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME = "last_connection";
+
+    public static final String COMPONENT_VERSIONS_DETAILS_FIRST_KEY_COLUMN = "id";
 
 }

@@ -1,7 +1,7 @@
 String developerName = "Alejandro Bicelis"
 String developerMail = "abicelis@gmail.com"
-String pluginName = "Hold"
-String layerName = "Cash Money Transaction"
+String pluginName = "Cash Money"
+String layerName = "Wallet"
 String packageRoot = "com.bitdubai.fermat_csh_plugin"
 String jdkVersion = "1.7"
 
@@ -27,6 +27,7 @@ databaseTables << [
                 ["Transaction ID", "STRING", "100", "true"],
                 ["Wallet Public Key", "STRING", "100", "false"],
                 ["Actor Public Key", "STRING", "100", "false"],
+                ["Plugin Public Key", "STRING", "100", "false"],
                 ["Transaction Type", "STRING", "100", "false"],
                 ["Amount", "MONEY", "100", "false"],
                 ["Memo", "STRING", "100", "false"],

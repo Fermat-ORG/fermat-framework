@@ -28,6 +28,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.cash_money_restock.interfaces.CashMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.database.StockTransactionsCashMoneyRestockDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.database.StockTransactionsCashMoneyRestockDatabaseFactory;
@@ -52,7 +54,7 @@ import java.util.UUID;
  */
 public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin  implements
         //TODO: Implementar DealsWiths de los modulos BNK y la Wallet CBP
-        CashMoneyDestockManager,
+        CashMoneyRestockManager,
         DatabaseManagerForDevelopers {
 
     public StockTransactionsCashMoneyRestockPluginRoot() {
@@ -73,11 +75,11 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
+    //TODO:Descomentar luego que esten arrancados estos Plugines: plugin = Plugins.CRYPTO_WALLET, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD
+    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    //TODO: Nompbre del plugin de la interfaz HoldManager
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.CRYPTO_WALLET)
+    //@NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD)
     CashUnholdTransactionManager cashUnHoldTransactionManager;
 
 
@@ -88,6 +90,8 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_DATABASE_NAME);
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
+            System.out.println("******* Init Cash Money Restock ******");
+            //testRestock();
             startMonitorAgent();
 
             database.closeDatabase();
@@ -141,7 +145,8 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
     }
 
     @Override
-    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, float amount, String memo) throws CantCreateCashMoneyDestockException {
+    public void createTransactionRestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, float amount, String memo) throws CantCreateCashMoneyRestockException {
+
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         CashMoneyRestockTransactionImpl cashMoneyRestockTransaction = new CashMoneyRestockTransactionImpl(
@@ -149,10 +154,10 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
                 publicKeyActor,
                 fiatCurrency,
                 cbpWalletPublicKey,
-                bankWalletPublicKey,
+                cshWalletPublicKey,
                 memo,
                 "INIT TRANSACTION",
-                bankAccount,
+                cashReference,
                 amount,
                 timestamp,
                 TransactionStatusRestockDestock.INIT_TRANSACTION);
@@ -183,5 +188,14 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
             stockTransactionsCashMoneyRestockMonitorAgent.start();
         }else stockTransactionsCashMoneyRestockMonitorAgent.start();
     }
+
+    private void testRestock(){
+        try {
+            createTransactionRestock("publicKeyActor", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpWalletPublicKey", "cshWalletPublicKey", "cashReference", 250, "memo");
+        } catch (CantCreateCashMoneyRestockException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

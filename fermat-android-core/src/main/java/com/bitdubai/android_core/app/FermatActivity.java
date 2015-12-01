@@ -64,6 +64,7 @@ import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFra
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
+import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
@@ -101,6 +102,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
@@ -209,8 +211,12 @@ public abstract class FermatActivity extends AppCompatActivity
     private CoordinatorLayout coordinatorLayout;
     private boolean flag=false;
 
+    /**
+     * This code will be in a manager in the new core
+     */
     private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
     private NavigationViewPainter navigationViewPainter;
+    private FooterViewPainter footerViewPainter;
 
     /**
      * Called when the activity is first created
@@ -375,6 +381,8 @@ public abstract class FermatActivity extends AppCompatActivity
 
             paintSideMenu(sideMenu);
 
+            paintFooter(activity.getFooter());
+
             setScreen(activity);
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -392,6 +400,17 @@ public abstract class FermatActivity extends AppCompatActivity
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
+        }
+    }
+
+    private void paintFooter(FermatFooter footer) {
+        if(footer!=null){
+            FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
+            RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
+            if( footer_container!=null && footerViewPainter!=null && slide_container!=null ){
+                footerViewPainter.addNavigationViewFooterElementVisible(getLayoutInflater(),slide_container);
+                footerViewPainter.addFooterViewContainer(getLayoutInflater(),footer_container);
+            }
         }
     }
 
@@ -724,8 +743,12 @@ public abstract class FermatActivity extends AppCompatActivity
                 setContentView(R.layout.new_wallet_runtime);
             } else {
                 setContentView(R.layout.base_layout_without_collapse);
+                if(activityType.equals(ActivityType.ACTIVITY_TYPE_DESKTOP)){
+                    ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.VISIBLE);
+                }else{
+                    ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.GONE);
+                }
             }
-
 
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
@@ -1085,6 +1108,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             navigationViewPainter = null;
             elementsWithAnimation = new ArrayList<>();
+            footerViewPainter = null;
 
             this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
@@ -2032,6 +2056,12 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void addFooterView(FooterViewPainter footerViewPainter){
+        this.footerViewPainter = footerViewPainter;
+        invalidate();
+    }
+
 
 
     public RelativeLayout getToolbarHeader() {
@@ -2040,7 +2070,21 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void invalidate() {
-        paintSideMenu(getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu());
+        switch (activityType){
+            case ACTIVITY_TYPE_DESKTOP:
+                break;
+            case ACTIVITY_TYPE_WALLET:
+                Activity activity = getWalletRuntimeManager().getLastWallet().getLastActivity();
+                paintSideMenu(activity.getSideMenu());
+                paintFooter(activity.getFooter());
+                break;
+            case ACTIVITY_TYPE_SUB_APP:
+                break;
+            default:
+                break;
+        }
+
+
     }
 
     @Override

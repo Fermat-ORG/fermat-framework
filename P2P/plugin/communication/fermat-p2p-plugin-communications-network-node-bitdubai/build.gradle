@@ -131,7 +131,7 @@ task fatJar(type: Jar
     baseName = project.name + '-with-dependencies'
 
     manifest {
-        attributes 'Implementation-Title': 'Standalone Jar Prototype',
+        attributes 'Implementation-Title': 'Standalone Jar App',
                 'Implementation-Version': version,
                 'Main-Class': 'com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.NetworkNodeMainRunner'
     }
@@ -146,15 +146,11 @@ task fatJar(type: Jar
             it.isDirectory() ? it : zipTree(it)
         }
     }
+
     zip64 true
 
     with jar
 }
-
-
-
-
-
 
 check.mustRunAfter clean
 jacocoTestReport.mustRunAfter check

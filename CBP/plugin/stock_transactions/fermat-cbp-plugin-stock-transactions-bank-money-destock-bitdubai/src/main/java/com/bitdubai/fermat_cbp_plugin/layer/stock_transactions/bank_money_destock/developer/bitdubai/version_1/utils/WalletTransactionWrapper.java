@@ -16,6 +16,7 @@ import java.util.UUID;
  */
 public class WalletTransactionWrapper implements StockTransaction {
     private final UUID            transactionId;
+//    private final UUID            contractId;
     private final FermatEnum      merchandise;
     private final BalanceType     balanceType;
     private final TransactionType transactionType;
@@ -27,6 +28,7 @@ public class WalletTransactionWrapper implements StockTransaction {
     private final String          memo;
 
     public WalletTransactionWrapper(UUID            transactionId,
+//                                    UUID            contractId,
                                     FermatEnum      merchandise,
                                     BalanceType     balanceType,
                                     TransactionType transactionType,
@@ -38,7 +40,8 @@ public class WalletTransactionWrapper implements StockTransaction {
                                     String          memo){
 
         this.transactionId   = transactionId;
-        this.merchandise       = merchandise;
+//        this.contractId      = contractId;
+        this.merchandise     = merchandise;
         this.balanceType     = balanceType;
         this.transactionType = transactionType;
         this.currencyType    = currencyType;
@@ -50,10 +53,12 @@ public class WalletTransactionWrapper implements StockTransaction {
     }
 
     @Override
-    public UUID getTransactionId() {
-        return transactionId;
-    }
+    public UUID getTransactionId() { return transactionId; }
 
+//    @Override
+//    public UUID getContractId() {
+//        return contractId;
+//    }
 
     @Override
     public BalanceType getBalanceType() {

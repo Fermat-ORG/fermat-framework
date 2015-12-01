@@ -27,6 +27,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -105,6 +107,8 @@ public class AppropriationStatsDigitalAssetTransactionPluginRoot extends Abstrac
                 "pluginDatabaseSystem : " + pluginDatabaseSystem + "\n" +
                 "pluginFileSystem : " + pluginFileSystem + "\n" +
                 "logManager : " + logManager + "\n" +
+                "assetIssuerActorNetworkServiceManager : " + assetIssuerActorNetworkServiceManager + "\n" +
+                "actorAssetUserManager : " + actorAssetUserManager + "\n" +
                 "eventManager : " + eventManager + "\n" +
                 "recorderService : " + recorderService + "\n";
 
@@ -263,8 +267,8 @@ public class AppropriationStatsDigitalAssetTransactionPluginRoot extends Abstrac
                 }
             };
             ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser(); //The user of this device, whom appropriate the asset.
-            String message = new AssetAppropriationContentMessage(assetAppropriated, userThatAppropriated).toString();
-//            DAPMessage message = new DAPMessage(DAPMessageType.ASSET_APPROPRIATION, new AssetAppropriationContentMessage(assetAppropriated, userThatAppropriated));
+//            String message = new AssetAppropriationContentMessage(assetAppropriated, userThatAppropriated).toString();
+            DAPMessage message = new DAPMessage(DAPMessageType.ASSET_APPROPRIATION, new AssetAppropriationContentMessage(assetAppropriated, userThatAppropriated),actorAssetUser,actorAssetIssuer);
             assetIssuerActorNetworkServiceManager.sendMessage(actorAssetUser, actorAssetIssuer, message); //FROM: USER. TO:ISSUER.
         } catch (Exception e) {
             throw new CantStartAppropriationStatsException(FermatException.wrapException(e), context, null);
