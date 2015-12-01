@@ -15,8 +15,7 @@
            android:id="@+id/wallet_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="24dp"
-            android:paddingRight="4dp"
+
             android:paddingTop="7dp"
             android:paddingBottom="14dp"
             android:orientation="vertical"
@@ -27,6 +26,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black_overlay"
                 android:clickable="true"
+                android:layout_gravity="center_horizontal"
                />
 
             <RelativeLayout
@@ -46,14 +46,16 @@
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:text="App Name"
-                android:layout_width="match_parent"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/company_text_view"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:textSize="13sp"
+                android:layout_gravity="center"
                 app:typeface="CAVIAR_DREAMS_BOLD"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

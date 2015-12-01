@@ -1314,17 +1314,17 @@ public abstract class FermatActivity extends AppCompatActivity
             //faltan:  "Crypto Brokers" "Crypto Broker | Customer"
 
 
-            FermatFolder fermatFolder = new FermatFolder("Identities Managment",lstIdentities,2);
+            FermatFolder fermatFolder = new FermatFolder("Identities",lstIdentities,2);
             Item identityFolder = new Item(fermatFolder);
             identityFolder.setIconResource(R.drawable.ic_01);
             identityFolder.setPosition(2);
             lst.add(identityFolder);
 
             //store
-            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Store", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Wallet Store", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
             item2 = new Item(installedSubApp);
             item2.setIconResource(R.drawable.ic_03);
-            item2.setPosition(3);
+            item2.setPosition(4);
             lst.add(item2);
 
             //communities
@@ -1336,18 +1336,18 @@ public abstract class FermatActivity extends AppCompatActivity
             item1.setPosition(0);
             lstCommunities.add(item1);
 
-            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_ISSUER, null, null, "sub-app-asset-community-issuer", "Digital Asset\nIssuers", "public_key_dap_issuer_community", "sub-app-asset-community-issuer", new Version(1, 0, 0));
+            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_ISSUER, null, null, "sub-app-asset-community-issuer", "Asset Issuers", "public_key_dap_issuer_community", "sub-app-asset-community-issuer", new Version(1, 0, 0));
             item1 = new Item(installedSubApp);
             item1.setIconResource(R.drawable.intra_user_2);
             item1.setPosition(1);
             lstCommunities.add(item1);
 
-            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_USER, null, null, "sub-app-asset-community-user", "Digital Asset\nUsers", "public_key_dap_user_community", "sub-app-asset-community-user", new Version(1, 0, 0));
+            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_USER, null, null, "sub-app-asset-community-user", "Asset Users", "public_key_dap_user_community", "sub-app-asset-community-user", new Version(1, 0, 0));
             item1 = new Item(installedSubApp);
             item1.setIconResource(R.drawable.intra_user_2);
             item1.setPosition(2);
             lstCommunities.add(item1);
-            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Digital Asset\nRedeem Points", "public_key_dap_reedem_point_community", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
+            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Asset Redeem Points", "public_key_dap_reedem_point_community", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
             item1 = new Item(installedSubApp);
             item1.setIconResource(R.drawable.intra_user_2);
             item1.setPosition(3);
@@ -1358,10 +1358,10 @@ public abstract class FermatActivity extends AppCompatActivity
 
 
 
-            fermatFolder = new FermatFolder("Fermat Communities",lstCommunities,1);
+            fermatFolder = new FermatFolder("Communities",lstCommunities,1);
             item2 = new Item(fermatFolder);
             item2.setIconResource(R.drawable.ic_002);
-            item2.setPosition(4);
+            item2.setPosition(3);
             lst.add(item2);
 
 

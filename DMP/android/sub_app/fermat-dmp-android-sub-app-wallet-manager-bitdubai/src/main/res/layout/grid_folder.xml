@@ -35,11 +35,12 @@
                 />
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:text="App Name"
-                android:layout_width="fill_parent"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/company_text_view"
                 android:gravity="center"
                 android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
                 android:textSize="13sp"
                 app:typeface="CAVIAR_DREAMS_BOLD"
                 android:textColor="#000" />
