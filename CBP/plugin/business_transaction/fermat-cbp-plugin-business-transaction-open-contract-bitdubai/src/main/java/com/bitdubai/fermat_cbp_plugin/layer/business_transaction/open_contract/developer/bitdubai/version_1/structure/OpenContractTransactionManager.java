@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 26/11/15.
@@ -24,6 +25,8 @@ public class OpenContractTransactionManager implements OpenContractManager{
      * Represents the sale contract
      */
     private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+
+    private OpenContractBusinessTransactionDao openContractBusinessTransactionDao;
 
     /**
      * Represents the purchase negotiation
@@ -50,11 +53,13 @@ public class OpenContractTransactionManager implements OpenContractManager{
     public OpenContractTransactionManager(
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-            TransactionTransmissionManager transactionTransmissionManager){
+            TransactionTransmissionManager transactionTransmissionManager,
+            OpenContractBusinessTransactionDao openContractBusinessTransactionDao){
 
         this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
         this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
         this.transactionTransmissionManager=transactionTransmissionManager;
+        this.openContractBusinessTransactionDao=openContractBusinessTransactionDao;
 
     }
 
@@ -69,7 +74,8 @@ public class OpenContractTransactionManager implements OpenContractManager{
                                  FiatIndex fiatIndex) throws CantOpenContractException{
         OpenContractBrokerContractManager openContractCustomerContractManager=new OpenContractBrokerContractManager(
                 customerBrokerContractSaleManager,
-                transactionTransmissionManager);
+                transactionTransmissionManager,
+                openContractBusinessTransactionDao);
         openContractCustomerContractManager.openContract(customerBrokerSaleNegotiation, fiatIndex);
         //openContract(negotiationId);
     }
