@@ -1,15 +1,20 @@
 :bookseries: animal
 :numbered:
 :toc:
+
+= Fermat: expanding the cryptoworld
+
+Gustavo H. Corradi <book@fermat.org>
+
+v.0.0 (draft), november, 2015.
+
+
 image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20book%20logotype/FermatBookLogotype3D/PNG_fermat_book_logo_3D_Low_800x813.png[FermatBookLogo]
 
-= FERMAT: expanding the cryptoworld
-Gustavo H. Corradi <book@fermat.org>
-v.1.0, november, 2015.
 
-include::book-chapter-00(intro).asciidoc[]
+include::book-chapter-00(intro).asciidoc[Introduction]
 
-include::book-chapter-01.asciidoc[]
+include::book-chapter-01.asciidoc[Chapter 01: Fermat Master Plan]
 
 include::book-chapter-02.asciidoc[]
 
@@ -53,15 +58,16 @@ include::book-chapter-21.asciidoc[]
 
 include::book-glossary.asciidoc[]
 
-////
-include::conventions.asciidoc[]
-
-
-////
-
-include::index.asciidoc[]
-{toc}
+include::book-index.asciidoc[]
 
 include::book-appendix-01-principles.asciidoc[]
+
 include::book-appendix-02-history.asciidoc[]
+
 include::book-appendix-03-money.asciidoc[]
+
+////
+include::conventions.asciidoc[]
+////
+
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]

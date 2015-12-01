@@ -82,8 +82,15 @@ image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Imag
 
 link:book-chapter-01.asciidoc[Next Chapter]
 
-link:book-appendix-01-principles.asciidoc[Appendix: Fermat Principles in Detail]
+link:book-z-appendix-01-principles.asciidoc[Appendix: Fermat Principles in Detail]
 
-link:book-appendix-02-history.asciidoc[Appendix: Fermat History]
+link:book-z-appendix-02-history.asciidoc[Appendix: Fermat History]
 
-link:book-appendix-03-money.asciidoc[Appendix: Money and Crypto Currency]
+link:book-z-appendix-03-money.asciidoc[Appendix: Money and Crypto Currency]
+
+==== _Fermat Network Visualization_ 
+If you are more confortable with an overview of Fermat rather than reading, please refer to the official site +
+http://fermat.org
+
+
+
