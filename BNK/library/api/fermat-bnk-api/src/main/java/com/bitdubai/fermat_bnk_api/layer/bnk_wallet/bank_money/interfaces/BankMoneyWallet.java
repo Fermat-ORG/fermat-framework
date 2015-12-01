@@ -1,10 +1,7 @@
 package com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces;
 
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantGetBankMoneyWalletTransactionsException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantGetHeldFundsException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterHoldException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterUnholdException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.*;
 
 
 import java.util.List;
@@ -31,4 +28,7 @@ public interface BankMoneyWallet {
     void unhold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterUnholdException;
 
     List<BankAccountNumber> getAccounts(UUID walletPublicKey) ;
+
+    void addNewAccount(BankAccountNumber bankAccountNumber,UUID walletPublicKey) throws CantAddNewAccountException;
+
 }

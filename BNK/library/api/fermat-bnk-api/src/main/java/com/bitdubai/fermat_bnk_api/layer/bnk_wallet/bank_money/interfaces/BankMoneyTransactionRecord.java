@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankCurrencyType;
@@ -22,13 +23,13 @@ public interface BankMoneyTransactionRecord {
 
     TransactionType getTransactionType();
 
-    String getPublicKeyActorFrom();
+    /*String getPublicKeyActorFrom();
 
-    String getPublicKeyActorTo();
+    String getPublicKeyActorTo();*/
 
     float getAmount();
 
-    BankCurrencyType getBankCurrencyType();
+    FiatCurrency getCurrencyType();
 
     BankOperationType getBankOperationType();
 

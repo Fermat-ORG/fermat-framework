@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.BankCurrencyType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
@@ -13,19 +13,19 @@ import java.util.UUID;
 /**
  * Created by francisco on 05/11/15.
  */
-public class TransactionBankMoney implements BankMoneyTransactionRecord {
+public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecord {
 
     UUID bankTransactionId;
     String publicKeyBroker;
     String publicKeyCustomer;
     String balanceType;
     String transactionType;
-    double amount;
+    float amount;
     String cashCurrencyType;
     String bankOperationType;
     String bankDocumentReference;
     String bankName;
-    String bankNumber;
+    String bankAccountNumber;
     String bankAccountType;
     long runningBookBalance;
     long runningAvailableBalance;
@@ -33,10 +33,8 @@ public class TransactionBankMoney implements BankMoneyTransactionRecord {
     String memo;
     String status;
 
-    public TransactionBankMoney(UUID bankTransactionId, String publicKeyBroker, String publicKeyCustomer, String balanceType, String transactionType, double amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankNumber, String bankAccountType, long runningBookBalance, long runningAvailableBalance, long timeStamp, String memo, String status) {
+    public BankMoneyTransactionRecordImpl(UUID bankTransactionId, String balanceType, String transactionType, float amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankAccountNumber, String bankAccountType, long runningBookBalance, long runningAvailableBalance, long timeStamp, String memo, String status) {
         this.bankTransactionId = bankTransactionId;
-        this.publicKeyBroker = publicKeyBroker;
-        this.publicKeyCustomer = publicKeyCustomer;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
         this.amount = amount;
@@ -44,7 +42,7 @@ public class TransactionBankMoney implements BankMoneyTransactionRecord {
         this.bankOperationType = bankOperationType;
         this.bankDocumentReference = bankDocumentReference;
         this.bankName = bankName;
-        this.bankNumber = bankNumber;
+        this.bankAccountNumber = bankAccountNumber;
         this.bankAccountType = bankAccountType;
         this.runningBookBalance = runningBookBalance;
         this.runningAvailableBalance = runningAvailableBalance;
@@ -55,7 +53,7 @@ public class TransactionBankMoney implements BankMoneyTransactionRecord {
 
     @Override
     public UUID getBankTransactionId() {
-        return null;
+        return bankTransactionId;
     }
 
     @Override
@@ -74,27 +72,27 @@ public class TransactionBankMoney implements BankMoneyTransactionRecord {
     }
 
     @Override
-    public String getPublicKeyActorFrom() {
-        return null;
-    }
-
-    @Override
-    public String getPublicKeyActorTo() {
-        return null;
-    }
-
-    @Override
     public float getAmount() {
-        return 0;
+        return amount;
     }
 
     @Override
-    public BankCurrencyType getBankCurrencyType() {
+    public FiatCurrency getCurrencyType() {
+        try {
+            FiatCurrency.getByCode(cashCurrencyType);
+        }catch (Exception e){
+
+        }
         return null;
     }
 
     @Override
     public BankOperationType getBankOperationType() {
+        try{
+            return BankOperationType.getByCode(bankOperationType);
+        }catch (Exception e){
+
+        }
         return null;
     }
 
@@ -110,31 +108,36 @@ public class TransactionBankMoney implements BankMoneyTransactionRecord {
 
     @Override
     public String getBankAccountNumber() {
-        return null;
+        return bankAccountNumber;
     }
 
     @Override
     public BankAccountType getBankAccountType() {
+        try {
+            return BankAccountType.getByCode(bankAccountType);
+        }catch (Exception e){
+
+        }
         return null;
     }
 
     @Override
     public long getTimestamp() {
-        return 0;
+        return timeStamp;
     }
 
     @Override
     public long getRunningBookBalance() {
-        return 0;
+        return runningBookBalance;
     }
 
     @Override
     public long getRunningAvailableBalance() {
-        return 0;
+        return runningAvailableBalance;
     }
 
     @Override
     public String getMemo() {
-        return null;
+        return memo;
     }
 }

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.withdraw.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
@@ -37,6 +37,7 @@ public class BankTransactionImpl implements BankTransaction {
 
     private BankTransactionStatus status;
 
+
     public BankTransactionImpl(UUID transactionId, String publicKeyPlugin, String publicKeyWallet, float amount, String accountNumber, FiatCurrency fiatCurrency, String memo, BankOperationType bankOperationType, TransactionType transactionType, long timestamp, BankTransactionStatus status) {
         this.transactionId = transactionId;
         this.publicKeyPlugin = publicKeyPlugin;
@@ -70,7 +71,6 @@ public class BankTransactionImpl implements BankTransaction {
     public String getPublicKeyActor() {
         return null;
     }
-
 
     @Override
     public float getAmount() {

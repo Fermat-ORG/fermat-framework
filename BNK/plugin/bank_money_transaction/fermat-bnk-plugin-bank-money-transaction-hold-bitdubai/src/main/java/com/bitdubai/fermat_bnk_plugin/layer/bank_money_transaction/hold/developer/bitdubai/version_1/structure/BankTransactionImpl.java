@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.develop
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 
 
@@ -36,7 +37,9 @@ public class BankTransactionImpl implements BankTransaction {
 
     private long timestamp;
 
-    public BankTransactionImpl(UUID transactionId, String publicKeyPlugin, String publicKeyWallet, String publicKeyActor, float amount, String accountNumber, FiatCurrency fiatCurrency, String memo, BankOperationType bankOperationType, TransactionType transactionType, long timestamp) {
+    private BankTransactionStatus status;
+
+    public BankTransactionImpl(UUID transactionId, String publicKeyPlugin, String publicKeyWallet, String publicKeyActor, float amount, String accountNumber, FiatCurrency fiatCurrency, String memo, BankOperationType bankOperationType, TransactionType transactionType, long timestamp,BankTransactionStatus status) {
         this.transactionId = transactionId;
         this.publicKeyPlugin = publicKeyPlugin;
         this.publicKeyWallet = publicKeyWallet;
@@ -48,6 +51,7 @@ public class BankTransactionImpl implements BankTransaction {
         this.bankOperationType = bankOperationType;
         this.transactionType = transactionType;
         this.timestamp = timestamp;
+        this.status = status;
     }
 
     @Override
@@ -103,5 +107,10 @@ public class BankTransactionImpl implements BankTransaction {
     @Override
     public long getTimestamp() {
         return timestamp;
+    }
+
+    @Override
+    public BankTransactionStatus getBankTransactionStatus() {
+        return status;
     }
 }
