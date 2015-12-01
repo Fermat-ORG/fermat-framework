@@ -51,12 +51,11 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
 
     //public String LOCAL_STORAGE_PATH="digital-asset-metadata/";
     public AssetUserWalletManager assetUserWalletManager;
-    public final String digitalAssetFileName = "digital-asset.xml";
-    public final String digitalAssetMetadataFileName = "digital-asset-metadata.xml";
-    public String LOCAL_STORAGE_PATH = "digital-asset-swap/";
+    public final String digitalAssetFileName = "digital-asset";
+    public final String digitalAssetMetadataFileName = "digital-asset-metadata";
+    public String LOCAL_STORAGE_PATH = "digital-asset-swap";
     public FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
-    //For testing I'm gonna use this type of privacy, change to PRIVATE in production release
-    public FilePrivacy FILE_PRIVACY = FilePrivacy.PUBLIC;
+    public FilePrivacy FILE_PRIVACY = FilePrivacy.PRIVATE;
     public UUID pluginId;
     public PluginFileSystem pluginFileSystem;
     public String digitalAssetFileStoragePath;
@@ -115,7 +114,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
     public void persistDigitalAssetInLocalStorage(DigitalAsset digitalAsset) throws CantCreateDigitalAssetFileException {
         try {
             String digitalAssetInnerXML = digitalAsset.toString();
-            persistXMLStringInLocalStorage(digitalAssetInnerXML, digitalAsset.getPublicKey() + "-" + digitalAssetFileName);
+            persistXMLStringInLocalStorage(digitalAssetInnerXML, "digitalAsset", digitalAsset.getPublicKey());
         } catch (CantPersistFileException | CantCreateFileException exception) {
             throw new CantCreateDigitalAssetFileException(exception, "Persisting the digital asset objects in local storage", "Cannot create or persist the file");
         }
@@ -132,22 +131,19 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
     public void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata, String internalId) throws CantCreateDigitalAssetFileException {
         DigitalAsset digitalAsset = digitalAssetMetadata.getDigitalAsset();
         //String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
-        System.out.println("Persisting path: " + this.LOCAL_STORAGE_PATH + "digital-asset-metadata/" + internalId + ".xml");
         try {
             String digitalAssetInnerXML = digitalAsset.toString();
-            setDigitalAssetLocalFilePath(this.LOCAL_STORAGE_PATH + "digital-asset");
-            persistXMLStringInLocalStorage(digitalAssetInnerXML, internalId + ".xml");
+            persistXMLStringInLocalStorage(digitalAssetInnerXML, "digitalAsset", internalId);
             String digitalAssetMetadataInnerXML = digitalAssetMetadata.toString();
-            setDigitalAssetLocalFilePath(this.LOCAL_STORAGE_PATH + "digital-asset-metadata");
-            persistXMLStringInLocalStorage(digitalAssetMetadataInnerXML, internalId + ".xml");
+            persistXMLStringInLocalStorage(digitalAssetMetadataInnerXML, "digitalAssetMetadata", internalId);
         } catch (CantPersistFileException | CantCreateFileException exception) {
             throw new CantCreateDigitalAssetFileException(exception, "Persisting the digital asset objects in local storage", "Cannot create or persist the file");
         }
 
     }
 
-    private void persistXMLStringInLocalStorage(String innerXML, String fileName) throws CantCreateFileException, CantPersistFileException {
-        PluginTextFile digitalAssetFile = this.pluginFileSystem.createTextFile(this.pluginId, this.digitalAssetFileStoragePath, fileName, this.FILE_PRIVACY, this.FILE_LIFE_SPAN);
+    private void persistXMLStringInLocalStorage(String innerXML, String directory,  String fileName) throws CantCreateFileException, CantPersistFileException {
+        PluginTextFile digitalAssetFile = this.pluginFileSystem.createTextFile(this.pluginId, directory, fileName, this.FILE_PRIVACY, this.FILE_LIFE_SPAN);
         digitalAssetFile.setContent(innerXML);
         digitalAssetFile.persistToMedia();
     }
@@ -160,20 +156,18 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
      * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException
      */
     public DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String internalId) throws CantGetDigitalAssetFromLocalStorageException {
-        String digitalAssetMetadataFileName = "no-file-name-assigned";
         try {
             DigitalAssetMetadata digitalAssetMetadataObtainedFromFileStorage = new DigitalAssetMetadata();
-            digitalAssetMetadataFileName = internalId + ".xml";
-            PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, this.LOCAL_STORAGE_PATH + "digital-asset-metadata", digitalAssetMetadataFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
+            PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, "digitalAssetMetadata", internalId, FILE_PRIVACY, FILE_LIFE_SPAN);
             String digitalAssetMetadataXMLString = digitalAssetMetadataFile.getContent();
             digitalAssetMetadataObtainedFromFileStorage = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetadataXMLString, digitalAssetMetadataObtainedFromFileStorage);
             return digitalAssetMetadataObtainedFromFileStorage;
         } catch (FileNotFoundException exception) {
-            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot find " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot find " + internalId + "' file");
         } catch (CantCreateFileException exception) {
-            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot create " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot create " + internalId + "' file");
         } catch (Exception exception) {
-            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Unexpected exception getting '" + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Unexpected exception getting " +  internalId + "' file");
         }
 
     }
@@ -186,20 +180,18 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
      * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException
      */
     public DigitalAsset getDigitalAssetFromLocalStorage(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
-        String digitalAssetFileName = "digital-asset.xml";
         try {
             DigitalAsset digitalAssetObtainedFromFileStorage = new DigitalAsset();
-            digitalAssetFileName = assetPublicKey + "-" + digitalAssetFileName;
-            PluginTextFile digitalAssetFile = this.pluginFileSystem.getTextFile(this.pluginId, this.LOCAL_STORAGE_PATH + "digital-asset", digitalAssetFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
+            PluginTextFile digitalAssetFile = this.pluginFileSystem.getTextFile(this.pluginId, "digitalAsset", assetPublicKey, FILE_PRIVACY, FILE_LIFE_SPAN);
             String digitalAssetXMLString = digitalAssetFile.getContent();
             digitalAssetObtainedFromFileStorage = (DigitalAsset) XMLParser.parseXML(digitalAssetXMLString, digitalAssetObtainedFromFileStorage);
             return digitalAssetObtainedFromFileStorage;
         } catch (FileNotFoundException exception) {
-            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot find " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot find " + assetPublicKey + "' file");
         } catch (CantCreateFileException exception) {
-            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot create " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot create " +assetPublicKey + "' file");
         } catch (Exception exception) {
-            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Unexpected exception getting '" + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Unexpected exception getting '" + assetPublicKey + "' file");
         }
 
     }
@@ -211,18 +203,18 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
      * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeleteDigitalAssetFromLocalStorageException
      */
     public void deleteDigitalAssetMetadataFromLocalStorage(String internalId) throws CantDeleteDigitalAssetFromLocalStorageException {
-        String digitalAssetMetadataFileName = "no-file-name-assigned";
-        try {
-            digitalAssetMetadataFileName = internalId + ".xml";
-            PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, this.LOCAL_STORAGE_PATH + "digital-asset-metadata", digitalAssetMetadataFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
-            digitalAssetMetadataFile.delete();
-        } catch (FileNotFoundException exception) {
-            throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage", "Cannot find " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
-        } catch (CantCreateFileException exception) {
-            throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage", "Cannot create " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
-        } catch (Exception exception) {
-            throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage", "Unexpected exception getting '" + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
-        }
+//        String digitalAssetMetadataFileName = "no-file-name-assigned";
+//        try {
+//            digitalAssetMetadataFileName = internalId + ".xml";
+//            PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, this.LOCAL_STORAGE_PATH + "digital-asset-metadata", digitalAssetMetadataFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
+//            digitalAssetMetadataFile.delete();
+//        } catch (FileNotFoundException exception) {
+//            throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage", "Cannot find " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+//        } catch (CantCreateFileException exception) {
+//            throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage", "Cannot create " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+//        } catch (Exception exception) {
+//            throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage", "Unexpected exception getting '" + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+//        }
     }
 
     public void setDigitalAssetLocalFilePath(String digitalAssetFileStoragePath) {

@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_manager.structure;
+package com.bitdubai.fermat_api.layer.desktop;
 
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.interface_objects.FermatInterfaceObject;

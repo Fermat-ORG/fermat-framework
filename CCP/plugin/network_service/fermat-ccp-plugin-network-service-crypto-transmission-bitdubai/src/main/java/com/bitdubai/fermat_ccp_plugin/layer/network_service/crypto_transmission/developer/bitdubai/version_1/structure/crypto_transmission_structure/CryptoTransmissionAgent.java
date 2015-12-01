@@ -550,6 +550,7 @@ public class CryptoTransmissionAgent {
                         try {
                             // lo cambio directo porque la metadata viene con un mensaje de estado distinto, actualizado
 
+
                             switch (cryptoTransmissionMetadata.getCryptoTransmissionStates()) {
 
                                 case SEEN_BY_DESTINATION_NETWORK_SERVICE:
@@ -570,7 +571,7 @@ public class CryptoTransmissionAgent {
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
                                     System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
 
-                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
                                     cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
                                     cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
 
@@ -589,9 +590,9 @@ public class CryptoTransmissionAgent {
                                     // deberia ver si tengo que lanzar un evento acá
                                     //para el outgoing intra user
 
-                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
-                                    cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
-                                    cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
+                                  //  cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                                  //  cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
+                                  //  cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
 
                                     System.out.print("-----------------------\n" +
                                             "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
@@ -619,7 +620,6 @@ public class CryptoTransmissionAgent {
                                             cryptoTransmissionMetadata.getTransactionId(),
                                             CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE,
                                             CryptoTransmissionMetadataType.METADATA_SEND);
-
                                     Gson gson = new Gson();
 
                                     String message = gson.toJson(cryptoTransmissionResponseMessage);

@@ -181,6 +181,10 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
 
         try {
+            //when refresh offset set 0
+            if(refreshType.equals(FermatRefreshTypes.NEW))
+                offset = 0;
+
             lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey,10,offset);
             offset+=MAX_TRANSACTIONS;
         } catch (Exception e) {

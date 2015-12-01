@@ -16,6 +16,10 @@ public enum IntraUserFragmentsEnumType implements FermatFragmentsEnumType<IntraU
     CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT("CCPSAIUCF"),
     CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT("CCPSAIUCCF"),
     CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL_FRAGMENT("CCPSAIUCCDF"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT("CCPSAIUCCNF"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT("CCPSAIUCCOPF"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT("CCPSAIUCCWF"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT("CCPSAIUCCFLF"),
 
 
     /**
@@ -47,17 +51,6 @@ public enum IntraUserFragmentsEnumType implements FermatFragmentsEnumType<IntraU
     IntraUserFragmentsEnumType() {
     }
 
-    @Override
-    public String getKey() {
-        return this.key;
-    }
-
-
-    @Override
-    public String toString() {
-        return key;
-    }
-
     public static IntraUserFragmentsEnumType getValue(String name) {
         for (IntraUserFragmentsEnumType fragments : IntraUserFragmentsEnumType.values()) {
             if (fragments.key.equals(name)) {
@@ -67,5 +60,15 @@ public enum IntraUserFragmentsEnumType implements FermatFragmentsEnumType<IntraU
         // throw an IllegalArgumentException or return null
         // throw new IllegalArgumentException("the given number doesn't match any Status.");
         return null;
+    }
+
+    @Override
+    public String getKey() {
+        return this.key;
+    }
+
+    @Override
+    public String toString() {
+        return key;
     }
 }
