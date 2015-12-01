@@ -228,6 +228,10 @@ public enum Plugins implements FermatEnum {
     WALLET_SETTINGS             ("WSE"),
     WALLET_STATISTICS           ("WSTA"),
     WALLET_STORE                ("WST"),
+
+
+
+
     WS_CLOUD_CLIENT             ("WCL"),
 
     //CBP
