@@ -15,7 +15,7 @@
 
 **Reviewers** : 
 
-Noviembre 2014
+November 2015
 
 _www.fermat.org_
 
@@ -26,7 +26,7 @@ A peer-to-peer financial application framework could allow standalone crypto wal
 
 Developing peer-to-peer financial applications is challenging. Bitcoin provide part of the solution as a p2p system of electronic cash [1], but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallets files or keys, manage identities, interface crypto networks or the legacy financial system.
 
-We propose a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. A synchronization scheme running on top of it transform a standalone app into a distributed application across several devices still owned by the same user.
+We propose a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. A synchronization scheme running on top of it transforms a standalone app into a distributed application across several devices still owned by the same user.
 
 We propose a framework to replace the standalone wallet application. This framework handles the full stack on top of crypto networks up to the user interface. In this way we enable the development of peer-to-peer financial applications that are both crypto-currency and digital-asset-enabled, and that does not require a trusted third party of any sort.
 
@@ -52,19 +52,19 @@ A built-in _wallet-factory_ allows developers to reuse the highest level compone
 
 The Fermat Network is structured as a peer-to-peer network architecture on top of the Internet. Fermat nodes are peers to each other, meaning that they are all equal and there are no "special" nodes. All the nodes share the burden of providing all services. The network nodes interconnect to each other only when they need to do so according to the Fermat P2P Protocol. There is no server, no centralized service, and no hierarchy within the network. 
 
-The term "Fermat Network" refers to the collection of nodes running the Fermat P2P Protocol. There are two other protocols such as the Fermat Consensus Protocol which allows the network to agree which transactions are going to be recorded on the blockchain, and the Fermat Client Protocol which is used for coomunicating Fermat Clients between each other and to Fermat Nodes. We use the term "Extended Fermat Network" to refer to the overall network that includes both Fermat Nodes and Clients.
+The term "Fermat Network" refers to the collection of nodes running the Fermat P2P Protocol. There are two other protocols such as the Fermat Consensus Protocol which allows the network to agree which transactions are going to be recorded on the blockchain, and the Fermat Client Protocol which is used for communicating Fermat Clients between each other and to Fermat Nodes. We use the term "Extended Fermat Network" to refer to the overall network that includes both Fermat Nodes and Clients.
 
 ### Fermat Nodes Roles
 
 Fermat nodes performs several tasks at the same time. For each one of them, the protocol has it own set of rules:
 
-#### Mantains the Distributed Nodes Catalogue
+#### Maintain the Distributed Nodes Catalogue
 
-Each node mantains a full catalogue of all nodes registered in the network. This role is ruled by the Fermat P2P Protocol.
+Each node maintains a full catalogue of all nodes registered in the network. This role is ruled by the Fermat P2P Protocol.
 
-#### Mantains an Identities Catalogue
+#### Maintain an Identities Catalogue
 
-Each node mantains a part of a distributed catalogue of the End User identities. This catalogue is designed to facilitate End Users to find each other. This role is ruled by the Fermat Client Protocol.
+Each node maintains a part of a distributed catalogue of the End User identities. This catalogue is designed to facilitate End Users to find each other. This role is ruled by the Fermat Client Protocol.
 
 #### Act as Identities' Home
 
@@ -72,11 +72,11 @@ Each node is home to a set of End Users identities. These identities can receive
 
 #### Acts as a Call Bridge
 
-Each node interconects clients between each other in order to let them freely transfer information between them. This role is ruled by the Fermat Client Protocol.
+Each node interconnects clients between each other in order to let them freely transfer information between them. This role is ruled by the Fermat Client Protocol.
 
-#### Mantains the Fermat Blockchain
+#### Maintain the Fermat Blockchain
 
-Each node mantains the Fermat Blockchain: a public record of all coinbase transactions where the protocol issues new fermats. This role is ruled by the Fermat Consensus Protocol.
+Each node maintains the Fermat Blockchain: a public record of all coinbase transactions where the protocol issues new fermats. This role is ruled by the Fermat Consensus Protocol.
 
 ### Fermat Clients
 
@@ -88,7 +88,7 @@ Fermat clients run the Fermat Framework, which in turn run the Fermat Components
 
 The solution we propose begins with a Framework that must be portable into different OS. On a multi-layered format, the bottom most layer is interfacing the OS and must be built with replaceable components implementing the same set of public interfaces in order to build on top a single set of OS-independent components. At the same time, the upper most layers are again OS-dependent, providing a native GUI on each device.
 
-We identify 3 different kind of components that we arbitrarily call **Add-ons**, **Plug-ins**, and **GUI** components. We define Add-ons as low level components that do not need to identify themselves to consume services from other components. They have broad access to the file system and databases. Plug-ins have their own identity and must identify themselves to other components to use their services which in return restrict the scope of their services based on the caller's identity (for example the filesystem add-on would only give access to the Plug-ins own folder structure, the database system add-on would only give access to the plugins own databases, and so on). In this way we handle the problem of plug-ins accessing the infromation of other plug-ins.
+We identify 3 different kinds of components that we arbitrarily call **Add-ons**, **Plug-ins**, and **GUI** components. We define Add-ons as low level components that do not need to identify themselves to consume services from other components. They have broad access to the file system and databases. Plug-ins have their own identity and must identify themselves to other components to use their services which in return restrict the scope of their services based on the caller's identity (for example the filesystem add-on would only give access to the Plug-ins own folder structure, the database system add-on would only give access to the plugins own databases, and so on). In this way we handle the problem of plug-ins accessing the information of other plug-ins.
 
 The core framework is in charge of initializing Add-ons and Plug-ins and managing Plug-ins identities. An internal API library defines the public interfaces that each component exposes to the rest of the components within the same device in order to allow them to use their services locally. This provides a strong encapsulation of each components business logic allowing them to freely define their internal structure and data model.
 
@@ -121,7 +121,7 @@ With the development mechanism, tokens are generated using a predefined mechanis
 
 The Fermat Protocol generates tokens according to a standard crytptographic algorithm acting as a proof of the value nodes are contributing to the application (Fermat uses a kind of Proof of Work Algorithm designed for the particular services Fermat nodes are providing).
 
-With the mining mechanism, tokens are distributed to those who contribute most work to the operation of the Fermat Network. In this case, fermats are distributed through a predetermined algorithm to the miners that connect clients between each other and allows them to talk through them.
+With the mining mechanism, tokens are distributed to those who contribute most work to the operation of the Fermat Network. In this case, fermats are distributed through a predetermined algorithm to the miners that connect clients between each other and allow clients to talk through them.
 
 ### Token Issuing
 
@@ -143,7 +143,7 @@ The protocol itself issues tokens for miners and for development. In the last ca
 
 ### Token Usage
 
-End users automatically aquires fermats by receiving bitcoins into a their Fermat wallet. They can go back to bitcoin by transfering fermats into a Bitcoin wallet. 
+End users automatically acquire fermats by receiving bitcoins into a Fermat wallet of their own. They can go back to bitcoin by transfering fermats into a Bitcoin wallet. 
 
 Fermat tokes are necesary for users to pay for three things:
 
@@ -162,7 +162,7 @@ End Users pay with fermats to receive personalized technical support from Fermat
 <br>
 ## Fermat Blockchain
 
-Fermat's blockchain inherits many of the characteristics of the bitcoin blockchain and it is highly coupled with it. The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are coinbase transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back," each referring to the previous block in the chain. 
+Fermat's blockchain inherits many of the characteristics of the bitcoin blockchain and it is highly coupled with it. The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are coinbase transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back" each referring to the previous block in the chain. 
 
 Each block within the blockchain:
 
@@ -172,7 +172,7 @@ Each block within the blockchain:
 <br>
 ## Mining
 
-Mining is the process by which new fermats are added to the token supply. Mining also serves to the main purpose of the Fermat Network: enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidh to the Fermat network in exchange for the opportunity to be rewarded fermats.
+Mining is the process by which new fermats are added to the token supply. Mining also serves to the main purpose of the Fermat Network: to enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidh to the Fermat network in exchange for the opportunity to be rewarded fermats.
 
 Miners inter-connect devices and acts as a bridge relaying everything from one device to the other. A new block, containing transactions that occurred since the last block, is "mined" every approximatelly 10 minutes, thereby adding those transactions to the blockchain. Transactions that become part of a block and added to the blockchain are considered "confirmed," which allows the new owners of fermats to spend the fermats they received in those transactions.
 
@@ -186,7 +186,7 @@ Miners receive two types of rewards for mining: new tokens created with each new
 
 To earn this reward, the miners compete to sell incoming bandwith to network clients, i.e. being their home node. Network Clients are free to choose which node to use as their home and at some point they pay in fermats to these nodes for their services. Fermat "proof of work" consist on nodes proving that have received payments for being a home node. 
 
-The amount of newly created fermats that can be added to a block decreces approximately every four years. It starts at 50 fermats per block and halves by 2 every 4 years. Based on this formula, fermat mining rewards decrease exponentially until all fermats (21,000,000 million) have been issued. After that, no new fermats will be issued.
+The amount of newly created fermats that can be added to a block decreases approximately every four years. It starts at 50 fermats per block and halves by 2 every 4 years. Based on this formula, fermat mining rewards decrease exponentially until all fermats (21,000,000 million) have been issued. After that, no new fermats will be issued.
 
 #### Home Node Fees
 
@@ -205,7 +205,7 @@ According to the Fermat Protocol these are the rules to be followed:
 
 * Each node scans the transactions at the bitcoin blockchain block height: head - 6. 
 * They search for fermat transactions and aggregate all the ones that are payments to nodes in their node catalog.
-* They order the node list considering the ones with the highest amount colleted in fees first.
+* They order the node list considering the ones with the highest amount collected in fees first.
 * If they are between the 25% of the nodes that:
 
 a. Received the biggest amount payed by adding all payments.
@@ -214,14 +214,14 @@ b. Have been payed with the biggest number of different transactions.
 
 c. The sum of the bitcoin mining fees is the greatest.
 
-Then they are allowed to propose themselves as canditates to receive new fermats by participating in the Race to the Blockchain.
+Then they are allowed to propose themselves as candidates to receive new fermats by participating in the Race to the Blockchain.
 
 In other words, if the node making all these calculations is at the same time in three different sets of nodes, selected by different criteria, then they should consider themselves candidates for the race and should continue with the next step.
 
 
 ### Race to the Blockchain
 
-Inmidiatelly when a new block is mined at the bitcoin network, the following actions are taken by each qualifying node in order to see if they can earn the new fermats.
+Immediately when a new block is mined at the bitcoin network, the following actions are taken by each qualifying node in order to see if they can earn the new fermats.
 
 They create a coinbase transaction racing between each other to be incorporated first by a bitcoin miner into the bitcoin blockchain at the next block mined. The first 10 % of valid transactions to be incorporated at the bitcoin blockchain will be the ones recorded by every Fermat Node on the Fermat blockchain by adding them on a new block. The recording will happen when that block has 6 more blocks on top of it. 
 
@@ -231,13 +231,13 @@ The sum of the amounts of all these transactions must not exceed the amount of f
 
 ### Rationale
 
-By using the fees payed by network clients as "proof of work" we discorage dishonest nodes to lie to the rest of the network about the value added. Network Clients will often pay after the service is delivered. Of course node operators can create fake fees to quilify for the race, but they will need to pay bitcoin mining fees for this and they are not guaranteed that they will win the race to the blockchain. In fact to have better chances to win the race they will have to invest in higher bitcoin miner's fees in order to be included first, again without any guarantee of being among the first 10%.
+By using the fees payed by network clients as "proof of work" we discourage dishonest nodes to lie to the rest of the network about the value added. Network Clients will often pay after the service is delivered. Of course node operators can create fake fees to qualify for the race, but they will need to pay bitcoin mining fees for this and they are not guaranteed that they will win the race to the blockchain. In fact to have better chances to win the race they will have to invest in higher bitcoin miner's fees in order to be included first, again without any guarantee of being among the first 10%.
 
 
 <br>
 ## Independent Verification of Transactions
 
-In Fermat, coinbase transactions are recorded on the Fermat Blockchain. Previously, nodes recorded the candidate coinbase transactions on the bitcoin network. Those transactions includes the transaction hash on the OP_RETURN field that later is going to be crytical to recognize the satoshis present on the other outputs as fermats by Fermat wallets.
+In Fermat, coinbase transactions are recorded on the Fermat Blockchain. Previously, nodes recorded the candidate coinbase transactions on the bitcoin network. Those transactions includes the transaction hash on the OP_RETURN field that later is going to be critical to recognize the satoshis present on the other outputs as fermats by Fermat wallets.
 
 ### Fermat Genesis Transactions
 
@@ -268,7 +268,7 @@ We know that by doing this, 1 fermat has a minimun market value of 0.0001 bitcoi
 
 ### For developers
 
-Plug-in developers declare a _Micro-Use-License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro-Use-License_ for their components. end users install the Apps (wallets) of their choice. The license to be paid is the summary of the Apps _Micro-Use-License_ plus all the _Micro-Use-Licenses_ of the plug-ins used by that App. 
+Plug-in developers declare a _Micro-Use-License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro-Use-License_ for their components. End users install the Apps (wallets) of their choice. The license to be paid is the sum of the Apps _Micro-Use-License_ plus all the _Micro-Use-Licenses_ of the plug-ins used by that App. 
 
 The Framework is responsible to charge the end user and distribute the payments to all developers involved.
 
