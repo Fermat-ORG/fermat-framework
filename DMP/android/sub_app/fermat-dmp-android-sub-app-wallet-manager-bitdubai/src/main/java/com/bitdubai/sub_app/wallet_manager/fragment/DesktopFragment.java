@@ -459,7 +459,9 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
         try {
             switch (data.getType()) {
                 case SUB_APP:
-                    selectSubApp((InstalledSubApp) data.getInterfaceObject());
+                    if(((InstalledSubApp)data.getInterfaceObject()).getSubAppType().equals(SubApps.Scanner)){
+                        Toast.makeText(getActivity(),"Coming soon",Toast.LENGTH_SHORT).show();
+                    }else selectSubApp((InstalledSubApp) data.getInterfaceObject());
                     break;
                 case WALLET:
                     selectWallet((InstalledWallet) data.getInterfaceObject());

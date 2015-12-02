@@ -591,7 +591,7 @@ public class CryptoTransmissionAgent {
                                     //para el outgoing intra user
 
                                   //  cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
-                                  //  cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
+                                  //  cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_SEND);
                                   //  cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
 
                                     System.out.print("-----------------------\n" +
