@@ -1279,7 +1279,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             List<Item> lst = new ArrayList<>();
 
-            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Scanner", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.Scanner, null, null, "intra_user_identity_sub_app", "Scanner", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
             Item item2 = new Item(installedSubApp);
             item2.setIconResource(R.drawable.ic_04);
             item2.setPosition(1);
@@ -1320,12 +1320,7 @@ public abstract class FermatActivity extends AppCompatActivity
             identityFolder.setPosition(2);
             lst.add(identityFolder);
 
-            //store
-            installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","Wallet store","public_key_store","wallet_store",new Version(1,0,0));
-            item2 = new Item(installedSubApp);
-            item2.setIconResource(R.drawable.ic_03);
-            item2.setPosition(4);
-            lst.add(item2);
+
 
             //communities
             List<Item> lstCommunities = new ArrayList<>();
@@ -1362,6 +1357,13 @@ public abstract class FermatActivity extends AppCompatActivity
             item2 = new Item(fermatFolder);
             item2.setIconResource(R.drawable.ic_002);
             item2.setPosition(3);
+            lst.add(item2);
+
+            //store
+            installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","Wallet Store","public_key_store","wallet_store",new Version(1,0,0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.ic_03);
+            item2.setPosition(4);
             lst.add(item2);
 
 
