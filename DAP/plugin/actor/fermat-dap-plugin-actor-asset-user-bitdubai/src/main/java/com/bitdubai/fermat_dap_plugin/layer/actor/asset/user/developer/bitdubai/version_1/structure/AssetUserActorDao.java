@@ -419,8 +419,6 @@ public class AssetUserActorDao implements Serializable {
                 for (DatabaseTableRecord record : table.getRecords()) {
                     if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
                         dapConnectionState = DAPConnectionState.CONNECTED_OFFLINE;
-                    }else {
-                        dapConnectionState = DAPConnectionState.REGISTERED_OFFLINE;
                     }
 
                     record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
@@ -704,7 +702,7 @@ public class AssetUserActorDao implements Serializable {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
             }
             // 2) Find  Asset Users by Connection State.
-            //TODO Actor Asset User en Tabla REGISTERED con DAPDAPConnectionState CONNECTED_ONLINE indicara que tiene CryptoAddress
+            //TODO Actor Asset User en Tabla REGISTERED con DAPConnectionState CONNECTED_ONLINE indicara que tiene CryptoAddress
 //            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
