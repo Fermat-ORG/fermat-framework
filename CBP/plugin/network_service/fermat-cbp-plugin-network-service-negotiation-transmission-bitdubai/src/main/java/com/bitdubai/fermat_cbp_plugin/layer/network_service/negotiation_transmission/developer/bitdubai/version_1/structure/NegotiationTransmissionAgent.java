@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.N
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
@@ -277,7 +279,81 @@ public class NegotiationTransmissionAgent {
 
     /*PRIVATE*/
     private void processReceive() {
+        try {
+            //communicationNetworkServiceConnectionManager.
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, "false");
 
+            //Read all pending CryptoTransmissionMetadata from database
+            List<NegotiationTransmission> businessTransactionMetadataList = databaseDao.findAll(filters);
+            for(BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList){
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(businessTransactionMetadata.getSenderId());
+                if(communicationNetworkServiceLocal!=null){
+                    System.out.print("-----------------------\n" +
+                            "RECEIVING BUSINESS TRANSACTION-----------------------\n" +
+                            "-----------------------\n STATE: " + businessTransactionMetadata.getState());
+                    // si no contiene la metadata, la tengo que guardar en la bd y notificar que llegó, tambien debería cargar ese caché cuando se lanza el evento de que llega la metadata de respuesta
+                    // if( ! cacheResponseMetadataFromRemotes.containsKey(cryptoTransmissionMetadata.getDestinationPublicKey())){
+                    try {
+                        switch (businessTransactionMetadata.getState()) {
+                            case SEEN_BY_DESTINATION_NETWORK_SERVICE:
+                                //TODO: revisar que se puede hacer acá
+                                System.out.println("Transaction Transmission SEEN_BY_DESTINATION_NETWORK_SERVICE---to implement");
+                                break;
+
+                            case CONFIRM_CONTRACT:
+                                System.out.print(businessTransactionMetadata.getSenderId()+" Transaction Transmission CONFIRM_CONTRACT");
+
+                                //this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
+                                launchNotification();
+                                this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
+                                break;
+
+                            case CONFIRM_RESPONSE:
+                                System.out.print(businessTransactionMetadata.getSenderId()+" Transaction Transmission CONFIRM_RESPONSE");
+                                launchNotification();
+                                this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
+                                break;
+                            // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
+                            case SENT:
+
+                                businessTransactionMetadata.setState(TransactionTransmissionStates.SEEN_BY_OWN_NETWORK_SERVICE);
+                                businessTransactionMetadata.setBusinessTransactionTransactionType(businessTransactionMetadata.getType());
+                                databaseDao.update(businessTransactionMetadata);
+
+                                System.out.print("-----------------------\n" +
+                                        "RECEIVING BUSINESS TRANSACTION -----------------------\n" +
+                                        "-----------------------\n STATE: " + businessTransactionMetadata.getState());
+
+                                launchNotification();
+
+                                TransactionTransmissionResponseMessage cryptoTransmissionResponseMessage = new TransactionTransmissionResponseMessage(
+                                        businessTransactionMetadata.getTransactionId(),
+                                        TransactionTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE,
+                                        businessTransactionMetadata.getType());
+
+                                Gson gson = new Gson();
+                                String message = gson.toJson(cryptoTransmissionResponseMessage);
+
+                                // El destination soy yo porque me lo estan enviando
+                                // El sender es el otro y es a quien le voy a responder
+                                communicationNetworkServiceLocal.sendMessage(businessTransactionMetadata.getReceiverId(), businessTransactionMetadata.getSenderId(), message);
+                                System.out.print("-----------------------\n" +
+                                        "SENDING ANSWER -----------------------\n" +
+                                        "-----------------------\n STATE: " + businessTransactionMetadata.getState());
+                                break;
+                            default:
+                                //TODO: handle with an exception
+                                break;
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (CantReadRecordDataBaseException e) {
+            e.printStackTrace();
+        }
     }
 
     private void launchNotification(){

@@ -95,6 +95,9 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         }
     }
 
+    /*UPDATE REGISTER SEND NEGOTIATION TRANSMISSION*/
+
+
     /**
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
