@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -662,21 +663,21 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         private void showLoading(View contentView, View loadingView, View emptyView) {
             contentView.setVisibility(View.GONE);
             loadingView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
+            FermatAnimationsUtils.showEmpty(getActivity(),false,emptyView);
         }
 
 
         private void showContent(View contentView, View loadingView, View emptyView) {
             contentView.setVisibility(View.VISIBLE);
             loadingView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.GONE);
+            FermatAnimationsUtils.showEmpty(getActivity(), false, emptyView);
         }
 
 
         private void showEmptyText(View contentView, View loadingView, View emptyView) {
             contentView.setVisibility(View.GONE);
             loadingView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
+            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyView);
         }
 
 
