@@ -40,7 +40,7 @@ public class StartTest  {
     @Mock
     private BitcoinWalletManager mockBitcoinWalletManager;
     @Mock
-    private PlatformCryptoVaultManager mockCryptoVaultManager;
+    private CryptoVaultManager mockCryptoVaultManager;
     @Mock
     private ErrorManager mockErrorManager;
 

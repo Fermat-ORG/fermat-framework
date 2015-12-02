@@ -1,6 +1,6 @@
 package test.com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoMonitorAgent;
 
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoMonitorAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRegistry;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -20,7 +20,7 @@ public class ConstructionTest {
     private ErrorManager mockErrorManager;
 
     @Mock
-    private PlatformCryptoVaultManager mockIncomingCryptoManager;
+    private CryptoVaultManager mockIncomingCryptoManager;
 
     @Mock
     private IncomingCryptoRegistry mockRegistry;

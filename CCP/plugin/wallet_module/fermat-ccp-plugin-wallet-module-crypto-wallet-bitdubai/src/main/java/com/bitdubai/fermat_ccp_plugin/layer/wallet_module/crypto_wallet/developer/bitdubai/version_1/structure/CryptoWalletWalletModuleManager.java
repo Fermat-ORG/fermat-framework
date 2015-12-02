@@ -94,7 +94,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichIntraUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantGetActorException;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
@@ -129,7 +129,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
     private final CryptoAddressesManager         cryptoAddressesNSManager      ;
     private final CryptoPaymentManager           cryptoPaymentManager          ;
-    private final PlatformCryptoVaultManager cryptoVaultManager            ;
+    private final CryptoVaultManager cryptoVaultManager            ;
     private final ErrorManager                   errorManager                  ;
     private final ExtraUserManager               extraUserManager              ;
     private final IntraWalletUserActorManager    intraUserManager              ;
@@ -142,7 +142,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                            final CryptoAddressBookManager       cryptoAddressBookManager      ,
                                            final CryptoAddressesManager         cryptoAddressesNSManager      ,
                                            final CryptoPaymentManager           cryptoPaymentManager          ,
-                                           final PlatformCryptoVaultManager cryptoVaultManager            ,
+                                           final CryptoVaultManager cryptoVaultManager            ,
                                            final ErrorManager                   errorManager                  ,
                                            final ExtraUserManager               extraUserManager              ,
                                            final IntraWalletUserActorManager    intraUserManager              ,

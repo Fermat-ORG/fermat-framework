@@ -13,9 +13,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManagerPlatform;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -84,7 +84,7 @@ public class GetDatabaseTableListTest {
     private ActorAssetIssuerManager actorAssetIssuerManager;
 
     @Mock
-    private PlatformCryptoVaultManager cryptoVaultManager;
+    private CryptoVaultManager cryptoVaultManager;
 
     @Mock
     private BitcoinWalletManager bitcoinWalletManager;
@@ -93,7 +93,7 @@ public class GetDatabaseTableListTest {
     private BitcoinNetworkManager bitcoinNetworkManager;
 
     @Mock
-    private AssetVaultManagerPlatform assetVaultManager;
+    private AssetVaultManager assetVaultManager;
 
     @Mock
     private DeveloperObjectFactory developerObjectFactory;

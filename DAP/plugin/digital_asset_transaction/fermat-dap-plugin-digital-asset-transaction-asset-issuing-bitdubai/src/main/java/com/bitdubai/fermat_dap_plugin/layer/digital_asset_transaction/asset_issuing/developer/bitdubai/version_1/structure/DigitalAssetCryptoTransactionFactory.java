@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManagerPlatform;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
@@ -40,7 +40,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
@@ -92,10 +92,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     int assetsAmount;
     private AssetIssuingTransactionDao assetIssuingTransactionDao;
     ActorAssetIssuerManager actorAssetIssuerManager;
-    AssetVaultManagerPlatform assetVaultManager;
+    AssetVaultManager assetVaultManager;
     BitcoinWalletBalance bitcoinWalletBalance;
     BlockchainNetworkType blockchainNetworkType;
-    PlatformCryptoVaultManager cryptoVaultManager;
+    CryptoVaultManager cryptoVaultManager;
     BitcoinWalletManager bitcoinWalletManager;
     CryptoAddressBookManager cryptoAddressBookManager;
     IntraWalletUserActorManager intraWalletUserActorManager;
@@ -121,11 +121,11 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     Logger LOG = Logger.getGlobal();
 
     public DigitalAssetCryptoTransactionFactory(UUID pluginId,
-                                                PlatformCryptoVaultManager cryptoVaultManager,
+                                                CryptoVaultManager cryptoVaultManager,
                                                 BitcoinWalletManager bitcoinWalletManager,
                                                 PluginDatabaseSystem pluginDatabaseSystem,
                                                 PluginFileSystem pluginFileSystem,
-                                                AssetVaultManagerPlatform assetVaultManager,
+                                                AssetVaultManager assetVaultManager,
                                                 CryptoAddressBookManager cryptoAddressBookManager,
                                                 OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 

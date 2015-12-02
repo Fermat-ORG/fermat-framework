@@ -34,7 +34,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -69,8 +69,8 @@ import javax.annotation.Nullable;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinPlatformCryptoVaultPluginRoot extends AbstractPlugin implements
-        PlatformCryptoVaultManager,
+public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
+        CryptoVaultManager,
         PlatformCryptoVault,
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
@@ -98,14 +98,14 @@ public class BitcoinPlatformCryptoVaultPluginRoot extends AbstractPlugin impleme
     private BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
 
 
-    public BitcoinPlatformCryptoVaultPluginRoot() {
+    public BitcoinCryptoVaultPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
     public static final EventSource EVENT_SOURCE = EventSource.CRYPTO_VAULT;
 
     /**
-     * BitcoinPlatformCryptoVaultPluginRoot member variables
+     * BitcoinCryptoVaultPluginRoot member variables
      */
     BitcoinCryptoVault vault;
     TransactionNotificationAgent transactionNotificationAgent;
@@ -120,7 +120,7 @@ public class BitcoinPlatformCryptoVaultPluginRoot extends AbstractPlugin impleme
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinPlatformCryptoVaultPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot");
         returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinNetworkConfiguration");
         returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory");
         returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault");
@@ -149,11 +149,11 @@ public class BitcoinPlatformCryptoVaultPluginRoot extends AbstractPlugin impleme
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (BitcoinPlatformCryptoVaultPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                BitcoinPlatformCryptoVaultPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                BitcoinPlatformCryptoVaultPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (BitcoinCryptoVaultPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                BitcoinCryptoVaultPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                BitcoinPlatformCryptoVaultPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
 
@@ -319,7 +319,7 @@ public class BitcoinPlatformCryptoVaultPluginRoot extends AbstractPlugin impleme
          * the service is started.
          */
         this.serviceStatus = ServiceStatus.STARTED;
-        logManager.log(BitcoinPlatformCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "PlatformCryptoVault started.", null, null);
+        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "PlatformCryptoVault started.", null, null);
     }
 
     /**
@@ -348,7 +348,7 @@ public class BitcoinPlatformCryptoVaultPluginRoot extends AbstractPlugin impleme
 
     //TODO Franklin, aqui falta la gestion de excepciones genericas
     /**
-     * PlatformCryptoVaultManager interface implementation
+     * CryptoVaultManager interface implementation
      */
     @Override
     public void connectToBitcoin() throws VaultNotConnectedToNetworkException {
@@ -362,7 +362,7 @@ public class BitcoinPlatformCryptoVaultPluginRoot extends AbstractPlugin impleme
 
     //TODO Franklin, aqui falta la gestion de excepciones genericas, usa el errorManager
     /**
-     * PlatformCryptoVaultManager interface implementation
+     * CryptoVaultManager interface implementation
      */
     @Override
     public void disconnectFromBitcoin()  {
@@ -374,7 +374,7 @@ public class BitcoinPlatformCryptoVaultPluginRoot extends AbstractPlugin impleme
     }
 
     /**
-     * PlatformCryptoVaultManager interface implementation
+     * CryptoVaultManager interface implementation
      */
     @Override
     public CryptoAddress getAddress() {
@@ -382,7 +382,7 @@ public class BitcoinPlatformCryptoVaultPluginRoot extends AbstractPlugin impleme
     }
 
     /**
-     * PlatformCryptoVaultManager interface implementation
+     * CryptoVaultManager interface implementation
      */
     @Override
     public List<CryptoAddress> getAddresses(int amount) {
@@ -423,7 +423,7 @@ public class BitcoinPlatformCryptoVaultPluginRoot extends AbstractPlugin impleme
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return BitcoinPlatformCryptoVaultPluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return BitcoinCryptoVaultPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.

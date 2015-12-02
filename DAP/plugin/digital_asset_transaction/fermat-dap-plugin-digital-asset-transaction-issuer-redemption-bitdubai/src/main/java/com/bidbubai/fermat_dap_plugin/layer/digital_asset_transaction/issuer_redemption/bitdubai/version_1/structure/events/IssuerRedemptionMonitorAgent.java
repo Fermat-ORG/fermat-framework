@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManagerPlatform;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
@@ -50,7 +50,7 @@ public class IssuerRedemptionMonitorAgent implements Agent,DealsWithLogger,Deals
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     OutgoingIntraActorManager outgoingIntraActorManager;
-    AssetVaultManagerPlatform assetVaultManager;
+    AssetVaultManager assetVaultManager;
     //DigitalAssetIssuingVault digitalAssetIssuingVault;
     BitcoinNetworkManager bitcoinNetworkManager;
 //TODO: clean up this class
@@ -60,7 +60,7 @@ public class IssuerRedemptionMonitorAgent implements Agent,DealsWithLogger,Deals
                                                ErrorManager errorManager,
                                                UUID pluginId,
                                                String userPublicKey,
-                                               AssetVaultManagerPlatform assetVaultManager,
+                                               AssetVaultManager assetVaultManager,
                                                OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -78,9 +78,9 @@ public class IssuerRedemptionMonitorAgent implements Agent,DealsWithLogger,Deals
         this.outgoingIntraActorManager=outgoingIntraActorManager;
     }
 
-    private void setAssetVaultManager(AssetVaultManagerPlatform assetVaultManager) throws CantSetObjectException{
+    private void setAssetVaultManager(AssetVaultManager assetVaultManager) throws CantSetObjectException{
         if(assetVaultManager==null){
-            throw new CantSetObjectException("AssetVaultManagerPlatform is null");
+            throw new CantSetObjectException("AssetVaultManager is null");
         }
         this.assetVaultManager=assetVaultManager;
     }

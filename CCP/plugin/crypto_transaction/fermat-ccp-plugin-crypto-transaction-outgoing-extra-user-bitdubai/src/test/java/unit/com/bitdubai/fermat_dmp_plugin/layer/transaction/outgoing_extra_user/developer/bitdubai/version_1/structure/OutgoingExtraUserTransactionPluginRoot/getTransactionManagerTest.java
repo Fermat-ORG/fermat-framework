@@ -15,7 +15,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import ErrorManager;
 import EventManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.OutgoingExtraUserTransactionPluginRoot;
 import com.googlecode.catchexception.CatchException;
 
@@ -32,7 +32,7 @@ public class getTransactionManagerTest {
     @Mock
     private BitcoinWalletManager mockBitcoinWalletManager;
     @Mock
-    private PlatformCryptoVaultManager mockCryptoVaultManager;
+    private CryptoVaultManager mockCryptoVaultManager;
     @Mock
     private ErrorManager mockErrorManager;
 

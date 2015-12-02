@@ -8,11 +8,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManagerPlatform;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
@@ -43,7 +43,7 @@ public class IssuePendingDigitalAssetsTest {
     UUID pluginId;
 
     @Mock
-    PlatformCryptoVaultManager cryptoVaultManager;
+    CryptoVaultManager cryptoVaultManager;
 
     @Mock
     BitcoinWalletManager bitcoinWalletManager;
@@ -55,7 +55,7 @@ public class IssuePendingDigitalAssetsTest {
     PluginFileSystem pluginFileSystem;
 
     @Mock
-    AssetVaultManagerPlatform assetVaultManager;
+    AssetVaultManager assetVaultManager;
 
     @Mock
     CryptoAddressBookManager cryptoAddressBookManager;

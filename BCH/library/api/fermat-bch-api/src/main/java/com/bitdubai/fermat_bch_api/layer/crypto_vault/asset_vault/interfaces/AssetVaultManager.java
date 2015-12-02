@@ -10,7 +10,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoV
 /**
  * Created by rodrigo on 9/20/15.
  */
-public interface AssetVaultManagerPlatform extends FermatManager, PlatformCryptoVault {
+public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
 
     /**
      * Will generate a CryptoAddress in the current network originated at the vault.

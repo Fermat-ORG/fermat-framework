@@ -17,7 +17,7 @@
 //import ErrorManager;
 //import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 //import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-//import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
+//import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 //
 //import junit.framework.TestCase;
 //
@@ -42,7 +42,7 @@
 //     * DealsWithCryptoVault interface Mocked
 //     */
 //    @Mock
-//    PlatformCryptoVaultManager cryptoVaultManager;
+//    CryptoVaultManager cryptoVaultManager;
 //
 //    /**
 //     * DealsWithErrors interface Mocked

@@ -18,7 +18,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 11/06/15.
  */
-public interface PlatformCryptoVaultManager extends TransactionSender<CryptoTransaction>, PlatformCryptoVault {
+public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>, PlatformCryptoVault {
     public void connectToBitcoin() throws VaultNotConnectedToNetworkException;
     public void disconnectFromBitcoin();
     public CryptoAddress getAddress();

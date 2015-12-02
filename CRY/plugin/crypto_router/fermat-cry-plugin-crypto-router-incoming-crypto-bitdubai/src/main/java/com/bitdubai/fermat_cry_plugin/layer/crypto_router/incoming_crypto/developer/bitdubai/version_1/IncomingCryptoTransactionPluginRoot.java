@@ -29,7 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.developerUtils.IncomingCryptoDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
@@ -80,7 +80,7 @@ public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implemen
     private CryptoAddressBookManager cryptoAddressBookManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.BITCOIN_VAULT)
-    private PlatformCryptoVaultManager cryptoVaultManager;
+    private CryptoVaultManager cryptoVaultManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK)
     private BitcoinNetworkManager bitcoinNetworkManager;
