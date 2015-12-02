@@ -264,6 +264,26 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                             //toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getIncomingNotificationsDao());
                         break;
+                    case DENIED:
+                        System.out.print("-----------------------\n" +
+                                "DENEGARON EL REQUEST!!!!!-----------------------\n" +
+                                "-----------------------\n NOTIFICAION: " + cpr);
+
+                        lauchNotification();
+
+                        try {
+
+                            actorNetworkServicePluginRoot.getIncomingNotificationsDao().changeProtocolState(cpr.getId(),ActorProtocolState.PENDING_ACTION);
+
+                        } catch (CantUpdateRecordDataBaseException e) {
+                            e.printStackTrace();
+                        } catch (CantUpdateRecordException e) {
+                            e.printStackTrace();
+                        } catch (RequestNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        break;
                 }
             }
 
@@ -347,6 +367,9 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                         reportUnexpectedError(FermatException.wrapException(e));
                     }
+                }else{
+                 // connectionFailure(actorNetworkServiceRecord.getActorDestinationPublicKey());
+                   System.out.println("ENTRO EN ESTE ELSE");
                 }
             }
         } catch (Exception z) {

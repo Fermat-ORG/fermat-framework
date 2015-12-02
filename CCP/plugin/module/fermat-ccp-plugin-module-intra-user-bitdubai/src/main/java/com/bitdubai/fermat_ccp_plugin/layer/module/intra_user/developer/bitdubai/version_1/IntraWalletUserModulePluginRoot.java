@@ -372,19 +372,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws IntraUserConectionDenegationFailedException
      */
     @Override
-    public void denyConnection(String intraUserToRejectPublicKey) throws IntraUserConectionDenegationFailedException {
+    public void denyConnection(String intraUserLoggedPublicKey,String intraUserToRejectPublicKey) throws IntraUserConectionDenegationFailedException {
         try
         {
             /**
              *Call Actor Intra User to denied request connection
              */
 
-           this.intraWalletUserManager.denyConnection(this.intraUserLoggedPublicKey, intraUserToRejectPublicKey);
+           this.intraWalletUserManager.denyConnection(intraUserLoggedPublicKey, intraUserToRejectPublicKey);
 
             /**
              *Call Network Service Intra User to denied request connection
              */
-            this.intraUserNertwokServiceManager.denyConnection(this.intraUserLoggedPublicKey, intraUserToRejectPublicKey);
+            this.intraUserNertwokServiceManager.denyConnection(intraUserLoggedPublicKey, intraUserToRejectPublicKey);
 
         }
         catch(CantDenyConnectionException e)
