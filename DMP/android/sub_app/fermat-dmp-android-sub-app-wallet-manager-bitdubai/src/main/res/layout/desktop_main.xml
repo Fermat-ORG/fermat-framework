@@ -12,22 +12,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+
+        <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Wallets"
-            app:typeface="CAVIAR_DREAMS"
-            android:textSize="52sp"
-            android:layout_marginTop="24dp"
-            android:paddingLeft="20dp"
-            android:layout_marginBottom="24dp"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:shadowColor="#1E1E1E"
-            android:shadowDx="16"
-            android:shadowDy="12"
-            android:shadowRadius="12"
-            />
+            android:layout_height="150dp"
+            android:src="@drawable/wallet_title" />
 
     <LinearLayout
         android:layout_width="match_parent"
