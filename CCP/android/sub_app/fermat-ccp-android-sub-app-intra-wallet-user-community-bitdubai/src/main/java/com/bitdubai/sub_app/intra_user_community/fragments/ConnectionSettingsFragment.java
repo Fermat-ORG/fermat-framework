@@ -5,12 +5,17 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
+import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 /**
  * Created by josemanueldsds on 01/12/15.
@@ -18,6 +23,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 public class ConnectionSettingsFragment extends FermatFragment {
 
 
+    protected final String TAG = "ConnectionSettingsFragment";
     private View rootView;
     private IntraUserSubAppSession intraUserSubAppSession;
     private IntraUserModuleManager moduleManager;
@@ -48,7 +54,27 @@ public class ConnectionSettingsFragment extends FermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-        rootView = inflater.inflate(R.layout.intra_user_settings, container, false);
+        try {
+            rootView = inflater.inflate(R.layout.intra_user_settings, container, false);
+            setUpScreen(inflater);
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
         return rootView;
+    }
+
+
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
+        /**
+         * add navigation header
+         */
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+
+        /**
+         * Navigation view items
+         */
+        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
+        setNavigationDrawer(navigationViewAdapter);
     }
 }

@@ -15,7 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -27,6 +30,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by josemanueldsds on 29/11/15.
@@ -100,11 +104,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
-
-            empty = (LinearLayout) rootView.findViewById(R.id.empty);
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            showEmpty(true, rootView);
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -116,6 +116,22 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         return rootView;
     }
 
+    private synchronized List<IntraUserInformation> getMoreData() {
+        List<IntraUserInformation> dataSet = new ArrayList<>();
+
+        try {
+
+            dataSet.addAll(moduleManager.getSuggestionsToContact(MAX, offset));
+            offset = dataSet.size();
+
+        } catch (CantGetIntraUsersListException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return dataSet;
+    }
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
         /**
          * add navigation header
@@ -146,7 +162,44 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
 
     @Override
     public void onRefresh() {
+        if (!isRefreshing) {
+            isRefreshing = true;
+            FermatWorker worker = new FermatWorker() {
+                @Override
+                protected Object doInBackground() throws Exception {
+                    return getMoreData();
+                }
+            };
+            worker.setContext(getActivity());
+            worker.setCallBack(new FermatWorkerCallBack() {
+                @SuppressWarnings("unchecked")
+                @Override
+                public void onPostExecute(Object... result) {
+                    isRefreshing = false;
+                    if (swipeRefresh != null)
+                        swipeRefresh.setRefreshing(false);
+                    if (result != null &&
+                            result.length > 0) {
+                        if (getActivity() != null && adapter != null) {
+                            lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
+                            adapter.changeDataSet(lstIntraUserInformations);
+                        }
+                    } else
+                        showEmpty(adapter.getSize() < 0, emptyView);
+                }
 
+                @Override
+                public void onErrorOccurred(Exception ex) {
+                    isRefreshing = false;
+                    if (swipeRefresh != null)
+                        swipeRefresh.setRefreshing(false);
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    ex.printStackTrace();
+                }
+            });
+            worker.execute();
+        }
     }
 
 }

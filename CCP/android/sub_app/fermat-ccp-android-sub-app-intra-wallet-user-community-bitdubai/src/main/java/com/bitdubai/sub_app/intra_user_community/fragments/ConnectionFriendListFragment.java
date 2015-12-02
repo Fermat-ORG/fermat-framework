@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -80,19 +79,7 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
-
-            empty = (LinearLayout) rootView.findViewById(R.id.empty);
-            empty.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    changeActivity(Activities.CWP_INTRA_USER_ACTIVITY.getCode(),subAppsSession.getAppPublicKey(),null);
-                }
-            });
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            showEmpty(true, rootView);
-
+            showEmpty(adapter.getSize() <= 0, emptyView);
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
