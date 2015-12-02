@@ -21,17 +21,17 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
  */
 public final class CryptoVaultSelector {
 
-    private final PlatformCryptoVault platformCryptoVault;
+    private  PlatformCryptoVault platformCryptoVault;
     private CryptoVaultManager cryptoVaultManager;
     private AssetVaultManager assetVaultManager;
 
 
-    public CryptoVaultSelector(final PlatformCryptoVault platformCryptoVault) {
-
-        this.platformCryptoVault = platformCryptoVault;
+    public CryptoVaultSelector(CryptoVaultManager cryptoVaultManager, AssetVaultManager assetVaultManager) {
+        this.cryptoVaultManager = cryptoVaultManager;
+        this.assetVaultManager = assetVaultManager;
     }
 
-    public final CryptoVaultManager getVault(final VaultType      vaultType     ,
+    public final PlatformCryptoVault getVault(final VaultType      vaultType     ,
                                              final CryptoCurrency cryptoCurrency) throws CantIdentifyVaultException {
 
         try {
@@ -51,15 +51,10 @@ public final class CryptoVaultSelector {
         }
     }
 
-    public final CryptoVaultManager getVault(final FermatVaultEnum fermatVaultEnum) throws CantIdentifyVaultException {
-
-        return getVault(fermatVaultEnum.getVaultType(), fermatVaultEnum.getCryptoCurrency());
-    }
-
     public final PlatformCryptoVault getCryptoCurrencyVault(final CryptoCurrency cryptoCurrency) throws InvalidParameterException {
 
         switch (CryptoCurrencyVault.getByCryptoCurrency(cryptoCurrency)) {
-            case BITCOIN_VAULT: return platformCryptoVault;
+            case BITCOIN_VAULT: return cryptoVaultManager;
 
             default:
                 throw new InvalidParameterException(
@@ -72,7 +67,7 @@ public final class CryptoVaultSelector {
 
         switch (CryptoCurrencyVault.getByCryptoCurrency(cryptoCurrency)) {
 
-            case ASSET_VAULT: return platformCryptoVault;
+            case ASSET_VAULT: return assetVaultManager;
 
             default:
                 throw new InvalidParameterException(

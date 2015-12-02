@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatVault
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CallToGetByCodeOnNONEException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CantGenerateAndRegisterCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CantGenerateCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CantGetDefaultWalletException;
@@ -51,11 +52,11 @@ public abstract class CryptoAddressDealer {
     }
 
     protected final CryptoAddress getAddress(final VaultType      vaultType     ,
-                                             final CryptoCurrency cryptoCurrency) throws CantGenerateCryptoAddressException {
+                                             final CryptoCurrency cryptoCurrency) throws CantGenerateCryptoAddressException, GetNewCryptoAddressException {
 
         try {
 
-            return cryptoVaultSelector.getVault(vaultType, cryptoCurrency).getAddress();
+            return cryptoVaultSelector.getVault(vaultType, cryptoCurrency).getCryptoAddress(BlockchainNetworkType.DEFAULT);
 
         } catch (CantIdentifyVaultException e) {
 
@@ -150,6 +151,8 @@ public abstract class CryptoAddressDealer {
             throw new CantGenerateAndRegisterCryptoAddressException(e, "", "There was a problem trying to register the crypto address.");
         } catch (CantGenerateCryptoAddressException e) {
 
+            throw new CantGenerateAndRegisterCryptoAddressException(e, "", "There was a problem trying to generate the crypto address.");
+        } catch (GetNewCryptoAddressException e) {
             throw new CantGenerateAndRegisterCryptoAddressException(e, "", "There was a problem trying to generate the crypto address.");
         }
     }
