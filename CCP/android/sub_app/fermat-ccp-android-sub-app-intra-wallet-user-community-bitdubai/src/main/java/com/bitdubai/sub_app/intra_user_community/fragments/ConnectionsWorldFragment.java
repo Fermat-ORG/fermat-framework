@@ -7,22 +7,21 @@ import android.graphics.Color;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ActionProvider;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-
-import android.support.v7.widget.SearchView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
@@ -41,8 +40,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserL
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
@@ -50,7 +49,6 @@ import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
-import com.bitdubai.sub_app.intra_user_community.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,20 +68,14 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
 
-
+    private static final int MAX = 20;
     /**
      * MANAGERS
      */
     private  static IntraUserModuleManager moduleManager;
     private  static ErrorManager errorManager;
-
-    private List<IntraUserInformation> lstIntraUserInformations;
-
-
     protected final String TAG = "Recycler Base";
-
-    private static final int MAX = 20;
-
+    private List<IntraUserInformation> lstIntraUserInformations;
     private int offset = 0;
 
     private int mNotificationsCount=0;
@@ -108,6 +100,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
     private IntraUserSubAppSession intraUserSubAppSession;
 
     private String searchName;
+    private LinearLayout emptyView;
 
     /**
      * Create a new instance of this fragment
@@ -132,7 +125,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
 
             //get search name if
-            searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();
+            //searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();
 
             // TODO: display unread notifications.
             // Run a task to fetch the notifications count
@@ -168,6 +161,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
+            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
 
             onRefresh();
@@ -183,6 +177,21 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
 
 
         return rootView;
+    }
+
+    public void showEmpty(boolean show, View emptyView) {
+        Animation anim = AnimationUtils.loadAnimation(getActivity(),
+                show ? android.R.anim.fade_in : android.R.anim.fade_out);
+        if (show &&
+                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.VISIBLE);
+            if (adapter != null)
+                adapter.changeDataSet(null);
+        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.GONE);
+        }
     }
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
         /**
@@ -220,8 +229,12 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
                         if (getActivity() != null && adapter != null) {
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
+                            if(lstIntraUserInformations.isEmpty()){
+                                showEmpty(true, emptyView);
+                            }
                         }
-                    }
+                    } else
+                        showEmpty(true, emptyView);
                 }
 
                 @Override
@@ -247,7 +260,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
         inflater.inflate(R.menu.intra_user_menu, menu);
 
         //MenuItem menuItem = new SearchView(getActivity());
-        try {
+        /*try {
             MenuItem searchItem = menu.findItem(R.id.action_search);
             searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
             //MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -259,7 +272,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
 
         }catch (Exception e){
 
-        }
+        }*/
 //        MenuItem menuItem = menu.add(0, IntraUserCommunityConstants.IC_ACTION_SEARCH, 0, "send");
 //        menuItem.setIcon(R.drawable.ic_action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 //        menuItem.setActionProvider(new SearchView(getActivity()))
