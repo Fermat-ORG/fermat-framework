@@ -34,6 +34,10 @@ public interface NegotiationTransmission {
 
     long getTimestamp();
 
+    boolean isPendingToRead();
+
+    void confirmRead();
+
     void setTransmissionState(NegotiationTransmissionState negotiationTransmissionState);
 
 }

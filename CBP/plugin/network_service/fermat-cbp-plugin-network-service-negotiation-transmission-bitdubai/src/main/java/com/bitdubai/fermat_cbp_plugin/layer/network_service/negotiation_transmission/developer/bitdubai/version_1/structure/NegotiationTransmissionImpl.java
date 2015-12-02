@@ -25,6 +25,7 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     private final NegotiationTransmissionType transmissionType;
     private NegotiationTransmissionState transmissionState;
     private final long timestamp;
+    private boolean pendingFlag;
 
     public NegotiationTransmissionImpl(
             final UUID transmissionId,
@@ -50,29 +51,49 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
         this.transmissionType = transmissionType;
         this.transmissionState = transmissionState;
         this.timestamp = timestamp;
+        this.pendingFlag = false;
     }
 
+    @Override
     public UUID getTransmissionId(){ return transmissionId; }
 
+    @Override
     public UUID getTransactionId(){ return transactionId; }
 
+    @Override
     public UUID getNegotiationId(){ return negotiationId; }
 
+    @Override
     public NegotiationTransactionType getNegotiationTansactionType(){ return negotiationTansactionType; }
 
+    @Override
     public String getPublicKeyActorSend(){ return publicKeyActorSend; }
 
+    @Override
     public PlatformComponentType getActorSendType(){ return actorSendType; }
 
+    @Override
     public String getPublicKeyActorReceive(){ return publicKeyActorReceive;}
 
+    @Override
     public PlatformComponentType getActorReceiveType(){ return actorReceiveType; }
 
+    @Override
     public NegotiationTransmissionType getTransmissionType(){ return transmissionType; }
 
+    @Override
     public NegotiationTransmissionState getTransmissionState(){ return transmissionState; }
 
+    @Override
     public long getTimestamp(){ return timestamp; }
 
+    @Override
+    public boolean isPendingToRead() { return this.pendingFlag; }
+
+    @Override
+    public void confirmRead() { this.pendingFlag=true; }
+
+    @Override
     public void setTransmissionState(NegotiationTransmissionState state){  this.transmissionState = state; }
+
 }
