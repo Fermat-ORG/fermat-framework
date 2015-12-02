@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="275dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/rounded_corners"
-    >
+    android:background="@drawable/rounded_corners">
 
     <View
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="16dp"
                 android:paddingLeft="5dp">
 
 
@@ -42,10 +42,12 @@
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:id="@+id/txt_title"
                         android:text="Social"
                         android:paddingLeft="2dp"
-                        android:textSize="23sp"
+                        android:textSize="20sp"
                         android:textColor="#00a99d"
+                        app:typeface="CAVIAR_DREAMS_BOLD"
                         android:paddingBottom="4dp"/>
 
                     <ImageView
@@ -67,7 +69,7 @@
                     android:background="@drawable/round_corner_line_dialog"/>
 
                 <android.support.v7.widget.RecyclerView
-                    android:layout_marginRight="54dp"
+                    android:layout_marginRight="24dp"
                     android:isScrollContainer="false"
                     android:id="@+id/gridView"
                     android:layout_width="wrap_content"

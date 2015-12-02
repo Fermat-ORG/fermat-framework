@@ -87,7 +87,7 @@ public class IncomingIntraUserRelayAgent {
 
         private com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserTransactionHandler transactionHandler;
 
-        private static final int SLEEP_TIME = 5000;
+        private static final int SLEEP_TIME = 10000;
 
         public RelayAgent(final BitcoinWalletManager bitcoinWalletManager, final CryptoAddressBookManager cryptoAddressBookManager, final ErrorManager errorManager,EventManager eventManager, final IncomingIntraUserRegistry registry, final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager){
             this.registry                 = registry;

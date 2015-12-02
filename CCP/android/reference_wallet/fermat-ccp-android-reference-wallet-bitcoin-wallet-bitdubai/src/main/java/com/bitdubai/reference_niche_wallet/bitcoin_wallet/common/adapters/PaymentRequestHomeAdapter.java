@@ -93,7 +93,7 @@ public class PaymentRequestHomeAdapter extends FermatAdapter<PaymentRequest, Pay
         //Bitmap bm = BitmapFactory.decodeResource((context.getResources(), R.drawable.mati_profile)), options);
 
 
-        Bitmap bitmap = MemoryUtils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.profile_image, holder.getContactIcon().getMaxWidth(), holder.getContactIcon().getMaxHeight());
+        Bitmap bitmap = MemoryUtils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.profile_image_standard, holder.getContactIcon().getMaxWidth(), holder.getContactIcon().getMaxHeight());
         holder.getContactIcon().setImageBitmap(bitmap);
 
         //holder.getContactIcon().setImageBitmap(ImagesUtils.getRoundedShape(BitmapFactory.decodeResource(context.getResources(), R.drawable.mati_profile)));

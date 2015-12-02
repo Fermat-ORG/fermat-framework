@@ -46,6 +46,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserS
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.CheckBoxListItem;
 import com.bitdubai.sub_app.intra_user_community.adapters.ListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
@@ -53,7 +54,6 @@ import com.bitdubai.sub_app.intra_user_community.common.adapters.IntraUserConnec
 import com.bitdubai.sub_app.intra_user_community.common.models.IntraUserConnectionListItem;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
-import com.bitdubai.sub_app.intra_user_community.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,8 +82,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
     private int mNotificationsCount=0;
 
     public static ConnectionsRequestListFragment newInstance(){
-        ConnectionsRequestListFragment fragment = new ConnectionsRequestListFragment();
-        return fragment;
+        return new ConnectionsRequestListFragment();
     }
 
     @Override
@@ -402,25 +401,6 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
         return false;
     }
 
-    /*
-    Sample AsyncTask to fetch the notifications count
-    */
-    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
-
-        @Override
-        protected Integer doInBackground(Void... params) {
-            // example count. This is where you'd
-            // query your data store for the actual count.
-            return mNotificationsCount;
-        }
-
-        @Override
-        public void onPostExecute(Integer count) {
-            updateNotificationsBadge(count);
-        }
-    }
-
-
     // Call this when you want to show the ListPopupWindow
     private void showListMenu(View anchor,List<IntraUserInformation> lstIntraUserRequestWaiting) {
         ListPopupWindow popupWindow = new ListPopupWindow(getActivity());
@@ -449,6 +429,25 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
         }); // the callback for when a list item is selected
         popupWindow.show();
     }
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
+    }
+
     public class CustomListAdapter extends ArrayAdapter<IntraUserInformation> {
 
         private final Activity context;
@@ -494,8 +493,10 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
                 @Override
                 public void onClick(View view) {
                     try {
-                        intraUserModuleManager.denyConnection(intraUser.getPublicKey());
+                        intraUserModuleManager.denyConnection(intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),intraUser.getPublicKey());
                     } catch (IntraUserConectionDenegationFailedException e) {
+                        e.printStackTrace();
+                    } catch (CantGetActiveLoginIdentityException e) {
                         e.printStackTrace();
                     }
                 }

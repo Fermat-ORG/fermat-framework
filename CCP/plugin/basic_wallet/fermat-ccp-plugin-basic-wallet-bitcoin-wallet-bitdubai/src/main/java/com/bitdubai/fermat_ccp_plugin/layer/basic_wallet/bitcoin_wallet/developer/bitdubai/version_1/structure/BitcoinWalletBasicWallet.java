@@ -157,8 +157,38 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
 
             return bitcoinWalletBasicWalletDao.listTransactionsByActor(
                     actorPublicKey,
-                    balanceType   ,
-                    max           ,
+                    balanceType,
+                    max,
+                    offset
+            );
+
+        } catch (CantListTransactionsException exception) {
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw exception;
+        } catch (Exception exception) {
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public List<BitcoinWalletTransaction> listTransactionsByActorAndType(final String           actorPublicKey,
+                                                                         final BalanceType      balanceType   ,
+                                                                         final TransactionType  transactionType,
+                                                                         final int              max           ,
+                                                                         final int              offset        ) throws CantListTransactionsException {
+
+        try {
+
+            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+
+            return bitcoinWalletBasicWalletDao.listTransactionsByActorAndType(
+                    actorPublicKey,
+                    balanceType,
+                    transactionType,
+                    max,
                     offset
             );
 
