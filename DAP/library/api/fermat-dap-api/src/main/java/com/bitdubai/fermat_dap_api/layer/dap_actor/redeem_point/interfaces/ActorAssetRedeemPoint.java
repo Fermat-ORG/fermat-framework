@@ -19,6 +19,14 @@ public interface ActorAssetRedeemPoint extends DAPActor {
     long getRegistrationDate();
 
     /**
+     * The method <code>getLastConnectionDate</code> gives us the Las Connection Date of the represented
+     * Asset Issuer
+     *
+     * @return the Connection Date
+     */
+    long getLastConnectionDate();
+
+    /**
      * The method <code>getConnectionState</code> gives us the connection state of the represented
      * Asset Issuer
      *

@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatVaultEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CantIdentifyVaultException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 
@@ -20,6 +21,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 public final class CryptoVaultSelector {
 
     private final CryptoVaultManager cryptoVaultManager;
+
 
     public CryptoVaultSelector(final CryptoVaultManager cryptoVaultManager) {
 
@@ -68,7 +70,7 @@ public final class CryptoVaultSelector {
 
         switch (CryptoCurrencyVault.getByCryptoCurrency(cryptoCurrency)) {
 
-            case BITCOIN_VAULT: return cryptoVaultManager;
+            case ASSET_VAULT: return cryptoVaultManager;
 
             default:
                 throw new InvalidParameterException(
