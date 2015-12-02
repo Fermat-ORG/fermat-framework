@@ -125,7 +125,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
 
             //get search name if
-            searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();
+            //searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();
 
             // TODO: display unread notifications.
             // Run a task to fetch the notifications count
@@ -229,6 +229,9 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
                         if (getActivity() != null && adapter != null) {
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
+                            if(lstIntraUserInformations.isEmpty()){
+                                showEmpty(true, emptyView);
+                            }
                         }
                     } else
                         showEmpty(true, emptyView);

@@ -46,6 +46,14 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="AppThemeNavigationView" parent="Theme.AppCompat">
+        <item name="android:windowShowWallpaper">false</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
+
 
 
 </resources>
