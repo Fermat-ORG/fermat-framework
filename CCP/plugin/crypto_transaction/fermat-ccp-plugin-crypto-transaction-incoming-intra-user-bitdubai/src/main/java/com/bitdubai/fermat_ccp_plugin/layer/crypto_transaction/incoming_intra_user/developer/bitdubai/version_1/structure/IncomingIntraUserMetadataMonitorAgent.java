@@ -178,7 +178,7 @@ public class IncomingIntraUserMetadataMonitorAgent {
                         registry.acquireFermatCryptoTransactionResponsibility(transaction);
 
                         //notified Transmission NS that transaction Seen By Vault
-                       // cryptoTransmissionNetworkServiceManager.informTransactionSeenByVault(transaction.getTransactionID());
+                  //     cryptoTransmissionNetworkServiceManager.informTransactionSeenByVault(transaction.getTransactionID());
 
                     } catch (CantConfirmTransactionException | com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantAcquireResponsibilityException exception) {
                         // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
