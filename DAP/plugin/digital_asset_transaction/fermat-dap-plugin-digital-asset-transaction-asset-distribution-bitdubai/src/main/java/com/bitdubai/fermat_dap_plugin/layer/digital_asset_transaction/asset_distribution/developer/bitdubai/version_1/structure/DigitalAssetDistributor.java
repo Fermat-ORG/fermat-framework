@@ -231,12 +231,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
 
 
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
-        //DigitalAsset Path structure: digital-asset-distribution/hash/digital-asset.xml
-        //DigitalAssetMetadata Path structure: digital-asset-distribution/hash/digital-asset-metadata.xml
-        //TODO: create an UUID for this asset and persists in database
         try {
-//            UUID distributionId = UUID.randomUUID();
-
             System.out.println("ASSET DISTRIBUTION Internal Id: " + digitalAssetMetadata.getGenesisTransaction());
             this.assetDistributionDao.persistDistributionId(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisTransaction());
             this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, digitalAssetMetadata.getGenesisTransaction());
