@@ -584,6 +584,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //Activity Explore
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
             subAppIntraUser.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeActivity.setColor("#FF0B46F0");
 
@@ -643,7 +644,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
             subAppIntraUser.addActivity(runtimeActivity);
-            subAppIntraUser.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
 
             // Activity: Connection friend list
             runtimeActivity = new Activity();
@@ -735,6 +735,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeSideMenu = new SideMenu();
             runtimeSideMenu.setBackgroundColor("#0072bb");
+            runtimeSideMenu.setHasFooter(false);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Explore");
