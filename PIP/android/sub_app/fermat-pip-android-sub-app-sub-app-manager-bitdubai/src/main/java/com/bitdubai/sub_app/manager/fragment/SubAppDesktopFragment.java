@@ -91,13 +91,13 @@ public class SubAppDesktopFragment extends Fragment {
         mlist = new ArrayList<InstalledSubApp>();
 
 
-        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_FACTORY,null,null,"wallet_factory","Wallet factory","public_key_factory","wallet_factory",new Version(1,0,0));
+        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_FACTORY,null,null,"wallet_factory","Wallet Factory","public_key_factory","wallet_factory",new Version(1,0,0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER,null,null,"wallet_publisher","Wallet publisher","public_key_publisher","wallet_publisher",new Version(1,0,0));
+        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER,null,null,"wallet_publisher","Wallet Publisher","public_key_publisher","wallet_publisher",new Version(1,0,0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","Wallet store","public_key_store","wallet_store",new Version(1,0,0));
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Asset Factory", "public_key_dap_factory", "sub-app-asset-factory", new Version(1, 0, 0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP,null,null,"developer_sub_app","Developer","public_key_pip_developer_sub_app","developer_sub_app",new Version(1,0,0));
+        installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP,null,null,"developer_sub_app","Developer Tools","public_key_pip_developer_sub_app","developer_sub_app",new Version(1,0,0));
         mlist.add(installedSubApp);
 //        installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","intra_user_identity_sub_app","intra_user_identity_sub_app",new Version(1,0,0));
 //        mlist.add(installedSubApp);
@@ -142,26 +142,13 @@ public class SubAppDesktopFragment extends Fragment {
 
         public String description;
 
-        public String picture;
-
-        public String company;
-
-
         public String Address;
-
-
-
-        public float rate;
 
         public int value;
 
         public float favorite;
 
         public float sale;
-
-        public float timetoarraive;
-
-        public boolean installed;
 
     }
 
@@ -192,7 +179,7 @@ public class SubAppDesktopFragment extends Fragment {
             }
 
             holder.companyTextView.setText(installedSubApp.getSubAppName());
-            holder.companyTextView.setTypeface(tf, Typeface.BOLD);
+            holder.companyTextView.setTypeface(tf);
 
             LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.sub_apps);
             switch (installedSubApp.getSubAppIcon())
@@ -251,10 +238,20 @@ public class SubAppDesktopFragment extends Fragment {
                         }
                     });
                     break;
+                case "sub-app-asset-factory":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_icon);
+                    holder.imageView.setTag("asset|1");
+                    linearLayout.setTag("asset|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                        }
+                    });
+                    break;
             }
-
-
             return convertView;
         }
 

@@ -23,10 +23,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewPainter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.FragmentsCommons;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
@@ -181,6 +178,10 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
 
         try {
+            //when refresh offset set 0
+            if(refreshType.equals(FermatRefreshTypes.NEW))
+                offset = 0;
+
             lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey,10,offset);
             offset+=MAX_TRANSACTIONS;
         } catch (Exception e) {

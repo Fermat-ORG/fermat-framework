@@ -76,26 +76,26 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 digitalAssetMetadataTransactionImpl.setReceiverType(receiverType);
                 digitalAssetMetadataTransactionImpl.setDistributionStatus(distributionStatus);
                 digitalAssetMetadataTransactionImpl.setProcessed(DigitalAssetMetadataTransactionImpl.NO_PROCESSED);
+                digitalAssetMetadataTransactionImpl.setType(DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE);
+
+                /*
+                * Save into data base like a new transaction
+                */
+                getAssetTransmissionNetworkServicePluginRoot().getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransactionImpl);
+
+                /*
+                * Mark the message as read
+                */
+                ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
+                ((CommunicationNetworkServiceConnectionManager) getAssetTransmissionNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
+
+                /*
+                * Notify to the interested
+                */
+                FermatEvent event =  getAssetTransmissionNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
+                event.setSource(AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE);
+                getAssetTransmissionNetworkServicePluginRoot().getEventManager().raiseEvent(event);
             }
-
-            /*
-             * Save into data base like a new transaction
-             */
-            getAssetTransmissionNetworkServicePluginRoot().getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransactionImpl);
-
-            /*
-             * Mark the message as read
-             */
-            ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-            ((CommunicationNetworkServiceConnectionManager) getAssetTransmissionNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
-
-            /*
-             * Notify to the interested
-             */
-            FermatEvent event =  getAssetTransmissionNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
-            event.setSource(AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE);
-            getAssetTransmissionNetworkServicePluginRoot().getEventManager().raiseEvent(event);
-
         } catch (Exception e) {
             getAssetTransmissionNetworkServicePluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
@@ -109,6 +109,6 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
      */
     @Override
     public DigitalAssetMetadataTransactionType getDigitalAssetMetadataTransactionType() {
-        return DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT;
+        return DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE;
     }
 }

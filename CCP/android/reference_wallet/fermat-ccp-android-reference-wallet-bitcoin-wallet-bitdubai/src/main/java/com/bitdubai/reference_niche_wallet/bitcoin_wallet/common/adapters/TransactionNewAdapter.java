@@ -98,7 +98,7 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
                  bitmap  = BitmapFactory.decodeByteArray(data.getInvolvedActor().getPhoto(),0,data.getInvolvedActor().getPhoto().length);
                  holder.getContactIcon().setImageBitmap(bitmap);
            // }else{
-                holder.getContactIcon().setImageResource(R.drawable.profile_image);
+                holder.getContactIcon().setImageResource(R.drawable.profile_image_standard);
            // }
 
 

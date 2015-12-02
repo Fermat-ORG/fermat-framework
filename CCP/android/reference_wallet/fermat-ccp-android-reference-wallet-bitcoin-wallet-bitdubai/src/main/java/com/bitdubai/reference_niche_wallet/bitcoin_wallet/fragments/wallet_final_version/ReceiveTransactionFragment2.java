@@ -247,10 +247,10 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
                 book_offset = lstCryptoWalletTransactionsBook.size();
 
-
+                //get transactions from actor public key to send me btc
                 for (CryptoWalletTransaction cryptoWalletTransaction : list) {
                     List<CryptoWalletTransaction> lst = new ArrayList<>();
-                    lst = moduleManager.getTransactions(intraUserPk, BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), MAX_TRANSACTIONS, 0);
+                    lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorFromPublicKey(), intraUserPk,MAX_TRANSACTIONS, 0);
                     GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);
                 }
@@ -367,28 +367,29 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     private void moveViewToOriginalPosition(View view) {
         if(Build.VERSION.SDK_INT>17) {
-            int position[] = new int[2];
-            view.getLocationOnScreen(position);
-            float centreY = rootView.getY() + rootView.getHeight() / 2;
-            TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0  , centreY-250,0);
-            anim.setDuration(1000);
-            anim.setFillAfter(true);
-            view.startAnimation(anim);
+            if(view!=null) {
+                int position[] = new int[2];
+                view.getLocationOnScreen(position);
+                float centreY = rootView.getY() + rootView.getHeight() / 2;
+                TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0, centreY - 250, 0);
+                anim.setDuration(1000);
+                anim.setFillAfter(true);
+                view.startAnimation(anim);
+            }
         }
     }
 
     private void moveViewToScreenCenter( View view ) {
         if (Build.VERSION.SDK_INT > 17) {
-            DisplayMetrics dm = new DisplayMetrics();
-            rootView.getDisplay().getMetrics(dm);
-            int xDest = dm.widthPixels / 2;
-            xDest -= (view.getMeasuredWidth() / 2);
-            float centreY = rootView.getY() + rootView.getHeight() / 2;
-
-            TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
-            anim.setDuration(1000);
-            anim.setFillAfter(true);
-            view.startAnimation(anim);
+            if(view!=null) {
+                DisplayMetrics dm = new DisplayMetrics();
+                rootView.getDisplay().getMetrics(dm);
+                float centreY = rootView.getY() + rootView.getHeight() / 2;
+                TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
+                anim.setDuration(1000);
+                anim.setFillAfter(true);
+                view.startAnimation(anim);
+            }
         }
     }
 }
