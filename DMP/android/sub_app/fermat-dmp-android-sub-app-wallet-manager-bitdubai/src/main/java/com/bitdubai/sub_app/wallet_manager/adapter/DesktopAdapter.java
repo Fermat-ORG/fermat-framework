@@ -3,18 +3,18 @@ package com.bitdubai.sub_app.wallet_manager.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.AdapterChangeListener;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.ItemTouchHelperAdapter;
-import com.bitdubai.sub_app.wallet_manager.holder.DesktopHolderClickCallback;
+import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
+import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.sub_app.wallet_manager.holder.FermatAppHolder;
-import com.bitdubai.sub_app.wallet_manager.structure.Item;
+import com.bitdubai.fermat_api.layer.desktop.Item;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,8 +23,12 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
 
     public static final int DEKSTOP = 1;
     public static final int FOLDER = 2;
+    public static final int DESKTOP_FOLDER = 3;
+    private Typeface tf;
+    private Item parentItem;
 
     private int fragmentWhoUseThisAdapter;
+    private boolean isChild=false;
     private DesktopHolderClickCallback desktopHolderClickCallback;
     private AdapterChangeListener adapterChangeListener;
 
@@ -38,7 +42,17 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
             this.fragmentWhoUseThisAdapter = fragmentWhoUseThisAdapter;
         }
 
-        @Override
+    public DesktopAdapter(Context context, List<Item> dataSet,Item parent,DesktopHolderClickCallback desktopHolderClickCallback,int fragmentWhoUseThisAdapter,boolean isChild) {
+        super(context, dataSet);
+        this.desktopHolderClickCallback = desktopHolderClickCallback;
+        this.fragmentWhoUseThisAdapter = fragmentWhoUseThisAdapter;
+        this.isChild=isChild;
+        this.parentItem = parent;
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
+    }
+
+
+    @Override
         protected FermatAppHolder createHolder(View itemView, int type) {
             FermatAppHolder fermatAppHolder = new FermatAppHolder(itemView);
             return fermatAppHolder;
@@ -47,14 +61,17 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
         @Override
         protected int getCardViewResource() {
             if(DEKSTOP==fragmentWhoUseThisAdapter)
+            return R.layout.shell_sub_app_desktop_fragment_grid_item;
+            else if(FOLDER==fragmentWhoUseThisAdapter) return R.layout.grid_folder;
+            else if (DESKTOP_FOLDER==fragmentWhoUseThisAdapter) return R.layout.desktop_grid_item;
+
             return R.layout.shell_wallet_desktop_front_grid_item;
-            else return R.layout.grid_folder;
         }
 
         @Override
         protected void bindHolder(FermatAppHolder holder, Item data, final int position) {
 
-            holder.name.setText(data.getName());
+
 //            byte[] profileImage = data.getIcon();
 //            if (profileImage != null) {
 //                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
@@ -63,18 +80,69 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
             if(data.getIconResource()!=0)
                 if(data.getType()!= InterfaceType.EMPTY)
                     holder.thumbnail.setImageResource(data.getIconResource());
+            if(data.getType()== InterfaceType.FOLDER){
+                holder.thumbnail.setVisibility(View.GONE);
+                holder.folder.setVisibility(View.VISIBLE);
+                holder.folder.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dataSet.get(position).selected = !dataSet.get(position).selected;
+                        Item item = dataSet.get(position);
+                        notifyItemChanged(position);
+                        desktopHolderClickCallback.onHolderItemClickListener(item, position);
+                        if (adapterChangeListener != null)
+                            adapterChangeListener.onDataSetChanged(dataSet);
+                    }
+                });
+                holder.folder.setAdapter(new DesktopAdapter(context,((FermatFolder) data.getInterfaceObject()).getLstFolderItems(),data,desktopHolderClickCallback,DESKTOP_FOLDER,true));
 
-            holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dataSet.get(position).selected = !dataSet.get(position).selected;
-                    Item item = dataSet.get(position);
-                    notifyItemChanged(position);
-                    desktopHolderClickCallback.onHolderItemClickListener(item, position);
-                    if (adapterChangeListener != null)
-                        adapterChangeListener.onDataSetChanged(dataSet);
+            }else {
+
+                if(!isChild) {
+                    holder.name.setText(data.getName());
+                    //holder.name.setTypeface(tf);
+//                    holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            dataSet.get(position).selected = !dataSet.get(position).selected;
+//                            Item item = dataSet.get(position);
+//                            notifyItemChanged(position);
+//                            desktopHolderClickCallback.onHolderItemClickListener(item, position);
+//                            if (adapterChangeListener != null)
+//                                adapterChangeListener.onDataSetChanged(dataSet);
+//                        }
+//                    });
+                    holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dataSet.get(position).selected = !dataSet.get(position).selected;
+                            Item item = dataSet.get(position);
+                            notifyItemChanged(position);
+                            desktopHolderClickCallback.onHolderItemClickListener(item, position);
+                            if (adapterChangeListener != null)
+                                adapterChangeListener.onDataSetChanged(dataSet);
+                        }
+                    });
+                }else {
+                    Bitmap bm = BitmapFactory.decodeResource(context.getResources(), data.getIconResource());
+                    Bitmap bt=Bitmap.createScaledBitmap(bm, 50, 50, false);
+                    View.OnClickListener onClickListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+//                            dataSet.get(parentItem.getPosition()).selected = !dataSet.get(parentItem.getPosition()).selected;
+//                            Item item = dataSet.get(position);
+//                            notifyItemChanged(position);
+                            desktopHolderClickCallback.onHolderItemClickListener(parentItem, parentItem.getPosition());
+//                            if (adapterChangeListener != null)
+//                                adapterChangeListener.onDataSetChanged(dataSet);
+                        }
+                    };
+                    holder.grid_container.setOnClickListener(onClickListener);
+                    holder.thumbnail.setOnClickListener(onClickListener);
                 }
-            });
+
+
+            }
 
         }
 

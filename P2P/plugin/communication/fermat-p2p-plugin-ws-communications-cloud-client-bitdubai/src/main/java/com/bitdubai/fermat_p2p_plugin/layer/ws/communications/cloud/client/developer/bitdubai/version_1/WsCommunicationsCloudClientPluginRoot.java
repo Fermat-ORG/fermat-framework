@@ -80,7 +80,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
      //public static final String SERVER_IP = "52.34.94.176"; //AWS PAID INSTANCE
      public static final String SERVER_IP = "52.11.156.16"; //AWS FREE INSTANCE
-    //public static final String SERVER_IP = "192.168.1.3";
+
+    //public static final String SERVER_IP = "192.168.0.103";
+
 
 
     /**

@@ -92,7 +92,7 @@ public class IncomingIntraUserMetadataMonitorAgent {
         private IncomingIntraUserMetadataSourceAdministrator sourceAdministrator;
 
 
-        private static final int SLEEP_TIME = 5000;
+        private static final int SLEEP_TIME = 10000;
 
         /**
          * MonitorAgent methods.
@@ -178,7 +178,7 @@ public class IncomingIntraUserMetadataMonitorAgent {
                         registry.acquireFermatCryptoTransactionResponsibility(transaction);
 
                         //notified Transmission NS that transaction Seen By Vault
-                        cryptoTransmissionNetworkServiceManager.informTransactionSeenByVault(transaction.getTransactionID());
+                       // cryptoTransmissionNetworkServiceManager.informTransactionSeenByVault(transaction.getTransactionID());
 
                     } catch (CantConfirmTransactionException | com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantAcquireResponsibilityException exception) {
                         // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
@@ -186,10 +186,10 @@ public class IncomingIntraUserMetadataMonitorAgent {
                         // We will inform the exception and try again in the next round
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                     }
-                    catch(CantSetToSeenByCryptoVaultException e){
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                  //  catch(CantSetToSeenByCryptoVaultException e){
+                       // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
-                    }
+                   // }
                 }
 
 

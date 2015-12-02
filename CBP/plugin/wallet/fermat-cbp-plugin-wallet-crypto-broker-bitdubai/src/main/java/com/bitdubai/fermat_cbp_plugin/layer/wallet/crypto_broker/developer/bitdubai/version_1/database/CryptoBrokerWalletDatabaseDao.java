@@ -283,8 +283,6 @@ public class CryptoBrokerWalletDatabaseDao {
     private DatabaseTableRecord getBalancesTotalBalances(String publicKeyWallet) throws CantGetBalanceRecordException {
         try {
             DatabaseTable totalBalancesTable = database.getTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME);
-            ;
-            ;
             totalBalancesTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_WALLET_PUBLIC_KEY_COLUMN_NAME, publicKeyWallet, DatabaseFilterType.EQUAL);
             totalBalancesTable.loadToMemory();
             if (!totalBalancesTable.getRecords().isEmpty()) {
@@ -333,6 +331,7 @@ public class CryptoBrokerWalletDatabaseDao {
             float runningAvailableBalance
     ) {
         databaseTableRecord.setUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, transaction.getTransactionId());
+//        databaseTableRecord.setUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, transaction.getContractId());
         databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME, transaction.getWalletPublicKey());
         databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BROKER_PUBLIC_KEY_COLUMN_NAME, transaction.getOwnerPublicKey());
         databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
@@ -363,6 +362,7 @@ public class CryptoBrokerWalletDatabaseDao {
     private StockTransaction getStockTransactionFromRecord(final DatabaseTableRecord record) throws InvalidParameterException {
         FermatEnum merchadise = null;
         UUID transactionId = record.getUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME);
+        UUID contractId = record.getUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_CONTRACT_ID_COLUMN_NAME);
         String walletPublicKey = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME);
         String ownerPublicKey = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BROKER_PUBLIC_KEY_COLUMN_NAME);
         BalanceType balanceType = BalanceType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME));
@@ -384,6 +384,7 @@ public class CryptoBrokerWalletDatabaseDao {
 
         return new CryptoBrokerStockTransactionRecordImpl(
                 transactionId,
+//                contractId,
                 walletKeyPair,
                 ownerPublicKey,
                 balanceType,

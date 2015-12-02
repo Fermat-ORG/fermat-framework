@@ -1,6 +1,11 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.OpenContractStatus;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContractManager</code>
@@ -8,19 +13,21 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enum
  * <p>
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 19/11/15.
  */
-public interface OpenContractManager {
+public interface OpenContractManager extends FermatManager {
 
     /**
      * This method opens a new contract for a Customer Broker Sale Transaction
-     * @param negotiationId
+     * @param customerBrokerSaleNegotiation
      */
-    void openSaleContract(String negotiationId);
+    void openSaleContract(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
+                          FiatIndex fiatIndex) throws CantOpenContractException;
 
     /**
      * This method opens a new contract for a Customer Broker Purchase Transaction
-     * @param negotiationId
+     * @param customerBrokerPurchaseNegotiation
      */
-    void openPurchaseContract(String negotiationId);
+    void openPurchaseContract(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
+                              FiatIndex fiatIndex)throws CantOpenContractException;
 
     /**
      * This method returns the status from the Open Contract Business Transaction.

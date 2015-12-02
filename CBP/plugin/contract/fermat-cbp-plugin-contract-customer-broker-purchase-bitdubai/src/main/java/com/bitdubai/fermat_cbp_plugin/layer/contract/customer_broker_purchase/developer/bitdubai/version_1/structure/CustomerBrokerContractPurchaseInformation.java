@@ -5,14 +5,12 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 
-import java.util.UUID;
-
 /**
  * Created by angel on 02/11/15.
  */
 public class CustomerBrokerContractPurchaseInformation implements CustomerBrokerContractPurchase {
 
-    private UUID contractId;
+    private String contractId;
     private String publicKeyCustomer;
     private String publicKeyBroker;
     private CurrencyType paymentCurrency;
@@ -26,7 +24,7 @@ public class CustomerBrokerContractPurchaseInformation implements CustomerBroker
     private ContractStatus status;
 
     public CustomerBrokerContractPurchaseInformation(
-            UUID contractId,
+            String contractId,
             String publicKeyCustomer,
             String publicKeyBroker,
             CurrencyType paymentCurrency,
@@ -54,7 +52,7 @@ public class CustomerBrokerContractPurchaseInformation implements CustomerBroker
     }
 
     @Override
-    public UUID getContractId() {
+    public String getContractId() {
         return this.contractId;
     }
 

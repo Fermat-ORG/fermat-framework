@@ -11,6 +11,7 @@ repositories {
     mavenCentral()
 }
 
+//noinspection GroovyAssignabilityCheck
 dependencies {
 
     /**
@@ -29,6 +30,7 @@ dependencies {
 
     //Business Transaction
     compile project(':fermat-cbp-plugin-business-transaction-open-contract-bitdubai')
+    compile project(':fermat-cbp-plugin-business-transaction-close-contract-bitdubai')
 
     //Identity
     compile project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai')
@@ -53,7 +55,8 @@ dependencies {
     compile project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai')
     compile project(':fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai')
 
-
+    //World Layer
+    compile project(':fermat-cbp-plugin-world-fiat-index-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
