@@ -106,6 +106,7 @@ public class OpenContractBusinessTransactionDeveloperDatabaseFactory implements 
         openContractColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
         openContractColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSMISSION_STATUS_COLUMN_NAME);
         openContractColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_TYPE_COLUMN_NAME);
+        openContractColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_XML_COLUMN_NAME);
 
         /**
          * Table Open Contract addition.

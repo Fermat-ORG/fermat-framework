@@ -73,6 +73,7 @@ public class OpenContractBusinessTransactionDatabaseFactory implements DealsWith
             table.addColumn(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSMISSION_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_TYPE_COLUMN_NAME, DatabaseDataType.STRING,10,Boolean.FALSE);
+            table.addColumn(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_XML_COLUMN_NAME, DatabaseDataType.STRING,4000,Boolean.FALSE);
 
             table.addIndex(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_FIRST_KEY_COLUMN);
 
