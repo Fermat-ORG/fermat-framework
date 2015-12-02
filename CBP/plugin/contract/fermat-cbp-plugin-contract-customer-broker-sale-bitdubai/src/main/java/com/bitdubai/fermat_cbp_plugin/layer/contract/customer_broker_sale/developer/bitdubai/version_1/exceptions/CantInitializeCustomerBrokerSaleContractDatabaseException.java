@@ -6,28 +6,28 @@ import com.bitdubai.fermat_api.FermatException;
  * is thrown when an error occurs initializing database
  * <p/>
  *
- * Created by Angel Veloz - (vlzangel91@gmail.com) on 02/11/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 29/11/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantInitializeCustomerBrokerContractSaleDatabaseException extends FermatException {
+public class CantInitializeCustomerBrokerSaleContractDatabaseException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE CUSTOMER BROKER SALE CONTRACT DATABASE EXCEPTION";
 
-    public CantInitializeCustomerBrokerContractSaleDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantInitializeCustomerBrokerSaleContractDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
-    public CantInitializeCustomerBrokerContractSaleDatabaseException(final String message, final Exception cause) {
+    public CantInitializeCustomerBrokerSaleContractDatabaseException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
-    public CantInitializeCustomerBrokerContractSaleDatabaseException(final String message) {
+    public CantInitializeCustomerBrokerSaleContractDatabaseException(final String message) {
         this(message, null);
     }
 
-    public CantInitializeCustomerBrokerContractSaleDatabaseException() {
+    public CantInitializeCustomerBrokerSaleContractDatabaseException() {
         this(DEFAULT_MESSAGE);
     }
 }

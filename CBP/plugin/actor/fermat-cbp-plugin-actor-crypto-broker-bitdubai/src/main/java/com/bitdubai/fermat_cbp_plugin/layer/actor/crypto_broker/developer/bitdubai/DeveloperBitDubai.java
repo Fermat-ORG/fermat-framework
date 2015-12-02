@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai;
+package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
@@ -8,14 +8,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorConnectionPluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorPluginRoot;
 
 /**
- * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.DeveloperBitDubai</code>
- * contains all the functionality to return plug-ins related with Developer BitDubai.
- * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
+ * Created by Angel on 28-11-2015.
  */
+
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
     public DeveloperBitDubai() {
@@ -25,16 +23,15 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     @Override
     public void start() throws CantStartPluginDeveloperException {
         try {
-            this.registerVersion(new CryptoBrokerActorConnectionPluginRoot());
+            this.registerVersion(new CryptoBrokerActorPluginRoot());
         } catch (CantRegisterVersionException e) {
             throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
         }
     }
 
-
     @Override
     public int getAmountToPay() {
-        return 100;
+        return 0;
     }
 
     @Override
@@ -44,7 +41,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 
     @Override
     public String getAddress() {
-        return "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh";
+        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
     }
 
     @Override
