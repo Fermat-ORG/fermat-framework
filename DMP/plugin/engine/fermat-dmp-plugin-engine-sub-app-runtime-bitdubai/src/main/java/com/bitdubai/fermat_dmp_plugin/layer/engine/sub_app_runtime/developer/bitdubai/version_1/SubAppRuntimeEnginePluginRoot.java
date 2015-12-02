@@ -581,7 +581,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             subAppIntraUser.setPublicKey(communityPublicKey);
             listSubApp.put(subAppIntraUser.getPublicKey(), subAppIntraUser);
 
-
             //Activity Explore
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
@@ -597,7 +596,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeTitleBar.setLabelSize(20);
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#FF0B46F0");
+            runtimeTitleBar.setColor("#0072bb");
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -641,69 +640,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
             subAppIntraUser.addActivity(runtimeActivity);
             subAppIntraUser.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
 
-            /*// Activity: Explore
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
-            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
-            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
-            runtimeActivity.setBackPublicKey(communityPublicKey);
-            runtimeActivity.setColor("#FF0B46F0");
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Explore");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#FF0B46F0");
-            runtimeTitleBar.setLabelSize(20);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#FF0B46F0");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-
-            runtimeSideMenu = new SideMenu();
-            runtimeSideMenu.setBackgroundColor("#0072bb");
-
-            runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Explore");
-            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
-            runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-            runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Your conections");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
-            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-            runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-            runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Notifications");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS);
-            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-            runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-            runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Settings");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS);
-            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-            runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-
-            runtimeActivity.setSideMenu(runtimeSideMenu);
-
-            subAppIntraUser.addActivity(runtimeActivity);
-*/
             // Activity: Connection friend list
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
@@ -712,16 +653,20 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setBackPublicKey(communityPublicKey);
             runtimeActivity.setColor("#FF0B46F0");
 
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Friend List");
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#FF0B46F0");
+            runtimeTitleBar.setColor("#0072bb");
             runtimeTitleBar.setLabelSize(20);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#FF0B46F0");
+            statusBar.setColor("#0072bb");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
@@ -767,16 +712,20 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setBackPublicKey(communityPublicKey);
             runtimeActivity.setColor("#FF0B46F0");
 
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Notifications");
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#FF0B46F0");
+            runtimeTitleBar.setColor("#0072bb");
             runtimeTitleBar.setLabelSize(20);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#FF0B46F0");
+            statusBar.setColor("#0072bb");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
@@ -823,16 +772,20 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setBackPublicKey(communityPublicKey);
             runtimeActivity.setColor("#FF0B46F0");
 
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Settings");
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#FF0B46F0");
+            runtimeTitleBar.setColor("#0072bb");
             runtimeTitleBar.setLabelSize(20);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#FF0B46F0");
+            statusBar.setColor("#0072bb");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
@@ -867,11 +820,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
             subAppIntraUser.addActivity(runtimeActivity);
-
             /**
              * End of community intra user CCP
              */
