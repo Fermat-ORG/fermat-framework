@@ -248,7 +248,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         List<ECKey> childKeys = new ArrayList<>();
 
         //todo I need to get the value of generated keys from the database
-        for (int i = 0; i < 101; i++) {
+        for (int i = 0; i < 200; i++) {
             // I derive the key at position i
             DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, false, new ChildNumber(i, false));
             // I add this key to the ECKey list
