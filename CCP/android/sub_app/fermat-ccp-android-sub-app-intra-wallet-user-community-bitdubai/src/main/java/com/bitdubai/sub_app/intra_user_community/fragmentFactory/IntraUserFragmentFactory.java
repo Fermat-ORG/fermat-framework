@@ -6,6 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionFriendListFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionOtherProfileFragment;
+import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionSettingsFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsWorldFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.RegisterIntraUserFragment;
@@ -66,6 +67,9 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
                 break;
             case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT:
                 currentFragment = ConnectionFriendListFragment.newInstance();
+                break;
+            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS_FRAGMENT:
+                currentFragment = ConnectionSettingsFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.toString(), "Swith failed");

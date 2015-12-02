@@ -43,4 +43,10 @@ public class AppFriendsListAdapter extends FermatAdapter<IntraUserModuleManager,
 
         }
     }
+
+    public int getSize() {
+        if (dataSet != null)
+            return dataSet.size();
+        return 0;
+    }
 }

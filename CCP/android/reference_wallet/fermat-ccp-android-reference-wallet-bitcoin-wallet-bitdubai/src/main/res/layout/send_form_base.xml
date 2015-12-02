@@ -46,7 +46,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:id="@+id/profile_Image"
-                        android:src="@drawable/profile_image"
+                        android:src="@drawable/profile_image_standard"
                         android:layout_marginLeft="12dp"/>
 
                     <FrameLayout
