@@ -4541,12 +4541,11 @@
 					<plugin	name="Deposit"
 						description=""
 						difficulty="6"
-						code-level="development"
-						>
+						code-level="qa">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="guillermo20" scope="implementation" percentage="10"></author>
+							<author name="guillermo20" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4556,12 +4555,11 @@
 					<plugin	name="Withdraw"
 						description=""
 						difficulty="6"
-						code-level="development"
-						>
+						code-level="qa">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="guillermo20" scope="implementation" percentage="10"></author>
+							<author name="guillermo20" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4606,13 +4604,13 @@
 					<plugin name="Bank Money"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="laderuner" scope="implementation" percentage="10"></author>
-							<author name="guillermo20" scope="implementation" percentage="20"></author>
+							<author name="guillermo20" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
