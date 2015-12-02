@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.bottom_navigation;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.fermat.R;
@@ -18,17 +19,21 @@ import java.util.List;
 public class BottomNavigationAdapter extends FermatAdapter<Item, FermatAppHolder> implements ItemTouchHelperAdapter {
 
 
+    private final Typeface tf;
     private DesktopHolderClickCallback desktopHolderClickCallback;
     private AdapterChangeListener adapterChangeListener;
 
     public BottomNavigationAdapter(Context context) {
             super(context);
+            tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
         }
 
         public BottomNavigationAdapter(Context context, List<Item> dataSet, DesktopHolderClickCallback desktopHolderClickCallback) {
             super(context, dataSet);
             this.desktopHolderClickCallback = desktopHolderClickCallback;
+            tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
         }
+
 
         @Override
         protected FermatAppHolder createHolder(View itemView, int type) {
@@ -45,6 +50,7 @@ public class BottomNavigationAdapter extends FermatAdapter<Item, FermatAppHolder
         protected void bindHolder(FermatAppHolder holder, Item data, final int position) {
 
             holder.name.setText(data.getName());
+            holder.name.setTypeface(tf);
 //            byte[] profileImage = data.getIcon();
 //            if (profileImage != null) {
 //                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
