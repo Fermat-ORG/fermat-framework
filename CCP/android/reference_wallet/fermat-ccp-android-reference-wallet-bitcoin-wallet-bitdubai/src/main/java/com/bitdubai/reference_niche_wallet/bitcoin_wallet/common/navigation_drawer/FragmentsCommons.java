@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
