@@ -453,7 +453,10 @@ public abstract class FermatActivity extends AppCompatActivity
                      * Body
                      */
                     RelativeLayout navigation_view_footer = (RelativeLayout) findViewById(R.id.navigation_view_footer);
-                    ViewGroup viewGroup = navigationViewPainter.addNavigationViewBodyContainer(getLayoutInflater(), navigation_view_footer);
+                    if(sideMenu.hasFooter()){
+                        navigation_view_footer.setVisibility(View.VISIBLE);
+                        ViewGroup viewGroup = navigationViewPainter.addNavigationViewBodyContainer(getLayoutInflater(), navigation_view_footer);
+                    }
 
 
                     /**
@@ -814,6 +817,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             // listen for navigation events
             navigationView = (NavigationView) findViewById(R.id.navigation);
+
 
             if (sidemenu != null) {
 
@@ -1311,14 +1315,44 @@ public abstract class FermatActivity extends AppCompatActivity
             item2.setPosition(3);
             lstIdentities.add(item2);
 
-            //faltan:  "Crypto Brokers" "Crypto Broker | Customer"
 
+
+            installedSubApp = new InstalledSubApp(
+                    SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                    null,
+                    null,
+                    "sub_app_crypto_broker_identity",
+                    "Brokers",
+                    "sub_app_crypto_broker_identity",
+                    "sub_app_crypto_broker_identity",
+                    new Version(1, 0, 0));
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.crypto_broker_identity);
+            item2.setPosition(4);
+            lstIdentities.add(item2);
+
+            installedSubApp = new InstalledSubApp(
+                    SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY,
+                    null,
+                    null,
+                    "sub_app_crypto_customer_identity",
+                    "Customers",
+                    "sub_app_crypto_customer_identity",
+                    "sub_app_crypto_customer_identity",
+                    new Version(1, 0, 0));
+
+            item2 = new Item(installedSubApp);
+            item2.setIconResource(R.drawable.crypto_broker_identity);
+            item2.setPosition(5);
+            lstIdentities.add(item2);
 
             FermatFolder fermatFolder = new FermatFolder("Identities",lstIdentities,2);
             Item identityFolder = new Item(fermatFolder);
             identityFolder.setIconResource(R.drawable.ic_01);
             identityFolder.setPosition(2);
             lst.add(identityFolder);
+
+
 
 
 
@@ -1348,8 +1382,51 @@ public abstract class FermatActivity extends AppCompatActivity
             item1.setPosition(3);
             lstCommunities.add(item1);
 
-            //faltan
-            // Crypto Brokers" "Crypto Broker | Customer
+            installedSubApp = new InstalledSubApp(
+                    SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
+                    null,
+                    null,
+                    "sub_app_crypto_broker_community",
+                    "Brokers",
+                    "sub_app_crypto_broker_community",
+                    "sub_app_crypto_broker_community",
+                    new Version(1, 0, 0));
+            item1 = new Item(installedSubApp);
+            item1.setIconResource(R.drawable.crypto_broker_community1);
+            item1.setPosition(4);
+            lstCommunities.add(item1);
+
+
+
+
+            installedSubApp = new InstalledSubApp(
+                    SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY,
+                    null,
+                    null,
+                    "sub_app_crypto_customer_community",
+                    "Customers",
+                    "sub_app_crypto_customer_community",
+                    "sub_app_crypto_customer_community",
+                    new Version(1, 0, 0));
+
+            item1 = new Item(installedSubApp);
+            item1.setIconResource(R.drawable.crypto_broker_community1);
+            item1.setPosition(5);
+            lstCommunities.add(item1);
+
+            installedSubApp = new InstalledSubApp(
+                    SubApps.CBP_CUSTOMERS,
+                    null,
+                    null,
+                    "sub_app_customers",
+                    "Customers",
+                    "sub_app_customers",
+                    "sub_app_customers",
+                    new Version(1, 0, 0));
+            item1 = new Item(installedSubApp);
+            item1.setIconResource(R.drawable.customer_icon);
+            item1.setPosition(6);
+            lstCommunities.add(item1);
 
 
 

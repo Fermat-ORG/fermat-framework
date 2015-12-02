@@ -20,6 +20,7 @@ public class SideMenu implements FermatSideMenu {
     private String backgroundColor;
     private String backgroudColor;
     private String navigationIconColor;
+    private boolean hasFooter=false;
 
     /**
      * SideMenu class constructors
@@ -60,6 +61,15 @@ public class SideMenu implements FermatSideMenu {
 
     public void setNavigationIconColor(String navigationIconColor) {
         this.navigationIconColor = navigationIconColor;
+    }
+
+    @Override
+    public boolean hasFooter() {
+        return hasFooter;
+    }
+
+    public void setHasFooter(boolean hasFooter) {
+        this.hasFooter = hasFooter;
     }
 
     public String getNavigationIconColor() {

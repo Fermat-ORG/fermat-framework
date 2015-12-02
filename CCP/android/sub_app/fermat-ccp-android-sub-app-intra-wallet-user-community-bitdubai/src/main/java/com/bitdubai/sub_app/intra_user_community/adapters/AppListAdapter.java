@@ -3,7 +3,6 @@ package com.bitdubai.sub_app.intra_user_community.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -56,6 +55,12 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUse
             else Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
         } else  Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
 
+    }
+
+    public int getSize() {
+        if (dataSet != null)
+            return dataSet.size();
+        return 0;
     }
 
 }

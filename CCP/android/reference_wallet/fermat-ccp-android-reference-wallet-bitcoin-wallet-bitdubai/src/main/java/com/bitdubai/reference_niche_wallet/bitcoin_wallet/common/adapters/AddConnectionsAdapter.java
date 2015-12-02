@@ -1,15 +1,12 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.IntraUserInfoViewHolder;
 
@@ -47,10 +44,10 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
             if(profileImage.length>0){
                 roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), profileImage);
             }else {
-                roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.profile_image);
+                roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.profile_image_standard);
             }
         }else {
-            roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.profile_image);
+            roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.profile_image_standard);
         }
 
         holder.getThumbnail().setImageBitmap(roundedBitmap.getBitmap());

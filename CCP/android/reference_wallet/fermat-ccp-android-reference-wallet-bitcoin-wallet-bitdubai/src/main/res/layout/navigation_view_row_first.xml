@@ -12,6 +12,7 @@
         android:layout_height="180dp"
         android:layout_gravity="center"
         android:scaleType="centerCrop"
+        android:background="@drawable/profile_image_standard"
         />
 
     <FrameLayout
