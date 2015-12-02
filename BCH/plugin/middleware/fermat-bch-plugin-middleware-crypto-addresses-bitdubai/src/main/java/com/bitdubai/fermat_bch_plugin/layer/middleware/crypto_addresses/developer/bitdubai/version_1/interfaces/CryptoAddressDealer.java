@@ -103,10 +103,10 @@ public abstract class CryptoAddressDealer {
 
             cryptoAddressBookManager.registerCryptoAddress(
                     cryptoAddress,
-                    request.getIdentityPublicKeyResponding(),
-                    request.getIdentityTypeResponding(),
                     request.getIdentityPublicKeyRequesting(),
                     request.getIdentityTypeRequesting(),
+                    request.getIdentityPublicKeyResponding(),
+                    request.getIdentityTypeResponding(),
                     installedWallet.getPlatform(),
                     vaultType,
                     fermatVaultEnum.getCode(),
