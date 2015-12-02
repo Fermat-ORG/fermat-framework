@@ -64,11 +64,6 @@ public class MainFragment extends FermatWalletFragment
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-//        if (manager == null)
-//            Toast.makeText(getActivity(), "AssetUserWalletSubAppModuleManager is null", Toast.LENGTH_SHORT).show();
-//        else {
-//            Toast.makeText(getActivity(), "AssetUserWalletSubAppModuleManager is connected", Toast.LENGTH_SHORT).show();
-//        }
     }
 
     @Override
@@ -77,9 +72,9 @@ public class MainFragment extends FermatWalletFragment
         FermatWorker worker = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-//                if (manager == null)
-//                    throw new NullPointerException("AssetUserWalletModuleManager is null");
-//                assetUserWalletList = manager.getAssetUserWalletBalancesBook("walletPublicKeyTest");
+                if (manager == null)
+                    throw new NullPointerException("AssetUserWalletModuleManager is null");
+                assetUserWalletList = manager.getAssetUserWalletBalancesBook("walletPublicKeyTest");
                 if (assetUserWalletList != null && !assetUserWalletList.isEmpty()) {
                     bookAssets = new ArrayList<>();
                     for (AssetUserWalletList assetUserWallet : assetUserWalletList) {
