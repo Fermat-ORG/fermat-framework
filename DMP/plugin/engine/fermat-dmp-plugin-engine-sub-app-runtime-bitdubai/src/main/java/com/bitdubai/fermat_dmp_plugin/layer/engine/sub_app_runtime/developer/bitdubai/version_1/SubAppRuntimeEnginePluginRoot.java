@@ -643,7 +643,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Your conections");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRIEND_LIST);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -795,6 +795,62 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setSideMenu(runtimeSideMenu);
             subAppIntraUser.addActivity(runtimeActivity);
 
+            // Activity: Connection detail
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRIEND_LIST);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRIEND_LIST.getCode());
+            runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
+            runtimeActivity.setColor("#FF0B46F0");
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Your Connections");
+            runtimeTitleBar.setColor("#FF0B46F0");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#FF0B46F0");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT.getKey());
+
+            runtimeSideMenu = new SideMenu();
+            runtimeSideMenu.setBackgroundColor("#0072bb");
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Explore");
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+            runtimeMenuItem.setLinkToActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Your conections");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Notifications");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Settings");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+            runtimeActivity.setSideMenu(runtimeSideMenu);
+
+            subAppIntraUser.addActivity(runtimeActivity);
+
+            // friend list
             // Activity: Connection detail
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL);
