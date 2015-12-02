@@ -1,7 +1,7 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.DeveloperBitDubai;
 
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.DeveloperBitDubai;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinPlatformCryptoVaultPluginRoot;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +22,6 @@ public class DeveloperBitDubaiTest {
 
     @Test
     public void GetPluging() {
-        assertThat(developTest.getPlugin()).isInstanceOf(BitcoinCryptoVaultPluginRoot.class);
+        assertThat(developTest.getPlugin()).isInstanceOf(BitcoinPlatformCryptoVaultPluginRoot.class);
     }
 }

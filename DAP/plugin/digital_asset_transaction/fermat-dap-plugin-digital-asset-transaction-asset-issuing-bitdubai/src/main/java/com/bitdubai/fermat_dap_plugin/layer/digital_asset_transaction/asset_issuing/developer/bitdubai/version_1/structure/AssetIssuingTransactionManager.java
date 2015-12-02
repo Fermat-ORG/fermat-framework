@@ -12,11 +12,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManagerPlatform;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -42,14 +42,14 @@ import java.util.UUID;
 public class AssetIssuingTransactionManager implements AssetIssuingManager, DealsWithErrors/*, TransactionProtocolManager*/ {
 
     CryptoAddressBookManager cryptoAddressBookManager;
-    CryptoVaultManager cryptoVaultManager;
+    PlatformCryptoVaultManager cryptoVaultManager;
     BitcoinWalletManager bitcoinWalletManager;
     ErrorManager errorManager;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
     DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
     PluginFileSystem pluginFileSystem;
-    AssetVaultManager assetVaultManager;
+    AssetVaultManagerPlatform assetVaultManager;
     OutgoingIntraActorManager outgoingIntraActorManager;
     AssetIssuingTransactionDao assetIssuingTransactionDao;
     AssetIssuingTransactionMonitorAgent assetIssuingTransactionMonitorAgent;
@@ -61,12 +61,12 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     //ActorAssetIssuerManager actorAssetIssuerManager;
 
     public AssetIssuingTransactionManager(UUID pluginId,
-                                          CryptoVaultManager cryptoVaultManager,
+                                          PlatformCryptoVaultManager cryptoVaultManager,
                                           BitcoinWalletManager bitcoinWalletManager,
                                           PluginDatabaseSystem pluginDatabaseSystem,
                                           PluginFileSystem pluginFileSystem,
                                           ErrorManager errorManager,
-                                          AssetVaultManager assetVaultManager,
+                                          AssetVaultManagerPlatform assetVaultManager,
                                           CryptoAddressBookManager cryptoAddressBookManager,
                                           OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
@@ -227,14 +227,14 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         this.pluginFileSystem=pluginFileSystem;
     }
 
-    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) throws CantSetObjectException{
+    public void setCryptoVaultManager(PlatformCryptoVaultManager cryptoVaultManager) throws CantSetObjectException{
         if(cryptoVaultManager==null){
             throw new CantSetObjectException("cryptoVaultManager is null");
         }
         this.cryptoVaultManager=cryptoVaultManager;
     }
 
-    public void setAssetVaultManager(AssetVaultManager assetVaultManager)throws CantSetObjectException{
+    public void setAssetVaultManager(AssetVaultManagerPlatform assetVaultManager)throws CantSetObjectException{
         if(assetVaultManager==null){
             throw new CantSetObjectException("assetVaultManager is null");
         }

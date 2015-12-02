@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
@@ -17,7 +18,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 11/06/15.
  */
-public interface CryptoVaultManager extends TransactionSender<CryptoTransaction> {
+public interface PlatformCryptoVaultManager extends TransactionSender<CryptoTransaction>, PlatformCryptoVault {
     public void connectToBitcoin() throws VaultNotConnectedToNetworkException;
     public void disconnectFromBitcoin();
     public CryptoAddress getAddress();

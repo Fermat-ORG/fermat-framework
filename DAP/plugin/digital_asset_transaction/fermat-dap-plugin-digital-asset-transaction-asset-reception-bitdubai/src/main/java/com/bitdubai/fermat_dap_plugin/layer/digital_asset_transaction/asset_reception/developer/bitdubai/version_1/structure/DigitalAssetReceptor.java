@@ -41,9 +41,9 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
     BitcoinNetworkManager bitcoinNetworkManager;
 
     DigitalAssetReceptionVault digitalAssetReceptionVault;
-    //AssetVaultManager assetVaultManager;
+    //AssetVaultManagerPlatform assetVaultManager;
 
-    public DigitalAssetReceptor(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) throws CantExecuteDatabaseOperationException {
+    public DigitalAssetReceptor(/*AssetVaultManagerPlatform assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) throws CantExecuteDatabaseOperationException {
         super(/*assetVaultManager,*/  pluginId, pluginFileSystem);
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.setBitcoinCryptoNetworkManager(this.bitcoinNetworkManager);

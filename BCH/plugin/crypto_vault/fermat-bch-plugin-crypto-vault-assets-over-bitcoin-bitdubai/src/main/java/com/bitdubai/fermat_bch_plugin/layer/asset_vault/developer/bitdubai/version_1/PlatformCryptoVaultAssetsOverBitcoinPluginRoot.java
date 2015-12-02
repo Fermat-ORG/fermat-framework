@@ -23,9 +23,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManagerPlatform;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -33,8 +34,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
- * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.CryptoVaultAssetsOverBitcoinPluginRoot</code>
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.PlatformCryptoVaultAssetsOverBitcoinPluginRoot</code>
  * is the root plugin of the Assets over bitcoin Crypto Vault.
  * <p/>
  *
@@ -43,8 +46,9 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin implements
-        AssetVaultManager,
+public class PlatformCryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin implements
+        AssetVaultManagerPlatform,
+        PlatformCryptoVault,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.USER            , addon  = Addons .DEVICE_USER           )
@@ -66,7 +70,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     private AssetCryptoVaultManager assetCryptoVaultManager;
 
 
-    public CryptoVaultAssetsOverBitcoinPluginRoot() {
+    public PlatformCryptoVaultAssetsOverBitcoinPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
@@ -202,5 +206,26 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     @Override
     public String sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException {
         return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, addressTo, amount);
+    }
+
+    /**
+     * PlatformCryptoVault interface implementation.
+     * Generates a new Crypto Address by getting next available key path, derive it, and generate it in the specified network.
+     * @param blockchainNetworkType DEFAULT if null value is passed.
+     * @return the newly created crypto address
+     * @throws GetNewCryptoAddressException
+     */
+    @Override
+    public CryptoAddress getCryptoAddress(@Nullable BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
+        return getNewAssetVaultCryptoAddress(blockchainNetworkType);
+    }
+
+    /**
+     * PlatformCryptoVault interface implementation-
+     * @return DAP
+     */
+    @Override
+    public Platforms getPlatform() {
+        return Platforms.DIGITAL_ASSET_PLATFORM;
     }
 }

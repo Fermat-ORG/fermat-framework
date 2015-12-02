@@ -2,7 +2,7 @@ package test.com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantIdentifyEventSourceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SourceAdministrator;
 
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.doReturn;
 public class GetSourceAdministratorTest extends TestCase {
 
     @Mock
-    CryptoVaultManager cryptoVault;
+    PlatformCryptoVaultManager cryptoVault;
 
     @Mock
     TransactionProtocolManager<CryptoTransaction> transactionTransactionProtocolManager;

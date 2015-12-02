@@ -41,7 +41,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
 
     //ActorAssetIssuerManager actorAssetIssuerManager;
     ActorAssetUser actorAssetUser;
-    //AssetVaultManager assetVaultManager;
+    //AssetVaultManagerPlatform assetVaultManager;
     ErrorManager errorManager;
     final String LOCAL_STORAGE_PATH="user-redemption/";
     String digitalAssetFileStoragePath;
@@ -50,7 +50,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
     DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault;
     //BitcoinNetworkManager bitcoinNetworkManager;
 
-    public UserRedemptionRedeemer(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
+    public UserRedemptionRedeemer(/*AssetVaultManagerPlatform assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
         super(/*assetVaultManager,*/  pluginId, pluginFileSystem);
         this.errorManager=errorManager;
     }
