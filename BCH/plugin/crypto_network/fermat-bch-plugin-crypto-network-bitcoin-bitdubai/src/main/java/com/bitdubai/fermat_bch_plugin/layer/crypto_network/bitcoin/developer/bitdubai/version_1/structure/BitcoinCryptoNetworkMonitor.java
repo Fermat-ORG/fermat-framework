@@ -195,6 +195,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             wallet.addWalletTransaction(walletTransaction);
 
             /**
+             * save the added transaction in the wallet
+             */
+            wallet.saveToFile(walletFileName);
+
+            /**
              * Broadcast it.
              */
             TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);

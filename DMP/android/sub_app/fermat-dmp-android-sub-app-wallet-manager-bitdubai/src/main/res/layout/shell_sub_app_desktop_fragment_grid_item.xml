@@ -22,8 +22,8 @@
           >
             <ImageView
                 android:id="@+id/image_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:scaleType="centerCrop"
                 android:textSize="13sp"
                 android:layout_gravity="center_horizontal"
@@ -37,7 +37,7 @@
                 android:gravity="center"
                 android:paddingRight="5dp"
                 android:textColor="#ffffff"
-                app:typeface="CAVIAR_DREAMS"
+                app:typeface="CAVIAR_DREAMS_BOLD"
                 android:textStyle="bold"
                 android:textSize="13sp"/>
 
