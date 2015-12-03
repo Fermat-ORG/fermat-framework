@@ -409,12 +409,15 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
     private void paintFooter(FermatFooter footer) {
-        if(footer!=null){
+        if (footer != null) {
             FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
-            RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
-            if( footer_container!=null && footerViewPainter!=null && slide_container!=null ){
-                footerViewPainter.addNavigationViewFooterElementVisible(getLayoutInflater(),slide_container);
-                footerViewPainter.addFooterViewContainer(getLayoutInflater(),footer_container);
+            LinearLayout footer_container = (LinearLayout) findViewById(R.id.footer_container);
+            if (footer_container != null && footerViewPainter != null && slide_container != null) {
+                footerViewPainter.addNavigationViewFooterElementVisible(getLayoutInflater(), slide_container);
+                footerViewPainter.addFooterViewContainer(getLayoutInflater(), footer_container);
+            } else {
+                slide_container.setVisibility(View.GONE);
+                footer_container.setVisibility(View.GONE);
             }
         }
     }
@@ -451,6 +454,10 @@ public abstract class FermatActivity extends AppCompatActivity
                     navigation_recycler_view.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
 
+                    RecyclerView.ItemDecoration itemDecoration = navigationViewPainter.addItemDecoration();
+                    if(itemDecoration!=null){
+                        navigation_recycler_view.addItemDecoration(itemDecoration);
+                    }
                     /**
                      * Body
                      */
@@ -459,9 +466,6 @@ public abstract class FermatActivity extends AppCompatActivity
                         if (sideMenu.hasFooter()) {
                             navigation_view_footer.setVisibility(View.VISIBLE);
                             ViewGroup viewGroup = navigationViewPainter.addNavigationViewBodyContainer(getLayoutInflater(), navigation_view_footer);
-                        }else{
-                            navigation_view_footer.setVisibility(View.GONE);
-                            ((LinearLayout)findViewById(R.id.footer_container)).setVisibility(View.GONE);
                         }
                     }
 
@@ -477,6 +481,8 @@ public abstract class FermatActivity extends AppCompatActivity
                             relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
                         }
                     }
+
+
 
 
                     navigationView.invalidate();
@@ -2149,6 +2155,8 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void onItemClickListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
+        getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu().clearSelected();
+        data.setSelected(true);
         onNavigationMenuItemTouchListener(data, position);
     }
 
