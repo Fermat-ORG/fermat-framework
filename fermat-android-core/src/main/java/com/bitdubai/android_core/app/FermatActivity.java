@@ -103,6 +103,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
@@ -384,7 +385,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             paintTitleBar(titleBar, activity);
 
-            paintSideMenu(sideMenu);
+            paintSideMenu(activity,sideMenu);
 
             paintFooter(activity.getFooter());
 
@@ -422,7 +423,7 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-    private void paintSideMenu(SideMenu sideMenu) {
+    private void paintSideMenu(Activity activity, SideMenu sideMenu) {
         try {
             if (sideMenu != null) {
                 String backgroundColor = sideMenu.getBackgroudColor();
@@ -449,6 +450,18 @@ public abstract class FermatActivity extends AppCompatActivity
                      * Set adapter
                      */
                     FermatAdapter mAdapter = navigationViewPainter.addNavigationViewAdapter();
+                    List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = getNavigationMenu();
+                    boolean flag = false;
+                    int counter = 0;
+                    while(!flag &&  counter<lstItems.size()){
+                        com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = lstItems.get(counter);
+                        Activities navActivity = menuItem.getLinkToActivity();
+                        if(navActivity.getCode().equals(activity.getActivityType())){
+                            menuItem.setSelected(true);
+                            flag=true;
+                        }
+                        counter++;
+                    }
                     mAdapter.changeDataSet(getNavigationMenu());
                     mAdapter.setFermatListEventListener(this);
                     navigation_recycler_view.setAdapter(mAdapter);
@@ -2056,7 +2069,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 break;
             case ACTIVITY_TYPE_WALLET:
                 Activity activity = getWalletRuntimeManager().getLastWallet().getLastActivity();
-                paintSideMenu(activity.getSideMenu());
+                paintSideMenu(activity,activity.getSideMenu());
                 paintFooter(activity.getFooter());
                 break;
             case ACTIVITY_TYPE_SUB_APP:
@@ -2155,8 +2168,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void onItemClickListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
-        getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu().clearSelected();
-        data.setSelected(true);
+        getWalletRuntimeManager().getLastWallet().clear();
         onNavigationMenuItemTouchListener(data, position);
     }
 
