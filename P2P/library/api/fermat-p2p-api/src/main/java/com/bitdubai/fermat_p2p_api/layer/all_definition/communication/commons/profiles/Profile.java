@@ -4,12 +4,12 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.profiles;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.profiles.Profile</code> is
+ * The Class <code>Profile</code> is
  * the base of the component profile
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 02/12/15.

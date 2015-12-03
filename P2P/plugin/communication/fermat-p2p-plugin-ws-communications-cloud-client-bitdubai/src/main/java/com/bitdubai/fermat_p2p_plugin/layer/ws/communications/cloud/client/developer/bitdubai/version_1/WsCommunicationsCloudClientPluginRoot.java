@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -56,42 +57,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     private LocationManager locationManager;
 
     /**
-     * Represents the value of DISABLE_CLIENT
-     */
-    public static final Boolean DISABLE_CLIENT = Boolean.TRUE;
-
-    /**
-     * Represents the value of ENABLE_CLIENT
-     */
-    public static final Boolean ENABLE_CLIENT = Boolean.FALSE;
-
-    /**
-     * Represent the WS_PROTOCOL
-     */
-    public static final String WS_PROTOCOL = "ws://";
-
-    /**
-     * Represent the HTTP_PROTOCOL
-     */
-    public static final String HTTP_PROTOCOL = "http://";
-
-    /**
      * Represent the SERVER_IP
      */
-     //public static final String SERVER_IP = "52.34.94.176"; //AWS PAID INSTANCE
-//     public static final String SERVER_IP = "52.11.156.16"; //AWS FREE INSTANCE
-    public static final String SERVER_IP = "192.168.0.103";
-
-
-    /**
-     * Represent the DEFAULT_PORT
-     */
-    public static final int DEFAULT_PORT = 9090;
-
-    /**
-     * Represent the WEB_SERVICE_PORT
-     */
-    public static final int WEB_SERVICE_PORT = 8080;
+     public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCCTION;
 
     /*
      * Hold the list of event listeners
@@ -113,8 +81,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     public WsCommunicationsCloudClientPluginRoot(){
         super(new PluginVersionReference(new Version()));
-        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
-//        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
+        this.disableClientFlag = ServerConf.ENABLE_CLIENT;
     }
 
     /**
@@ -170,7 +137,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
             WebSocketImpl.DEBUG = false;
 
-            URI uri = new URI(WsCommunicationsCloudClientPluginRoot.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.DEFAULT_PORT);
+            URI uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT);
 
             wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
