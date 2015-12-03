@@ -94,7 +94,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession,SubAppResourcesPro
         }else if( i == R.id.btn_close){
             try {
                 if(intraUserInformation!=null && identity!=null)
-                    ((IntraUserSubAppSession)getSession()).getIntraUserModuleManager().denyConnection(intraUserInformation.getPublicKey());
+                    ((IntraUserSubAppSession)getSession()).getIntraUserModuleManager().denyConnection(identity.getPublicKey(),intraUserInformation.getPublicKey());
                 else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }

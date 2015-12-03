@@ -145,28 +145,28 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
                         CryptoTransactionStatus cryptoTransactionStatus = cryptoUnholdTransactionManager.getCryptoUnholdTransactionStatus(cryptoMoneyTransaction.getTransactionId());
                         if (CryptoTransactionStatus.CONFIRMED.getCode() == cryptoTransactionStatus.getCode()) {
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
-                            try {
-                                WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(cryptoMoneyTransaction.getTransactionId(),
-                                        null,
-                                        BalanceType.AVAILABLE,
-                                        TransactionType.CREDIT,
-                                        CurrencyType.BANK_MONEY,
-                                        cryptoMoneyTransaction.getCbpWalletPublicKey(),
-                                        cryptoMoneyTransaction.getActorPublicKey(),
-                                        cryptoMoneyTransaction.getAmount(),
-                                        new Date().getTime() / 1000,
-                                        cryptoMoneyTransaction.getConcept());
-
-                                cryptoBrokerWalletManager.getCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
-
-                                cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
-                                stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
-
-                            } catch (CantPerformTransactionException e) {
-                                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                            } catch (CryptoBrokerWalletNotFoundException e) {
-                                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                            }
+//                            try {
+//                                WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(cryptoMoneyTransaction.getTransactionId(),
+//                                        null,
+//                                        BalanceType.AVAILABLE,
+//                                        TransactionType.CREDIT,
+//                                        CurrencyType.BANK_MONEY,
+//                                        cryptoMoneyTransaction.getCbpWalletPublicKey(),
+//                                        cryptoMoneyTransaction.getActorPublicKey(),
+//                                        cryptoMoneyTransaction.getAmount(),
+//                                        new Date().getTime() / 1000,
+//                                        cryptoMoneyTransaction.getConcept());
+//
+//                                cryptoBrokerWalletManager.getCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
+//
+//                                cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
+//                                stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
+//
+//                            } catch (CantPerformTransactionException e) {
+//                                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                            } catch (CryptoBrokerWalletNotFoundException e) {
+//                                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                            }
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                             stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
                         }

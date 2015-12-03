@@ -71,6 +71,8 @@ public class StockTransactionsCryptoMoneyRestockDatabaseFactory {
             table.addColumn(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME,             DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_MEMO_COLUMN_NAME,                  DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME,    DatabaseDataType.STRING, 15, Boolean.FALSE);
+            table.addColumn(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME,       DatabaseDataType.REAL, 0, Boolean.FALSE);
+            table.addColumn(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME,    DatabaseDataType.STRING, 15, Boolean.FALSE);
 
             table.addIndex(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_FIRST_KEY_COLUMN);
 

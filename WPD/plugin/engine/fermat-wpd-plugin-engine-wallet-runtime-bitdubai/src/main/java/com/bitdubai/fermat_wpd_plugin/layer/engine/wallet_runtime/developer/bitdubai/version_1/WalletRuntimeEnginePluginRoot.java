@@ -1206,7 +1206,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
 
-        final String cryptoBrokerWalletPublicKey = "crypto_broker_wallet";
+        final String publicKey = "crypto_broker_wallet";
         final String statusBarColor = "#0e738b";
         final String titleBarTitleColor = "#ffffff";
         final int titleBarTextSize = 16;
@@ -1214,7 +1214,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        runtimeWalletNavigationStructure.setPublicKey(cryptoBrokerWalletPublicKey);
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
 
 
         // Side Menu
@@ -1223,25 +1223,25 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-        runtimeMenuItem.setAppLinkPublicKey(cryptoBrokerWalletPublicKey);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Contracts History");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
-        runtimeMenuItem.setAppLinkPublicKey(cryptoBrokerWalletPublicKey);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Earnings");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
-        runtimeMenuItem.setAppLinkPublicKey(cryptoBrokerWalletPublicKey);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Settings");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
-        runtimeMenuItem.setAppLinkPublicKey(cryptoBrokerWalletPublicKey);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
@@ -1308,6 +1308,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
+        runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setColor("#1189a5");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
@@ -1331,6 +1332,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getCode());
+        runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setColor("#1189a5");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
@@ -1355,6 +1357,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
+        runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setColor("#1189a5");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
@@ -1379,6 +1382,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
+        runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setColor("#1189a5");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
@@ -1486,7 +1490,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
 
-        final String cryptoCustomerWalletPublicKey = "crypto_customer_wallet";
+        final String publicKey = "crypto_customer_wallet";
         final String statusBarColor = "#990c75";
         final String titleBarLabelColor = "#ffffff";
         final int titleBarLabelSize = 16;
@@ -1495,7 +1499,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        runtimeWalletNavigationStructure.setPublicKey(cryptoCustomerWalletPublicKey);
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
 
 
         // Side Menu
@@ -1504,25 +1508,25 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
-        runtimeMenuItem.setAppLinkPublicKey(cryptoCustomerWalletPublicKey);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Contracts History");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY);
-        runtimeMenuItem.setAppLinkPublicKey(cryptoCustomerWalletPublicKey);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Broker List");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(cryptoCustomerWalletPublicKey);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Settings");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS);
-        runtimeMenuItem.setAppLinkPublicKey(cryptoCustomerWalletPublicKey);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
@@ -1585,6 +1589,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST);
+        runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setColor("#1189a5");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
@@ -1609,6 +1614,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
+        runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setColor("#1189a5");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
@@ -1655,6 +1661,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
+        runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setColor("#1189a5");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
@@ -1679,6 +1686,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY);
+        runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setColor("#1189a5");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
@@ -2001,47 +2009,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey(), runtimeFragment);
 
-        //Navigation
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#ffffff");
-        runtimeSideMenu.setNavigationIconColor("#ffffff");
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setIcon("home");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Contacts");
-        runtimeMenuItem.setIcon("contacts");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setIcon("settings");
-        runtimeMenuItem.setLinkToActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Logout");
-        runtimeMenuItem.setLinkToActivity(Activities.DEVELOP_MODE);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //Side Menu
+        runtimeActivity.setSideMenu(loadSideMenuBitcoinWallet(publicKey));
 
         //fin navigation
 
@@ -2131,45 +2101,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey(), runtimeFragment);
 //Navigation
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#ffffff");
-        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        //Side Menu
+        runtimeActivity.setSideMenu(loadSideMenuBitcoinWallet(publicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setIcon("home");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Contacts");
-        runtimeMenuItem.setIcon("contacts");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setIcon("settings");
-        runtimeMenuItem.setLinkToActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Logout");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //fin navigation
 
         //fin navigation
 
@@ -2233,45 +2168,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         //Navigation
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#ffffff");
-        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        //Side Menu
+        runtimeActivity.setSideMenu(loadSideMenuBitcoinWallet(publicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setIcon("home");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Contacts");
-        runtimeMenuItem.setIcon("contacts");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setIcon("settings");
-        runtimeMenuItem.setLinkToActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Logout");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //fin navigation
 
         //fin navigation
         /**
@@ -2315,47 +2215,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey(), runtimeFragment);
 
-        //Navigation
+        //Side Menu
+        runtimeActivity.setSideMenu(loadSideMenuBitcoinWallet(publicKey));
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#ffffff");
-        runtimeSideMenu.setNavigationIconColor("#ffffff");
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setIcon("home");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Contacts");
-        runtimeMenuItem.setIcon("contacts");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setIcon("settings");
-        runtimeMenuItem.setLinkToActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Logout");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //fin navigation
 
         //fin navigation
 
@@ -2480,6 +2343,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Contact detail");
         runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#12aca1");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
@@ -2545,47 +2410,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT.getKey(), runtimeFragment);
 
-        //Navigation
+        //Side Menu
+        runtimeActivity.setSideMenu(loadSideMenuBitcoinWallet(publicKey));
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#ffffff");
-        runtimeSideMenu.setNavigationIconColor("#ffffff");
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setIcon("home");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Contacts");
-        runtimeMenuItem.setIcon("contacts");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setIcon("settings");
-        runtimeMenuItem.setLinkToActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Logout");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //fin navigation
 
         //fin navigation
         /**
@@ -2671,5 +2499,50 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
 
         return runtimeWalletNavigationStructure;
+    }
+
+    private SideMenu loadSideMenuBitcoinWallet(String publicKey) {
+        //Navigation
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#ffffff");
+        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setIcon("home");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Contacts");
+        runtimeMenuItem.setIcon("contacts");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Payment request");
+        runtimeMenuItem.setIcon("request");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setIcon("settings");
+        runtimeMenuItem.setLinkToActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Logout");
+        runtimeMenuItem.setLinkToActivity(Activities.DEVELOP_MODE);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
     }
 }
