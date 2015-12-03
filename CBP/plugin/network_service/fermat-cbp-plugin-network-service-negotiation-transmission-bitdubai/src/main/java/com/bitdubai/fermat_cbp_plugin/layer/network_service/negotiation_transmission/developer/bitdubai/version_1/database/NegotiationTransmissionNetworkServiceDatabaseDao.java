@@ -88,10 +88,54 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             DatabaseTableRecord record = table.getEmptyRecord();
             loadRecordAsSendNegotiatioTransmission(record,negotiationTransmission);
             table.insertRecord(record);
+
         } catch (CantInsertRecordException e){
-            throw new CantRegisterSendNegotiationTransmissionException ("CAN'T REGISTER IN DATABSE A NEGOTIATION TRANSMISSION", e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
+            throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE + ". CAN'T REGISTER IN DATABSE A NEGOTIATION TRANSMISSION", e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
         } catch (Exception e){
             throw new CantRegisterSendNegotiationTransmissionException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", "ERROR SEND CONFIRM TO CRYPTO BROKER, UNKNOWN FAILURE.");
+        }
+    }
+
+    /*UPDATE REGISTER SEND NEGOTIATION TRANSMISSION*/
+    public void updateRegisterSendNegotiatioTransmission(NegotiationTransmission negotiationTransmission) throws CantRegisterSendNegotiationTransmissionException {
+
+        if (negotiationTransmission == null) {
+            throw new IllegalArgumentException("The entity is required, can not be null");
+        }
+
+        try {
+
+            DatabaseTable table = getDatabaseTable();
+            DatabaseTableRecord record = table.getEmptyRecord();
+            loadRecordAsSendNegotiatioTransmission(record,negotiationTransmission);
+            DatabaseTransaction transaction = getDataBase().newTransaction();
+            transaction.addRecordToUpdate(getDatabaseTable(), record);
+            getDataBase().executeTransaction(transaction);
+
+        } catch (DatabaseTransactionFailedException e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE + ". CAN'T UPDATE REGISTER IN DATABSE A NEGOTIATION TRANSMISSION", e, contextBuffer.toString(), "The record do not exist");
+
+        }
+
+    }
+
+    /*CONFIRM RECEPTION*/
+    public void confirmReception(UUID transmissionId) throws CantRegisterSendNegotiationTransmissionException {
+        try {
+
+            NegotiationTransmission negotiationTransmission = getNegotiationTransmissionRecord(transmissionId);
+            negotiationTransmission.confirmRead();
+            updateRegisterSendNegotiatioTransmission(negotiationTransmission);
+
+        } catch (CantGetNegotiationTransmissionException e) {
+            throw new CantRegisterSendNegotiationTransmissionException(null, "RequestID: "+transmissionId.toString(), "Can not find an address exchange request with the given request id.");
+        } catch (CantRegisterSendNegotiationTransmissionException e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE + ". CAN'T CONFIRM RECEPTION IN REGISTER OF DATABSE NEGOTIATION TRANSMISSION", e, contextBuffer.toString(), "The record do not exist");
+
         }
     }
 
@@ -176,8 +220,6 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
             throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, databaseTransactionFailedException, contextBuffer.toString(), "The data no exist");
-        } catch (PendingRequestNotFoundException e) {
-            e.printStackTrace();
         } catch (CantGetNegotiationTransmissionException e) {
             e.printStackTrace();
         }
@@ -214,8 +256,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
 
     }
 
-    public NegotiationTransmission getNegotiationTransmissionRecord(UUID transmissionId) throws CantGetNegotiationTransmissionException,
-            PendingRequestNotFoundException {
+    public NegotiationTransmission getNegotiationTransmissionRecord(UUID transmissionId) throws CantGetNegotiationTransmissionException {
 
         if (transmissionId == null)
             throw new CantGetNegotiationTransmissionException("",null, "requestId, can not be null","");
@@ -230,7 +271,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             if (!records.isEmpty())
                 return constructNegotiationTransmission(records.get(0));
             else
-                throw new PendingRequestNotFoundException(null, "RequestID: "+transmissionId, "Cannot find an address exchange request with the given request id.");
+                throw new CantGetNegotiationTransmissionException(null, "RequestID: "+transmissionId, "Cannot find an address exchange request with the given request id.");
 
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantGetNegotiationTransmissionException("",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
