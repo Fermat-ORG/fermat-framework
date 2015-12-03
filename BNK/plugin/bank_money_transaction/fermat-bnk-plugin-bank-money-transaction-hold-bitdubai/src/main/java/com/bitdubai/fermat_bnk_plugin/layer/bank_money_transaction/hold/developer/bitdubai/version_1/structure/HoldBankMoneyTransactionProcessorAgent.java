@@ -2,13 +2,17 @@ package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.develop
 
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.*;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantGetHoldTransactionException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by memo on 25/11/15.
@@ -21,11 +25,12 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
 
     private final ErrorManager errorManager;
     private final HoldBankMoneyTransactionManager holdTransactionManager;
+    private final BankMoneyWalletManager bankMoneyWalletManager;
 
-    public HoldBankMoneyTransactionProcessorAgent(final ErrorManager errorManager, final HoldBankMoneyTransactionManager holdManager) {
+    public HoldBankMoneyTransactionProcessorAgent(final ErrorManager errorManager, final HoldBankMoneyTransactionManager holdManager, final BankMoneyWalletManager bankMoneyWalletManager) {
         this.errorManager = errorManager;
         this.holdTransactionManager = holdManager;
-
+        this.bankMoneyWalletManager = bankMoneyWalletManager;
         this.agentThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -91,16 +96,18 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
           * If not: Changes transaction status to Rejected.
          */
 
-        //TODO: try to get the CSH wallet manager, using transaction's wallet public key, and then try to get its available balance!!
+        //TODO: try to get the BNK wallet manager, using transaction's wallet public key, and then try to get its available balance!!
 
-        long availableBalance;
+        double availableBalance;
         for(BankTransaction transaction : transactionList) {
 
-            //TODO: Kill this next mock line
-            availableBalance = 500;
+
+            availableBalance = 0;
+
             try {
+                availableBalance = bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).getAvailableBalance().getBalance(transaction.getAccountNumber());
                 if(availableBalance >= transaction.getAmount()) {
-                    //TODO: wallet.debit(transaction.getAmount());
+                    bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).hold(new BankMoneyTransactionRecordImpl(transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.HOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(),BankOperationType.HOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVING.getCode(),0,0,transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode()));
                     holdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
                 }
                 else {
