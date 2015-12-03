@@ -1,5 +1,9 @@
-package com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes;
+package com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
@@ -21,7 +25,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform</code>
+ * The class <code>com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform</code>
  * contains all the basic functionality of a Platform class.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.

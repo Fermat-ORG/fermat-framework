@@ -2,12 +2,12 @@ package com.bitdubai.fermat_core;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonDeveloper;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonSubsystem;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractLayer;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractAddonSubsystem;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginSubsystem;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPlatformException;

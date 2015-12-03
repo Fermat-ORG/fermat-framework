@@ -37,6 +37,8 @@ android {
 
 dependencies {
     compile project(':fermat-api')
+    compile project(':fermat-core-api')
+
     compile project(':fermat-osa-addon-android-database-system-bitdubai')
     compile project(':fermat-osa-addon-android-file-system-bitdubai')
     compile project(':fermat-osa-addon-android-device-location-bitdubai')

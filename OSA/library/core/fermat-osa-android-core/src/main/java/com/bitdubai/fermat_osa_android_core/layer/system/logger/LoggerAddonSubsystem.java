@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_osa_android_core.layer.system.logger;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonSubsystem;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractAddonSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;

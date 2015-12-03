@@ -1,5 +1,7 @@
-package com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes;
+package com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
@@ -24,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractLayer {
 
-    private final Map<AddonReference , AbstractAddonSubsystem > addons ;
+    private final Map<AddonReference , AbstractAddonSubsystem> addons ;
     private final Map<PluginReference, AbstractPluginSubsystem> plugins;
 
     private final LayerReference layerReference;
