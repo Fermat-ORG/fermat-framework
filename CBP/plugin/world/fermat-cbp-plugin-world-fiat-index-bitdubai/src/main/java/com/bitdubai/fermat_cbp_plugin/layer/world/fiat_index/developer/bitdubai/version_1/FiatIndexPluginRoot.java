@@ -38,6 +38,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -117,7 +118,7 @@ public class FiatIndexPluginRoot extends AbstractPlugin implements DatabaseManag
         }
         serviceStatus = ServiceStatus.STARTED;
 
-        testGetCurrentIndex();
+        // testGetCurrentIndex();
     }
 
 
@@ -128,10 +129,8 @@ public class FiatIndexPluginRoot extends AbstractPlugin implements DatabaseManag
 
     @Override
     public Collection<FiatCurrency> getSupportedCurrencies() {
-        Collection<FiatCurrency> c = new HashSet<>();
-        for (FiatCurrency f : FiatCurrency.values())
-            c.add(f);
-        return c;
+
+        return new HashSet<>(Arrays.asList(FiatCurrency.values()));
     }
 
     @Override
