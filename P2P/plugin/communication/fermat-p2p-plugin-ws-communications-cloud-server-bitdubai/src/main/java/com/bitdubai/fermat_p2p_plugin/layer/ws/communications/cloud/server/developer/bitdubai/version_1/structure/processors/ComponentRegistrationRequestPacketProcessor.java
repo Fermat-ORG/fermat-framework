@@ -278,6 +278,16 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         if (networkServiceRegistered.containsKey(platformComponentProfileToRegister.getNetworkServiceType())){
 
             /*
+             * Validate are not yet registered
+             */
+            for (PlatformComponentProfile registered : networkServiceRegistered.get(platformComponentProfileToRegister.getNetworkServiceType())) {
+
+                if (registered.getIdentityPublicKey().equals(platformComponentProfileToRegister.getIdentityPublicKey())){
+                    throw new RuntimeException("The PlatformComponentProfile is already registered con el server");
+                }
+            }
+
+            /*
              * Add to the list
              */
             networkServiceRegistered.get(platformComponentProfileToRegister.getNetworkServiceType()).add(platformComponentProfileToRegister);
@@ -338,6 +348,16 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         if (registeredPlatformComponentProfile.containsKey(platformComponentProfileToRegister.getPlatformComponentType())){
 
             /*
+             * Validate are not yet registered
+             */
+            for (PlatformComponentProfile registered : registeredPlatformComponentProfile.get(platformComponentProfileToRegister.getPlatformComponentType())) {
+
+                if (registered.getIdentityPublicKey().equals(platformComponentProfileToRegister.getIdentityPublicKey())){
+                    throw new RuntimeException("The PlatformComponentProfile is already registered con el server");
+                }
+            }
+
+            /*
              * Add to the list
              */
             registeredPlatformComponentProfile.get(platformComponentProfileToRegister.getPlatformComponentType()).add(platformComponentProfileToRegister);
@@ -379,7 +399,6 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         System.out.println("ComponentRegistrationRequestPacketProcessor - Total (" + platformComponentProfileToRegister.getPlatformComponentType() + ") Component Registered  = " + registeredPlatformComponentProfile.get(platformComponentProfileToRegister.getPlatformComponentType()).size());
 
     }
-
 
     /**
      * (no-javadoc)

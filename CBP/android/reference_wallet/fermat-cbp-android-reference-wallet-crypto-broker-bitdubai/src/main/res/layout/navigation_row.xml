@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFF"
-    >
-
+    android:background="#FFF">
 
 
     <ImageView
@@ -12,30 +12,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="#FFF"
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:scaleType="centerCrop"
         android:src="@drawable/btn_drawer_home_normal"
-        android:background="#FFF"
+        tools:ignore="contentDescription"
         />
 
     <TextView
         android:id="@+id/textView_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="14dip"
+        android:background="#FFF"
 
+        android:paddingBottom="14dip"
         android:paddingLeft="8dip"
         android:paddingRight="8dip"
         android:paddingTop="14dip"
-        android:text="Home"
-        android:textColor="#4a4a4a"
+        android:textColor="#2d2d2d"
         android:textSize="16sp"
-        android:background="#FFF"
+        tools:text="Home"
         >
     </TextView>
 
 
-
-
-</LinearLayout> 
+</LinearLayout>

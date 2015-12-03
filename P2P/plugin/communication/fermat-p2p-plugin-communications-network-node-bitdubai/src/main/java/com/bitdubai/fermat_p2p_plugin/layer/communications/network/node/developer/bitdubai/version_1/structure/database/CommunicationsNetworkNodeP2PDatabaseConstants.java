@@ -16,6 +16,9 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
  */
 public class CommunicationsNetworkNodeP2PDatabaseConstants {
 
+
+    public static final String DATA_BASE_NAME =  "NETWORK_NODE_DB";
+
     /**
      * actor catalog database table definition.
      */

@@ -533,7 +533,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                 contextBuffer.append("eventManager: " + eventManager);
 
                 String context = contextBuffer.toString();
-                String possibleCause = "Asset User Actor Network Service Not Registered";
+                String possibleCause = "Asset Redeem Point Actor Network Service Not Registered";
 //
 //                CantRequestCryptoAddressException pluginStartException = new CantRequestCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 //
@@ -620,7 +620,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
             contextBuffer.append("eventManager: " + eventManager);
 
             String context = contextBuffer.toString();
-            String possibleCause = "Cant Request List Actor Asset User Registered";
+            String possibleCause = "Cant Request List Actor Asset Redeem Point Registered";
 
             CantRequestListActorAssetRedeemPointRegisteredException pluginStartException = new CantRequestListActorAssetRedeemPointRegisteredException(CantRequestListActorAssetRedeemPointRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
 
@@ -764,7 +764,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
             /*
              * tell to the manager to connect to this remote network service
              */
-            if (remoteNetworkServiceToConnect.getNetworkServiceType() == NetworkServiceType.UNDEFINED && remoteNetworkServiceToConnect.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_USER) {
+            if (remoteNetworkServiceToConnect.getNetworkServiceType() == NetworkServiceType.UNDEFINED && remoteNetworkServiceToConnect.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT) {
                 for (PlatformComponentProfile p : platformComponentProfileRegisteredList) {
                     Location loca = null;
                     ActorAssetRedeemPoint actorAssetUserNew = new RedeemPointActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), loca);
@@ -772,12 +772,12 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                     actorAssetRedeemPointRegisteredList.add(actorAssetUserNew);
                 }
 
-                FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION);
-                event.setSource(EventSource.ACTOR_ASSET_USER);
+                FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_REQUEST_LIST_ASSET_REDEEM_POINT_REGISTERED_NOTIFICATION);
+                event.setSource(EventSource.ACTOR_ASSET_REDEEM_POINT);
 
                 //((AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent) event).setActorAssetUserList(actorAssetUserRegisteredList);
                 eventManager.raiseEvent(event);
-            } else if (remoteNetworkServiceToConnect.getNetworkServiceType() == NetworkServiceType.ASSET_USER_ACTOR && remoteNetworkServiceToConnect.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE) {
+            } else if (remoteNetworkServiceToConnect.getNetworkServiceType() == NetworkServiceType.ASSET_REDEEM_POINT_ACTOR && remoteNetworkServiceToConnect.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE) {
                 /*
                  * save into the cache
                  */

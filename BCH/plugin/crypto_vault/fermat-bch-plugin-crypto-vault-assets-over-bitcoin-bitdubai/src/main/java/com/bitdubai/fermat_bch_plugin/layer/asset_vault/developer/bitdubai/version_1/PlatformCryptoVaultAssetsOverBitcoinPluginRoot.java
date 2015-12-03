@@ -25,7 +25,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -33,8 +34,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
- * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.CryptoVaultAssetsOverBitcoinPluginRoot</code>
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.PlatformCryptoVaultAssetsOverBitcoinPluginRoot</code>
  * is the root plugin of the Assets over bitcoin Crypto Vault.
  * <p/>
  *
@@ -43,8 +46,9 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin implements
+public class PlatformCryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin implements
         AssetVaultManager,
+        PlatformCryptoVault,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.USER            , addon  = Addons .DEVICE_USER           )
@@ -66,7 +70,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     private AssetCryptoVaultManager assetCryptoVaultManager;
 
 
-    public CryptoVaultAssetsOverBitcoinPluginRoot() {
+    public PlatformCryptoVaultAssetsOverBitcoinPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
@@ -173,8 +177,9 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(5000);
-                        assetCryptoVaultManager.sendAssetBitcoins("c932eb1b998ceed9e38a40dd2efa9d925007d4898dc91451c79fdc6529116cfd", new CryptoAddress("myd4UH9nGSqxwejkyk8rZWvuxQqzqLfB7J", CryptoCurrency.BITCOIN), 100000);
+                        Thread.sleep(15000);
+                        CryptoAddress address = new CryptoAddress("msXC2m8zeJMVvBo4vHkgn3uih2uxFZex7Y", CryptoCurrency.BITCOIN);
+                        assetCryptoVaultManager.sendAssetBitcoins("9a4244b25430b3c6ffc869eabc6230916113b9b44059bdccf85b954bcf3ae8c6", address, 123333);
                     } catch (CantSendAssetBitcoinsToUserException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -201,5 +206,26 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     @Override
     public String sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException {
         return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, addressTo, amount);
+    }
+
+    /**
+     * PlatformCryptoVault interface implementation.
+     * Generates a new Crypto Address by getting next available key path, derive it, and generate it in the specified network.
+     * @param blockchainNetworkType DEFAULT if null value is passed.
+     * @return the newly created crypto address
+     * @throws GetNewCryptoAddressException
+     */
+    @Override
+    public CryptoAddress getCryptoAddress(@Nullable BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
+        return getNewAssetVaultCryptoAddress(blockchainNetworkType);
+    }
+
+    /**
+     * PlatformCryptoVault interface implementation-
+     * @return DAP
+     */
+    @Override
+    public Platforms getPlatform() {
+        return Platforms.DIGITAL_ASSET_PLATFORM;
     }
 }

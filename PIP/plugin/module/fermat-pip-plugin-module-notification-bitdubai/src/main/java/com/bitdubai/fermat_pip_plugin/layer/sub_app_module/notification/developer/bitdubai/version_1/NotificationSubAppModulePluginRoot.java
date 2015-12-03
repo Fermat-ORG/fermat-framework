@@ -4,12 +4,14 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.FlagNotification;
@@ -58,6 +60,9 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR           , plugin = Plugins.INTRA_WALLET_USER)
+    private IntraWalletUserActorManager intraWalletUserActorManager;
+
     // TODO MAKE USE OF THE ERROR MANAGER
     // TODO MAKE USE OF THE ERROR MANAGER
     // TODO MAKE USE OF THE ERROR MANAGER
@@ -92,7 +97,6 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
      * Intra User
      */
 
-    private IntraWalletUserActorManager intraUserManager;
 
     FlagNotification flagNotification;
 
@@ -200,8 +204,9 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             Actor actor = null;
             try{
                 actor = getActor(intraUserIdentityPublicKey,actorId,actorType);
-            } catch ( IntraUserNotFoundException e) {
+            } catch (IntraUserNotFoundException e) {
 
+                e.printStackTrace();
             }
 
 
@@ -370,7 +375,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             case INTRA_USER:
 
                     //find actor connected with logget identity
-                return intraUserManager.getActorByPublicKey(intraUserLoggedInPublicKey,actorId);
+                return intraWalletUserActorManager.getActorByPublicKey(intraUserLoggedInPublicKey,actorId);
 
             default:
                 return null;
