@@ -20,6 +20,7 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFr
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
@@ -262,7 +263,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     @Override
     public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
         walletSession.setData("negotiation_data", data);
-        //changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS);
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS, walletSession.getAppPublicKey());
     }
 
     @Override
