@@ -459,6 +459,9 @@ public abstract class FermatActivity extends AppCompatActivity
                         if (sideMenu.hasFooter()) {
                             navigation_view_footer.setVisibility(View.VISIBLE);
                             ViewGroup viewGroup = navigationViewPainter.addNavigationViewBodyContainer(getLayoutInflater(), navigation_view_footer);
+                        }else{
+                            navigation_view_footer.setVisibility(View.GONE);
+                            ((LinearLayout)findViewById(R.id.footer_container)).setVisibility(View.GONE);
                         }
                     }
 
