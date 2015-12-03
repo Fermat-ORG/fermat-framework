@@ -1935,13 +1935,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeHeader.setLabel("Balance");
         runtimeActivity.setHeader(runtimeHeader);
 
-        /**
-         * Footer test
-         */
-        fermatFooter = new Footer();
-        fermatFooter.setBackgroundColor("#000000");
-        fermatFooter.setFragmentCode(Fragments.CCP_BITCOIN_WALLET_NO_IDENTITY_FRAGMENT.getKey());
-        runtimeActivity.setFooter(fermatFooter);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Bitcoin wallet");
@@ -2499,7 +2492,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         SideMenu runtimeSideMenu= new SideMenu();
         runtimeSideMenu.setBackgroundColor("#ffffff");
         runtimeSideMenu.setNavigationIconColor("#ffffff");
-        runtimeSideMenu.setHasFooter(true);
 
         MenuItem runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
