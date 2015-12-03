@@ -175,6 +175,23 @@ public class OpenContractBusinessTransactionDao {
         }
     }
 
+    public ContractTransactionStatus getContractTransactionStatusByNegotiationId(String negotiationId) throws
+            UnexpectedResultReturnedFromDatabaseException {
+        try{
+
+            String stringContractTransactionStatus=getValue(
+                    negotiationId,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_NEGOTIATION_ID_COLUMN_NAME,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
+            return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
+        } catch (InvalidParameterException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    e,
+                    "Getting the contract transaction status",
+                    "Invalid code in ContractTransactionStatus enum");
+        }
+    }
+
     public UUID getTransactionId(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
         String transactionId= getValue(
                 contractHash,
