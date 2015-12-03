@@ -2,11 +2,12 @@ package com.bitdubai.fermat_api.layer.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 
 /**
  * Created by ciencias on 20.12.14.
  */
-public enum CryptoCurrency implements FermatEnum {
+public enum CryptoCurrency implements FermatEnum, Currency {
 
     BITCOIN("BTC"),
     CHAVEZCOIN("CHC"),

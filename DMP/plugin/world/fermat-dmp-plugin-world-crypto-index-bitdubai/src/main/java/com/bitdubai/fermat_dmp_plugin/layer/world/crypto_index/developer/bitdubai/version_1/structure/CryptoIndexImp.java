@@ -6,7 +6,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
  * Created by francisco on 11/09/15.
  * TODO add a little explanation of the class
  */
-public class CryptoIndex implements CryptoIndexInterface {
+public class CryptoIndexImp implements CryptoIndexInterface {
 
     private String cryptoCurrency;
     private String fiatCurrency;
@@ -19,7 +19,7 @@ public class CryptoIndex implements CryptoIndexInterface {
      * @param time
      * @param rateExchange
      */
-    public CryptoIndex(String cryptoCurrency, String fiatCurrency, String time, double rateExchange) {
+    public CryptoIndexImp(String cryptoCurrency, String fiatCurrency, String time, double rateExchange) {
         this.cryptoCurrency = cryptoCurrency;
         this.fiatCurrency = fiatCurrency;
         this.time = time;
