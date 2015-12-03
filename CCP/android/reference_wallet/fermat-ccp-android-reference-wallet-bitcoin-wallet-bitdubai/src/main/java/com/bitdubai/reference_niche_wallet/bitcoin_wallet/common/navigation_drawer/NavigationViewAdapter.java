@@ -66,7 +66,8 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
 
             if(data.isSelected()) {
 
-                holder.getRow_container().setBackgroundColor(Color.parseColor("#80000000"));
+                //holder.getRow_container().setBackgroundColor(Color.parseColor("#80000000"));
+                holder.getRow_container().setBackgroundResource(R.color.black_overlay);
 
                 switch (position) {
                     case 0:
