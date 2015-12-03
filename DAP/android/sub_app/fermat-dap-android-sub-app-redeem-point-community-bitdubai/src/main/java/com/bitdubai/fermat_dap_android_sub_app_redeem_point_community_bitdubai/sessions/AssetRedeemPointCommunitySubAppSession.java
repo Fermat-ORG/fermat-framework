@@ -18,20 +18,17 @@ import java.util.Map;
  */
 public class AssetRedeemPointCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,RedeemPointCommunitySubAppModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
 
-
     private RedeemPointCommunitySubAppModuleManager manager;
 
     private ErrorManager errorManager;
     private SubApps sessionType;
     private Map<String, Object> data;
 
-
     public AssetRedeemPointCommunitySubAppSession(InstalledSubApp subApp, ErrorManager errorManager, RedeemPointCommunitySubAppModuleManager manager) {
         super(subApp.getAppPublicKey(),subApp,errorManager,manager,null);
         this.errorManager = errorManager;
         this.manager = manager;
     }
-
 
     @Override
     public InstalledSubApp getSubAppSessionType() {

@@ -278,21 +278,21 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         //TODO GENERACION DE PUBLICK KEY SOLICITADA.
 
         //TODO ENVIO DE PUBLICK KEY EXTENDED GENERADA PARA A.N.S Redeem Point
-//        AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage();
-//
-//        try {
-//            DAPMessage dapMessageSend = new DAPMessage(
-//                    DAPMessageType.EXTENDED_PUBLIC_KEY,
-//                    assetExtendedPublickKeyContentMessage,
-//                    dapActorSender,
-//                    dapActorDestination);
-//
-//            assetRedeemPointActorNetworkServiceManager.sendMessage(dapActorDestination, dapActorSender, dapMessageSend);
-//        } catch (CantSetObjectException e) {
-//            e.printStackTrace();
-//        } catch (CantSendMessageException e) {
-//            e.printStackTrace();
-//        }
+        AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage();
+
+        try {
+            DAPMessage dapMessageSend = new DAPMessage(
+                    DAPMessageType.EXTENDED_PUBLIC_KEY,
+                    assetExtendedPublickKeyContentMessage,
+                    dapActorSender,
+                    dapActorDestination);
+
+            assetRedeemPointActorNetworkServiceManager.sendMessage(dapActorDestination, dapActorSender, dapMessageSend);
+        } catch (CantSetObjectException e) {
+            e.printStackTrace();
+        } catch (CantSendMessageException e) {
+            e.printStackTrace();
+        }
 //        try {
 //            this.assetIssuerActorDao.updateAssetIssuerDAPConnectionState(
 //                    actorAssetIssuer.getActorPublicKey(),

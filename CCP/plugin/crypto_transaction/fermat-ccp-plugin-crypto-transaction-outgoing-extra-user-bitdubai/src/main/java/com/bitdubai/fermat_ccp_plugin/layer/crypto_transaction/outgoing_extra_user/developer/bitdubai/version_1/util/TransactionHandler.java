@@ -22,7 +22,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_us
 public class TransactionHandler {
 
     public static void handleTransaction(TransactionWrapper   transaction       ,
-                                         CryptoVaultManager   cryptoVaultManager,
+                                         CryptoVaultManager cryptoVaultManager,
                                          CryptoStatus         cryptoStatus      ,
                                          BitcoinWalletWallet  bitcoinWallet     ,
                                          com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserDao dao               ,

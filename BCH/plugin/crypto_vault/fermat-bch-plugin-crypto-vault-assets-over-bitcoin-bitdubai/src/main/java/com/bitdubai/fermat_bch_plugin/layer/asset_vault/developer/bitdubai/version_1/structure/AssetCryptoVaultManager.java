@@ -8,7 +8,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSe
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantLoadExistingVaultSeed;
@@ -23,19 +23,12 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionInput;
-import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicException;
-import org.bitcoinj.crypto.TransactionSignature;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -164,12 +157,12 @@ public class AssetCryptoVaultManager  {
          * I get the network for this address.
          */
         BlockchainNetworkType networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
-        NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(networkType);
+        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(networkType);
 
         /**
          * I will get the genesis transaction  I will use to form the input from the CryptoNetwork
          */
-        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionId);
+        final Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionId);
         if (genesisTransaction  == null){
             StringBuilder output = new StringBuilder("The specified transaction hash ");
             output.append(genesisTransactionId);
@@ -194,7 +187,7 @@ public class AssetCryptoVaultManager  {
          * Create the bitcoinj wallet from the keys of this account
          */
         HierarchyAccount vaultAccount = new HierarchyAccount(0, "Asset Vault");
-        Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
+        final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
 
         /**
          * Adds the Genesis Transaction as a UTXO
@@ -206,17 +199,28 @@ public class AssetCryptoVaultManager  {
          * Calculates the amount to be sent by removing the fee from the passed value.
          */
         Coin fee = Coin.valueOf(10000);
-        Coin coinToSend = Coin.valueOf(amount).subtract(fee);
+        final Coin coinToSend = Coin.valueOf(amount).subtract(fee);
 
         /**
          * creates the send request and broadcast it on the network.
          */
+        wallet.allowSpendingUnconfirmedTransactions();
+        wallet.setAcceptRiskyTransactions(true);
+
         Wallet.SendRequest sendRequest = Wallet.SendRequest.to(address, coinToSend);
+        sendRequest.fee = fee;
+        sendRequest.feePerKb = Coin.ZERO;
+
         try {
-            sendRequest.fee = fee;
             wallet.completeTx(sendRequest);
         } catch (InsufficientMoneyException e) {
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Not enought money to send bitcoins.", null);
+
+            StringBuilder output = new StringBuilder("Not enought money to send bitcoins.");
+            output.append(System.lineSeparator());
+            output.append("Current balance available for this transaction: " + wallet.getBalance().getValue());
+            output.append(System.lineSeparator());
+            output.append("Current value to send: " + coinToSend.getValue() + " (+fee: " + fee.getValue() + ")");
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, output.toString(), null);
         }
 
         try {
