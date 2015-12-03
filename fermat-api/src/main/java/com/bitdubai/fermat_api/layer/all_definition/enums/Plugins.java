@@ -238,7 +238,10 @@ public enum Plugins implements FermatEnum {
     BANK_MONEY_DESTOCK          ("BMDE"),
     CASH_MONEY_RESTOCK          ("CMDE"),
     CASH_MONEY_DESTOCK          ("CMRE"),
+    CONTRACT_PURCHASE           ("CONTP"),
+    CONTRACT_SALE               ("CONTS"),
     CRYPTO_BROKER_WALLET        ("CBWA"),
+    CRYPTO_BROKER_ACTOR         ("CBAC"),
     CRYPTO_CUSTOMER_ACTOR       ("CCAC"),
     CRYPTO_MONEY_DESTOCK        ("CRDE"),
     CRYPTO_MONEY_RESTOCK        ("CRRE"),
@@ -287,6 +290,8 @@ public enum Plugins implements FermatEnum {
             case "BWOV" :   return BITCOIN_WATCH_ONLY_VAULT ;
             case "BHOLD":   return BITCOIN_HOLD             ;
             case "BUNHOLD": return BITCOIN_UNHOLD           ;
+            case "CONTP" :   return CONTRACT_PURCHASE       ;
+            case "CONTS" :   return CONTRACT_SALE           ;
             case "CA"   :   return CRYPTO_ADDRESSES         ;
             case "CAB"  :   return CRYPTO_ADDRESS_BOOK      ;
             case "CB"   :   return CRYPTO_BROKER            ;
@@ -326,6 +331,7 @@ public enum Plugins implements FermatEnum {
             case "WSTA" :   return WALLET_STATISTICS        ;
             case "WST"  :   return WALLET_STORE             ;
             case "WCL"  :   return WS_CLOUD_CLIENT          ;
+            case ("CBAC"):  return CRYPTO_BROKER_ACTOR      ;
             case ("CCAC"):  return CRYPTO_CUSTOMER_ACTOR    ;
             case ("CBWA"):  return CRYPTO_BROKER_WALLET     ;
             case ("BMRE"):  return BANK_MONEY_RESTOCK       ;

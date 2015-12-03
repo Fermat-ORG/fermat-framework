@@ -40,7 +40,7 @@ public class StockTransactionCryptoMoneyDestockManager {
     }
 
     public void saveCryptoMoneyDestockTransactionData(CryptoMoneyTransaction cryptoMoneyTransaction) throws DatabaseOperationException, MissingCryptoMoneyDestockDataException {
-        getStockTransactionCryptoMoneyDestockDao().saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
+        getStockTransactionCryptoMoneyDestockDao().saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
     }
 
     public List<CryptoMoneyTransaction> getCryptoMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException{

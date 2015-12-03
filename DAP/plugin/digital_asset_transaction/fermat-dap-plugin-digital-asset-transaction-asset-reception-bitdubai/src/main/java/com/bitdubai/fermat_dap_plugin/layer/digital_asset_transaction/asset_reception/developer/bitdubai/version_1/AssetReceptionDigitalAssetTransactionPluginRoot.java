@@ -229,6 +229,11 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
             }
             //testDeveloperDatabase();
 
+            /**
+             * I will start the Monitor Agent at start up
+             */
+            this.startMonitorAgent();
+
         } catch (CantSetObjectException exception) {
             this.serviceStatus = ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset Reception plugin", "Cannot set an object, probably is null");
@@ -270,9 +275,9 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
             this.assetReceptionMonitorAgent.setActorAssetIssuerManager(this.actorAssetIssuerManager);
             this.assetReceptionMonitorAgent.setDigitalAssetReceptor(this.digitalAssetReceptor);
             this.assetReceptionMonitorAgent.start();
-        }/*else{
+        }else{
             this.assetReceptionMonitorAgent.start();
-        }*/
+        }
     }
 
     //TODO: DELETE THIS USELESS METHOD
