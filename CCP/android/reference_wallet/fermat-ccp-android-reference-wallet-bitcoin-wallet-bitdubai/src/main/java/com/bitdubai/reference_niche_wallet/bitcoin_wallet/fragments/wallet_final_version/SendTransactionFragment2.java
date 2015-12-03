@@ -201,8 +201,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         CircularProgressBar circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 
-        circularProgressBar.setProgressValue(20);
-        circularProgressBar.setProgressValue2(28);
+        circularProgressBar.setProgressValue(2);
+        circularProgressBar.setProgressValue2(3);
         circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
         circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
         circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
