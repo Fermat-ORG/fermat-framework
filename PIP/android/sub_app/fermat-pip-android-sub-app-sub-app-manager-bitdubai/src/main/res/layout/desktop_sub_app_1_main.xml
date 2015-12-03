@@ -16,7 +16,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:src="@drawable/wallet_title" />
+            android:src="@drawable/title_fin_apps" />
 
     <LinearLayout
         android:layout_width="match_parent"

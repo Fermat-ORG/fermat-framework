@@ -15,8 +15,8 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:src="@drawable/wallet_title" />
+            android:layout_height="125dp"
+            android:src="@drawable/title_sub_app" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,8 +29,8 @@
         android:paddingStart="1dp">
 
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/gridView"
+            <GridView
+                android:id="@+id/grid_view_sub_app"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
