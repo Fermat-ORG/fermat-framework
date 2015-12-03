@@ -62,6 +62,7 @@ public class CommunicationNetworkServiceDatabaseConstants {
     public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_RECEIVE_TYPE_COLUMN_NAME = "actor_receive_type";
     public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_TYPE_COLUMN_NAME = "transmissionType";
     public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME = "transmissionstate";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME = "pending_flag";
     public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TIMESTAMP_COLUMN_NAME = "timestamp";
 
     public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_FIRST_KEY_COLUMN = "transmission_id";
