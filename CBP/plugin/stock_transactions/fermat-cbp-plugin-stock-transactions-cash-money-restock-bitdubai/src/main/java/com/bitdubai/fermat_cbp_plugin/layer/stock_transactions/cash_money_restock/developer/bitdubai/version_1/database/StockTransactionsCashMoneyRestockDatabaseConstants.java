@@ -28,6 +28,8 @@ public class StockTransactionsCashMoneyRestockDatabaseConstants {
     static final String CASH_MONEY_RESTOCK_AMOUNT_COLUMN_NAME                = "amount";
     static final String CASH_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME             = "timestamp";
     static final String CASH_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME    = "transaction_status";
+    static final String CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME    = "origin_transaction";
+    static final String CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME       = "price_reference";
 
     static final String CASH_MONEY_RESTOCK_FIRST_KEY_COLUMN                  = "transaction_id";
 }

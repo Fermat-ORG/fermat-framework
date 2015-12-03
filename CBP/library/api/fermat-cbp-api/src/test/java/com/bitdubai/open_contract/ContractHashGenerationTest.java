@@ -1,9 +1,11 @@
 package com.bitdubai.open_contract;
 
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractPurchaseRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractSaleRecord;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,8 +15,8 @@ import org.junit.Test;
  */
 public class ContractHashGenerationTest {
 
-    private ContractRecord generateMockedContractRecord(){
-        ContractRecord contractRecord=new ContractRecord();
+    private ContractSaleRecord generateMockedContractRecord(){
+        ContractSaleRecord contractRecord=new ContractSaleRecord();
         contractRecord.setMerchandiseAmount(10);
         contractRecord.setMerchandiseCurrency(CurrencyType.CRYPTO_MONEY);
         contractRecord.setMerchandiseDeliveryExpirationDate(616);
@@ -25,14 +27,42 @@ public class ContractHashGenerationTest {
         contractRecord.setPublicKeyCustomer("customerPublicKey");
         contractRecord.setReferenceCurrency(ReferenceCurrency.DOLLAR);
         contractRecord.setReferencePrice(245);
-        contractRecord.setStatus(ContractStatus.CREATING_CONTRACT);
+        contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
+        contractRecord.setNegotiationId("negotiationId");
+        return contractRecord;
+    }
+
+    private ContractPurchaseRecord generateMockedContractPurchaseRecord(){
+        ContractPurchaseRecord contractRecord=new ContractPurchaseRecord();
+        contractRecord.setMerchandiseAmount(10);
+        contractRecord.setMerchandiseCurrency(CurrencyType.CRYPTO_MONEY);
+        contractRecord.setMerchandiseDeliveryExpirationDate(616);
+        contractRecord.setPaymentAmount(10);
+        contractRecord.setPaymentCurrency(CurrencyType.BANK_MONEY);
+        contractRecord.setPaymentExpirationDate(161);
+        contractRecord.setPublicKeyBroker("brokerPublicKey");
+        contractRecord.setPublicKeyCustomer("customerPublicKey");
+        contractRecord.setReferenceCurrency(ReferenceCurrency.DOLLAR);
+        contractRecord.setReferencePrice(245);
+        contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
         contractRecord.setNegotiationId("negotiationId");
         return contractRecord;
     }
 
     @Test
+    public void generationDifferentObjectTest(){
+        ContractSaleRecord saleRecord=generateMockedContractRecord();
+        saleRecord.generateContractHash();
+        System.out.println(saleRecord);
+        ContractPurchaseRecord purchaseRecord=generateMockedContractPurchaseRecord();
+        purchaseRecord.generateContractHash();
+        System.out.println(purchaseRecord);
+        Assert.assertEquals(purchaseRecord.getContractId(), saleRecord.getContractId());
+    }
+
+    @Test
     public void generationHashTest() throws Exception{
-        ContractRecord contractRecord=generateMockedContractRecord();
+        ContractSaleRecord contractRecord=generateMockedContractRecord();
         System.out.println("Contract XML\n" + contractRecord);
         String generatedHash=contractRecord.generateContractHash();
         System.out.println("Generated Hash:\n" + generatedHash);
@@ -44,7 +74,7 @@ public class ContractHashGenerationTest {
 
     @Test
     public void changeHashTest() throws Exception{
-        ContractRecord contractRecord=generateMockedContractRecord();
+        ContractSaleRecord contractRecord=generateMockedContractRecord();
         System.out.println("Contract XML\n" + contractRecord);
         String generatedHash=contractRecord.generateContractHash();
         System.out.println("Generated Hash:\n" + generatedHash);
@@ -58,7 +88,7 @@ public class ContractHashGenerationTest {
     @Test
     public void changeNegotiationIdTest() throws Exception{
         System.out.println("changeNegotiationIdTest");
-        ContractRecord contractRecord=generateMockedContractRecord();
+        ContractSaleRecord contractRecord=generateMockedContractRecord();
         System.out.println("Contract XML\n" + contractRecord);
         String generatedHash=contractRecord.generateContractHash();
         System.out.println("Generated Hash:\n" + generatedHash);

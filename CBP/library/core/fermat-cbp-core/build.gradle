@@ -25,6 +25,10 @@ dependencies {
     compile project(':fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai')
     compile project(':fermat-cbp-plugin-actor-network-service-crypto-customer-bitdubai')
 
+    //Actor
+    compile project(':fermat-cbp-plugin-actor-crypto-broker-bitdubai')
+
+    //Actor Connection
     compile project(':fermat-cbp-plugin-actor-connection-crypto-broker-bitdubai')
     compile project(':fermat-cbp-plugin-actor-connection-crypto-customer-bitdubai')
 
@@ -32,9 +36,17 @@ dependencies {
     compile project(':fermat-cbp-plugin-business-transaction-open-contract-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-close-contract-bitdubai')
 
+    //Contract
+    compile project(':fermat-cbp-plugin-contract-customer-broker-purchase-bitdubai')
+    compile project(':fermat-cbp-plugin-contract-customer-broker-sale-bitdubai')
+
     //Identity
     compile project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai')
     compile project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai')
+
+    //Negotiation
+    compile project(':fermat-cbp-plugin-negotiation-customer-broker-purchase-bitdubai')
+    compile project(':fermat-cbp-plugin-negotiation-customer-broker-sale-bitdubai')
 
     //Network Service
     compile project(':fermat-cbp-plugin-network-service-transaction-transmission-bitdubai')
@@ -57,6 +69,9 @@ dependencies {
 
     //World Layer
     compile project(':fermat-cbp-plugin-world-fiat-index-bitdubai')
+
+    //Crypto Broker Wallet
+    compile project(':fermat-cbp-plugin-wallet-crypto-broker-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

@@ -1,26 +1,25 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.AbstractOpenContract;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractPurchaseRecord;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
-import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CantGetNegotiationStatusException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CannotFindKeyValueException;
 
 import java.util.Collection;
 
@@ -33,6 +32,8 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
      * Represents the purchase contract
      */
     private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
+
+    OpenContractBusinessTransactionDao openContractBusinessTransactionDao;
 
     /**
      * Represents the purchase negotiation
@@ -50,10 +51,12 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
     private TransactionTransmissionManager transactionTransmissionManager;
 
     public OpenContractCustomerContractManager(CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-                                               TransactionTransmissionManager transactionTransmissionManager) {
+                                               TransactionTransmissionManager transactionTransmissionManager,
+                                               OpenContractBusinessTransactionDao openContractBusinessTransactionDao) {
 
         this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
         this.transactionTransmissionManager = transactionTransmissionManager;
+        this.openContractBusinessTransactionDao = openContractBusinessTransactionDao;
     }
 
 
@@ -79,16 +82,26 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
     }*/
 
     public void openContract(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-                             FiatIndex fiatIndex)throws CantOpenContractException {
+                             FiatIndex fiatIndex) throws
+            CantOpenContractException,
+            UnexpectedResultReturnedFromDatabaseException {
 
         contractType= ContractType.PURCHASE;
         try{
             //CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation= findPurchaseNegotiation(negotiationId);
             Collection<Clause> negotiationClauses=customerBrokerPurchaseNegotiation.getClauses();
-            ContractRecord contractRecord=createPurchaseContractRecord(
+            ContractPurchaseRecord contractRecord=createPurchaseContractRecord(
                     negotiationClauses,
                     customerBrokerPurchaseNegotiation,
                     fiatIndex);
+            contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
+            this.openContractBusinessTransactionDao.persistContractRecord(
+                    contractRecord,
+                    contractType);
+            customerBrokerContractPurchaseManager.createCustomerBrokerContractPurchase(contractRecord);
+            this.openContractBusinessTransactionDao.updateContractTransactionStatus(
+                    contractRecord.getContractId(),
+                    ContractTransactionStatus.PENDING_SUBMIT);
         } catch (CantGetListClauseException exception) {
             throw new CantOpenContractException(exception,
                     "Opening a new contract",
@@ -101,6 +114,18 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
             throw new CantOpenContractException(exception,
                     "Opening a new contract",
                     "Cannot get the fiat index");
+        } catch (CantInsertRecordException exception) {
+            throw new CantOpenContractException(exception,
+                    "Opening a new contract",
+                    "Cannot insert the contract record in database");
+        } catch (CantCreateCustomerBrokerContractPurchaseException exception) {
+            throw new CantOpenContractException(exception,
+                    "Opening a new contract",
+                    "Cannot create the CustomerBrokerContractPurchase");
+        }  catch (CantUpdateRecordException exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Opening a new contract",
+                    "Cannot update ContractTransactionStatus");
         }
 
     }

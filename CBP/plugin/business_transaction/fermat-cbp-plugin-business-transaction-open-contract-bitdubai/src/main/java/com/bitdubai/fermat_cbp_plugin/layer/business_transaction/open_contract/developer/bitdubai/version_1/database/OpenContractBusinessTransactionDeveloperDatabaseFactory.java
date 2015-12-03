@@ -103,13 +103,30 @@ public class OpenContractBusinessTransactionDeveloperDatabaseFactory implements 
         openContractColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_NEGOTIATION_ID_COLUMN_NAME);
         openContractColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
         openContractColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_STATUS_COLUMN_NAME);
+        openContractColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
         openContractColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSMISSION_STATUS_COLUMN_NAME);
+        openContractColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_TYPE_COLUMN_NAME);
+        openContractColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_XML_COLUMN_NAME);
+
         /**
          * Table Open Contract addition.
          */
         DeveloperDatabaseTable openContractTable = developerObjectFactory.getNewDeveloperDatabaseTable(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TABLE_NAME, openContractColumns);
         tables.add(openContractTable);
 
+        /**
+         * Events Recorder table
+         * */
+        List<String> eventsRecorderColumns = new ArrayList<String>();
+
+        eventsRecorderColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME);
+        eventsRecorderColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_EVENT_COLUMN_NAME);
+        eventsRecorderColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_SOURCE_COLUMN_NAME);
+        eventsRecorderColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME);
+        eventsRecorderColumns.add(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
+
+        DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
+        tables.add(eventsRecorderTable);
 
         return tables;
     }

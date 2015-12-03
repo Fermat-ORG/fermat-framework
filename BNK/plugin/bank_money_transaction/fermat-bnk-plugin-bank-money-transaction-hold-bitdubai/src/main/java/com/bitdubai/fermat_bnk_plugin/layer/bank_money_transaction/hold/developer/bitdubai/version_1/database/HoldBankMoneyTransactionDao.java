@@ -220,7 +220,7 @@ public class HoldBankMoneyTransactionDao {
             throw new CantCreateHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Invalid bankTransactionStatus value stored in table"
                     + HoldBankMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME + " for id " + transactionId);
         }
-        return new BankTransactionImpl(transactionId,publicKeyPlugin,publicKeyWallet,publicKeyActor,amount,accountNumber,currency,memo, BankOperationType.HOLD, TransactionType.HOLD,timestampAcknowledged);
+        return new BankTransactionImpl(transactionId,publicKeyPlugin,publicKeyWallet,publicKeyActor,amount,accountNumber,currency,memo, BankOperationType.HOLD, TransactionType.HOLD,timestampAcknowledged,transactionStatus);
         
     }
 
