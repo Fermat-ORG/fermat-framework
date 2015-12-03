@@ -231,6 +231,8 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
                             adapter.changeDataSet(lstIntraUserInformations);
                             if(lstIntraUserInformations.isEmpty()){
                                 showEmpty(true, emptyView);
+                            }else{
+                                showEmpty(false, emptyView);
                             }
                         }
                     } else
