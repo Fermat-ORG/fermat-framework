@@ -15,7 +15,7 @@ import java.util.UUID;
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
- * Created by Manuel Perez - (darkestpriest@gmail.com) on 29/11/15.
+ * Created by Manuel Perez - (darkestpriest@gmail.com) on 03/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7

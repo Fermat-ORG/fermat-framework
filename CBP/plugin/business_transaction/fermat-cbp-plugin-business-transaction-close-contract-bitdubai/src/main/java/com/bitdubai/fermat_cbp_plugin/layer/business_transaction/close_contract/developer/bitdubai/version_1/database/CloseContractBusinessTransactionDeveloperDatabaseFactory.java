@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCloseDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.exceptions.CantInitializeCloseContractBusinessTransactionDatabaseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class CloseContractBusinessTransactionDeveloperDatabaseFactory implements
               * Close new database connection
               */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
-        } catch (CantCloseDatabaseException cantCloseDatabaseException) {
+        } catch (CantOpenDatabaseException cantCloseDatabaseException) {
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
