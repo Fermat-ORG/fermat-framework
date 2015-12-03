@@ -133,13 +133,13 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
         }
 
         private void doTheMainTask() throws CantCreateActorAssetIssuerException {
-            try {
-                listByActorAssetIssuerNetworkService();
-
-            } catch (CantCreateActorAssetIssuerException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantCreateActorAssetIssuerException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET ISSUER IN ACTOR NETWORK SERVICE", e, "", "");
-            }
+//            try {
+//                listByActorAssetIssuerNetworkService();
+//
+//            } catch (CantCreateActorAssetIssuerException e) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantCreateActorAssetIssuerException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET ISSUER IN ACTOR NETWORK SERVICE", e, "", "");
+//            }
         }
 
         private void listByActorAssetIssuerNetworkService() throws CantCreateActorAssetIssuerException {
