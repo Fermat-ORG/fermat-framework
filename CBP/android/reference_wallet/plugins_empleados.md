@@ -85,15 +85,22 @@ Notas:
   - **(?) Asociar Wallet como stock** >> Settings de `Crypto Broker Wallet` 
     - Se va a registrar en una tabla que representa el setting de wallets asociadas
     - Con las wallets asociadas se conoce que mercancias se van a utilizar
-    - Se debe guardar en el setting: la plataforma, el public_key de la wallet que voy a asociar y la mercancia que maneja esa wallet. En el caso de una wallet bank se debe guardar tambien de que cuenta va a salir su stock
+    - Se debe guardar en el setting: 
+      - la plataforma
+      - el public_key de la wallet que voy a asociar
+      - la mercaderia que maneja esa wallet. 
+        - En el caso de una wallet bank se debe guardar tambien de que cuenta va a salir su stock (el stock sale de una unica cuenta)
   - **(?) Asociar Wallet como ganancia** >> Settings `Matching Engine Middleware`
   - **(?) Spread** >> Settings de `Crypto Broker Wallet`
+    - este es un setting de valor unico y es un numero entre 0 y 1 (es un porcentaje)
 
 #### Wizard Providers
   - **(A) Lista de Proveedores** >> la implementacion de la super capa CER
     - Los puedo mostrar todos sin importar que wallets he asociado. 
     - Deberia existir una interface o plugin que me perimta listarlos y obtener referencias a ellos
   - **(A) Asociar proveedores con la wallet** >> Settings de `Crypto Broker Wallet`
+    - va a ser un setting con multiples valores
+    - UUID del plugin, nombre descripyivo (esto es temporal, hasta que se confirme que va a ser asi)
 
 #### Wizard Locations
   - **(A) Agregar Locaciones** >> Settings de `Customer Broker Sale Negotiation`
@@ -107,7 +114,8 @@ Notas:
 No usa plugins, es solo Android
 
 #### Settings Merchandises
-  - **(A) Lista de Wallets** >> Settings `Crypto Broker Wallet`
+  NOTA: por ahora la public_key de la cbp wallet a de proveermela el WPD Wallet Manager, esto para hacer restock o destock, porque es uno de los parametros que necesitan esos plugins
+  - **(A) Lista de Wallets asociadas** >> `Crypto Broker Wallet` (informacion registrada como setting)
   - **(A) Hacer Restock** >> `Crypto Money Restock` o `Bank Money Restock` o `Cash Money Restock` dendiendo de la wallet devuelta
   - **(A) Hacer Destock** >> `Crypto Money Restock` o `Bank Money Restock` o `Cash Money Restock`
 
