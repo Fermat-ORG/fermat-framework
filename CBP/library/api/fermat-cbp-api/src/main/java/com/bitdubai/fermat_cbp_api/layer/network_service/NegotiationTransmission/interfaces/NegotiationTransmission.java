@@ -18,7 +18,7 @@ public interface NegotiationTransmission {
 
     UUID getNegotiationId();
 
-    NegotiationTransactionType getNegotiationTansactionType();
+    NegotiationTransactionType getNegotiationTransactionType();
 
     String getPublicKeyActorSend();
 
@@ -37,6 +37,8 @@ public interface NegotiationTransmission {
     boolean isPendingToRead();
 
     void confirmRead();
+
+    void setNegotiationTransactionType(NegotiationTransactionType negotiationTransactionType);
 
     void setTransmissionState(NegotiationTransmissionState negotiationTransmissionState);
 

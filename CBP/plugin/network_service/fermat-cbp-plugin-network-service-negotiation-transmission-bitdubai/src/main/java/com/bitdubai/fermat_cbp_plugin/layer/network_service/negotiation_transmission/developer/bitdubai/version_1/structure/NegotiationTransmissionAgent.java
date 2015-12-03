@@ -16,6 +16,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationTransmissionResponseMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -278,7 +279,7 @@ public class NegotiationTransmissionAgent {
 
     /*PRIVATE*/
     private void processReceive() {
-        /*
+
         try {
             //communicationNetworkServiceConnectionManager.
             Map<String, Object> filters = new HashMap<>();
@@ -287,7 +288,7 @@ public class NegotiationTransmissionAgent {
             //Read all pending CryptoTransmissionMetadata from database
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
             for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList){
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(negotiationTransmission.getSenderId());
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(negotiationTransmission.getPublicKeyActorSend());
                 if(communicationNetworkServiceLocal!=null){
                     System.out.print("-----------------------\n" +
                             "RECEIVING BUSINESS TRANSACTION-----------------------\n" +
@@ -297,51 +298,55 @@ public class NegotiationTransmissionAgent {
                     try {
                         switch (negotiationTransmission.getTransmissionState()) {
                             case SEEN_BY_DESTINATION_NETWORK_SERVICE:
+
                                 //TODO: revisar que se puede hacer acá
                                 System.out.println("Transaction Transmission SEEN_BY_DESTINATION_NETWORK_SERVICE---to implement");
                                 break;
 
-                            case CONFIRM_CONTRACT:
-                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Transaction Transmission CONFIRM_CONTRACT");
+                            case CONFIRM_RESPONSE:
 
+                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Transaction Transmission CONFIRM_RESPONSE");
+                                launchNotification();
+                                this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getPublicKeyActorReceive());
+                                break;
+
+                            case CONFIRM_NEGOTIATION:
+
+                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Transaction Transmission CONFIRM_CONTRACT");
                                 //this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getReceiverId());
                                 launchNotification();
                                 this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getPublicKeyActorReceive());
                                 break;
 
-                            case CONFIRM_RESPONSE:
-                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Transaction Transmission CONFIRM_RESPONSE");
-                                launchNotification();
-                                this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getPublicKeyActorReceive());
-                                break;
                             // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
                             case SENT:
 
-                                negotiationTransmission.getPublicKeyActorSend(TransactionTransmissionStates.SEEN_BY_OWN_NETWORK_SERVICE);
-                                negotiationTransmission.setBusinessTransactionTransactionType(negotiationTransmission.getType());
+                                negotiationTransmission.setTransmissionState(NegotiationTransmissionState.SEEN_BY_OWN_NETWORK_SERVICE);
+                                negotiationTransmission.setNegotiationTransactionType(negotiationTransmission.getNegotiationTransactionType());
                                 databaseDao.updateRegisterSendNegotiatioTransmission(negotiationTransmission);
 
                                 System.out.print("-----------------------\n" +
-                                        "RECEIVING BUSINESS TRANSACTION -----------------------\n" +
+                                        "RECEIVING NEGOTIATION TRANSACTION -----------------------\n" +
                                         "-----------------------\n STATE: " + negotiationTransmission.getPublicKeyActorSend());
 
                                 launchNotification();
 
-                                TransactionTransmissionResponseMessage cryptoTransmissionResponseMessage = new TransactionTransmissionResponseMessage(
+                                NegotiationTransmissionResponseMessage transmissionResponseMessage = new NegotiationTransmissionResponseMessage(
                                         negotiationTransmission.getTransactionId(),
-                                        TransactionTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE,
-                                        negotiationTransmission.getType());
+                                        NegotiationTransmissionState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
+                                        negotiationTransmission.getNegotiationTransactionType());
 
                                 Gson gson = new Gson();
-                                String message = gson.toJson(cryptoTransmissionResponseMessage);
+                                String message = gson.toJson(transmissionResponseMessage);
 
                                 // El destination soy yo porque me lo estan enviando
                                 // El sender es el otro y es a quien le voy a responder
                                 communicationNetworkServiceLocal.sendMessage(negotiationTransmission.getPublicKeyActorReceive(), negotiationTransmission.getPublicKeyActorSend(), message);
                                 System.out.print("-----------------------\n" +
                                         "SENDING ANSWER -----------------------\n" +
-                                        "-----------------------\n STATE: " + negotiationTransmission.getState());
+                                        "-----------------------\n STATE: " + negotiationTransmission.getTransmissionState());
                                 break;
+
                             default:
                                 //TODO: handle with an exception
                                 break;
@@ -354,7 +359,6 @@ public class NegotiationTransmissionAgent {
         } catch (CantReadRecordDataBaseException e) {
             e.printStackTrace();
         }
-        */
     }
 
     private void launchNotification(){

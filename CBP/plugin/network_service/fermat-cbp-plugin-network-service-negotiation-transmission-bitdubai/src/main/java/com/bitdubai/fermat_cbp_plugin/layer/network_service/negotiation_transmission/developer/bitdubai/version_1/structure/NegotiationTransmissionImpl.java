@@ -17,7 +17,7 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     private final UUID transmissionId;
     private final UUID transactionId;
     private final UUID negotiationId;
-    private final NegotiationTransactionType negotiationTansactionType;
+    private NegotiationTransactionType negotiationTansactionType;
     private final String publicKeyActorSend;
     private final PlatformComponentType actorSendType;
     private final String publicKeyActorReceive;
@@ -64,7 +64,7 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     public UUID getNegotiationId(){ return negotiationId; }
 
     @Override
-    public NegotiationTransactionType getNegotiationTansactionType(){ return negotiationTansactionType; }
+    public NegotiationTransactionType getNegotiationTransactionType(){ return negotiationTansactionType; }
 
     @Override
     public String getPublicKeyActorSend(){ return publicKeyActorSend; }
@@ -92,6 +92,9 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
 
     @Override
     public void confirmRead() { this.pendingFlag=true; }
+
+    @Override
+    public void setNegotiationTransactionType(NegotiationTransactionType type){ this.negotiationTansactionType = type;}
 
     @Override
     public void setTransmissionState(NegotiationTransmissionState state){  this.transmissionState = state; }
