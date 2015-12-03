@@ -12,8 +12,20 @@ import java.util.UUID;
  */
 
 public interface Negotiation {
+
+    String getCustomerPublicKey();
+    String getBrokerPublicKey();
+
     UUID getNegotiationId();
     Long getStartDate();
+    Long getNegotiationExpirationDate();
     NegotiationStatus getStatus();
     Collection<Clause> getClauses() throws CantGetListClauseException;
+
+
+    void setCancelReason(String cancelReason);
+    String getCancelReason();
+
+    void setMemo(String memo);
+    String getMemo();
 }
