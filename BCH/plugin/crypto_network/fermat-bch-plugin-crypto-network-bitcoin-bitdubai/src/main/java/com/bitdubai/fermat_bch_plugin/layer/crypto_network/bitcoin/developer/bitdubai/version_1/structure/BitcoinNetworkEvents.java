@@ -537,14 +537,19 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @return
      */
     private String getBlockHash(Transaction tx) {
-        for (Map.Entry<Sha256Hash, Integer> entry : tx.getAppearsInHashes().entrySet()){
-            Sha256Hash hash = entry.getKey();
-            return hash.toString();
+        try{
+            for (Map.Entry<Sha256Hash, Integer> entry : tx.getAppearsInHashes().entrySet()){
+                Sha256Hash hash = entry.getKey();
+                return hash.toString();
+            }
+            /**
+             * will return null if the transaction is not in a block
+             */
+            return null;
+        } catch (Exception e){
+            return null;
         }
-        /**
-         * will return null if the transaction is not in a block
-         */
-        return null;
+
     }
 
     /**

@@ -2,4 +2,36 @@
 <resources>
     <color name="bg_app">#000b12</color>
     <color name="blue">#0072bc</color>
+    <color name="app_background">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="cbw_activity_color">#1189a5</color>
+    <color name="cbw_status_bar_color">#0e738b</color>
+    <color name="cbw_third_line_item">#7b7b7b</color>
+    <color name="cbw_first_line_item">#343434</color>
+    <color name="cbw_second_line_item">#00b3dc</color>
+    <color name="cbw_waiting_for_broker_grouper_background">#3ec8e8</color>
+    <color name="cbw_waiting_for_customer_grouper_background">#dbdbdb</color>
+    <color name="cbw_list_divider">#a7a7a7</color>
+    <color name="cbw_grouper_text">#343434</color>
+    <color name="cbw_contract_history_background">#ffffff</color>
+    <color name="cbw_contract_history_customer_name_text">#6b7378</color>
+    <color name="cbw_contract_history_sold_text">#00b3dc</color>
+    <color name="cbw_contract_history_exchange_rate_text">#6b7378</color>
+    <color name="cbw_contract_history_date_text">#6b7378</color>
+    <color name="cbw_toolbar_start_background">#12aca0</color>
+    <color name="cbw_toolbar_end_background">#1375a7</color>
+    <color name="cbw_header_start_background">#097168</color>
+    <color name="cbw_header_end_background">#09364d</color>
+    <color name="contract_completed_list_item_background">#f3f3f3</color>
+    <color name="contract_cancelled_list_item_background">#f3f3f3</color>
+    <color name="dark_grey">#7b7b7b</color>
+    <color name="negotiation_date_text">#6b7378</color>
+    <color name="negotiation_closed_list_item_background">#c6c6c6</color>
+    <color name="negotiation_cancelled_list_item_background">#ff8b8b</color>
+    <color name="market_rate_text">#31beff</color>
+    <color name="withe">#FFFFFF</color>
+    <color name="waiting_for_text">#6b7378</color>
+    <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
+    <color name="waiting_for_customer_list_item_background">#f3f3f3</color>
 </resources>

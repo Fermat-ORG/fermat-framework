@@ -134,6 +134,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
@@ -1183,7 +1184,7 @@ public abstract class FermatActivity extends AppCompatActivity
                         break;
                     case "WPD":
                         if (activePlatforms.contains(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION)) {
-                            SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
+                            DesktopSubAppFragment subAppDesktopFragment = DesktopSubAppFragment.newInstance();
                             fragments.add(subAppDesktopFragment);
                         }
                         break;
