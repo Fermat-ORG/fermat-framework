@@ -4,24 +4,29 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatVault
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
+ * The enum <code>com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault</code>
  * Enums the crypto currency vaults in Fermat.
  * Created by Leon Acosta (laion.cj91@gmail.com) on 02/09/2015.
+ * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
  */
 public enum CryptoCurrencyVault implements FermatVaultEnum {
 
-    BITCOIN_VAULT("BITV", CryptoCurrency.BITCOIN),
+
+    /**
+     * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
+     */
+    BITCOIN_VAULT   ("BITV", CryptoCurrency.BITCOIN)
 
     ;
 
-    private String code;
+    private final String code;
 
-    private CryptoCurrency cryptoCurrency;
+    private final CryptoCurrency cryptoCurrency;
 
     CryptoCurrencyVault(String code, CryptoCurrency cryptoCurrency) {
         this.code = code;
         this.cryptoCurrency = cryptoCurrency;
     }
-
 
     public static CryptoCurrencyVault getByCode(String code) throws InvalidParameterException {
 
@@ -29,7 +34,10 @@ public enum CryptoCurrencyVault implements FermatVaultEnum {
             if (vault.getCode().equals(code))
                 return vault;
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code is not valid for the CryptoCurrencyVault enum.");
+        throw new InvalidParameterException(
+                "Code Received: " + code,
+                "This code is not valid for the CryptoCurrencyVault enum."
+        );
     }
 
     public static CryptoCurrencyVault getByCryptoCurrency(CryptoCurrency cryptoCurrency) throws InvalidParameterException {
@@ -38,7 +46,10 @@ public enum CryptoCurrencyVault implements FermatVaultEnum {
             if (vault.getCryptoCurrency().equals(cryptoCurrency))
                 return vault;
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "CryptoCurrency Received: " + cryptoCurrency, "This CryptoCurrency is not valid for the CryptoCurrencyVault enum.");
+        throw new InvalidParameterException(
+                "CryptoCurrency Received: " + cryptoCurrency,
+                "This CryptoCurrency is not valid for the CryptoCurrencyVault enum."
+        );
     }
 
     @Override

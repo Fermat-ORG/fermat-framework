@@ -21,6 +21,7 @@ dependencies {
      */
 
     compile project(':fermat-api')
+    compile project(':fermat-core-api')
 
     compile project(':fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai')
     compile project(':fermat-cbp-plugin-actor-network-service-crypto-customer-bitdubai')

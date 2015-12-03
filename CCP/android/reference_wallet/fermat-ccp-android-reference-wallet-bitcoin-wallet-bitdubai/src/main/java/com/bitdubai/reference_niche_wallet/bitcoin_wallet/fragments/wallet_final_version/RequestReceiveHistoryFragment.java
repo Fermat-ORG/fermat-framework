@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -64,6 +66,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
     String walletPublicKey = "reference_wallet";
     private View rootView;
+    private LinearLayout empty;
 
     /**
      * Create a new instance of this fragment
@@ -71,7 +74,6 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
      * @return InstalledFragment instance object
      */
     public static RequestReceiveHistoryFragment newInstance() {
-        RequestReceiveHistoryFragment requestPaymentFragment = new RequestReceiveHistoryFragment();
         return new RequestReceiveHistoryFragment();
     }
 
@@ -86,7 +88,8 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
-            lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+            //lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+            onRefresh();
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -102,6 +105,8 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             rootView = super.onCreateView(inflater, container, savedInstanceState);
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
+            empty = (LinearLayout) rootView.findViewById(R.id.empty);
+
             return rootView;
         }catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -217,6 +222,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                 lstPaymentRequest = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(lstPaymentRequest);
+                if(lstPaymentRequest.isEmpty()) FermatAnimationsUtils.showEmpty(getActivity(),true,empty);
+                else FermatAnimationsUtils.showEmpty(getActivity(),false,empty);
+
             }
         }
     }
