@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.deve
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 
 import java.util.UUID;
@@ -13,21 +14,56 @@ import java.util.UUID;
 public class BankTransactionImpl implements BankTransaction {
 
 
+    private UUID transactionId;
 
+    private String publicKeyPlugin;
+
+    private String publicKeyWallet;
+
+
+    private float amount;
+
+    private String accountNumber;
+
+    private FiatCurrency fiatCurrency;
+
+    private String memo;
+
+    private BankOperationType bankOperationType;
+
+    private TransactionType transactionType;
+
+    private long timestamp;
+
+    private BankTransactionStatus status;
+
+    public BankTransactionImpl(UUID transactionId, String publicKeyPlugin, String publicKeyWallet, float amount, String accountNumber, FiatCurrency fiatCurrency, String memo, BankOperationType bankOperationType, TransactionType transactionType, long timestamp, BankTransactionStatus status) {
+        this.transactionId = transactionId;
+        this.publicKeyPlugin = publicKeyPlugin;
+        this.publicKeyWallet = publicKeyWallet;
+        this.amount = amount;
+        this.accountNumber = accountNumber;
+        this.fiatCurrency = fiatCurrency;
+        this.memo = memo;
+        this.bankOperationType = bankOperationType;
+        this.transactionType = transactionType;
+        this.timestamp = timestamp;
+        this.status = status;
+    }
 
     @Override
     public UUID getTransactionId() {
-        return null;
+        return transactionId;
     }
 
     @Override
     public String getPublicKeyPlugin() {
-        return null;
+        return publicKeyPlugin;
     }
 
     @Override
     public String getPublicKeyWallet() {
-        return null;
+        return publicKeyWallet;
     }
 
     @Override
@@ -35,38 +71,44 @@ public class BankTransactionImpl implements BankTransaction {
         return null;
     }
 
+
     @Override
     public float getAmount() {
-        return 0;
+        return amount;
     }
 
     @Override
     public String getAccountNumber() {
-        return null;
+        return accountNumber;
     }
 
     @Override
     public FiatCurrency getCurrency() {
-        return null;
+        return fiatCurrency;
     }
 
     @Override
     public String getMemo() {
-        return null;
+        return memo;
     }
 
     @Override
     public BankOperationType getBankOperationType() {
-        return null;
+        return bankOperationType;
     }
 
     @Override
     public TransactionType getTransactionType() {
-        return null;
+        return transactionType;
     }
 
     @Override
     public long getTimestamp() {
-        return 0;
+        return timestamp;
+    }
+
+    @Override
+    public BankTransactionStatus getBankTransactionStatus() {
+        return status;
     }
 }
