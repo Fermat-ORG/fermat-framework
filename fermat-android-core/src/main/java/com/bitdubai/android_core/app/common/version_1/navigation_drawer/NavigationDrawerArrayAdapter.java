@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -79,7 +77,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         Bitmap bitmapDrawable = BitmapFactory.decodeByteArray(activeIntraUser.getProfileImage(), 0, activeIntraUser.getProfileImage().length);
                         icon.setImageBitmap(bitmapDrawable);
                     } else
-                        Picasso.with(context).load(R.drawable.profile_image).into(imageView_intra_users);
+                        Picasso.with(context).load(R.drawable.profile_image_standard).into(imageView_intra_users);
 
 
                     TextView txtView_description = (TextView) rowView.findViewById(R.id.txtView_description);

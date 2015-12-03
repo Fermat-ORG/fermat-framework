@@ -720,6 +720,31 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
     @Override
+    public List<CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
+                                                                        TransactionType transactionType,
+                                                                 String walletPublicKey,
+                                                                 String actorPublicKey,
+                                                                 String intraUserLoggedInPublicKey,
+                                                                 int max,
+                                                                 int offset) throws CantListTransactionsException {
+        try {
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
+            List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActorAndType(actorPublicKey,balanceType,transactionType,  max, offset);
+
+            for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
+            }
+
+            return cryptoWalletTransactionList;
+        } catch (CantLoadWalletException | com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException e) {
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, e);
+        } catch(Exception e){
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+    @Override
     public ActorTransactionSummary getActorTransactionHistory(BalanceType balanceType,
                                                               String walletPublicKey,
                                                               String actorPublicKey) throws CantGetActorTransactionHistoryException {
@@ -732,6 +757,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             throw new CantGetActorTransactionHistoryException(CantGetActorTransactionHistoryException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
+
+
 
 
     @Override

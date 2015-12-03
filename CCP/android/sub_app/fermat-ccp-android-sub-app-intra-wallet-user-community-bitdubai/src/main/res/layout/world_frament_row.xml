@@ -1,40 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width= "120dp"
-    android:layout_height="120dp"
-    android:padding="2dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
     android:background="#d9d6d6"
-    >
-    <com.bitdubai.fermat_android_api.ui.Views.SquareImageView android:id="@+id/profile_Image"
-        android:layout_width="match_parent"
-        android:src="@drawable/profile_image"
-        android:scaleType="centerCrop"
-        android:layout_height="match_parent"/>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:paddingTop="3dip">
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="#d9d6d6">
+
+        <com.bitdubai.fermat_android_api.ui.Views.SquareImageView
+            android:id="@+id/profile_Image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/profile_image" />
+
+        <ImageView
+            android:id="@+id/imageView_connection"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_action_add_person_grey"
+            android:visibility="gone"
+            tools:ignore="ContentDescription" />
+
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:background="@color/black_overlay"
             android:id="@+id/community_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFFFF"
-            android:textSize="12sp"
-            android:textStyle="bold"
+            android:layout_alignParentBottom="true"
+            android:background="#B3000000"
+            android:gravity="start"
+            android:paddingBottom="2dip"
+            android:paddingLeft="8dp"
             android:text="Anna"
-            android:gravity="center"
-            android:paddingBottom="2dip"/>
-    </FrameLayout>
+            android:textColor="#FFFFFFFF"
+            android:textSize="16sp"
+            app:typeface="ROBOTO_REGULAR" />
 
-    <ImageView
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:id="@+id/imageView_connection"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:src="@drawable/ic_action_add_person_grey"
-        android:visibility="gone"/>
-</RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fffff4"
+        android:orientation="vertical"
+        android:paddingLeft="8dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/community_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:text="Unknow"
+            android:textColor="#4d4d4d"
+            android:textSize="14sp"
+            app:typeface="ROBOTO_REGULAR" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/community_country"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Unknow"
+            android:textAllCaps="true"
+            android:textColor="#0072bc"
+            android:textSize="14sp"
+            app:typeface="ROBOTO_REGULAR" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:paddingLeft="7dp"
         android:paddingRight="7dp">
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,24 +19,19 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:scaleType="centerCrop"
-                android:layout_alignParentTop="true"
-                android:layout_column="2"
+                android:layout_gravity="center_horizontal"
                 android:clickable="true"
                 android:src="@drawable/ic_03"
 
                 />
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView android:text="App Name"
-                android:layout_width="fill_parent"
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/company_text_view"
-                android:layout_below="@+id/image12"
-                android:layout_centerHorizontal="true"
-                android:layout_column="2"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:textSize="12sp"
-                android:singleLine="true"
-                app:typeface="ROBOTO_REGULAR"
+                android:textSize="13sp"
+                app:typeface="CAVIAR_DREAMS"
                 android:textColor="#ffffff" />
         </LinearLayout>
     </RelativeLayout>

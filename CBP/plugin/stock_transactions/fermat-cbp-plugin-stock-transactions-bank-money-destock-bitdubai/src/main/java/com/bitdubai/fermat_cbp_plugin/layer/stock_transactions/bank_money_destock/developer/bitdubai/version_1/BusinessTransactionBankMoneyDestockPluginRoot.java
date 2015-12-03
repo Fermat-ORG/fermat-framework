@@ -26,9 +26,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.interfaces.UnholdManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
-import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.database.BusinessTransactionBankMoneyDestockDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.database.BusinessTransactionBankMoneyDestockDeveloperFactory;
@@ -76,7 +77,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
     //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    //@NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.CRYPTO_WALLET)
+    @NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.BANK_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION)
     UnholdManager unHoldManager;
 
 
@@ -142,7 +143,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
     }
 
     @Override
-    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, float amount, String memo) throws CantCreateBankMoneyDestockException {
+    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, float amount, String memo, float priceReference, OriginTransaction originTransaction) throws CantCreateBankMoneyDestockException {
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         BankMoneyDestockTransactionImpl bankMoneyRestockTransaction = new BankMoneyDestockTransactionImpl(
@@ -156,7 +157,9 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
                 bankAccount,
                 amount,
                 timestamp,
-                TransactionStatusRestockDestock.INIT_TRANSACTION);
+                TransactionStatusRestockDestock.INIT_TRANSACTION,
+                priceReference,
+                originTransaction);
 
         try {
             stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyRestockTransaction);
@@ -187,7 +190,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
 
     private void testDestock(){
         try {
-            createTransactionDestock("actorPublicKey", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpwalletPublicKey", "bnkWalletPublicKey","account", 250, "memo");
+            createTransactionDestock("actorPublicKey", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpwalletPublicKey", "bnkWalletPublicKey", "account", 250, "memo", 250, OriginTransaction.STOCK_INITIAL);
         } catch (CantCreateBankMoneyDestockException e) {
             e.printStackTrace();
         }

@@ -76,6 +76,9 @@ dependencies {
     //World Layer
     compile project(':fermat-cbp-plugin-world-fiat-index-bitdubai')
 
+    //Crypto Broker Wallet
+    compile project(':fermat-cbp-plugin-wallet-crypto-broker-bitdubai')
+
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
