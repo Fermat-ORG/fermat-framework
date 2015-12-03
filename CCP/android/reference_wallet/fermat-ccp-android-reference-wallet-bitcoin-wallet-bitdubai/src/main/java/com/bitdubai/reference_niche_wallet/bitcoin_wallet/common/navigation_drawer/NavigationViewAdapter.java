@@ -111,7 +111,7 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
             }
 
             if(position==4){
-                holder.getRow_container().setVisibility(View.GONE);
+                holder.getNavigation_row_divider().setVisibility(View.GONE);
             }
         }catch (Exception e){
             e.printStackTrace();
