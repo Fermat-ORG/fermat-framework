@@ -36,7 +36,7 @@
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="25">
+                android:layout_weight="20">
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager"
@@ -72,10 +72,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="95dp"
             android:orientation="vertical"
-            android:paddingBottom="2dp"
-            android:paddingEnd="1dp"
             android:paddingLeft="1dp"
             android:paddingRight="1dp"
             android:paddingStart="1dp"
@@ -87,7 +85,9 @@
                 android:id="@+id/bottom_navigation_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:overScrollMode="never"/>
+                android:overScrollMode="never"
+                android:layout_gravity="center"
+                />
 
 
 
