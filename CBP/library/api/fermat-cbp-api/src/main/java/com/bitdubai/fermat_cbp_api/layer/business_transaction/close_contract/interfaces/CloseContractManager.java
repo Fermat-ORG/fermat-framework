@@ -16,19 +16,19 @@ public interface CloseContractManager extends FermatManager {
     /**
      * This method closes a  contract for a Customer Broker Sale Transaction
      */
-    void openSaleContract() throws CantCloseContractException;
+    void openSaleContract(String contractHash) throws CantCloseContractException;
 
     /**
      * This method closes a new contract for a Customer Broker Purchase Transaction
      *
      */
-    void openPurchaseContract()throws CantCloseContractException;
+    void openPurchaseContract(String contractHash)throws CantCloseContractException;
 
     /**
      * This method returns the status from the Close Contract Business Transaction.
-     * @param negotiationId
+     * @param contractHash
      * @return
      */
-    ContractTransactionStatus getOpenContractStatus(String negotiationId) throws UnexpectedResultReturnedFromDatabaseException;
+    ContractTransactionStatus getOpenContractStatus(String contractHash) throws UnexpectedResultReturnedFromDatabaseException;
 
 }
