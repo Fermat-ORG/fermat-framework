@@ -413,7 +413,7 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
 
         private void checkTransactionsByReceptionStatus(ReceptionStatus receptionStatus) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException, CantCheckAssetReceptionProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantExecuteQueryException {
             DistributionStatus distributionStatus = DistributionStatus.ASSET_REJECTED_BY_CONTRACT;
-            ActorAssetIssuer actorAssetIssuer;
+//            ActorAssetIssuer actorAssetIssuer;
             List<String> genesisTransactionList;
             String senderId;
             ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser();
@@ -431,10 +431,10 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 System.out.println("ASSET RECEPTION Genesis transaction " + receptionStatus + ":" + genesisTransaction);
                 senderId = assetReceptionDao.getSenderIdByGenesisTransaction(genesisTransaction);
                 System.out.println("ASSET RECEPTION sender id  " + senderId);
-                actorAssetIssuer = getActorAssetIssuer(senderId);
+//                actorAssetIssuer = getActorAssetIssuer(senderId);
                 assetTransmissionManager.sendTransactionNewStatusNotification(
                         actorAssetUser,
-                        actorAssetIssuer,
+                        senderId,
                         genesisTransaction,
                         distributionStatus);
                 assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.RECEPTION_FINISHED, genesisTransaction);

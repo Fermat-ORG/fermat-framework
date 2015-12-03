@@ -130,7 +130,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdu
         private final IncomingExtraUserRegistry registry;
         private IncomingExtraUserTransactionHandler transactionHandler;
 
-        private static final int SLEEP_TIME = 5000;
+        private static final int SLEEP_TIME = 10000;
 
         public RelayAgent(final BitcoinWalletManager bitcoinWalletManager, final CryptoAddressBookManager cryptoAddressBookManager, final ErrorManager errorManager,EventManager eventManager, final IncomingExtraUserRegistry registry){
             this.bitcoinWalletManager = bitcoinWalletManager;

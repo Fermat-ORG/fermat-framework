@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#010c12"
     android:gravity="center"
     android:orientation="vertical">
-
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
@@ -19,11 +20,44 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/gridView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
+            android:layout_height="match_parent"
+            android:layout_margin="0.5dp"
+            tools:listitem="@layout/world_frament_row" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#010c12"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/img_home_empty"
+            tools:ignore="ContentDescription" />
 
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="there are no users"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="available"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
 
 </RelativeLayout>

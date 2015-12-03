@@ -50,7 +50,8 @@
                 android:layout_gravity="center_horizontal|bottom"
                 android:orientation="horizontal"
                 android:id="@+id/radiogroup"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:paddingBottom="12dp">
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -65,17 +66,6 @@
                     android:button="@drawable/pager_selector"
                     android:id="@+id/radioButton2" />
 
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@drawable/pager_selector"
-                    android:id="@+id/radioButton3" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@drawable/pager_selector"
-                    android:id="@+id/radioButton4" />
             </RadioGroup>
 
         </FrameLayout>
@@ -85,12 +75,12 @@
             android:layout_height="100dp"
             android:orientation="vertical"
             android:paddingBottom="2dp"
-            android:paddingTop="5dp"
             android:paddingEnd="1dp"
             android:paddingLeft="1dp"
             android:paddingRight="1dp"
             android:paddingStart="1dp"
-            android:id="@+id/bottom_navigation_container">
+            android:id="@+id/bottom_navigation_container"
+            >
 
 
             <android.support.v7.widget.RecyclerView

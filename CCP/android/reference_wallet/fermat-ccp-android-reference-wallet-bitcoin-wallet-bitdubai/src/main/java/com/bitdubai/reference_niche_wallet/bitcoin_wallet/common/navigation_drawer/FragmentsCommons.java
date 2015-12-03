@@ -1,12 +1,11 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -16,7 +15,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserL
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by mati on 2015.11.12..
+ * Created by Matias Furszyfer on 2015.11.12..
  */
 public class FragmentsCommons {
 
@@ -28,9 +27,11 @@ public class FragmentsCommons {
             if (intraUserLoginIdentity != null) {
                 if (intraUserLoginIdentity.getProfileImage() != null) {
                     if (intraUserLoginIdentity.getProfileImage().length > 0) {
-                        imageView.setImageBitmap((BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length)));
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length);
+                        bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
+                        imageView.setImageBitmap(bitmap);
                     } else
-                        Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
+                        Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
                 }
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
                 fermatTextView.setText(intraUserLoginIdentity.getAlias());

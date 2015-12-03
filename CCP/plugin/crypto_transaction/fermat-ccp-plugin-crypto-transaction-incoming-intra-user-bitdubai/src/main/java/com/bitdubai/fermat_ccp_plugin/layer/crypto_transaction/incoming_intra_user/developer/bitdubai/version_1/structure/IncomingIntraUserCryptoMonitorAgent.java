@@ -89,7 +89,7 @@ public class IncomingIntraUserCryptoMonitorAgent {
         private com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserCryptoSourceAdministrator sourceAdministrator;
 
 
-        private static final int SLEEP_TIME = 5000;
+        private static final int SLEEP_TIME = 10000;
 
         /**
          * MonitorAgent methods.
