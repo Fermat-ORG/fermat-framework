@@ -78,12 +78,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
-     //public static final String SERVER_IP = "52.34.94.176"; //AWS PAID INSTANCE
-     public static final String SERVER_IP = "52.35.64.221"; //AWS FREE INSTANCE
-
-    //public static final String SERVER_IP = "192.168.0.103";
-
-
+    /***************************************************************************************************/
+     public static final String SERVER_IP = "52.35.64.221"; //Do not change this when pulling to bitDubai
+    /***************************************************************************************************/
 
     /**
      * Represent the DEFAULT_PORT

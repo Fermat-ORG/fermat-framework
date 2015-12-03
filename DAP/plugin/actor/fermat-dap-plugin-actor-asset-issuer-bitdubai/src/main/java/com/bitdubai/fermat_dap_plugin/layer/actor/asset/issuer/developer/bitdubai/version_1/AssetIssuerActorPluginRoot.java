@@ -110,7 +110,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             /**
              * Agent for Search Actor Asset User REGISTERED in Actor Network Service User
              */
-            startMonitorAgent();
+//            startMonitorAgent();
 
             this.serviceStatus = ServiceStatus.STARTED;
 
@@ -178,6 +178,15 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             throw new CantCreateActorAssetIssuerException("CAN'T GET ACTOR ASSET ISSUER", e, "", "");
         } catch (Exception e) {
             throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER unknow Cause", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    @Override
+    public void createActorAssetIssuerRegisterInNetworkService(List<ActorAssetIssuer> actorAssetIssuers) throws CantCreateActorAssetIssuerException {
+        try {
+            assetIssuerActorDao.createNewAssetIssuerRegisterInNetworkServiceByList(actorAssetIssuers);
+        } catch (CantAddPendingAssetIssuerException e) {
+            throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER REGISTERED", e, "", "");
         }
     }
 
