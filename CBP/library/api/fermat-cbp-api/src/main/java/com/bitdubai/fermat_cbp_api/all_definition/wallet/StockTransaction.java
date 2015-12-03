@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.all_definition.wallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 
 import java.util.UUID;
@@ -11,10 +12,9 @@ import java.util.UUID;
  * Created by jorge on 30-09-2015.
  */
 public interface StockTransaction {
+    //TODO: Documentar
 
     UUID getTransactionId();
-
-//    UUID getContractId();
 
     BalanceType getBalanceType();
 
@@ -26,11 +26,15 @@ public interface StockTransaction {
 
     String getWalletPublicKey();
 
-    String getOwnerPublicKey();
+    String getBrokerPublicKey();
 
     float getAmount();
 
     long getTimestamp();
 
     String getMemo();
+
+    float getPriceReference();
+
+    OriginTransaction getOriginTransaction();
 }

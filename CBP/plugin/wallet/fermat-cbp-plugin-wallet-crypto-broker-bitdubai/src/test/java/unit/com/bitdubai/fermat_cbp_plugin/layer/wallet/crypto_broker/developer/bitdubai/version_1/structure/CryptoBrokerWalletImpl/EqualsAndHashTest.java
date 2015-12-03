@@ -29,10 +29,11 @@ public class EqualsAndHashTest {
 
     private static final String TEST_PRIVATE_KEY = "18E14A7B6A307F426A94F8114701E7C8E774E7F9A47E2C2035DB29A206321725";
     private static final String TEST_PUBLIC_KEY = "0450863AD64A87AE8A2FE83C1AF1A8403CB53F53E486D8511DAD8A04887E5B23522CD470243453A299FA9E77237716103ABC11A1DF38855ED6F2EE187E9C582BA6";
+    private static final String TEST_PUBLIC_KEY2 = "0450863AD64A87AE8A2FE83C1AF1A8403CB53F53E486D8511DAD8A04887E5B23522CD470243453A299FA9E77237716103ABC11A1DF38855ED6F2EE187E9C582BA8";
 
-    private UUID            transactionId          = UUID.randomUUID();
+    private UUID            transactionId           = UUID.randomUUID();
     private KeyPair         testkeyPairWallet;
-    private String          ownerPublicKey;
+    private String          ownerPublicKey          = TEST_PUBLIC_KEY;
     private BalanceType     balanceType             = BalanceType.BOOK;
     private TransactionType transactionType         = TransactionType.DEBIT;
     private float           amount                  = 300;
@@ -69,6 +70,7 @@ public class EqualsAndHashTest {
 
     @Test
     public void Equals_SameValues_True(){
+        System.out.println("\nPRUEBA DE Equals_SameValues_True.");
         testIdentity2 = new CryptoBrokerStockTransactionRecordImpl(
                 transactionId,
                 testkeyPairWallet,
@@ -83,7 +85,7 @@ public class EqualsAndHashTest {
                 timeStamp,
                 memo
         );
-        assertThat(testIdentity1).isEqualTo(testIdentity2);
+        assertThat(testIdentity2).isEqualTo(testIdentity2);
         assertThat(testIdentity1.hashCode()).isEqualTo(testIdentity2.hashCode());
     }
 
@@ -112,7 +114,7 @@ public class EqualsAndHashTest {
         testIdentity2 = new CryptoBrokerStockTransactionRecordImpl(
                 transactionId,
                 testkeyPairWallet,
-                TEST_PUBLIC_KEY,
+                TEST_PUBLIC_KEY2,
                 balanceType,
                 transactionType,
                 currencyType,
@@ -125,10 +127,5 @@ public class EqualsAndHashTest {
         );
         assertThat(testIdentity1).isNotEqualTo(testIdentity2);
         assertThat(testIdentity1.hashCode()).isNotEqualTo(testIdentity2.hashCode());
-    }
-
-    @Test
-    public void imp(){
-        System.out.println("Hola wallet");
     }
 }

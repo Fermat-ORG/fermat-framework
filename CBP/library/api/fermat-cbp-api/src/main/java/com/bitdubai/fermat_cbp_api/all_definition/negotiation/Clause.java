@@ -7,11 +7,14 @@ import java.util.UUID;
 
 /**
  * Created by jorge on 12-10-2015.
+ * Update by Angel on 29/11/2015
  */
+
 public interface Clause {
-    UUID getClauseId();
-    ClauseType getType();
-    String getValue();
-    ClauseStatus getStatus();
-    String getProposedBy();
+    UUID            getClauseId();
+    ClauseType      getType();
+    String          getValue();
+    ClauseStatus    getStatus();
+    String          getProposedBy();
+    short           getIndexOrdery();
 }

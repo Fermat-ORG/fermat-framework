@@ -11,7 +11,7 @@ import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTra
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantGetHoldTransactionException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantCreateUnholdTransactionException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantInitializeUnholdBankMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantUpdateUnholdTransactionException;
@@ -76,24 +76,24 @@ public class UnholdBankMoneyTransactionDao {
         return constructUnholdTransactionFromRecord(newRecord);
     }
 
-    public BankTransaction getUnholdTransaction(UUID transactionId) throws CantGetHoldTransactionException {
+    public BankTransaction getUnholdTransaction(UUID transactionId) throws CantGetUnholdTransactionException {
         DatabaseTableRecord record;
         BankTransaction HoldTransaction;
         try {
             record = getRecordByPrimaryKey(transactionId);
             HoldTransaction = constructUnholdTransactionFromRecord(record);
         } catch (CantLoadTableToMemoryException e){
-            throw new CantGetHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Cannot load table into memory");
+            throw new CantGetUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Cannot load table into memory");
         } catch (UnholdBankMoneyTransactionInconsistentTableStateException e) {
-            throw new CantGetHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Inconsistent number of fetched records, should be between 0 and 1.");
+            throw new CantGetUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Inconsistent number of fetched records, should be between 0 and 1.");
         } catch (CantCreateUnholdTransactionException e) {
-            throw new CantGetHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Failed while constructing transaction from record.");
+            throw new CantGetUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Failed while constructing transaction from record.");
         }
 
         return HoldTransaction;
     }
 
-    public List<BankTransaction> getUnholdTransactionList(DatabaseTableFilter filter) throws CantGetHoldTransactionException
+    public List<BankTransaction> getUnholdTransactionList(DatabaseTableFilter filter) throws CantGetUnholdTransactionException
     {
         List<BankTransaction> transactions = new ArrayList<>();
         try {
@@ -102,14 +102,14 @@ public class UnholdBankMoneyTransactionDao {
                 transactions.add(transaction);
             }
         } catch (CantCreateUnholdTransactionException e) {
-            throw new CantGetHoldTransactionException(CantGetHoldTransactionException.DEFAULT_MESSAGE, e, "Failed to get Cash Hold Transaction list. Filter: " + filter.toString(), "");
+            throw new CantGetUnholdTransactionException(CantGetUnholdTransactionException.DEFAULT_MESSAGE, e, "Failed to get Cash Hold Transaction list. Filter: " + filter.toString(), "");
         }catch (CantLoadTableToMemoryException e) {
-            throw new CantGetHoldTransactionException(CantGetHoldTransactionException.DEFAULT_MESSAGE, e, "Failed to get Cash Hold Transaction list. Filter: " + filter.toString(), "");
+            throw new CantGetUnholdTransactionException(CantGetUnholdTransactionException.DEFAULT_MESSAGE, e, "Failed to get Cash Hold Transaction list. Filter: " + filter.toString(), "");
         }
         return transactions;
     }
 
-    public List<BankTransaction> getAcknowledgedTransactionList() throws CantGetHoldTransactionException
+    public List<BankTransaction> getAcknowledgedTransactionList() throws CantGetUnholdTransactionException
     {
         DatabaseTableFilter filter = getEmptyHoldTableFilter();
         filter.setColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME);
@@ -217,7 +217,7 @@ public class UnholdBankMoneyTransactionDao {
             throw new CantCreateUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Invalid CashTransactionStatus value stored in table"
                     + UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME + " for id " + transactionId);
         }
-        return new BankTransactionImpl(transactionId,publicKeyPlugin,publicKeyWallet,publicKeyActor,amount,accountNumber,currency,memo, BankOperationType.HOLD, TransactionType.HOLD,timestampAcknowledged);
+        return new BankTransactionImpl(transactionId,publicKeyPlugin,publicKeyWallet,publicKeyActor,amount,accountNumber,currency,memo, BankOperationType.HOLD, TransactionType.HOLD,timestampAcknowledged,transactionStatus);
 
     }
 
