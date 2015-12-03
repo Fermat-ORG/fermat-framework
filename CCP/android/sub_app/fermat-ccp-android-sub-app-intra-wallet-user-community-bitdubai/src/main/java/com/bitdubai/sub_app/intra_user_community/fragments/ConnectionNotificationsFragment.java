@@ -201,7 +201,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
         try {
-            moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(),data.getName(),data.getPublicKey(),null);
+            moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(),data.getName(),data.getPublicKey(),data.getProfileImage());
             Toast.makeText(getActivity(),"Aceptado,\njose esto lo hice porque me lo dejaste mal y tengo que probar lo mio",Toast.LENGTH_SHORT).show();
         } catch (CantAcceptRequestException e) {
             e.printStackTrace();
@@ -217,7 +217,6 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
 
     /**
      * @param show
-     * @param view instance
      */
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),

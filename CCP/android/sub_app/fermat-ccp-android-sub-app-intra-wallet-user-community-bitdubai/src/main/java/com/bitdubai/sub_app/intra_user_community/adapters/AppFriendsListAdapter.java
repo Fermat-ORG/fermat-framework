@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.intra_user_community.adapters;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -22,8 +23,8 @@ public class AppFriendsListAdapter extends FermatAdapter<IntraUserInformation, A
     }
 
     @Override
-    protected AppFriendsListHolder createHolder(View itemView, int type) {
-        return null;
+    public AppFriendsListHolder createHolder(View itemView, int type) {
+        return new AppFriendsListHolder(itemView);
     }
 
     @Override

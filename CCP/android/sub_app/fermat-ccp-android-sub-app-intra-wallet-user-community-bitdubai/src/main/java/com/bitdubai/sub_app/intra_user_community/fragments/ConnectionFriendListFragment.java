@@ -137,7 +137,7 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
+                            lstIntraUserInformations = (List<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
                             if (lstIntraUserInformations.isEmpty()) {
                                 showEmpty(true, emptyView);
@@ -167,12 +167,12 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
         }
     }
 
-    private synchronized ArrayList<IntraUserInformation> getMoreData() {
-        ArrayList<IntraUserInformation> dataSet = new ArrayList<>();
+    private synchronized List<IntraUserInformation> getMoreData() {
+        List<IntraUserInformation> dataSet = new ArrayList<>();
 
         try {
 
-            dataSet.addAll(moduleManager.getIntraUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
+            dataSet.addAll(moduleManager.getAllIntraUsers(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
             //offset = dataSet.size();
 //
 //            lstIntraUserInformations.addAll(moduleManager.getIntraUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
