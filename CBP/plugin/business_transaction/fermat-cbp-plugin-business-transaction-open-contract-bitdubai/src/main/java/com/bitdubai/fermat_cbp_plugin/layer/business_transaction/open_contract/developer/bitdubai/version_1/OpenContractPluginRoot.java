@@ -32,13 +32,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingNewContractStatusUpdate;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.event_handler.OpenContractRecorderService;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure.OpenContractMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure.OpenContractTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -228,9 +229,23 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     eventManager);
             openContractRecorderService.start();
 
+            /**
+             * Init monitor Agent
+             */
+            OpenContractMonitorAgent openContractMonitorAgent=new OpenContractMonitorAgent(
+                    pluginDatabaseSystem,
+                    logManager,
+                    errorManager,
+                    eventManager,
+                    pluginId,
+                    transactionTransmissionManager,
+                    customerBrokerContractPurchaseManager,
+                    customerBrokerContractSaleManager);
+            openContractMonitorAgent.start();
+
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.println("Starting Open Contract Business Transaction");
-            launchNotificationTest();
+            //launchNotificationTest();
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Starting open contract plugin", "Unexpected Exception");
         }
@@ -303,10 +318,10 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
     }
 
     private void launchNotificationTest(){
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
-        IncomingNewContractStatusUpdate incomingNewContractStatusUpdate = (IncomingNewContractStatusUpdate) fermatEvent;
-        incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
-        eventManager.raiseEvent(incomingNewContractStatusUpdate);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+        IncomingConfirmBusinessTransactionResponse incomingConfirmBusinessTransactionResponse = (IncomingConfirmBusinessTransactionResponse) fermatEvent;
+        incomingConfirmBusinessTransactionResponse.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+        eventManager.raiseEvent(incomingConfirmBusinessTransactionResponse);
     }
 
 }

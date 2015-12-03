@@ -10,6 +10,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectExcept
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingBusinessTransactionContractHash;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingConfirmBusinessTransactionContract;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingNewContractStatusUpdate;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -72,11 +73,11 @@ public class OpenContractRecorderService implements CBPService {
         //LOG.info("CHECK THE DATABASE");
     }
 
-    public void incomingNewContractStatusUpdateEventHandler(IncomingNewContractStatusUpdate event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+    public void incomingConfirmBusinessTransactionResponse(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
+        Logger LOG = Logger.getGlobal();
+        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.openContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
+        LOG.info("CHECK THE DATABASE");
     }
 
     @Override
@@ -102,9 +103,9 @@ public class OpenContractRecorderService implements CBPService {
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
-            fermatEventHandler = new IncomingNewContractStatusUpdateEventHandler();
-            ((IncomingNewContractStatusUpdateEventHandler) fermatEventHandler).setOpenContractRecorderService(this);
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+            fermatEventHandler = new IncomingConfirmBusinessTransactionResponseEventHandler();
+            ((IncomingConfirmBusinessTransactionResponseEventHandler) fermatEventHandler).setOpenContractRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);

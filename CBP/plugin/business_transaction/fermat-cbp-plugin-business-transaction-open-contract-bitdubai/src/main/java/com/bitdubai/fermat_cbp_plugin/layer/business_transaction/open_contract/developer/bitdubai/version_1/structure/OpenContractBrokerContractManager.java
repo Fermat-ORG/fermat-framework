@@ -129,10 +129,6 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Opening a new contract",
                     "Cannot update ContractTransactionStatus");
-        } catch (CannotFindKeyValueException exception) {
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                    "Opening a new contract",
-                    "Cannot find the contract status in database");
         }
 
     }
