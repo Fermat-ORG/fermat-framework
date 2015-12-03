@@ -67,6 +67,13 @@ public class SideMenu implements FermatSideMenu {
         return hasFooter;
     }
 
+    @Override
+    public void clearSelected() {
+        for(MenuItem item : menuItems){
+            item.setSelected(false);
+        }
+    }
+
     public void setHasFooter(boolean hasFooter) {
         this.hasFooter = hasFooter;
     }
