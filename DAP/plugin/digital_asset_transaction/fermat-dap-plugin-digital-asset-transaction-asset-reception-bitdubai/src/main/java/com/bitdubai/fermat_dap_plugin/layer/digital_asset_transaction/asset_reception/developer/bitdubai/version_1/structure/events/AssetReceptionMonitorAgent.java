@@ -357,7 +357,7 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 System.out.println("ASSET RECEPTION event Id: " + eventId);
                 eventType = assetReceptionDao.getEventTypeById(eventId);
                 System.out.println("ASSET RECEPTION event Type: " + eventType);
-                if (eventType.equals(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER.getCode())) {
+                if (eventType.equals(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER.getCode())) {
                     if (isTransactionToBeNotified(CryptoStatus.PENDING_SUBMIT)) {
                         genesisTransactionList = assetReceptionDao.getGenesisTransactionListByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
                         System.out.println("ASSET RECEPTION genesisTransactionList on pending submit has " + genesisTransactionList.size() + " events");
@@ -378,7 +378,7 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                         assetReceptionDao.updateEventStatus(eventId);
                     }
                 }
-                if (eventType.equals(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER.getCode())) {
+                if (eventType.equals(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER.getCode())) {
                     if (isTransactionToBeNotified(CryptoStatus.ON_CRYPTO_NETWORK)) {
                         genesisTransactionList = assetReceptionDao.getGenesisTransactionListByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                         System.out.println("ASSET RECEPTION genesisTransactionList has " + genesisTransactionList.size() + " events");
@@ -402,10 +402,10 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                         assetReceptionDao.updateEventStatus(eventId);
                     }
                 }
-                if (eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER)) {
+                if (eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)) {
                     //TODO: to handle
                 }
-                if (eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER)) {
+                if (eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)) {
                     //TODO: to handle
                 }
             }
