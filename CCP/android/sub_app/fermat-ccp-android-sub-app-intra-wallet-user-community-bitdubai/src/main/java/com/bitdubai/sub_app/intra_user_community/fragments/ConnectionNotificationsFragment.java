@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by josemanueldsds on 29/11/15.
+ * Creado por Jose manuel De Sousa el 30/11/2015
  */
 public class ConnectionNotificationsFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
@@ -80,20 +80,11 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
-
-
-    /**
-     * Fragment Class implementation.
-     */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         try {
-
             rootView = inflater.inflate(R.layout.intra_user_notification_center, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
@@ -146,28 +137,13 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
 //        /**
 //         * add navigation header
 //         */
-//        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
 //
 //        /**
 //         * Navigation view items
 //         */
-//        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null);
-//        setNavigationDrawer(navigationViewAdapter);
-    }
-
-    public void showEmpty(boolean show, View emptyView) {
-        Animation anim = AnimationUtils.loadAnimation(getActivity(),
-                show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show &&
-                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
-            if (adapter != null)
-                adapter.changeDataSet(null);
-        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
-        }
+        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
+        setNavigationDrawer(navigationViewAdapter);
     }
 
     @Override
@@ -191,8 +167,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            List<IntraUserInformation> lst = (ArrayList<IntraUserInformation>) result[0];
-                            lstIntraUserInformations = lst;
+                            lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
                             if (lstIntraUserInformations.isEmpty()) {
                                 showEmpty(true, emptyView);
@@ -238,5 +213,24 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
     @Override
     public void onLongItemClickListener(IntraUserInformation data, int position) {
 
+    }
+
+    /**
+     * @param show
+     * @param view instance
+     */
+    public void showEmpty(boolean show, View emptyView) {
+        Animation anim = AnimationUtils.loadAnimation(getActivity(),
+                show ? android.R.anim.fade_in : android.R.anim.fade_out);
+        if (show &&
+                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.VISIBLE);
+            if (adapter != null)
+                adapter.changeDataSet(null);
+        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.GONE);
+        }
     }
 }
