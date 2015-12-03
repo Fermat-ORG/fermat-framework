@@ -130,28 +130,28 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent{
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
-                        try {
-                            WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(bankMoneyTransaction.getTransactionId(),
-                                    null,
-                                    BalanceType.AVAILABLE,
-                                    TransactionType.CREDIT,
-                                    CurrencyType.BANK_MONEY,
-                                    bankMoneyTransaction.getCbpWalletPublicKey(),
-                                    bankMoneyTransaction.getActorPublicKey(),
-                                    bankMoneyTransaction.getAmount(),
-                                    new Date().getTime() / 1000,
-                                    bankMoneyTransaction.getConcept());
-
-                            cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
-
-                            bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
-                            stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
-
-                        } catch (CantPerformTransactionException e) {
-                            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-                        } catch (CryptoBrokerWalletNotFoundException e) {
-                            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-                        }
+//                        try {
+//                            WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(bankMoneyTransaction.getTransactionId(),
+//                                    null,
+//                                    BalanceType.AVAILABLE,
+//                                    TransactionType.CREDIT,
+//                                    CurrencyType.BANK_MONEY,
+//                                    bankMoneyTransaction.getCbpWalletPublicKey(),
+//                                    bankMoneyTransaction.getActorPublicKey(),
+//                                    bankMoneyTransaction.getAmount(),
+//                                    new Date().getTime() / 1000,
+//                                    bankMoneyTransaction.getConcept());
+//
+//                            cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
+//
+//                            bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
+//                            stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
+//
+//                        } catch (CantPerformTransactionException e) {
+//                            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+//                        } catch (CryptoBrokerWalletNotFoundException e) {
+//                            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+//                        }
                         break;
                     case IN_UNHOLD:
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
