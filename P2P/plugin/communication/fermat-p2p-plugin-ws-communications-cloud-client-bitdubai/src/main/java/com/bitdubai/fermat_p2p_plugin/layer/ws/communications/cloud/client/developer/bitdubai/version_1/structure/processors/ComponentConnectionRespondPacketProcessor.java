@@ -13,6 +13,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -77,7 +78,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             stringTokenizer.nextElement();
             stringTokenizer.nextElement();
             String port = (String) stringTokenizer.nextElement();
-            vpnServerUri = new URI("ws://" + WsCommunicationsCloudClientPluginRoot.SERVER_IP  + ":" + port);
+            vpnServerUri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP  + ":" + port);
 
             System.out.println("ComponentConnectionRespondPacketProcessor - reconstruct vpnServerUri = "+vpnServerUri);
 

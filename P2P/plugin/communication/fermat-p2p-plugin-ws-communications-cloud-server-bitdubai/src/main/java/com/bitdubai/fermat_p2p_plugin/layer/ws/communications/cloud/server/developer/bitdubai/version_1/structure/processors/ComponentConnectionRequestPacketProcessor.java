@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
 
 import java.util.List;
@@ -34,6 +35,11 @@ import java.util.List;
  * @since Java JDK 1.7
  */
 public class ComponentConnectionRequestPacketProcessor extends FermatPacketProcessor {
+
+    /**
+     * Represent the logger instance
+     */
+    private Logger LOG = Logger.getLogger(ComponentConnectionRequestPacketProcessor.class);
 
     /**
      * Represent the gson
@@ -61,8 +67,8 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
     public void processingPackage(WebSocket clientConnection, FermatPacket receiveFermatPacket, ECCKeyPair serverIdentity) {
 
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("ComponentConnectionRequestPacketProcessor - Starting processingPackage");
+        LOG.info("--------------------------------------------------------------------- ");
+        LOG.info("Starting processingPackage");
         String packetContentJsonStringRepresentation = null;
         PlatformComponentProfile peer1 = null;
         PlatformComponentProfile peer2 = null;
@@ -73,7 +79,7 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
              * Get the packet content from the message content and decrypt
              */
             packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
-            System.out.println("ComponentConnectionRequestPacketProcessor - packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation);
+            LOG.info("packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
 
             /*
              * Get the list
@@ -82,7 +88,7 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
             }.getType());
 
             for (PlatformComponentProfile participant: participantsList) {
-                System.out.println("ComponentConnectionRequestPacketProcessor - participant = "+participant.getIdentityPublicKey());
+                LOG.info("participant = " + participant.getAlias() + "("+participant.getIdentityPublicKey()+")");
             }
 
             peer1 = participantsList.get(0);
@@ -103,8 +109,8 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
 
         }catch (Exception e){
 
-            System.out.println("ComponentConnectionRequestPacketProcessor - requested connection is no possible ");
-            System.out.println("ComponentConnectionRequestPacketProcessor - cause: "+e.getMessage());
+            LOG.error("requested connection is no possible ");
+            LOG.error(" cause: "+e.getMessage());
 
             // e.printStackTrace();
 

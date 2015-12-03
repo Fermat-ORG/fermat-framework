@@ -25,6 +25,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
 
 import java.util.ArrayList;
@@ -44,6 +45,10 @@ import java.util.TreeMap;
  */
 public class RequestListComponentRegisterPacketProcessor extends FermatPacketProcessor {
 
+    /**
+     * Represent the logger instance
+     */
+    private Logger LOG = Logger.getLogger(RequestListComponentRegisterPacketProcessor.class);
 
     /**
      * Represent the gson
@@ -70,8 +75,8 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
     @Override
     public void processingPackage(WebSocket clientConnection, FermatPacket receiveFermatPacket, ECCKeyPair serverIdentity) {
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
+        LOG.info(" --------------------------------------------------------------------- ");
+        LOG.info("Starting processingPackage");
 
         String packetContentJsonStringRepresentation = null;
         NetworkServiceType networkServiceTypeApplicant = null;
@@ -84,7 +89,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
              */
             packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
 
-            System.out.println("RequestListComponentRegisterPacketProcessor - Starting packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation);
+            LOG.info("Starting packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
 
             /*
              * Construct the json object
@@ -109,7 +114,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
             }
 
-            System.out.println("RequestListComponentRegisterPacketProcessor - filteredLis.size() ="+resultList.size());
+            LOG.info("filteredLis.size() =" + resultList.size());
 
             /*
              * Convert the list to json representation
@@ -139,8 +144,8 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
         }catch (Exception e){
 
-            System.out.println("RequestListComponentRegisterPacketProcessor - requested list is not available");
-            System.out.println("RequestListComponentRegisterPacketProcessor - cause: "+e.getMessage());
+            LOG.info("requested list is not available");
+            LOG.info("cause: " + e.getMessage());
 
             /*
              * Get the client connection destination
@@ -228,7 +233,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
             PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
             if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
-                System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
+                LOG.info("removing =" + platformComponentProfileRegistered.getName());
                 iterator.remove();
             }
         }
@@ -252,7 +257,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         List<PlatformComponentProfile>  list = getPrimaryFilteredListFromCache(discoveryQueryParameters.getPlatformComponentType(), discoveryQueryParameters.getNetworkServiceType(), receiveFermatPacket);
         List<PlatformComponentProfile>  filteredLis = new ArrayList<>();
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - totalFilterToApply    = "+totalFilterToApply);
+        LOG.info("totalFilterToApply    = " + totalFilterToApply);
 
         if (totalFilterToApply > 0){
 
@@ -396,7 +401,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          * Get the list from the cache that match with the other componet
          */
         List<PlatformComponentProfile> otherComponentList = (List<PlatformComponentProfile>) new ArrayList<>(searchProfile(discoveryQueryParameters.getFromOtherPlatformComponentType(), discoveryQueryParameters.getFromOtherNetworkServiceType(), discoveryQueryParameters.getIdentityPublicKey())).clone();
-        System.out.println("RequestListComponentRegisterPacketProcessor - otherComponentList  = " + otherComponentList.size());
+        LOG.info("otherComponentList  = " + otherComponentList.size());
 
         /*
          * Find the other component that match with the identity
@@ -418,15 +423,14 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
             PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
             if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
-                System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
+                LOG.info("removing =" + platformComponentProfileRegistered.getName());
                 iterator.remove();
             }
         }
 
 
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - filteredListFromOtherComponentType  = "+filteredListFromOtherComponentType.size());
-
+        LOG.info("filteredListFromOtherComponentType  = "+filteredListFromOtherComponentType.size());
 
         return filteredListFromOtherComponentType;
 

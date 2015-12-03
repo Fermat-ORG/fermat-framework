@@ -8,6 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
 
+import org.apache.log4j.Logger;
 import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.Server;
@@ -22,6 +23,11 @@ import org.restlet.data.Protocol;
  * @since Java JDK 1.7
  */
 public class RestletCommunicationCloudServer {
+
+    /**
+     * Represent the logger instance
+     */
+    private Logger LOG = Logger.getLogger(RestletCommunicationCloudServer.class);
 
     /**
      * Represent the restletWebServer
@@ -51,7 +57,7 @@ public class RestletCommunicationCloudServer {
     }
 
     public void start() throws Exception {
-        System.out.println("RestletCommunicationCloudServer - starting");
+        LOG.info("RestletCommunicationCloudServer - starting");
         restletWebServer.start();
     }
 }

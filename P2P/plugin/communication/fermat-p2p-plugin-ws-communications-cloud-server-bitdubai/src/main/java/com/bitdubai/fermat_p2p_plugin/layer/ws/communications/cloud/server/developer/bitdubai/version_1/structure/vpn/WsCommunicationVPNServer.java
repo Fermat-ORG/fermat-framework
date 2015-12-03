@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.framing.FramedataImpl1;
@@ -46,6 +47,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since Java JDK 1.7
  */
 public class WsCommunicationVPNServer extends WebSocketServer{
+
+    /**
+     * Represent the logger instance
+     */
+    private Logger LOG = Logger.getLogger(WsCommunicationVPNServer.class);
 
     /**
      * Represent the WS_PROTOCOL
@@ -118,7 +124,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         frame.setFin(true);
 
         for (WebSocket conn:connections()) {
-            System.out.println(" WsCommunicationVPNClient - Sending ping message to remote node (" + conn.getRemoteSocketAddress() + ")");
+            LOG.debug("WsCommunicationVPNClient - Sending ping message to remote node (" + conn.getRemoteSocketAddress() + ")");
             conn.sendFrame(frame);
             pendingPongMessageByConnection.put(conn.hashCode(), Boolean.TRUE);
         }
@@ -135,9 +141,9 @@ public class WsCommunicationVPNServer extends WebSocketServer{
      */
     @Override
     public void onWebsocketPong(WebSocket conn, Framedata f) {
-        System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node (" + conn.getRemoteSocketAddress() + ") connection is alive");
+        LOG.debug("Pong message receiveRemote from node (" + conn.getRemoteSocketAddress() + ") connection is alive");
         if (f.getOpcode() == Framedata.Opcode.PONG){
-            System.out.println(" WsCommunicationCloudServer - Pong message receiveRemote from node ("+conn.getRemoteSocketAddress()+") connection is alive");
+            LOG.debug("Pong message receiveRemote from node (" + conn.getRemoteSocketAddress() + ") connection is alive");
             pendingPongMessageByConnection.remove(conn.hashCode());
         }
     }
@@ -152,10 +158,10 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     @Override
     public void onOpen(WebSocket clientConnection, ClientHandshake handshake) {
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" WsCommunicationVPNServer - Starting method onOpen");
-        System.out.println(" WsCommunicationVPNServer - New Participant Client: "+clientConnection.getRemoteSocketAddress().getAddress().getHostAddress() + " is connected!");
-        System.out.println(" WsCommunicationVPNServer - tmp-i = " + handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI));
+        LOG.info(" --------------------------------------------------------------------- ");
+        LOG.info("WsCommunicationVPNServer - Starting method onOpen");
+        LOG.info("WsCommunicationVPNServer - New Participant Client: " + clientConnection.getRemoteSocketAddress().getAddress().getHostAddress() + " is connected!");
+        LOG.info("WsCommunicationVPNServer - tmp-i = " + handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI));
 
         /*
          * Validate is a handshake valid
@@ -167,7 +173,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
 
             String messageContentJsonStringRepresentation =  AsymmetricCryptography.decryptMessagePrivateKey(handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI), vpnServerIdentity.getPrivateKey());
 
-            System.out.println(" WsCommunicationVPNServer - messageContentJsonStringRepresentation = " + messageContentJsonStringRepresentation);
+            LOG.info("messageContentJsonStringRepresentation = " + messageContentJsonStringRepresentation);
 
             JsonParser parser = new JsonParser();
             JsonObject respond = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
@@ -194,10 +200,10 @@ public class WsCommunicationVPNServer extends WebSocketServer{
                 participantsConnections.put(participantIdentity, clientConnection);
                 vpnClientIdentityByParticipants.put(participantIdentity, vpnClientIdentity);
             }
-            
-            System.out.println(" WsCommunicationVPNServer - registeredParticipants.size() = " + registeredParticipants.size());
-            System.out.println(" WsCommunicationVPNServer - participantsConnections.size() = " + participantsConnections.size());
-            System.out.println(" WsCommunicationVPNServer - Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0 = " + (Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0));
+
+            LOG.info("registeredParticipants.size() = " + registeredParticipants.size());
+            LOG.info("participantsConnections.size() = " + participantsConnections.size());
+            LOG.info("Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0 = " + (Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0));
 
             //Validate if all participantsConnections register are connect
             if(Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0){
@@ -224,7 +230,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
      */
     private void sendNotificationPacketConnectionComplete(PlatformComponentProfile destinationPlatformComponentProfile, PlatformComponentProfile remotePlatformComponentProfile){
 
-        System.out.println(" WsCommunicationVPNServer - sendNotificationPacketConnectionComplete = " + destinationPlatformComponentProfile.getName() +" ("+destinationPlatformComponentProfile.getIdentityPublicKey()+")");
+        LOG.info("sendNotificationPacketConnectionComplete = " + destinationPlatformComponentProfile.getName() + " (" + destinationPlatformComponentProfile.getIdentityPublicKey() + ")");
 
          /*
          * Construct the content of the msj
@@ -265,9 +271,9 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     @Override
     public void onClose(WebSocket clientConnection, int code, String reason, boolean remote) {
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" WsCommunicationVPNServer - Starting method onClose");
-        System.out.println(" WsCommunicationVPNServer - " + clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code + " reason = " + reason + " remote = " + remote);
+        LOG.info("--------------------------------------------------------------------- ");
+        LOG.info("Starting method onClose");
+        LOG.info(clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code + " reason = " + reason + " remote = " + remote);
 
         Iterator<WebSocket> iterator = connections().iterator();
         while (iterator.hasNext()){
@@ -288,7 +294,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     @Override
     public void onMessage(WebSocket clientConnection, String fermatPacketEncode) {
 
-        System.out.println("WsCommunicationVPNServer - onMessage ");
+        LOG.info("onMessage ");
 
         /*
          * Decode the fermatPacketEncode into a fermatPacket
@@ -309,7 +315,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
             FermatMessageCommunication fermatMessage = (FermatMessageCommunication) new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
 
 
-            System.out.println("WsCommunicationVPNServer - fermatMessage = "+fermatMessage);
+            LOG.info("fermatMessage = " + fermatMessage);
 
             /*
             * Construct a new fermat packet whit the same message and different destination
@@ -331,7 +337,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
              */
             if (clientConnectionDestination != null && clientConnectionDestination.isOpen()){
 
-                System.out.println("WsCommunicationVPNServer - sending to destination "+fermatPacketRespond.getDestination());
+                LOG.info("sending to destination " + fermatPacketRespond.getDestination());
 
                /*
                 * Send the encode packet to the destination
@@ -342,7 +348,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
 
 
         }else {
-            System.out.println("WsCommunicationVPNServer - Packet type " + receiveFermatPacket.getFermatPacketType() + "is not supported");
+            LOG.warn("Packet type " + receiveFermatPacket.getFermatPacketType() + "is not supported");
         }
 
     }
@@ -354,8 +360,8 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     @Override
     public void onError(WebSocket clientConnection, Exception ex) {
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" WsCommunicationVPNServer - Starting method onError");
+        LOG.info(" --------------------------------------------------------------------- ");
+        LOG.info("WsCommunicationVPNServer - Starting method onError");
         ex.printStackTrace();
 
         closeAllConnections(ex);
@@ -364,7 +370,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
 
     public void closeAllConnections(){
 
-        System.out.println(" WsCommunicationVPNServer - Starting method closeAllConnections");
+        LOG.info("Starting method closeAllConnections");
         /*
          * Close all the connection
          */
@@ -377,7 +383,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
 
     public void closeAllConnections(Exception ex){
 
-        System.out.println(" WsCommunicationVPNServer - Starting method closeAllConnections(Exception)");
+        LOG.info("Starting method closeAllConnections(Exception)");
         /*
          * Close all the connection
          */

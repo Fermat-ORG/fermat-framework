@@ -11,6 +11,8 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
 
+import org.apache.log4j.Logger;
+
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,11 @@ import java.util.List;
  * @since Java JDK 1.7
  */
 public class WsCommunicationVpnServerManagerAgent extends Thread{
+
+    /**
+     * Represent the logger instance
+     */
+    private Logger LOG = Logger.getLogger(WsCommunicationVpnServerManagerAgent.class);
 
     /**
      * Represent the SLEEP_TIME
@@ -115,7 +122,7 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
 
                     }catch (Exception ex){
 
-                        System.out.println(" WsCommunicationVpnServerManagerAgent - Some Connection of the participant maybe not active");
+                        LOG.error("Some Connection of the participant maybe not active");
                         //Close all connection and stop the vpn server
                         wsCommunicationVPNServer.closeAllConnections();
                         wsCommunicationVPNServer.stop();

@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
 
 import java.util.ArrayList;
@@ -38,6 +39,11 @@ import java.util.List;
  * @since Java JDK 1.7
  */
 public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPacketProcessor {
+
+    /**
+     * Represent the logger instance
+     */
+    private Logger LOG = Logger.getLogger(DiscoveryComponentConnectionRequestPacketProcessor.class);
 
     /**
      * Represent the gson
@@ -64,8 +70,8 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
     @Override
     public void processingPackage(WebSocket clientConnection, FermatPacket receiveFermatPacket, ECCKeyPair serverIdentity) {
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - Starting processingPackage");
+        LOG.info("--------------------------------------------------------------------- ");
+        LOG.info("Starting processingPackage");
 
         String packetContentJsonStringRepresentation = null;
         PlatformComponentProfile networkServiceApplicant = null;
@@ -77,7 +83,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
              * Get the packet content from the message content and decrypt
              */
             packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
-            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation);
+            LOG.info("packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
 
 
             /*
@@ -89,7 +95,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
              * Get the applicant network service
              */
             networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString());
-            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant.toJson());
+            LOG.info("networkServiceApplicant " + networkServiceApplicant.toJson());
 
             /*
              * Get the component profile as participant that live in the same device of the network service applicant
@@ -103,7 +109,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
                     break;
                 }
             }
-            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - applicantParticipant "+applicantParticipant.toJson());
+            LOG.info("applicantParticipant " + applicantParticipant.toJson());
 
             /*
              * Get the component profile to connect as remote participant
@@ -111,14 +117,14 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             remoteParticipant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString());
             List<PlatformComponentProfile> remoteParticipantList = searchProfile(remoteParticipant.getPlatformComponentType(), remoteParticipant.getNetworkServiceType(), remoteParticipant.getIdentityPublicKey());
             remoteParticipant = remoteParticipantList.get(0);
-            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - remoteParticipant "+remoteParticipant.toJson());
+            LOG.info("remoteParticipant " + remoteParticipant.toJson());
 
             /*
              * Get the network service profile that live in the same device of the remote participant
              */
             List<PlatformComponentProfile> remoteNsParticipantList = searchProfileByCommunicationCloudClientIdentity(networkServiceApplicant.getPlatformComponentType(), networkServiceApplicant.getNetworkServiceType(), remoteParticipant.getCommunicationCloudClientIdentity());
             PlatformComponentProfile remoteNsParticipant = remoteNsParticipantList.get(0);
-            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - remoteNsParticipant "+remoteNsParticipant.toJson());
+            LOG.info("remoteNsParticipant " + remoteNsParticipant.toJson());
 
             /*
              * Create the list of participant
@@ -127,7 +133,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             participantsList.add(applicantParticipant);
             participantsList.add(remoteParticipant);
 
-            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - participantsList.size() = "+participantsList.size());
+            LOG.info("participantsList.size() = " + participantsList.size());
 
             //Create a new vpn
             WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer(), networkServiceApplicant.getNetworkServiceType());
@@ -147,8 +153,8 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
 
         }catch (Exception e){
 
-            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - requested connection is no possible ");
-            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - cause: "+e.getMessage());
+            LOG.info("requested connection is no possible ");
+            LOG.info("cause: "+e.getMessage());
 
             /*
              * Get the client connection destination
