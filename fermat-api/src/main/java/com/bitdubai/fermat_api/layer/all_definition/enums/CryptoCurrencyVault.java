@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum CryptoCurrencyVault implements FermatVaultEnum {
 
-    //ASSET_VAULT("ASSV", CryptoCurrency.BITCOIN), TODO: lo comente porque dio error al pedir la address de un intra user (Natalia)
+    ASSET_VAULT("ASSV", CryptoCurrency.BITCOIN),
     BITCOIN_VAULT("BITV", CryptoCurrency.BITCOIN);
 
     private String code;

@@ -67,7 +67,7 @@ public final class CryptoVaultSelector {
 
         switch (CryptoCurrencyVault.getByCryptoCurrency(cryptoCurrency)) {
 
-            case BITCOIN_VAULT: return assetVaultManager; //TODO: lo cambie porque dio error al pedir la address de un intra user (Natalia)
+            case ASSET_VAULT: return assetVaultManager;
 
             default:
                 throw new InvalidParameterException(
