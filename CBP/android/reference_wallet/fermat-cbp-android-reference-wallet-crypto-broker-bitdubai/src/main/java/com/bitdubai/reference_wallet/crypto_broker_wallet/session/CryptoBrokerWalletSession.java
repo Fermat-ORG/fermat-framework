@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CryptoBrokerWalletSession extends AbstractFermatSession<InstalledWallet, CryptoBrokerWalletModuleManager, WalletResourcesProviderManager> implements WalletSession {
+    public static final String NEGOTIATION_DATA = "negotiation_data";
 
     /**
      * SubApps type

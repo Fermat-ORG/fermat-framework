@@ -25,9 +25,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
-import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.database.StockTransactionsCashMoneyDestockDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.database.StockTransactionsCashMoneyDestockDatabaseFactory;
@@ -38,6 +39,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destoc
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.StockTransactionCashMoneyDestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.events.StockTransactionsCashMoneyDestockMonitorAgent;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionManager;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -76,8 +78,8 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
     //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    //@NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD)
-    CashHoldTransactionManager cashHoldTransactionManager;
+    @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.CASH_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD)
+    CashUnholdTransactionManager cashUnholdTransactionManager;
 
 
     @Override
@@ -142,7 +144,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
     }
 
     @Override
-    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, float amount, String memo) throws CantCreateCashMoneyDestockException {
+    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, float amount, String memo, float priceReference, OriginTransaction originTransaction) throws CantCreateCashMoneyDestockException {
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         CashMoneyDestockTransactionImpl cashMoneyRestockTransaction = new CashMoneyDestockTransactionImpl(
@@ -156,7 +158,9 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
                 cashReference,
                 amount,
                 timestamp,
-                TransactionStatusRestockDestock.INIT_TRANSACTION);
+                TransactionStatusRestockDestock.INIT_TRANSACTION,
+                priceReference,
+                originTransaction);
 
         try {
             stockTransactionCashMoneyDestockManager.saveCashMoneyDestockTransactionData(cashMoneyRestockTransaction);
@@ -178,7 +182,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
                     errorManager,
                     stockTransactionCashMoneyDestockManager,
                     cryptoBrokerWalletManager,
-                    cashHoldTransactionManager
+                    cashUnholdTransactionManager
             );
 
             stockTransactionsCashMoneyDestockMonitorAgent.start();
@@ -187,7 +191,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
 
     private void testDestock(){
         try {
-            createTransactionDestock("publicKeyActor", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpWalletPublicKey", "cshWalletPublicKey", "cashReference", 250, "memo");
+            createTransactionDestock("publicKeyActor", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpWalletPublicKey", "cshWalletPublicKey", "cashReference", 250, "memo", 250, OriginTransaction.STOCK_INITIAL);
         } catch (CantCreateCashMoneyDestockException e) {
             e.printStackTrace();
         }

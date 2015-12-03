@@ -34,4 +34,12 @@
     <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
     <color name="waiting_for_customer_list_item_background">#f3f3f3</color>
 
+    <color name="option_button_background">#75222222</color>
+    <color name="card_title_color_status_confirm">#222</color>
+    <color name="card_title_color_status_accepted">#fff</color>
+    <color name="card_title_color_status_changed">#fff</color>
+    <color name="card_background_status_confirm">#f1f1f1</color>
+    <color name="card_background_status_accepted">#2e679c</color>
+    <color name="card_background_status_changed">#39ab89</color>
+    <color name="note_card_background">#363636</color>
 </resources>
