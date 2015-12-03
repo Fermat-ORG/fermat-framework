@@ -3,7 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dis
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManagerPlatform;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -24,7 +24,7 @@ import java.util.UUID;
  */
 public class AssetDistributionTransactionManager implements AssetDistributionManager {
 
-    AssetVaultManager assetVaultManager;
+    AssetVaultManagerPlatform assetVaultManager;
     DigitalAssetDistributor digitalAssetDistributor;
     ErrorManager errorManager;
     UUID pluginId;
@@ -33,7 +33,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
     //ActorAssetIssuerManager actorAssetIssuerManager;
     //DigitalAssetDistributionVault digitalAssetDistributionVault;
 
-    public AssetDistributionTransactionManager(AssetVaultManager assetVaultManager,
+    public AssetDistributionTransactionManager(AssetVaultManagerPlatform assetVaultManager,
                                                ErrorManager errorManager,
                                                UUID pluginId,
                                                PluginDatabaseSystem pluginDatabaseSystem,
@@ -98,9 +98,9 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         this.errorManager=errorManager;
     }
 
-    public void setAssetVaultManager(AssetVaultManager assetVaultManager) throws CantSetObjectException{
+    public void setAssetVaultManager(AssetVaultManagerPlatform assetVaultManager) throws CantSetObjectException{
         if(assetVaultManager==null){
-            throw new CantSetObjectException("AssetVaultManager is null");
+            throw new CantSetObjectException("AssetVaultManagerPlatform is null");
         }
         this.assetVaultManager=assetVaultManager;
     }

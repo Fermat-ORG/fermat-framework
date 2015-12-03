@@ -1,13 +1,11 @@
 package com.bitdubai.sub_app.intra_user_community.adapters;
 
-import android.app.Notification;
 import android.content.Context;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.common.models.IntraUserConnectionListItem;
 import com.bitdubai.sub_app.intra_user_community.holders.AppNotificationsHolder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -44,5 +42,11 @@ public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, 
         } catch (Exception ex) {
 
         }
+    }
+
+    public int getSize() {
+        if (dataSet != null)
+            return dataSet.size();
+        return 0;
     }
 }

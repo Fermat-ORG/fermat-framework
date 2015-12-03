@@ -25,7 +25,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.utils.FernatAnimationUtils;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
@@ -106,23 +105,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
-
-            empty = (LinearLayout) rootView.findViewById(R.id.empty);
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            showEmpty(true, rootView);
-
-            if (dialog != null)
-                dialog.dismiss();
-            dialog = null;
-            dialog = new ProgressDialog(getActivity());
-            dialog.setTitle("Loading connections");
-            dialog.setMessage("Please wait...");
-            dialog.show();
-            FernatAnimationUtils.showView(false, empty);
-            FernatAnimationUtils.showEmpty(isAttached, empty, lstIntraUserInformations);
-
-            onRefresh();
-
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -134,6 +117,22 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         return rootView;
     }
 
+    private synchronized List<IntraUserInformation> getMoreData() {
+        List<IntraUserInformation> dataSet = new ArrayList<>();
+
+        try {
+
+            dataSet.addAll(moduleManager.getSuggestionsToContact(MAX, offset));
+            offset = dataSet.size();
+
+        } catch (CantGetIntraUsersListException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return dataSet;
+    }
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
         /**
          * add navigation header
@@ -178,7 +177,6 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
                 @Override
                 public void onPostExecute(Object... result) {
                     isRefreshing = false;
-                    dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
@@ -188,14 +186,12 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
                             adapter.changeDataSet(lstIntraUserInformations);
                         }
                     } else
-                        showEmpty(true, emptyView);
-
+                        showEmpty(adapter.getSize() < 0, emptyView);
                 }
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
                     isRefreshing = false;
-                    dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
@@ -205,23 +201,6 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
             });
             worker.execute();
         }
-
-    }
-
-    private synchronized List<IntraUserInformation> getMoreData() {
-        List<IntraUserInformation> dataSet = new ArrayList<>();
-
-        try {
-
-            dataSet = moduleManager.getAllIntraUsers(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset);
-            offset = dataSet.size();
-        } catch (CantGetIntraUsersListException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return dataSet;
     }
 
 }

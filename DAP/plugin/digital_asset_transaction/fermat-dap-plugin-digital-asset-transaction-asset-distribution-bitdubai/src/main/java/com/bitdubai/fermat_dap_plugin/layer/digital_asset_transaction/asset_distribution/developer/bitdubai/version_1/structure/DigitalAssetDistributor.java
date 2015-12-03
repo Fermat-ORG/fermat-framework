@@ -45,7 +45,7 @@ import java.util.UUID;
 public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
 
     ActorAssetIssuerManager actorAssetIssuerManager;
-    //AssetVaultManager assetVaultManager;
+    //AssetVaultManagerPlatform assetVaultManager;
     ErrorManager errorManager;
     final String LOCAL_STORAGE_PATH = "digital-asset-distribution/";
     String digitalAssetFileStoragePath;
@@ -54,7 +54,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     DigitalAssetDistributionVault digitalAssetDistributionVault;
     BitcoinNetworkManager bitcoinNetworkManager;
 
-    public DigitalAssetDistributor(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) throws CantExecuteDatabaseOperationException {
+    public DigitalAssetDistributor(/*AssetVaultManagerPlatform assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) throws CantExecuteDatabaseOperationException {
         super(/*assetVaultManager,*/  pluginId, pluginFileSystem);
         this.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
         this.errorManager = errorManager;

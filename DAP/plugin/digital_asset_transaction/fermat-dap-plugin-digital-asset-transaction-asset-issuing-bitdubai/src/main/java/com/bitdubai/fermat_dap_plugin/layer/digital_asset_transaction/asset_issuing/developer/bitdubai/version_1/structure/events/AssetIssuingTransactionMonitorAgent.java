@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManagerPlatform;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetSendCryptoTransactionHashException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
@@ -64,7 +64,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     OutgoingIntraActorManager outgoingIntraActorManager;
-    AssetVaultManager assetVaultManager;
+    AssetVaultManagerPlatform assetVaultManager;
     DigitalAssetIssuingVault digitalAssetIssuingVault;
     BitcoinNetworkManager bitcoinNetworkManager;
 //TODO: clean up this class
@@ -74,7 +74,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                                ErrorManager errorManager,
                                                UUID pluginId,
                                                String userPublicKey,
-                                               AssetVaultManager assetVaultManager,
+                                               AssetVaultManagerPlatform assetVaultManager,
                                                OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -92,9 +92,9 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
         this.outgoingIntraActorManager=outgoingIntraActorManager;
     }
 
-    private void setAssetVaultManager(AssetVaultManager assetVaultManager) throws CantSetObjectException{
+    private void setAssetVaultManager(AssetVaultManagerPlatform assetVaultManager) throws CantSetObjectException{
         if(assetVaultManager==null){
-            throw new CantSetObjectException("AssetVaultManager is null");
+            throw new CantSetObjectException("AssetVaultManagerPlatform is null");
         }
         this.assetVaultManager=assetVaultManager;
     }

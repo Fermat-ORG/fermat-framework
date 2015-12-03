@@ -1,15 +1,11 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces;
 
 import com.bitdubai.fermat_api.layer.DAPException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManagerPlatform;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
@@ -30,7 +26,7 @@ import java.util.UUID;
  */
 public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
 
-    AssetVaultManager assetVaultManager;
+    AssetVaultManagerPlatform assetVaultManager;
     public BitcoinNetworkManager bitcoinNetworkManager;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
@@ -51,7 +47,7 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
         this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
 
-    public void setAssetVaultManager(AssetVaultManager assetVaultManager) {
+    public void setAssetVaultManager(AssetVaultManagerPlatform assetVaultManager) {
         this.assetVaultManager = assetVaultManager;
     }
 

@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManagerPlatform;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
@@ -70,7 +70,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
     ErrorManager errorManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
-    AssetVaultManager assetVaultManager;
+    AssetVaultManagerPlatform assetVaultManager;
     DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault;
     AssetTransmissionNetworkServiceManager assetTransmissionManager;
     BitcoinNetworkManager bitcoinNetworkManager;
@@ -81,7 +81,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                                       ErrorManager errorManager,
                                       UUID pluginId,
                                       String userPublicKey,
-                                      AssetVaultManager assetVaultManager) throws CantSetObjectException {
+                                      AssetVaultManagerPlatform assetVaultManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -97,9 +97,9 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
         this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
 
-    private void setAssetVaultManager(AssetVaultManager assetVaultManager) throws CantSetObjectException {
+    private void setAssetVaultManager(AssetVaultManagerPlatform assetVaultManager) throws CantSetObjectException {
         if (assetVaultManager == null) {
-            throw new CantSetObjectException("AssetVaultManager is null");
+            throw new CantSetObjectException("AssetVaultManagerPlatform is null");
         }
         this.assetVaultManager = assetVaultManager;
     }

@@ -2,7 +2,7 @@ package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitduba
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinPlatformCryptoVaultPluginRoot;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,14 +20,14 @@ public class ServiceStatusTest {
 
     @Test
     public void pauseTest(){
-        BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
+        BitcoinPlatformCryptoVaultPluginRoot root = new BitcoinPlatformCryptoVaultPluginRoot();
         root.pause();
         org.junit.Assert.assertEquals(root.getStatus(), ServiceStatus.PAUSED);
     }
 
     @Test
     public void resumeTest(){
-        BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
+        BitcoinPlatformCryptoVaultPluginRoot root = new BitcoinPlatformCryptoVaultPluginRoot();
         root.resume();
         org.junit.Assert.assertEquals(root.getStatus(), ServiceStatus.STARTED);
     }

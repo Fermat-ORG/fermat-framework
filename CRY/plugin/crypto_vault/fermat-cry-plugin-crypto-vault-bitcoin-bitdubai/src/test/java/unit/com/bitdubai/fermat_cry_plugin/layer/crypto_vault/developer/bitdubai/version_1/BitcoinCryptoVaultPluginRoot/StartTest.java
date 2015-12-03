@@ -4,10 +4,10 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinPlatformCryptoVaultPluginRoot;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
@@ -56,7 +56,7 @@ public class StartTest {
 
     @Test
     public void testValidStart() throws Exception {
-        BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
+        BitcoinPlatformCryptoVaultPluginRoot root = new BitcoinPlatformCryptoVaultPluginRoot();
         pluginFileSystem = new MockedPluginFileSystem();
         root.setErrorManager(errorManager);
         root.setEventManager(eventManager);
@@ -84,7 +84,7 @@ public class StartTest {
      */
     @Test (expected = CantStartPluginException.class)
     public void testStartWithError() throws Exception {
-        BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
+        BitcoinPlatformCryptoVaultPluginRoot root = new BitcoinPlatformCryptoVaultPluginRoot();
         MockedPluginFileSystemWithError pluginFileSystemWithError = new MockedPluginFileSystemWithError();
         root.setErrorManager(errorManager);
         root.setEventManager(eventManager);
@@ -106,7 +106,7 @@ public class StartTest {
 
     @Test
     public void getAddressTest() throws Exception {
-        BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
+        BitcoinPlatformCryptoVaultPluginRoot root = new BitcoinPlatformCryptoVaultPluginRoot();
         pluginFileSystem = new MockedPluginFileSystem();
         root.setErrorManager(errorManager);
         root.setEventManager(eventManager);
@@ -131,7 +131,7 @@ public class StartTest {
 
     @Test
     public void testTransactionProtocolManager() throws Exception {
-        BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
+        BitcoinPlatformCryptoVaultPluginRoot root = new BitcoinPlatformCryptoVaultPluginRoot();
         pluginFileSystem = new MockedPluginFileSystem();
         root.setErrorManager(errorManager);
         root.setEventManager(eventManager);
@@ -154,7 +154,7 @@ public class StartTest {
 
     @Test
     public void stopTest() throws Exception {
-        BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
+        BitcoinPlatformCryptoVaultPluginRoot root = new BitcoinPlatformCryptoVaultPluginRoot();
         pluginFileSystem = new MockedPluginFileSystem();
         root.setErrorManager(errorManager);
         root.setEventManager(eventManager);

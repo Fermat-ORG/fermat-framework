@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinPlatformCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -71,7 +71,7 @@ public class IsValidAddressTest {
 
     private UUID pluginId = UUID.randomUUID();
 
-    private BitcoinCryptoVaultPluginRoot bitcoinCryptoVaultPluginRoot;
+    private BitcoinPlatformCryptoVaultPluginRoot bitcoinCryptoVaultPluginRoot;
 
     private String userPublicKey = "replace_user_public_key";
 
@@ -80,7 +80,7 @@ public class IsValidAddressTest {
 
     @Before
     public void setUp() throws Exception{
-        bitcoinCryptoVaultPluginRoot = new BitcoinCryptoVaultPluginRoot();
+        bitcoinCryptoVaultPluginRoot = new BitcoinPlatformCryptoVaultPluginRoot();
         pluginFileSystem = new MockedPluginFileSystem();
         bitcoinCryptoVaultPluginRoot.setErrorManager(errorManager);
         bitcoinCryptoVaultPluginRoot.setEventManager(eventManager);

@@ -17,11 +17,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManagerPlatform;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -64,11 +64,11 @@ public class AssetAppropriationMonitorAgent implements Agent {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final AssetAppropriationVault assetVault;
     private final UUID pluginId;
-    private final AssetVaultManager assetVaultManager;
+    private final AssetVaultManagerPlatform assetVaultManager;
     private final AssetUserWalletManager assetUserWalletManager;
     private final BitcoinNetworkManager bitcoinNetworkManager;
     private final CryptoAddressBookManager cryptoAddressBookManager;
-    private final CryptoVaultManager cryptoVaultManager;
+    private final PlatformCryptoVaultManager cryptoVaultManager;
     private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     private AppropriationAgent appropriationAgent;
@@ -85,11 +85,11 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                           LogManager logManager,
                                           ErrorManager errorManager,
                                           UUID pluginId,
-                                          AssetVaultManager assetVaultManager,
+                                          AssetVaultManagerPlatform assetVaultManager,
                                           AssetUserWalletManager assetUserWalletManager,
                                           BitcoinNetworkManager bitcoinNetworkManager,
                                           CryptoAddressBookManager cryptoAddressBookManager,
-                                          CryptoVaultManager cryptoVaultManager,
+                                          PlatformCryptoVaultManager cryptoVaultManager,
                                           IntraWalletUserIdentityManager intraWalletUserIdentityManager) throws CantSetObjectException {
         this.assetVault = assetVault;
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");

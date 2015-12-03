@@ -40,7 +40,7 @@ public class InitializeTest extends TestCase {
      *//*
 
     @Mock
-    CryptoVaultManager cryptoVaultManager;
+    PlatformCryptoVaultManager cryptoVaultManager;
 
     */
 /**
