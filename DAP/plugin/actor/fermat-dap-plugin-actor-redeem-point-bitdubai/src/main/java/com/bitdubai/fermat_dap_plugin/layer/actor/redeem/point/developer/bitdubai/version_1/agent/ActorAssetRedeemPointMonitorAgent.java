@@ -135,13 +135,13 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
         }
 
         private void doTheMainTask() throws CantCreateActorRedeemPointException {
-            try {
-                listByActorAssetRedeemPointNetworkService();
-
-            } catch (CantCreateActorRedeemPointException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantCreateActorRedeemPointException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET REDEEM POINT IN ACTOR NETWORK SERVICE", e, "", "");
-            }
+//            try {
+//                listByActorAssetRedeemPointNetworkService();
+//
+//            } catch (CantCreateActorRedeemPointException e) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantCreateActorRedeemPointException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET REDEEM POINT IN ACTOR NETWORK SERVICE", e, "", "");
+//            }
         }
 
         private void listByActorAssetRedeemPointNetworkService() throws CantCreateActorRedeemPointException {

@@ -130,13 +130,13 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
         }
 
         private void doTheMainTask() throws CantCreateAssetUserActorException {
-            try {
-                listByActorAssetUserNetworkService();
-
-            } catch (CantCreateAssetUserActorException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantCreateAssetUserActorException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET USER IN ACTOR NETWORK SERVICE", e, "", "");
-            }
+//            try {
+//                listByActorAssetUserNetworkService();
+//
+//            } catch (CantCreateAssetUserActorException e) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantCreateAssetUserActorException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET USER IN ACTOR NETWORK SERVICE", e, "", "");
+//            }
         }
 
         private void listByActorAssetUserNetworkService() throws CantCreateAssetUserActorException {
