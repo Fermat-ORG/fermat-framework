@@ -90,7 +90,6 @@ public class DeveloperDatabaseFactory {
          * Asset Statistic table definition
          */
         List<String> assetStatisticColumns = new ArrayList<>();
-        assetStatisticColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
         assetStatisticColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME);
         assetStatisticColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME);
         assetStatisticColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME);
