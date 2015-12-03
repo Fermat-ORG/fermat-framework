@@ -29,12 +29,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@color/black_overlay"
-            android:gravity="center"
+            android:gravity="left"
+            android:paddingLeft="20dp"
             android:paddingBottom="14dip"
             android:paddingRight="20dp"
             android:paddingTop="14dip"
             android:text="Jennifer"
-            android:textColor="#DDDDDDDD"
+            android:textColor="#ffffff"
             android:textSize="16sp"
             />
 
