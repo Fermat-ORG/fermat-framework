@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="2dp"
-            android:text="Miami, Florida"
+            android:text="Unknow"
             android:textColor="#4d4d4d"
             android:textSize="14sp"
             app:typeface="ROBOTO_REGULAR" />
@@ -66,7 +66,7 @@
             android:id="@+id/community_country"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="USA"
+            android:text="Unknow"
             android:textAllCaps="true"
             android:textColor="#0072bc"
             android:textSize="14sp"
