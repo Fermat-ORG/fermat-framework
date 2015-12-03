@@ -497,7 +497,7 @@ public class AssetDistributionDao {
         }
     }
 
-    public void persistDistributionId(String genesisTransaction, UUID distributionId) throws CantPersistsTransactionUUIDException {
+    public void persistDistributionId(String genesisTransaction, String distributionId) throws CantPersistsTransactionUUIDException {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
@@ -511,7 +511,7 @@ public class AssetDistributionDao {
             } else {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
-            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_ID_COLUMN_NAME, distributionId.toString());
+            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_ID_COLUMN_NAME, distributionId);
             databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME, TransactionStatus.TO_DELIVER.getCode());
             databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
