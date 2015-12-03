@@ -357,7 +357,7 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 System.out.println("ASSET RECEPTION event Id: " + eventId);
                 eventType = assetReceptionDao.getEventTypeById(eventId);
                 System.out.println("ASSET RECEPTION event Type: " + eventType);
-                if (eventType.equals(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER.getCode())) {
+                if (eventType.equals(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER.getCode())) {
                     if (isTransactionToBeNotified(CryptoStatus.PENDING_SUBMIT)) {
                         genesisTransactionList = assetReceptionDao.getGenesisTransactionListByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
                         System.out.println("ASSET RECEPTION genesisTransactionList on pending submit has " + genesisTransactionList.size() + " events");
@@ -371,6 +371,12 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                             System.out.println("ASSET DISTRIBUTION crypto transaction on crypto network " + cryptoGenesisTransaction.getTransactionHash());
                             String transactionInternalId = this.assetReceptionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                             String actorIssuerPublicKey = assetReceptionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
+
+                            try {
+                                digitalAssetReceptionVault.setActorAssetUserManager(actorAssetUserManager);
+                            } catch (CantSetObjectException e) {
+                                e.printStackTrace();
+                            }
                             digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
 
@@ -378,7 +384,7 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                         assetReceptionDao.updateEventStatus(eventId);
                     }
                 }
-                if (eventType.equals(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER.getCode())) {
+                if (eventType.equals(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER.getCode())) {
                     if (isTransactionToBeNotified(CryptoStatus.ON_CRYPTO_NETWORK)) {
                         genesisTransactionList = assetReceptionDao.getGenesisTransactionListByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                         System.out.println("ASSET RECEPTION genesisTransactionList has " + genesisTransactionList.size() + " events");
@@ -402,10 +408,10 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                         assetReceptionDao.updateEventStatus(eventId);
                     }
                 }
-                if (eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER)) {
+                if (eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)) {
                     //TODO: to handle
                 }
-                if (eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER)) {
+                if (eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)) {
                     //TODO: to handle
                 }
             }
@@ -467,18 +473,17 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
          */
         private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetCryptoTransactionException {
             /**
-             * Mock for testing
-             */
-            //CryptoTransaction mockCryptoTransaction=new CryptoTransaction();
-            //mockCryptoTransaction.setTransactionHash("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
-            //mockCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
-            //return mockCryptoTransaction;
-            //transactionList.add(mockCryptoTransaction);
-            /**
-             * End of mocking
-             */
-            //TODO: change this line when is implemented in crypto network
+             * I will get the genesis transaction from the CryptoNetwork
+              */
             List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
+            if (transactionListFromCryptoNetwork.size() == 0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ){
+                /**
+                 * If I didn't get it, I will get the child of the genesis Transaction
+                 */
+                transactionListFromCryptoNetwork = bitcoinNetworkManager.getChildCryptoTransaction(genesisTransaction);
+            }
+
+
             if (transactionListFromCryptoNetwork == null) {
                 System.out.println("ASSET RECEPTION transaction List From Crypto Network for " + genesisTransaction + " is null");
                 throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null,
@@ -498,6 +503,7 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 System.out.println("ASSET RECEPTION CryptoStatus from Crypto Network:" + cryptoTransaction.getCryptoStatus());
                 if (cryptoTransaction.getCryptoStatus() == cryptoStatus) {
                     System.out.println("ASSET RECEPTION I found it!");
+                    cryptoTransaction.setTransactionHash(genesisTransaction);
                     return cryptoTransaction;
                 }
             }
