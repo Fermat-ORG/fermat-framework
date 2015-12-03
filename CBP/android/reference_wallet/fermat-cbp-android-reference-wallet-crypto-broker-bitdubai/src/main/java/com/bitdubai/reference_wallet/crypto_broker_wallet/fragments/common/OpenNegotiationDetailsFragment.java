@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -327,16 +328,24 @@ public class OpenNegotiationDetailsFragment extends FermatWalletFragment {
         exchangeRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToSell, decimalFormat.format(215.25), currencyToReceive));
         markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToSell, decimalFormat.format(212.48), currencyToReceive));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s", currencyToSell));
-        yourExchangeRateValue.setText(exchangeRateAmount);
+        if (exchangeRateAmount != null) {
+            double exchangeRateAmountDoubleVal = Double.parseDouble(exchangeRateAmount);
+            yourExchangeRateValue.setText(decimalFormat.format(exchangeRateAmountDoubleVal));
+        }
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToReceive));
 
         // Clause CUSTOMER_CURRENCY_QUANTITY
         sellingValue.setText(amountToBuy);
         this.currencyToSell.setText(currencyToSell);
-        double amountTouBuyDoubleVal = Double.parseDouble(amountToBuy);
-        double exchangeRateAmountDoubleVal = Double.parseDouble(exchangeRateAmount);
-        String productValStr = decimalFormat.format(amountTouBuyDoubleVal * exchangeRateAmountDoubleVal);
-        youWillReceiveValue.setText(String.format("%1s %2s", productValStr, currencyToReceive));
+
+        String yourExchangeRateValueText = yourExchangeRateValue.getText().toString();
+        if (!yourExchangeRateValueText.isEmpty() && amountToBuy != null) {
+            double exchangeRateAmountDoubleVal = Double.parseDouble(yourExchangeRateValueText);
+            double amountTouBuyDoubleVal = Double.parseDouble(amountToBuy);
+
+            String productValStr = decimalFormat.format(amountTouBuyDoubleVal * exchangeRateAmountDoubleVal);
+            youWillReceiveValue.setText(String.format("%1s %2s", productValStr, currencyToReceive));
+        }
 
         // Clause CUSTOMER_DATE_TIME_TO_DELIVER
         paymentDateValue.setText(dateToPay);
@@ -361,10 +370,8 @@ public class OpenNegotiationDetailsFragment extends FermatWalletFragment {
 
     @NonNull
     private String getExchangeRateAmountAndCurrencyText(CustomerBrokerNegotiationInformation itemInfo) {
-        final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-
         String merchandise = getClauseValue(itemInfo, ClauseType.CUSTOMER_CURRENCY);
-        String exchangeAmount = decimalFormat.format(getClauseValue(itemInfo, ClauseType.EXCHANGE_RATE));
+        String exchangeAmount = getClauseValue(itemInfo, ClauseType.EXCHANGE_RATE);
         String paymentCurrency = getClauseValue(itemInfo, ClauseType.BROKER_CURRENCY);
 
         return getResources().getString(R.string.cbw_exchange_rate_amount_and_currency, merchandise, exchangeAmount, paymentCurrency);
@@ -373,7 +380,7 @@ public class OpenNegotiationDetailsFragment extends FermatWalletFragment {
     @NonNull
     private String getBuyingQuantityAndCurrencyText(CustomerBrokerNegotiationInformation itemInfo) {
         Map<ClauseType, String> negotiationSummary = itemInfo.getNegotiationSummary();
-        String amount = decimalFormat.format(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
+        String amount = negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
         String merchandise = negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY);
 
         return String.format("Buying %1$s %2$s", amount, merchandise);
