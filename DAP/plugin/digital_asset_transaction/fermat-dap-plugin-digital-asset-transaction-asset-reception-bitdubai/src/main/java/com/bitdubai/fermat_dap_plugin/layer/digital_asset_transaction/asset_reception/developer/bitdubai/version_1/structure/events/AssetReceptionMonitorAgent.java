@@ -371,6 +371,12 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                             System.out.println("ASSET DISTRIBUTION crypto transaction on crypto network " + cryptoGenesisTransaction.getTransactionHash());
                             String transactionInternalId = this.assetReceptionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                             String actorIssuerPublicKey = assetReceptionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
+
+                            try {
+                                digitalAssetReceptionVault.setActorAssetUserManager(actorAssetUserManager);
+                            } catch (CantSetObjectException e) {
+                                e.printStackTrace();
+                            }
                             digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
 
@@ -467,18 +473,17 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
          */
         private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetCryptoTransactionException {
             /**
-             * Mock for testing
-             */
-            //CryptoTransaction mockCryptoTransaction=new CryptoTransaction();
-            //mockCryptoTransaction.setTransactionHash("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
-            //mockCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
-            //return mockCryptoTransaction;
-            //transactionList.add(mockCryptoTransaction);
-            /**
-             * End of mocking
-             */
-            //TODO: change this line when is implemented in crypto network
+             * I will get the genesis transaction from the CryptoNetwork
+              */
             List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
+            if (transactionListFromCryptoNetwork.size() == 0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ){
+                /**
+                 * If I didn't get it, I will get the child of the genesis Transaction
+                 */
+                transactionListFromCryptoNetwork = bitcoinNetworkManager.getChildCryptoTransaction(genesisTransaction);
+            }
+
+
             if (transactionListFromCryptoNetwork == null) {
                 System.out.println("ASSET RECEPTION transaction List From Crypto Network for " + genesisTransaction + " is null");
                 throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null,
@@ -498,6 +503,7 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 System.out.println("ASSET RECEPTION CryptoStatus from Crypto Network:" + cryptoTransaction.getCryptoStatus());
                 if (cryptoTransaction.getCryptoStatus() == cryptoStatus) {
                     System.out.println("ASSET RECEPTION I found it!");
+                    cryptoTransaction.setTransactionHash(genesisTransaction);
                     return cryptoTransaction;
                 }
             }

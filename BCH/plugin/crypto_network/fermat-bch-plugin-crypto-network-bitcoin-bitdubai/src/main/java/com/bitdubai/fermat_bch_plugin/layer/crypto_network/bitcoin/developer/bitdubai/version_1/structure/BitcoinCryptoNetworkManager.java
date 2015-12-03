@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
@@ -24,6 +25,7 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.UTXO;
 import org.bitcoinj.core.UTXOProvider;
@@ -469,6 +471,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     }
 
     /**
+     * Gets all the transactions stored in the specified network.
+     * @param blockchainNetworkType
+     * @return
+     */
+    private List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+        Wallet wallet = getWallet(blockchainNetworkType, null);
+        return wallet.getTransactionsByTime();
+    }
+
+    /**
      * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
      * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
      * @param txHash the Hash of the transaction we are going to look for.
@@ -489,5 +501,60 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          * if no agents are running, then no CryptoTransaction to return.
          */
         return null;
+    }
+
+    /**
+     * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
+     * @param parentHash
+     * @return
+     * @throws CantGetCryptoTransactionException
+     */
+    public List<CryptoTransaction> getChildCryptoTransaction(String parentHash) throws CantGetCryptoTransactionException {
+        CryptoTransaction cryptoTransaction = null;
+        /**
+         * I will get the list of stored transactions for the default network.
+         */
+        List<Transaction> transactions = getBitcoinTransactions(BlockchainNetworkType.DEFAULT);
+
+        for (Transaction transaction : transactions){
+            /**
+             * I will search on the inputs of each transaction and search for the passed hash.
+             */
+            for (TransactionInput input : transaction.getInputs()){
+                if (input.getOutpoint().getHash().toString().contentEquals(parentHash))
+                    cryptoTransaction =  CryptoTransaction.getCryptoTransaction(transaction);
+            }
+        }
+
+        /**
+         * If i couldn't find a match, then I will return null.
+         */
+        if (cryptoTransaction == null)
+            return null;
+
+        /**
+         * I will add the Crypto Transaction to the list and verify if I need to inform any previous state.
+         */
+        List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
+        cryptoTransactions.add(cryptoTransaction);
+
+        /**
+         * I need to return all the previous CryptoStates of the CryptoTransaction,
+         * so I will manually add them.
+         */
+        if (cryptoTransaction.getCryptoStatus() == CryptoStatus.IRREVERSIBLE){
+            cryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+            cryptoTransactions.add(cryptoTransaction);
+
+            cryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+            cryptoTransactions.add(cryptoTransaction);
+        }
+
+        if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN){
+            cryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+            cryptoTransactions.add(cryptoTransaction);
+        }
+
+        return cryptoTransactions;
     }
 }
