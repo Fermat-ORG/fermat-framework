@@ -17,34 +17,34 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private static final int HASH_PRIME_NUMBER_PRODUCT = 3061;
     private static final int HASH_PRIME_NUMBER_ADD = 7213;
 
-    private UUID transactionId;
+    private final UUID transactionId;
 //    private UUID contractId;
-    private KeyPair walletKeyPair;
-    private String ownerPublicKey;
-    private BalanceType balanceType;
-    private TransactionType transactionType;
-    private float amount;
-    private CurrencyType currencyType;
-    private FermatEnum merchandise;
-    private float runningBookBalance;
-    private float runningAvailableBalance;
-    private long timeStamp;
-    private String memo;
+    private final KeyPair walletKeyPair;
+    private final String ownerPublicKey;
+    private final BalanceType balanceType;
+    private final TransactionType transactionType;
+    private final float amount;
+    private final CurrencyType currencyType;
+    private final FermatEnum merchandise;
+    private final float runningBookBalance;
+    private final float runningAvailableBalance;
+    private final long timeStamp;
+    private final String memo;
 
     public CryptoBrokerStockTransactionRecordImpl(
-            UUID transactionId,
+            final UUID transactionId,
 //            UUID contractId,
-            KeyPair walletKeyPair,
-            String ownerPublicKey,
-            BalanceType balanceType,
-            TransactionType transactionType,
-            CurrencyType currencyType,
-            FermatEnum merchandise,
-            float amount,
-            float runningBookBalance,
-            float runningAvailableBalance,
-            long timeStamp,
-            String memo
+            final KeyPair walletKeyPair,
+            final String ownerPublicKey,
+            final BalanceType balanceType,
+            final TransactionType transactionType,
+            final CurrencyType currencyType,
+            final FermatEnum merchandise,
+            final float amount,
+            final float runningBookBalance,
+            final float runningAvailableBalance,
+            final long timeStamp,
+            final String memo
     ){
         this.transactionId = transactionId;
 //        this.contractId      = contractId;
