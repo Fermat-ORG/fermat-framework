@@ -1,12 +1,13 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_stock_transactions.bank_money_restock.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by franklin on 16/11/15.
+ * Created by Franklin Marcano on 31.0.11.2015
  */
-public class CantCreateBankMoneyRestockException extends FermatException {
-    public static final String DEFAULT_MESSAGE = "CAN'T CREATE BANK MONEY RESTOCK TRANSACTION";
+public class CantSaveCryptoBrokerWalletSettingException extends FermatException {
+
+    public static final String DEFAULT_MESSAGE = "CANT SAVE CRYPTO BROKER WALLET SETTING";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -16,7 +17,7 @@ public class CantCreateBankMoneyRestockException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCreateBankMoneyRestockException(String message, Exception cause, String context, String possibleReason) {
+    public CantSaveCryptoBrokerWalletSettingException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
