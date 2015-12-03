@@ -1,0 +1,1135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#222"
+    android:fillViewport="false"
+    android:orientation="vertical"
+    android:paddingBottom="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cbw_negotiation_details_gradient_background"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/cbw_customer_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/person"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_buying_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/cbw_customer_image"
+                android:layout_toRightOf="@+id/cbw_customer_image"
+                android:text="Buying 12 BTC"
+                android:textColor="#111"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_exchange_rate_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cbw_buying_details"
+                android:layout_toEndOf="@+id/cbw_customer_image"
+                android:layout_toRightOf="@+id/cbw_customer_image"
+                android:text="1 BTC @ 254 USD"
+                android:textColor="#fff"
+                android:textSize="14sp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_customer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cbw_exchange_rate_summary"
+                android:layout_toEndOf="@+id/cbw_customer_image"
+                android:layout_toRightOf="@+id/cbw_customer_image"
+                android:text="Customer Name"
+                android:textColor="#dedede"
+                android:textSize="12dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_last_update_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/cbw_customer_name"
+                android:text="03 Feb 2015"
+                android:textColor="#fff"
+                android:textSize="12sp"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <!-- Notes -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/negotiation_note_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#363636"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:text="@string/notes"
+                        android:textAllCaps="true"
+                        android:textColor="#fff"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#b5009dff"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:id="@+id/note_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentTop="true"
+                        android:layout_margin="16dp"
+                        android:text="Nos Vemos en el Sambil a las 4:30pm en la feria de la comida, cerca de Farmatodo"
+                        android:textColor="#ffffff"
+                        android:textSize="14sp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="32dp"
+                        android:background="#b5009dff"/>
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- Exchange Rate Reference (tasa de referencia) -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/exchange_rate_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/card_background_status_changed"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:text="@string/exchange_rate_reference"
+                        android:textAllCaps="true"
+                        android:textColor="@color/card_title_color_status_changed"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="16dp">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/exchange_rate_reference_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:text="@string/suggested_exchange_rate"
+                            android:textColor="#ffffff"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/exchange_rate_reference_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_toEndOf="@+id/exchange_rate_reference_text"
+                            android:layout_toRightOf="@+id/exchange_rate_reference_text"
+                            android:text="1 BTC / 210 USD"
+                            android:textColor="#27507b"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/exchange_rate_reference_text"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:text="@string/market_text"
+                            android:textColor="#ffffff"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/market_rate_reference_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_toEndOf="@+id/textView2"
+                            android:layout_toRightOf="@+id/textView2"
+                            android:text="1 BTC / 210 USD"
+                            android:textColor="#27507b"/>
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/textView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignTop="@+id/your_exchange_rate_value_right_side"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:text="Yours:"
+                            android:textColor="#ffffff"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/your_exchange_rate_value_left_side"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignTop="@+id/textView3"
+                            android:layout_toEndOf="@+id/textView3"
+                            android:layout_toRightOf="@+id/textView3"
+                            android:textColor="#3e3e3e"
+                            tools:text="1 BTC / "/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                            android:id="@+id/your_exchange_rate_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_toEndOf="@+id/your_exchange_rate_value_left_side"
+                            android:layout_toRightOf="@+id/your_exchange_rate_value_left_side"
+                            android:hint="@string/amount"
+                            android:inputType="numberDecimal"
+                            android:minEms="3"
+                            android:paddingTop="0dp"
+                            android:textColor="#202020"
+                            android:textSize="14sp"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/your_exchange_rate_value_right_side"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_toEndOf="@+id/your_exchange_rate_value"
+                            android:layout_toRightOf="@+id/your_exchange_rate_value"
+                            android:textColor="#3e3e3e"
+                            tools:text="USD"/>
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:text="@string/status_changed"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- Amount to Sell (cantidad de vender) -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/amount_to_sell_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/card_background_status_accepted"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:text="@string/amount_to_sell"
+                        android:textAllCaps="true"
+                        android:textColor="@color/card_title_color_status_accepted"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="16dp">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/selling_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/selling_text"
+                            android:textColor="#ffffff"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                            android:id="@+id/selling_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_toEndOf="@+id/selling_text"
+                            android:layout_toRightOf="@+id/selling_text"
+                            android:hint="@string/amount"
+                            android:inputType="numberDecimal"
+                            android:minEms="3"
+                            android:paddingTop="0dp"
+                            android:textColor="#202020"
+                            android:textSize="14sp"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/currency_to_sell"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_toEndOf="@+id/selling_value"
+                            android:layout_toRightOf="@+id/selling_value"
+                            android:text="BTC"
+                            android:textColor="#202020"/>
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:orientation="horizontal">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/you_will_receive_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/you_will_receive_amount"
+                            android:textColor="#ffffff"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/you_will_receive_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1450.25 USD"
+                            android:textColor="#0e0e0e"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:text="@string/status_accepted"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- Merchandise Delivery (Modo de pago) -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/merchandise_delivery_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/card_background_status_confirm"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:text="@string/merchandise_delivery_title"
+                        android:textAllCaps="true"
+                        android:textColor="@color/card_title_color_status_confirm"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/delivery_type_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/delivery_type"
+                            android:textColor="#3e3e3e"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/merchandise_delivery_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_toEndOf="@+id/delivery_type_text"
+                            android:layout_toRightOf="@+id/delivery_type_text"
+                            android:background="@color/option_button_background"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:text="Cash on Hand"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="14sp"/>
+
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:text="@string/status_confirm"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- Broker Locations (Locaciones del broker) -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/broker_locations_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#f1f1f1"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:text="@string/broker_locations_title"
+                        android:textAllCaps="true"
+                        android:textColor="@color/card_title_color_status_confirm"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/broker_locations_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:text="@string/selected_location"
+                            android:textColor="#3e3e3e"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/broker_locations_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_below="@id/broker_locations_text"
+                            android:background="@color/option_button_background"
+                            android:paddingBottom="4dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="4dp"
+                            android:text="C.C. Sambil Maracaibo, Piso 2, Local 5A, al lado de Farmatodo"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="14sp"/>
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:text="@string/status_confirm"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- Broker's Bank Accounts (Cuentas bancarias del broker) -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/broker_bank_accounts_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#f1f1f1"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:text="@string/broker_bank_account_title"
+                        android:textAllCaps="true"
+                        android:textColor="@color/card_title_color_status_confirm"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/broker_bank_accounts_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:text="@string/selected_bank_account"
+                            android:textColor="#3e3e3e"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/broker_bank_accounts_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_below="@id/broker_bank_accounts_text"
+                            android:background="@color/option_button_background"
+                            android:paddingBottom="4dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="4dp"
+                            android:text="Banco: BOD\nTipo de cuenta: Corriente\nNro: 0105-2255-2221548739\nCliente: Brokers Asociados"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="14sp"/>
+
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="right"
+                        android:layout_margin="8dp"
+                        android:text="@string/status_confirm"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- Customer Locations (Locaciones del customer) -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/customer_locations_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#f1f1f1"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:text="@string/customer_locations_title"
+                        android:textAllCaps="true"
+                        android:textColor="@color/card_title_color_status_confirm"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/customer_locations_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:text="@string/selected_location"
+                            android:textColor="#3e3e3e"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/customer_locations_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_below="@id/customer_locations_text"
+                            android:background="@color/option_button_background"
+                            android:paddingBottom="4dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="4dp"
+                            android:text="C.C. Sambil Maracaibo, Piso 2, Local 5A, al lado de Farmatodo"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="14sp"/>
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:text="@string/status_confirm"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- Customer's Bank Accounts (Cuentas bancarias del customer) -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/customer_bank_accounts_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#f1f1f1"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:text="@string/customer_bank_account_title"
+                        android:textAllCaps="true"
+                        android:textColor="@color/card_title_color_status_confirm"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/customer_bank_accounts_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:text="@string/selected_bank_account"
+                            android:textColor="#3e3e3e"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/customer_bank_accounts_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_below="@id/customer_bank_accounts_text"
+                            android:background="@color/option_button_background"
+                            android:paddingBottom="4dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="4dp"
+                            android:text="Banco: BOD\nTipo de cuenta: Corriente\nNro: 0105-2255-2221548739\nCliente: Brokers Asociados"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="14sp"/>
+
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:text="@string/status_confirm"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- Payment Date (Fecha de pago) -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/payment_date_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#f1f1f1"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:text="@string/payment_date_title"
+                        android:textColor="#222"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/payment_date_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/payment_date"
+                            android:textColor="#3e3e3e"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/payment_date_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_toEndOf="@+id/payment_date_text"
+                            android:layout_toRightOf="@+id/payment_date_text"
+                            android:background="@color/option_button_background"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:text="04/12/2015"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="14sp"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/payment_time_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_toEndOf="@+id/payment_date_value"
+                            android:layout_toRightOf="@+id/payment_date_value"
+                            android:background="@color/option_button_background"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:text="15:30 pm"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="14sp"/>
+
+                    </RelativeLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:text="@string/status_confirm"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- Payment Date (Fecha de pago) -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/delivery_date_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#f1f1f1"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:text="@string/delivery_date_title"
+                        android:textAllCaps="true"
+                        android:textColor="#222"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/delivery_date_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/delivery_date_text"
+                            android:textColor="#3e3e3e"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/delivery_date_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_toEndOf="@+id/delivery_date_text"
+                            android:layout_toRightOf="@+id/delivery_date_text"
+                            android:background="@color/option_button_background"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:text="04/12/2015"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="14sp"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/delivery_time_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_toEndOf="@+id/delivery_date_value"
+                            android:layout_toRightOf="@+id/delivery_date_value"
+                            android:background="@color/option_button_background"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:text="15:30 pm"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="14sp"/>
+
+                    </RelativeLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:text="@string/status_confirm"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- Negotiation Expiration Date (Duracion de la negociacion) -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/negotiation_expiration_time_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#f1f1f1"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:text="NEGOTIATION EXPIRATION DATE"
+                        android:textColor="#222"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:id="@+id/negotiation_expiration_time_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:text="Expiration Date:"
+                            android:textColor="#3e3e3e"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/expiration_date_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_toRightOf="@+id/negotiation_expiration_time_text"
+                            android:background="@color/option_button_background"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:text="04/12/2015"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="14sp"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/expiration_time_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_toRightOf="@+id/expiration_date_value"
+                            android:background="@color/option_button_background"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:text="15:30 pm"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="14sp"/>
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#2e2e2e2e"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:text="@string/status_confirm"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- Add a Note (Boton para agregar una nota) -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/add_a_note_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#f1f1f1"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="2dp"
+                tools:visibility="visible">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:text="@string/add_a_note_button"
+                    android:textColor="#222"
+                    android:textSize="16sp"/>
+
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/send_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/cbw_circular_shape"
+            android:gravity="center"
+            android:text="SEND"
+            android:textAllCaps="true"
+            android:textColor="@color/withe"/>
+    </LinearLayout>
+
+</ScrollView>

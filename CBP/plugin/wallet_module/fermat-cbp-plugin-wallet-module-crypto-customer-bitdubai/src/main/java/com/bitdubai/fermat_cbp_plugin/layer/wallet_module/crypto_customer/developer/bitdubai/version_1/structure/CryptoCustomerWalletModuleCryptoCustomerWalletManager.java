@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
@@ -85,7 +86,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
             for (ContractBasicInformation item : openContracts) {
-                if (item.getStatus().equals(ContractStatus.PENDING_CONFIRMATION))
+                //TODO: Changed for Manuel Perez on 30/11/2015 for compiling.
+                if (item.getStatus().equals(ContractTransactionStatus.PENDING_CONFIRMATION))
                     waitingForBroker.add(item);
             }
 

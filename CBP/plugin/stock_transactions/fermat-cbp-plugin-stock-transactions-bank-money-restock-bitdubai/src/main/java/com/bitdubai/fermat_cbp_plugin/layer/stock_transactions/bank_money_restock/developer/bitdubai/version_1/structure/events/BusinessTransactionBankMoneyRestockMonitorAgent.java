@@ -144,28 +144,28 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent  implements Agent{
                         if (BankTransactionStatus.CONFIRMED.getCode() == bankTransactionStatus.getCode())
                         {
 
-                           try {
-                                WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(bankMoneyTransaction.getTransactionId(),
-                                                                                                                null,
-                                                                                                                BalanceType.AVAILABLE,
-                                                                                                                TransactionType.CREDIT,
-                                                                                                                CurrencyType.BANK_MONEY,
-                                                                                                                bankMoneyTransaction.getCbpWalletPublicKey(),
-                                                                                                                bankMoneyTransaction.getActorPublicKey(),
-                                                                                                                bankMoneyTransaction.getAmount(),
-                                                                                                                new Date().getTime() / 1000,
-                                                                                                                bankMoneyTransaction.getConcept());
-
-                               cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
-
-                               bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
-                               stockTransactionBankMoneyRestockManager.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
-
-                           } catch (CantPerformTransactionException e) {
-                               errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-                            } catch (CryptoBrokerWalletNotFoundException e) {
-                               errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-                            }
+//                           try {
+//                                WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(bankMoneyTransaction.getTransactionId(),
+//                                                                                                                null,
+//                                                                                                                BalanceType.AVAILABLE,
+//                                                                                                                TransactionType.CREDIT,
+//                                                                                                                CurrencyType.BANK_MONEY,
+//                                                                                                                bankMoneyTransaction.getCbpWalletPublicKey(),
+//                                                                                                                bankMoneyTransaction.getActorPublicKey(),
+//                                                                                                                bankMoneyTransaction.getAmount(),
+//                                                                                                                new Date().getTime() / 1000,
+//                                                                                                                bankMoneyTransaction.getConcept());
+//
+//                               cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
+//
+//                               bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
+//                               stockTransactionBankMoneyRestockManager.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
+//
+//                           } catch (CantPerformTransactionException e) {
+//                               errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+//                            } catch (CryptoBrokerWalletNotFoundException e) {
+//                               errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+//                            }
                         }
 
                         break;

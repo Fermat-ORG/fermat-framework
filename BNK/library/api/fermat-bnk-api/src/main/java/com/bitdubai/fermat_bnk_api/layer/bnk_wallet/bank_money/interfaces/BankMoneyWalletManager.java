@@ -12,5 +12,5 @@ public interface BankMoneyWalletManager extends FermatManager {
 
     public BankMoneyWallet loadBankMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyWalletException;
 
-    public void createBankMoneyWallet (String walletPublicKey) throws CantCreateBankMoneyWalletException;
+    /*public void createBankMoneyWallet (String walletPublicKey) throws CantCreateBankMoneyWalletException;*/
 }
