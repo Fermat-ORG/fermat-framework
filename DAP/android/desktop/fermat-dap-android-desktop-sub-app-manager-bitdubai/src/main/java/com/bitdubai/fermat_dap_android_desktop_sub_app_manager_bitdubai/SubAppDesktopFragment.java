@@ -227,7 +227,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-identity-issuer":
-                    holder.imageView.setImageResource(R.drawable.asset_identity_issuer);
+                    holder.imageView.setImageResource(R.drawable.asset_issuer_identity);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -241,7 +241,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-factory":
-                    holder.imageView.setImageResource(R.drawable.factory_nuevo);
+                    holder.imageView.setImageResource(R.drawable.asset_factory);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -262,7 +262,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-community-issuer":
-                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setImageResource(R.drawable.asset_issuer_comunity);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -276,7 +276,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-community-user":
-                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setImageResource(R.drawable.asset_user_comunity);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -312,7 +312,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "wallet_factory":
-                    holder.imageView.setImageResource(R.drawable.factory_nuevo);
+                    holder.imageView.setImageResource(R.drawable.wallet_factory);
                     holder.imageView.setTag("FactoryActivity|1");
                     linearLayout.setTag("FactoryActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -325,7 +325,7 @@ public class SubAppDesktopFragment extends Fragment {
                     break;
 
                 case "wallet_publisher":
-                    holder.imageView.setImageResource(R.drawable.publisher_nuevo);
+                    holder.imageView.setImageResource(R.drawable.wallet_publisher);
                     holder.imageView.setTag("PublisherActivity|1");
                     linearLayout.setTag("PublisherActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -339,7 +339,7 @@ public class SubAppDesktopFragment extends Fragment {
                     break;
 
                 case "wallet_store":
-                    holder.imageView.setImageResource(R.drawable.store_nuevo);
+                    holder.imageView.setImageResource(R.drawable.wallet_store);
                     holder.imageView.setTag("StoreFrontActivity|1");
                     linearLayout.setTag("StoreFrontActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
