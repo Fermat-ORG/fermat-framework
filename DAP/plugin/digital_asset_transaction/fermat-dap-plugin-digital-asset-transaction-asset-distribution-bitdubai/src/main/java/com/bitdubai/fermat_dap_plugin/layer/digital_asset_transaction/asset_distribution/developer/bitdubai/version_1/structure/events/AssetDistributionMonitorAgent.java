@@ -294,6 +294,10 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                         DigitalAsset digitalAsset = digitalAssetDistributionVault.getDigitalAssetFromLocalStorage(assetAcceptedGenesisTransaction);
                         sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo, digitalAsset.getGenesisAmount());
 
+                        /**
+                         * Now that the bitcoins are out, Is irreversible, so I will do the debit in the wallet
+                         */
+
                         assetDistributionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
                     }
                     List<String> assetRejectedByContractGenesisTransactionList = assetDistributionDao.getGenesisTransactionByAssetRejectedByContractStatus();
@@ -386,9 +390,13 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                                 continue;
                             }
                             System.out.println("ASSET DISTRIBUTION crypto transaction on crypto network " + cryptoGenesisTransaction.getTransactionHash());
-                            //String transactionInternalId=this.assetDistributionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
-                            //TODO: DEBIT TO ASSET WALLET
-                            //digitalAssetDistributionVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK);
+                            String transactionInternalId=this.assetDistributionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
+                            /**
+                             * If the transaction is CryptoStatus.PENDING_SUBMIT, then bitcoins are out..I'm done from this side so will execute the debit.
+                             * TODO Review lo correcto seria actualizar el balance luego de que la transaccion se confirma en blockchain.
+                             */
+                            String actorAssetUserPublicKey = assetDistributionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
+                            digitalAssetDistributionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.DISTRIBUTION, actorAssetUserPublicKey);
                             assetDistributionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
 
                         }

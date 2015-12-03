@@ -2,7 +2,9 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdu
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -17,8 +19,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
@@ -42,6 +47,8 @@ import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdub
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -630,6 +637,147 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
         updateLongFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME, System.currentTimeMillis(), assetPublicKey);
     }
 
+    public DigitalAsset getAssetByPublicKey(String assetPublicKey) {
+        try {
+            return (DigitalAsset) XMLParser.parseXML(pluginFileSystem.getTextFile(plugin, PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent(), new DigitalAsset());
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            return null;
+        }
+    }
+
+    //Methods for construct the AssetStatistic object.
+    public String getUserPublicKey(String assetPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        return getAssetStatisticStringFieldByPk(assetPublicKey, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME);
+    }
+
+    public String getRedeemPointPublicKey(String assetPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        return getAssetStatisticStringFieldByPk(assetPublicKey, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME);
+    }
+
+    public AssetCurrentStatus getStatus(String assetPublicKey) {
+        try {
+            return AssetCurrentStatus.getByCode(getAssetStatisticStringFieldByPk(assetPublicKey, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME));
+        } catch (InvalidParameterException | CantGetAssetStatisticException | RecordsNotFoundException e) {
+            return AssetCurrentStatus.ASSET_CREATED;
+        }
+    }
+
+    public String getAssetName(String assetPublicKey) {
+        try {
+            return getAssetStatisticStringFieldByPk(assetPublicKey, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_NAME_COLUMN_NAME);
+        } catch (CantGetAssetStatisticException | RecordsNotFoundException e) {
+            return Validate.DEFAULT_STRING;
+        }
+    }
+
+    public Date getDistributionDate(String assetPublicKey) {
+        try {
+            return new Date(getAssetStatisticLongFieldByPk(assetPublicKey, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_DISTRIBUTION_DATE_COLUMN_NAME));
+        } catch (CantGetAssetStatisticException | RecordsNotFoundException e) {
+            return null;
+        }
+    }
+
+    public Date getUsageDate(String assetPublicKey) {
+        try {
+            return new Date(getAssetStatisticLongFieldByPk(assetPublicKey, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME));
+        } catch (CantGetAssetStatisticException | RecordsNotFoundException e) {
+            return null;
+        }
+    }
+
+    //Query Methods.
+    public List<String> getAllAssetPublicKeyForAssetName(String assetName) throws CantGetAssetStatisticException {
+        String context = "Asset Name: " + assetName;
+        try {
+            DatabaseTable assetStatisticTable;
+            assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
+            assetStatisticTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_NAME_COLUMN_NAME, assetName, DatabaseFilterType.EQUAL);
+            assetStatisticTable.loadToMemory();
+
+            if (assetStatisticTable.getRecords().isEmpty()) {
+                return Collections.EMPTY_LIST;
+            }
+
+            List<String> returnList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : assetStatisticTable.getRecords()) {
+                returnList.add(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME));
+            }
+            return returnList;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantGetAssetStatisticException(exception, context, "Cannot load table to memory.");
+        }
+    }
+
+    public List<String> getAllAssetPublicKeyForAssetNameAndStatus(String assetName, AssetCurrentStatus status) throws CantGetAssetStatisticException {
+        String context = "Asset Name: " + assetName;
+        try {
+            DatabaseTable assetStatisticTable;
+            assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
+            assetStatisticTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_NAME_COLUMN_NAME, assetName, DatabaseFilterType.EQUAL);
+            assetStatisticTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
+            assetStatisticTable.loadToMemory();
+
+            if (assetStatisticTable.getRecords().isEmpty()) {
+                return Collections.EMPTY_LIST;
+            }
+
+            List<String> returnList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : assetStatisticTable.getRecords()) {
+                returnList.add(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME));
+            }
+            return returnList;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantGetAssetStatisticException(exception, context, "Cannot load table to memory.");
+        }
+    }
+
+    public List<String> getAllAssetPublicKey() throws CantGetAssetStatisticException {
+        try {
+            DatabaseTable assetStatisticTable;
+            assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
+            assetStatisticTable.loadToMemory();
+
+            if (assetStatisticTable.getRecords().isEmpty()) {
+                return Collections.EMPTY_LIST;
+            }
+
+            List<String> returnList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : assetStatisticTable.getRecords()) {
+                returnList.add(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME));
+            }
+            return returnList;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantGetAssetStatisticException(exception, null, "Cannot load table to memory.");
+        }
+    }
+
+    public List<String> getAllAssetPublicKeyForStatus(AssetCurrentStatus status) throws CantGetAssetStatisticException {
+        String context = "Asset Status: " + status.getCode();
+        try {
+            DatabaseTable assetStatisticTable;
+            assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
+            assetStatisticTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
+            assetStatisticTable.loadToMemory();
+
+            if (assetStatisticTable.getRecords().isEmpty()) {
+                return Collections.EMPTY_LIST;
+            }
+
+            List<String> returnList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : assetStatisticTable.getRecords()) {
+                returnList.add(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME));
+            }
+            return returnList;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantGetAssetStatisticException(exception, context, "Cannot load table to memory.");
+        }
+    }
+
 
     //PRIVATE METHODS
 
@@ -656,6 +804,44 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
         }
     }
 
+    private String getAssetStatisticStringFieldByPk(String assetPublicKey, String column) throws CantGetAssetStatisticException, RecordsNotFoundException {
+        String context = "assetPublicKey: " + assetPublicKey;
+        try {
+            DatabaseTable assetStatisticTable;
+            assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
+            DatabaseTableRecord record = assetStatisticTable.getRecordFromPk(assetPublicKey);
+
+            if (record == null) {
+                throw new RecordsNotFoundException(null, context, "");
+            }
+
+            return record.getStringValue(column);
+        } catch (RecordsNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CantGetAssetStatisticException(e, context, "Database error.");
+        }
+    }
+
+    private long getAssetStatisticLongFieldByPk(String assetPublicKey, String column) throws CantGetAssetStatisticException, RecordsNotFoundException {
+        String context = "assetPublicKey: " + assetPublicKey;
+        try {
+            DatabaseTable assetStatisticTable;
+            assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
+            DatabaseTableRecord record = assetStatisticTable.getRecordFromPk(assetPublicKey);
+
+            if (record == null) {
+                throw new RecordsNotFoundException(null, context, "");
+            }
+
+            return record.getLongValue(column);
+        } catch (RecordsNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CantGetAssetStatisticException(e, context, "Database error.");
+        }
+    }
+
     private void updateStringFieldByAssetPublicKey(String columnName, String value, String assetPublicKey) throws CantGetAssetStatisticException, RecordsNotFoundException {
         String context = "Column Name: " + columnName + " - Asset Public Key: " + assetPublicKey + " - Value: " + value;
         try {
@@ -678,5 +864,4 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             throw new CantGetAssetStatisticException(exception, context, "Cannot update record.");
         }
     }
-
 }

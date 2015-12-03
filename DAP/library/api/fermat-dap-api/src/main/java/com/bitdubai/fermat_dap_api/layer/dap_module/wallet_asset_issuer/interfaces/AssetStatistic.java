@@ -12,6 +12,14 @@ import java.util.Date;
  * @since version 1.0
  */
 public interface AssetStatistic {
+    /**
+     * This method returns the public key associated with the asset for this statistic, even
+     * when this public key is not very useful for the statistic we'll have it in this object
+     * in case we need to use it in the future.
+     *
+     * @return {@link String} with the public key of the asset.
+     */
+    String assetPublicKey();
 
     /**
      * This method search for user that owns this asset.
@@ -52,4 +60,12 @@ public interface AssetStatistic {
      * @return {@link ActorAssetRedeemPoint} instance if the asset has been redeemed, otherwise null.
      */
     ActorAssetRedeemPoint getRedeemPoint();
+
+    /**
+     * This method search for the asset name that is associated with this statistic so we can
+     * group all the assets with the same name and have a global statistic.
+     *
+     * @return {@link String} with the asset's name.
+     */
+    String getAssetName();
 }
