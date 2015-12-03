@@ -199,7 +199,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "wallet_factory":
-                    holder.imageView.setImageResource(R.drawable.wallet_factory_icon);
+                    holder.imageView.setImageResource(R.drawable.wallet_factory);
                     holder.imageView.setTag("FactoryActivity|1");
                     linearLayout.setTag("FactoryActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +212,7 @@ public class SubAppDesktopFragment extends Fragment {
                     break;
 
                 case "wallet_publisher":
-                    holder.imageView.setImageResource(R.drawable.wallet_publisher_icon);
+                    holder.imageView.setImageResource(R.drawable.wallet_publisher);
                     holder.imageView.setTag("PublisherActivity|1");
                     linearLayout.setTag("PublisherActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -226,7 +226,7 @@ public class SubAppDesktopFragment extends Fragment {
                     break;
 
                 case "wallet_store":
-                    holder.imageView.setImageResource(R.drawable.wallet_store_icon);
+                    holder.imageView.setImageResource(R.drawable.wallet_store);
                     holder.imageView.setTag("StoreFrontActivity|1");
                     linearLayout.setTag("StoreFrontActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -239,7 +239,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "sub-app-asset-factory":
-                    holder.imageView.setImageResource(R.drawable.wallet_store_icon);
+                    holder.imageView.setImageResource(R.drawable.asset_factory);
                     holder.imageView.setTag("asset|1");
                     linearLayout.setTag("asset|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
