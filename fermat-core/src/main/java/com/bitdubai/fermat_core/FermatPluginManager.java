@@ -8,7 +8,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantP
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantResumePluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginIdsManagerException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPluginIdsManagerException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStopPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CyclicalRelationshipFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
