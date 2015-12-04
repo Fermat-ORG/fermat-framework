@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorConnection;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import java.util.UUID;

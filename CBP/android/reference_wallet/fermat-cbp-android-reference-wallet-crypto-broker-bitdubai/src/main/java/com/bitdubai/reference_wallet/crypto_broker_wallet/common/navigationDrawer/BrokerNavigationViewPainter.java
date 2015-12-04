@@ -56,8 +56,7 @@ public class BrokerNavigationViewPainter implements com.bitdubai.fermat_android_
 
     @Override
     public Drawable addBodyBackground() {
-        return ContextCompat.getDrawable(activity.getApplicationContext(), R.color.cbw_toolbar_end_background);
-        //return null;
+        return ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.navigation_drawer_background);
     }
 
     @Override

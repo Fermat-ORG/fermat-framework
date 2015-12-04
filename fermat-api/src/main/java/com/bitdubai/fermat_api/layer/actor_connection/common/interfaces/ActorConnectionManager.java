@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_api.layer.actor_connection.common.interfaces;
 
-import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorConnection;
-import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorConnectionSearch;
-import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorIdentity;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnectionSearch;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcceptActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantCancelActorConnectionRequestException;
