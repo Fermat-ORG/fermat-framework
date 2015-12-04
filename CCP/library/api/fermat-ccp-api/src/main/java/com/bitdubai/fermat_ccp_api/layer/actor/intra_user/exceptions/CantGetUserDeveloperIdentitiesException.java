@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions;
+package com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
@@ -21,4 +21,5 @@ public class CantGetUserDeveloperIdentitiesException extends FermatException {
     public CantGetUserDeveloperIdentitiesException(String context, String possibleReason) {
         super(DEFAULT_MESSAGE, null, context, possibleReason);
     }
+
 }

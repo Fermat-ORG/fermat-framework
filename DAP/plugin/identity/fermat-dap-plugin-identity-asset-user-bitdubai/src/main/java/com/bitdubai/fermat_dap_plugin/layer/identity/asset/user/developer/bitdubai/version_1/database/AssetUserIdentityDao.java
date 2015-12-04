@@ -22,8 +22,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.AssetUserIdentityPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserIdentityPrivateKeyException;
@@ -144,7 +144,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
 
         try {
             if (aliasExists (alias)) {
-                throw new CantCreateNewDeveloperException ("Cant create new Asset User, alias exists.", "Asset User Identity", "Cant create new Asset User, alias exists.");
+                throw new CantCreateNewDeveloperException("Cant create new Asset User, alias exists.", "Asset User Identity", "Cant create new Asset User, alias exists.");
             }
 
             persistNewUserPrivateKeysFile(publicKey, privateKey);
@@ -195,7 +195,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException ("Cant get Asset User identity list, table not found.", "Asset User", "Cant get Intra User identity list, table not found.");
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset User identity list, table not found.", "Asset User", "Cant get Intra User identity list, table not found.");
             }
 
 
