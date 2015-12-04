@@ -523,6 +523,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Store");
+            runtimeTitleBar.setColor("#aa2bce");
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setTitleColor("#232bca");
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             runtimeFragment = new Fragment();
@@ -1035,14 +1039,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setBackActivity(null);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Intra user Identity");
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeTitleBar.setColor("#FFFFFF");
             runtimeTitleBar.setTitleColor("#a2b2da");
-            runtimeTitleBar.setLabelSize(16);
+            runtimeTitleBar.setLabelSize(18);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
@@ -1058,14 +1062,17 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
-            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Create New Identity");
+            runtimeTitleBar.setLabel("Identity Manager");
             runtimeTitleBar.setColor("#FFFFFF");
-            runtimeTitleBar.setLabelSize(16);
+            runtimeTitleBar.setTitleColor("#a2b2da");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();

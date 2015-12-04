@@ -23,9 +23,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -34,6 +36,7 @@ import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 
@@ -65,6 +68,7 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
 
     IntraUserIdentitySubAppSession intraUserIdentitySubAppSession ;
     private IntraWalletUserIdentity identitySelected;
+    private boolean isUpdate=false;
 
 
     public static CreateIntraUserIdentityFragment newInstance() {
@@ -126,7 +130,7 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
                 int resultKey = createNewIdentity();
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
-                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(),subAppsSession.getAppPublicKey());
+                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), subAppsSession.getAppPublicKey());
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
                         Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
@@ -143,18 +147,40 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
     }
 
     private void setUpIdentity() {
-        identitySelected = (IntraWalletUserIdentity)intraUserIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
+        try {
 
-        if(identitySelected!=null){
-            if(identitySelected.getProfileImage()!=null){
-                if(identitySelected.getProfileImage().length>0){
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(),0,identitySelected.getProfileImage().length);
-                    bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-                    brokerImageByteArray = toByteArray(bitmap);
+            identitySelected = (IntraWalletUserIdentity) intraUserIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
+
+
+            if (identitySelected != null) {
+                loadIdentity();
+            } else{
+                identitySelected = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+                if(identitySelected!=null) {
+                    loadIdentity();
+                    isUpdate = true;
+                    createButton.setText("Save changes");
                 }
             }
-            mBrokerName.setText(identitySelected.getAlias());
+        }catch (Exception e){
+            e.printStackTrace();
         }
+    }
+
+    private void loadIdentity(){
+        if (identitySelected.getProfileImage() != null) {
+            if (identitySelected.getProfileImage().length > 0) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(), 0, identitySelected.getProfileImage().length);
+                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
+                bitmap = ImagesUtils.getRoundedBitmap(getResources(), bitmap).getBitmap();
+                brokerImageByteArray = toByteArray(bitmap);
+            }else{
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.profile_image);
+
+                //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
+            }
+        }
+        mBrokerName.setText(identitySelected.getAlias());
     }
 
     @Override
@@ -229,9 +255,13 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         if (dataIsValid) {
             if (moduleManager != null) {
                 try {
+                    if(!isUpdate)
                     moduleManager.createNewIntraWalletUser(brokerNameText, brokerImageByteArray);
+                    else moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(),brokerNameText,brokerImageByteArray);
                 } catch (CantCreateNewIntraWalletUserException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
+                } catch (CantUpdateIdentityException e) {
+                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 }
                 return CREATE_IDENTITY_SUCCESS;
             }
