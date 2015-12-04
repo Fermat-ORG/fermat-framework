@@ -76,7 +76,9 @@ public class IncomingExtraUserTransactionHandler {
         IncomingMoneyNotificationEvent incomingMoneyNotificationEvent =  (IncomingMoneyNotificationEvent) platformEvent;
         incomingMoneyNotificationEvent.setSource(EventSource.INCOMING_EXTRA_USER);
         incomingMoneyNotificationEvent.setActorId(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
-        incomingMoneyNotificationEvent.setActorType(Actors.getByCode(cryptoAddressBookRecord.getDeliveredToActorPublicKey()));
+//        incomingMoneyNotificationEvent.setActorType(Actors.getByCode(cryptoAddressBookRecord.getDeliveredToActorPublicKey()));
+        //TODO CAMBIADO PARA EVIAR EXCEPTION YA QUE LA getDeliveredToActorPublicKey NO ES UN ENUM TYPE ACTOR
+        incomingMoneyNotificationEvent.setActorType(Actors.getByCode(cryptoAddressBookRecord.getDeliveredToActorType().getCode()));
         incomingMoneyNotificationEvent.setAmount(transaction.getInformation().getCryptoAmount());
         incomingMoneyNotificationEvent.setCryptoCurrency(transaction.getInformation().getCryptoCurrency());
         incomingMoneyNotificationEvent.setWalletPublicKey(cryptoAddressBookRecord.getWalletPublicKey());

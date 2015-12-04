@@ -48,11 +48,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class IncomingCryptoMonitorAgent implements DealsWithRegistry, TransactionAgent {
 
     private final BitcoinNetworkManager bitcoinNetworkManager;
-    private final CryptoVaultManager    cryptoVaultManager   ;
+    private final CryptoVaultManager cryptoVaultManager   ;
     private final ErrorManager          errorManager         ;
 
     public IncomingCryptoMonitorAgent(final BitcoinNetworkManager bitcoinNetworkManager,
-                                      final CryptoVaultManager    cryptoVaultManager   ,
+                                      final CryptoVaultManager cryptoVaultManager   ,
                                       final ErrorManager          errorManager         ) {
 
         this.bitcoinNetworkManager = bitcoinNetworkManager;
@@ -144,11 +144,11 @@ public class IncomingCryptoMonitorAgent implements DealsWithRegistry, Transactio
         private static final int SLEEP_TIME = 5000;
 
         private final BitcoinNetworkManager bitcoinNetworkManager;
-        private final CryptoVaultManager    cryptoVaultManager   ;
+        private final CryptoVaultManager cryptoVaultManager   ;
         private final ErrorManager          errorManager         ;
 
         public MonitorAgent(final BitcoinNetworkManager bitcoinNetworkManager,
-                                          final CryptoVaultManager    cryptoVaultManager   ,
+                                          final CryptoVaultManager cryptoVaultManager   ,
                                           final ErrorManager          errorManager         ) {
 
             this.bitcoinNetworkManager = bitcoinNetworkManager;
