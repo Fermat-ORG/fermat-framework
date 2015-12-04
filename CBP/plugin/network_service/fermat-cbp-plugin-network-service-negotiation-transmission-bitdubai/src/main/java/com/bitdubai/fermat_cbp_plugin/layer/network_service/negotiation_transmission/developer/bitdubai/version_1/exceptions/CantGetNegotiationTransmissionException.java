@@ -20,4 +20,8 @@ public class CantGetNegotiationTransmissionException extends FermatException {
     public CantGetNegotiationTransmissionException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    public CantGetNegotiationTransmissionException(Exception cause, String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
 }

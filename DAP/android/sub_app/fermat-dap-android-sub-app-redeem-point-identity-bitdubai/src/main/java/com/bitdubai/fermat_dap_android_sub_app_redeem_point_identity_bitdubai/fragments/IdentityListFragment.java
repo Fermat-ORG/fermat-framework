@@ -20,7 +20,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.se
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
