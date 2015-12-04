@@ -9,7 +9,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum CryptoCurrencyVault implements FermatVaultEnum {
 
-    BITCOIN_VAULT("BITV", CryptoCurrency.BITCOIN);
+    BITCOIN_VAULT("BITV", CryptoCurrency.BITCOIN),
+
+    ;
 
     private String code;
 

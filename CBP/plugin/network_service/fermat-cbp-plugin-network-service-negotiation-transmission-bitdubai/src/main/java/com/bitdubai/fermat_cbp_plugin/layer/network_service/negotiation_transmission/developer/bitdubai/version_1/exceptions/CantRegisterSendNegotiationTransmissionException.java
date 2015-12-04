@@ -20,4 +20,8 @@ public class CantRegisterSendNegotiationTransmissionException extends FermatExce
     public CantRegisterSendNegotiationTransmissionException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    public CantRegisterSendNegotiationTransmissionException(Exception cause, String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
 }

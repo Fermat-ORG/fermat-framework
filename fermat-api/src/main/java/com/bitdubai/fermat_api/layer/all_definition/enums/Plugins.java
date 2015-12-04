@@ -19,8 +19,14 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_BITCOIN_CRYPTO_NETWORK2("BBTCCNET2"),
     BITDUBAI_CLOUD_CHANNEL("BCLOUDC"),
 
+    // Init p2p
     BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER("BWSCCLSERVER"),
     BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL("BWSCCLIENTCH"),
+
+    BITDUBAI_COMMUNICATIONS_NETWORK_NODE("BCNNODE"),
+    BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT("BCNCLIENT"),
+
+    //End p2p
 
     BITDUBAI_CLOUD_SERVER_COMMUNICATION("BCLOUSC"),
     BITDUBAI_USER_NETWORK_SERVICE("BUSERNETS"),
@@ -30,7 +36,6 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET("BDWALLBW"),
     BITDUBAI_WALLET_RUNTIME_MODULE("BWALLRUNM"),
     BITDUBAI_BITCOIN_CRYPTO_VAULT("BBTCCRYV"),
-    BITDUBAI_ASSETS_CRYPTO_VAULT("BASSTCRYV"),
     BITDUBAI_INTRA_USER_FACTORY_MODULE("BINUSFACM"),
     BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE("BBNWWM"),
     BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE("BCLPWWM"),
@@ -222,6 +227,10 @@ public enum Plugins implements FermatEnum {
     WALLET_SETTINGS             ("WSE"),
     WALLET_STATISTICS           ("WSTA"),
     WALLET_STORE                ("WST"),
+
+
+
+
     WS_CLOUD_CLIENT             ("WCL"),
 
     //CBP
@@ -351,6 +360,10 @@ public enum Plugins implements FermatEnum {
             case ("NGP"):   return NEGOTIATION_PURCHASE     ;
             case "OPC":     return OPEN_CONTRACT            ;
             case "CLC":     return CLOSE_CONTRACT           ;
+
+            case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
+            case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
+
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

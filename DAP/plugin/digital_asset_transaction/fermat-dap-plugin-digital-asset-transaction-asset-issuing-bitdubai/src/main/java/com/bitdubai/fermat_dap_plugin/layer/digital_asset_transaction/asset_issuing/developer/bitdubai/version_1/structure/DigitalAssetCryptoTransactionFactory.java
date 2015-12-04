@@ -20,8 +20,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
@@ -781,7 +781,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 this.actorAssetIssuerPublicKey,
                 Actors.DAP_ASSET_ISSUER,
                 Platforms.DIGITAL_ASSET_PLATFORM,
-                VaultType.ASSET_VAULT,
+                VaultType.CRYPTO_ASSET_VAULT,
                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                 this.walletPublicKey,
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);

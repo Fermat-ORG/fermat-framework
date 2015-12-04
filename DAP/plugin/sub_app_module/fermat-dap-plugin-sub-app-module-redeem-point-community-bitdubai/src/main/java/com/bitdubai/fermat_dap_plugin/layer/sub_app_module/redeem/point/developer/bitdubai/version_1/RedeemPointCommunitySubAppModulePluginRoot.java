@@ -13,6 +13,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGet
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
@@ -46,19 +47,24 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
     }
 
     @Override
-    public List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException {
+    public List<RedeemPointActorRecord> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException {
+
+        List<RedeemPointActorRecord> actorAssetRedeemPoints = new ArrayList<>();
 
         try {
-            return actorAssetRedeemPointManager.getAllAssetRedeemPointActorInTableRegistered();
+            for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPointManager.getAllAssetRedeemPointActorInTableRegistered()) {
+                RedeemPointActorRecord redeemPointActorRecord = (RedeemPointActorRecord) actorAssetRedeemPoint;
+                actorAssetRedeemPoints.add(redeemPointActorRecord);
+            }
         } catch (CantGetAssetRedeemPointActorsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         }
-        return new ArrayList<>();
+        return actorAssetRedeemPoints;
     }
 
     @Override
-    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantConnectToActorAssetUserException {
+    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoint) throws CantConnectToActorAssetUserException {
 
         ActorAssetUser actorAssetUser;
         //TODO Actor Asset User de BD Local

@@ -173,14 +173,14 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.isActive() = "+communicationsVPNConnection.isActive());
+            // System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.isActive() = "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isActive()){
 
-                //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
+                // System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -224,10 +224,11 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                     notifyObservers(message);
                 }
             }
-            //Sleep for a time
-            if (!toReceive.isInterrupted()) {
-                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+            if(toReceive.isInterrupted() == Boolean.FALSE){
+                //Sleep for a time
+                toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
+
         } catch (InterruptedException e) {
             toReceive.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
@@ -303,9 +304,9 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
             }
 
-            if(!toSend.isInterrupted()){
+            if(toSend.isInterrupted() == Boolean.FALSE){
                 //Sleep for a time
-                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                toSend.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
