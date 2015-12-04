@@ -491,7 +491,8 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             this.register = false;
-            communicationNetworkServiceConnectionManager.closeAllConnection();
+            if(communicationNetworkServiceConnectionManager!=null)
+                communicationNetworkServiceConnectionManager.closeAllConnection();
         }
 
     }
@@ -523,19 +524,14 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
      */
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-
         if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
-
             VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-
+                if(communicationNetworkServiceConnectionManager!=null){
+                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                }
             }
-
         }
-
     }
 
 
