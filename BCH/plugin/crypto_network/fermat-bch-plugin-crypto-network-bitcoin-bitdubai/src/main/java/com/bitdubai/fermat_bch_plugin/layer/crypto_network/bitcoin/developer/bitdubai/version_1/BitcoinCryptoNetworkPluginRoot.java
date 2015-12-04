@@ -207,4 +207,16 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
         return  bitcoinCryptoNetworkManager.getCryptoTransactionFromBlockChain(txHash, blockHash);
     }
+
+
+    /**
+     * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
+     * @param parentHash
+     * @return
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public List<CryptoTransaction> getChildCryptoTransaction(String parentHash) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getChildCryptoTransaction(parentHash);
+    }
 }

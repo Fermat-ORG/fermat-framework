@@ -68,7 +68,7 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
     public void receivedNewDigitalAssetMetadataNotificationEvent(ReceivedNewDigitalAssetMetadataNotificationEvent event) throws CantSaveEventException {
         Logger LOG = Logger.getGlobal();
         LOG.info("ASSET RECEPTION EVENT TEST, I GOT AN EVENT:\n"+event);
-        startMonitorAgent();
+        //startMonitorAgent();
         this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         LOG.info("ASSET RECEPTION CHECK THE DATABASE");
     }

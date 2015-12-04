@@ -20,6 +20,8 @@ public class MenuItem implements FermatMenuItem {
     Activities linkToActivity;
     private String appLinkPublicKey;
 
+    boolean selected=false;
+
     /**
      * SideMenu class constructors
      */
@@ -72,5 +74,13 @@ public class MenuItem implements FermatMenuItem {
 
     public void setAppLinkPublicKey(String appLinkPublicKey) {
         this.appLinkPublicKey = appLinkPublicKey;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

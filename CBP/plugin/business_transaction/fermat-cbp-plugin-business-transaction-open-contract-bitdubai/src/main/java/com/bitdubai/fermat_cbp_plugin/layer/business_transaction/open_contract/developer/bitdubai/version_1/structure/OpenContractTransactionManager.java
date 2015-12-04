@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.OpenContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
@@ -66,8 +67,9 @@ public class OpenContractTransactionManager implements OpenContractManager{
 
 
     @Override
-    public OpenContractStatus getOpenContractStatus(String negotiationId) {
-        return null;
+    public ContractTransactionStatus getOpenContractStatus(String negotiationId) throws
+            UnexpectedResultReturnedFromDatabaseException {
+        return this.openContractBusinessTransactionDao.getContractTransactionStatusByNegotiationId(negotiationId);
     }
 
     @Override

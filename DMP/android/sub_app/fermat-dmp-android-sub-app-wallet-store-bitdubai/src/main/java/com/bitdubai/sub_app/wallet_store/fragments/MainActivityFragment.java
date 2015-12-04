@@ -152,22 +152,24 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     public ArrayList<WalletStoreListItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         ArrayList<WalletStoreListItem> data;
 
-        try {
-            WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
-            List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
+        data = WalletStoreListItem.getTestData(getResources());
 
-            data = new ArrayList<>();
-            for (WalletStoreCatalogueItem catalogItem : catalogueItems) {
-                WalletStoreListItem item = new WalletStoreListItem(catalogItem, getResources());
-                data.add(item);
-            }
-
-        } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
-            data = WalletStoreListItem.getTestData(getResources());
-        }
+//        try {
+//            WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
+//            List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
+//
+//            data = new ArrayList<>();
+//            for (WalletStoreCatalogueItem catalogItem : catalogueItems) {
+//                WalletStoreListItem item = new WalletStoreListItem(catalogItem, getResources());
+//                data.add(item);
+//            }
+//
+//        } catch (Exception e) {
+//            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+//                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//
+//            data = WalletStoreListItem.getTestData(getResources());
+//        }
 
         return data;
     }
@@ -259,17 +261,17 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
     private void showDetailsActivityFragment(WalletStoreListItem item) {
 
-        if(item.isTestData()){
+        if (item.isTestData()) {
             subAppsSession.setData(DEVELOPER_NAME, "developerAlias");
             subAppsSession.setData(LANGUAGE_ID, new UUID(0, 0));
             subAppsSession.setData(WALLET_VERSION, new Version(1, 0, 0));
             subAppsSession.setData(SKIN_ID, new UUID(0, 0));
-            subAppsSession.setData(PREVIEW_IMGS, null);
+            subAppsSession.setData(PREVIEW_IMGS, item.getScreenshots());
             subAppsSession.setData(BASIC_DATA, item);
 
-            changeActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY.getCode());
+            changeActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY.getCode(), subAppsSession.getAppPublicKey());
 
-        }else{
+        } else {
             final Activity activity = getActivity();
             FermatWorkerCallBack callBack = new FermatWorkerCallBack() {
                 @Override
