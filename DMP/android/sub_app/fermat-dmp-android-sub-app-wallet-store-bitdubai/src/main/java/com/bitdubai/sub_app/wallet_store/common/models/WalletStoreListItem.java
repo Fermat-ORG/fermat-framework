@@ -13,6 +13,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus.INSTALLED;
+
 /**
  * Created on 22/08/15.
  * Representa la informacion de un item de la lista de wallets que esta en el catalogo de la Wallet Store.
@@ -30,6 +32,7 @@ public class WalletStoreListItem implements Serializable {
     private UUID id;
     private WalletCategory category;
     private boolean testData;
+    private int bannerWalletRes;
 
 
     /**
@@ -51,7 +54,6 @@ public class WalletStoreListItem implements Serializable {
 
         installationStatus = catalogueItem.getInstallationStatus();
 
-
         try {
             byte[] iconBytes = catalogueItem.getIcon();
             walletIcon = BitmapFactory.decodeByteArray(iconBytes, 0, iconBytes.length);
@@ -59,6 +61,10 @@ public class WalletStoreListItem implements Serializable {
             walletIcon = BitmapFactory.decodeResource(res, R.drawable.wallet_1);
         }
 
+    }
+
+    public int getBannerWalletRes() {
+        return bannerWalletRes;
     }
 
 
@@ -87,43 +93,60 @@ public class WalletStoreListItem implements Serializable {
     }
 
 
-    private WalletStoreListItem(String walletName, InstallationStatus installationStatus, Bitmap walletIcon) {
+    private WalletStoreListItem(String walletName, InstallationStatus installationStatus, Bitmap walletIcon, int bannerWalletRes) {
         this.walletName = walletName;
         this.installationStatus = installationStatus;
         this.walletIcon = walletIcon;
         this.testData = true;
+        this.bannerWalletRes = bannerWalletRes;
     }
 
     public static ArrayList<WalletStoreListItem> getTestData(Resources res) {
 
-        String[] walletNames = {"Girl's wallet", "Boy's wallet", "Ladies", "Young", "Boca Junior's wallet",
-                "Carrefour's wallet", "Gucci's wallet", "Bank Itau's wallet", "Mc donal's wallet", "Van's wallet",
-                "Samsung's wallet", "Popular Bank's wallet", "Sony's wallet", "BMW's wallet", "HP's wallet",
-                "Billabong's wallet", "Starbuck's wallet"};
+        String[] walletNames = {
+                "Bitcoin Wallet",
+                "Crypto Broker",
+                "Crypto Customer",
+                "Asset Issuer",
+                "Asset User",
+                "Redeem Point"};
 
-        String[] prices = {"FREE", "$9.25", "FREE", "$7.65", "$5.32", "FREE", "$3.98", "FREE", "$0.24", "$3.40",
-                "FREE", "FREE", "20.01", "$1.00", "FREE", "FREE", "$3.21"};
+        String[] prices = {
+                "FREE",
+                "FREE",
+                "FREE",
+                "FREE",
+                "FREE",
+                "FREE"};
 
-        InstallationStatus[] installed = {InstallationStatus.INSTALLED, InstallationStatus.INSTALLED, InstallationStatus.INSTALLED,
-                InstallationStatus.INSTALLED, InstallationStatus.INSTALLED, InstallationStatus.INSTALLED, InstallationStatus.INSTALLED,
-                InstallationStatus.INSTALLED, InstallationStatus.NOT_INSTALLED, InstallationStatus.UPGRADE_AVAILABLE, InstallationStatus.NOT_INSTALLED,
-                InstallationStatus.INSTALLED, InstallationStatus.UPGRADE_AVAILABLE, InstallationStatus.NOT_INSTALLED, InstallationStatus.NOT_INSTALLED,
-                InstallationStatus.NOT_INSTALLED, InstallationStatus.NOT_INSTALLED};
+        InstallationStatus[] installed = {
+                INSTALLED,
+                INSTALLED,
+                INSTALLED,
+                INSTALLED,
+                INSTALLED,
+                INSTALLED};
 
-        int[] walletIcons = {R.drawable.wallet_store_cover_photo_girl, R.drawable.wallet_store_cover_photo_boy,
-                R.drawable.wallet_store_cover_photo_lady, R.drawable.wallet_store_cover_photo_young,
-                R.drawable.wallet_store_cover_photo_boca_juniors, R.drawable.wallet_store_cover_photo_carrefour,
-                R.drawable.wallet_store_cover_photo_gucci, R.drawable.wallet_store_cover_photo_bank_itau,
-                R.drawable.wallet_store_cover_photo_mcdonals, R.drawable.wallet_store_cover_photo_vans,
-                R.drawable.wallet_store_cover_photo_samsung, R.drawable.wallet_store_cover_photo_bank_popular,
-                R.drawable.wallet_store_cover_photo_sony, R.drawable.wallet_store_cover_photo_bmw,
-                R.drawable.wallet_store_cover_photo_hp, R.drawable.wallet_store_cover_photo_billabong,
-                R.drawable.wallet_store_cover_photo_starbucks};
+        int[] walletIcons = {
+                R.drawable.bitcoin_wallet,
+                R.drawable.crypto_broker,
+                R.drawable.crypto_customer,
+                R.drawable.asset_issuer,
+                R.drawable.asset_user_wallet,
+                R.drawable.redeem_point};
+
+        int[] walletBanners = {
+                R.drawable.banner_bitcoin_wallet,
+                R.drawable.banner_crypto_broker,
+                R.drawable.banner_crypto_customer,
+                R.drawable.asset_issuer,
+                R.drawable.asset_user_wallet,
+                R.drawable.redeem_point};
 
         ArrayList<WalletStoreListItem> testItems = new ArrayList<>();
         for (int i = 0; i < walletIcons.length && i < installed.length && i < prices.length && i < walletNames.length; i++) {
             Bitmap icon = BitmapFactory.decodeResource(res, walletIcons[i]);
-            WalletStoreListItem item = new WalletStoreListItem(walletNames[i], installed[i], icon);
+            WalletStoreListItem item = new WalletStoreListItem(walletNames[i], installed[i], icon, walletBanners[i]);
             testItems.add(item);
         }
 
@@ -133,5 +156,9 @@ public class WalletStoreListItem implements Serializable {
 
     public boolean isTestData() {
         return testData;
+    }
+
+    public void setBannerWalletRes(int bannerWalletRes) {
+        this.bannerWalletRes = bannerWalletRes;
     }
 }
