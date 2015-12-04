@@ -30,9 +30,11 @@ public class FragmentsCommons {
             if (intraUserLoginIdentity != null) {
                 if (intraUserLoginIdentity.getProfileImage() != null) {
                     if (intraUserLoginIdentity.getProfileImage().length > 0) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length);
-                        Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.RGB_565);
-                        bitmap = Bitmap.createScaledBitmap(convertedBitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inScaled = true;
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length,options);
+                        //Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.ARGB_8888);
+                        bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),false);
                         imageView.setImageBitmap(bitmap);
                     } else
                         Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
