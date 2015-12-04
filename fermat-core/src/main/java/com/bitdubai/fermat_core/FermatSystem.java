@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetResourcesManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetRuntimeManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPlatformException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;

@@ -1,9 +1,8 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignReferenceException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetPluginIdException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantGetPluginIdException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantPausePluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantResumePluginException;
@@ -13,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStopPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CyclicalRelationshipFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.UnexpectedServiceStatusException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.UnexpectedServiceStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;

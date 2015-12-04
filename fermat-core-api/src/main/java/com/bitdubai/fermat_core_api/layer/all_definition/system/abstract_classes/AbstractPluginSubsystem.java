@@ -2,7 +2,7 @@ package com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classe
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterDeveloperException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.DeveloperNotFoundException;
