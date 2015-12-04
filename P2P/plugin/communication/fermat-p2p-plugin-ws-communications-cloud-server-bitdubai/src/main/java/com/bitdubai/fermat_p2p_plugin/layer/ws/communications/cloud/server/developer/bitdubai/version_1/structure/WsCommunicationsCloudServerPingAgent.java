@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure;
 
 
+import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
 
@@ -25,7 +26,7 @@ public class WsCommunicationsCloudServerPingAgent extends Thread {
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(WsCommunicationsCloudServerPingAgent.class);
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WsCommunicationsCloudServerPingAgent.class));
 
     /*
      * Represent the sleep time for send new ping (10000 milliseconds)

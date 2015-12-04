@@ -22,6 +22,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.devel
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.Framedata;
@@ -50,7 +51,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(WsCommunicationCloudServer.class);
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WsCommunicationCloudServer.class));
 
     /**
      * Represent the default port

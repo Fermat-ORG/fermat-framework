@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
 
@@ -42,7 +43,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(ComponentRegistrationRequestPacketProcessor.class);
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ComponentRegistrationRequestPacketProcessor.class));
 
     /**
      * Represent the gson

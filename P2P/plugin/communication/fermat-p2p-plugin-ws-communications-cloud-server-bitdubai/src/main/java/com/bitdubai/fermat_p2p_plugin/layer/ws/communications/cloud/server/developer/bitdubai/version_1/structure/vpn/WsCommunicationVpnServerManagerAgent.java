@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
 
+import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
 import java.net.InetSocketAddress;
@@ -31,7 +32,7 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(WsCommunicationVpnServerManagerAgent.class);
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WsCommunicationVpnServerManagerAgent.class));
 
     /**
      * Represent the SLEEP_TIME

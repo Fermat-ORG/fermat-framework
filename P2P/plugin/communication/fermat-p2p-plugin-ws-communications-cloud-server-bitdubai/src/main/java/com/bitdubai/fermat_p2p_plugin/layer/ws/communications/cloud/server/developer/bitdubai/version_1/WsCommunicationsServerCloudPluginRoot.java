@@ -33,6 +33,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggerFactory;
 import org.java_websocket.WebSocketImpl;
@@ -65,7 +66,7 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(WsCommunicationsServerCloudPluginRoot.class);
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WsCommunicationsServerCloudPluginRoot.class));
 
     /**
      * Represents the value of DISABLE_SERVER
