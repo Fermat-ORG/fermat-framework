@@ -979,13 +979,13 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Intra user Identity");
             runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#FFFFFF");
-            runtimeTitleBar.setTitleColor("#a2b2da");
+            runtimeTitleBar.setColor("#1189a4");
+            runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setLabelSize(18);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#0288D1");
+            statusBar.setColor("#1189a4");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
@@ -1004,14 +1004,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Identity Manager");
-            runtimeTitleBar.setColor("#FFFFFF");
-            runtimeTitleBar.setTitleColor("#a2b2da");
+            runtimeTitleBar.setColor("#1189a4");
+            runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#0288D1");
+            statusBar.setColor("#1189a4");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
