@@ -25,9 +25,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
@@ -68,7 +68,7 @@ public class RedeemPointActorDao implements Serializable {
 
     /**
      * Constructor with parameters
-     * Because all the methods in this class do need a database connction
+     * Because all the methods in this class do need a database connection
      * This constructor initialize the database and throws the respective exception
      * if it can't be done you shouldn't continue with the use of this class
      * because every method is going to throw a {@link NullPointerException}

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions;
+package com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 

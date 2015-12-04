@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions;
+package com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
@@ -30,4 +30,3 @@ public class CantCreateNewDeveloperException extends FermatException {
         super(message, cause, context, possibleReason);
     }
 }
-
