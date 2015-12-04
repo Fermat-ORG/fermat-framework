@@ -88,7 +88,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
             try {
                 //image null
                 if(intraUserInformation!=null && identity!=null)
-                ((IntraUserSubAppSession)getSession()).getIntraUserModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(),identity.getPublicKey(),identity.getAlias());
+                ((IntraUserSubAppSession)getSession()).getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(),identity.getPublicKey(),identity.getAlias());
                 else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - " , Toast.LENGTH_SHORT).show();
                 }

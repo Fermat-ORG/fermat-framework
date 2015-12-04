@@ -107,7 +107,7 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
         /**
          * add navigation header
          */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
 
         /**
          * Navigation view items

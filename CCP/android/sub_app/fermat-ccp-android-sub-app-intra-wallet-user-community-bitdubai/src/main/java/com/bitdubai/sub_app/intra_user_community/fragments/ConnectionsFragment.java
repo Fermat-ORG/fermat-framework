@@ -121,7 +121,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
             setHasOptionsMenu(true);
             // setting up  module
-            moduleManager = ((IntraUserSubAppSession) subAppsSession).getIntraUserModuleManager();
+            moduleManager = ((IntraUserSubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
 
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
@@ -202,7 +202,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
         /**
          * add navigation header
          */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
 
         /**
          * Navigation view items

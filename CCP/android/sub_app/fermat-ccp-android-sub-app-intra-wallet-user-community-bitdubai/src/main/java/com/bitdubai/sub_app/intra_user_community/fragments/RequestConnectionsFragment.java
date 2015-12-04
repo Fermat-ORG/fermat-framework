@@ -50,7 +50,7 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
 
         try {
             // setting up  module
-            moduleManager = ((IntraUserSubAppSession) subAppsSession).getIntraUserModuleManager();
+            moduleManager = ((IntraUserSubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {

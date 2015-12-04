@@ -137,7 +137,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
 //        /**
 //         * add navigation header
 //         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
 //
 //        /**
 //         * Navigation view items
@@ -217,7 +217,6 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
 
     /**
      * @param show
-     * @param view instance
      */
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),

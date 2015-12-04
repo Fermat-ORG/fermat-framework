@@ -39,7 +39,7 @@ public class MoreDetailsActivityFragment extends FermatFragment {
         super.setSubAppsSession(subAppsSession);
 
         IntraUserSubAppSession session = (IntraUserSubAppSession) subAppsSession;
-        moduleManager = session.getIntraUserModuleManager();
+        moduleManager = session.getModuleManager();
     }
 
     @Override

@@ -295,7 +295,7 @@ public class RegisterIntraUserFragment extends FermatFragment {
 
             //thread.start();
 
-            intraUserSubAppSession.getIntraUserModuleManager().createIntraUser(editContactName.getText().toString(),identityImage);
+            intraUserSubAppSession.getModuleManager().createIntraUser(editContactName.getText().toString(),identityImage);
 
             Toast.makeText(getActivity(), "Identity sucessfully created", Toast.LENGTH_SHORT).show();
 
