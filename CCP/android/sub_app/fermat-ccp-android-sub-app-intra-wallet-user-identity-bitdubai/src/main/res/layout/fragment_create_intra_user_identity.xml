@@ -3,22 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/create_identity_fragment_background">
+    android:background="#FFFFFF">
 
-    <ImageView
+
+    <RelativeLayout
+        android:id="@+id/user_image"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/bg_circular_other_profile">
+
+        <ImageView
+            android:id="@+id/crypto_broker_image"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+             />
+
+    </RelativeLayout>
+    <!-- <ImageView
         android:id="@+id/crypto_broker_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
         android:background="@android:color/darker_gray"
-        android:src="@android:drawable/ic_menu_camera" />
+        android:src="@android:drawable/ic_menu_camera" />-->
 
     <EditText
         android:id="@+id/crypto_broker_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/crypto_broker_image"
+        android:layout_below="@+id/user_image"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -32,10 +52,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:background="@color/create_identity_button"
+        android:background="#5677fc"
         android:text="@string/create"
+        android:textSize="16sp"
         android:textColor="@android:color/white" />
 </RelativeLayout>
