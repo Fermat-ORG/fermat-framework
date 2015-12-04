@@ -70,8 +70,8 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     }
 
     @Override
-    public double getHeldFunds() throws CantGetHeldFundsException {
-        return 0;
+    public double getHeldFunds(String account) throws CantGetHeldFundsException {
+        return bankMoneyWalletDao.getHeldFunds(account);
     }
 
     @Override
