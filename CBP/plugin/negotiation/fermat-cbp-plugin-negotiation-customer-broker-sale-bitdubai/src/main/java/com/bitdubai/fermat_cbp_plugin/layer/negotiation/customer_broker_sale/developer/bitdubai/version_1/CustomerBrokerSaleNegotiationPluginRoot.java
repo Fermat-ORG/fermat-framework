@@ -10,12 +10,12 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
@@ -33,9 +33,9 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetNextClaus
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -161,8 +161,8 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
         }
 
         @Override
-        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByContractId(UUID negotiationId) throws CantGetListSaleNegotiationsException {
-            return this.customerBrokerSaleNegotiationDao.getNegotiationsByContractId(negotiationId);
+        public CustomerBrokerSaleNegotiation getNegotiationsByNegotiationId(UUID negotiationId) throws CantGetListSaleNegotiationsException {
+            return this.customerBrokerSaleNegotiationDao.getNegotiationsByNegotiationId(negotiationId);
         }
 
         @Override
@@ -252,22 +252,22 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
         }
 
         @Override
-        public Collection<NegotiationBankAccount> getLocationsByCurrencyType(FiatCurrency currency) {
+        public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(Currency currency) {
             return null;
         }
 
         @Override
-        public void createNewPaymentCurrency(FiatCurrency currency) {
+        public void createNewPaymentCurrency(Currency currency) {
 
         }
 
         @Override
-        public void deletePaymentCurrency(FiatCurrency currency) {
+        public void deletePaymentCurrency(Currency currency) {
 
         }
 
         @Override
-        public Collection<FiatCurrency> getAllPaymentCurrencies() {
+        public Collection<Currency> getAllPaymentCurrencies() {
             return null;
         }
 
