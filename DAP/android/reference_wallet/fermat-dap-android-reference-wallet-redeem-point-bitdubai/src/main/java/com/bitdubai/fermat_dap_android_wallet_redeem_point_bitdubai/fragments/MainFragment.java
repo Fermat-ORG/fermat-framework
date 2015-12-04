@@ -73,18 +73,18 @@ public class MainFragment extends FermatWalletFragment
             protected Object doInBackground() throws Exception {
                 if (manager == null)
                     throw new NullPointerException("AssetUserWalletModuleManager is null");
-                assetRedeemPointWalletList = manager.getAssetRedeemPointWalletBalancesBook("walletPublicKeyTest");
-                if (assetRedeemPointWalletList != null && !assetRedeemPointWalletList.isEmpty()) {
-                    bookAssets = new ArrayList<>();
-                    for (AssetRedeemPointWalletList assetRedeemPointWallet : assetRedeemPointWalletList) {
-                        DigitalAsset asset = new DigitalAsset(assetRedeemPointWallet.getName(),
-                                String.valueOf(String.format("BookBalance: %d - AvailableBalance: %d",
-                                        assetRedeemPointWallet.getQuantityBookBalance(), assetRedeemPointWallet.getQuantityAvailableBalance())));
-                        asset.setAssetPublicKey(assetRedeemPointWallet.getAssetPublicKey());
-                        asset.setWalletPublicKey("public_key");
-                        bookAssets.add(asset);
-                    }
-                }
+//                assetRedeemPointWalletList = manager.getAssetRedeemPointWalletBalancesBook("walletPublicKeyTest");
+//                if (assetRedeemPointWalletList != null && !assetRedeemPointWalletList.isEmpty()) {
+//                    bookAssets = new ArrayList<>();
+//                    for (AssetRedeemPointWalletList assetRedeemPointWallet : assetRedeemPointWalletList) {
+//                        DigitalAsset asset = new DigitalAsset(assetRedeemPointWallet.getName(),
+//                                String.valueOf(String.format("BookBalance: %d - AvailableBalance: %d",
+//                                        assetRedeemPointWallet.getQuantityBookBalance(), assetRedeemPointWallet.getQuantityAvailableBalance())));
+//                        asset.setAssetPublicKey(assetRedeemPointWallet.getAssetPublicKey());
+//                        asset.setWalletPublicKey("public_key");
+//                        bookAssets.add(asset);
+//                    }
+//                }
                 return true;
             }
         };
