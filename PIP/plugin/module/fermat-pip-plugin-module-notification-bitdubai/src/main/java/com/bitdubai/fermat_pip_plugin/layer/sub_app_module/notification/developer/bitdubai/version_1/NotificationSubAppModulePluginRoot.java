@@ -29,8 +29,8 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNo
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
-import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
+import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.CloudClientNotificationHandler;

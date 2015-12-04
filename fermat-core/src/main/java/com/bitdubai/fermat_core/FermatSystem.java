@@ -43,7 +43,7 @@ import com.bitdubai.fermat_ccp_core.CCPPlatform;
 import com.bitdubai.fermat_csh_core.CSHPlatform;
 import com.bitdubai.fermat_dap_core.DAPPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
 
