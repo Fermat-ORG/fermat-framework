@@ -45,7 +45,6 @@ import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
@@ -429,15 +428,19 @@ Updates the count of notifications in the ActionBar.
         return dataSet;
     }
 
+
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
-        ConnectDialog connectDialog = null;
+
+        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), subAppsSession.getAppPublicKey());
+
+        /*ConnectDialog connectDialog = null;
         try {
             connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) subAppsSession, subAppResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
             connectDialog.show();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 

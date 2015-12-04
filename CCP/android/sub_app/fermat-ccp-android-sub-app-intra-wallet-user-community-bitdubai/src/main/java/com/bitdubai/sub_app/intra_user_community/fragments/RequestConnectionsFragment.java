@@ -21,7 +21,6 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.IntraUserIdentityInfoAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -152,15 +151,15 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
 
-        //ConnectionOtherProfileFragment.newInstance();
+        ConnectionOtherProfileFragment.newInstance();
 
-        AcceptDialog acceptDialog = null;
+        /*AcceptDialog acceptDialog = null;
         try {
             acceptDialog = new AcceptDialog(getActivity(),(IntraUserSubAppSession)subAppsSession,subAppResourcesProviderManager,data,moduleManager.getActiveIntraUserIdentity());
             acceptDialog.show();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
-        }
+        }*/
         onRefresh();
     }
 
