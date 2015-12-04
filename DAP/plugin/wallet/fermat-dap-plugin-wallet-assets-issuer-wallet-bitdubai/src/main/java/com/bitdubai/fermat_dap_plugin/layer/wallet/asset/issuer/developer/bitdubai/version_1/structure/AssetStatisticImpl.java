@@ -141,7 +141,7 @@ public class AssetStatisticImpl implements AssetStatistic {
      */
     @Override
     public String getAssetName() {
-        return null;
+        return assetName;
     }
 
     public void setAssetOwner(ActorAssetUser assetOwner) {
