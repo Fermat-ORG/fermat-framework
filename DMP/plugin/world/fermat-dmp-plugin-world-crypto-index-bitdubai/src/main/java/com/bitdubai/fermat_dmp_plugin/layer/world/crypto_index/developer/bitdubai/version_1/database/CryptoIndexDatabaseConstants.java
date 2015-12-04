@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.Money;
 
 public class CryptoIndexDatabaseConstants {
 
-    public static final String CRYPTO_INDEX_DATABASE_NAME = "CryptoIndex";
+    public static final String CRYPTO_INDEX_DATABASE_NAME = "CryptoIndexImp";
 
     public static final String CRYPTO_INDEX_TABLE_NAME = "Crypto_Index";
 

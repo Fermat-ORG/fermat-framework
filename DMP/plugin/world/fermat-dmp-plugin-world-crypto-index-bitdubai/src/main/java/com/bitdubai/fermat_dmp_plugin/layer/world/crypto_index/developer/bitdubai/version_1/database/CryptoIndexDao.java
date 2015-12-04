@@ -15,7 +15,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantInitializeCryptoIndexDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantSaveLastRateExchangeException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndexInterface;
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.CryptoIndex;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.CryptoIndexImp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -116,7 +116,7 @@ public class CryptoIndexDao implements Serializable {
 
             table.loadToMemory();
             for (DatabaseTableRecord record : table.getRecords()){
-                LastExchangeRateList.add(new CryptoIndex(
+                LastExchangeRateList.add(new CryptoIndexImp(
                         record.getStringValue(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME),
                         record.getStringValue(CryptoIndexDatabaseConstants.CRYPTO_INDEX_FIAT_CURRENCY_COLUMN_NAME),
                         record.getStringValue(CryptoIndexDatabaseConstants.CRYPTO_INDEX_TIME_COLUMN_NAME),
@@ -148,7 +148,7 @@ public class CryptoIndexDao implements Serializable {
             table.loadToMemory();
             System.out.println(table.getRecords().get(0));
             for (DatabaseTableRecord record : table.getRecords()){
-                HistoricalExchangeRateList.add(new CryptoIndex(
+                HistoricalExchangeRateList.add(new CryptoIndexImp(
                        record.getStringValue(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME),
                        record.getStringValue(CryptoIndexDatabaseConstants.CRYPTO_INDEX_FIAT_CURRENCY_COLUMN_NAME),
                        record.getStringValue(CryptoIndexDatabaseConstants.CRYPTO_INDEX_TIME_COLUMN_NAME),

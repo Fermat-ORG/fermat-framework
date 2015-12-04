@@ -37,6 +37,11 @@ dependencies {
     compile project(':fermat-cbp-plugin-business-transaction-open-contract-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-close-contract-bitdubai')
 
+    //Negotiation Transaction
+    compile project(':fermat-cbp-plugin-negotiation-transaction-customer-broker-new-bitdubai')
+    compile project(':fermat-cbp-plugin-negotiation-transaction-customer-broker-update-bitdubai')
+    compile project(':fermat-cbp-plugin-negotiation-transaction-customer-broker-close-bitdubai')
+
     //Contract
     compile project(':fermat-cbp-plugin-contract-customer-broker-purchase-bitdubai')
     compile project(':fermat-cbp-plugin-contract-customer-broker-sale-bitdubai')
@@ -51,6 +56,7 @@ dependencies {
 
     //Network Service
     compile project(':fermat-cbp-plugin-network-service-transaction-transmission-bitdubai')
+    compile project(':fermat-cbp-plugin-network-service-negotiation-transmission-bitdubai')
 
     //Stock Transactions
     compile project(':fermat-cbp-plugin-stock-transactions-bank-money-destock-bitdubai')
