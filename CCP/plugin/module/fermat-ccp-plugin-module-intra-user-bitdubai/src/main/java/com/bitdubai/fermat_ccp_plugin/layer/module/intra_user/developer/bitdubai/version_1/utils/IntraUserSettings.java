@@ -1,13 +1,6 @@
-package com.bitdubai.fermat_api.layer.all_definition.IntraUsers;
-
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
+package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.utils;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by natalia on 25/08/15.
