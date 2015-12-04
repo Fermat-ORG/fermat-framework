@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
@@ -29,6 +30,7 @@ public class StockBalanceImpl implements StockBalance {
     private CryptoBrokerWalletDatabaseDao cryptoBrokerWalletDatabaseDao;
     UUID plugin;
     PluginFileSystem pluginFileSystem;
+
     /**
      * Constructor.
      */
@@ -36,31 +38,34 @@ public class StockBalanceImpl implements StockBalance {
         this.database = database;
         this.plugin = plugin;
         this.pluginFileSystem = pluginFileSystem;
+
+        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
+        cryptoBrokerWalletDatabaseDao.setPlugin(this.plugin);
+        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
     }
     @Override
-    public float getBookedBalance() throws CantGetBookedBalanceCryptoBrokerWalletException {
-        return 0;
+    public float getBookedBalance(FermatEnum merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException {
+        return cryptoBrokerWalletDatabaseDao.getBookedBalance(null);
     }
 
     @Override
-    public float getBookedAvailable() throws CantGetAvailableBalanceCryptoBrokerWalletException {
-        return 0;
+    public float getAvailableBalance(FermatEnum merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
+        return cryptoBrokerWalletDatabaseDao.geAvailableBalance(null);
     }
 
     @Override
-    public float getBookedAvailableFrozen() throws CantGetAvailableBalanceCryptoBrokerWalletException {
-        return 0;
+    public float getAvailableBalanceFrozen(FermatEnum merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
+        return cryptoBrokerWalletDatabaseDao.getAvailableBalanceFrozen(null);
     }
 
     @Override
     public List<CryptoBrokerWalletBalanceRecord> getCryptoBrokerWalletBalanceBook() throws CantGetBookedBalanceCryptoBrokerWalletException {
-        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(database);
-        cryptoBrokerWalletDatabaseDao.setPlugin(plugin);
-        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(pluginFileSystem);
         List<CryptoBrokerWalletBalanceRecord> cryptoBrokerWalletBalanceRecords = null;
         try {
             cryptoBrokerWalletBalanceRecords =  cryptoBrokerWalletDatabaseDao.getAvailableBalanceByMerchandise();
         } catch (CantCalculateBalanceException e) {
+            e.printStackTrace();
+        } catch (CantGetBalanceRecordException e) {
             e.printStackTrace();
         }
         return cryptoBrokerWalletBalanceRecords;
@@ -68,9 +73,6 @@ public class StockBalanceImpl implements StockBalance {
 
     @Override
     public List<CryptoBrokerWalletBalanceRecord> getCryptoBrokerWalletBalanceAvailable() throws CantGetBookedBalanceCryptoBrokerWalletException {
-        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(database);
-        cryptoBrokerWalletDatabaseDao.setPlugin(plugin);
-        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(pluginFileSystem);
         List<CryptoBrokerWalletBalanceRecord> cryptoBrokerWalletBalanceRecords = null;
         try {
             cryptoBrokerWalletBalanceRecords = cryptoBrokerWalletDatabaseDao.getBookBalanceByMerchandise();
@@ -84,9 +86,6 @@ public class StockBalanceImpl implements StockBalance {
 
     @Override
     public List<CryptoBrokerWalletBalanceRecord> getCryptoBrokerWalletBalanceBookFrozen() throws CantGetBookedBalanceCryptoBrokerWalletException {
-        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(database);
-        cryptoBrokerWalletDatabaseDao.setPlugin(plugin);
-        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(pluginFileSystem);
         List<CryptoBrokerWalletBalanceRecord> cryptoBrokerWalletBalanceRecords = null;
         try {
             cryptoBrokerWalletBalanceRecords = cryptoBrokerWalletDatabaseDao.getBookBalanceByMerchandiseFrozen();
@@ -98,9 +97,6 @@ public class StockBalanceImpl implements StockBalance {
 
     @Override
     public List<CryptoBrokerWalletBalanceRecord> getCryptoBrokerWalletBalanceAvailableFrozen() throws CantGetBookedBalanceCryptoBrokerWalletException {
-        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(database);
-        cryptoBrokerWalletDatabaseDao.setPlugin(plugin);
-        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(pluginFileSystem);
         List<CryptoBrokerWalletBalanceRecord> cryptoBrokerWalletBalanceRecords = null;
         try {
             cryptoBrokerWalletBalanceRecords = cryptoBrokerWalletDatabaseDao.getAvailableBalanceByMerchandiseFrozen();
@@ -112,10 +108,6 @@ public class StockBalanceImpl implements StockBalance {
 
     @Override
     public void debit(CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecord, BalanceType balanceType) throws CantAddDebitCryptoBrokerWalletException {
-        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(database);
-        cryptoBrokerWalletDatabaseDao.setPlugin(plugin);
-        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(pluginFileSystem);
-
         try {
             cryptoBrokerWalletDatabaseDao.addDebit(cryptoBrokerStockTransactionRecord, balanceType);
         } catch (CantAddDebitException e) {
@@ -125,10 +117,6 @@ public class StockBalanceImpl implements StockBalance {
 
     @Override
     public void credit(CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecord, BalanceType balanceType) throws CantAddCreditCryptoBrokerWalletException {
-        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(database);
-        cryptoBrokerWalletDatabaseDao.setPlugin(plugin);
-        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(pluginFileSystem);
-
         try {
             cryptoBrokerWalletDatabaseDao.addCredit(cryptoBrokerStockTransactionRecord, balanceType);
         } catch (CantAddCreditException e) {
