@@ -7,14 +7,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="7dp"
-        android:paddingRight="7dp"
+        android:paddingRight="5dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
         <LinearLayout
             android:id="@+id/sub_apps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="4dp"
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
             android:orientation="vertical"
@@ -22,8 +21,8 @@
           >
             <ImageView
                 android:id="@+id/image_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:scaleType="centerCrop"
                 android:textSize="13sp"
                 android:layout_gravity="center_horizontal"
@@ -37,9 +36,13 @@
                 android:gravity="center"
                 android:paddingRight="5dp"
                 android:textColor="#ffffff"
-                app:typeface="CAVIAR_DREAMS"
+                app:typeface="CAVIAR_DREAMS_BOLD"
                 android:textStyle="bold"
-                android:textSize="13sp"/>
+                android:textSize="13sp"
+                android:shadowColor="#454545"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="20"/>
 
 
         </LinearLayout>

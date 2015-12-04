@@ -1,59 +1,55 @@
 package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
+
+import java.util.Collection;
 
 /**
  * Created by angel on 02/11/15.
  */
+
 public class CustomerBrokerContractPurchaseInformation implements CustomerBrokerContractPurchase {
 
-    private String contractId;
-    private String publicKeyCustomer;
-    private String publicKeyBroker;
-    private CurrencyType paymentCurrency;
-    private CurrencyType merchandiseCurrency;
-    private float referencePrice;
-    private ReferenceCurrency referenceCurrency;
-    private float paymentAmount;
-    private float merchandiseAmount;
-    private long paymentExpirationDate;
-    private long merchandiseDeliveryExpirationDate;
-    private ContractStatus status;
+    // TODO: Cambiar los numeros primos
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 1117;
+    private static final int HASH_PRIME_NUMBER_ADD = 3001;
+
+    private final String contractID;
+    private final String negotiationID;
+    private final String publicKeyCustomer;
+    private final String publicKeyBroker;
+    private final Long dateTime;
+    private final ContractStatus status;
+    private final Collection<ContractClause> clause;
 
     public CustomerBrokerContractPurchaseInformation(
-            String contractId,
+            String contractID,
+            String negotiationID,
             String publicKeyCustomer,
             String publicKeyBroker,
-            CurrencyType paymentCurrency,
-            CurrencyType merchandiseCurrency,
-            float referencePrice,
-            ReferenceCurrency referenceCurrency,
-            float paymentAmount,
-            float merchandiseAmount,
-            long paymentExpirationDate,
-            long merchandiseDeliveryExpirationDate,
-            ContractStatus status
+            long dateTime,
+            ContractStatus status,
+            Collection<ContractClause> clause
     ){
-        this.contractId = contractId;
+        this.contractID = contractID;
+        this.negotiationID = negotiationID;
         this.publicKeyCustomer = publicKeyCustomer;
         this.publicKeyBroker = publicKeyBroker;
-        this.paymentCurrency = paymentCurrency;
-        this.merchandiseCurrency = merchandiseCurrency;
-        this.referencePrice = referencePrice;
-        this.referenceCurrency = referenceCurrency;
-        this.paymentAmount = paymentAmount;
-        this.merchandiseAmount = merchandiseAmount;
-        this.paymentExpirationDate = paymentExpirationDate;
-        this.merchandiseDeliveryExpirationDate = merchandiseDeliveryExpirationDate;
+        this.dateTime = dateTime;
         this.status = status;
+        this.clause = clause;
     }
 
     @Override
     public String getContractId() {
-        return this.contractId;
+        return this.contractID;
+    }
+
+    @Override
+    public String getNegotiatiotId() {
+        return this.negotiationID;
     }
 
     @Override
@@ -67,47 +63,54 @@ public class CustomerBrokerContractPurchaseInformation implements CustomerBroker
     }
 
     @Override
-    public CurrencyType getPaymentCurrency() {
-        return this.paymentCurrency;
-    }
-
-    @Override
-    public CurrencyType getMerchandiseCurrency() {
-        return this.merchandiseCurrency;
-    }
-
-    @Override
-    public float getReferencePrice() {
-        return this.referencePrice;
-    }
-
-    @Override
-    public ReferenceCurrency getReferenceCurrency() {
-        return this.referenceCurrency;
-    }
-
-    @Override
-    public float getPaymentAmount() {
-        return this.paymentAmount;
-    }
-
-    @Override
-    public float getMerchandiseAmount() {
-        return this.merchandiseAmount;
-    }
-
-    @Override
-    public long getPaymentExpirationDate() {
-        return this.paymentExpirationDate;
-    }
-
-    @Override
-    public long getMerchandiseDeliveryExpirationDate() {
-        return this.merchandiseDeliveryExpirationDate;
+    public long getDateTime() {
+        return this.dateTime;
     }
 
     @Override
     public ContractStatus getStatus() {
         return this.status;
+    }
+
+    @Override
+    public Collection<ContractClause> getContractClause() {
+        return clause;
+    }
+
+    @Override
+    public boolean equals(final Object o){
+        if(!(o instanceof CustomerBrokerContractPurchase))
+            return false;
+        CustomerBrokerContractPurchase compare = (CustomerBrokerContractPurchase) o;
+
+        if(!this.contractID.equals(compare.getContractId()))
+            return false;
+        if(!this.negotiationID.equals(compare.getNegotiatiotId()))
+            return false;
+        if(!this.publicKeyCustomer.equals(compare.getPublicKeyCustomer()))
+            return false;
+        if(!this.publicKeyBroker.equals(compare.getPublicKeyBroker()))
+            return false;
+        if(this.dateTime != compare.getDateTime())
+            return false;
+        if(!this.status.equals(compare.getStatus()))
+            return false;
+        if(!this.clause.equals(compare.getContractClause()))
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode(){
+        int c = 0;
+        c += contractID.hashCode();
+        c += negotiationID.hashCode();
+        c += publicKeyCustomer.hashCode();
+        c += publicKeyBroker.hashCode();
+        c += dateTime.hashCode();
+        c += status.hashCode();
+        c += clause.hashCode();
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }

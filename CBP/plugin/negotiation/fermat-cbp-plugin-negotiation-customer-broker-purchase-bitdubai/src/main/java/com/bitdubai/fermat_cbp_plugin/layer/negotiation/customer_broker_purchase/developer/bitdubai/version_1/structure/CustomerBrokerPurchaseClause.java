@@ -11,13 +11,12 @@ import java.util.UUID;
  */
 
 public class CustomerBrokerPurchaseClause implements Clause{
-
     private final UUID clauseId;
     private final ClauseType type;
     private final String value;
     private final String proposedBy;
     private ClauseStatus status;
-
+    private short indexOrder;
 
     public CustomerBrokerPurchaseClause(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder){
         this.clauseId = clauseId;
@@ -25,6 +24,7 @@ public class CustomerBrokerPurchaseClause implements Clause{
         this.value = value;
         this.status = status;
         this.proposedBy = proposedBy;
+        this.indexOrder = indexOrder;
     }
 
     @Override
@@ -50,6 +50,11 @@ public class CustomerBrokerPurchaseClause implements Clause{
     @Override
     public String getProposedBy() {
         return this.proposedBy;
+    }
+
+    @Override
+    public short getIndexOrdery() {
+        return this.indexOrder;
     }
 
 }
