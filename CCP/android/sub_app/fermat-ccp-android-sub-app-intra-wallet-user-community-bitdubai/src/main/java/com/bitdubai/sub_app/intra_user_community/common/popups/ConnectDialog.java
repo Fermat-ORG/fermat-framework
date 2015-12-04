@@ -26,11 +26,11 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  */
 
 @SuppressWarnings("FieldCanBeLocal")
-public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesProviderManager> implements
+public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
     /**
-     *  UI components
+     * UI components
      */
     FermatTextView positiveBtn;
     FermatTextView negativeBtn;
@@ -42,7 +42,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
     IntraUserLoginIdentity identity;
 
 
-    public ConnectDialog(Activity a,IntraUserSubAppSession intraUserSubAppSession,SubAppResourcesProviderManager subAppResources,IntraUserInformation intraUserInformation,IntraUserLoginIdentity identity) {
+    public ConnectDialog(Activity a, IntraUserSubAppSession intraUserSubAppSession, SubAppResourcesProviderManager subAppResources, IntraUserInformation intraUserInformation, IntraUserLoginIdentity identity) {
         super(a, intraUserSubAppSession, subAppResources);
         this.intraUserInformation = intraUserInformation;
         this.identity = identity;
@@ -62,12 +62,10 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
-
         description.setText("Want connect with ");
-        //username.setText(intraUserInformation.getName());
+        username.setText(intraUserInformation.getName());
 
     }
-
 
 
     @Override
@@ -84,30 +82,25 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.btn_connect) {
+        if (i == R.id.positive_button) {
             try {
                 //image null
-                if(intraUserInformation!=null && identity!=null)
-                ((IntraUserSubAppSession)getSession()).getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(),identity.getPublicKey(),identity.getAlias());
-                else {
-                    Toast.makeText(getContext(), "Oooops! recovering from system error - " , Toast.LENGTH_SHORT).show();
+                if (intraUserInformation != null && identity != null) {
+                    ((IntraUserSubAppSession) getSession()).getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage(), identity.getPublicKey(), identity.getAlias());
+                    Toast.makeText(getContext(), "Conected", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (CantStartRequestException e) {
-                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
+                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 Toast.makeText(getContext(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
             dismiss();
-        }else if( i == R.id.btn_close){
+        } else if (i == R.id.negative_button) {
             dismiss();
         }
     }
-
-
-
-
-
-
 
 
 }
