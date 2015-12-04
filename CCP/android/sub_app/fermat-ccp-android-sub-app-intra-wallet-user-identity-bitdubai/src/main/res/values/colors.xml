@@ -2,14 +2,5 @@
 <resources>
 
     <color name="background_tab_pressed">#6633B5E5</color>
-    <color name="black_a20">#33000000></color>
-    <color name="orange">#FF7F00></color>
-    <color name="identity_list_fragment_background">#dbe6ee</color>
-    <color name="circle_border">#b3d3df</color>
-    <color name="create_identity_fragment_background">#FFFFFF</color>
-    <color name="add_button_normal">#ff4f37</color>
-    <color name="create_identity_button">#5677fc</color>
-    <color name="crypto_broker_identity_name_item">#323232</color>
-    <color name="crypto_broker_identity_list_divider">#9e9e9e</color>
 
 </resources>

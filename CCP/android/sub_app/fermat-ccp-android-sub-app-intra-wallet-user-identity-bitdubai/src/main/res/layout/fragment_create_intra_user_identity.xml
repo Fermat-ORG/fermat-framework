@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/create_identity_fragment_background">
+    android:background="#FFFFFF">
 
 
     <RelativeLayout
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/create_identity_button"
+        android:background="#5677fc"
         android:text="@string/create"
         android:textSize="16sp"
         android:textColor="@android:color/white" />
