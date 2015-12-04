@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
  */
+// TODO DELETE OR MOVE THIS, IT DOESN'T BELONG HERE
 public class CBPException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "THE CRYPTO BROKER PLATFORM HAS DETECTED AN EXCEPTION";

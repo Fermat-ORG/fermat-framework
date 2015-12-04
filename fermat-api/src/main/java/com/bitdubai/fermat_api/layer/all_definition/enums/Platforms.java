@@ -7,11 +7,12 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * The enum class <code>com.bitdubai.fermat_api.layer.all_definition.enums.Platforms</code>
  * Enums all the platforms to be found on Fermat.
  * Created by lnacosta (laion.cj91@gmail.com) on 02/09/2015.
- * Updated by PatricioGesualdi (pmgesualdi@hotmail.com) on 10/11/2015.
+ * Modified by PatricioGesualdi (pmgesualdi@hotmail.com) on 10/11/2015.
  */
 public enum Platforms implements FermatEnum {
+
     /**
-     * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     BLOCKCHAINS                         ("BCH"),
     BANKING_PLATFORM                    ("BNK"),
