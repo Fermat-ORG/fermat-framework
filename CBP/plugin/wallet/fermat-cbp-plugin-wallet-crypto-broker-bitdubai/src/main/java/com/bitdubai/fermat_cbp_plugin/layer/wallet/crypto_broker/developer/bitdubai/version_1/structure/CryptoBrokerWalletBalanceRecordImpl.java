@@ -14,8 +14,19 @@ public class CryptoBrokerWalletBalanceRecordImpl implements CryptoBrokerWalletBa
     private float bookBalance;
     private float availableBalance;
     private CurrencyType  currencyType;
+    private String brokerPublicKey;
 
     public CryptoBrokerWalletBalanceRecordImpl(){}
+
+    @Override
+    public String getBrokerPublicKey() {
+        return brokerPublicKey;
+    }
+
+    @Override
+    public void setBrokerPublicKey(String brokerPublicKey) {
+        this.brokerPublicKey = brokerPublicKey;
+    }
 
     @Override
     public FermatEnum getMerchandise() {

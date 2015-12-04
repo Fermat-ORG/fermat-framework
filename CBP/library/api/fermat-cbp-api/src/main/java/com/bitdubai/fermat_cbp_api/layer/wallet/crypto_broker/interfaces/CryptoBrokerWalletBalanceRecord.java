@@ -12,9 +12,9 @@ public interface CryptoBrokerWalletBalanceRecord {
 //    String getWalletPublicKey();
 //    void   setWalletPublicKey(String walletPublicKey);
 //
-//    String getBrokerPublicKey();
-//    void   setBrokerPublicKey(String brokerPublicKey);
-//
+    String getBrokerPublicKey();
+    void   setBrokerPublicKey(String brokerPublicKey);
+
 //    FiatCurrency getFiatCurrency();
 //    void         setFiatCurrency(FiatCurrency fiatCurrency);
 
