@@ -57,7 +57,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
 
     @Override
     public Drawable addBodyBackground() {
-        return ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.navigation_drawer_background);
+        return ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ccw_navigation_drawer_background);
     }
 
     @Override
