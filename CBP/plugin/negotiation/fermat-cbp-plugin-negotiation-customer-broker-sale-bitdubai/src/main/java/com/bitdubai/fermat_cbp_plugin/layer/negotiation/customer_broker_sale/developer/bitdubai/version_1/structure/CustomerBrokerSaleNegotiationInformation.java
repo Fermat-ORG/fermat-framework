@@ -21,7 +21,7 @@ public class CustomerBrokerSaleNegotiationInformation implements CustomerBrokerS
     private NegotiationStatus statusNegotiation;
     private final Collection<Clause> clauses;
 
-
+    private Long   lastNegotiationUpdateDate;
     private String cancelReason;
     private String memo;
 
@@ -65,8 +65,12 @@ public class CustomerBrokerSaleNegotiationInformation implements CustomerBrokerS
 
     @Override
     public Long getLastNegotiationUpdateDate() {
-        //TODO
-        return null;
+        return this.lastNegotiationUpdateDate;
+    }
+
+    @Override
+    public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate) {
+        this.lastNegotiationUpdateDate = lastNegotiationUpdateDate;
     }
 
     @Override

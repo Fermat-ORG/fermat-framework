@@ -40,6 +40,12 @@ public interface Negotiation {
     Long getLastNegotiationUpdateDate();
 
     /**
+     *
+     * @param lastNegotiationUpdateDate
+     */
+    void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate);
+
+    /**
      * @return a long representation of the Datetime the negotiation is going to be available (this is set by the broker)
      */
     Long getNegotiationExpirationDate();
