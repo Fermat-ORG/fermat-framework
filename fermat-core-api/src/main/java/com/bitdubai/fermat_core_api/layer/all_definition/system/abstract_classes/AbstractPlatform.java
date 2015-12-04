@@ -8,7 +8,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.Addon
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.DeveloperNotFoundException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.DeveloperNotFoundException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.LayerNotFoundException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PluginNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
