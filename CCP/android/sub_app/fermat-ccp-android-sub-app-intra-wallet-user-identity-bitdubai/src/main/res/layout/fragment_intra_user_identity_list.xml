@@ -4,7 +4,7 @@
     android:id="@+id/activity_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/identity_list_fragment_background">
+    android:background="#dbe6ee">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
@@ -32,7 +32,7 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_float_new_identity"
-        fab:fab_colorNormal="@color/add_button_normal"
+        fab:fab_colorNormal="#ff7f00"
         fab:fab_colorPressed="@color/material_blue_grey_800"
         fab:fab_colorRipple="@color/ripple_material_dark" />
 
