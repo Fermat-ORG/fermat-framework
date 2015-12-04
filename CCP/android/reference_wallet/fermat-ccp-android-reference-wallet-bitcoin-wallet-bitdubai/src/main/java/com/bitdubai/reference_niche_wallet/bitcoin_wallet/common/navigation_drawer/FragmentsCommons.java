@@ -34,7 +34,7 @@ public class FragmentsCommons {
                         options.inScaled = true;
                         Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length,options);
                         //Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.ARGB_8888);
-                        bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),false);
+ //                       bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
                         imageView.setImageBitmap(bitmap);
                     } else
                         Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
