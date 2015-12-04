@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cbp_core.layer.wallet_module;
 
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_cbp_core.layer.wallet_module.crypto_broker.CryptoBrokerPluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.wallet_module.crypto_customer.CryptoCustomerPluginSubsystem;
