@@ -40,7 +40,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmResponseEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantConfirmNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantConfirmReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantGetPendingTransactionException;
@@ -60,11 +63,14 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceConnectionsDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantConstructNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationTransmissionResponseMessage;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -76,6 +82,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -115,6 +122,10 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     /*Represent DAO Database Transmission*/
     private NegotiationTransmissionNetworkServiceDatabaseDao databaseDao;
+
+    /*Represent DAO Database Connections*/
+    private NegotiationTransmissionNetworkServiceConnectionsDatabaseDao databaseConnectionsDao;
+
     /*Represent the listeners*/
     private List<FermatEventListener> listenersAdded;
 
@@ -129,6 +140,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     //Represent the communicationNetworkServiceDeveloperDatabaseFactory
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+
+    //Represent the Negotation Transmission agent
+    private NegotiationTransmissionAgent negotiationTransmissionAgent;
 
     //Represent the newLoggingLevel
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
@@ -305,18 +319,17 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             Map<String, Object> filters = new HashMap<>();
             filters.put(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, "false");
 
-            List<NegotiationTransmission> negotiationTransmissionList =databaseDao.findAll(filters);
+            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
             if(!negotiationTransmissionList.isEmpty()){
 
                 for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList){
                     Transaction<NegotiationTransmission> transaction = new Transaction<>(
-                            negotiationTransmission.getTransactionId(),
+                            negotiationTransmission.getTransmissionId(),
                             negotiationTransmission,
                             Action.APPLY,
                             negotiationTransmission.getTimestamp());
                     pendingTransaction.add(transaction);
                 }
-
             }
             return pendingTransaction;
 
@@ -478,12 +491,11 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     }
 
     @Override
-    //TODO revisar esto. pro que CRYPTO_ADRESSES.
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
         //If the component registered have my profile and my identity public key
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.CRYPTO_ADDRESSES &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NEGOTIATION_TRANSMISSION &&
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             System.out.print("-----------------------\n" +
@@ -493,32 +505,46 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             //Mark as register
             this.register = Boolean.TRUE;
 
-            //TODO AGENTE
-//            initializeAgent();
+            //Negotiation Transmission Agent
+            negotiationTransmissionAgent = new NegotiationTransmissionAgent(
+                this,
+                databaseConnectionsDao,
+                databaseDao,
+                communicationNetworkServiceConnectionManager,
+                wsCommunicationsCloudClientManager,
+                platformComponentProfileRegistered,
+                errorManager,
+                new ArrayList<PlatformComponentProfile>(),
+                identity,
+                eventManager
+            );
+
+            //Start agent
+            negotiationTransmissionAgent.start();
         }
     }
 
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteNetworkService) {
-        //TODO AGENTE
-        /*System.out.println("----------------------------------\n" +
-                "FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
+
+        System.out.println("----------------------------------\n" +
+                "FAILED CONNECTION WITH "+remoteNetworkService.getAlias()+"\n" +
                 "--------------------------------------------------------");
-        cryptoAddressesExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());*/
+        negotiationTransmissionAgent.connectionFailure(remoteNetworkService.getIdentityPublicKey());
+
     }
 
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
-        System.out.println("TransactionTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
+        System.out.println("TransactionTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
         System.out.print("-----------------------\n" +
                 "TRANSACTION TRANSMISSION: SUCCESSFUL CONNECTION!  -----------------------\n" +
                 "-----------------------\n A: " + getName());
-
         //save into the cache
-        remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);;
-        //TODO AGENTE: si hace falta
-        //cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
+        remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
+        //Add remote network service register List
+        negotiationTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
 
     }
 
@@ -527,16 +553,11 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         //Tell the manager to handler the new connection established
 
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-
         System.out.print("-----------------------\n" +
                 "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
                 "-----------------------\n A: " + remoteComponentProfile.getAlias());
-
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
-
             remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
-
-
             System.out.print("-----------------------\n" +
                     "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
                     "-----------------------\n A: " + remoteComponentProfile.getAlias());
@@ -544,34 +565,74 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     }
 
     @Override
-    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
+        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+                System.out.println("KKKKKKKKKKKKKKKKKKKKK SE CAYO LA VPN PUBLIC KEY  " + vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+            }
+
+        }
+
+    }
+
+    @Override
+    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+        if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             System.out.println("*( *( *( *( *( *( *( *( *(  SE CAYO LA CONEXION *( *( *( *( *( *( *( *( *( *( ");
             this.register = false;
             communicationNetworkServiceConnectionManager.closeAllConnection();
         }
+
     }
 
-    @Override
-    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+    public void handleNewMessages(final FermatMessage fermatMessage){
+        Gson gson = new Gson();
+        System.out.println("Transaction Transmission gets a new message");
+        try{
+            NegotiationTransmission negotiationTransmissionReceived = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionImpl.class);
+            if(negotiationTransmissionReceived.getTransmissionId()!=null){
+                //aca ira confirm o send
+                negotiationTransmissionReceived.setTransmissionType(NegotiationTransmissionType.TRANSMISSION_CONFIRM);
+                databaseDao.registerSendNegotiatioTransmission(negotiationTransmissionReceived);
+            }else{
 
-            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-
-            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-
-                System.out.println("KKKKKKKKKKKKKKKKKKKKK SE CAYO LA VPN PUBLIC KEY  " + vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                NegotiationTransmissionResponseMessage negotiationTransmissionResponseMessage =  gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionResponseMessage.class);
+                FermatEvent fermatEvent;
+                switch (negotiationTransmissionResponseMessage.getNegotiationTransmissionState()){
+                    case CONFIRM_NEGOTIATION:
+                        databaseDao.changeState(negotiationTransmissionResponseMessage.getTransmissionId(), NegotiationTransmissionState.CONFIRM_NEGOTIATION);
+                        System.out.print("-----------------------\n" +
+                                "TRANSACTION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
+                                "-----------------------\n STATE: " + NegotiationTransmissionState.CONFIRM_NEGOTIATION);
+                        fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION);
+                        IncomingNegotiationTransmissionConfirmNegotiationEvent incomingNegotiationTransmissionConfirmNegotiationEvent = (IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent;
+                        incomingNegotiationTransmissionConfirmNegotiationEvent.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+                        incomingNegotiationTransmissionConfirmNegotiationEvent.setDestinationPlatformComponentType(negotiationTransmissionReceived.getActorReceiveType());
+                        eventManager.raiseEvent(incomingNegotiationTransmissionConfirmNegotiationEvent);
+                        break;
+                    case CONFIRM_RESPONSE:
+                        databaseDao.changeState(negotiationTransmissionResponseMessage.getTransmissionId(), NegotiationTransmissionState.CONFIRM_RESPONSE);
+                        System.out.print("-----------------------\n" +
+                                "TRANSACTION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
+                                "-----------------------\n STATE: " + NegotiationTransmissionState.CONFIRM_RESPONSE);
+                        fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                        IncomingNegotiationTransmissionConfirmResponseEvent incomingNegotiationTransmissionConfirmResponseEvent = (IncomingNegotiationTransmissionConfirmResponseEvent) fermatEvent;
+                        incomingNegotiationTransmissionConfirmResponseEvent.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+                        incomingNegotiationTransmissionConfirmResponseEvent.setDestinationPlatformComponentType(negotiationTransmissionReceived.getActorReceiveType());
+                        eventManager.raiseEvent(incomingNegotiationTransmissionConfirmResponseEvent);
+                        break;
+                }
 
             }
-
+        } catch (CantRegisterSendNegotiationTransmissionException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+        } catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
-    }
-
-    public void handleNewMessages(final FermatMessage message){
-
     }
     /*END PUBLIC*/
 
