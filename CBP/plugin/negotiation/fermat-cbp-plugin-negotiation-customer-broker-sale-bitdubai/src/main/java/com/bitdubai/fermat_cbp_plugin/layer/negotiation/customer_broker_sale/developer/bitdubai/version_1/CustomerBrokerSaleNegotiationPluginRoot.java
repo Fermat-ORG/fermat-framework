@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -20,6 +21,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
@@ -211,6 +214,61 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
                 default:
                     throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
             }
+        }
+
+        @Override
+        public void createNewLocation(String location) {
+
+        }
+
+        @Override
+        public void updateLocation(NegotiationLocations location) {
+
+        }
+
+        @Override
+        public void deleteLocation(NegotiationLocations location) {
+
+        }
+
+        @Override
+        public Collection<NegotiationLocations> getAllLocations() {
+            return null;
+        }
+
+        @Override
+        public void createNewBankAccount(NegotiationBankAccount bankAccount) {
+
+        }
+
+        @Override
+        public void updateBankAccount(NegotiationBankAccount bankAccount) {
+
+        }
+
+        @Override
+        public void deleteBankAccount(NegotiationBankAccount bankAccount) {
+
+        }
+
+        @Override
+        public Collection<NegotiationBankAccount> getLocationsByCurrencyType(FiatCurrency currency) {
+            return null;
+        }
+
+        @Override
+        public void createNewPaymentCurrency(FiatCurrency currency) {
+
+        }
+
+        @Override
+        public void deletePaymentCurrency(FiatCurrency currency) {
+
+        }
+
+        @Override
+        public Collection<FiatCurrency> getAllPaymentCurrencies() {
+            return null;
         }
 
     /*

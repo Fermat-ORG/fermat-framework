@@ -27,8 +27,9 @@ public interface CustomerBrokerNewManager {
 
     List<CustomerBrokerNew> getAllCustomerBrokerNewNegotiationTranasction() throws CantGetListCustomerBrokerNewNegotiationTransactionException;
 
-    void sendCustomerBrokerNewNegotiationTranasction(CustomerBrokerPurchaseNegotiation negotiation) throws CantSendCustomerBrokerNewNegotiationTransactionException;
+    /*
+    void sendCustomerBrokerNewNegotiationTranasction(CustomerBrokerNegotiation negotiation) throws CantSendCustomerBrokerNewNegotiationTransactionException;
 
-    void receiveCustomerBrokerNewNegotiationTranasction(CustomerBrokerPurchaseNegotiation negotiation) throws CantReceiveCustomerBrokerNewNegotiationTransactionException;
-
+    void receiveCustomerBrokerNewNegotiationTranasction(CustomerBrokerNegotiation negotiation) throws CantReceiveCustomerBrokerNewNegotiationTransactionException;
+    */
 }
