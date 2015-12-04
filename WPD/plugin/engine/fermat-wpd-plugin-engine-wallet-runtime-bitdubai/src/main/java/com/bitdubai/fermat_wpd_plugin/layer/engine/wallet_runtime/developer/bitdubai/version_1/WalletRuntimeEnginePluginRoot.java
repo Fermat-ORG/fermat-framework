@@ -1794,6 +1794,46 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         return runtimeWalletNavigationStructure;
     }
 
+    public WalletNavigationStructure createBankMoneyWalletNavigationStructure(){
+        WalletNavigationStructure runtimeWalletNavigationStructure;
+        SideMenu runtimeSideMenu;
+        MenuItem runtimeMenuItem;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar runtimeStatusBar;
+        Header runtimeHeader;
+        Fragment runtimeFragment;
+        TabStrip runtimeTabStrip;
+        Tab runtimeTab;
+
+        final String publicKey = "banking_wallet";
+        final String statusBarColor = "#990c75";
+        final String titleBarLabelColor = "#ffffff";
+        final int titleBarLabelSize = 16;
+
+
+        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
+        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+
+        //Home Activity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
+        runtimeActivity.setColor("#1189a5");
+        //runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.setStartActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
+
+        return runtimeWalletNavigationStructure;
+    }
+
     private void loadLastWalletNavigationStructure() throws CantFactoryReset {
         String walletCategory = null;
         String walletType = null;
