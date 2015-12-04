@@ -16,10 +16,12 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -38,8 +40,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCreateCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
@@ -56,6 +65,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,6 +156,7 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
             cryptoBrokerWalletImpl = loadCryptoBrokerWallet(walletPublicKey);
             System.out.println("Start Plugin Crypto Broker Wallet ");
             this.serviceStatus = ServiceStatus.STARTED;
+            //testAddCredito();
         }catch(CantStartPluginException exception){
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw exception;
@@ -203,6 +214,161 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CryptoBrokerWalletNotFoundException(CryptoBrokerWalletNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "", "");
+        }
+    }
+
+    private void testAddCredito(){
+        CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecordBook = new CryptoBrokerStockTransactionRecord() {
+            @Override
+            public float getRunningBookBalance() {
+                return 0;
+            }
+
+            @Override
+            public float getRunningAvailableBalance() {
+                return 0;
+            }
+
+            @Override
+            public UUID getTransactionId() {
+                return UUID.randomUUID();
+            }
+
+            @Override
+            public BalanceType getBalanceType() {
+                return BalanceType.BOOK;
+            }
+
+            @Override
+            public TransactionType getTransactionType() {
+                return TransactionType.CREDIT;
+            }
+
+            @Override
+            public CurrencyType getCurrencyType() {
+                return CurrencyType.BANK_MONEY;
+            }
+
+            @Override
+            public FermatEnum getMerchandise() {
+                return FiatCurrency.US_DOLLAR;
+            }
+
+            @Override
+            public String getWalletPublicKey() {
+                return "walletPublicKeyTest";
+            }
+
+            @Override
+            public String getBrokerPublicKey() {
+                return "brokerPublicKeyTest";
+            }
+
+            @Override
+            public float getAmount() {
+                return 250;
+            }
+
+            @Override
+            public long getTimestamp() {
+                return new Date().getTime() / 1000;
+            }
+
+            @Override
+            public String getMemo() {
+                return "STOCK: compra";
+            }
+
+            @Override
+            public float getPriceReference() {
+                return 350;
+            }
+
+            @Override
+            public OriginTransaction getOriginTransaction() {
+                return OriginTransaction.STOCK_INITIAL;
+            }
+        };
+        CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecordAvailable = new CryptoBrokerStockTransactionRecord() {
+            @Override
+            public float getRunningBookBalance() {
+                return 0;
+            }
+
+            @Override
+            public float getRunningAvailableBalance() {
+                return 0;
+            }
+
+            @Override
+            public UUID getTransactionId() {
+                return UUID.randomUUID();
+            }
+
+            @Override
+            public BalanceType getBalanceType() {
+                return BalanceType.AVAILABLE;
+            }
+
+            @Override
+            public TransactionType getTransactionType() {
+                return TransactionType.CREDIT;
+            }
+
+            @Override
+            public CurrencyType getCurrencyType() {
+                return CurrencyType.BANK_MONEY;
+            }
+
+            @Override
+            public FermatEnum getMerchandise() {
+                return FiatCurrency.US_DOLLAR;
+            }
+
+            @Override
+            public String getWalletPublicKey() {
+                return "walletPublicKeyTest";
+            }
+
+            @Override
+            public String getBrokerPublicKey() {
+                return "brokerPublicKeyTest";
+            }
+
+            @Override
+            public float getAmount() {
+                return 250;
+            }
+
+            @Override
+            public long getTimestamp() {
+                return new Date().getTime() / 1000;
+            }
+
+            @Override
+            public String getMemo() {
+                return "STOCK: compra";
+            }
+
+            @Override
+            public float getPriceReference() {
+                return 350;
+            }
+
+            @Override
+            public OriginTransaction getOriginTransaction() {
+                return OriginTransaction.STOCK_INITIAL;
+            }
+        };
+        try {
+            loadCryptoBrokerWallet(walletPublicKey).getStockBalance().credit(cryptoBrokerStockTransactionRecordBook, BalanceType.BOOK);
+            loadCryptoBrokerWallet(walletPublicKey).getStockBalance().credit(cryptoBrokerStockTransactionRecordAvailable, BalanceType.AVAILABLE);
+        } catch (CantAddCreditCryptoBrokerWalletException e) {
+            e.printStackTrace();
+        } catch (CantGetStockCryptoBrokerWalletException e) {
+            e.printStackTrace();
+        } catch (CryptoBrokerWalletNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
