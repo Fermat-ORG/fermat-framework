@@ -35,13 +35,16 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetAvailableBalanceCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetBookedBalanceCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerStockTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletBalanceRecord;
@@ -67,11 +70,13 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletProviderSettingImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletSettingSpreadImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerStockTransactionImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -103,18 +108,15 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     }
 
     public float getBookedBalance(FermatEnum merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException {
-        //TODO Implementar:
-        return 0;
+        return getCurrentBalanceByMerchandise(BalanceType.BOOK, merchandise.getCode());
     }
 
     public float geAvailableBalance(FermatEnum merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
-        //TODO Implementar:
-        return 0;
+        return getCurrentBalanceByMerchandise(BalanceType.AVAILABLE, merchandise.getCode());
     }
 
     public float getAvailableBalanceFrozen(FermatEnum merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
-        //TODO Implementar:
-        return 0;
+        return getCurrentBalanceByMerchandise(BalanceType.AVAILABLE, merchandise.getCode());
     }
 
     public List<CryptoBrokerWalletBalanceRecord> getAvailableBalanceByMerchandise() throws CantCalculateBalanceException, CantGetBalanceRecordException {
@@ -140,6 +142,92 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     // el metodo le devolvera Cuanto se le puede vender, el precio de la venta en la moneda que piden, y el precio en dolar.
     public void getQuote(FermatEnum merchandise, CurrencyType currencyType, float merchandiseQuantity, FiatCurrency fiatCurrency){
 
+    }
+
+    public List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(FermatEnum merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException {
+        DatabaseTable databaseTable = getStockWalletTransactionTable();
+
+        String query = "SELECT * FROM " +
+                CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME +
+                " WHERE " +
+                CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME +
+                " = '" +
+                merchandise.getCode() +
+                "' AND " +
+                CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME +
+                " = '" +
+                transactionType.getCode() +
+                "' AND " +
+                CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME +
+                " = '" +
+                balanceType.getCode() +
+                "' ORDER BY " +
+                CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME +
+                "' DESC";
+
+        List<CryptoBrokerStockTransaction> transactions = new ArrayList<>();
+
+        try {
+            Collection<DatabaseTableRecord> records = databaseTable.customQuery(query, true);
+            for (DatabaseTableRecord record : records) {
+                FiatCurrency fiatCurrency = null;
+                CryptoCurrency cryptoCurrency = null;
+                CryptoBrokerStockTransactionImpl cryptoBrokerStockTransaction = null;
+                if (CurrencyType.CRYPTO_MONEY != CurrencyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_CURRENCY_TYPE_COLUMN_NAME)))
+                {
+                    fiatCurrency = FiatCurrency.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
+                        cryptoBrokerStockTransaction = new CryptoBrokerStockTransactionImpl(
+                        record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_BOOK_BALANCE_COLUMN_NAME),
+                        record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME),
+                        0,
+                        0,
+                        record.getUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME),
+                        BalanceType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME)),
+                        TransactionType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME)),
+                        CurrencyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_CURRENCY_TYPE_COLUMN_NAME)),
+                        fiatCurrency,
+                        record.getStringValue(""),
+                        record.getStringValue(""),
+                        record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME),
+                        record.getLongValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME),
+                        record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MEMO_COLUMN_NAME),
+                        record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_PRICE_REFERENCE_COLUMN_NAME),
+                        OriginTransaction.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_COLUMN_NAME))
+                    );
+                }else
+                {
+                    cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
+                    cryptoBrokerStockTransaction = new CryptoBrokerStockTransactionImpl(
+                        record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_BOOK_BALANCE_COLUMN_NAME),
+                        record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME),
+                        0,
+                        0,
+                        record.getUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME),
+                        BalanceType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME)),
+                        TransactionType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME)),
+                        CurrencyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_CURRENCY_TYPE_COLUMN_NAME)),
+                        cryptoCurrency,
+                        record.getStringValue(""),
+                        record.getStringValue(""),
+                        record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME),
+                        record.getLongValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME),
+                        record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MEMO_COLUMN_NAME),
+                        record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_PRICE_REFERENCE_COLUMN_NAME),
+                        OriginTransaction.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_COLUMN_NAME))
+                    );
+                }
+
+                transactions.add(cryptoBrokerStockTransaction);
+
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetCryptoBrokerStockTransactionException("Cant Load Table", e, "", "");
+        } catch (InvalidParameterException e) {
+            throw new CantGetCryptoBrokerStockTransactionException("Invalid Parameter", e, "", "");
+        }
+
+        return  transactions;
     }
 
     /*
