@@ -3,6 +3,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdu
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -31,8 +33,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdub
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantListIntraWalletUserIdentitiesException;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateIntraUserIdentityException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
@@ -133,7 +133,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
         try {
             if (aliasExists (alias)) {
-                throw new CantCreateNewDeveloperException ("Cant create new Intra User, alias exists.", "Intra User Identity", "Cant create new Intra User, alias exists.");
+                throw new CantCreateNewDeveloperException("Cant create new Intra User, alias exists.", "Intra User Identity", "Cant create new Intra User, alias exists.");
             }
 
             persistNewUserPrivateKeysFile(publicKey, privateKey);
@@ -179,7 +179,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException ("Cant get intra user identity list, table not found.", "Intra User Identity", "Cant get Intra User identity list, table not found.");
+                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user identity list, table not found.", "Intra User Identity", "Cant get Intra User identity list, table not found.");
             }
 
 
