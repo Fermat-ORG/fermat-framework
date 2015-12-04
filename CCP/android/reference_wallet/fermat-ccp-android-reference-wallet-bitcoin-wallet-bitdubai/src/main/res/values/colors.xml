@@ -3,6 +3,7 @@
 
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="black_overlay">#66000000</color>
+    <color name="black_overlay_2">#59000000</color>
     <color name="wallet_factory_orange">#ff9900</color>
     <color name="green">#8bba9e</color>
 
