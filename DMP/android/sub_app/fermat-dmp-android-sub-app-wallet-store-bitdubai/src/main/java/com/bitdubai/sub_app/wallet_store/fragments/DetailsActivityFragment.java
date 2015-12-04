@@ -30,6 +30,7 @@ import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
 import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
@@ -118,7 +119,7 @@ public class DetailsActivityFragment extends FermatFragment {
     }
 
     private void setupDataInViews() {
-        final ArrayList<Bitmap> walletPreviewImgList = (ArrayList) subAppsSession.getData(PREVIEW_IMGS);
+        final List<Bitmap> walletPreviewImgList = (List) subAppsSession.getData(PREVIEW_IMGS);
         final String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
         catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
 
@@ -127,14 +128,14 @@ public class DetailsActivityFragment extends FermatFragment {
         walletIcon.setImageBitmap(catalogItem.getWalletIcon());
         developerName.setText(developerAlias);
         shortDescription.setText(catalogItem.getDescription());
-        walletBanner.setImageBitmap(catalogItem.getWalletIcon()); // TODO Obtener valor correcto
-        publisherName.setText("Publisher Name"); // TODO Obtener valor correcto
-        totalInstalls.setText("10"); // TODO Obtener valor correcto
+        walletBanner.setImageResource(catalogItem.getBannerWalletRes()); // TODO Obtener valor correcto
+        publisherName.setText("BitDubai"); // TODO Obtener valor correcto
+        totalInstalls.setText("1"); // TODO Obtener valor correcto
 
         readMoreLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getCode());
+                changeActivity(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getCode(), subAppsSession.getAppPublicKey());
             }
         });
 

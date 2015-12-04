@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
@@ -26,6 +28,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAg
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractPurchaseRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractSaleRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
@@ -352,6 +355,13 @@ public class OpenContractMonitorAgent implements
 
         }
 
+        private void raiseNewContractEvent(){
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_OPENED);
+            NewContractOpened newContractOpened = (NewContractOpened) fermatEvent;
+            newContractOpened.setSource(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT);
+            eventManager.raiseEvent(newContractOpened);
+        }
+
         private void checkPendingEvent(String eventId) throws  UnexpectedResultReturnedFromDatabaseException {
             try{
                 String eventTypeCode=openContractBusinessTransactionDao.getEventType(eventId);
@@ -428,7 +438,7 @@ public class OpenContractMonitorAgent implements
                                                     ContractStatus.PENDING_PAYMENT);
                             }
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
-                            //TODO: raise an event.
+                            raiseNewContractEvent();
                         }
                     }
 
