@@ -44,6 +44,8 @@ public final class CryptoAddressMiddlewareExecutorService {
 
             final List<CryptoAddressRequest> cryptoAddressRequestRespondedList = cryptoAddressesManager.listPendingCryptoAddressRequests();
 
+            System.out.println("******* Crypto Addresses -> List of pending Crypto Address Requests -> "+cryptoAddressRequestRespondedList);
+
             for (final CryptoAddressRequest request : cryptoAddressRequestRespondedList) {
 
                 try {
