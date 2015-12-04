@@ -293,7 +293,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
                 recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_VALUE_COLUMN_NAME, clause.getValue());
                 recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_STATUS_COLUMN_NAME, clause.getStatus().getCode());
                 recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PROPOSED_BY_COLUMN_NAME, clause.getProposedBy());
-                recordToInsert.setIntegerValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME, (int) clause.getIndexOrdery());
+                recordToInsert.setIntegerValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME, (int) clause.getIndexOrder());
                 PurchaseClauseTable.insertRecord(recordToInsert);
             } catch (CantInsertRecordException e) {
                 throw new CantAddNewClausesException(CantAddNewClausesException.DEFAULT_MESSAGE, e, "", "");

@@ -64,6 +64,12 @@ public class CustomerBrokerSaleNegotiationInformation implements CustomerBrokerS
     }
 
     @Override
+    public Long getLastNegotiationUpdateDate() {
+        //TODO
+        return null;
+    }
+
+    @Override
     public Long getNegotiationExpirationDate() {
         return this.negotiationExpirationDate;
     }
