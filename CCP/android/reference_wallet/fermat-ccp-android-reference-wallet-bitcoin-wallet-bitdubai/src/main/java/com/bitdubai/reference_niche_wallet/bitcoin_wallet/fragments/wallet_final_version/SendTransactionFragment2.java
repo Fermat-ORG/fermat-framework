@@ -195,14 +195,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
         //container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.back_header);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.back_header);
         bitmap = Bitmap.createScaledBitmap(bitmap,300,400,true);
-        container_header_balance.setBackground(new BitmapDrawable(getResources(),bitmap));
+        container_header_balance.setBackground(new BitmapDrawable(getResources(), bitmap));
 
 
         View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
 
-        balance_header.setPadding(0,20,0,3);
+
+//        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams()
+//        balance_header.setLayoutParams();
 
         container_header_balance.setVisibility(View.VISIBLE);
 
