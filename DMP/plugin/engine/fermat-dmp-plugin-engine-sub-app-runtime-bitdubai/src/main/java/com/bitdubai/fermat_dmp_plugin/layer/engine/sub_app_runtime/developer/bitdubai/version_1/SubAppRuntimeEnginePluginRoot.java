@@ -1186,7 +1186,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         //List of wallets
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
-        runtimeActivity.setColor("#B46A54");
+        runtimeActivity.setActivityType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY.getCode());
         runtimeSubApp.addActivity(runtimeActivity);
         runtimeSubApp.setStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
 
@@ -1196,6 +1196,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Wallet Store");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#B46A54");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -1206,7 +1210,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         //Wallet Details
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY);
-        runtimeActivity.setColor("#B46A54");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeSubApp.addActivity(runtimeActivity);
@@ -1216,8 +1219,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabel("Wallet Details");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#B46A54");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -1235,11 +1240,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         statusBar = new StatusBar();
         statusBar.setColor("#AAAAAA");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Wallet Store more detail");
+        runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#222222");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#FFFFFF");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
