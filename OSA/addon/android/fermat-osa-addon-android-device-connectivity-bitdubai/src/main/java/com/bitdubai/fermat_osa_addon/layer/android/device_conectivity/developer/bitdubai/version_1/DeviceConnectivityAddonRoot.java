@@ -17,7 +17,7 @@ import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.
 import com.bitdubai.fermat_api.CantStartPluginException;
 
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStartAgentException;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
