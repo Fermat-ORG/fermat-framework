@@ -21,6 +21,7 @@ public class WalletStoreSubAppSession extends AbstractFermatSession<InstalledSub
     public static final String SKIN_ID = "skin id";
     public static final String LANGUAGE_ID = "skin id";
     public static final String WALLET_VERSION = "wallet version";
+    public static final String WALLET_LIST = "wallet_list";
 
     /**
      * SubApps type
