@@ -21,7 +21,7 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
     private NegotiationStatus statusNegotiation;
     private final Collection<Clause> clauses;
 
-
+    private Long   lastNegotiationUpdateDate;
     private String cancelReason;
     private String memo;
 
@@ -65,8 +65,12 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
 
     @Override
     public Long getLastNegotiationUpdateDate() {
-        // TODO
-        return null;
+        return this.lastNegotiationUpdateDate;
+    }
+
+    @Override
+    public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate) {
+        this.lastNegotiationUpdateDate = lastNegotiationUpdateDate;
     }
 
     @Override
@@ -103,6 +107,5 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
     public String getMemo() {
         return this.memo;
     }
-
 
 }
