@@ -505,7 +505,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             /**
              * WALLET STORE
              */
+
+
             createWalletStoreNavigationStructure();
+
 
 
             /**
@@ -760,6 +763,37 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
             subAppIntraUser.addActivity(runtimeActivity);
+
+            // Activity: Other Profile
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
+            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
+            runtimeActivity.setColor("#FF0B46F0");
+
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Profile");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeTitleBar.setColor("#0072bb");
+            runtimeTitleBar.setLabelSize(20);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+
+            subAppIntraUser.addActivity(runtimeActivity);
             /**
              * End of community intra user CCP
              */
@@ -940,14 +974,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setBackActivity(null);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Intra user Identity");
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeTitleBar.setColor("#FFFFFF");
             runtimeTitleBar.setTitleColor("#a2b2da");
-            runtimeTitleBar.setLabelSize(16);
+            runtimeTitleBar.setLabelSize(18);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
@@ -963,14 +997,17 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
-            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Create New Identity");
+            runtimeTitleBar.setLabel("Identity Manager");
             runtimeTitleBar.setColor("#FFFFFF");
-            runtimeTitleBar.setLabelSize(16);
+            runtimeTitleBar.setTitleColor("#a2b2da");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
@@ -1220,6 +1257,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setLabel("Wallet Details");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#B46A54");
@@ -1243,7 +1281,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Wallet Store more detail");
+        runtimeTitleBar.setLabel("More Details");
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#222222");
         runtimeTitleBar.setIsTitleTextStatic(true);

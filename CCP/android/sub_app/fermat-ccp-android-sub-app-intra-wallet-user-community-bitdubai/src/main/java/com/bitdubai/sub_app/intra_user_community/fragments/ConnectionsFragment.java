@@ -38,8 +38,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
@@ -121,7 +121,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
             setHasOptionsMenu(true);
             // setting up  module
-            moduleManager = ((IntraUserSubAppSession) subAppsSession).getIntraUserModuleManager();
+            moduleManager = ((IntraUserSubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
 
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
@@ -202,7 +202,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
         /**
          * add navigation header
          */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
 
         /**
          * Navigation view items

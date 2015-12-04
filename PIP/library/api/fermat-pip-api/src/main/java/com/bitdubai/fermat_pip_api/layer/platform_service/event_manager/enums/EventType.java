@@ -15,16 +15,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.BegunWalletInstallationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingIntraUserTransactionDebitNotificationEvent;
-
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.BegunWalletInstallationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingIntraUserDebitTransactionNotificationEventListener;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.BegunWalletInstallationEventListener;
-
-//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
-
-//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserCompleteRegistrationNotificationEvent;
-//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
-
 
 /**
  * The enum <code>EventType</code>

@@ -53,7 +53,7 @@ public class FermatButton extends Button {
     public void parseAttributes(Context context, AttributeSet attrs) {
         TypedArray values = context.obtainStyledAttributes(attrs, R.styleable.FermatButton);
         FontType typefaceType = FontType.values()
-                [values.getInt(R.styleable.FermatButton_typeface, FontType.CAVIAR_DREAMS.ordinal())];
+                [values.getInt(R.styleable.FermatButton_typeface, FontType.ROBOTO_REGULAR.ordinal())];
         setFont(typefaceType);
         values.recycle();
     }

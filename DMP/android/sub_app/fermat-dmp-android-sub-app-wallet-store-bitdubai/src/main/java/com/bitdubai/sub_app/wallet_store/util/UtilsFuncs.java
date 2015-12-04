@@ -23,9 +23,9 @@ public enum UtilsFuncs {
     INSTANCE;
 
     public int getInstallationStatusStringResource(InstallationStatus installationStatus) {
-        if (installationStatus == INSTALLED || installationStatus == NOT_UNINSTALLED)
+        if (installationStatus.equals(INSTALLED) || installationStatus.equals(NOT_UNINSTALLED))
             return R.string.wallet_status_installed;
-        if (installationStatus == UPGRADE_AVAILABLE)
+        if (installationStatus.equals(UPGRADE_AVAILABLE))
             return R.string.wallet_status_upgrade;
 
         return R.string.wallet_status_install;

@@ -21,12 +21,10 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogue;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
 import com.bitdubai.sub_app.wallet_store.common.interfaces.WalletStoreItemPopupMenuListener;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
@@ -40,7 +38,6 @@ import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
 import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
@@ -152,7 +149,13 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     public ArrayList<WalletStoreListItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         ArrayList<WalletStoreListItem> data;
 
-        data = WalletStoreListItem.getTestData(getResources());
+        Object walletList = subAppsSession.getData(WalletStoreSubAppSession.WALLET_LIST);
+        if (walletList != null) {
+            data = (ArrayList<WalletStoreListItem>) walletList;
+        } else {
+            data = WalletStoreListItem.getTestData(getResources());
+            subAppsSession.setData(WalletStoreSubAppSession.WALLET_LIST, data);
+        }
 
 //        try {
 //            WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
@@ -266,7 +269,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
             subAppsSession.setData(LANGUAGE_ID, new UUID(0, 0));
             subAppsSession.setData(WALLET_VERSION, new Version(1, 0, 0));
             subAppsSession.setData(SKIN_ID, new UUID(0, 0));
-            subAppsSession.setData(PREVIEW_IMGS, null);
+            subAppsSession.setData(PREVIEW_IMGS, item.getScreenshots());
             subAppsSession.setData(BASIC_DATA, item);
 
             changeActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY.getCode(), subAppsSession.getAppPublicKey());

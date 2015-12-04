@@ -22,12 +22,16 @@ public class CantCreateDatabaseException extends DatabaseSystemException {
 		super(DEFAULT_MESSAGE, cause, context, possibleReason);
 	}
 
+	public CantCreateDatabaseException(final String context, final String possibleReason) {
+		super(DEFAULT_MESSAGE, null, context, possibleReason);
+	}
+
 	public CantCreateDatabaseException(final String message, final Exception cause) {
 		this(message, cause, "", "");
 	}
 
 	public CantCreateDatabaseException(final String message) {
-		this(message, null);
+		this(message, null, null, null);
 	}
 
 	public CantCreateDatabaseException(final Exception exception) {

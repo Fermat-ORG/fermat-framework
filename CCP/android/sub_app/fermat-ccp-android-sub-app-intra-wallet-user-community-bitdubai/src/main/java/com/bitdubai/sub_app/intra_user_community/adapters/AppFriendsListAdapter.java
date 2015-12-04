@@ -33,8 +33,10 @@ public class AppFriendsListAdapter extends FermatAdapter<IntraUserInformation, A
 
     @Override
     protected void bindHolder(AppFriendsListHolder holder, IntraUserInformation data, int position) {
+
+        holder.friendName.setText("Jeniffer");
+
         try {
-            holder.friendName.setText("Jeniffer");
             Picasso.with(context)
                     .load("http://www.garuyo.com/sites/default/files/jennifer-lawrence-signo-del-zodiaco-leo-1.jpg")
                     .placeholder(R.drawable.profile_image_round)
