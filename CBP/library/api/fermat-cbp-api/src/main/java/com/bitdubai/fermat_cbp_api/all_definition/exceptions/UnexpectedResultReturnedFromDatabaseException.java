@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_cbp_api.all_definition.exceptions;
 
-import com.bitdubai.fermat_api.layer.CBPException;
-
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 30/11/15.
  */

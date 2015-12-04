@@ -8,20 +8,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.NavigationViewAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
+
+import static android.widget.Toast.makeText;
 
 
 /**
@@ -29,7 +33,6 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
  */
 public class SettingsActivityFragment extends FermatWalletFragment {
 
-    private static final String CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY = "crypto_customer_wallet";
     private static final String TAG = "SettingsActivityFragment";
 
     // Fermat Managers
@@ -63,17 +66,20 @@ public class SettingsActivityFragment extends FermatWalletFragment {
 
         configureActionBar();
 
-        Activity activity = getActivity();
-        LayoutInflater layoutInflater = activity.getLayoutInflater();
-        try {
-            addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), null));
-            NavigationViewAdapter adapter = new NavigationViewAdapter(activity, null);
-            setNavigationDrawer(adapter);
-        } catch (CantGetActiveLoginIdentityException e) {
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-        }
-
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        try {
+            CustomerNavigationViewPainter navigationViewPainter = new CustomerNavigationViewPainter(getActivity(), null);
+            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+        } catch (Exception e) {
+            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
     }
 
     private void configureActionBar() {

@@ -29,7 +29,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.d
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 28/11/15.
@@ -165,6 +164,23 @@ public class OpenContractBusinessTransactionDao {
             String stringContractTransactionStatus=getValue(
                     contractHash,
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
+            return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
+        } catch (InvalidParameterException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    e,
+                    "Getting the contract transaction status",
+                    "Invalid code in ContractTransactionStatus enum");
+        }
+    }
+
+    public ContractTransactionStatus getContractTransactionStatusByNegotiationId(String negotiationId) throws
+            UnexpectedResultReturnedFromDatabaseException {
+        try{
+
+            String stringContractTransactionStatus=getValue(
+                    negotiationId,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_NEGOTIATION_ID_COLUMN_NAME,
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
             return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
         } catch (InvalidParameterException e) {

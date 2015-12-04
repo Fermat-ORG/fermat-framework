@@ -26,8 +26,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.MarketPriceInterface;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.MarketPrice;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -113,7 +113,7 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
 
 
     /**
-     * CryptoIndex Interface implementation.
+     * CryptoIndexImp Interface implementation.
      */
 
     @Override
@@ -135,7 +135,7 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
             // ok TODO add exception CantGetMarketPriceException
             // ok TODO use errorManager to report unexpected exceptions
             // ok TODO use generic exceptions for other unexpected exceptions
-          new CantGetMarketPriceException(CantGetMarketPriceException.DEFAULT_MESSAGE,cantSaveLastRateExchangeException,"CryptoIndex WorldPluginRoot GetMarketPrice","Cant Save Last Rate Exchange Exception");
+          new CantGetMarketPriceException(CantGetMarketPriceException.DEFAULT_MESSAGE,cantSaveLastRateExchangeException,"CryptoIndexImp WorldPluginRoot GetMarketPrice","Cant Save Last Rate Exchange Exception");
         }catch(Exception exception){
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_INDEX, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
         }
@@ -185,9 +185,9 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
         try {
             marketExchangeRate=marketPrice.getHistoricalExchangeRate(cryptoCurrency,fiatCurrency,time);
         } catch (CantGetHistoricalExchangeRateException cantGetHistoricalExchangeRateException) {
-            new CantGetHistoricalExchangeRateException(CantGetHistoricalExchangeRateException.DEFAULT_MESSAGE,cantGetHistoricalExchangeRateException,"CryptoIndex WorldPluginRoot GetMarketPrice","Cant Get Historical Exchange Rate ");
+            new CantGetHistoricalExchangeRateException(CantGetHistoricalExchangeRateException.DEFAULT_MESSAGE,cantGetHistoricalExchangeRateException,"CryptoIndexImp WorldPluginRoot GetMarketPrice","Cant Get Historical Exchange Rate ");
         } catch (HistoricalExchangeRateNotFoundException e) {
-            new HistoricalExchangeRateNotFoundException(HistoricalExchangeRateNotFoundException.DEFAULT_MESSAGE,e,"CryptoIndex WorldPluginRoot GetMarketPrice","Historical Exchange Rate Not Found Exception");
+            new HistoricalExchangeRateNotFoundException(HistoricalExchangeRateNotFoundException.DEFAULT_MESSAGE,e,"CryptoIndexImp WorldPluginRoot GetMarketPrice","Historical Exchange Rate Not Found Exception");
         }catch (Exception exception){
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_INDEX, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
         }
@@ -205,9 +205,9 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
             marketExchangeRate =marketPrice.getHistoricalExchangeRateFromDatabase(cryptoCurrency, fiatCurrency, time);
             return marketExchangeRate;
         } catch (CantGetHistoricalExchangeRateException cantGetHistoricalExchangeRateException) {
-            new CantGetHistoricalExchangeRateException(CantGetHistoricalExchangeRateException.DEFAULT_MESSAGE,cantGetHistoricalExchangeRateException,"CryptoIndex WorldPluginRoot GetMarketPrice","Cant Get Historical Exchange Rate ");
+            new CantGetHistoricalExchangeRateException(CantGetHistoricalExchangeRateException.DEFAULT_MESSAGE,cantGetHistoricalExchangeRateException,"CryptoIndexImp WorldPluginRoot GetMarketPrice","Cant Get Historical Exchange Rate ");
         }catch (HistoricalExchangeRateNotFoundException historicalExchangeRateNotFoundException){
-            new HistoricalExchangeRateNotFoundException(HistoricalExchangeRateNotFoundException.DEFAULT_MESSAGE,null,"CryptoIndex WorldPluginRoot GetMarketPrice","Historical Exchange Rate Not Found Exception");
+            new HistoricalExchangeRateNotFoundException(HistoricalExchangeRateNotFoundException.DEFAULT_MESSAGE,null,"CryptoIndexImp WorldPluginRoot GetMarketPrice","Historical Exchange Rate Not Found Exception");
         }
         catch (Exception exception){
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_INDEX, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);

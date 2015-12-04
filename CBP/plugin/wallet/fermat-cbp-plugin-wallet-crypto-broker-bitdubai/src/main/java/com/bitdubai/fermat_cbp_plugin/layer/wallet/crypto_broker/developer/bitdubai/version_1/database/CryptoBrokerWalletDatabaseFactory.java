@@ -39,7 +39,10 @@ public class CryptoBrokerWalletDatabaseFactory implements DealsWithPluginDatabas
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
             createStockWalletTable(ownerId, database.getDatabaseFactory());
-            createStockalletBalancesTable(ownerId, database.getDatabaseFactory());
+            createStockWalletBalancesTable(ownerId, database.getDatabaseFactory());
+            createWalletSpreadSettingTable(ownerId, database.getDatabaseFactory());
+            createWalletAssociatedSettingTable(ownerId, database.getDatabaseFactory());
+            createWalletProviderSettingTable(ownerId, database.getDatabaseFactory());
             return database;
         } catch(CantCreateTableException exception){
             //catch(CantCreateTableException | CantInsertRecordException exception){
@@ -55,6 +58,33 @@ public class CryptoBrokerWalletDatabaseFactory implements DealsWithPluginDatabas
         }
     }
 
+    private void createWalletProviderSettingTable(UUID ownerId, DatabaseFactory databaseFactory) throws CantCreateTableException {
+        try{
+            DatabaseTableFactory tableFactory = createWalletProviderSettingTableFactory(ownerId, databaseFactory);
+            databaseFactory.createTable(tableFactory);
+        } catch(InvalidOwnerIdException exception){
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
+        }
+    }
+
+    private void createWalletAssociatedSettingTable(UUID ownerId, DatabaseFactory databaseFactory) throws CantCreateTableException {
+        try{
+            DatabaseTableFactory tableFactory = createWalletAssociatedSettingTableFactory(ownerId, databaseFactory);
+            databaseFactory.createTable(tableFactory);
+        } catch(InvalidOwnerIdException exception){
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
+        }
+    }
+
+    private void createWalletSpreadSettingTable(UUID ownerId, DatabaseFactory databaseFactory) throws CantCreateTableException {
+        try{
+            DatabaseTableFactory tableFactory = createWalletSpreadSettingTableFactory(ownerId, databaseFactory);
+            databaseFactory.createTable(tableFactory);
+        } catch(InvalidOwnerIdException exception){
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
+        }
+    }
+
     private void createStockWalletTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
         try{
             DatabaseTableFactory tableFactory = createStockWalletTableFactory(ownerId, databaseFactory);
@@ -64,7 +94,7 @@ public class CryptoBrokerWalletDatabaseFactory implements DealsWithPluginDatabas
         }
     }
 
-    private void createStockalletBalancesTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
+    private void createStockWalletBalancesTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
         try{
             DatabaseTableFactory tableFactory = createStockWalletBalanceTableFactory(ownerId, databaseFactory);
             databaseFactory.createTable(tableFactory);
@@ -82,7 +112,7 @@ public class CryptoBrokerWalletDatabaseFactory implements DealsWithPluginDatabas
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 30, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 200, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.REAL, 0, false);
@@ -94,10 +124,43 @@ public class CryptoBrokerWalletDatabaseFactory implements DealsWithPluginDatabas
 
     private DatabaseTableFactory createStockWalletBalanceTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.REAL, 0, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.REAL, 0, false);
+
+        return table;
+    }
+
+    private DatabaseTableFactory createWalletSpreadSettingTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_TABLE_NAME);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_VALUE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
+
+        return table;
+    }
+
+    private DatabaseTableFactory createWalletAssociatedSettingTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_TABLE_NAME);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PLATFORM_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_MERCHANDISE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_BANK_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
+
+
+        return table;
+    }
+
+    private DatabaseTableFactory createWalletProviderSettingTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_TABLE_NAME);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_PLUGIN_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
 
         return table;
     }

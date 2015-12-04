@@ -26,8 +26,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupRecord;
@@ -419,8 +419,6 @@ public class AssetUserActorDao implements Serializable {
                 for (DatabaseTableRecord record : table.getRecords()) {
                     if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
                         dapConnectionState = DAPConnectionState.CONNECTED_OFFLINE;
-                    }else {
-                        dapConnectionState = DAPConnectionState.REGISTERED_OFFLINE;
                     }
 
                     record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
@@ -470,9 +468,7 @@ public class AssetUserActorDao implements Serializable {
 
             // 3) Get Asset User record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
-                    dapConnectionState = DAPConnectionState.CONNECTED_ONLINE;
-                }else {
+                if(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) == null) {
                     dapConnectionState = DAPConnectionState.REGISTERED_ONLINE;
                 }
 
@@ -706,7 +702,7 @@ public class AssetUserActorDao implements Serializable {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
             }
             // 2) Find  Asset Users by Connection State.
-            //TODO Actor Asset User en Tabla REGISTERED con DAPDAPConnectionState CONNECTED_ONLINE indicara que tiene CryptoAddress
+            //TODO Actor Asset User en Tabla REGISTERED con DAPConnectionState CONNECTED_ONLINE indicara que tiene CryptoAddress
 //            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();

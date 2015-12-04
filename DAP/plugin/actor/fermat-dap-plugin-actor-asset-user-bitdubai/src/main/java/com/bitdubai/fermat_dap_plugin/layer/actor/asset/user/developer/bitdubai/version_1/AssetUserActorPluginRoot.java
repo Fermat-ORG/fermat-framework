@@ -23,7 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
@@ -67,9 +67,9 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserConnectionException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorDao;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -126,7 +126,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             /**
              * Agent for Search Actor Asset User REGISTERED in Actor Network Service User
              */
-            startMonitorAgent();
+//            startMonitorAgent();
 
             this.serviceStatus = ServiceStatus.STARTED;
             //groupTest ();
@@ -200,6 +200,15 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public void createActorAssetUserRegisterInNetworkService(List<ActorAssetUser> actorAssetUsers) throws CantCreateAssetUserActorException {
+        try {
+            assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(actorAssetUsers);
+        } catch (CantAddPendingAssetUserException e) {
+            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ACTOR ASSET USER REGISTERED", e, "", "");
+        }
+    }
+
+    @Override
     public ActorAssetUser getActorAssetUser() throws CantGetAssetUserActorsException {
 
         ActorAssetUser actorAssetUser;
@@ -263,6 +272,31 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 } catch (CantUpdateAssetUserConnectionException e) {
                     e.printStackTrace();
                 }
+            }
+        } catch (CantSendAddressExchangeRequestException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint>  actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException {
+        try {
+            for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
+//                try {
+                    cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(
+                            null,
+                            CryptoCurrency.BITCOIN,
+                            Actors.DAP_ASSET_USER,
+                            Actors.DAP_ASSET_REDEEM_POINT,
+                            requester.getActorPublicKey(),
+                            actorAssetRedeemPoint.getActorPublicKey(),
+                            CryptoAddressDealers.DAP_ASSET,
+                            BlockchainNetworkType.DEFAULT);
+
+//                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
+//                } catch (CantUpdateAssetUserConnectionException e) {
+//                    e.printStackTrace();
+//                }
             }
         } catch (CantSendAddressExchangeRequestException e) {
             e.printStackTrace();
@@ -357,19 +391,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             throw new CantGetAssetUserGroupExcepcion("You can not get the group", ex, "Error", "");
         }
         return actorAssetUserGroup;
-    }
-
-    /**
-     * The method <code>connectToActorAssetRedeemPoint</code> Enable Connection
-     * with Requester and Deliver Redeem Point to Reddem Asset
-     *
-     * @param requester
-     * @param actorAssetRedeemPoint
-     * @throws CantConnectToActorAssetRedeemPointException
-     */
-    @Override
-    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantConnectToActorAssetRedeemPointException {
-        System.out.println("NOT IMPLEMENT YET - ACTOR ASSET USER");
     }
 
     public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetUserException {

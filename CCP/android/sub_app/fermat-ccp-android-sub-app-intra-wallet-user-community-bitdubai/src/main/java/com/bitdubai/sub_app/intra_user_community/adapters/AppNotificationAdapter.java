@@ -11,19 +11,20 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by josemanueldsds on 29/11/15.
  */
 public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, AppNotificationsHolder> {
 
-    public AppNotificationAdapter(Context context) {
-        super(context);
+    public AppNotificationAdapter(Context context,List<IntraUserInformation> lst) {
+        super(context,lst);
     }
 
     @Override
     protected AppNotificationsHolder createHolder(View itemView, int type) {
-        return null;
+        return new AppNotificationsHolder(itemView);
     }
 
     @Override

@@ -1,45 +1,45 @@
 package com.bitdubai.sub_app.intra_user_community.common.popups;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 
 
 /**
  * Created by Matias Furszyfer on 2015.08.12..
+ * Changed by Jose Manuel De Sousa Dos Santos on 2015.12.03
  */
 
+@SuppressWarnings("FieldCanBeLocal")
 public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesProviderManager> implements
         View.OnClickListener {
-
 
     /**
      *  UI components
      */
-    Button btn_connect;
-    Button btn_cancel;
-    FermatTextView txt_person_to_connect;
+    FermatTextView positiveBtn;
+    FermatTextView negativeBtn;
+    FermatTextView description;
+    FermatTextView username;
 
     IntraUserInformation intraUserInformation;
 
     IntraUserLoginIdentity identity;
-
 
 
     public ConnectDialog(Activity a,IntraUserSubAppSession intraUserSubAppSession,SubAppResourcesProviderManager subAppResources,IntraUserInformation intraUserInformation,IntraUserLoginIdentity identity) {
@@ -49,19 +49,22 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        txt_person_to_connect = (FermatTextView)findViewById(R.id.txt_person_to_connect);
-        btn_connect =(FermatButton) findViewById(R.id.btn_connect);
-        btn_cancel = (FermatButton) findViewById(R.id.btn_close);
+        description = (FermatTextView) findViewById(R.id.description);
+        username = (FermatTextView) findViewById(R.id.user_name);
 
-        btn_connect.setOnClickListener(this);
-        btn_cancel.setOnClickListener(this);
+        positiveBtn = (FermatTextView) findViewById(R.id.positive_button);
+        negativeBtn = (FermatTextView) findViewById(R.id.negative_button);
 
+        positiveBtn.setOnClickListener(this);
+        negativeBtn.setOnClickListener(this);
 
-        txt_person_to_connect.setText("Want connect with "+ intraUserInformation.getName());
+        description.setText("Want connect with ");
+        //username.setText(intraUserInformation.getName());
 
     }
 
@@ -69,7 +72,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
 
     @Override
     protected int setLayoutId() {
-        return R.layout.connect_dialog_layout;
+        return R.layout.dialog_builder;
     }
 
     @Override
@@ -85,7 +88,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
             try {
                 //image null
                 if(intraUserInformation!=null && identity!=null)
-                ((IntraUserSubAppSession)getSession()).getIntraUserModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(),identity.getPublicKey(),identity.getAlias());
+                ((IntraUserSubAppSession)getSession()).getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(),identity.getPublicKey(),identity.getAlias());
                 else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - " , Toast.LENGTH_SHORT).show();
                 }

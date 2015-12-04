@@ -9,13 +9,13 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Lists all the NicheWallets of Fermat.
  * Created by eze on 2015.07.19..
  * Modified by Leon Acosta (laion.cj91@gmail.com) on 23/09/2015.
- * Updated by PatricioGesualdi - (pmgesualdi@hotmail.com) on 18/11/2015.
+ * Modified by PatricioGesualdi - (pmgesualdi@hotmail.com) on 18/11/2015.
  */
 public enum NicheWallet implements FermatWalletEnum {
     /**
      * The value NONE is used to store the information of no wallet
      * <p/>
-     * In order to make the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     NONE           ("NONE", null),
     UNKNOWN_WALLET ("UNKW", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET)

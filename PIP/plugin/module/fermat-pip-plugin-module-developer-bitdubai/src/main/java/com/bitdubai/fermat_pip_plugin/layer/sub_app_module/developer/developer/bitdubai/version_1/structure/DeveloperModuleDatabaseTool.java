@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerFor
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseTool;
 
 import java.util.ArrayList;
 import java.util.List;

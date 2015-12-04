@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,11 +56,16 @@ public class BrokerNavigationViewPainter implements com.bitdubai.fermat_android_
 
     @Override
     public Drawable addBodyBackground() {
-        return null; // ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.bg_drawer_body);
+        return ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.cbw_navigation_drawer_background);
     }
 
     @Override
     public int addBodyBackgroundColor() {
-        return Color.WHITE;
+        return Color.parseColor("#1375a7");
+    }
+
+    @Override
+    public RecyclerView.ItemDecoration addItemDecoration() {
+        return null;
     }
 }

@@ -92,13 +92,13 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
             bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(record);
 
             //notified to Transmission NS that transaction Credit in Wallet
-            cryptoTransmissionNetworkServiceManager.informTransactionCreditedInWallet(transaction.getTransactionMetadata().getTransactionID());
+            //cryptoTransmissionNetworkServiceManager.informTransactionCreditedInWallet(transaction.getTransactionMetadata().getTransactionID());
 
         } catch (IncomingIntraUserCantGenerateTransactionException e) {
             throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
-        } catch (CantSetToCreditedInWalletException e) {
-            throw new CantRegisterCreditException("I couldn't inform to NS that transaction credit in wallet",e,"","");
-        }
+       // } catch (CantSetToCreditedInWalletException e) {
+       //     throw new CantRegisterCreditException("I couldn't inform to NS that transaction credit in wallet",e,"","");
+       }
 
         //Esto se hiso aca hasta pensar mejor el proceso para cambiar el estado del request
         try
