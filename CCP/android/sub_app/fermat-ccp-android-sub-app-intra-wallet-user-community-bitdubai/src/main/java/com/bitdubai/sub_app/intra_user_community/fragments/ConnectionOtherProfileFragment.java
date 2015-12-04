@@ -1,14 +1,19 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
+import android.annotation.SuppressLint;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatRoundedImageView;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -22,10 +27,12 @@ import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 
 /**
- * Created by josemanueldsds on 29/11/15.
+ * Creado por Jose Manuel De Sousa on 29/11/15.
  */
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ConnectionOtherProfileFragment extends FermatFragment {
 
+    private Resources res;
     private View rootView;
     private IntraUserSubAppSession intraUserSubAppSession;
     private FermatRoundedImageView userProfileAvatar;
@@ -34,9 +41,9 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
     private IntraUserInformation intraUserInformation;
-    private Button connect;
-    private Button disconect;
+    private ToggleButton connect;
     private CryptoWalletIntraUserActor identity;
+
 
     /**
      * Create a new instance of this fragment
@@ -55,8 +62,10 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
         intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = subAppsSession.getErrorManager();
+        intraUserInformation = (IntraUserInformation) subAppsSession.getData(ConnectionsWorldFragment.INTRA_USER_SELECTED);
     }
 
+    @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,20 +73,14 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
         userProfileAvatar = (FermatRoundedImageView) rootView.findViewById(R.id.img_user_avatar);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
         userEmail = (FermatTextView) rootView.findViewById(R.id.email);
-        connect = (Button) rootView.findViewById(R.id.btn_conect);
-        disconect = (Button) rootView.findViewById(R.id.btn_disconect);
-        connect.setVisibility(View.VISIBLE);
-        disconect.setVisibility(View.GONE);
-        /*try {
+        connect = (ToggleButton) rootView.findViewById(R.id.btn_conect);
+        try {
             userName.setText(intraUserInformation.getName());
             userEmail.setText("Unknow");
-            Picasso.with(getActivity())
-                    .load(Arrays.toString(intraUserInformation.getProfileImage()))
-                    .placeholder(R.drawable.profile_image)
-                    .into(userProfileAvatar);
+            userProfileAvatar.setImageDrawable(getImgDrawable(intraUserInformation.getProfileImage()));
         } catch (Exception ex) {
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-        }*/
+        }
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,6 +95,13 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
         });
 
         return rootView;
+    }
+
+    private Drawable getImgDrawable(byte[] customerImg) {
+        if (customerImg != null && customerImg.length > 0)
+            return ImagesUtils.getRoundedBitmap(res, customerImg);
+
+        return ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image);
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {

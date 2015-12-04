@@ -31,37 +31,21 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="32dp">
 
-        <Button
+        <ToggleButton
             android:id="@+id/btn_conect"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/bg_rounded_button_blue"
-            android:drawableLeft="@drawable/ic_profile_connect"
+            android:background="@drawable/drawable_background"
+            android:drawableLeft="@drawable/conection_check"
             android:drawablePadding="4dp"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
-            android:text="Conect"
             android:textAllCaps="true"
-            android:textColor="#ffffff"
-            android:visibility="visible"
+            android:textColor="@color/text_color_conect"
+            android:textOff="Disconect"
+            android:textOn="Conect"
             tools:ignore="HardcodedText,RtlHardcoded"/>
-
-        <Button
-            android:id="@+id/btn_disconect"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/bg_rounded_button_white"
-            android:drawableLeft="@drawable/ic_profile_disconnect"
-            android:drawablePadding="4dp"
-            android:paddingLeft="18dp"
-            android:paddingRight="18dp"
-            android:text="Disconect"
-            android:textAllCaps="true"
-            android:textColor="#0072bc"
-            android:visibility="gone"
-            tools:ignore="HardcodedText,RtlHardcoded" />
 
     </RelativeLayout>
 
