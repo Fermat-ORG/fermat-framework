@@ -171,9 +171,9 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         if (identitySelected.getProfileImage() != null) {
             if (identitySelected.getProfileImage().length > 0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(), 0, identitySelected.getProfileImage().length);
-                bitmap = ImagesUtils.getRoundedBitmap(getResources(), bitmap).getBitmap();
                 bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
                 brokerImageByteArray = toByteArray(bitmap);
+                mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
             }else{
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.profile_image);
 
@@ -211,7 +211,8 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
             }
 
             if (pictureView != null && imageBitmap != null)
-                pictureView.setImageDrawable(new BitmapDrawable(getResources(), imageBitmap));
+                //pictureView.setImageDrawable(new BitmapDrawable(getResources(), imageBitmap));
+                pictureView.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
         }
     }
 
