@@ -30,6 +30,7 @@ import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
 import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
@@ -118,7 +119,7 @@ public class DetailsActivityFragment extends FermatFragment {
     }
 
     private void setupDataInViews() {
-        final ArrayList<Bitmap> walletPreviewImgList = (ArrayList) subAppsSession.getData(PREVIEW_IMGS);
+        final List<Bitmap> walletPreviewImgList = (List) subAppsSession.getData(PREVIEW_IMGS);
         final String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
         catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
 

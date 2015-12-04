@@ -266,7 +266,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
             subAppsSession.setData(LANGUAGE_ID, new UUID(0, 0));
             subAppsSession.setData(WALLET_VERSION, new Version(1, 0, 0));
             subAppsSession.setData(SKIN_ID, new UUID(0, 0));
-            subAppsSession.setData(PREVIEW_IMGS, null);
+            subAppsSession.setData(PREVIEW_IMGS, item.getScreenshots());
             subAppsSession.setData(BASIC_DATA, item);
 
             changeActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY.getCode(), subAppsSession.getAppPublicKey());
