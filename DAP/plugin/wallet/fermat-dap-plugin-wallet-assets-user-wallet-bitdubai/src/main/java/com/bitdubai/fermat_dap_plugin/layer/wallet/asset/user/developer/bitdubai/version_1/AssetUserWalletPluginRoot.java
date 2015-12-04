@@ -87,29 +87,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
             this.serviceStatus = ServiceStatus.STARTED;
 
             //TODO testing code
-            DigitalAsset digitalAsset = new DigitalAsset();
-            digitalAsset.setPublicKey("digitalAssetPublicKey");
-            digitalAsset.setName("name");
-            digitalAsset.setDescription("description");
-
-            CryptoAddress cryptoAddress = new CryptoAddress();
-            cryptoAddress.setAddress("address");
-
-            CryptoTransaction cryptoTransaction = new CryptoTransaction();
-            cryptoTransaction.setAddressFrom(cryptoAddress);
-            cryptoTransaction.setAddressTo(cryptoAddress);
-            cryptoTransaction.setCryptoAmount(1);
-            cryptoTransaction.setTransactionHash("transactionHash");
-
-            AssetUserWalletTransactionRecord record = new AssetUserWalletTransactionRecordWrapper(
-                    new DigitalAssetMetadata(digitalAsset), cryptoTransaction, "", ""
-            );
-
-            UUID internalAssetIssuerWalletId = walletUser.get("walletPublicKeyTest");
-            Database database = pluginDatabaseSystem.openDatabase(pluginId, internalAssetIssuerWalletId.toString());
-            AssetUserWalletDao assetUserWalletDao = new AssetUserWalletDao(database);
-            assetUserWalletDao.setPluginFileSystem(pluginFileSystem);
-            assetUserWalletDao.addCredit(record, BalanceType.AVAILABLE);
+            testInsert();
 
         }catch(CantStartPluginException exception){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
@@ -119,6 +97,33 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
 
         }
+    }
+
+    private void testInsert() throws Exception {
+        DigitalAsset digitalAsset = new DigitalAsset();
+        digitalAsset.setPublicKey("digitalAssetPublicKey");
+        digitalAsset.setName("name");
+        digitalAsset.setDescription("description");
+
+        CryptoAddress cryptoAddress = new CryptoAddress();
+        cryptoAddress.setAddress("address");
+
+        CryptoTransaction cryptoTransaction = new CryptoTransaction();
+        cryptoTransaction.setAddressFrom(cryptoAddress);
+        cryptoTransaction.setAddressTo(cryptoAddress);
+        cryptoTransaction.setCryptoAmount(1);
+        cryptoTransaction.setTransactionHash("transactionHash");
+
+        AssetUserWalletTransactionRecord record = new AssetUserWalletTransactionRecordWrapper(
+                new DigitalAssetMetadata(digitalAsset), cryptoTransaction, "", ""
+        );
+
+        UUID internalAssetIssuerWalletId = walletUser.get("walletPublicKeyTest");
+        Database database = pluginDatabaseSystem.openDatabase(pluginId, internalAssetIssuerWalletId.toString());
+        AssetUserWalletDao assetUserWalletDao = new AssetUserWalletDao(database);
+        assetUserWalletDao.setPluginFileSystem(pluginFileSystem);
+        assetUserWalletDao.setPlugin(pluginId);
+        assetUserWalletDao.addCredit(record, BalanceType.AVAILABLE);
     }
 
     @Override

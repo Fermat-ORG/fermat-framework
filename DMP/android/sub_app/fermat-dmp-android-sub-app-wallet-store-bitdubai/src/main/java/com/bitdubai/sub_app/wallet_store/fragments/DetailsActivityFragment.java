@@ -127,14 +127,14 @@ public class DetailsActivityFragment extends FermatFragment {
         walletIcon.setImageBitmap(catalogItem.getWalletIcon());
         developerName.setText(developerAlias);
         shortDescription.setText(catalogItem.getDescription());
-        walletBanner.setImageBitmap(catalogItem.getWalletIcon()); // TODO Obtener valor correcto
-        publisherName.setText("Publisher Name"); // TODO Obtener valor correcto
-        totalInstalls.setText("10"); // TODO Obtener valor correcto
+        walletBanner.setImageResource(catalogItem.getBannerWalletRes()); // TODO Obtener valor correcto
+        publisherName.setText("BitDubai"); // TODO Obtener valor correcto
+        totalInstalls.setText("1"); // TODO Obtener valor correcto
 
         readMoreLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getCode());
+                changeActivity(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getCode(), subAppsSession.getAppPublicKey());
             }
         });
 

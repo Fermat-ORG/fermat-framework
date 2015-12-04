@@ -781,7 +781,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 this.actorAssetIssuerPublicKey,
                 Actors.DAP_ASSET_ISSUER,
                 Platforms.DIGITAL_ASSET_PLATFORM,
-                VaultType.ASSET_VAULT,
+                VaultType.CRYPTO_ASSET_VAULT,
                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                 this.walletPublicKey,
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
