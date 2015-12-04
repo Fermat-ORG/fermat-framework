@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_pip_api.layer.platform_service.error_manager;
 
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
 /**
  * Created by ciencias on 05.02.15.
  */
