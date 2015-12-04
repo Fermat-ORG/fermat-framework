@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
  * Created by memo on 04/12/15.
  */
 public enum BankMoneyWalletFragmentsEnumType implements FermatFragmentsEnumType<BankMoneyWalletFragmentsEnumType> {
-    ;
+    BNK_BANK_MONEY_WALLET_ACCOUNTS_HOME("BNKBMWAH");
 
 
     private String key;
@@ -16,7 +16,7 @@ public enum BankMoneyWalletFragmentsEnumType implements FermatFragmentsEnumType<
     }
     @Override
     public String getKey() {
-        return null;
+        return key;
     }
     @Override
     public String toString() {
