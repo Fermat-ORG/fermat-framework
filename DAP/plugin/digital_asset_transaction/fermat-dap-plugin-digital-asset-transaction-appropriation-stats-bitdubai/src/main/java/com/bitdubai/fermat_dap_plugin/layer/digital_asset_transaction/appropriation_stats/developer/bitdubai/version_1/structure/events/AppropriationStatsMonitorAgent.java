@@ -11,6 +11,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.AppropriationStatsDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.database.AppropriationStatsDAO;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -36,6 +38,7 @@ public class AppropriationStatsMonitorAgent implements Agent {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
     private final AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
+    private final AssetIssuerWalletManager assetIssuerWalletManager;
     private volatile CountDownLatch latch;
 
     private StatsAgent statsAgent;
@@ -45,12 +48,14 @@ public class AppropriationStatsMonitorAgent implements Agent {
                                           LogManager logManager,
                                           ErrorManager errorManager,
                                           UUID pluginId,
-                                          AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager) throws CantSetObjectException {
+                                          AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager,
+                                          AssetIssuerWalletManager assetIssuerWalletManager) throws CantSetObjectException {
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
         this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
         this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
         this.assetIssuerActorNetworkServiceManager = Validate.verifySetter(assetIssuerActorNetworkServiceManager, "assetIssuerActorNetworkServiceManager is null");
+        this.assetIssuerWalletManager = Validate.verifySetter(assetIssuerWalletManager, "assetIssuerWalletManager is null");
     }
 
     //PUBLIC METHODS
@@ -133,8 +138,9 @@ public class AppropriationStatsMonitorAgent implements Agent {
                             //assetIssuerActorNetworkServiceManager.getPendingMessages(); or something like that...
                             String message = "";
                             AssetAppropriationContentMessage contentMessage = (AssetAppropriationContentMessage) XMLParser.parseXML(message, new AssetAppropriationContentMessage());
-                            dao.assetAppropriated(contentMessage.getDigitalAssetAppropriated(), contentMessage.getUserThatAppropriate()); //That should be all...
-
+                            //TODO REMOVE HARDCODE.
+                            AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
+                            wallet.assetAppropriated(contentMessage.getDigitalAssetAppropriated().getPublicKey(), contentMessage.getUserThatAppropriate().getActorPublicKey());
                             dao.notifyEvent(eventId);
                             break;
                         default:
