@@ -48,7 +48,7 @@
                 tools:text="Nombre de la wallet"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/wallet_publisher_name"
+                android:id="@+id/ws_wallet_publisher_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
