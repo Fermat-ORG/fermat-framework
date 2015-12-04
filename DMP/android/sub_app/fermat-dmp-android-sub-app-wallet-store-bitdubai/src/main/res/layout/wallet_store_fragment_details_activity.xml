@@ -50,7 +50,7 @@
                     android:layout_height="72dp"
                     android:layout_margin="3dp"
                     android:contentDescription="@string/wallet_icon"
-                    tools:src="@drawable/bitcoin_wallet_72x72" />
+                    tools:src="@drawable/bitcoin_wallet_med" />
 
                 <FrameLayout
                     android:layout_width="match_parent"

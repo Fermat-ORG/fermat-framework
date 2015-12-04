@@ -128,9 +128,9 @@ public class WalletStoreListItem implements Serializable {
                 INSTALLED};
 
         int[] walletIcons = {
-                R.drawable.bitcoin_wallet,
-                R.drawable.crypto_broker,
-                R.drawable.crypto_customer,
+                R.drawable.bitcoin_wallet_med,
+                R.drawable.crypto_broker_med,
+                R.drawable.crypto_customer_med,
                 R.drawable.asset_issuer,
                 R.drawable.asset_user_wallet,
                 R.drawable.redeem_point};
