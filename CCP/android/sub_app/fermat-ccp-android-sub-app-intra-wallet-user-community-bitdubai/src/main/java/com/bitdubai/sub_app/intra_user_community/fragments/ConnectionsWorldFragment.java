@@ -67,6 +67,8 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
 
+    public static final String INTRA_USER_SELECTED = "intra_user";
+
     private static final int MAX = 20;
     /**
      * MANAGERS
@@ -118,7 +120,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
             setHasOptionsMenu(true);
             // setting up  module
             intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
-            moduleManager = intraUserSubAppSession.getIntraUserModuleManager();
+            moduleManager = intraUserSubAppSession.getModuleManager();
             errorManager = subAppsSession.getErrorManager();
 
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
@@ -193,7 +195,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
         /**
          * add navigation header
          */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
 
         /**
          * Navigation view items
@@ -432,7 +434,9 @@ Updates the count of notifications in the ActionBar.
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
 
+        subAppsSession.setData(INTRA_USER_SELECTED, data);
         changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), subAppsSession.getAppPublicKey());
+
 
         /*ConnectDialog connectDialog = null;
         try {
