@@ -12,7 +12,6 @@ import java.util.UUID;
  * Created by franklin on 16/11/15.
  */
 public interface CashMoneyTransaction {
-    //TODO: Documentar
     /**
      * The property <code>TransactionId</code>  represented identifier the record
      *
@@ -29,36 +28,89 @@ public interface CashMoneyTransaction {
     String getActorPublicKey();
     void setActorPublicKey(String actorPublicKey);
 
+    /**
+     * The property <code>FiatCurrency</code>  represented the type Fiat Currency
+     *
+     * @return the FiatCurrency
+     */
     FiatCurrency getFiatCurrency();
     void setFiatCurrency(FiatCurrency fiatCurrency);
 
+    /**
+     * The property <code>WalletPublicKey</code>  represented the public key Wallet
+     *
+     * @return the Sting
+     */
     String getCbpWalletPublicKey();
     void setCbpWalletPublicKey(String cbpWalletPublicKey);
 
+    /**
+     * The property <code>CashWalletPublicKey</code>  represented the public key Cah Wallet
+     *
+     * @return the Sting
+     */
     String getCashWalletPublicKey();
     void setCashWalletPublicKey(String CashWalletPublicKey);
 
+    /**
+     * The property <code>Concept</code>  represented the public key Bank
+     *
+     * @return the Sting
+     */
     String getConcept();
     void setConcept(String concept);
 
+    /**
+     * The property <code>CashReference</code>  represented the public Cash Reference
+     * @return the Sting
+     */
     String getCashReference();
     void setCashReference(String cashReference);
 
+    /**
+     * The property <code>Amount</code>  represented the amount in transaction
+     *
+     * @return the Sting
+     */
     float getAmount();
     void setAmount(float amount);
 
+    /**
+     * The property <code>Timestamp</code>  represented the Date in transaction
+     *
+     * @return the Timestamp
+     */
     Timestamp getTimeStamp();
     void setTimeStamp(Timestamp timeStamp);
 
+    /**
+     * The property <code>Memo</code>  represented the Memo transaction
+     *
+     * @return the Sting
+     */
     String getMemo();
     void setMemo(String memo);
 
+    /**
+     * The property <code>TransactionStatusRestockDestock</code>  represented the Status in transaction
+     *
+     * @return the Sting
+     */
     TransactionStatusRestockDestock getTransactionStatus();
     void setTransactionStatus(TransactionStatusRestockDestock transactionStatus);
 
+    /**
+     * The property <code>PriceReference</code>  represented the Price Reference
+     * @return float
+     */
     float getPriceReference();
     void setPriceReference(float priceReference);
 
+    /**
+     * The property <code>OriginTransaction</code>  represented the Origin Transaction
+     *
+     * @return the OriginTransaction
+     */
     OriginTransaction getOriginTransaction();
     void setOriginTransaction(OriginTransaction originTransaction);
 

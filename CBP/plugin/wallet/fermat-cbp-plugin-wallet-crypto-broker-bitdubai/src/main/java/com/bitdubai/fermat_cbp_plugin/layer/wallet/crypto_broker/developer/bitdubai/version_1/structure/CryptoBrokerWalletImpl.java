@@ -27,6 +27,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantCreateNewCryptoBrokerWalletException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -53,6 +54,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
     private ErrorManager errorManager;
     private PluginDatabaseSystem pluginDatabaseSystem;
     private PluginFileSystem pluginFileSystem;
+    private CryptoBrokerWalletDatabaseDao cryptoBrokerWalletDatabaseDao;
 
     public CryptoBrokerWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.errorManager = errorManager;
@@ -73,7 +75,11 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
 
     @Override
     public List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(FermatEnum merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException {
-        return null;
+
+        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
+        cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
+        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
+        return cryptoBrokerWalletDatabaseDao.getCryptoBrokerStockTransactionsByMerchandise(merchandise, currencyType, transactionType, balanceType);
     }
 
     public void initialize(UUID walletId) throws CryptoBrokerWalletNotFoundException {

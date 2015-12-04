@@ -17,9 +17,29 @@ import java.util.List;
  * Modified by Franklin Marcano 01.12.2015
  */
 public interface Wallet {
-    //TODO: Documentar y manejo de excepciones
+    /**
+     * This method load the instance the StockBalance
+     * @param
+     * @return StockBalance
+     * @exception CantGetStockCryptoBrokerWalletException
+     */
     StockBalance getStockBalance()  throws CantGetStockCryptoBrokerWalletException;
+    /**
+     * This method load the instance the CryptoBrokerWalletSetting
+     * @param
+     * @return StockBalance
+     * @exception CantGetCryptoBrokerWalletSettingException
+     */
     CryptoBrokerWalletSetting getCryptoWalletSetting() throws CantGetCryptoBrokerWalletSettingException;
+    /**
+     * This method load the list CryptoBrokerStockTransaction
+     * @param merchandise
+     * @param currencyType
+     * @param transactionType
+     * @param balanceType
+     * @return List<CryptoBrokerStockTransaction>
+     * @exception CantGetCryptoBrokerStockTransactionException
+     */
     List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(FermatEnum merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException;
     //void getMarketRate();
     //void getQuote(FermatEnum merchandise, float quantity, FiatCurrency payment);

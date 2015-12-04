@@ -29,33 +29,83 @@ public interface CryptoMoneyTransaction {
     String getActorPublicKey();
     void setActorPublicKey(String actorPublicKey);
 
+    /**
+     * The property <code>CryptoCurrency</code>  represented the Crypto Currency
+     *
+     * @return the CryptoCurrency
+     */
     CryptoCurrency getCryptoCurrency();
     void setCryptoCurrency(CryptoCurrency cryptoCurrency);
 
+    /**
+     * The property <code>WalletPublicKey</code>  represented the public key Wallet
+     *
+     * @return the Sting
+     */
     String getCbpWalletPublicKey();
     void setCbpWalletPublicKey(String cbpWalletPublicKey);
 
+    /**
+     * The property <code>getCryWalletPublicKey</code>  represented the public key Bitcoin Wallet
+     *
+     * @return the Sting
+     */
     String getCryWalletPublicKey();
     void setCryWalletPublicKey(String cryWalletPublicKey);
 
+    /**
+     * The property <code>Concept</code>  represented the public key Bank
+     *
+     * @return the Sting
+     */
     String getConcept();
     void setConcept(String concept);
 
+    /**
+     * The property <code>Amount</code>  represented the amount in transaction
+     *
+     * @return the Sting
+     */
     float getAmount();
     void setAmount(float amount);
 
+    /**
+     * The property <code>Timestamp</code>  represented the Date in transaction
+     *
+     * @return the Timestamp
+     */
     Timestamp getTimeStamp();
     void setTimeStamp(Timestamp timeStamp);
 
+    /**
+     * The property <code>Memo</code>  represented the Memo transaction
+     *
+     * @return the Sting
+     */
     String getMemo();
     void setMemo(String memo);
 
+    /**
+     * The property <code>TransactionStatusRestockDestock</code>  represented the Status in transaction
+     *
+     * @return the Sting
+     */
     TransactionStatusRestockDestock getTransactionStatus();
     void setTransactionStatus(TransactionStatusRestockDestock transactionStatus);
 
+
+    /**
+     * The property <code>PriceReference</code>  represented the Price Reference
+     * @return float
+     */
     float getPriceReference();
     void setPriceReference(float priceReference);
 
+    /**
+     * The property <code>OriginTransaction</code>  represented the Origin Transaction
+     *
+     * @return the OriginTransaction
+     */
     OriginTransaction getOriginTransaction();
     void setOriginTransaction(OriginTransaction originTransaction);
 
