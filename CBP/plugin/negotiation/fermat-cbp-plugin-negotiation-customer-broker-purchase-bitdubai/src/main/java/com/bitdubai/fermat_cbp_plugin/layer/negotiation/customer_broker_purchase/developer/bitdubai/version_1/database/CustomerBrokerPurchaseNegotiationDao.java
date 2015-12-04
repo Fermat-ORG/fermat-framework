@@ -308,7 +308,8 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
                 UUID   negotiationId,
                 String publicKeyCustomer,
                 String publicKeyBroker,
-                long startDateTime,
+                Long startDateTime,
+                Long negotiationExpirationDate,
                 NegotiationStatus statusNegotiation,
                 Collection<Clause> clauses
         ){
@@ -317,6 +318,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
                     publicKeyCustomer,
                     publicKeyBroker,
                     startDateTime,
+                    negotiationExpirationDate,
                     statusNegotiation,
                     clauses
             );
@@ -326,9 +328,15 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             UUID    negotiationId     = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME);
             String  publicKeyCustomer = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
             String  publicKeyBroker   = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
-            long    startDataTime     = record.getLongValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME);
+            Long    startDataTime     = record.getLongValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME);
+
+
+            Long    negotiationExpirationDate = record.getLongValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME);
+
+
             NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
-            return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation, getClauses(negotiationId));
+
+            return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, negotiationExpirationDate, statusNegotiation, getClauses(negotiationId));
         }
 
         private CustomerBrokerPurchaseClause newCustomerBrokerPurchaseClause(

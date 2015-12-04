@@ -308,7 +308,8 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             UUID   negotiationId,
             String publicKeyCustomer,
             String publicKeyBroker,
-            long startDateTime,
+            Long startDateTime,
+            Long negotiationExpirationDate,
             NegotiationStatus statusNegotiation,
             Collection<Clause> clauses
     ){
@@ -317,6 +318,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 publicKeyCustomer,
                 publicKeyBroker,
                 startDateTime,
+                negotiationExpirationDate,
                 statusNegotiation,
                 clauses
         );
@@ -326,9 +328,12 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
         UUID    negotiationId     = record.getUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME);
         String  publicKeyCustomer = record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         String  publicKeyBroker   = record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
-        long    startDataTime     = record.getLongValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME);
+        Long    startDataTime     = record.getLongValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME);
+
+        Long    negotiationExpirationDate = record.getLongValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_EXPIRATION_DATE_TIME_COLUMN_NAME);
+
         NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
-        return newCustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation, getClauses(negotiationId));
+        return newCustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, negotiationExpirationDate, statusNegotiation, getClauses(negotiationId));
     }
 
     private CustomerBrokerSaleClause newCustomerBrokerSaleClause(

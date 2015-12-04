@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by jorge on 12-10-2015.
  */
+
 public enum ClauseType implements FermatEnum {
     CUSTOMER_CURRENCY("CUSCUR"),
     BROKER_CURRENCY("BROCUR"),
@@ -34,7 +35,9 @@ public enum ClauseType implements FermatEnum {
     BROKER_DATE_TIME_TO_DELIVER("BRODATDEL"),
 
     CUSTOMER_PLACE_TO_DELIVER("CUSPLADEL"),
-    CUSTOMER_DATE_TIME_TO_DELIVER("CUSDATDEL");
+    CUSTOMER_DATE_TIME_TO_DELIVER("CUSDATDEL")
+
+    ;
 
     private final String code;
 
