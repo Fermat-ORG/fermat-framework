@@ -295,7 +295,7 @@ public class NegotiationTransmissionAgent {
                 CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(negotiationTransmission.getPublicKeyActorSend());
                 if(communicationNetworkServiceLocal!=null){
                     System.out.print("-----------------------\n" +
-                            "RECEIVING BUSINESS TRANSACTION-----------------------\n" +
+                            "RECEIVING NEGOTIATION TRANSACTION-----------------------\n" +
                             "-----------------------\n STATE: " + negotiationTransmission.getTransmissionState());
                     // si no contiene la metadata, la tengo que guardar en la bd y notificar que llegó, tambien debería cargar ese caché cuando se lanza el evento de que llega la metadata de respuesta
                     // if( ! cacheResponseMetadataFromRemotes.containsKey(cryptoTransmissionMetadata.getDestinationPublicKey())){
@@ -304,19 +304,19 @@ public class NegotiationTransmissionAgent {
                             case SEEN_BY_DESTINATION_NETWORK_SERVICE:
 
                                 //TODO: revisar que se puede hacer acá
-                                System.out.println("Transaction Transmission SEEN_BY_DESTINATION_NETWORK_SERVICE---to implement");
+                                System.out.println("Negotiation Transmission SEEN_BY_DESTINATION_NETWORK_SERVICE---to implement");
                                 break;
 
                             case CONFIRM_RESPONSE:
 
-                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Transaction Transmission CONFIRM_RESPONSE");
+                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Negotiation Transmission CONFIRM_RESPONSE");
                                 launchNotification();
                                 this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getPublicKeyActorReceive());
                                 break;
 
                             case CONFIRM_NEGOTIATION:
 
-                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Transaction Transmission CONFIRM_CONTRACT");
+                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Negotiation Transmission CONFIRM_NEGOTIATION");
                                 //this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getReceiverId());
                                 launchNotification();
                                 this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getPublicKeyActorReceive());

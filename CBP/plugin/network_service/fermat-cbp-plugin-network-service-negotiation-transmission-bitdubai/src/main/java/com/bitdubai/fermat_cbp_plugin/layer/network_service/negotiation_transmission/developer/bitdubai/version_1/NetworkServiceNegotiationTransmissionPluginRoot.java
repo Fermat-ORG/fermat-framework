@@ -212,7 +212,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             throw pluginStartException;
 
         }
-        System.out.println("********* Crypto Addresses: Successful start. ");
+        System.out.println("********* Negotiation Transmission: Successful start. ");
 
     }
 
@@ -289,9 +289,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         try{
             databaseDao.confirmReception(transmissionId);
         } catch (CantRegisterSendNegotiationTransmissionException e){
-            throw new CantConfirmReceptionException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
+            throw new CantConfirmReceptionException("CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", e, "ERROR SEND CONFIRM THE RECEPTION", "");
         } catch (Exception e){
-            throw new CantConfirmReceptionException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", "ERROR SEND CONFIRM TO CRYPTO BROKER, UNKNOWN FAILURE.");
+            throw new CantConfirmReceptionException(e.getMessage(), FermatException.wrapException(e), "CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", "ERROR SEND CONFIRM THE RECEPTION, UNKNOWN FAILURE.");
         }
     }
 
@@ -303,9 +303,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
         } catch (CantConstructNegotiationTransmissionException e){
-            throw new CantConfirmNegotiationException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
+            throw new CantConfirmNegotiationException("CAN'T CONFIRM THE CREATION OF NEGOTIATION", e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
         } catch (CantRegisterSendNegotiationTransmissionException e){
-            throw new CantConfirmNegotiationException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
+            throw new CantConfirmNegotiationException("CAN'T CONFIRM THE CREATION OF NEGOTIATION", e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
         } catch (Exception e){
             throw new CantConfirmNegotiationException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", "ERROR SEND CONFIRM TO CRYPTO BROKER, UNKNOWN FAILURE.");
         }
@@ -334,9 +334,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             return pendingTransaction;
 
         } catch (CantReadRecordDataBaseException e) {
-            throw new CantGetPendingTransactionException("CAN'T GET PENDING METADATA NOTIFICATIONS",e, "Transaction Transmission network service", "database error");
+            throw new CantGetPendingTransactionException("CAN'T GET PENDING NOTIFICATIONS",e, "Negotiation Transmission network service", "database error");
         } catch (Exception e) {
-            throw new CantGetPendingTransactionException("CAN'T GET PENDING METADATA NOTIFICATIONS",e, "Transaction Transmission network service", "database error");
+            throw new CantGetPendingTransactionException("CAN'T GET PENDING NOTIFICATIONS",e, "Negotiation Transmission network service", "database error");
 
         }
     }
@@ -368,7 +368,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionPluginRoot");
         return returnedClasses;
     }
 
@@ -499,7 +499,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             System.out.print("-----------------------\n" +
-                    "TRANSACTION TRANSMISSION REGISTERED  -----------------------\n" +
+                    "NEGOTIATION TRANSMISSION REGISTERED  -----------------------\n" +
                     "-----------------------\n TO: " + getName());
 
             //Mark as register
@@ -537,9 +537,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
-        System.out.println("TransactionTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
+        System.out.println("NegotiationTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
         System.out.print("-----------------------\n" +
-                "TRANSACTION TRANSMISSION: SUCCESSFUL CONNECTION!  -----------------------\n" +
+                "NEGOTIATION TRANSMISSION: SUCCESSFUL CONNECTION!  -----------------------\n" +
                 "-----------------------\n A: " + getName());
         //save into the cache
         remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
@@ -554,12 +554,12 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
         System.out.print("-----------------------\n" +
-                "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
+                "NEGOTIATION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
                 "-----------------------\n A: " + remoteComponentProfile.getAlias());
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
             remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
             System.out.print("-----------------------\n" +
-                    "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
+                    "NEGOTIATION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
                     "-----------------------\n A: " + remoteComponentProfile.getAlias());
         }
     }
@@ -591,7 +591,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     public void handleNewMessages(final FermatMessage fermatMessage){
         Gson gson = new Gson();
-        System.out.println("Transaction Transmission gets a new message");
+        System.out.println("Negotiation Transmission gets a new message");
         try{
             NegotiationTransmission negotiationTransmissionReceived = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionImpl.class);
             if(negotiationTransmissionReceived.getTransmissionId()!=null){
@@ -606,7 +606,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                     case CONFIRM_NEGOTIATION:
                         databaseDao.changeState(negotiationTransmissionResponseMessage.getTransmissionId(), NegotiationTransmissionState.CONFIRM_NEGOTIATION);
                         System.out.print("-----------------------\n" +
-                                "TRANSACTION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
+                                "NEGOTIATION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
                                 "-----------------------\n STATE: " + NegotiationTransmissionState.CONFIRM_NEGOTIATION);
                         fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION);
                         IncomingNegotiationTransmissionConfirmNegotiationEvent incomingNegotiationTransmissionConfirmNegotiationEvent = (IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent;
@@ -617,7 +617,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                     case CONFIRM_RESPONSE:
                         databaseDao.changeState(negotiationTransmissionResponseMessage.getTransmissionId(), NegotiationTransmissionState.CONFIRM_RESPONSE);
                         System.out.print("-----------------------\n" +
-                                "TRANSACTION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
+                                "NEGOTIATION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
                                 "-----------------------\n STATE: " + NegotiationTransmissionState.CONFIRM_RESPONSE);
                         fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
                         IncomingNegotiationTransmissionConfirmResponseEvent incomingNegotiationTransmissionConfirmResponseEvent = (IncomingNegotiationTransmissionConfirmResponseEvent) fermatEvent;
