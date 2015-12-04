@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Angel Veloz - (vlzangel91@gmail.com) on 30/11/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 03/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -123,7 +123,10 @@ public class CustomerBrokerSaleNegotiationDeveloperDatabaseFactory implements De
         negotiationsSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         negotiationsSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
         negotiationsSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME);
+        negotiationsSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_EXPIRATION_DATE_TIME_COLUMN_NAME);
         negotiationsSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME);
+        negotiationsSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_MEMO_COLUMN_NAME);
+        negotiationsSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CANCEL_REASON_COLUMN_NAME);
         /**
          * Table Negotiations Sale addition.
          */
@@ -163,6 +166,46 @@ public class CustomerBrokerSaleNegotiationDeveloperDatabaseFactory implements De
          */
         DeveloperDatabaseTable changesSaleTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_TABLE_NAME, changesSaleColumns);
         tables.add(changesSaleTable);
+
+        /**
+         * Table Locations Broker columns.
+         */
+        List<String> locationsBrokerColumns = new ArrayList<String>();
+
+        locationsBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_ID_COLUMN_NAME);
+        locationsBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_COLUMN_NAME);
+        locationsBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_URI_COLUMN_NAME);
+        /**
+         * Table Locations Broker addition.
+         */
+        DeveloperDatabaseTable locationsBrokerTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_TABLE_NAME, locationsBrokerColumns);
+        tables.add(locationsBrokerTable);
+
+        /**
+         * Table Bank Accounts Broker columns.
+         */
+        List<String> bankAccountsBrokerColumns = new ArrayList<String>();
+
+        bankAccountsBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_ID_COLUMN_NAME);
+        bankAccountsBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_COLUMN_NAME);
+        /**
+         * Table Bank Accounts Broker addition.
+         */
+        DeveloperDatabaseTable bankAccountsBrokerTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_TABLE_NAME, bankAccountsBrokerColumns);
+        tables.add(bankAccountsBrokerTable);
+
+        /**
+         * Table Payment Currencies Broker columns.
+         */
+        List<String> paymentCurrenciesBrokerColumns = new ArrayList<String>();
+
+        paymentCurrenciesBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_ID_COLUMN_NAME);
+        paymentCurrenciesBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_COLUMN_NAME);
+        /**
+         * Table Payment Currencies Broker addition.
+         */
+        DeveloperDatabaseTable paymentCurrenciesBrokerTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_TABLE_NAME, paymentCurrenciesBrokerColumns);
+        tables.add(paymentCurrenciesBrokerTable);
 
 
 
