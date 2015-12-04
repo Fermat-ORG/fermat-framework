@@ -23,7 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
@@ -55,6 +55,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantC
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.GroupTest;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.Agent.AssetUserActorMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.AssetUserActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorCompleteRegistrationNotificationEventHandler;
@@ -66,9 +67,9 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserConnectionException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorDao;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -125,10 +126,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             /**
              * Agent for Search Actor Asset User REGISTERED in Actor Network Service User
              */
-            startMonitorAgent();
+//            startMonitorAgent();
 
             this.serviceStatus = ServiceStatus.STARTED;
-
+            //groupTest ();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR);
@@ -199,6 +200,15 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public void createActorAssetUserRegisterInNetworkService(List<ActorAssetUser> actorAssetUsers) throws CantCreateAssetUserActorException {
+        try {
+            assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(actorAssetUsers);
+        } catch (CantAddPendingAssetUserException e) {
+            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ACTOR ASSET USER REGISTERED", e, "", "");
+        }
+    }
+
+    @Override
     public ActorAssetUser getActorAssetUser() throws CantGetAssetUserActorsException {
 
         ActorAssetUser actorAssetUser;
@@ -262,6 +272,31 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 } catch (CantUpdateAssetUserConnectionException e) {
                     e.printStackTrace();
                 }
+            }
+        } catch (CantSendAddressExchangeRequestException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint>  actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException {
+        try {
+            for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
+//                try {
+                    cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(
+                            null,
+                            CryptoCurrency.BITCOIN,
+                            Actors.DAP_ASSET_USER,
+                            Actors.DAP_ASSET_REDEEM_POINT,
+                            requester.getActorPublicKey(),
+                            actorAssetRedeemPoint.getActorPublicKey(),
+                            CryptoAddressDealers.DAP_ASSET,
+                            BlockchainNetworkType.DEFAULT);
+
+//                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
+//                } catch (CantUpdateAssetUserConnectionException e) {
+//                    e.printStackTrace();
+//                }
             }
         } catch (CantSendAddressExchangeRequestException e) {
             e.printStackTrace();
@@ -356,19 +391,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             throw new CantGetAssetUserGroupExcepcion("You can not get the group", ex, "Error", "");
         }
         return actorAssetUserGroup;
-    }
-
-    /**
-     * The method <code>connectToActorAssetRedeemPoint</code> Enable Connection
-     * with Requester and Deliver Redeem Point to Reddem Asset
-     *
-     * @param requester
-     * @param actorAssetRedeemPoint
-     * @throws CantConnectToActorAssetRedeemPointException
-     */
-    @Override
-    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantConnectToActorAssetRedeemPointException {
-        System.out.println("NOT IMPLEMENT YET - ACTOR ASSET USER");
     }
 
     public void registerActorInActorNetowrkSerice() throws CantRegisterActorAssetUserException {
@@ -542,5 +564,106 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         fermatEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+    }
+
+    private void groupTest (){
+        List<ActorAssetUserGroup> groupList = GroupTest.getGroupList();
+        System.out.println("Cantidad de grupos: " + groupList.size());
+        List<ActorAssetUserGroupMember> groupMemberList = GroupTest.getGroupMemberList();
+        for(ActorAssetUserGroup group: groupList){
+            try {
+                createAssetUserGroup(group);
+                System.out.println(group.getGroupName() +" ingresado con exito");
+            } catch (CantCreateAssetUserGroupException e) {
+                e.printStackTrace();
+                System.out.println("Error inesperado: "+e.getMessage());
+                this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
+        }
+
+        try {
+            System.out.println("Lista de grupos antes de las pruebas");
+            List<ActorAssetUserGroup> listGroups = getAssetUserGroupsList();
+            for(ActorAssetUserGroup actorAssetUserGroup: listGroups) {
+                System.out.println("Grupo: "+actorAssetUserGroup.getGroupName()+", Id: "+actorAssetUserGroup.getGroupId());
+            }
+        } catch (CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
+            cantGetAssetUserGroupExcepcion.printStackTrace();
+        }
+
+        System.out.println("Asignando usuarios a grupos");
+        for(ActorAssetUserGroupMember groupMember: groupMemberList){
+            try {
+                addAssetUserToGroup(groupMember);
+                System.out.println("Add users "+groupMember.getActorPublicKey() +"in group "+groupMember.getGroupId());
+            } catch (CantCreateAssetUserGroupException e) {
+                e.printStackTrace();
+                System.out.println("Error inesperado: "+e.getMessage());
+                this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
+        }
+
+        System.out.println("Grupos a los que pertenece el usuario: "+groupMemberList.get(3).getActorPublicKey());
+        try {
+            List<ActorAssetUserGroup> groupListUsers = getListAssetUserGroupsByActorAssetUser(groupMemberList.get(3).getActorPublicKey());
+            for(ActorAssetUserGroup actorAssetUserGroup: groupListUsers)
+            {
+                System.out.println("Grupo: "+actorAssetUserGroup.getGroupName() +" Id: "+actorAssetUserGroup.getGroupId());
+            }
+            System.out.println();
+        } catch (CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
+            cantGetAssetUserGroupExcepcion.printStackTrace();
+        }
+
+        try {
+            System.out.println("Consultando el grupo: "+groupList.get(0).getGroupId());
+            ActorAssetUserGroup group = getAssetUserGroup(groupList.get(0).getGroupId());
+            System.out.println("Grupo obtenido: "+group.getGroupId());
+
+        } catch (CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
+            cantGetAssetUserGroupExcepcion.printStackTrace();
+        }
+
+        System.out.println("Remover un usuario de un grupo");
+        ActorAssetUserGroupMember groupMember = groupMemberList.get(3);
+        try {
+
+            removeAssetUserFromGroup(groupMember);
+            System.out.println("El usuario :"+ groupMember.getActorPublicKey() + "fue removido con exito");
+        } catch (CantCreateAssetUserGroupException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            System.out.println("Renombrar un grupo");
+            ActorAssetUserGroup group = getAssetUserGroup(groupList.get(0).getGroupId());
+            System.out.println("Grupo: " + group. getGroupName() + "Id: " + group.getGroupId());
+            updateAssetUserGroup(group);
+            ActorAssetUserGroup groupActualizado = getAssetUserGroup(groupList.get(0).getGroupId());
+            System.out.println("Grupo actualizado: " + groupActualizado.getGroupName() + "Id: " + groupActualizado.getGroupId());
+            if(group.getGroupId().equals(groupActualizado.getGroupId())) System.out.println("OK");
+        } catch (CantUpdateAssetUserGroupException e) {
+            e.printStackTrace();
+        }catch (CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
+            cantGetAssetUserGroupExcepcion.printStackTrace();
+        }
+
+        System.out.println("Remover un grupo");
+        try {
+            deleteAssetUserGroup(groupList.get(0).getGroupId());
+            System.out.println("El grupo "+groupList.get(0).getGroupId() +" ha sido removido");
+        } catch (CantDeleteAssetUserGroupException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            System.out.println("Lista de grupos resultantes");
+            List<ActorAssetUserGroup> listGroups = getAssetUserGroupsList();
+            for(ActorAssetUserGroup actorAssetUserGroup: listGroups) {
+                System.out.println("Grupo: "+actorAssetUserGroup.getGroupName()+", Id: "+actorAssetUserGroup.getGroupId());
+            }
+        } catch (CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
+            cantGetAssetUserGroupExcepcion.printStackTrace();
+        }
     }
 }

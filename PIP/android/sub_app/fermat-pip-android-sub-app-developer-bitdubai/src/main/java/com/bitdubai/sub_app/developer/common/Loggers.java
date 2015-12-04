@@ -1,7 +1,7 @@
 package com.bitdubai.sub_app.developer.common;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.ClassHierarchyLevels;
+import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
 
 /**
  * Created by mati on 2015.07.03..

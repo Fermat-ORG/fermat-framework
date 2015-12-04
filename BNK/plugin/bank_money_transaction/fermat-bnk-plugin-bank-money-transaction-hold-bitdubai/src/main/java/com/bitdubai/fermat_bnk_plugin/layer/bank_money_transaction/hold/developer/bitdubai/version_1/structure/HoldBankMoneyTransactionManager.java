@@ -11,10 +11,11 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.excepti
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantMakeHoldTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfaces.HoldManager;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.database.HoldBankMoneyTransactionDao;
+import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantCreateHoldTransactionException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantInitializeHoldBankMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantUpdateHoldTransactionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,8 +38,8 @@ public class HoldBankMoneyTransactionManager implements HoldManager {
         try{
             holdBankMoneyTransactionDao.initialize();
         } catch (CantInitializeHoldBankMoneyTransactionDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION);
         } catch (Exception e) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
@@ -62,11 +63,15 @@ public class HoldBankMoneyTransactionManager implements HoldManager {
 
     @Override
     public BankTransaction hold(BankTransactionParameters parameters) throws CantMakeHoldTransactionException {
-        return null;
+        try{
+            return holdBankMoneyTransactionDao.createHoldTransaction(parameters);
+        }catch (CantCreateHoldTransactionException e){
+            throw new CantMakeHoldTransactionException(CantMakeHoldTransactionException.DEFAULT_MESSAGE,e,null,null);
+        }
     }
 
     @Override
     public BankTransactionStatus getHoldTransactionsStatus(UUID transactionId) throws CantGetHoldTransactionException {
-        return null;
+            return holdBankMoneyTransactionDao.getHoldTransaction(transactionId).getBankTransactionStatus();
     }
 }

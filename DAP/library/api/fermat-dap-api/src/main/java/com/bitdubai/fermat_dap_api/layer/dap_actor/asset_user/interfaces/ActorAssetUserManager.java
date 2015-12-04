@@ -41,6 +41,14 @@ public interface ActorAssetUserManager extends FermatManager {
     void createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage) throws CantCreateAssetUserActorException;
 
     /**
+     * The method <code>createActorAssetUserRegisterInNetworkService</code> create Actor Registered
+     *
+     * @param actorAssetUsers                       Referred to the Identity publicKey
+     * @throws CantCreateAssetUserActorException
+     */
+    void createActorAssetUserRegisterInNetworkService(List<ActorAssetUser> actorAssetUsers) throws CantCreateAssetUserActorException;
+
+    /**
      * The method <code>getActorPublicKey</code> get All Information about Actor
      *
      * @throws CantGetAssetUserActorsException
@@ -76,7 +84,7 @@ public interface ActorAssetUserManager extends FermatManager {
      *
      * @throws CantConnectToActorAssetRedeemPointException
      */
-    void connectToActorAssetRedeemPoint(ActorAssetUser requester, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantConnectToActorAssetRedeemPointException;
+    void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoint) throws CantConnectToActorAssetRedeemPointException;
 
     /**
      * The method <code>createAssetUserGroup</code> Register a group in database Actor Asset User

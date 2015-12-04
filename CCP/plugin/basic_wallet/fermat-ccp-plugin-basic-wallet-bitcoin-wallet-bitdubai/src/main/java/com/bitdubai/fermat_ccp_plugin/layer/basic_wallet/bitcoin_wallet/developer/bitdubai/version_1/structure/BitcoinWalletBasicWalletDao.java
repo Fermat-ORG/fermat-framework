@@ -113,7 +113,7 @@ public class BitcoinWalletBasicWalletDao {
         try {
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
-            bitcoinWalletTable.setFilterTop   (String.valueOf(max)   );
+            bitcoinWalletTable.setFilterTop(String.valueOf(max));
             bitcoinWalletTable.setFilterOffSet(String.valueOf(offset));
 
             bitcoinWalletTable.setFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
@@ -128,6 +128,40 @@ public class BitcoinWalletBasicWalletDao {
             DatabaseTableFilterGroup filterGroup = bitcoinWalletTable.getNewFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
 
             bitcoinWalletTable.setFilterGroup(filterGroup);
+
+            bitcoinWalletTable.loadToMemory();
+            return createTransactionList(bitcoinWalletTable.getRecords());
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, cantLoadTableToMemory, "Error loading wallet table ", "");
+        } catch (Exception exception){
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Unhandled exception.");
+        }
+    }
+
+    public List<BitcoinWalletTransaction> listTransactionsByActorAndType(final String actorPublicKey,
+                                                                  final BalanceType balanceType,
+                                                                  final TransactionType  transactionType,
+                                                                  final int max,
+                                                                  final int offset) throws CantListTransactionsException {
+        try {
+            DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
+
+            bitcoinWalletTable.setFilterTop   (String.valueOf(max)   );
+            bitcoinWalletTable.setFilterOffSet(String.valueOf(offset));
+
+            bitcoinWalletTable.setFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            bitcoinWalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+
+            bitcoinWalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+
+            // filter by actor from or to
+
+            if (transactionType == TransactionType.CREDIT)
+                bitcoinWalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME,  actorPublicKey,DatabaseFilterType.EQUAL);
+            else
+                bitcoinWalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, actorPublicKey,DatabaseFilterType.EQUAL);
+
 
             bitcoinWalletTable.loadToMemory();
             return createTransactionList(bitcoinWalletTable.getRecords());
@@ -209,14 +243,16 @@ public class BitcoinWalletBasicWalletDao {
      */
     public void addCredit(final BitcoinWalletTransactionRecord transactionRecord, final BalanceType balanceType) throws CantRegisterCreditException {
         try{
-            if(isTransactionInTable(transactionRecord.getTransactionId(), TransactionType.CREDIT, balanceType))
-                throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
+//            if(!isTransactionInTable(transactionRecord.getTransactionId(), TransactionType.CREDIT, balanceType)) {
+                if(isTransactionInTable(transactionRecord.getTransactionId(), TransactionType.CREDIT, balanceType))
+                    throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
-            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
-            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
-            long availableRunningBalance = calculateAvailableRunningBalance(availableAmount);
-            long bookRunningBalance = calculateBookRunningBalance(bookAmount);
-            executeTransaction(transactionRecord,TransactionType.CREDIT ,balanceType, availableRunningBalance, bookRunningBalance);
+                long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
+                long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
+                long availableRunningBalance = calculateAvailableRunningBalance(availableAmount);
+                long bookRunningBalance = calculateBookRunningBalance(bookAmount);
+                executeTransaction(transactionRecord, TransactionType.CREDIT, balanceType, availableRunningBalance, bookRunningBalance);
+//            }
         } catch(CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteBitconTransactionException exception){
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception){

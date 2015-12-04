@@ -31,14 +31,14 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFind
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 /**
  * Created by eze on 2015.06.23..
@@ -157,8 +157,38 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
 
             return bitcoinWalletBasicWalletDao.listTransactionsByActor(
                     actorPublicKey,
-                    balanceType   ,
-                    max           ,
+                    balanceType,
+                    max,
+                    offset
+            );
+
+        } catch (CantListTransactionsException exception) {
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw exception;
+        } catch (Exception exception) {
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public List<BitcoinWalletTransaction> listTransactionsByActorAndType(final String           actorPublicKey,
+                                                                         final BalanceType      balanceType   ,
+                                                                         final TransactionType  transactionType,
+                                                                         final int              max           ,
+                                                                         final int              offset        ) throws CantListTransactionsException {
+
+        try {
+
+            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+
+            return bitcoinWalletBasicWalletDao.listTransactionsByActorAndType(
+                    actorPublicKey,
+                    balanceType,
+                    transactionType,
+                    max,
                     offset
             );
 

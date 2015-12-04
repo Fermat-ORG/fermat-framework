@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -34,7 +34,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAd
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.AbstractPeerEventListener;
@@ -94,7 +94,7 @@ public class BitcoinCryptoVault implements
 
 
     /**
-     * CryptoVault interface member variable
+     * PlatformCryptoVault interface member variable
      */
     String userPublicKey;
     Wallet vault;
@@ -142,7 +142,7 @@ public class BitcoinCryptoVault implements
     }
 
     /**
-     * CryptoVault interface implementations
+     * PlatformCryptoVault interface implementations
      * @param userPublicKey
      */
     @Override
@@ -151,16 +151,16 @@ public class BitcoinCryptoVault implements
     }
 
     /**
-     * CryptoVault interface implementations
+     * PlatformCryptoVault interface implementations
      * @return
      */
-    @Override
+                                                                                                                                                                                                                                                                                                                                        @Override
     public String getUserPublicKey() {
         return this.userPublicKey;
     }
 
     /**
-     * CryptoVault interface implementations
+     * PlatformCryptoVault interface implementations
      * @return
      */
     @Override
@@ -245,7 +245,7 @@ public class BitcoinCryptoVault implements
         try {
             vault = Wallet.loadFromFile(vaultFile);
 
-            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Vault loaded from file " + vaultFile.getAbsoluteFile().toString(), "CryptoVault current balance: " + vault.getBalance().getValue(), "CryptoVault estimated current balance: " + vault.getBalance(Wallet.BalanceType.ESTIMATED).toFriendlyString());
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Vault loaded from file " + vaultFile.getAbsoluteFile().toString(), "PlatformCryptoVault current balance: " + vault.getBalance().getValue(), "PlatformCryptoVault estimated current balance: " + vault.getBalance(Wallet.BalanceType.ESTIMATED).toFriendlyString());
 
             /**
              * If I couldn't load it I can't go on.
@@ -444,14 +444,14 @@ public class BitcoinCryptoVault implements
             broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
                 @Override
                 public void onBroadcastProgress(double progress) {
-                    System.out.println("****CryptoVault: progress broadcast " + progress);
+                    System.out.println("****PlatformCryptoVault: progress broadcast " + progress);
                 }
             });
 
             broadcast.broadcast().get(2, TimeUnit.MINUTES);
             broadcast.future().get(2, TimeUnit.MINUTES);
 
-            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "PlatformCryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
 
 
 

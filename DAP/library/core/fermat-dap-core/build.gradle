@@ -11,6 +11,7 @@ dependencies {
      */
 
     compile project(':fermat-api')
+    compile project(':fermat-core-api')
 
     compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-actor-asset-user-bitdubai')

@@ -9,11 +9,11 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * <p/>
  * Created by ciencias on 2/22/15.
  * Updated by Manuel Perez on 25/11/2015
- * Updated by PatricioGesualdi - (pmgesualdi@hotmail.com) on 18/11/2015.
+ * Modified by PatricioGesualdi - (pmgesualdi@hotmail.com) on 18/11/2015.
  */
 public enum NetworkServices implements FermatEnum {
     /**
-     * In order to make the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     BANK_NOTES               ("BNOTES"),
     CRYPTO_ADDRESSES         ("CRYPTADD"),

@@ -1,39 +1,35 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
-import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -42,20 +38,17 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewPainter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.FragmentsCommons;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -122,8 +115,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             IntraUserLoginIdentity lst = referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity();
             if(lst==null){
-                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),walletSession, walletSettings, walletResourcesProviderManager, null);
+//                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.profile_image);
+//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                byte[] byteArray = stream.toByteArray();
+                referenceWalletSession.getIntraUserModuleManager().createIntraUser("John Doe",null);
             }
+//            if(lst==null){
+//                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),walletSession, walletSettings, walletResourcesProviderManager, null);
+//            }
         } catch (Exception ex) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
@@ -141,9 +141,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             getPaintActivtyFeactures().addCollapseAnimation(animationManager);
             getPaintActivtyFeactures().addNavigationView(new NavigationViewPainter(getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
         } catch (CantGetActiveLoginIdentityException e) {
-            e.printStackTrace();
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         } catch (Exception e){
-            e.printStackTrace();
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
 
@@ -189,6 +191,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
         container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
+        //container_header_balance.setBackgroundResource(R.drawable.header_back);
         container_header_balance.setVisibility(View.VISIBLE);
 
 
@@ -196,8 +199,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         CircularProgressBar circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 
-        circularProgressBar.setProgressValue(20);
-        circularProgressBar.setProgressValue2(28);
+        circularProgressBar.setProgressValue(2);
+        circularProgressBar.setProgressValue2(3);
         circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
         circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
         circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
@@ -292,7 +295,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         if (openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer =(LinearLayout) layout.findViewById(R.id.empty);
-            emptyListViewsContainer.setVisibility(View.VISIBLE);
+            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+            //emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -315,7 +319,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public RecyclerView.LayoutManager getLayoutManager() {
         if (layoutManager == null)
             layoutManager = new LinearLayoutManager(getActivity());
-
         return layoutManager;
     }
 
@@ -356,10 +359,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 for (CryptoWalletTransaction cryptoWalletTransaction : list) {
                     List<CryptoWalletTransaction> lst = new ArrayList<>();
-                    lst = moduleManager.getTransactions(intraUserPk, BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), MAX_TRANSACTIONS, 0);
+                     lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, MAX_TRANSACTIONS, 0);
+
                     GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);
                 }
+
+                if(!data.isEmpty()){
+                    FermatAnimationsUtils.showEmpty(getActivity(),false,emptyListViewsContainer);
+                }
+
 
             }
 

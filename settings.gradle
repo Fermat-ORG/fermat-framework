@@ -20,6 +20,7 @@ include ':fermat-android-api', ':fermat-cbp-plugin-network-service-transaction-t
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
+include ':fermat-core-api'
 
 
 include ':fermat-cry-api'

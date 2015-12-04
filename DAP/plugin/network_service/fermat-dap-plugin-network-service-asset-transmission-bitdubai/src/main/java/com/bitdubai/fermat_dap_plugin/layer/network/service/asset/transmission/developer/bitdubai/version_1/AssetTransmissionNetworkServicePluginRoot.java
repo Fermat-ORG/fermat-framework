@@ -89,9 +89,9 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -959,17 +959,17 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
     /**
      * (non-Javadoc)
-     * @see AssetTransmissionNetworkServiceManager#sendTransactionNewStatusNotification(ActorAssetUser, ActorAssetIssuer, String, DistributionStatus)
+     * @see AssetTransmissionNetworkServiceManager#sendTransactionNewStatusNotification(ActorAssetUser, String, String, DistributionStatus)
      */
     @Override
-    public void sendTransactionNewStatusNotification(ActorAssetUser actorAssetUserSender, ActorAssetIssuer actorAssetIssuerReceiver, String transactionId, DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException {
+    public void sendTransactionNewStatusNotification(ActorAssetUser actorAssetUserSender, String actorAssetIssuerReceiverPublicKey, String transactionId, DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException {
 
         try {
 
             /*
              * ask for a previous connection
              */
-            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerReceiver.getActorPublicKey());
+            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerReceiverPublicKey);
 
             /*
              * Construct the message content in json format
@@ -982,7 +982,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(actorAssetUserSender.getActorPublicKey(), actorAssetIssuerReceiver.getActorPublicKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(actorAssetUserSender.getActorPublicKey(), actorAssetIssuerReceiverPublicKey, msjContent);
 
             }else{
 
@@ -990,7 +990,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                  * Created the message
                  */
                 FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetUserSender.getActorPublicKey(),//Sender
-                                                                                                        actorAssetIssuerReceiver.getActorPublicKey(), //Receiver
+                                                                                                        actorAssetIssuerReceiverPublicKey, //Receiver
                                                                                                         msjContent, //Message Content
                                                                                                         FermatMessageContentType.TEXT);//Type
                 /*
@@ -1012,7 +1012,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                 /*
                  * Create the receiver basic profile
                  */
-                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerReceiver.getActorPublicKey(),  NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
+                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerReceiverPublicKey,  NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
 
                 /*
                  * Ask the client to connect

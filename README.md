@@ -18,7 +18,7 @@ Fermat is a master plan to avoid getting into that future by waiting for indepen
 
 #### The Framework
 
-Fermat is a trust-less financial application framework that enables any kind of trust-less applications, including digital wallets. 
+Fermat is a p2p financial application framework that enables any kind of trust-less applications, including digital wallets. 
 
 The framework evolves from the stand-alone crypto wallet and enables an ecosystem of peer-to-peer financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down from an OS API level, to a Blockchain, Communication, Platform, and User Interface Level. 
 

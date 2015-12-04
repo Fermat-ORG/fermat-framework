@@ -8,12 +8,11 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantSetToSeenByCryptoVaultException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.EventWrapper;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserMetadataSourceAdministrator;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -92,7 +91,7 @@ public class IncomingIntraUserMetadataMonitorAgent {
         private IncomingIntraUserMetadataSourceAdministrator sourceAdministrator;
 
 
-        private static final int SLEEP_TIME = 5000;
+        private static final int SLEEP_TIME = 10000;
 
         /**
          * MonitorAgent methods.
@@ -178,7 +177,7 @@ public class IncomingIntraUserMetadataMonitorAgent {
                         registry.acquireFermatCryptoTransactionResponsibility(transaction);
 
                         //notified Transmission NS that transaction Seen By Vault
-                        cryptoTransmissionNetworkServiceManager.informTransactionSeenByVault(transaction.getTransactionID());
+                  //     cryptoTransmissionNetworkServiceManager.informTransactionSeenByVault(transaction.getTransactionID());
 
                     } catch (CantConfirmTransactionException | com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantAcquireResponsibilityException exception) {
                         // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
@@ -186,10 +185,10 @@ public class IncomingIntraUserMetadataMonitorAgent {
                         // We will inform the exception and try again in the next round
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                     }
-                    catch(CantSetToSeenByCryptoVaultException e){
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                  //  catch(CantSetToSeenByCryptoVaultException e){
+                       // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
-                    }
+                   // }
                 }
 
 

@@ -23,6 +23,7 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -36,10 +37,10 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserL
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
@@ -186,7 +187,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         if (openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer = layout.findViewById(R.id.empty);
-            emptyListViewsContainer.setVisibility(View.VISIBLE);
+            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
         }
     }
 
@@ -247,12 +248,15 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
                 book_offset = lstCryptoWalletTransactionsBook.size();
 
-
+                //get transactions from actor public key to send me btc
                 for (CryptoWalletTransaction cryptoWalletTransaction : list) {
                     List<CryptoWalletTransaction> lst = new ArrayList<>();
-                    lst = moduleManager.getTransactions(intraUserPk, BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), MAX_TRANSACTIONS, 0);
+                    lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorFromPublicKey(), intraUserPk,MAX_TRANSACTIONS, 0);
                     GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);
+                }
+                if(!data.isEmpty()){
+                    FermatAnimationsUtils.showEmpty(getActivity(),false,emptyListViewsContainer);
                 }
 
             }
@@ -367,28 +371,29 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     private void moveViewToOriginalPosition(View view) {
         if(Build.VERSION.SDK_INT>17) {
-            int position[] = new int[2];
-            view.getLocationOnScreen(position);
-            float centreY = rootView.getY() + rootView.getHeight() / 2;
-            TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0  , centreY-250,0);
-            anim.setDuration(1000);
-            anim.setFillAfter(true);
-            view.startAnimation(anim);
+            if(view!=null) {
+                int position[] = new int[2];
+                view.getLocationOnScreen(position);
+                float centreY = rootView.getY() + rootView.getHeight() / 2;
+                TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0, centreY - 250, 0);
+                anim.setDuration(1000);
+                anim.setFillAfter(true);
+                view.startAnimation(anim);
+            }
         }
     }
 
     private void moveViewToScreenCenter( View view ) {
         if (Build.VERSION.SDK_INT > 17) {
-            DisplayMetrics dm = new DisplayMetrics();
-            rootView.getDisplay().getMetrics(dm);
-            int xDest = dm.widthPixels / 2;
-            xDest -= (view.getMeasuredWidth() / 2);
-            float centreY = rootView.getY() + rootView.getHeight() / 2;
-
-            TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
-            anim.setDuration(1000);
-            anim.setFillAfter(true);
-            view.startAnimation(anim);
+            if(view!=null) {
+                DisplayMetrics dm = new DisplayMetrics();
+                rootView.getDisplay().getMetrics(dm);
+                float centreY = rootView.getY() + rootView.getHeight() / 2;
+                TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
+                anim.setDuration(1000);
+                anim.setFillAfter(true);
+                view.startAnimation(anim);
+            }
         }
     }
 }

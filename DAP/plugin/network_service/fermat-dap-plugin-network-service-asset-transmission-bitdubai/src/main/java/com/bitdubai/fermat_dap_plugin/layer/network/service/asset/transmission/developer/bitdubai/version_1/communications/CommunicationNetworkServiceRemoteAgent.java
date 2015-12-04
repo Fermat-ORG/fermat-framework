@@ -24,8 +24,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -201,7 +201,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
              */
             if (communicationsVPNConnection.isActive()){
 
-                //   System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
+                // System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -212,7 +212,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      * Read the next message in the queue
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
-
 
                     /*
                      * Validate the message signature
@@ -244,11 +243,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      */
                     setChanged();
                     notifyObservers(message);
-
                 }
-
             }
-
             if(toReceive.isInterrupted() == Boolean.FALSE){
                 //Sleep for a time
                 toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
@@ -261,7 +257,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         } catch (CantInsertRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
-
     }
 
     /**
@@ -340,6 +335,5 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
             return;
         }
-
     }
 }

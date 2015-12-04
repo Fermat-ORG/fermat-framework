@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by Matias Furszyfer on 2015.09.30..
+ * Maintained by Nelson Ramirez
  */
 public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationItemMenuViewHolder> {
     Typeface tf;
