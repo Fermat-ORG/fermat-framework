@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_ccp_core.layer.identity;
 
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_ccp_core.layer.identity.intra_user.IntraWalletUserPluginSubsystem;
 

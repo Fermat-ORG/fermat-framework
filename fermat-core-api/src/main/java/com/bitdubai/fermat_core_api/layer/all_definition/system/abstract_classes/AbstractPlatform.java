@@ -6,11 +6,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPlatformException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.DeveloperNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.LayerNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.PluginNotFoundException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.LayerNotFoundException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PluginNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;

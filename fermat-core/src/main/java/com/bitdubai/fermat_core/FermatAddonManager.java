@@ -4,10 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignOsContextException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantPauseAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantResumeAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStopAddonException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantPauseAddonException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantResumeAddonException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStopAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleOsContextException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.UnexpectedServiceStatusException;
