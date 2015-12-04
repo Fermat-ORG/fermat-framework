@@ -63,6 +63,9 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR           , plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserActorManager intraWalletUserActorManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR           , plugin = Plugins.EXTRA_WALLET_USER)
+    private ExtraUserManager extraUserManager;
+
     // TODO MAKE USE OF THE ERROR MANAGER
     // TODO MAKE USE OF THE ERROR MANAGER
     // TODO MAKE USE OF THE ERROR MANAGER
@@ -88,10 +91,6 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
      */
     Queue<NotificationEvent> poolNotification;
 
-    /**
-     * Extra users
-     */
-    private ExtraUserManager extraUserManager;
 
     /**
      * Intra User

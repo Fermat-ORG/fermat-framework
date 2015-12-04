@@ -23,7 +23,7 @@ public class AppFriendsListAdapter extends FermatAdapter<IntraUserInformation, A
 
     @Override
     protected AppFriendsListHolder createHolder(View itemView, int type) {
-        return null;
+        return new AppFriendsListHolder(itemView);
     }
 
     @Override
