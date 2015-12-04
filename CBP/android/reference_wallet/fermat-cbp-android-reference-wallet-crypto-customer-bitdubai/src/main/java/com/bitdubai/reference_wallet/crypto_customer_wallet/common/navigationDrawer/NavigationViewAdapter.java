@@ -17,15 +17,12 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.09.30..
  */
 public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationItemMenuViewHolder> {
-    Typeface tf;
-
     protected NavigationViewAdapter(Context context) {
         super(context);
     }
 
     public NavigationViewAdapter(Context context, List<MenuItem> dataSet) {
         super(context, dataSet);
-        tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
 
     /**
