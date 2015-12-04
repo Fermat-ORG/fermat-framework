@@ -3,6 +3,9 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_dra
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,7 +31,8 @@ public class FragmentsCommons {
                 if (intraUserLoginIdentity.getProfileImage() != null) {
                     if (intraUserLoginIdentity.getProfileImage().length > 0) {
                         Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length);
-                        bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
+                        Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.RGB_565);
+                        bitmap = Bitmap.createScaledBitmap(convertedBitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
                         imageView.setImageBitmap(bitmap);
                     } else
                         Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
@@ -42,5 +46,14 @@ public class FragmentsCommons {
             Toast.makeText(activity,"Error: out of memory ",Toast.LENGTH_SHORT).show();
         }
         return view;
+    }
+
+    private static Bitmap convert(Bitmap bitmap, Bitmap.Config config) {
+        Bitmap convertedBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), config);
+        Canvas canvas = new Canvas(convertedBitmap);
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+        return convertedBitmap;
     }
 }
