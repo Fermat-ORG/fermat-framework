@@ -31,8 +31,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantDeliverDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantGetActorAssetIssuerException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +45,7 @@ import java.util.UUID;
 public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
 
     ActorAssetIssuerManager actorAssetIssuerManager;
-    //AssetVaultManagerPlatform assetVaultManager;
+    //AssetVaultManager assetVaultManager;
     ErrorManager errorManager;
     final String LOCAL_STORAGE_PATH = "digital-asset-distribution/";
     String digitalAssetFileStoragePath;
@@ -54,7 +54,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     DigitalAssetDistributionVault digitalAssetDistributionVault;
     BitcoinNetworkManager bitcoinNetworkManager;
 
-    public DigitalAssetDistributor(/*AssetVaultManagerPlatform assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) throws CantExecuteDatabaseOperationException {
+    public DigitalAssetDistributor(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) throws CantExecuteDatabaseOperationException {
         super(/*assetVaultManager,*/  pluginId, pluginFileSystem);
         this.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
         this.errorManager = errorManager;

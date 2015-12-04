@@ -36,7 +36,8 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUse
 
     @Override
     protected void bindHolder(IntraUserInformationHolder holder, IntraUserInformation data, int position) {
-
+        if (data.getName().isEmpty())
+            holder.name.setText("Hola");
         holder.name.setText(data.getName());
         /*if (!data.getCity().isEmpty())
             holder.city.setText(data.getCity());
@@ -62,5 +63,4 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUse
             return dataSet.size();
         return 0;
     }
-
 }

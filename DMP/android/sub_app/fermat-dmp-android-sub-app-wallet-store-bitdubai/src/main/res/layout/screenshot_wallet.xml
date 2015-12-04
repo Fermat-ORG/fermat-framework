@@ -4,4 +4,4 @@
     android:id="@+id/screenshot"
     android:layout_width="200dp"
     android:layout_height="280dp"
-    tools:src="@drawable/wallet_screenshot_2" />
+    tools:src="@drawable/broker_screenshot_1" />

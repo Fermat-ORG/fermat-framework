@@ -29,7 +29,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +41,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
 
     //ActorAssetIssuerManager actorAssetIssuerManager;
     ActorAssetUser actorAssetUser;
-    //AssetVaultManagerPlatform assetVaultManager;
+    //AssetVaultManager assetVaultManager;
     ErrorManager errorManager;
     final String LOCAL_STORAGE_PATH="user-redemption/";
     String digitalAssetFileStoragePath;
@@ -50,7 +50,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
     DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault;
     //BitcoinNetworkManager bitcoinNetworkManager;
 
-    public UserRedemptionRedeemer(/*AssetVaultManagerPlatform assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
+    public UserRedemptionRedeemer(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
         super(/*assetVaultManager,*/  pluginId, pluginFileSystem);
         this.errorManager=errorManager;
     }

@@ -15,13 +15,15 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
@@ -33,9 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by josemanueldsds on 29/11/15.
+ * Creado por Jose manuel De Sousa el 30/11/2015
  */
-public class ConnectionNotificationsFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener{
+public class ConnectionNotificationsFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
     private static final int MAX = 20;
     protected final String TAG = "ConnectionNotificationsFragment";
@@ -51,7 +53,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
     private int offset = 0;
-    private ArrayList<IntraUserInformation> lstIntraUserInformations;
+    private List<IntraUserInformation> lstIntraUserInformations;
     private ProgressDialog dialog;
 
     /**
@@ -71,33 +73,26 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = subAppsSession.getErrorManager();
+        lstIntraUserInformations = new ArrayList<>();
     }
 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
-
-
-    /**
-     * Fragment Class implementation.
-     */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         try {
-
             rootView = inflater.inflate(R.layout.intra_user_notification_center, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
             layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            adapter = new AppNotificationAdapter(getActivity());
+            adapter = new AppNotificationAdapter(getActivity(),lstIntraUserInformations);
+            adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
 
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
@@ -106,6 +101,8 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+
+            onRefresh();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -117,13 +114,16 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         return rootView;
     }
 
-    private synchronized List<IntraUserInformation> getMoreData() {
-        List<IntraUserInformation> dataSet = new ArrayList<>();
+    private synchronized ArrayList<IntraUserInformation> getMoreData() {
+        ArrayList<IntraUserInformation> dataSet = new ArrayList<>();
 
         try {
 
-            dataSet.addAll(moduleManager.getSuggestionsToContact(MAX, offset));
-            offset = dataSet.size();
+            dataSet.addAll(moduleManager.getIntraUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
+            //offset = dataSet.size();
+//
+//            lstIntraUserInformations.addAll(moduleManager.getIntraUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
+//            adapter.notifyDataSetChanged();
 
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
@@ -134,31 +134,16 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         return dataSet;
     }
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-        /**
-         * add navigation header
-         */
+//        /**
+//         * add navigation header
+//         */
         addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
-
-        /**
-         * Navigation view items
-         */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null);
+//
+//        /**
+//         * Navigation view items
+//         */
+        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
         setNavigationDrawer(navigationViewAdapter);
-    }
-
-    public void showEmpty(boolean show, View emptyView) {
-        Animation anim = AnimationUtils.loadAnimation(getActivity(),
-                show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show &&
-                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
-            if (adapter != null)
-                adapter.changeDataSet(null);
-        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -184,6 +169,11 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
                         if (getActivity() != null && adapter != null) {
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
+                            if (lstIntraUserInformations.isEmpty()) {
+                                showEmpty(true, emptyView);
+                            } else {
+                                showEmpty(false, emptyView);
+                            }
                         }
                     } else
                         showEmpty(adapter.getSize() < 0, emptyView);
@@ -191,16 +181,56 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    isRefreshing = false;
-                    if (swipeRefresh != null)
-                        swipeRefresh.setRefreshing(false);
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                    ex.printStackTrace();
+                    try {
+                        isRefreshing = false;
+                        if (swipeRefresh != null)
+                            swipeRefresh.setRefreshing(false);
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                        ex.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             worker.execute();
         }
     }
 
+
+    @Override
+    public void onItemClickListener(IntraUserInformation data, int position) {
+        try {
+            moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(),data.getName(),data.getPublicKey(),null);
+            Toast.makeText(getActivity(),"Aceptado,\njose esto lo hice porque me lo dejaste mal y tengo que probar lo mio",Toast.LENGTH_SHORT).show();
+        } catch (CantAcceptRequestException e) {
+            e.printStackTrace();
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onLongItemClickListener(IntraUserInformation data, int position) {
+
+    }
+
+    /**
+     * @param show
+     * @param view instance
+     */
+    public void showEmpty(boolean show, View emptyView) {
+        Animation anim = AnimationUtils.loadAnimation(getActivity(),
+                show ? android.R.anim.fade_in : android.R.anim.fade_out);
+        if (show &&
+                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.VISIBLE);
+            if (adapter != null)
+                adapter.changeDataSet(null);
+        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.GONE);
+        }
+    }
 }

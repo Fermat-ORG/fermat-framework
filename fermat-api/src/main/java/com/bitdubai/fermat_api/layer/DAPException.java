@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/09/15.
  */
+// TODO DELETE OR MOVE THIS
 public class DAPException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "THE DAP LAYER HAS DETECTED AN EXCEPTION";

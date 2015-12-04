@@ -18,7 +18,6 @@ public class SideMenu implements FermatSideMenu {
      */
     List<MenuItem> menuItems = new ArrayList<>();
     private String backgroundColor;
-    private String backgroudColor;
     private String navigationIconColor;
     private boolean hasFooter=false;
 
@@ -56,7 +55,7 @@ public class SideMenu implements FermatSideMenu {
     }
 
     public String getBackgroudColor() {
-        return backgroudColor;
+        return backgroundColor;
     }
 
     public void setNavigationIconColor(String navigationIconColor) {
@@ -66,6 +65,13 @@ public class SideMenu implements FermatSideMenu {
     @Override
     public boolean hasFooter() {
         return hasFooter;
+    }
+
+    @Override
+    public void clearSelected() {
+        for(MenuItem item : menuItems){
+            item.setSelected(false);
+        }
     }
 
     public void setHasFooter(boolean hasFooter) {

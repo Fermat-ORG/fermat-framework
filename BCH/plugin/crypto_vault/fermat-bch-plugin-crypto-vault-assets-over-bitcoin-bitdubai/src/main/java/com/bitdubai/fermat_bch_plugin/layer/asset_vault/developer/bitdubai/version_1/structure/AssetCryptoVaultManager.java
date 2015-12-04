@@ -45,7 +45,7 @@ import java.util.UUID;
  */
 public class AssetCryptoVaultManager  {
     /**
-     * AssetVaultManagerPlatform variables
+     * AssetVaultManager variables
      */
     UUID pluginId;
     VaultKeyHierarchyGenerator vaultKeyHierarchyGenerator;

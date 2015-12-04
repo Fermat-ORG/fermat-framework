@@ -28,7 +28,7 @@
 //import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 //import ErrorManager;
 //import EventManager;
-//import com.bitdubai.fermat_cry_api.layer.crypto_vault.PlatformCryptoVaultManager;
+//import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 //import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserDatabaseConstants;
 //import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserTransactionManager;
 //
@@ -65,7 +65,7 @@
 //    private BitcoinWalletBalance mockBitcoinWalletBalance;
 //
 //    @Mock
-//    private PlatformCryptoVaultManager mockCryptoVaultManager;
+//    private CryptoVaultManager mockCryptoVaultManager;
 //    @Mock
 //    private ErrorManager mockErrorManager;
 //

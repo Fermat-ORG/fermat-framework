@@ -3,7 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_rede
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManagerPlatform;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -14,7 +14,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantE
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.exceptions.CantRedeemDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfaces.UserRedemptionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -23,14 +23,14 @@ import java.util.UUID;
  */
 public class UserRedemptionTransactionManager implements UserRedemptionManager {
 
-    AssetVaultManagerPlatform assetVaultManager;
+    AssetVaultManager assetVaultManager;
     UserRedemptionRedeemer userRedemptionRedeemer;
     ErrorManager errorManager;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
 
-    public UserRedemptionTransactionManager(AssetVaultManagerPlatform assetVaultManager,
+    public UserRedemptionTransactionManager(AssetVaultManager assetVaultManager,
                                             ErrorManager errorManager,
                                             UUID pluginId,
                                             PluginDatabaseSystem pluginDatabaseSystem,
@@ -93,9 +93,9 @@ public class UserRedemptionTransactionManager implements UserRedemptionManager {
         this.errorManager=errorManager;
     }
 
-    public void setAssetVaultManager(AssetVaultManagerPlatform assetVaultManager) throws CantSetObjectException{
+    public void setAssetVaultManager(AssetVaultManager assetVaultManager) throws CantSetObjectException{
         if(assetVaultManager==null){
-            throw new CantSetObjectException("AssetVaultManagerPlatform is null");
+            throw new CantSetObjectException("AssetVaultManager is null");
         }
         this.assetVaultManager=assetVaultManager;
     }

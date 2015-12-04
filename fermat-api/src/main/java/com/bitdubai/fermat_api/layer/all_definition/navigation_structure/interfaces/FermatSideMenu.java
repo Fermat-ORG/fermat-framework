@@ -13,4 +13,6 @@ public interface FermatSideMenu  extends Serializable {
     List<MenuItem> getMenuItems ();
 
     boolean hasFooter();
+
+    void clearSelected();
 }

@@ -11,11 +11,11 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinPlatformCryptoVaultPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.utils.EventsSelector;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.utils.TransactionTypeAndCryptoStatus;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultTransactionNotificationAgent;
@@ -59,7 +59,7 @@ public class TransactionNotificationAgent extends FermatAgent {
             @Override
             public void run() {
 
-                logManager.log(BitcoinPlatformCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Transaction Protocol Notification Agent: running...", null, null);
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Transaction Protocol Notification Agent: running...", null, null);
 
                 while (isRunning()) {
 
@@ -96,7 +96,7 @@ public class TransactionNotificationAgent extends FermatAgent {
             // Increase the iteration counter
             iteration++;
 
-            logManager.log(BitcoinPlatformCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iteration, null, null);
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iteration, null, null);
 
             // TO CONTROL WHAT TYPE OF EVENTS I WILL RAISE, MODIFY THE CLASS EVENT SELECTOR, AND SET THE EVENT OR A NULL.
             // NULL WILL NOT RAISE EVENTS.
@@ -110,11 +110,11 @@ public class TransactionNotificationAgent extends FermatAgent {
                 EventType eventType = EventsSelector.getEventType(type, cryptoStatus);
 
                 if (eventType != null) {
-                    logManager.log(BitcoinPlatformCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in " + cryptoStatus.name() + " Status! Raising " + eventType.name() + " event.", null, null);
+                    logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in " + cryptoStatus.name() + " Status! Raising " + eventType.name() + " event.", null, null);
 
                     raiseEvent(eventType);
 
-                    logManager.log(BitcoinPlatformCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iteration + " without other plugins consuming transaction.", null);
+                    logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iteration + " without other plugins consuming transaction.", null);
                     if (ITERATIONS_THRESHOLD < this.iteration) {
                         throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null, "Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
                     }
@@ -136,7 +136,7 @@ public class TransactionNotificationAgent extends FermatAgent {
 
     private void raiseEvent(EventType eventType) {
         FermatEvent event = eventManager.getNewEvent(eventType);
-        event.setSource(BitcoinPlatformCryptoVaultPluginRoot.EVENT_SOURCE);
+        event.setSource(BitcoinCryptoVaultPluginRoot.EVENT_SOURCE);
         eventManager.raiseEvent(event);
     }
 }
