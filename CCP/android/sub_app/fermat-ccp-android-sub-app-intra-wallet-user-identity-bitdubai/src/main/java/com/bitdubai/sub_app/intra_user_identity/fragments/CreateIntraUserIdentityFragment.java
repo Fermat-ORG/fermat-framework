@@ -171,8 +171,8 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         if (identitySelected.getProfileImage() != null) {
             if (identitySelected.getProfileImage().length > 0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(), 0, identitySelected.getProfileImage().length);
-                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
                 bitmap = ImagesUtils.getRoundedBitmap(getResources(), bitmap).getBitmap();
+                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
                 brokerImageByteArray = toByteArray(bitmap);
             }else{
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.profile_image);
