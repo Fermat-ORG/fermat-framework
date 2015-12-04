@@ -824,6 +824,37 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
             subAppIntraUser.addActivity(runtimeActivity);
+
+            // Activity: Other Profile
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
+            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
+            runtimeActivity.setColor("#FF0B46F0");
+
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Profile");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeTitleBar.setColor("#0072bb");
+            runtimeTitleBar.setLabelSize(20);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+
+            subAppIntraUser.addActivity(runtimeActivity);
             /**
              * End of community intra user CCP
              */
