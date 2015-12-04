@@ -130,7 +130,8 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
                 int resultKey = createNewIdentity();
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
-                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), subAppsSession.getAppPublicKey());
+//                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), subAppsSession.getAppPublicKey());
+                        Toast.makeText(getActivity(),"Changes saved",Toast.LENGTH_SHORT).show();
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
                         Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
@@ -169,16 +170,18 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
 
     private void loadIdentity(){
         if (identitySelected.getProfileImage() != null) {
+            Bitmap bitmap = null;
             if (identitySelected.getProfileImage().length > 0) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(), 0, identitySelected.getProfileImage().length);
-                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-                brokerImageByteArray = toByteArray(bitmap);
-                mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+                bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(), 0, identitySelected.getProfileImage().length);
+//                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             }else{
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.profile_image);
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }
+            bitmap = Bitmap.createScaledBitmap(bitmap, 100,100, true);
+            brokerImageByteArray = toByteArray(bitmap);
+            mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
         mBrokerName.setText(identitySelected.getAlias());
     }
