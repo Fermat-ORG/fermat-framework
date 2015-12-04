@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_api.layer.all_definition.enums;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The enum class <code>com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices</code>
+ * The enum class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.enums.NetworkServices</code>
  * enumerates all the NetworkServices of fermat.
  * <p/>
  * Created by ciencias on 2/22/15.
