@@ -8,10 +8,11 @@
     android:orientation="horizontal">
 
     <FrameLayout
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp">
 
         <ImageView
             android:id="@+id/crypto_broker_identity_image"
@@ -19,12 +20,14 @@
             android:layout_height="match_parent"
             android:padding="2dp"
             android:contentDescription="@string/identity_img"
-            tools:src="@drawable/profile_image" />
+            tools:src="@drawable/profile_image"
+            android:background="@drawable/image_border"
+            />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/circular_shape" />
+             />
 
     </FrameLayout>
 
@@ -34,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:singleLine="true"
-        android:textColor="@color/crypto_broker_identity_name_item"
-        tools:text="Nelson Alfonso Ramirez Noguera" />
+        android:textColor="#323232"
+        tools:text="Nelson Alfonso Ramirez Noguera"
+        android:textSize="16sp"/>
 </LinearLayout>
