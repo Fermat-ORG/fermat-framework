@@ -45,6 +45,7 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
     private CryptoWalletIntraUserActor identity;
 
 
+
     /**
      * Create a new instance of this fragment
      *
@@ -63,6 +64,7 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = subAppsSession.getErrorManager();
         intraUserInformation = (IntraUserInformation) subAppsSession.getData(ConnectionsWorldFragment.INTRA_USER_SELECTED);
+
     }
 
     @SuppressLint("SetTextI18n")
