@@ -40,8 +40,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_module.developer.ClassHierarchyLeve
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetLogToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;

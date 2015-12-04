@@ -42,7 +42,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.ex
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantUninstallCompleteSubAppException;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantUninstallSubAppLanguageException;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantUninstallSubAppSkinException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesInstallationNetworkServiceDAO;

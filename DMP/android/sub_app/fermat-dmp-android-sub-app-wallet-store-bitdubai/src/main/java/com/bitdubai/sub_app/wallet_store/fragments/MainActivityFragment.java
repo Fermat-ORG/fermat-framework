@@ -25,8 +25,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.Insta
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogue;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
 import com.bitdubai.sub_app.wallet_store.common.interfaces.WalletStoreItemPopupMenuListener;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;

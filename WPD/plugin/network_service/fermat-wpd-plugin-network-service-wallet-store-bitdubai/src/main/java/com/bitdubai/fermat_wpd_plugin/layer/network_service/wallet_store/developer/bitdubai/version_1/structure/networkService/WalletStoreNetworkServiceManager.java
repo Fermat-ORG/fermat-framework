@@ -11,8 +11,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationExceptio
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;

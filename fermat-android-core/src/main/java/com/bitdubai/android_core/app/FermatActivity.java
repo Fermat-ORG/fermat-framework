@@ -109,7 +109,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -130,17 +129,14 @@ import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListene
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
-import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
-import com.bitdubai.fermat_api.layer.desktop.Item;
-import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
