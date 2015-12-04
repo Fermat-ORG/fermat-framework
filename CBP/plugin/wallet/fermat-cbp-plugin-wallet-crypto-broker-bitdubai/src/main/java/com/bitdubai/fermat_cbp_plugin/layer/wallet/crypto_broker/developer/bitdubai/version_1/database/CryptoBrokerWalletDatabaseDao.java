@@ -27,12 +27,16 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetAvailableBalanceCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetBookedBalanceCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerMarketRateException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerStockTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletBalanceRecord;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
@@ -120,11 +124,78 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     }
 
     //TODO Implementar:
-    // Este metodo se utilizara para devolver al Broker que se le puede vender, recibira como argumento que mercaderia quiere comprar, la cantidad a comprar, como paga
-    // el metodo le devolvera Cuanto se le puede vender, el precio de la venta en la moneda que piden, y el precio en dolar.
-    public void getQuote(FermatEnum merchandise, CurrencyType currencyType, float merchandiseQuantity, FiatCurrency fiatCurrency){
+    public Quote getQuote(final FermatEnum merchandise, final float quantity, final FiatCurrency payment) throws CantGetCryptoBrokerQuoteException {
+        //Debemos de conocer el valor AvailableBalance menos los congelado, de esa forma tengo lo que puedo vender
+        final float availableBalanceFroze = 0; //getAvailableBalance(FermatEnum merchandise)
+        //Buscar el Spread en el setting de la wallet
+        //CryptoBrokerWalletSettingSpread getSpread()
+        final float spread = 0;
+        //Determinar luego si ya se vendio o compro esa mercaderia para calcular el rate sobre el precio inicial y final
+        //Tambien podemos determinar devolver segun la volatilidad del mercado
+        //Determinar mediante el precio del mercado a como esta esa mercancia
+        final float priceReference = 0; //Precio en dolar devuelto al pedir el precio del mercado
+        final float priceRateSale = 0;
+        final float priceRatePurchase = 0;
+        final float priceSaleUp = 0; //(priceRateSale * ((spread / 2) / 100)) + priceRateSale
+        final float priceDown = 0;   //(priceRateSale * ((spread / 2) / 100)) - priceRateSale
+        final float pricePurchaseUp = 0; //(priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase
+        final float pricePurchaseDown = 0; //(priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase
 
+        Quote quote = new Quote() {
+            @Override
+            public FermatEnum getMerchandise() {
+                return merchandise;
+            }
+
+            @Override
+            public FiatCurrency getFiatCurrency() {
+                return payment;
+            }
+
+            @Override
+            public float getPriceReference() {
+                return priceReference;
+            }
+
+            @Override
+            public float getQuantity() {
+                return availableBalanceFroze;
+            }
+        };
+        return quote;
     }
+
+    //TODO Implementar:
+    public FiatIndex getMarketRate(final FermatEnum merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType) throws CantGetCryptoBrokerMarketRateException {
+        //Determinar luego si ya se vendio o compro esa mercaderia para calcular el rate sobre el precio inicial y final
+        //Tambien podemos determinar devolver segun la volatilidad del mercado
+        //Determinar mediante el precio del mercado a como esta esa mercancia
+        final float priceReference = 0; //Precio en dolar devuelto al pedir el precio del mercado
+        final float priceRateSale = 0;
+        final float priceRatePurchase = 0;
+        final float priceSaleUp = 0; //(priceRateSale * ((spread / 2) / 100)) + priceRateSale
+        final float priceDown = 0;   //(priceRateSale * ((spread / 2) / 100)) - priceRateSale
+        final float pricePurchaseUp = 0; //(priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase
+        final float pricePurchaseDown = 0; //(priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase
+        FiatIndex fiatIndex = new FiatIndex() {
+            @Override
+            public FermatEnum getMerchandise() {
+                return merchandise;
+            }
+
+            @Override
+            public float getSalePrice() {
+                return priceRateSale;
+            }
+
+            @Override
+            public float getPurchasePrice() {
+                return priceRatePurchase;
+            }
+        };
+        return fiatIndex;
+    }
+
 
     public List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(FermatEnum merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException {
         DatabaseTable databaseTable = getStockWalletTransactionTable();
