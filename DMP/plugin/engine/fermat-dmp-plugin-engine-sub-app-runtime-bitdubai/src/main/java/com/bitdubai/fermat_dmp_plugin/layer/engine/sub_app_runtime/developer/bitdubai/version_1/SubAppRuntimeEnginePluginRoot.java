@@ -1244,7 +1244,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Wallet Store more detail");
+        runtimeTitleBar.setLabel("More Details");
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#222222");
         runtimeTitleBar.setIsTitleTextStatic(true);
