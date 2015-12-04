@@ -1,6 +1,10 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -190,12 +194,17 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
 
 
-        container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
-        //container_header_balance.setBackgroundResource(R.drawable.header_back);
-        container_header_balance.setVisibility(View.VISIBLE);
+        //container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.back_header);
+        bitmap = Bitmap.createScaledBitmap(bitmap,300,400,true);
+        container_header_balance.setBackground(new BitmapDrawable(getResources(),bitmap));
 
 
         View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
+
+        balance_header.setPadding(0,20,0,3);
+
+        container_header_balance.setVisibility(View.VISIBLE);
 
         CircularProgressBar circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 

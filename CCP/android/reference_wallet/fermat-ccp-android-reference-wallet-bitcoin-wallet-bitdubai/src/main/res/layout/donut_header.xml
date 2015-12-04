@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center_horizontal"
     android:gravity="center"
-    android:layout_marginTop="10dp"
+    android:layout_marginTop="30dp"
     android:layout_marginLeft="12dp"
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
@@ -28,7 +28,7 @@
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
         android:gravity="center"
-        android:paddingLeft="20dp"
+        android:paddingLeft="16dp"
         android:paddingBottom="7dp">
 
 
