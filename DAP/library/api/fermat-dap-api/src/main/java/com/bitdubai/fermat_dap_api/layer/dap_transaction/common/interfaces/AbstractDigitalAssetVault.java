@@ -349,5 +349,4 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         }
 
     }
-
 }

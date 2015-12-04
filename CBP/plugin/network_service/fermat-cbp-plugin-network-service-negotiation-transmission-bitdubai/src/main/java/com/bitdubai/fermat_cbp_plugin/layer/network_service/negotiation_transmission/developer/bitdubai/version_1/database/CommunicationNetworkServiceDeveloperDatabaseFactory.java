@@ -137,6 +137,7 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
         negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_RECEIVE_COLUMN_NAME);
         negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_RECEIVE_TYPE_COLUMN_NAME);
         negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_TYPE_COLUMN_NAME);
+        negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME);
         negotiationTransmissionNetworkServiceColumns.add(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TIMESTAMP_COLUMN_NAME);
         /**
          * Table Negotiation Transmission Network Service addition.

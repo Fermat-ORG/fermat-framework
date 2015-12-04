@@ -50,6 +50,3 @@ To connect to a known peer, nodes establish a TCP connection, usually to port 94
 | My Address    |               | 111.44.15.1  | The IP address of the local node, as discovered by the local node.|
 
 
-
-
-

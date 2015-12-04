@@ -2,8 +2,8 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdub
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_world.Agent;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.Agent;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -17,8 +17,8 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitduba
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantAddPendingRedeemPointException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure.RedeemPointActorDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -135,13 +135,13 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
         }
 
         private void doTheMainTask() throws CantCreateActorRedeemPointException {
-            try {
-                listByActorAssetRedeemPointNetworkService();
-
-            } catch (CantCreateActorRedeemPointException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantCreateActorRedeemPointException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET REDEEM POINT IN ACTOR NETWORK SERVICE", e, "", "");
-            }
+//            try {
+//                listByActorAssetRedeemPointNetworkService();
+//
+//            } catch (CantCreateActorRedeemPointException e) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantCreateActorRedeemPointException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET REDEEM POINT IN ACTOR NETWORK SERVICE", e, "", "");
+//            }
         }
 
         private void listByActorAssetRedeemPointNetworkService() throws CantCreateActorRedeemPointException {

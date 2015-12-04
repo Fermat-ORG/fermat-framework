@@ -80,7 +80,7 @@ public class MoreDetailsActivityFragment extends FermatFragment {
         updateDate = (FermatTextView) layout.findViewById(R.id.update_date);
         numInstalls = (FermatTextView) layout.findViewById(R.id.num_installs);
         resourcesSize = (FermatTextView) layout.findViewById(R.id.resources_size);
-        walletPublisherName = (FermatTextView) layout.findViewById(R.id.wallet_publisher_name);
+        walletPublisherName = (FermatTextView) layout.findViewById(R.id.ws_wallet_publisher_name);
         developerAddress = (FermatTextView) layout.findViewById(R.id.developer_address);
         developerEmail = (FermatTextView) layout.findViewById(R.id.developer_email);
 

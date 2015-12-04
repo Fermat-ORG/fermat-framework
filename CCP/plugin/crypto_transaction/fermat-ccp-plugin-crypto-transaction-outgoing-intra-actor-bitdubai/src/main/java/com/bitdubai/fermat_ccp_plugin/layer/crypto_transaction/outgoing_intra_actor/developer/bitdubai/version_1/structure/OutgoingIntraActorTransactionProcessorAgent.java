@@ -13,8 +13,6 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantUpdateRequestPaymentStateException;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantHandleTransactionException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
@@ -31,8 +29,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_ac
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorWalletNotSupportedException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionHandlerFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionWrapper;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,7 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
     private ErrorManager                               errorManager;
-    private CryptoVaultManager                         cryptoVaultManager;
+    private CryptoVaultManager cryptoVaultManager;
     private BitcoinWalletManager                       bitcoinWalletManager;
     private OutgoingIntraActorDao                      outgoingIntraActorDao;
     private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
@@ -97,7 +95,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         private OutgoingIntraActorDao dao;
         private ErrorManager                               errorManager;
         private BitcoinWalletManager                       bitcoinWalletManager;
-        private CryptoVaultManager                         cryptoVaultManager;
+        private CryptoVaultManager cryptoVaultManager;
         private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
         private CryptoTransmissionNetworkServiceManager    cryptoTransmissionManager;
 
@@ -112,7 +110,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         private void initialize (ErrorManager                               errorManager,
                                  OutgoingIntraActorDao dao,
                                  BitcoinWalletManager                       bitcoinWalletManager,
-                                 CryptoVaultManager                         cryptoVaultManager,
+                                 CryptoVaultManager cryptoVaultManager,
                                  OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
                                  CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager) {
             this.dao                       = dao;

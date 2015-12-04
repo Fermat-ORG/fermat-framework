@@ -23,8 +23,8 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SourceAdministrator;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -48,11 +48,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class IncomingCryptoMonitorAgent implements DealsWithRegistry, TransactionAgent {
 
     private final BitcoinNetworkManager bitcoinNetworkManager;
-    private final CryptoVaultManager    cryptoVaultManager   ;
+    private final CryptoVaultManager cryptoVaultManager   ;
     private final ErrorManager          errorManager         ;
 
     public IncomingCryptoMonitorAgent(final BitcoinNetworkManager bitcoinNetworkManager,
-                                      final CryptoVaultManager    cryptoVaultManager   ,
+                                      final CryptoVaultManager cryptoVaultManager   ,
                                       final ErrorManager          errorManager         ) {
 
         this.bitcoinNetworkManager = bitcoinNetworkManager;
@@ -144,11 +144,11 @@ public class IncomingCryptoMonitorAgent implements DealsWithRegistry, Transactio
         private static final int SLEEP_TIME = 5000;
 
         private final BitcoinNetworkManager bitcoinNetworkManager;
-        private final CryptoVaultManager    cryptoVaultManager   ;
+        private final CryptoVaultManager cryptoVaultManager   ;
         private final ErrorManager          errorManager         ;
 
         public MonitorAgent(final BitcoinNetworkManager bitcoinNetworkManager,
-                                          final CryptoVaultManager    cryptoVaultManager   ,
+                                          final CryptoVaultManager cryptoVaultManager   ,
                                           final ErrorManager          errorManager         ) {
 
             this.bitcoinNetworkManager = bitcoinNetworkManager;

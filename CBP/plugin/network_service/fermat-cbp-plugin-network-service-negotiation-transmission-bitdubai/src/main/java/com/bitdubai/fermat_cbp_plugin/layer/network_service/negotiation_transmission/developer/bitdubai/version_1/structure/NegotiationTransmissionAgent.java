@@ -4,9 +4,13 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionUpdateEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionPluginRoot;
@@ -16,12 +20,14 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationTransmissionResponseMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
@@ -278,10 +284,92 @@ public class NegotiationTransmissionAgent {
     /*PRIVATE*/
     private void processReceive() {
 
+        try {
+            //communicationNetworkServiceConnectionManager.
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, "false");
+
+            //Read all pending CryptoTransmissionMetadata from database
+            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
+            for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList){
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(negotiationTransmission.getPublicKeyActorSend());
+                if(communicationNetworkServiceLocal!=null){
+                    System.out.print("-----------------------\n" +
+                            "RECEIVING BUSINESS TRANSACTION-----------------------\n" +
+                            "-----------------------\n STATE: " + negotiationTransmission.getTransmissionState());
+                    // si no contiene la metadata, la tengo que guardar en la bd y notificar que llegó, tambien debería cargar ese caché cuando se lanza el evento de que llega la metadata de respuesta
+                    // if( ! cacheResponseMetadataFromRemotes.containsKey(cryptoTransmissionMetadata.getDestinationPublicKey())){
+                    try {
+                        switch (negotiationTransmission.getTransmissionState()) {
+                            case SEEN_BY_DESTINATION_NETWORK_SERVICE:
+
+                                //TODO: revisar que se puede hacer acá
+                                System.out.println("Transaction Transmission SEEN_BY_DESTINATION_NETWORK_SERVICE---to implement");
+                                break;
+
+                            case CONFIRM_RESPONSE:
+
+                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Transaction Transmission CONFIRM_RESPONSE");
+                                launchNotification();
+                                this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getPublicKeyActorReceive());
+                                break;
+
+                            case CONFIRM_NEGOTIATION:
+
+                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Transaction Transmission CONFIRM_CONTRACT");
+                                //this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getReceiverId());
+                                launchNotification();
+                                this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getPublicKeyActorReceive());
+                                break;
+
+                            // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
+                            case SENT:
+
+                                negotiationTransmission.setTransmissionState(NegotiationTransmissionState.SEEN_BY_OWN_NETWORK_SERVICE);
+                                negotiationTransmission.setNegotiationTransactionType(negotiationTransmission.getNegotiationTransactionType());
+                                databaseDao.updateRegisterSendNegotiatioTransmission(negotiationTransmission);
+
+                                System.out.print("-----------------------\n" +
+                                        "RECEIVING NEGOTIATION TRANSACTION -----------------------\n" +
+                                        "-----------------------\n STATE: " + negotiationTransmission.getPublicKeyActorSend());
+
+                                launchNotification();
+
+                                NegotiationTransmissionResponseMessage transmissionResponseMessage = new NegotiationTransmissionResponseMessage(
+                                        negotiationTransmission.getTransactionId(),
+                                        NegotiationTransmissionState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
+                                        negotiationTransmission.getNegotiationTransactionType());
+
+                                Gson gson = new Gson();
+                                String message = gson.toJson(transmissionResponseMessage);
+
+                                // El destination soy yo porque me lo estan enviando
+                                // El sender es el otro y es a quien le voy a responder
+                                communicationNetworkServiceLocal.sendMessage(negotiationTransmission.getPublicKeyActorReceive(), negotiationTransmission.getPublicKeyActorSend(), message);
+                                System.out.print("-----------------------\n" +
+                                        "SENDING ANSWER -----------------------\n" +
+                                        "-----------------------\n STATE: " + negotiationTransmission.getTransmissionState());
+                                break;
+
+                            default:
+                                //TODO: handle with an exception
+                                break;
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (CantReadRecordDataBaseException e) {
+            e.printStackTrace();
+        }
     }
 
     private void launchNotification(){
-
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_UPDATE);
+        IncomingNegotiationTransmissionUpdateEvent incomingNegotiationTransmissionUpdateEvent = (IncomingNegotiationTransmissionUpdateEvent) fermatEvent;
+        incomingNegotiationTransmissionUpdateEvent.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+        eventManager.raiseEvent(incomingNegotiationTransmissionUpdateEvent);
     }
 
     private void discountWaitTime(){

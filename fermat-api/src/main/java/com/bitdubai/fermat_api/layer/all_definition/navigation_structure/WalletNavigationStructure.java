@@ -127,6 +127,17 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
         this.publicKey=publicKey;
     }
 
+    @Override
+    public void clear() {
+        for(Activity activity : activities.values()){
+            SideMenu sideMenu = activity.getSideMenu();
+            if (sideMenu!=null){
+                sideMenu.clearSelected();
+            }
+
+        }
+    }
+
     /**
      *  Screens in a WalletNavigationStructure
      *

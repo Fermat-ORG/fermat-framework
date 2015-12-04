@@ -22,8 +22,8 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.java_websocket.WebSocketImpl;
@@ -78,12 +78,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
-     //public static final String SERVER_IP = "52.34.94.176"; //AWS PAID INSTANCE
-     public static final String SERVER_IP = "52.11.156.16"; //AWS FREE INSTANCE
-
-    //public static final String SERVER_IP = "192.168.0.103";
-
-
+    /***************************************************************************************************/
+     public static final String SERVER_IP = "52.35.64.221"; //Do not change this when pulling to bitDubai
+    /***************************************************************************************************/
 
     /**
      * Represent the DEFAULT_PORT
