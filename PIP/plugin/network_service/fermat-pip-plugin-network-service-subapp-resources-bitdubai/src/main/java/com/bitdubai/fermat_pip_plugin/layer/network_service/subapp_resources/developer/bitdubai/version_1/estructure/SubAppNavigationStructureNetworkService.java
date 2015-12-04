@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure;
 
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppNavigationStructure;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantGetSubAppNavigationStructureException;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppNavigationStructure;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantGetSubAppNavigationStructureException;
 
 import java.util.UUID;
 
