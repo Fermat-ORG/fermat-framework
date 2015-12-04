@@ -3,6 +3,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:background="@color/wallet_store_activities_background"
             android:fillViewport="false"
             android:orientation="vertical">
@@ -20,8 +21,8 @@
             android:layout_height="230dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            tools:src="@drawable/banner_crypto_customer"
-            tools:ignore="contentDescription"/>
+            tools:ignore="contentDescription"
+            tools:src="@drawable/banner_crypto_customer"/>
         <!--/ Banner de la wallet -->
 
         <!-- Contenedor de Infromacion de la wallet -->
@@ -104,37 +105,42 @@
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
                         tools:text="Nombre del desarrollador"/>
+
                 </RelativeLayout>
 
-                <Button
-                    android:id="@+id/wallet_uninstall_button"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_toLeftOf="@+id/wallet_install_button"
-                    android:layout_toStartOf="@+id/wallet_install_button"
-                    android:background="@color/wallet_uninstall_background_button"
-                    android:textAllCaps="true"
-                    android:textColor="@color/wallet_uninstall_text_button"
-                    android:textSize="14sp"
-                    android:visibility="gone"
-                    tools:text="@string/wallet_status_uninstall"
-                    tools:visibility="visible"/>
-
-                <Button
-                    android:id="@+id/wallet_install_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_below="@+id/wallet_icon"
-                    android:background="@color/wallet_install_background_button"
-                    android:textAllCaps="true"
-                    android:textColor="@color/wallet_install_text_button"
-                    android:textSize="14sp"
-                    tools:text="@string/wallet_status_install"/>
+                    android:layout_marginTop="80dp"
+                    android:orientation="horizontal">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:id="@+id/wallet_uninstall_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        android:background="@color/wallet_uninstall_background_button"
+                        android:textAllCaps="true"
+                        android:textColor="@color/wallet_uninstall_text_button"
+                        android:textSize="14sp"
+                        android:visibility="gone"
+                        tools:text="@string/wallet_status_uninstall"
+                        tools:visibility="visible"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                        android:id="@+id/wallet_install_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/wallet_install_background_button"
+                        android:textAllCaps="true"
+                        android:textColor="@color/wallet_install_text_button"
+                        android:textSize="14sp"
+                        tools:text="@string/wallet_status_install"/>
+                </LinearLayout>
 
             </RelativeLayout>
             <!--/ Icono y Nombre de la wallet -->
