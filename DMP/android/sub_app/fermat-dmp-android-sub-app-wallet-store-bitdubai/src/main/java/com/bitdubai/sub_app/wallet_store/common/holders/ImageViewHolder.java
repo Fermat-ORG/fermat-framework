@@ -9,10 +9,10 @@ import com.wallet_store.bitdubai.R;
 /**
  * Created by nelson on 01/09/15.
  */
-public class BitmapViewHolder extends FermatViewHolder {
+public class ImageViewHolder extends FermatViewHolder {
     private ImageView walletScreenshot;
 
-    public BitmapViewHolder(View itemView) {
+    public ImageViewHolder(View itemView) {
         super(itemView);
         walletScreenshot = (ImageView) itemView.findViewById(R.id.screenshot);
     }

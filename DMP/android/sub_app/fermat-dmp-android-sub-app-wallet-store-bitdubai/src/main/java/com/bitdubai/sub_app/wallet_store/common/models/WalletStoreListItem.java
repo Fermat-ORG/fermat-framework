@@ -34,7 +34,7 @@ public class WalletStoreListItem implements Serializable {
     private WalletCategory category;
     private boolean testData;
     private int bannerWalletRes;
-    private List<Bitmap> screenshots;
+    private List<Integer> screenshots;
 
 
     /**
@@ -86,7 +86,7 @@ public class WalletStoreListItem implements Serializable {
         return installationStatus;
     }
 
-    public List<Bitmap> getScreenshots() {
+    public List<Integer> getScreenshots() {
         return screenshots;
     }
 
@@ -99,7 +99,7 @@ public class WalletStoreListItem implements Serializable {
     }
 
 
-    private WalletStoreListItem(String walletName, String description, InstallationStatus installationStatus, Bitmap walletIcon, int bannerWalletRes, List<Bitmap> screenshots) {
+    private WalletStoreListItem(String walletName, String description, InstallationStatus installationStatus, Bitmap walletIcon, int bannerWalletRes, List<Integer> screenshots) {
         this.testData = true;
 
         this.walletName = walletName;
@@ -142,12 +142,12 @@ public class WalletStoreListItem implements Serializable {
                 R.drawable.banner_asset_user_wallet,
                 R.drawable.banner_redeem_point};
 
-        ArrayList<List<Bitmap>> walletScreenshots = createListOfScreenshots(res);
+        ArrayList<List<Integer>> walletScreenshots = createListOfScreenshots();
 
         ArrayList<WalletStoreListItem> testItems = new ArrayList<>();
         for (int i = 0; i < walletIcons.length && i < installed.length && i < prices.length && i < walletNames.length; i++) {
             Bitmap icon = BitmapFactory.decodeResource(res, walletIcons[i]);
-            List<Bitmap> screenshots = walletScreenshots.get(i);
+            List<Integer> screenshots = walletScreenshots.get(i);
             WalletStoreListItem item = new WalletStoreListItem(walletNames[i], descriptions[i], installed[i], icon, walletBanners[i], screenshots);
             testItems.add(item);
         }
@@ -155,25 +155,25 @@ public class WalletStoreListItem implements Serializable {
         return testItems;
     }
 
-    private static ArrayList<List<Bitmap>> createListOfScreenshots(Resources res) {
-        ArrayList<List<Bitmap>> data = new ArrayList<>();
-        ArrayList<Bitmap> screenshots;
+    private static ArrayList<List<Integer>> createListOfScreenshots() {
+        ArrayList<List<Integer>> data = new ArrayList<>();
+        ArrayList<Integer> screenshots;
 
         screenshots = new ArrayList<>();
-        screenshots.add(BitmapFactory.decodeResource(res, R.drawable.bitcoin_screenshot_1));
-        screenshots.add(BitmapFactory.decodeResource(res, R.drawable.bitcoin_screenshot_2));
-        screenshots.add(BitmapFactory.decodeResource(res, R.drawable.bitcoin_screenshot_3));
+        screenshots.add(R.drawable.bitcoin_screenshot_1);
+        screenshots.add(R.drawable.bitcoin_screenshot_2);
+        screenshots.add(R.drawable.bitcoin_screenshot_3);
         data.add(screenshots);
 
         screenshots = new ArrayList<>();
-        screenshots.add(BitmapFactory.decodeResource(res, R.drawable.customer_screenshot_1));
-        screenshots.add(BitmapFactory.decodeResource(res, R.drawable.customer_screenshot_2));
+        screenshots.add(R.drawable.customer_screenshot_1);
+        screenshots.add(R.drawable.customer_screenshot_2);
         data.add(screenshots);
 
         screenshots = new ArrayList<>();
-        screenshots.add(BitmapFactory.decodeResource(res, R.drawable.broker_screenshot_1));
-        screenshots.add(BitmapFactory.decodeResource(res, R.drawable.broker_screenshot_2));
-        screenshots.add(BitmapFactory.decodeResource(res, R.drawable.broker_screenshot_3));
+        screenshots.add(R.drawable.broker_screenshot_1);
+        screenshots.add(R.drawable.broker_screenshot_2);
+        screenshots.add(R.drawable.broker_screenshot_3);
         data.add(screenshots);
 
         data.add(null);
