@@ -2,6 +2,8 @@
 <resources>
 
     <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="black_a20">#33000000></color>
+    <color name="orange">#FF7F00></color>
     <color name="identity_list_fragment_background">#dbe6ee</color>
     <color name="circle_border">#b3d3df</color>
     <color name="create_identity_fragment_background">#FFFFFF</color>
