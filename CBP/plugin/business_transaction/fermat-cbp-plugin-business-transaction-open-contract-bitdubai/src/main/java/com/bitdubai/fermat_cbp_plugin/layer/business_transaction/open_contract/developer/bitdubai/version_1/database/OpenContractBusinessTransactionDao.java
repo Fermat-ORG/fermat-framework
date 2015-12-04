@@ -29,7 +29,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.d
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 28/11/15.

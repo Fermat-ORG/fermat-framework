@@ -118,14 +118,19 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
             /*
              * Open new database connection
              */
-            this.database = this.pluginDatabaseSystem.openDatabase(pluginId, OpenContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
+            this.database = this.pluginDatabaseSystem.openDatabase(
+                    pluginId,
+                    OpenContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.OPEN_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -134,21 +139,27 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            OpenContractBusinessTransactionDatabaseFactory communicationNetworkServiceDatabaseFactory = new OpenContractBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
+            OpenContractBusinessTransactionDatabaseFactory openContractBusinessTransactionDatabaseFactory =
+                    new OpenContractBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
                 /*
                  * We create the new database
                  */
-                this.database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, OpenContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
+                this.database = openContractBusinessTransactionDatabaseFactory.createDatabase(
+                        pluginId,
+                        OpenContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.OPEN_CONTRACT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
@@ -198,7 +209,9 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
              * Initialize Developer Database Factory
              */
             //System.out.println("OPEN_CONTRACT Facti");
-            openContractBusinessTransactionDeveloperDatabaseFactory = new OpenContractBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            openContractBusinessTransactionDeveloperDatabaseFactory = new
+                    OpenContractBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
+                    pluginId);
             openContractBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
 
             /**
@@ -247,7 +260,11 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
             System.out.println("Starting Open Contract Business Transaction");
             //launchNotificationTest();
         } catch (Exception exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Starting open contract plugin", "Unexpected Exception");
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(exception),
+                    "Starting open contract plugin",
+                    "Unexpected Exception");
         }
     }
 
@@ -285,21 +302,6 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         return openContractBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
-
-    /*@Override
-    public void openPurchaseContract(String negotiationId) throws CantOpenContractException {
-
-    }
-
-    @Override
-    public void openSaleContract(String negotiationId) throws CantOpenContractException {
-
-    }
-
-    @Override
-    public OpenContractStatus getOpenContractStatus(String negotiationId) {
-        return null;
-    }*/
 
     public static LogLevel getLogLevelByClass(String className) {
         try{

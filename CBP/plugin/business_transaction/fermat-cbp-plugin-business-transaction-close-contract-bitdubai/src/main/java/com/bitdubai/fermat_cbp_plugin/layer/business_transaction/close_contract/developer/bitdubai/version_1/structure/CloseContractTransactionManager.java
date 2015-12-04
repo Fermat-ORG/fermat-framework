@@ -9,6 +9,8 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.int
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 02/12/15.
  */
 public class CloseContractTransactionManager implements CloseContractManager {
+
+
     @Override
     public void openSaleContract(String contractHash) throws CantCloseContractException {
 
