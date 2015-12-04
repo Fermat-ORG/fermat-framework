@@ -8,16 +8,41 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum UISource implements FermatEnum {
 
-    //Modified by Manuel Perez on 03/08/2015
-    ACTIVITY("ACTIV"),
-    ADAPTER("ADAPT"),
-    TASK("TASK"),
-    VIEW("VIEW");
+    // TODO MAKE THIS COMPATIBLE WITH OTHER TYPES OF OS - ACTIVITIES, TASKS, VIEWS, ADAPTERS ONLY BELONGS TO ANDROID.
 
-    private String code;
+    /**
+     * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
+     */
 
-    UISource(String code) {
+    ACTIVITY  ("ACTIV"),
+    ADAPTER   ("ADAPT"),
+    TASK      ("TASK" ),
+    VIEW      ("VIEW" ),
+
+    ;
+
+    private final String code;
+
+    UISource(final String code) {
         this.code = code;
+    }
+
+
+    public static UISource getByCode(final String code) throws InvalidParameterException {
+
+        switch (code) {
+
+            case "ACTIV": return ACTIVITY;
+            case "ADAPT": return ADAPTER ;
+            case "TASK":  return TASK    ;
+            case "VIEW":  return VIEW    ;
+
+            default:
+                throw new InvalidParameterException(
+                        "Code Received: " + code,
+                        "This Code Is Not Valid for the UISource enum"
+                );
+        }
     }
 
     @Override
@@ -25,15 +50,4 @@ public enum UISource implements FermatEnum {
         return this.code;
     }
 
-    public static UISource getByCode(String code) throws InvalidParameterException {
-
-        switch (code) {
-            case "ACTIV": return UISource.ACTIVITY;
-            case "ADAPT": return UISource.ADAPTER;
-            case "TASK":  return UISource.TASK;
-            case "VIEW":  return UISource.VIEW;
-            default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the UISource enum");
-        }
-    }
 }

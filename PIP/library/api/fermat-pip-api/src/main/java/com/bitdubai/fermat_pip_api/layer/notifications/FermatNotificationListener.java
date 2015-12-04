@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.notifications;
 
-import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationEvent;
 
 /**
  * Created by mati on 2015.10.20..

@@ -12,6 +12,7 @@ import com.bitdubai.sub_app.wallet_store.common.holders.BitmapViewHolder;
 import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nelson on 27/08/15.
@@ -22,7 +23,7 @@ public class ImagesAdapter extends FermatAdapter<Bitmap, BitmapViewHolder> {
         super(context);
     }
 
-    public ImagesAdapter(Context context, ArrayList<Bitmap> dataSet) {
+    public ImagesAdapter(Context context, List<Bitmap> dataSet) {
         super(context, dataSet);
     }
 

@@ -15,6 +15,7 @@ dependencies {
      */
 
     compile project(':fermat-api')
+    compile project(':fermat-core-api')
 
     compile project(':fermat-bch-core')
     compile project(':fermat-bnk-core')
