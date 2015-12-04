@@ -77,7 +77,7 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
         /**
          * stockWalletColumns table
          */
-        DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME, stockWalletColumns);
+        DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME, stockWalletColumns);
         tables.add(cryptoTransactionsTable);
 
         /**
@@ -85,6 +85,7 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
          */
         List<String> stockWalletTotalBalancesColumns = new ArrayList<>();
         stockWalletTotalBalancesColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME);
+        stockWalletTotalBalancesColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME);
         stockWalletTotalBalancesColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME);
         stockWalletTotalBalancesColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME);
         stockWalletTotalBalancesColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BOOK_BALANCE_COLUMN_NAME);
@@ -92,8 +93,53 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
         /**
          * stockWalletTotalBalanceColumns table
          */
-        DeveloperDatabaseTable  assetIssuerWalletWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME, stockWalletTotalBalancesColumns);
-        tables.add(assetIssuerWalletWalletTotalBalances);
+        DeveloperDatabaseTable  stockWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME, stockWalletTotalBalancesColumns);
+        tables.add(stockWalletTotalBalances);
+
+        /**
+         * Added new table wallet setting spread
+         */
+        List<String> walletSettingSpreadColumns = new ArrayList<>();
+        walletSettingSpreadColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME);
+        walletSettingSpreadColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_VALUE_COLUMN_NAME);
+        walletSettingSpreadColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_BROKER_PUBLIC_KEY_COLUMN_NAME);
+
+        /**
+         * walletSettingSpreadColumns table
+         */
+        DeveloperDatabaseTable  walletSettingSpread = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_TABLE_NAME, walletSettingSpreadColumns);
+        tables.add(walletSettingSpread);
+
+        /**
+         * Added new table wallet setting associated
+         */
+        List<String> walletSettingAssociatedColumns = new ArrayList<>();
+        walletSettingAssociatedColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_ID_COLUMN_NAME);
+        walletSettingAssociatedColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PUBLIC_KEY_COLUMN_NAME);
+        walletSettingAssociatedColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_MERCHANDISE_COLUMN_NAME);
+        walletSettingAssociatedColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_CURRENCY_TYPE_COLUMN_NAME);
+        walletSettingAssociatedColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PLATFORM_COLUMN_NAME);
+        walletSettingAssociatedColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_BANK_ACCOUNT_COLUMN_NAME);
+        walletSettingAssociatedColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        /**
+         * walletSettingAssociatedColumns table
+         */
+        DeveloperDatabaseTable  walletSettingAssociated = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_TABLE_NAME, walletSettingAssociatedColumns);
+        tables.add(walletSettingAssociated);
+
+        /**
+         * Added new table wallet setting provider
+         */
+        List<String> walletSettingProviderColumns = new ArrayList<>();
+        walletSettingProviderColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_ID_COLUMN_NAME);
+        walletSettingProviderColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_PLUGIN_COLUMN_NAME);
+        walletSettingProviderColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_DESCRIPTION_COLUMN_NAME);
+        walletSettingProviderColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        /**
+         * walletSettingAssociatedColumns table
+         */
+        DeveloperDatabaseTable  walletSettingProvider = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_TABLE_NAME, walletSettingProviderColumns);
+        tables.add(walletSettingProvider);
 
         return tables;
     }
