@@ -45,8 +45,8 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriat
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.database.AssetAppropriationStatsDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.events.AppropriationStatsMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.events.AppropriationStatsRecorderService;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Collections;
@@ -280,7 +280,7 @@ public class AppropriationStatsDigitalAssetTransactionPluginRoot extends Abstrac
             ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser(); //The user of this device, whom appropriate the asset.
 //            String message = new AssetAppropriationContentMessage(assetAppropriated, userThatAppropriated).toString();
             DAPMessage message = new DAPMessage(DAPMessageType.ASSET_APPROPRIATION, new AssetAppropriationContentMessage(assetAppropriated, userThatAppropriated), actorAssetUser, actorAssetIssuer);
-            assetIssuerActorNetworkServiceManager.sendMessage(actorAssetUser, actorAssetIssuer, message); //FROM: USER. TO:ISSUER.
+            assetIssuerActorNetworkServiceManager.sendMessage(message); //FROM: USER. TO:ISSUER.
         } catch (Exception e) {
             throw new CantStartAppropriationStatsException(FermatException.wrapException(e), context, null);
         }
