@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -23,7 +24,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
@@ -69,10 +69,10 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserConnectionException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorDao;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -343,7 +343,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void removeAssetUserFromGroup(ActorAssetUserGroupMember assetUserGroupMember) throws CantCreateAssetUserGroupException {
+    public void removeAssetUserFromGroup(ActorAssetUserGroupMember assetUserGroupMember) throws CantCreateAssetUserGroupException, RecordsNotFoundException {
         try {
             this.assetUserActorDao.deleteAssetUserGroupMember(assetUserGroupMember);
         } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantCreateAssetUserGroupException e) {
@@ -625,7 +625,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
             removeAssetUserFromGroup(groupMember);
             System.out.println("El usuario :" + groupMember.getActorPublicKey() + "fue removido con exito");
-        } catch (CantCreateAssetUserGroupException e) {
+        } catch (CantCreateAssetUserGroupException | RecordsNotFoundException e) {
             e.printStackTrace();
         }
 

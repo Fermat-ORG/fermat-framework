@@ -121,7 +121,7 @@ public interface ActorAssetUserManager extends FermatManager {
      * @param assetUserGroupMember
      * @throws CantCreateAssetUserGroupException
      */
-    void removeAssetUserFromGroup (ActorAssetUserGroupMember assetUserGroupMember) throws CantCreateAssetUserGroupException;
+    void removeAssetUserFromGroup(ActorAssetUserGroupMember assetUserGroupMember) throws CantCreateAssetUserGroupException, RecordsNotFoundException;
 
     /**
      * The method <code>getAssetUserGroupsList</code> Returns a list of groups

@@ -13,6 +13,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantG
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.ActorAssetUserGroupAlreadyExistException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserGroupException;
@@ -27,15 +28,16 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * TODO explain here the main functionality of the plug-in.
- *
+ * <p/>
  * Created by Nerio on 13/10/15.
  * Modified by Luis Campo 27/11/2015
  */
@@ -73,7 +75,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
-        if(list != null && list.size() > 0) {
+        if (list != null && list.size() > 0) {
             assetUserActorRecords = new ArrayList<>();
 
             try {
@@ -107,30 +109,30 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
-    public void createGroup(ActorAssetUserGroup assetUserGroup) throws CantCreateAssetUserGroupException {
+    public ActorAssetUserGroup createAssetUserGroup(String groupName) throws CantCreateAssetUserGroupException, ActorAssetUserGroupAlreadyExistException {
         try {
-            actorAssetUserManager.createAssetUserGroup(assetUserGroup);
-        } catch (CantCreateAssetUserGroupException e) {
+            return actorAssetUserManager.createAssetUserGroup(groupName);
+        } catch (CantCreateAssetUserGroupException | ActorAssetUserGroupAlreadyExistException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
     }
 
     @Override
-    public void renameGroup(ActorAssetUserGroup assetUserGroup) throws CantUpdateAssetUserGroupException {
+    public void renameGroup(ActorAssetUserGroup assetUserGroup) throws CantUpdateAssetUserGroupException, RecordsNotFoundException {
         try {
             actorAssetUserManager.updateAssetUserGroup(assetUserGroup);
-        } catch (CantUpdateAssetUserGroupException e) {
+        } catch (CantUpdateAssetUserGroupException | RecordsNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
     }
 
     @Override
-    public void deleteGroup(String assetUserGroupId) throws CantDeleteAssetUserGroupException {
+    public void deleteGroup(String assetUserGroupId) throws CantDeleteAssetUserGroupException, RecordsNotFoundException {
         try {
             actorAssetUserManager.deleteAssetUserGroup(assetUserGroupId);
-        } catch (CantDeleteAssetUserGroupException e) {
+        } catch (CantDeleteAssetUserGroupException | RecordsNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
@@ -147,10 +149,10 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
-    public void removeActorAssetUserFromGroup(ActorAssetUserGroupMember assetUserGroupMember) throws CantCreateAssetUserGroupException {
+    public void removeActorAssetUserFromGroup(ActorAssetUserGroupMember assetUserGroupMember) throws CantCreateAssetUserGroupException, RecordsNotFoundException {
         try {
             actorAssetUserManager.removeAssetUserFromGroup(assetUserGroupMember);
-        } catch (CantCreateAssetUserGroupException e) {
+        } catch (CantCreateAssetUserGroupException | RecordsNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
