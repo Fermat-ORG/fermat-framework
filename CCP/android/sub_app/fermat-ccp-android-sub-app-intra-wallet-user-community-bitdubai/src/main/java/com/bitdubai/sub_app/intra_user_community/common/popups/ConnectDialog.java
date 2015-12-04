@@ -8,6 +8,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -32,8 +33,8 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
     /**
      *  UI components
      */
-    FermatTextView positiveBtn;
-    FermatTextView negativeBtn;
+    FermatButton positiveBtn;
+    FermatButton negativeBtn;
     FermatTextView description;
     FermatTextView username;
 
@@ -57,8 +58,8 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
         description = (FermatTextView) findViewById(R.id.description);
         username = (FermatTextView) findViewById(R.id.user_name);
 
-        positiveBtn = (FermatTextView) findViewById(R.id.positive_button);
-        negativeBtn = (FermatTextView) findViewById(R.id.negative_button);
+        positiveBtn = (FermatButton) findViewById(R.id.positive_button);
+        negativeBtn = (FermatButton) findViewById(R.id.negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
@@ -84,7 +85,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.btn_connect) {
+        if (i == R.id.positive_button) {
             try {
                 //image null
                 if(intraUserInformation!=null && identity!=null)
@@ -98,7 +99,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
                 Toast.makeText(getContext(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
             dismiss();
-        }else if( i == R.id.btn_close){
+        }else if( i == R.id.negative_button){
             dismiss();
         }
     }

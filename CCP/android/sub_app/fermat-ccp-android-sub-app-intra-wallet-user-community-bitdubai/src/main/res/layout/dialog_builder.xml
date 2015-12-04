@@ -74,7 +74,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:id="@+id/negative_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
                 android:layout_height="match_parent"
                 android:background="#e1e1e1" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:id="@+id/positive_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

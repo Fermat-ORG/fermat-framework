@@ -38,6 +38,8 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
     private Button disconect;
     private CryptoWalletIntraUserActor identity;
 
+    public static final String INTRA_USER_SELECTED = "intra_user";
+
     /**
      * Create a new instance of this fragment
      *
@@ -55,6 +57,8 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
         intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = subAppsSession.getErrorManager();
+        intraUserInformation = (IntraUserInformation)subAppsSession.getData(INTRA_USER_SELECTED);
+
     }
 
     @Nullable
@@ -78,6 +82,8 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
         } catch (Exception ex) {
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }*/
+
+
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
