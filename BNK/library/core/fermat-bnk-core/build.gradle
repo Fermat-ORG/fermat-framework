@@ -20,6 +20,7 @@ dependencies {
      */
 
     compile project(':fermat-api')
+    compile project(':fermat-bnk-plugin-wallet-module-bank-money-bitdubai')
     compile project(':fermat-bnk-plugin-bank-money-transaction-deposit-bitdubai')
     compile project(':fermat-bnk-plugin-bank-money-transaction-withdraw-bitdubai')
     compile project(':fermat-bnk-plugin-bank-money-transaction-hold-bitdubai')
