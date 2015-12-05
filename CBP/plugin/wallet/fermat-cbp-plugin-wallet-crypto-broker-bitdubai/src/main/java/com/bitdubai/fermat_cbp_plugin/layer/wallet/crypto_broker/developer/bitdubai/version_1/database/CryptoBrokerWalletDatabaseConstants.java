@@ -12,12 +12,44 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
  * @since Java JDK 1.7
  */
 public class CryptoBrokerWalletDatabaseConstants {
+    /**
+     * Crypto Wallet Spread Setting table definition.
+     */
+    static final String CRYPTO_BROKER_WALLET_SPREAD_TABLE_NAME = "spread";
+
+    static final String CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME = "spread_id";
+    static final String CRYPTO_BROKER_WALLET_SPREAD_VALUE_COLUMN_NAME = "spread";
+    static final String CRYPTO_BROKER_WALLET_SPREAD_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
+
+    /**
+     * Crypto Wallet Associated Setting table definition.
+     */
+    static final String CRYPTO_BROKER_WALLET_ASSOCIATED_TABLE_NAME = "associated_wallet";
+
+    static final String CRYPTO_BROKER_WALLET_ASSOCIATED_ID_COLUMN_NAME = "wallet_associated_id";
+    static final String CRYPTO_BROKER_WALLET_ASSOCIATED_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key";
+    static final String CRYPTO_BROKER_WALLET_ASSOCIATED_PLATFORM_COLUMN_NAME = "platform";
+    static final String CRYPTO_BROKER_WALLET_ASSOCIATED_MERCHANDISE_COLUMN_NAME = "merchandise";
+    static final String CRYPTO_BROKER_WALLET_ASSOCIATED_CURRENCY_TYPE_COLUMN_NAME = "currency_type";
+    static final String CRYPTO_BROKER_WALLET_ASSOCIATED_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
+    static final String CRYPTO_BROKER_WALLET_ASSOCIATED_BANK_ACCOUNT_COLUMN_NAME = "bank_account";
+
+    /**
+     * Crypto Wallet Providers Setting table definition.
+     */
+    static final String CRYPTO_BROKER_WALLET_PROVIDER_TABLE_NAME = "provider";
+
+    static final String CRYPTO_BROKER_WALLET_PROVIDER_ID_COLUMN_NAME = "provider_id";
+    static final String CRYPTO_BROKER_WALLET_PROVIDER_PLUGIN_COLUMN_NAME = "plugin";
+    static final String CRYPTO_BROKER_WALLET_PROVIDER_DESCRIPTION_COLUMN_NAME = "description";
+    static final String CRYPTO_BROKER_WALLET_PROVIDER_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
 
     /**
      * Crypto Broker Stock Balance database table definition.
      */
-    static final String CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME = "crypto_broker_stock_balance";
+    static final String CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME = "stock_balance";
 
+    static final String CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
     static final String CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME = "merchandise";
     static final String CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME = "currency_type";
     static final String CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME = "available_balance";
@@ -28,7 +60,7 @@ public class CryptoBrokerWalletDatabaseConstants {
     /**
      * Crypto Broker Stock Transactions database table definition.
      */
-    static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME = "crypto_broker_stock_transactions";
+    static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME = "stock_transaction";
 
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME = "balance_type";

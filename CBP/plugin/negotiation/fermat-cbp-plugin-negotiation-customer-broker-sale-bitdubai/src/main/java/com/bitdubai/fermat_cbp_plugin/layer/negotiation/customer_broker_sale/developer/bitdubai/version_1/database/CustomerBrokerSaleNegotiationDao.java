@@ -216,18 +216,17 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
         }
     }
 
-    public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByContractId(UUID negotiationId) throws CantGetListSaleNegotiationsException {
+    public CustomerBrokerSaleNegotiation getNegotiationsByNegotiationId(UUID negotiationId) throws CantGetListSaleNegotiationsException {
         try {
             DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
             SaleNegotiationTable.setUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
             SaleNegotiationTable.loadToMemory();
             List<DatabaseTableRecord> records = SaleNegotiationTable.getRecords();
             SaleNegotiationTable.clearAllFilters();
-            Collection<CustomerBrokerSaleNegotiation> resultados = new ArrayList<>();
             for (DatabaseTableRecord record : records) {
-                resultados.add(constructCustomerBrokerSaleFromRecord(record));
+                return constructCustomerBrokerSaleFromRecord(record);
             }
-            return resultados;
+            return null;
         } catch (InvalidParameterException e) {
             throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
         } catch (CantGetListClauseException e) {
