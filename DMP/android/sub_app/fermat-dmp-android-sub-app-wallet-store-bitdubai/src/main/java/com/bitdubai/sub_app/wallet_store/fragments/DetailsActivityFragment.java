@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.wallet_store.fragments;
 
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +14,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
@@ -119,7 +119,7 @@ public class DetailsActivityFragment extends FermatFragment {
     }
 
     private void setupDataInViews() {
-        final List<Bitmap> walletPreviewImgList = (List) subAppsSession.getData(PREVIEW_IMGS);
+        final List screenshotList = (List) subAppsSession.getData(PREVIEW_IMGS);
         final String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
         catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
 
@@ -170,11 +170,12 @@ public class DetailsActivityFragment extends FermatFragment {
             });
         }
 
-        if (walletPreviewImgList != null) {
+
+        if (screenshotList != null) {
             LinearLayoutManager layout = new LinearLayoutManager(getActivity(), HORIZONTAL, false);
             previewImagesRecyclerView.setLayoutManager(layout);
 
-            ImagesAdapter adapter = new ImagesAdapter(getActivity(), walletPreviewImgList);
+            FermatAdapter adapter = new ImagesAdapter(getActivity(), screenshotList);
             previewImagesRecyclerView.setAdapter(adapter);
 
         } else {
