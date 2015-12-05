@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes;
+package com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -8,7 +8,7 @@ import org.apache.commons.lang.Validate;
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorConnection</code>
+ * The interface <code>ActorConnection</code>
  * represents a Connection with an Actor of the Fermat System.
  *
  * An Actor Connection contains all the basic information of the connection.
@@ -23,19 +23,19 @@ public abstract class ActorConnection<T extends ActorIdentity> {
     private final Actors          actorType      ;
     private final String          alias          ;
     private final byte[]          image          ;
-    private final ConnectionState connectionState;
+    private       ConnectionState connectionState;
     private final long            creationTime   ;
     private final long            updateTime     ;
 
-    public ActorConnection(final UUID            connectionId   ,
-                           final T               linkedIdentity ,
-                           final String          publicKey      ,
-                           final Actors          actorType      ,
-                           final String          alias          ,
-                           final byte[]          image          ,
-                           final ConnectionState connectionState,
-                           final long            creationTime   ,
-                           final long            updateTime     ) {
+    protected ActorConnection(final UUID            connectionId   ,
+                              final T               linkedIdentity ,
+                              final String          publicKey      ,
+                              final Actors          actorType      ,
+                              final String          alias          ,
+                              final byte[]          image          ,
+                              final ConnectionState connectionState,
+                              final long            creationTime   ,
+                              final long            updateTime     ) {
 
         Validate.notNull(connectionId   , "The Connection ID can't be null."   );
         Validate.notNull(linkedIdentity , "The Linked Identity can't be null." );
@@ -53,6 +53,35 @@ public abstract class ActorConnection<T extends ActorIdentity> {
         this.alias           = alias          ;
         this.image           = image          ;
         this.connectionState = connectionState;
+        this.creationTime    = creationTime   ;
+
+        // if the update time is 0 we'll assign like last update time the creation time.
+        this.updateTime = updateTime != 0 ? updateTime : creationTime;
+    }
+
+    public ActorConnection(final UUID   connectionId   ,
+                           final T      linkedIdentity ,
+                           final String publicKey      ,
+                           final Actors actorType      ,
+                           final String alias          ,
+                           final byte[] image          ,
+                           final long   creationTime   ,
+                           final long   updateTime     ) {
+
+        Validate.notNull(connectionId   , "The Connection ID can't be null."   );
+        Validate.notNull(linkedIdentity , "The Linked Identity can't be null." );
+        Validate.notNull(publicKey      , "The Public Key can't be null."      );
+        Validate.notNull(actorType      , "The Actor Type can't be null."      );
+        Validate.notNull(alias          , "The Alias can't be null."           );
+        Validate.notNull(image          , "The Image can't be null."           );
+        Validate.notNull(creationTime   , "The Creation Time can't be null."   );
+
+        this.connectionId    = connectionId   ;
+        this.linkedIdentity  = linkedIdentity ;
+        this.publicKey       = publicKey      ;
+        this.actorType       = actorType      ;
+        this.alias           = alias          ;
+        this.image           = image          ;
         this.creationTime    = creationTime   ;
 
         // if the update time is 0 we'll assign like last update time the creation time.

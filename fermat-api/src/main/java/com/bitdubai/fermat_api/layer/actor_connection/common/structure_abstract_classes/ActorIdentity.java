@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes;
+package com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import org.apache.commons.lang.Validate;
 
 /**
- * The abstract class <code>com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorIdentity</code>
+ * The abstract class <code>ActorIdentity</code>
  * represents an actor identity.
  *
  * An Actor Identity contains all the information related with the identity which is connected with other actors.
