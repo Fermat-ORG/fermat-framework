@@ -2,6 +2,7 @@ package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bi
 
 
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import java.util.ArrayList;
@@ -128,6 +129,11 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
         return 0;
     }
 
+    @Override
+    public String getVariableName(String columnName) {
+        return null;
+    }
+
 
     /**
      * <p>Set String field record value
@@ -248,6 +254,21 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
         record.setValue(Double.toString(value));
         record.setChange(true);
         values.add(record);
+    }
+
+    @Override
+    public void setVariableValue(String columnName, String variableName) {
+
+    }
+
+    @Override
+    public void setSelectField(String columnName) {
+
+    }
+
+    @Override
+    public void setFermatEnum(String columnName, FermatEnum state) {
+
     }
 
     @Override
