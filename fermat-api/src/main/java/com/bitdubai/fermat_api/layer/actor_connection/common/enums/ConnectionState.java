@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 /**
  * The enum <code>com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState</code>
- * enumerates the states of connection of a common Fermat Intra Actor.
+ * enumerates the states of connection of a common Fermat Actor.
  */
 public enum ConnectionState implements FermatEnum {
 
