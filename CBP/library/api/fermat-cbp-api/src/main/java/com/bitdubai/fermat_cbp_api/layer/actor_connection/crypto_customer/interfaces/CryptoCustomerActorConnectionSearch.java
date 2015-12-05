@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces;
 
-import com.bitdubai.fermat_api.layer.actor_connection.common.abstract_classes.ActorConnectionSearch;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorIdentity;
 

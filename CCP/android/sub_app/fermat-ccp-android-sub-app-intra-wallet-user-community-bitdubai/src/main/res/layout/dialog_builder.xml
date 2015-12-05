@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#0072bb"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="16dp">
@@ -19,6 +20,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"
+            android:text="Conection"
             android:textColor="#ffffff"
             android:textSize="16sp"/>
 
@@ -28,6 +30,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#ffffff"
         android:orientation="vertical">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -37,11 +40,11 @@
             android:gravity="center"
             android:paddingBottom="8dp"
             android:paddingEnd="8dp"
-            android:text="Description of dialog"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingStart="8dp"
             android:paddingTop="16dp"
+            android:text="Description of dialog"
             android:textColor="#2d3e50"
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
@@ -53,10 +56,10 @@
             android:gravity="center"
             android:paddingBottom="16dp"
             android:paddingEnd="8dp"
-            android:text="User name"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingStart="8dp"
+            android:text="User name"
             android:textColor="#0072bb"
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
@@ -72,8 +75,8 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/positive_button"
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/negative_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -81,8 +84,8 @@
                 android:gravity="center"
                 android:padding="8dp"
                 android:singleLine="true"
-                android:textColor="#2d3e50"
                 android:text="No"
+                android:textColor="#2d3e50"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
@@ -91,8 +94,8 @@
                 android:layout_height="match_parent"
                 android:background="#e1e1e1" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/negative_button"
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/positive_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
