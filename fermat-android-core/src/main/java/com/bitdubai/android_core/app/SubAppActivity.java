@@ -37,7 +37,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat.R;
 
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -445,8 +444,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     public Object[] connectBetweenAppsData() {
-        Objects[] objectses = (Objects[]) getIntent().getSerializableExtra(ConnectionConstants.SEARCH_NAME);
-        return objectses;
+        Object[] objects = (Object[]) getIntent().getSerializableExtra(ConnectionConstants.SEARCH_NAME);
+        return objects;
     }
 
 

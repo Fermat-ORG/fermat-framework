@@ -115,7 +115,7 @@ public class MainFragment extends FermatWalletFragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.main_fragment, container, false);
+        rootView = inflater.inflate(R.layout.dap_wallet_asset_user_main_fragment, container, false);
         assetsView = (RecyclerView) rootView.findViewById(R.id.assets);
         assetsView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -127,7 +127,7 @@ public class MainFragment extends FermatWalletFragment
                 setAsset(project);
                 PopupMenu popupMenu = new PopupMenu(getActivity(), menuView);
                 MenuInflater inflater = popupMenu.getMenuInflater();
-                inflater.inflate(R.menu.main, popupMenu.getMenu());
+                inflater.inflate(R.menu.dap_wallet_asset_user_main, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(MainFragment.this);
                 popupMenu.show();
             }
@@ -146,12 +146,6 @@ public class MainFragment extends FermatWalletFragment
             FermatWorker task = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-//                    manager.distributionAssets(
-//                            asset.getAssetPublicKey(),
-//                            asset.getWalletPublicKey(),
-//                            asset.getActorAssetUser()
-//                    );
-                    //TODO implement work to do
 //                    manager.appropriateAsset();
                     return true;
                 }
@@ -162,7 +156,39 @@ public class MainFragment extends FermatWalletFragment
                 public void onPostExecute(Object... result) {
                     dialog.dismiss();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), "Everything ok...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Everything ok (appropriate)...", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onErrorOccurred(Exception ex) {
+                    dialog.dismiss();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), "Fermat Has detected an exception",
+                                Toast.LENGTH_SHORT).show();
+                }
+            });
+            task.execute();
+            return true;
+        } else if (menuItem.getItemId() == R.id.action_redeem) {
+            final ProgressDialog dialog = new ProgressDialog(getActivity());
+            dialog.setMessage("Please wait...");
+            dialog.setCancelable(false);
+            dialog.show();
+            FermatWorker task = new FermatWorker() {
+                @Override
+                protected Object doInBackground() throws Exception {
+//                    manager.redeemAsset();
+                    return true;
+                }
+            };
+            task.setContext(getActivity());
+            task.setCallBack(new FermatWorkerCallBack() {
+                @Override
+                public void onPostExecute(Object... result) {
+                    dialog.dismiss();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), "Everything ok (redeem)...", Toast.LENGTH_SHORT).show();
                     }
                 }
 
