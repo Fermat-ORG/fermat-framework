@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
@@ -146,8 +145,6 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
             return identityAssetRedeemPoint;
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW ASSET USER IDENTITY", e, "Error getting current logged in device user", "");
-        } catch (CantCreateNewDeveloperException e) {
-            throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW ASSET USER IDENTITY", e, "Error save user on database", "");
         } catch (Exception e) {
             throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW ASSET USER IDENTITY", FermatException.wrapException(e), "", "");
         }

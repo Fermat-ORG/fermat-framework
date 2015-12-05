@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -33,8 +35,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraWalletUserActorDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateConnectionException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorRecord;
 
 import java.util.ArrayList;
