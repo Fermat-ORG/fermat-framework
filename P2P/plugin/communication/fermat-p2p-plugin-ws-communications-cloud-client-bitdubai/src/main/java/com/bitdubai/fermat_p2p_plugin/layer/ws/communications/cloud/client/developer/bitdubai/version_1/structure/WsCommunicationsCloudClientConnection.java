@@ -36,6 +36,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FailureRequestedListNoAvailblePacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ServerHandshakeRespondPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
@@ -73,7 +74,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     /**
      * Represent the WEB_SERVICE_URL
      */
-    private static String WEB_SERVICE_URL = WsCommunicationsCloudClientPluginRoot.HTTP_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.WEB_SERVICE_PORT + "/fermat/cloud-server/v1/components/registered/";
+    private static String WEB_SERVICE_URL = ServerConf.HTTP_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.WEB_SERVICE_PORT + "/fermat/cloud-server/v1/components/registered/";
 
     /**
      * Represent the wsCommunicationsCloudClientChannel

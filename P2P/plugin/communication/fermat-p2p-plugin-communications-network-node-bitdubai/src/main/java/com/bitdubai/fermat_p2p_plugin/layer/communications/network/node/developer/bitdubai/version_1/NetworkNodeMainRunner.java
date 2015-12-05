@@ -42,9 +42,10 @@ public class NetworkNodeMainRunner {
             System.out.println("***********************************************************************");
             System.out.println("* FERMAT - Plugin Network Node - Version 1.0 (2015)                   *");
             System.out.println("* www.fermat.org                                                      *");
-            System.out.println("* www.bitDubai.com - 2015                                             *");
-            System.out.println("* NETWORK NODE STARTING                                               *");
+            System.out.println("* www.bitDubai.com                                                    *");
             System.out.println("***********************************************************************");
+            System.out.println("");
+            System.out.println("- Starting process ...");
 
             /*
              * Create the plugin root

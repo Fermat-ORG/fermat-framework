@@ -23,9 +23,9 @@ public class NewReceiveMessagesNotificationEventHandler extends AbstractCommunic
     @Override
     public void processEvent(NewNetworkServiceMessageReceivedNotificationEvent event) {
 
-        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + event.toString());
+        //System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + event.toString());
 
-        System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE A INTRA USER NETWORK SERVICE!!!!");
+        //System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE A INTRA USER NETWORK SERVICE!!!!");
 
         ((IntraActorNetworkServicePluginRoot)networkService).handleNewMessages((FermatMessage) event.getData());
     }
