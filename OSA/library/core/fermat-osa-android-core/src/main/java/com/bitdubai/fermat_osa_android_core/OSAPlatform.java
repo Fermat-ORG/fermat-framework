@@ -9,7 +9,7 @@ import com.bitdubai.fermat_osa_android_core.layer.system.SystemLayer;
 
 /**
  * The class <code>com.bitdubai.fermat_osa_android_core.OSAPlatform</code>
- * haves all the necessary business logic to start the OSA platform.
+ * contains all the necessary business logic to start the OSA platform.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 26/10/2015.
  */
