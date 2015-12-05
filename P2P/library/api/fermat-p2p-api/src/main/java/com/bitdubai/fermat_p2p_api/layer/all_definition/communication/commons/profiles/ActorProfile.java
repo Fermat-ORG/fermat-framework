@@ -4,12 +4,12 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.profiles;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
 import com.google.gson.Gson;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.profiles.ActorProfile</code>
+ * The Class <code>ActorProfile</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 02/12/15.
  *
@@ -18,7 +18,7 @@ import com.google.gson.Gson;
  */
 public class ActorProfile extends Profile {
 
-    /**
+    /**y
      * Represent the actorType
      */
     private String actorType;

@@ -55,7 +55,7 @@ public class FailureComponentConnectionRequestPacketProcessor extends FermatPack
          */
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
-        System.out.println("FailureComponentConnectionRequestPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("FailureComponentConnectionRequestPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -63,7 +63,7 @@ public class FailureComponentConnectionRequestPacketProcessor extends FermatPack
         JsonObject packetContent = jsonParser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
         PlatformComponentProfile networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString());
         PlatformComponentProfile remoteParticipant       = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString());
-        System.out.println("FailureComponentConnectionRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant.toJson());
+        //System.out.println("FailureComponentConnectionRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant.toJson());
 
         /*
          * Create a new event whit the networkServiceType and remoteIdentity
@@ -80,7 +80,7 @@ public class FailureComponentConnectionRequestPacketProcessor extends FermatPack
         /*
          * Raise the event
          */
-        System.out.println("FailureComponentConnectionRequestPacketProcessor - Raised a event = P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
+        //System.out.println("FailureComponentConnectionRequestPacketProcessor - Raised a event = P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }
