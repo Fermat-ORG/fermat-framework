@@ -122,7 +122,10 @@ public abstract class FermatFragment extends AbstractFermatFragment implements F
      * Change activity
      */
     protected final void changeActivity(String activityCode,String appPublicKey, Object... objectses) {
-        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, appPublicKey,objectses);
+        onDestroy();
+        System.gc();
+        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, appPublicKey, objectses);
+
     }
     /**
      * Change activity
