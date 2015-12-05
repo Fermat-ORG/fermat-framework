@@ -53,7 +53,7 @@ public class CustomerBrokerSaleClause implements Clause{
     }
 
     @Override
-    public short getIndexOrdery() {
+    public short getIndexOrder() {
         return this.indexOrder;
     }
 

@@ -99,7 +99,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         configureActivityHeader(layoutInflater);
         configureToolbar();
 
-
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
 
