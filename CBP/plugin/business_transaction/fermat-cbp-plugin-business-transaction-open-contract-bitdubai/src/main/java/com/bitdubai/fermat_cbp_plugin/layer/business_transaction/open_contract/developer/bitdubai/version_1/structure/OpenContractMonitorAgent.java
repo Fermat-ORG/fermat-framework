@@ -34,7 +34,9 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.inte
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantConfirmNotificationReception;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendBusinessTransactionHashException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.OpenContractPluginRoot;
@@ -191,11 +193,8 @@ public class OpenContractMonitorAgent implements
 
                     logManager.log(OpenContractPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
-                } catch (CannotSendContractHashException | CantUpdateRecordException e) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.OPEN_CONTRACT,
-                            UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                            e);
+                } catch (CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
 
             }
@@ -237,7 +236,8 @@ public class OpenContractMonitorAgent implements
 
         private void doTheMainTask() throws
                 CannotSendContractHashException,
-                CantUpdateRecordException {
+                CantUpdateRecordException,
+                CantSendContractNewStatusNotificationException {
 
             try{
                 openContractBusinessTransactionDao=new OpenContractBusinessTransactionDao(
@@ -351,6 +351,13 @@ public class OpenContractMonitorAgent implements
                         "Unexpected result in database");
             }  catch (CantSendBusinessTransactionHashException e) {
                 throw new CannotSendContractHashException(
+                        e,
+                        "Sending contract hash",
+                        "Error in Transaction Transmission Network Service");
+            }
+            catch (CantSendContractNewStatusNotificationException e) {
+                throw new CantSendContractNewStatusNotificationException(
+                        CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
                         e,
                         "Sending contract hash",
                         "Error in Transaction Transmission Network Service");
