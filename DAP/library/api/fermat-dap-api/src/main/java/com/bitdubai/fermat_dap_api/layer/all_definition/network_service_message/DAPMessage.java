@@ -41,6 +41,16 @@ public class DAPMessage implements Serializable {
         return XMLParser.parseObject(this);
     }
 
+    @Override
+    public String toString() {
+        return "DAPMessage{" +
+                "messageType=" + messageType +
+                ", messageContent=" + messageContent +
+                ", actorSender=" + actorSender + " - " + actorSender.getClass().getSimpleName() +
+                ", actorReceiver=" + actorReceiver + " - " + actorReceiver.getClass().getSimpleName() +
+                '}';
+    }
+
     //PRIVATE METHODS
 
     //GETTER AND SETTERS
