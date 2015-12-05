@@ -118,6 +118,7 @@ public class FermatWalletFragment<M extends ModuleManager> extends Fragment impl
      * Change activity
      */
     protected final void changeActivity(Activities activity, String appPublicKey) {
+        destroy();
         getFermatScreenSwapper().changeActivity(activity.getCode(), appPublicKey);
     }
 
@@ -125,6 +126,7 @@ public class FermatWalletFragment<M extends ModuleManager> extends Fragment impl
      * Change activity
      */
     protected final void changeActivity(Activities activity) {
+        destroy();
         getFermatScreenSwapper().changeActivity(activity.getCode(), walletSession.getAppPublicKey());
     }
 
@@ -176,5 +178,11 @@ public class FermatWalletFragment<M extends ModuleManager> extends Fragment impl
     }
 
 
+    private void destroy(){
+        onDestroy();
+        System.gc();
+    }
+
 }
+
 

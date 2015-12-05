@@ -132,6 +132,7 @@ public abstract class FermatFragment extends AbstractFermatFragment implements F
      */
     @Deprecated
     protected final void changeActivity(String activityCode, Object... objectses) {
+        destroy();
         ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, null);
     }
 
@@ -176,6 +177,10 @@ public abstract class FermatFragment extends AbstractFermatFragment implements F
     }
 
 
+    private void destroy(){
+        onDestroy();
+        System.gc();
+    }
 
 }
 
