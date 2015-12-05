@@ -41,8 +41,8 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("ComponentConnectionRespondPacketProcessor - Starting processingPackage");
+        //System.out.println(" --------------------------------------------------------------------- ");
+        //System.out.println("ComponentConnectionRespondPacketProcessor - Starting processingPackage");
 
         /*
          * Get the message content and decrypt
@@ -50,7 +50,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
 
-        System.out.println("ComponentConnectionRespondPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("ComponentConnectionRespondPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -80,7 +80,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             String port = (String) stringTokenizer.nextElement();
             vpnServerUri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP  + ":" + port);
 
-            System.out.println("ComponentConnectionRespondPacketProcessor - reconstruct vpnServerUri = "+vpnServerUri);
+            //System.out.println("ComponentConnectionRespondPacketProcessor - reconstruct vpnServerUri = "+vpnServerUri);
 
             /*
              * Get the  wsCommunicationVPNClientManagerAgent
