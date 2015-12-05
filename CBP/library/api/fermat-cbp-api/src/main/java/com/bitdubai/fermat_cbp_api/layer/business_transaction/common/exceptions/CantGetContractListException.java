@@ -1,15 +1,15 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions;
 
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CBPException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 01/12/15.
  */
-public class CannotSendContractHashException extends CBPException{
+public class CantGetContractListException extends CBPException {
     /**
      * Represent the default message
      */
-    public static final String DEFAULT_MESSAGE = "CANNOT SEND CONTRACT HASH";
+    public static final String DEFAULT_MESSAGE = "CANNOT GET A LIST FROM DATABASE";
 
     /**
      * Constructor with parameters
@@ -19,7 +19,7 @@ public class CannotSendContractHashException extends CBPException{
      * @param context
      * @param possibleReason
      */
-    public CannotSendContractHashException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantGetContractListException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -30,7 +30,7 @@ public class CannotSendContractHashException extends CBPException{
      * @param context
      * @param possibleReason
      */
-    public CannotSendContractHashException(Exception cause, String context, String possibleReason) {
+    public CantGetContractListException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
@@ -40,7 +40,7 @@ public class CannotSendContractHashException extends CBPException{
      * @param message
      * @param cause
      */
-    public CannotSendContractHashException(final String message, final Exception cause) {
+    public CantGetContractListException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
@@ -49,7 +49,7 @@ public class CannotSendContractHashException extends CBPException{
      *
      * @param message
      */
-    public CannotSendContractHashException(final String message) {
+    public CantGetContractListException(final String message) {
         this(message, null);
     }
 
@@ -58,7 +58,7 @@ public class CannotSendContractHashException extends CBPException{
      *
      * @param exception
      */
-    public CannotSendContractHashException(final Exception exception) {
+    public CantGetContractListException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -66,7 +66,7 @@ public class CannotSendContractHashException extends CBPException{
     /**
      * Constructor
      */
-    public CannotSendContractHashException() {
+    public CantGetContractListException() {
         this(DEFAULT_MESSAGE);
     }
 }
