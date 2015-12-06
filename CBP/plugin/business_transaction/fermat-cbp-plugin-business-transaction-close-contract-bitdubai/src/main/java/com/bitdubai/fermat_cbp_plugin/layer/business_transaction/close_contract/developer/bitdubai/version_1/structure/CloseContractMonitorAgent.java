@@ -13,11 +13,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendBusinessTransactionHashException;
@@ -32,6 +34,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -154,7 +158,7 @@ public class CloseContractMonitorAgent implements
 
             threadWorking=true;
             logManager.log(CloseContractPluginRoot.getLogLevelByClass(this.getClass().getName()),
-                    "Open Contract Monitor Agent: running...", null, null);
+                    "Close Contract Monitor Agent: running...", null, null);
             while(threadWorking){
                 /**
                  * Increase the iteration counter
@@ -230,16 +234,31 @@ public class CloseContractMonitorAgent implements
                 /**
                  * Check if exist in database new close contracts to send
                  */
-
+                List<String> contractToCloseList=closeContractBusinessTransactionDao.getNewContractToCloseList();
+                ContractType contractType;
+                for(String hashToSubmit: contractToCloseList){
+                    closeContractBusinessTransactionDao.updateContractTransactionStatus(
+                            hashToSubmit,
+                            ContractTransactionStatus.CHECKING_CLOSING_CONTRACT);
+                    //TODO: submit new status with transaction transmission
+                    contractType=closeContractBusinessTransactionDao.getContractType(hashToSubmit);
+                    switch(contractType){
+                        case PURCHASE:
+                            //TODO: send to broker
+                            break;
+                        case SALE:
+                            //TODO: send to customer
+                            break;
+                    }
+                }
 
                 /**
                  * Check if pending events
                  */
-            //TODO: to implement
-                //List<String> pendingEventsIdList=openContractBusinessTransactionDao.getPendingEvents();
-                //for(String eventId : pendingEventsIdList){
+                List<String> pendingEventsIdList=closeContractBusinessTransactionDao.getPendingEvents();
+                for(String eventId : pendingEventsIdList){
                     checkPendingEvent("eventId");
-                //}
+                }
 
 
             } /*catch (CantGetContractListException e) {
@@ -257,7 +276,9 @@ public class CloseContractMonitorAgent implements
                         e,
                         "Sending contract hash",
                         "Error in Transaction Transmission Network Service");
-            }*/
+            }*/ catch (CantGetContractListException e) {
+                e.printStackTrace();
+            }
 
         }
 
