@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
@@ -85,9 +86,17 @@ public class CloseContractTransactionManager implements CloseContractManager {
             CustomerBrokerContractPurchase customerBrokerContractPurchase=
                     this.customerBrokerContractPurchaseManager.
                             getCustomerBrokerContractPurchaseForContractId(contractHash);
-            this.closeContractBusinessTransactionDao.persistContractRecord(
-                    customerBrokerContractPurchase,
-                    ContractType.PURCHASE);
+            ContractStatus contractStatus=customerBrokerContractPurchase.getStatus();
+            if(contractStatus.getCode().equals(ContractStatus.MERCHANDISE_SUBMIT)){
+                this.closeContractBusinessTransactionDao.persistContractRecord(
+                        customerBrokerContractPurchase,
+                        ContractType.PURCHASE);
+            }else{
+                throw new CantCloseContractException("The contract with the hash\n"+
+                        contractHash+"\n cannot be closed, because the ContractStatus is "+
+                        contractStatus);
+            }
+
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
             e.printStackTrace();
         } catch (CantInsertRecordException e) {
