@@ -248,9 +248,6 @@ public abstract class FermatActivity extends AppCompatActivity
         }
 
 
-        FermatGestureDetector fermatGestureDetector = new FermatGestureDetector(this);
-
-
         try {
 
             activePlatforms = new ArrayList();
@@ -1671,95 +1668,6 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Get IdentityAssetIssuerManager
-     */
-    public IdentityAssetIssuerManager getIdentityAssetIssuerManager() {
-/// TODO POINT TO THE REAL SUB-APP-MODULE PLEASE
-        try {
-            return (IdentityAssetIssuerManager) ((ApplicationSession) getApplication()).getFermatSystem().startAndGetPluginVersion(
-                    new PluginVersionReference(
-                            Platforms.DIGITAL_ASSET_PLATFORM,
-                            Layers.IDENTITY,
-                            Plugins.ASSET_ISSUER,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (VersionNotFoundException |
-                CantStartPluginException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    /**
-     * Get IdentityAssetUserManager
-     */
-    public IdentityAssetUserManager getIdentityAssetUserManager() {
-/// TODO POINT TO THE REAL SUB-APP-MODULE PLEASE
-        try {
-            return (IdentityAssetUserManager) ((ApplicationSession) getApplication()).getFermatSystem().startAndGetPluginVersion(
-                    new PluginVersionReference(
-                            Platforms.DIGITAL_ASSET_PLATFORM,
-                            Layers.IDENTITY,
-                            Plugins.ASSET_USER,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (VersionNotFoundException |
-                CantStartPluginException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    /**
-     * Get RedeemPointIdentityManager
-     */
-    public RedeemPointIdentityManager getIdentityRedeemPointManager() {
-    /// TODO POINT TO THE REAL SUB-APP-MODULE PLEASE
-        try {
-            return (RedeemPointIdentityManager) ((ApplicationSession) getApplication()).getFermatSystem().startAndGetPluginVersion(
-                    new PluginVersionReference(
-                            Platforms.DIGITAL_ASSET_PLATFORM,
-                            Layers.IDENTITY,
-                            Plugins.REDEEM_POINT,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (VersionNotFoundException |
-                CantStartPluginException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
 
     /**
      * Assest Issuer Wallet Module
