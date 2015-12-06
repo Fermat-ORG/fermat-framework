@@ -44,7 +44,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPlatformExceptionSeverity;
@@ -490,13 +490,13 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 try {
 
                     //Ultima pantalla de la wallet que quiere conectarse con la app
-                    installedSubApp.getActivity(Activities.CWP_INTRA_USER_ACTIVITY).changeBackActivity(
-                            walletNavigationStructure.getPublicKey(),
-                            lastWalletActivityWhoAskForConnetion.getActivityType());
+//                    installedSubApp.getActivity(Activities.CWP_INTRA_USER_ACTIVITY).changeBackActivity(
+//                            walletNavigationStructure.getPublicKey(),
+//                            lastWalletActivityWhoAskForConnetion.getActivityType());
 
                     connectWithSubApp(engine,objectses,installedSubApp);
 
-                } catch (InvalidParameterException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
