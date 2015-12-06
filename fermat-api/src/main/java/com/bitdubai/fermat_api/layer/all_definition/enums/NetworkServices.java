@@ -21,6 +21,7 @@ public enum NetworkServices implements FermatEnum {
     MONEY                    ("MONEY"),
     TEMPLATE                 ("TEMPLATE"),
     TRANSACTION_TRANSMISSION ("TRANSTX"),
+    NEGOTIATION_TRANSMISSION ("NEGOTRS"),
     UNDEFINED                ("UNDEF"),
     WALLET_COMMUNITY         ("WALLCOMM"),
     WALLET_RESOURCES         ("WALLRES"),
@@ -44,6 +45,7 @@ public enum NetworkServices implements FermatEnum {
             case "TEMPLATE": return NetworkServices.TEMPLATE;
             case "UNDEF":    return NetworkServices.UNDEFINED;
             case "TRANSTX":  return NetworkServices.TRANSACTION_TRANSMISSION;
+            case "NEGOTRS":  return NetworkServices.NEGOTIATION_TRANSMISSION;
             case "WALLCOMM": return NetworkServices.WALLET_COMMUNITY;
             case "WALLRES":  return NetworkServices.WALLET_RESOURCES;
             case "WALLSTO":  return NetworkServices.WALLET_STORE;

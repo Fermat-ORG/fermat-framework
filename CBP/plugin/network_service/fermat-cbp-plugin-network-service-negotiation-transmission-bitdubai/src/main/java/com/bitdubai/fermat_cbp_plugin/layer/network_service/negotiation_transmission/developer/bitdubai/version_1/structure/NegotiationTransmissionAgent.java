@@ -12,7 +12,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionS
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionUpdateEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
@@ -82,7 +81,7 @@ public class NegotiationTransmissionAgent {
     private Thread toReceive;
 
     //Cache de metadata con conexions leidas anteriormente. ActorPublicKey, metadata de respuesta
-    Map<String, TransactionTransmissionStates> cacheResponseMetadataFromRemotes;
+    Map<String, NegotiationTransmissionState> cacheResponseMetadataFromRemotes;
 
     //Map contains publicKey from componentProfile to connect and the number of connections intents.
     Map<String,Integer> connectionsCounters;
@@ -126,7 +125,7 @@ public class NegotiationTransmissionAgent {
         this.eventManager = eventManager;
 
 
-        cacheResponseMetadataFromRemotes = new HashMap<String, TransactionTransmissionStates>();
+        cacheResponseMetadataFromRemotes = new HashMap<String, NegotiationTransmissionState>();
         waitingPlatformComponentProfile = new HashMap<>();
 
 
@@ -368,7 +367,7 @@ public class NegotiationTransmissionAgent {
     private void launchNotification(){
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_UPDATE);
         IncomingNegotiationTransmissionUpdateEvent incomingNegotiationTransmissionUpdateEvent = (IncomingNegotiationTransmissionUpdateEvent) fermatEvent;
-        incomingNegotiationTransmissionUpdateEvent.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+        incomingNegotiationTransmissionUpdateEvent.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
         eventManager.raiseEvent(incomingNegotiationTransmissionUpdateEvent);
     }
 

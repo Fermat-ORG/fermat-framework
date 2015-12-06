@@ -91,6 +91,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 /**
@@ -119,6 +120,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     /*Represent the dataBase*/
     private Database dataBase;
+
+    /*Connections arrived*/
+    private AtomicBoolean connectionArrived;
 
     /*Represent DAO Database Transmission*/
     private NegotiationTransmissionNetworkServiceDatabaseDao databaseDao;
@@ -158,6 +162,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 null,
                 EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION
         );
+        this.listenersAdded=new ArrayList<>();
     }
 
     /*IMPLEMENTATION SERVICE*/
@@ -190,9 +195,12 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
             //Initialize DAO
             databaseDao = new NegotiationTransmissionNetworkServiceDatabaseDao(pluginDatabaseSystem,pluginId);
+            databaseConnectionsDao = new NegotiationTransmissionNetworkServiceConnectionsDatabaseDao(pluginDatabaseSystem, pluginId);
 
             //List Network Service Register
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
+
+            connectionArrived = new AtomicBoolean(false);
 
             //Initilize service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -213,7 +221,6 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         }
         System.out.println("********* Negotiation Transmission: Successful start. ");
-
     }
 
     @Override
@@ -610,7 +617,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                                 "-----------------------\n STATE: " + NegotiationTransmissionState.CONFIRM_NEGOTIATION);
                         fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION);
                         IncomingNegotiationTransmissionConfirmNegotiationEvent incomingNegotiationTransmissionConfirmNegotiationEvent = (IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent;
-                        incomingNegotiationTransmissionConfirmNegotiationEvent.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+                        incomingNegotiationTransmissionConfirmNegotiationEvent.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                         incomingNegotiationTransmissionConfirmNegotiationEvent.setDestinationPlatformComponentType(negotiationTransmissionReceived.getActorReceiveType());
                         eventManager.raiseEvent(incomingNegotiationTransmissionConfirmNegotiationEvent);
                         break;
@@ -621,7 +628,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                                 "-----------------------\n STATE: " + NegotiationTransmissionState.CONFIRM_RESPONSE);
                         fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
                         IncomingNegotiationTransmissionConfirmResponseEvent incomingNegotiationTransmissionConfirmResponseEvent = (IncomingNegotiationTransmissionConfirmResponseEvent) fermatEvent;
-                        incomingNegotiationTransmissionConfirmResponseEvent.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+                        incomingNegotiationTransmissionConfirmResponseEvent.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                         incomingNegotiationTransmissionConfirmResponseEvent.setDestinationPlatformComponentType(negotiationTransmissionReceived.getActorReceiveType());
                         eventManager.raiseEvent(incomingNegotiationTransmissionConfirmResponseEvent);
                         break;
@@ -629,9 +636,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
             }
         } catch (CantRegisterSendNegotiationTransmissionException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
     }
     /*END PUBLIC*/
