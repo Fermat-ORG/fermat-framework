@@ -209,7 +209,7 @@ public class TransactionTransmissionAgent {
     /**
      * Start the internal threads to make the job
      */
-    public void start() throws CantStartPluginException{
+    public void start(){
 
         //Set to running
         this.running  = Boolean.TRUE;
@@ -225,7 +225,8 @@ public class TransactionTransmissionAgent {
         System.out.println("CryptoTransmissionAgent - started ");
             }
         } catch (Exception exception){
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            FermatException ex = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
         }
 
     }
@@ -281,7 +282,7 @@ public class TransactionTransmissionAgent {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
         } catch (Exception e) {
             e.printStackTrace();
-            FermatException ex = new FermatException(CantEstablishConnectionException.DEFAULT_MESSAGE,FermatException.wrapException(e), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
+            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE,FermatException.wrapException(e), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
 
         }
@@ -495,7 +496,7 @@ public class TransactionTransmissionAgent {
 
     }
 
-    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) throws ObjectNotSetException{
+    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile){
         try{
             this.platformComponentProfile = platformComponentProfile;
         }catch (Exception ex){
