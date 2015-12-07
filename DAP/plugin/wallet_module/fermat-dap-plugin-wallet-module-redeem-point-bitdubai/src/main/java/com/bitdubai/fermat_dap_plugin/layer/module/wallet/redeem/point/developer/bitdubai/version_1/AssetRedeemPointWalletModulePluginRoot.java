@@ -61,14 +61,8 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     }
 
     @Override
-    public List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalancesAvailable(String publicKey) throws CantLoadWalletException {
+    public List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalances(String publicKey) throws CantLoadWalletException {
         // TODO MAKE USE OF THE ERROR MANAGER
-        return assetRedeemPointWalletModuleManager.getAssetRedeemPointWalletBalancesAvailable(publicKey);
-    }
-
-    @Override
-    public List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalancesBook(String publicKey) throws CantLoadWalletException {
-        // TODO MAKE USE OF THE ERROR MANAGER
-        return assetRedeemPointWalletModuleManager.getAssetRedeemPointWalletBalancesBook(publicKey);
+        return assetRedeemPointWalletModuleManager.getAssetRedeemPointWalletBalances(publicKey);
     }
 }

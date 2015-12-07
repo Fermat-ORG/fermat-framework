@@ -167,7 +167,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet{
     }
 
     @Override
-    public AssetRedeemPointWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException {
+    public AssetRedeemPointWalletBalance getBalance() throws CantGetTransactionsException {
         try {
             return new AssetRedeemPointWalletBalanceImpl(database, pluginId, pluginFileSystem);
         } catch (Exception exception) {

@@ -113,41 +113,19 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         }
     }
 
-
-    private List<AssetRedeemPointWalletList> getCurrentBookBalanceByAssets() throws CantGetBalanceRecordException{
-        return getCurrentBalanceByAsset(BalanceType.BOOK);
-    }
-
-    private List<AssetRedeemPointWalletList> getCurrentBalanceByAsset(final BalanceType balanceType) throws CantGetBalanceRecordException {
+    private List<AssetRedeemPointWalletList> getCurrentBalanceByAsset() throws CantGetBalanceRecordException {
         List<AssetRedeemPointWalletList> redeemPointWalletBalances= new ArrayList<>();
-        if (balanceType == BalanceType.AVAILABLE){
-            for (DatabaseTableRecord record : getBalancesRecord())
-            {
-                AssetRedeemPointWalletList redeemPointIssuerWalletBalance = new com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.AssetRedeemPointWalletBalance();
-                redeemPointIssuerWalletBalance.setName(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_NAME_COLUMN_NAME));
-                redeemPointIssuerWalletBalance.setDescription(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
-                redeemPointIssuerWalletBalance.setAssetPublicKey(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
-                redeemPointIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
-                redeemPointIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
-                redeemPointIssuerWalletBalance.setQuantityBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
-                redeemPointIssuerWalletBalance.setQuantityAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME));
-                redeemPointWalletBalances.add(redeemPointIssuerWalletBalance);
-            }
-        }
-        else{
-            for (DatabaseTableRecord record : getBalancesRecord())
-            {
-                AssetRedeemPointWalletList redeemPointIssuerWalletBalance = new com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.AssetRedeemPointWalletBalance();
-                redeemPointIssuerWalletBalance.setName(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_NAME_COLUMN_NAME));
-                redeemPointIssuerWalletBalance.setDescription(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
-                redeemPointIssuerWalletBalance.setAssetPublicKey(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
-                redeemPointIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
-                redeemPointIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
-                redeemPointIssuerWalletBalance.setQuantityBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
-                redeemPointIssuerWalletBalance.setQuantityAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME));
-                redeemPointWalletBalances.add(redeemPointIssuerWalletBalance);
-            }
-
+        for (DatabaseTableRecord record : getBalancesRecord())
+        {
+            AssetRedeemPointWalletList redeemPointIssuerWalletBalance = new com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.AssetRedeemPointWalletBalance();
+            redeemPointIssuerWalletBalance.setName(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_NAME_COLUMN_NAME));
+            redeemPointIssuerWalletBalance.setDescription(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
+            redeemPointIssuerWalletBalance.setAssetPublicKey(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
+            redeemPointIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
+            redeemPointIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
+            redeemPointIssuerWalletBalance.setQuantityBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
+            redeemPointIssuerWalletBalance.setQuantityAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME));
+            redeemPointWalletBalances.add(redeemPointIssuerWalletBalance);
         }
         return redeemPointWalletBalances;
     }
@@ -281,9 +259,6 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         return getCurrentBalance(BalanceType.AVAILABLE);
     }
 
-    private List<AssetRedeemPointWalletList> getCurrentAvailableBalanceByAssets() throws CantGetBalanceRecordException{
-        return getCurrentBalanceByAsset(BalanceType.AVAILABLE);
-    }
     /*
     * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
     */
@@ -297,23 +272,12 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         }
     }
 
-
-    public List<AssetRedeemPointWalletList> getAvailableBalanceByAsset() throws CantCalculateBalanceException {
-        try{
-            return getCurrentAvailableBalanceByAssets();
-        } catch (CantGetBalanceRecordException exception){
-            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
-        } catch (Exception exception){
-            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
-        }
-    }
-
     /*
- * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
- */
-    public List<AssetRedeemPointWalletList> getBookBalanceByAssets() throws CantCalculateBalanceException {
+     * getBalance must get actual Balance global of Asset Issuer wallet, select record from balances table
+     */
+    public List<AssetRedeemPointWalletList> getBalanceByAssets() throws CantCalculateBalanceException {
         try {
-            return getCurrentBookBalanceByAssets();
+            return getCurrentBalanceByAsset();
         } catch (CantGetBalanceRecordException exception) {
             throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {

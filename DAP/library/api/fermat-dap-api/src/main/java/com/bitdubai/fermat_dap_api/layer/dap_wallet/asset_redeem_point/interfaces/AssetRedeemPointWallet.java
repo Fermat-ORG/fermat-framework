@@ -19,7 +19,7 @@ public interface AssetRedeemPointWallet {
 
     //TODO:Documentar y manejo de excepciones
 
-    AssetRedeemPointWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException;
+    AssetRedeemPointWalletBalance getBalance() throws CantGetTransactionsException;
 
     List<AssetRedeemPointWalletTransaction> getTransactions(BalanceType balanceType,
                                                      TransactionType transactionType,
