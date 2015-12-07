@@ -6,8 +6,11 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.IncomingMessageDao;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.OutgoingMessageDao;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceLocal;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceRemoteAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.IncomingMessageDao;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
@@ -31,14 +34,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class AbstractCommunicationNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
+public abstract class AbstractCommunicationNetworkServiceConnectionManager<NS extends AbstractNetworkService> implements NetworkServiceConnectionManager {
 
     private final CommunicationsClientConnection communicationsClientConnection;
     private final PlatformComponentProfile       platformComponentProfile      ;
     private final ErrorManager                   errorManager                  ;
     private final EventManager                   eventManager                  ;
-    private final IncomingMessageDao             incomingMessageDao            ;
-    private final OutgoingMessageDao             outgoingMessageDao            ;
+    private final IncomingMessageDao incomingMessageDao            ;
+    private final OutgoingMessageDao outgoingMessageDao            ;
     private final ECCKeyPair                     identity                      ;
     private final EventSource                    eventSource                   ;
     private final PluginVersionReference         pluginVersionReference        ;
@@ -52,11 +55,14 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
      * Holds all references to the communication network service remote agents
      */
     private final Map<String,CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
+    private NS networkServicePluginRoot;
 
     /**
      * Constructor with parameters.
      */
-    public AbstractCommunicationNetworkServiceConnectionManager(final PlatformComponentProfile       platformComponentProfile      ,
+    public AbstractCommunicationNetworkServiceConnectionManager(
+            NS networkServicePluginRoot,
+            final PlatformComponentProfile       platformComponentProfile      ,
                                                                 final ECCKeyPair                     identity                      ,
                                                                 final CommunicationsClientConnection communicationsClientConnection,
                                                                 final Database                       dataBase                      ,
@@ -73,6 +79,7 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
         this.eventManager                   = eventManager                  ;
         this.eventSource                    = eventSource                   ;
         this.pluginVersionReference         = pluginVersionReference        ;
+        this.networkServicePluginRoot = networkServicePluginRoot;
 
         this.incomingMessageDao = new IncomingMessageDao(dataBase);
         this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
@@ -239,13 +246,15 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
     }
 
     protected CommunicationNetworkServiceLocal buildCommunicationNetworkServiceLocal(final PlatformComponentProfile remoteComponentProfile) {
+        //TODO: Leon tenes que pasarle la instancia del network service plugin root acá
+        return new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType(),networkServicePluginRoot);
 
-        return new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType(), eventSource);
     }
 
     protected CommunicationNetworkServiceRemoteAgent buildCommunicationNetworkServiceRemoteAgent(final CommunicationsVPNConnection communicationsVPNConnection) {
+        //TODO: Leon tenes que pasarle la instancia del network service plugin root acá
+        return new CommunicationNetworkServiceRemoteAgent(networkServicePluginRoot,identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
 
-        return new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao, eventSource, pluginVersionReference);
     }
 
 }
