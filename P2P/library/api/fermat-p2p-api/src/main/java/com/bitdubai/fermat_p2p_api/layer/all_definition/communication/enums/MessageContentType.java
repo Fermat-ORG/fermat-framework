@@ -4,12 +4,12 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.MessageContentType</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 03/12/15.
  *
