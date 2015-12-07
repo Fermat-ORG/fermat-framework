@@ -1,9 +1,13 @@
 package com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
 
 import java.util.List;
 
@@ -12,26 +16,14 @@ import java.util.List;
  */
 public interface CustomerBrokerContractPurchaseManager {
 
-    List<CustomerBrokerContractPurchase> getAllCustomerBrokerContractPurchaseFromCurrentDeviceUser() throws com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
+    List<CustomerBrokerContractPurchase> getAllCustomerBrokerContractPurchaseFromCurrentDeviceUser() throws CantGetListCustomerBrokerContractPurchaseException;
 
-    CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(final String ContractId) throws com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
+    CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(final String ContractId) throws CantGetListCustomerBrokerContractPurchaseException;
 
-    DatabaseTableRecord getCustomerBrokerPurchaseContractTable();
+    CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(CustomerBrokerContractPurchase contract) throws CantCreateCustomerBrokerContractPurchaseException;
 
-    CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(
-            String contractId,
-            String publicKeyCustomer,
-            String publicKeyBroker,
-            Float merchandiseAmount,
-            CurrencyType merchandiseCurrency,
-            Float referencePrice,
-            ReferenceCurrency referenceCurrency,
-            Float paymentAmount,
-            CurrencyType paymentCurrency,
-            long paymentExpirationDate,
-            long merchandiseDeliveryExpirationDate) throws com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
+    void updateStatusCustomerBrokerPurchaseContractStatus(String contractId, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException;
 
-    void updateCustomerBrokerContractPurchase(String contractId, ContractStatus status) throws com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
+    void updateStatusCustomerBrokerPurchaseContractClauseStatus(String contractId, ContractClause clause) throws CantupdateCustomerBrokerContractPurchaseException;
 
-    void deleteCustomerBrokerContractPurchase(String contractID) throws com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantDeleteCustomerBrokerContractPurchaseException;
 }

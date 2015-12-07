@@ -29,8 +29,8 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNo
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
-import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
+import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.CloudClientNotificationHandler;
@@ -63,6 +63,9 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR           , plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserActorManager intraWalletUserActorManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR           , plugin = Plugins.EXTRA_WALLET_USER)
+    private ExtraUserManager extraUserManager;
+
     // TODO MAKE USE OF THE ERROR MANAGER
     // TODO MAKE USE OF THE ERROR MANAGER
     // TODO MAKE USE OF THE ERROR MANAGER
@@ -88,10 +91,6 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
      */
     Queue<NotificationEvent> poolNotification;
 
-    /**
-     * Extra users
-     */
-    private ExtraUserManager extraUserManager;
 
     /**
      * Intra User

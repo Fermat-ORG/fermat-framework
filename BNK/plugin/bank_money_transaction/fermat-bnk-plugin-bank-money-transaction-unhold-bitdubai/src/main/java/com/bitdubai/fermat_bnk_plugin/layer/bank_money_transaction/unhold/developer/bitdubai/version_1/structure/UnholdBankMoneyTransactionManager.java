@@ -7,15 +7,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantGetHoldTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantMakeUnholdTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.interfaces.UnholdManager;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.database.UnholdBankMoneyTransactionDao;
+import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantCreateUnholdTransactionException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantInitializeUnholdBankMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantUpdateUnholdTransactionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 import java.util.UUID;
@@ -46,7 +46,7 @@ public class UnholdBankMoneyTransactionManager implements UnholdManager {
     }
 
 
-    public List<BankTransaction> getAcknowledgedTransactionList() throws CantGetHoldTransactionException {
+    public List<BankTransaction> getAcknowledgedTransactionList() throws CantGetUnholdTransactionException {
         return unholdBankMoneyTransactionDao.getAcknowledgedTransactionList();
     }
 
@@ -65,11 +65,16 @@ public class UnholdBankMoneyTransactionManager implements UnholdManager {
 
     @Override
     public BankTransaction unHold(BankTransactionParameters parameters) throws CantMakeUnholdTransactionException {
-        return null;
+        try{
+            return unholdBankMoneyTransactionDao.createUnholdTransaction(parameters);
+        }catch (CantCreateUnholdTransactionException e){
+            throw new CantMakeUnholdTransactionException(CantMakeUnholdTransactionException.DEFAULT_MESSAGE,e,null,null);
+        }
+
     }
 
     @Override
     public BankTransactionStatus getUnholdTransactionsStatus(UUID transactionId) throws CantGetUnholdTransactionException {
-        return null;
+        return unholdBankMoneyTransactionDao.getUnholdTransaction(transactionId).getBankTransactionStatus();
     }
 }

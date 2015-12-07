@@ -4,37 +4,40 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
+ * The enum <code>com.bitdubai.fermat_api.layer.all_definition.enums.Addons</code>
+ * Contains the different addons available on Fermat.
+ * <p/>
  * Created by ciencias on 2/13/15.
  * Modified by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
+ * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
  */
 public enum Addons implements FermatEnum {
 
     /**
-     * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    DEVICE_CONNECTIVITY("DEVC"),
-    DEVICE_LOCATION ("DEVLOC"),
-    DEVICE_USER("DEVU"),
-    ERROR_MANAGER("ERRM"),
-    EVENT_MANAGER("EVNTM"),
-    LICENSE_MANAGER("LICM"),
-    LOCAL_DEVICE("LOCD"),
-    LOCATION_MANAGER("LOCMG"),
-    LOG_MANAGER("LOGM"),
-    OS("OS"),
-    PLATFORM_DATABASE_SYSTEM("PLADS"),
-    PLATFORM_FILE_SYSTEM("PLAFS"),
-    PLATFORM_INFO("PLATINF"),
-    PLUGIN_FILE_SYSTEM("PLUFS"),
-    PLUGIN_DATABASE_SYSTEM("PLUDS"),
-    REMOTE_DEVICE("REMD"),
+    DEVICE_CONNECTIVITY         ("DEVC"),
+    DEVICE_LOCATION             ("DEVLOC"),
+    DEVICE_USER                 ("DEVU"),
+    ERROR_MANAGER               ("ERRM"),
+    EVENT_MANAGER               ("EVNTM"),
+    LICENSE_MANAGER             ("LICM"),
+    LOCAL_DEVICE                ("LOCD"),
+    LOCATION_MANAGER            ("LOCMG"),
+    LOG_MANAGER                 ("LOGM"),
+    OS                          ("OS"),
+    PLATFORM_DATABASE_SYSTEM    ("PLADS"),
+    PLATFORM_FILE_SYSTEM        ("PLAFS"),
+    PLATFORM_INFO               ("PLATINF"),
+    PLUGIN_FILE_SYSTEM          ("PLUFS"),
+    PLUGIN_DATABASE_SYSTEM      ("PLUDS"),
+    REMOTE_DEVICE               ("REMD"),
 
     ;
 
     private final String code;
 
     Addons(final String code) {
-
         this.code = code;
     }
 

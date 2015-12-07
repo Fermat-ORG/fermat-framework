@@ -67,7 +67,7 @@ public class CreateDatabaseTest {
     public void TestCreateDatabase() throws Exception{
        // testOwnerId=UUID.randomUUID();
         cryptoIndexDatabaseFactory = new CryptoIndexDatabaseFactory(mockPluginDatabaseSystem);
-        Database checkDatabase = cryptoIndexDatabaseFactory.createDatabase(testOwnerId, "CryptoIndex");
+        Database checkDatabase = cryptoIndexDatabaseFactory.createDatabase(testOwnerId, "CryptoIndexImp");
         System.out.println(checkDatabase);
         Assertions.assertThat(checkDatabase).isEqualTo(mockDatabase);
 

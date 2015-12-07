@@ -2,6 +2,8 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
@@ -33,6 +35,14 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @throws CantCreateActorRedeemPointException
      */
     void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage) throws CantCreateActorRedeemPointException;
+
+    /**
+     * The method <code>createActorAssetRedeemPointRegisterInNetworkService</code> create Actor Registered
+     *
+     * @param actorAssetRedeemPoints                       Referred to the Identity publicKey
+     * @throws CantCreateActorRedeemPointException
+     */
+    void createActorAssetRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantCreateActorRedeemPointException;
 
     /**
      * The method <code>getActorAssetRedeemPoint</code> get All Information about Actor

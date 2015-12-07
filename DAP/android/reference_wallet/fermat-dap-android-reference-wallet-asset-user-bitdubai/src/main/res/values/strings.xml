@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">fermat-dap-android-wallet-asset-user-bitdubai</string>
+    <string name="action_redeem">Redeem</string>
     <string name="action_appropriate">Appropriate</string>
 </resources>

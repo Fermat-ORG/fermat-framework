@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.*;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 
@@ -10,26 +11,54 @@ import java.util.UUID;
  */
 public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecord {
 
-    //TODO: add atributtes.
-
-
     UUID bankTransactionId;
+    String publicKeyBroker;
+    String publicKeyCustomer;
+    String balanceType;
+    String transactionType;
+    float amount;
+    String cashCurrencyType;
+    String bankOperationType;
+    String bankDocumentReference;
+    String bankName;
+    String bankAccountNumber;
+    String bankAccountType;
+    long runningBookBalance;
+    long runningAvailableBalance;
+    long timeStamp;
+    String memo;
+    String status;
 
-    BankTransactionStatus status;
-
-    BalanceType balanceType;
-
-    TransactionType transactionType;
-
-    String publicKey;
+    public BankMoneyTransactionRecordImpl(UUID bankTransactionId, String balanceType, String transactionType, float amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankAccountNumber, String bankAccountType, long runningBookBalance, long runningAvailableBalance, long timeStamp, String memo, String status) {
+        this.bankTransactionId = bankTransactionId;
+        this.balanceType = balanceType;
+        this.transactionType = transactionType;
+        this.amount = amount;
+        this.cashCurrencyType = cashCurrencyType;
+        this.bankOperationType = bankOperationType;
+        this.bankDocumentReference = bankDocumentReference;
+        this.bankName = bankName;
+        this.bankAccountNumber = bankAccountNumber;
+        this.bankAccountType = bankAccountType;
+        this.runningBookBalance = runningBookBalance;
+        this.runningAvailableBalance = runningAvailableBalance;
+        this.timeStamp = timeStamp;
+        this.memo = memo;
+        this.status = status;
+    }
 
     @Override
     public UUID getBankTransactionId() {
-        return null;
+        return bankTransactionId;
     }
 
     @Override
     public BankTransactionStatus getStatus() {
+        try{
+            return BankTransactionStatus.getByCode(status);
+        }catch (Exception e){
+
+        }
         return null;
     }
 
@@ -44,27 +73,27 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
     }
 
     @Override
-    public String getPublicKeyActorFrom() {
-        return null;
-    }
-
-    @Override
-    public String getPublicKeyActorTo() {
-        return null;
-    }
-
-    @Override
     public float getAmount() {
-        return 0;
+        return amount;
     }
 
     @Override
-    public BankCurrencyType getBankCurrencyType() {
+    public FiatCurrency getCurrencyType() {
+        try {
+            FiatCurrency.getByCode(cashCurrencyType);
+        }catch (Exception e){
+
+        }
         return null;
     }
 
     @Override
     public BankOperationType getBankOperationType() {
+        try{
+            return BankOperationType.getByCode(bankOperationType);
+        }catch (Exception e){
+
+        }
         return null;
     }
 
@@ -80,31 +109,36 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
 
     @Override
     public String getBankAccountNumber() {
-        return null;
+        return bankAccountNumber;
     }
 
     @Override
     public BankAccountType getBankAccountType() {
+        try {
+            return BankAccountType.getByCode(bankAccountType);
+        }catch (Exception e){
+
+        }
         return null;
     }
 
     @Override
     public long getTimestamp() {
-        return 0;
+        return timeStamp;
     }
 
     @Override
     public long getRunningBookBalance() {
-        return 0;
+        return runningBookBalance;
     }
 
     @Override
     public long getRunningAvailableBalance() {
-        return 0;
+        return runningAvailableBalance;
     }
 
     @Override
     public String getMemo() {
-        return null;
+        return memo;
     }
 }

@@ -50,7 +50,6 @@ public class BottomNavigationAdapter extends FermatAdapter<Item, FermatAppHolder
         protected void bindHolder(FermatAppHolder holder, Item data, final int position) {
 
             holder.name.setText(data.getName());
-            holder.name.setTypeface(tf);
 //            byte[] profileImage = data.getIcon();
 //            if (profileImage != null) {
 //                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);

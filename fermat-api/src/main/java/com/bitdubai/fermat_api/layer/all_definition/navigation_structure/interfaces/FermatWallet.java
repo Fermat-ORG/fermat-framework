@@ -25,4 +25,5 @@ public interface FermatWallet extends Serializable{
     public void setPublicKey(String publicKey);
 
 
+    void clear();
 }

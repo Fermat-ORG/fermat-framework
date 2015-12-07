@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 
@@ -11,14 +12,10 @@ import java.util.UUID;
 
 /**
  * Created by Yordin Alayn on 19.10.15.
+ * Modified by Franklin Marcano 01.12.2015
  */
 public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStockTransactionRecord {
-
-    private static final int HASH_PRIME_NUMBER_PRODUCT = 3061;
-    private static final int HASH_PRIME_NUMBER_ADD = 7213;
-
     private UUID transactionId;
-//    private UUID contractId;
     private KeyPair walletKeyPair;
     private String ownerPublicKey;
     private BalanceType balanceType;
@@ -30,10 +27,11 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private float runningAvailableBalance;
     private long timeStamp;
     private String memo;
+    private OriginTransaction originTransaction;
+    private float priceReference;
 
     public CryptoBrokerStockTransactionRecordImpl(
             UUID transactionId,
-//            UUID contractId,
             KeyPair walletKeyPair,
             String ownerPublicKey,
             BalanceType balanceType,
@@ -44,10 +42,11 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             float runningBookBalance,
             float runningAvailableBalance,
             long timeStamp,
-            String memo
+            String memo,
+            OriginTransaction originTransaction,
+            float priceReference
     ){
         this.transactionId = transactionId;
-//        this.contractId      = contractId;
         this.walletKeyPair = walletKeyPair;
         this.ownerPublicKey = ownerPublicKey;
         this.balanceType = balanceType;
@@ -59,15 +58,12 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
         this.runningAvailableBalance = runningAvailableBalance;
         this.timeStamp = timeStamp;
         this.memo = memo;
+        this.priceReference = priceReference;
+        this.originTransaction = originTransaction;
     }
 
     @Override
     public UUID getTransactionId() { return this.transactionId; }
-
-//    @Override
-//    public UUID getContractId() {
-//        return contractId;
-//    }
 
     @Override
     public BalanceType getBalanceType() { return this.balanceType; }
@@ -79,7 +75,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     public String getWalletPublicKey() { return this.walletKeyPair.getPublicKey(); }
 
     @Override
-    public String getOwnerPublicKey() { return this.ownerPublicKey; }
+    public String getBrokerPublicKey() { return this.ownerPublicKey; }
 
     @Override
     public CurrencyType getCurrencyType() { return this.currencyType; }
@@ -102,18 +98,14 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     @Override
     public String getMemo() { return this.memo; }
 
-    public boolean equals(Object o){
-        if(!(o instanceof CryptoBrokerStockTransactionRecord))
-            return false;
-        CryptoBrokerStockTransactionRecord compare = (CryptoBrokerStockTransactionRecord) o;
-        return ownerPublicKey.equals(compare.getOwnerPublicKey()) && walletKeyPair.getPublicKey().equals(compare.getWalletPublicKey());
+    @Override
+    public float getPriceReference() {
+        return this.priceReference;
     }
 
     @Override
-    public int hashCode(){
-        int c = 0;
-        c += ownerPublicKey.hashCode();
-        c += walletKeyPair.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    public OriginTransaction getOriginTransaction() {
+        return this.originTransaction;
     }
+
 }

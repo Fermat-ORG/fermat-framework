@@ -8,16 +8,12 @@ import java.util.UUID;
 
 /**
  * Created by jorge on 09-10-2015.
+ * Update by Angel on 29/11/2015
  */
+
 public interface Negotiation {
-    
     UUID getNegotiationId();
-
-    long getStartDate();
-
+    Long getStartDate();
     NegotiationStatus getStatus();
-
-    void setStatus(NegotiationStatus status);
     Collection<Clause> getClauses() throws CantGetListClauseException;
-
 }

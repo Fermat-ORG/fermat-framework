@@ -129,6 +129,8 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
                 assetUserWalletBalance.setDescription(record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
                 assetUserWalletBalance.setBookBalance(record.getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
                 assetUserWalletBalance.setAvailableBalance(record.getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
+                assetUserWalletBalance.setQuantityBookBalance(record.getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
+                assetUserWalletBalance.setQuantityAvailableBalance(record.getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME));
                 userWalletBalances.add(assetUserWalletBalance);
             }
         }
@@ -141,6 +143,8 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
                 assetUserWalletBalance.setDescription(record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
                 assetUserWalletBalance.setAvailableBalance(record.getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
                 assetUserWalletBalance.setBookBalance(record.getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
+                assetUserWalletBalance.setQuantityAvailableBalance(record.getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME));
+                assetUserWalletBalance.setQuantityBookBalance(record.getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
                 userWalletBalances.add(assetUserWalletBalance);
             }
 
@@ -446,7 +450,7 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
                 PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, assetUserWalletTransactionRecord.getDigitalAsset().getPublicKey(), PATH_DIRECTORY, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.setContent(digitalAssetInnerXML);
                 //TODO commented for testing
-//                pluginTextFile.persistToMedia();
+                pluginTextFile.persistToMedia();
             }else{
                 transaction.addRecordToUpdate(databaseTable, assetBalanceRecord);
             }

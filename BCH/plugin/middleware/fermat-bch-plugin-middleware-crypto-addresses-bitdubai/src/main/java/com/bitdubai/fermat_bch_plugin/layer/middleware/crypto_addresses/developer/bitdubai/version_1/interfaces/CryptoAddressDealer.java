@@ -90,10 +90,10 @@ public abstract class CryptoAddressDealer {
         }
     }
 
-    protected final void registerCryptoAddress(final CryptoAddress        cryptoAddress           ,
-                                               final CryptoAddressRequest request                 ,
-                                               final InstalledWallet      installedWallet         ,
-                                               final VaultType            vaultType               ) throws CantRegisterCryptoAddressBookException {
+    protected final void registerCryptoAddress(final CryptoAddress        cryptoAddress  ,
+                                               final CryptoAddressRequest request        ,
+                                               final InstalledWallet      installedWallet,
+                                               final VaultType            vaultType      ) throws CantRegisterCryptoAddressBookException {
 
         try {
 
@@ -130,7 +130,12 @@ public abstract class CryptoAddressDealer {
 
         try {
 
-            InstalledWallet wallet = this.getDefaultWallet(request.getIdentityTypeResponding(), request.getCryptoCurrency(), request.getBlockchainNetworkType(), platform);
+            InstalledWallet wallet = this.getDefaultWallet(
+                    request.getIdentityTypeResponding(),
+                    request.getCryptoCurrency()        ,
+                    request.getBlockchainNetworkType() ,
+                    platform
+            );
 
             final CryptoAddress cryptoAddress = this.getAddress(vaultType, request.getCryptoCurrency());
 

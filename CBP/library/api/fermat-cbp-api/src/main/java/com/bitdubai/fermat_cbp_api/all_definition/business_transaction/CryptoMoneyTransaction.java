@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.all_definition.business_transaction;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 
 import java.sql.Timestamp;
@@ -51,5 +52,11 @@ public interface CryptoMoneyTransaction {
 
     TransactionStatusRestockDestock getTransactionStatus();
     void setTransactionStatus(TransactionStatusRestockDestock transactionStatus);
+
+    float getPriceReference();
+    void setPriceReference(float priceReference);
+
+    OriginTransaction getOriginTransaction();
+    void setOriginTransaction(OriginTransaction originTransaction);
 
 }

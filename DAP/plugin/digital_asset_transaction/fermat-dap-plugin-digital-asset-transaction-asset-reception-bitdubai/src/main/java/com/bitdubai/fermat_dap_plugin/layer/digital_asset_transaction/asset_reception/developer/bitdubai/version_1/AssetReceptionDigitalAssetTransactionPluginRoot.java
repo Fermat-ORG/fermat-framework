@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -54,10 +54,10 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rece
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.events.AssetReceptionMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.events.AssetReceptionRecorderService;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -229,6 +229,11 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
             }
             //testDeveloperDatabase();
 
+            /**
+             * I will start the Monitor Agent at start up
+             */
+            this.startMonitorAgent();
+
         } catch (CantSetObjectException exception) {
             this.serviceStatus = ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset Reception plugin", "Cannot set an object, probably is null");
@@ -270,9 +275,9 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
             this.assetReceptionMonitorAgent.setActorAssetIssuerManager(this.actorAssetIssuerManager);
             this.assetReceptionMonitorAgent.setDigitalAssetReceptor(this.digitalAssetReceptor);
             this.assetReceptionMonitorAgent.start();
-        }/*else{
+        }else{
             this.assetReceptionMonitorAgent.start();
-        }*/
+        }
     }
 
     //TODO: DELETE THIS USELESS METHOD

@@ -1,11 +1,16 @@
 package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.exceptions.CantInitializeDepositBankMoneyTransactionDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Date;
 import java.util.UUID;
@@ -16,23 +21,35 @@ import java.util.UUID;
 public class DepositBankMoneyTransactionDao {
     UUID pluginId;
     Database database;
-
     PluginDatabaseSystem pluginDatabaseSystem;
+    ErrorManager errorManager;
 
-    public DepositBankMoneyTransactionDao(UUID pluginId,PluginDatabaseSystem pluginDatabaseSystem) throws CantExecuteDatabaseOperationException {
+    public DepositBankMoneyTransactionDao(UUID pluginId,PluginDatabaseSystem pluginDatabaseSystem,ErrorManager errorManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
-        database = openDatabase();
+        this.errorManager = errorManager;
     }
 
-    private Database openDatabase() throws CantExecuteDatabaseOperationException {
+
+    public void initialize()throws CantInitializeDepositBankMoneyTransactionDatabaseException{
         try {
-            return pluginDatabaseSystem.openDatabase(pluginId, DepositBankMoneyTransactionDatabaseConstants.DATABASE_NAME);
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
-            throw new CantExecuteDatabaseOperationException(exception, "Opening the Asset Issuing Transaction Database", "Error in database plugin.");
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+        } catch (DatabaseNotFoundException e) {
+            DepositBankMoneyTransactionDatabaseFactory databaseFactory = new DepositBankMoneyTransactionDatabaseFactory(pluginDatabaseSystem);
+            try {
+                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                throw new CantInitializeDepositBankMoneyTransactionDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + pluginId.toString(), "");
+            }
+        }catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeDepositBankMoneyTransactionDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + pluginId.toString(), "");
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantInitializeDepositBankMoneyTransactionDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + pluginId.toString(), "");
         }
     }
-
     public void registerDepositTransaction(BankTransactionParameters bankTransactionParameters){
         DatabaseTable table = database.getTable(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_TABLE_NAME);
         DatabaseTableRecord record = table.getEmptyRecord();
@@ -41,7 +58,6 @@ public class DepositBankMoneyTransactionDao {
         record.setStringValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_PLUGIN_PUBLIC_KEY_COLUMN_NAME,bankTransactionParameters.getPublicKeyPlugin());
         record.setStringValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_ACCOUNT_NUMBER_COLUMN_NAME,bankTransactionParameters.getAccount());
         record.setStringValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_MEMO_COLUMN_NAME,bankTransactionParameters.getMemo());
-        record.setStringValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_FIAT_CURRENCY_TYPE_COLUMN_NAME,bankTransactionParameters.getCurrency().getCode());
         record.setLongValue(DepositBankMoneyTransactionDatabaseConstants.DEPOSIT_TIMESTAMP_COLUMN_NAME,new Date().getTime());
         try {
             table.insertRecord(record);
@@ -49,4 +65,5 @@ public class DepositBankMoneyTransactionDao {
 
         }
     }
+
 }

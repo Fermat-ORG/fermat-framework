@@ -33,7 +33,7 @@ import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdub
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserIdentityProfileImageException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantListAssetUserIdentitiesException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.structure.IdentityAssetUsermpl;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
 import java.util.List;

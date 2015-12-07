@@ -14,7 +14,6 @@ import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.managers.ManagerFactory;
-import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
@@ -30,8 +29,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppNavigationStructure;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 import android.view.View;
 import android.view.ViewGroup;

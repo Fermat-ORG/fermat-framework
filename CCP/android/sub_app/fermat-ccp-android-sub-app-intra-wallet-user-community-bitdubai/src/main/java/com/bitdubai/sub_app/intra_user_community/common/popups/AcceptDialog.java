@@ -11,14 +11,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 
@@ -81,7 +78,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession,SubAppResourcesPro
         if (i == R.id.btn_connect) {
             try {
                 if(intraUserInformation!=null && identity!=null) {
-                    ((IntraUserSubAppSession) getSession()).getIntraUserModuleManager().acceptIntraUser(identity.getPublicKey(), intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
+                    ((IntraUserSubAppSession) getSession()).getModuleManager().acceptIntraUser(identity.getPublicKey(), intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
                     Toast.makeText(getContext(), intraUserInformation.getName() + " accepted", Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
@@ -94,7 +91,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession,SubAppResourcesPro
         }else if( i == R.id.btn_close){
             try {
                 if(intraUserInformation!=null && identity!=null)
-                    ((IntraUserSubAppSession)getSession()).getIntraUserModuleManager().denyConnection(identity.getPublicKey(),intraUserInformation.getPublicKey());
+                    ((IntraUserSubAppSession)getSession()).getModuleManager().denyConnection(identity.getPublicKey(),intraUserInformation.getPublicKey());
                 else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }

@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions;
 
-import com.bitdubai.fermat_api.layer.CBPException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CBPException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/11/15.

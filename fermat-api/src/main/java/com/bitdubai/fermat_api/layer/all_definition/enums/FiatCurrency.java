@@ -8,12 +8,12 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
  * Lists all the Fiat Currencies for fermat.
  * Created by ciencias on 20.12.14.
  * Modified by Manuel Perez on 03/08/2015
- * Updated by PatricioGesualdi - (pmgesualdi@hotmail.com) on 18/11/2015.
+ * Modified by PatricioGesualdi - (pmgesualdi@hotmail.com) on 18/11/2015.
  * Modified by Alejandro Bicelis on 20/11/2015
  */
 public enum FiatCurrency implements Currency {
     /**
-     * In order to make the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     ARGENTINE_PESO("ARS", Country.ARGENTINA),
     AUSTRALIAN_DOLLAR("AUD", Country.AUSTRALIA),
@@ -31,7 +31,6 @@ public enum FiatCurrency implements Currency {
     US_DOLLAR("USD", Country.UNITED_STATES_OF_AMERICA),
     VENEZUELAN_BOLIVAR("VEF", Country.VENEZUELA),
     ;
-
 
     private final String code;
     private final Country country;
@@ -73,6 +72,8 @@ public enum FiatCurrency implements Currency {
     }
 
     @Override
-    public String getCode() { return this.code; }
+    public String getCode() {
+        return this.code;
+    }
 
 }
