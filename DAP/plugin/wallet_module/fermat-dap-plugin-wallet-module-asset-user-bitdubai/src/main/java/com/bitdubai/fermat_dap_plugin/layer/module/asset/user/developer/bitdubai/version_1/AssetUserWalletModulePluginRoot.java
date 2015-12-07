@@ -20,8 +20,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exc
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.exceptions.CantRedeemDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfaces.UserRedemptionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.module.asset.user.developer.bitdubai.version_1.structure.AssetUserWalletModule;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -92,6 +94,16 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
         //TODO MAKE USE OF THE ERROR MANAGER
 
         return assetUserWalletModule.getAssetUserWalletBalancesBook(publicKey);
+    }
+
+    @Override
+    public AssetUserWallet loadAssetUserWallet(String walletPublicKey) throws CantLoadWalletException {
+        return assetUserWalletManager.loadAssetUserWallet(walletPublicKey);
+    }
+
+    @Override
+    public void createAssetUserWallet(String walletPublicKey) throws CantCreateWalletException {
+        assetUserWalletManager.createAssetUserWallet(walletPublicKey);
     }
 
     @Override
