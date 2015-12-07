@@ -21,7 +21,7 @@ public class NewReceiveMessagesNotificationEventHandler extends AbstractNewRecei
     @Override
     protected void handleNewMessages(FermatMessage message) throws FermatException {
 
-        System.out.println("Transaction Transmission - NewReceiveMessagesNotificationEventHandler - handleNewMessages =" + message.toString());
+        //System.out.println("Transaction Transmission - NewReceiveMessagesNotificationEventHandler - handleNewMessages =" + message.toString());
 
         ((TransactionTransmissionPluginRoot)networkService).handleNewMessages(message);
 

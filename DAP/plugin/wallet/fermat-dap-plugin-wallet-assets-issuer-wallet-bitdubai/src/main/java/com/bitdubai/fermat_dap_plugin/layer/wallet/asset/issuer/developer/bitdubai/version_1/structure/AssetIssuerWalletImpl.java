@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -25,7 +26,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantInitializeAssetIssuerWalletException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
@@ -101,6 +104,9 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
+            assetIssuerWalletDao = new AssetIssuerWalletDao(database);
+            assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
+            assetIssuerWalletDao.setPlugin(pluginId);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeAssetIssuerWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
@@ -317,6 +323,31 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
             throw new CantGetDigitalAssetFromLocalStorageException(FermatException.wrapException(e), null, null);
         }
         return digitalAssetMetadata;
+    }
+
+    @Override
+    public DigitalAsset getAssetByPublicKey(String assetPublicKey) {
+        return assetIssuerWalletDao.getAssetByPublicKey(assetPublicKey);
+    }
+
+    @Override
+    public void createdNewAsset(DigitalAsset asset) throws CantSaveStatisticException {
+        assetIssuerWalletDao.createdNewAsset(asset);
+    }
+
+    @Override
+    public void assetDistributed(String assetPublicKey, String actorAssetUserPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        assetIssuerWalletDao.assetDistributed(assetPublicKey, actorAssetUserPublicKey);
+    }
+
+    @Override
+    public void assetRedeemed(String assetPublicKey, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        assetIssuerWalletDao.assetRedeemed(assetPublicKey, userPublicKey, redeemPointPublicKey);
+    }
+
+    @Override
+    public void assetAppropriated(String assetPublicKey, String userPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        assetIssuerWalletDao.assetAppropriated(assetPublicKey, userPublicKey);
     }
 
     @Override
