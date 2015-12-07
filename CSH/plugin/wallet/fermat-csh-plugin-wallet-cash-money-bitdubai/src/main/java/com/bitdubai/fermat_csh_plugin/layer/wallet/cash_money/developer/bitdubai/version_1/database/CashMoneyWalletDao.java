@@ -89,7 +89,7 @@ public class CashMoneyWalletDao {
     public void createCashMoneyWallet(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyWalletException {
 
         if(walletExists(walletPublicKey))
-            throw new CantCreateCashMoneyWalletException(CantCreateCashMoneyWalletException.DEFAULT_MESSAGE, null, "Cant create Cash Money Wallet", "Wallet already exists! publicKey:" + walletPublicKey);
+            throw new CantCreateCashMoneyWalletException(CantCreateCashMoneyWalletException.DEFAULT_MESSAGE, null, "Cant create Cash Money Wallet", "Cash Wallet already exists! publicKey:" + walletPublicKey);
 
         try {
             DatabaseTable table = this.database.getTable(CashMoneyWalletDatabaseConstants.WALLETS_TABLE_NAME);

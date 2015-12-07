@@ -103,7 +103,6 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
     @Override
     public CashHoldTransaction createCashHoldTransaction(CashHoldTransactionParameters holdParameters) throws CantCreateHoldTransactionException {
         return holdTransactionManager.createCashHoldTransaction(holdParameters);
-
     }
 
     @Override
@@ -140,6 +139,7 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
         processorAgent.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
     }
+
 
 
 
