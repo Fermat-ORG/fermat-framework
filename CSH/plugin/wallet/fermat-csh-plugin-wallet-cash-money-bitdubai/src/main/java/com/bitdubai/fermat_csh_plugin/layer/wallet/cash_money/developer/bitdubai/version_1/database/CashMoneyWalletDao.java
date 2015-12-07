@@ -18,16 +18,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantCreateHoldTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantGetHoldTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransaction;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionParameters;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantChangeCashMoneyWalletException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CashMoneyWalletDoesNotExistException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletTransactionsException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetHeldFundsException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterCreditException;
@@ -43,7 +38,6 @@ import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantInitializeCashMoneyWalletDatabaseException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantRegisterCashMoneyWalletTransactionException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CashMoneyWalletInconsistentTableStateException;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure.CashMoneyConstructor;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure.CashMoneyWalletTransactionImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -94,6 +88,9 @@ public class CashMoneyWalletDao {
 
     public void createCashMoneyWallet(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyWalletException {
 
+        if(walletExists(walletPublicKey))
+            throw new CantCreateCashMoneyWalletException(CantCreateCashMoneyWalletException.DEFAULT_MESSAGE, null, "Cant create Cash Money Wallet", "Wallet already exists! publicKey:" + walletPublicKey);
+
         try {
             DatabaseTable table = this.database.getTable(CashMoneyWalletDatabaseConstants.WALLETS_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
@@ -129,7 +126,7 @@ public class CashMoneyWalletDao {
         DatabaseTable table;
         DatabaseTableRecord record;
         try {
-            table = this.database.getTable(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME);
+            table = this.database.getTable(CashMoneyWalletDatabaseConstants.WALLETS_TABLE_NAME);
             record = this.getWalletRecordByPublicKey(walletPublicKey);
             if (balanceType == BalanceType.AVAILABLE) {
                 float available = record.getFloatValue(CashMoneyWalletDatabaseConstants.WALLETS_AVAILABLE_BALANCE_COLUMN_NAME);
@@ -162,6 +159,8 @@ public class CashMoneyWalletDao {
             throw new CantRegisterCreditException(e.getMessage(), e, "Credit in Cash wallet", "Cant credit balance. Cant update record");
         } catch (CantLoadTableToMemoryException e) {
             throw new CantRegisterCreditException(e.getMessage(), e, "Credit in Cash wallet", "Cant credit balance. Cant load table to memory");
+        } catch (CashMoneyWalletDoesNotExistException e) {
+        throw new CantRegisterCreditException(e.getMessage(), e, "Credit in Cash wallet", "Cant credit balance. Wallet does not exist");
         }
     }
 
@@ -169,7 +168,7 @@ public class CashMoneyWalletDao {
         DatabaseTable table;
         DatabaseTableRecord record;
         try {
-            table = this.database.getTable(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME);
+            table = this.database.getTable(CashMoneyWalletDatabaseConstants.WALLETS_TABLE_NAME);
             record = this.getWalletRecordByPublicKey(walletPublicKey);
             if (balanceType == BalanceType.AVAILABLE) {
                 float available = record.getFloatValue(CashMoneyWalletDatabaseConstants.WALLETS_AVAILABLE_BALANCE_COLUMN_NAME);
@@ -215,6 +214,8 @@ public class CashMoneyWalletDao {
             throw new CantRegisterDebitException(e.getMessage(), e, "Debit in Cash wallet", "Cant debit balance. Cant update record");
         } catch (CantLoadTableToMemoryException e) {
             throw new CantRegisterDebitException(e.getMessage(), e, "Debit in Cash wallet", "Cant debit balance. Cant load table to memory");
+        } catch (CashMoneyWalletDoesNotExistException e) {
+            throw new CantRegisterDebitException(e.getMessage(), e, "Debit in Cash wallet", "Cant debit balance. Wallet does not exist");
         }
     }
 
@@ -248,12 +249,15 @@ public class CashMoneyWalletDao {
         return balance;
     }
 
-    public boolean walletExists(String walletPublicKey) throws CantChangeCashMoneyWalletException {
+    public boolean walletExists(String walletPublicKey) {
         DatabaseTableRecord record = null;
         try {
             record = this.getWalletRecordByPublicKey(walletPublicKey);
+        } catch (CashMoneyWalletDoesNotExistException e) {
+            return false;
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            return false;
         }
 
         if (record.getStringValue(CashMoneyWalletDatabaseConstants.WALLETS_WALLET_PUBLIC_KEY_COLUMN_NAME).equals(walletPublicKey))
@@ -334,7 +338,7 @@ public class CashMoneyWalletDao {
         return this.database.getTable(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME).getEmptyTableFilter();
     }
 
-    private DatabaseTableRecord getWalletRecordByPublicKey(String walletPublicKey) throws CantLoadTableToMemoryException, CashMoneyWalletInconsistentTableStateException {
+    private DatabaseTableRecord getWalletRecordByPublicKey(String walletPublicKey) throws CantLoadTableToMemoryException, CashMoneyWalletInconsistentTableStateException, CashMoneyWalletDoesNotExistException {
         List<DatabaseTableRecord> records;
         DatabaseTable table = this.database.getTable(CashMoneyWalletDatabaseConstants.WALLETS_TABLE_NAME);
         table.setStringFilter(CashMoneyWalletDatabaseConstants.WALLETS_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
@@ -347,6 +351,8 @@ public class CashMoneyWalletDao {
 
         records = table.getRecords();
 
+        if (records.size() == 0)
+            throw new CashMoneyWalletDoesNotExistException(CashMoneyWalletDoesNotExistException.DEFAULT_MESSAGE);
         if (records.size() != 1)
             throw new CashMoneyWalletInconsistentTableStateException("Inconsistent (" + records.size() + ") number of fetched records, should be between 0 and 1.", null, "The id is: " + walletPublicKey, "");
 
@@ -378,6 +384,7 @@ public class CashMoneyWalletDao {
         newRecord.setStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_ACTOR_PUBLIC_KEY_COLUMN_NAME, cashMoneyWalletTransaction.getPublicKeyActor());
         newRecord.setStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_PLUGIN_PUBLIC_KEY_COLUMN_NAME, cashMoneyWalletTransaction.getPublicKeyPlugin());
         newRecord.setStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME, cashMoneyWalletTransaction.getTransactionType().getCode());
+        newRecord.setStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, cashMoneyWalletTransaction.getBalanceType().getCode());
         newRecord.setFloatValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_AMOUNT_COLUMN_NAME, cashMoneyWalletTransaction.getAmount());
         newRecord.setStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_MEMO_COLUMN_NAME, cashMoneyWalletTransaction.getMemo());
         newRecord.setLongValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TIMESTAMP_COLUMN_NAME, cashMoneyWalletTransaction.getTimestamp());
@@ -397,11 +404,19 @@ public class CashMoneyWalletDao {
         try {
             transactionType = TransactionType.getByCode(record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME));
         } catch (InvalidParameterException e) {
-            throw new CantCreateHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Invalid FiatCurrency value stored in table"
+            throw new CantCreateHoldTransactionException(e.getMessage(), e, "Cash Money Wallet", "Invalid TransactionType value stored in table"
                     + CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME + " for id " + transactionId);
         }
 
-        return new CashMoneyWalletTransactionImpl(transactionId, publicKeyWallet, publicKeyActor, publicKeyPlugin, transactionType, amount, memo, timestamp);
+        BalanceType balanceType;
+        try {
+            balanceType = BalanceType.getByCode(record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME));
+        } catch (InvalidParameterException e) {
+            throw new CantCreateHoldTransactionException(e.getMessage(), e, "Cash Money Wallet", "Invalid BalanceType value stored in table"
+                    + CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME + " for id " + transactionId);
+        }
+
+        return new CashMoneyWalletTransactionImpl(transactionId, publicKeyWallet, publicKeyActor, publicKeyPlugin, transactionType, balanceType, amount, memo, timestamp);
     }
 
 

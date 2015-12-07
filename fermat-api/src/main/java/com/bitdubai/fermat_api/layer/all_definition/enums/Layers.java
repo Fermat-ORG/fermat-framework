@@ -63,6 +63,7 @@ public enum Layers implements FermatEnum {
             case "ANS":  return ACTOR_NETWORK_SERVICE;
             case "BSW":  return BASIC_WALLET;
             case "BTX":  return BUSINESS_TRANSACTION;
+            case "CMT":  return CASH_MONEY_TRANSACTION;
             case "COM":  return COMMUNICATION;
             case "CRM":  return CRYPTO_MODULE;
             case "CRN":  return CRYPTO_NETWORK;
