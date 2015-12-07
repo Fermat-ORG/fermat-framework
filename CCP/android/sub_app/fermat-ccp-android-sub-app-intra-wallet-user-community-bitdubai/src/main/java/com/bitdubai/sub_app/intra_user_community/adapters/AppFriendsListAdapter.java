@@ -34,7 +34,7 @@ public class AppFriendsListAdapter extends FermatAdapter<IntraUserInformation, A
     @Override
     protected void bindHolder(AppFriendsListHolder holder, IntraUserInformation data, int position) {
 
-        holder.friendName.setText("Jeniffer");
+        holder.friendName.setText(data.getName());
 
         try {
             Picasso.with(context)
