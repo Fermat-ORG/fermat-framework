@@ -90,7 +90,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
         super.onCreate(savedInstanceState);
         try {
             // setting up  module
-            intraUserModuleManager = ((IntraUserSubAppSession) subAppsSession).getIntraUserModuleManager();
+            intraUserModuleManager = ((IntraUserSubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
             intraUserItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
             isStartList = true;

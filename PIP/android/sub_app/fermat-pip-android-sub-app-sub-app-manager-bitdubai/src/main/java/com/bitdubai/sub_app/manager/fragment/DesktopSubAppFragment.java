@@ -305,17 +305,17 @@ public class DesktopSubAppFragment extends FermatFragment implements SearchView.
 
             InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_FACTORY,null,null,"wallet_factory","Wallet Factory","public_key_factory","wallet_factory",new Version(1,0,0));
             Item item = new Item(installedSubApp);
-            item.setIconResource(R.drawable.wallet_factory_icon);
+            item.setIconResource(R.drawable.wallet_factory);
             item.setPosition(0);
             lstItemsWithIcon.add(item);
             installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER,null,null,"wallet_publisher","Wallet Publisher","public_key_publisher","wallet_publisher",new Version(1,0,0));
             item = new Item(installedSubApp);
-            item.setIconResource(R.drawable.wallet_publisher_icon);
+            item.setIconResource(R.drawable.wallet_publisher);
             item.setPosition(1);
             lstItemsWithIcon.add(item);
             installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Asset Factory", "public_key_dap_factory", "sub-app-asset-factory", new Version(1, 0, 0));
             item = new Item(installedSubApp);
-            item.setIconResource(R.drawable.wallet_factory_icon);
+            item.setIconResource(R.drawable.asset_factory);
             item.setPosition(2);
             lstItemsWithIcon.add(item);
             installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP,null,null,"developer_sub_app","Developer Tools","public_key_pip_developer_sub_app","developer_sub_app",new Version(1,0,0));

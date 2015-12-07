@@ -146,8 +146,6 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
             return identityAssetIssuer;
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateNewIdentityAssetIssuerException("CAN'T CREATE NEW ASSET ISSUER IDENTITY", e, "Error getting current logged in device user", "");
-        } catch (CantCreateNewDeveloperException e) {
-            throw new CantCreateNewIdentityAssetIssuerException("CAN'T CREATE NEW ASSET ISSUER IDENTITY", e, "Error save user on database", "");
         } catch (Exception e) {
             throw new CantCreateNewIdentityAssetIssuerException("CAN'T CREATE NEW ASSET ISSUER IDENTITY", FermatException.wrapException(e), "", "");
         }
