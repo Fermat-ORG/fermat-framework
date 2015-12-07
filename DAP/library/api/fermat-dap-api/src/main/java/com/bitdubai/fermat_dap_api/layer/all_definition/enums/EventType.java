@@ -11,13 +11,11 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetRedeemP
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewReceiveMessageActorNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewRequestMessageActorNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetIssuerCompleteRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetRedeemPointCompleteRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetUserRequestListRegisteredNetworksNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.NewReceiveMessageActorNotificationEventListener;
-import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.NewRequestMessageActorNotificationEventListener;
 
 /**
  * Created by Nerio on 27/10/15.
@@ -84,18 +82,6 @@ public enum EventType implements FermatEventEnum {
         }
 
 
-    },
-
-    NEW_REQUEST_MESSAGE_ACTOR("NEW_REQUEST_MESSAGE") {
-        @Override
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new NewRequestMessageActorNotificationEventListener(this, fermatEventMonitor);
-        }
-
-        @Override
-        public FermatEvent getNewEvent() {
-            return new NewRequestMessageActorNotificationEvent(this);
-        }
     },
 
     NEW_RECEIVE_MESSAGE_ACTOR("NEW_RECEIVE_MESSAGE") {

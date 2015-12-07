@@ -8,11 +8,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
  * <p/>
  * Created by ciencias on 2/14/15.
  * Modified by Manuel Perez on 03/08/2015.
- * Updated by PatricioGesualdi - (pmgesualdi@hotmail.com) on 18/11/2015.
+ * Modified by PatricioGesualdi - (pmgesualdi@hotmail.com) on 18/11/2015.
  */
 public enum Languages implements FermatEnum {
     /**
-     * In order to make the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     AMERICAN_ENGLISH        ("AMERICAN_ENGLISH"),
     ENGLISH                 ("ENGLISH"),

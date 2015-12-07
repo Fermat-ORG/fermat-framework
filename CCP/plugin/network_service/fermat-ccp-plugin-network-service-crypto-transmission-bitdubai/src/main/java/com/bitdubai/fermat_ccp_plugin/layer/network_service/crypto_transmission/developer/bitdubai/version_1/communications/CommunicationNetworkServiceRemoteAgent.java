@@ -25,8 +25,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
@@ -330,10 +330,9 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
                 }
 
-
             if(!toSend.isInterrupted()){
                 //Sleep for a time
-                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                toSend.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
@@ -341,7 +340,5 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
             return;
         }
-
     }
-
 }

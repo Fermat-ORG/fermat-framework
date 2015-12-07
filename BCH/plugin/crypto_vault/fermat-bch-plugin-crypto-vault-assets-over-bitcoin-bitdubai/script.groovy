@@ -1,7 +1,7 @@
 String developerName = "Rodrigo Acosta"
 String developerMail = "acosta_rodrigo@hotmail.com"
 String pluginName = "AssetsOverBitcoin"
-String layerName = "CryptoVault"
+String layerName = "PlatformCryptoVault"
 String packageRoot = "com.bitdubai.fermat_bch_plugin"
 String jdkVersion = "1.7"
 

@@ -11,11 +11,11 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseMa
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetLogToolException;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
+import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetDataBaseToolException;
+import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseTool;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure.DeveloperModuleDatabaseTool;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure.DeveloperModuleLogTool;
 

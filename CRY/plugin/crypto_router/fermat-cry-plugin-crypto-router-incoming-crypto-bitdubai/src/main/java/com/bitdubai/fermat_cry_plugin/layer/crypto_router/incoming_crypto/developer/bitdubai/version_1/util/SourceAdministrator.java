@@ -19,10 +19,10 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 public class SourceAdministrator {
 
   private final BitcoinNetworkManager bitcoinNetworkManager;
-  private final CryptoVaultManager    cryptoVaultManager   ;
+  private final CryptoVaultManager cryptoVaultManager   ;
 
   public SourceAdministrator(BitcoinNetworkManager bitcoinNetworkManager,
-                             CryptoVaultManager    cryptoVaultManager   ) {
+                             CryptoVaultManager cryptoVaultManager   ) {
 
     this.bitcoinNetworkManager = bitcoinNetworkManager;
     this.cryptoVaultManager    = cryptoVaultManager   ;

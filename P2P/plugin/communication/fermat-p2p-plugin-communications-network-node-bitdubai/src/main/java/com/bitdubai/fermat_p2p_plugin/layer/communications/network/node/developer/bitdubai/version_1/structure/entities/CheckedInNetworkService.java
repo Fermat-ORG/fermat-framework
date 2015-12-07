@@ -2,7 +2,6 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 

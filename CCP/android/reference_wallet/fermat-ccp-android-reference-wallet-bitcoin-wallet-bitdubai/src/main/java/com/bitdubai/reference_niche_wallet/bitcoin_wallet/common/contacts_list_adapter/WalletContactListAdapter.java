@@ -1,7 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,11 +55,11 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
                     if (contact.profileImage.length > 0) {
                         contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), contact.profileImage));
                     } else
-                        contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image));
+                        contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image_standard));
                 } else
-                    contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image));
+                    contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image_standard));
             }catch (Exception e){
-                contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image));
+                contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image_standard));
             }
         }
         return v;

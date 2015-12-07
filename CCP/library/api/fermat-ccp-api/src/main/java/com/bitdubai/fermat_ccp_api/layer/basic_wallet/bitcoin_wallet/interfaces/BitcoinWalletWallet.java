@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces;
 
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
 
 import java.util.List;
 import java.util.UUID;
@@ -58,6 +60,24 @@ public interface BitcoinWalletWallet {
                                                            int         max,
                                                            int         offset) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
 
+
+    /**
+     * * Throw the method <code>listTransactionsByActorAndType</code> you can get all the transactions made with the
+     * loaded wallet related with an specific actor credits or debits.
+     *
+     * @param actorPublicKey
+     * @param balanceType
+     * @param transactionType
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantListTransactionsException
+     */
+    List<BitcoinWalletTransaction> listTransactionsByActorAndType(final String           actorPublicKey,
+                                                                  final BalanceType      balanceType   ,
+                                                                  final TransactionType transactionType,
+                                                                  final int              max           ,
+                                                                  final int              offset        ) throws CantListTransactionsException;
     /**
      * Throw the method <code>listLastActorTransactionsByTransactionType</code> you can get the last transaction for each actor
      * who have made transactions with this wallet.
@@ -72,7 +92,7 @@ public interface BitcoinWalletWallet {
      * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException if something goes wrong.
      */
     List<BitcoinWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType     balanceType,
-                                                                              com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType transactionType,
+                                                                              TransactionType transactionType,
                                                                               int             max,
                                                                               int             offset) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
 

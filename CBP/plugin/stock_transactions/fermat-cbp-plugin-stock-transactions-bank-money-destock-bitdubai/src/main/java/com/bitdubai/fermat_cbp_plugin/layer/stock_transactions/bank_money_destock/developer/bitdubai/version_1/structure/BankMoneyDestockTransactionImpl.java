@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_desto
 
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 
 import java.sql.Timestamp;
@@ -22,6 +23,8 @@ public class BankMoneyDestockTransactionImpl implements BankMoneyTransaction {
     float                           amount;
     Timestamp                       timeStamp;
     TransactionStatusRestockDestock transactionStatus;
+    float                           priceReference;
+    OriginTransaction               originTransaction;
 
     public BankMoneyDestockTransactionImpl(){
 
@@ -37,7 +40,9 @@ public class BankMoneyDestockTransactionImpl implements BankMoneyTransaction {
                                            String bankAccount,
                                            float amount,
                                            Timestamp timeStamp,
-                                           TransactionStatusRestockDestock transactionStatus){
+                                           TransactionStatusRestockDestock transactionStatus,
+                                           float priceReference,
+                                           OriginTransaction originTransaction){
         this.transactionId      = transactionId;
         this.actorPublicKey     = actorPublicKey;
         this.fiatCurrency       = fiatCurrency;
@@ -49,6 +54,8 @@ public class BankMoneyDestockTransactionImpl implements BankMoneyTransaction {
         this.amount             = amount;
         this.timeStamp          = timeStamp;
         this.transactionStatus  = transactionStatus;
+        this.priceReference     = priceReference;
+        this.originTransaction  = originTransaction;
     }
 
 
@@ -161,5 +168,25 @@ public class BankMoneyDestockTransactionImpl implements BankMoneyTransaction {
     @Override
     public void setTransactionStatus(TransactionStatusRestockDestock transactionStatus) {
         this.transactionStatus = transactionStatus;
+    }
+
+    @Override
+    public float getPriceReference() {
+        return priceReference;
+    }
+
+    @Override
+    public void setPriceReference(float priceReference) {
+        this.priceReference = priceReference;
+    }
+
+    @Override
+    public OriginTransaction getOriginTransaction() {
+        return originTransaction;
+    }
+
+    @Override
+    public void setOriginTransaction(OriginTransaction originTransaction) {
+        this.originTransaction = originTransaction;
     }
 }

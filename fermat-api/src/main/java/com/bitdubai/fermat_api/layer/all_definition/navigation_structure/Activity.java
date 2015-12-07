@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWizard;
 
@@ -44,6 +45,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     TitleBar titleBar;
 
     SideMenu sideMenu;
+
+    Footer footer;
 
     MainMenu mainMenu;
 
@@ -122,6 +125,9 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.backPublicKey = backPublicKey;
     }
 
+    public void setFooter(Footer footer) {
+        this.footer = footer;
+    }
 
     /**
      * Activity  interface implementation.
@@ -168,6 +174,11 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     @Override
     public FermatHeader getHeader() {
         return header;
+    }
+
+    @Override
+    public FermatFooter getFooter() {
+        return footer;
     }
 
     @Override

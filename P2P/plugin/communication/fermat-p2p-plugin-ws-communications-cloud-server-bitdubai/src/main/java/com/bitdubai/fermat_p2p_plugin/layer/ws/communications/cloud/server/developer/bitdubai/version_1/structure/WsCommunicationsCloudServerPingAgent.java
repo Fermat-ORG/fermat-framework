@@ -22,9 +22,9 @@ import java.util.Iterator;
 public class WsCommunicationsCloudServerPingAgent extends Thread {
 
     /*
-     * Represent the sleep time for send new ping (120000 milliseconds)
+     * Represent the sleep time for send new ping (10000 milliseconds)
      */
-    private static final long SLEEP_TIME = 120000;
+    private static final long SLEEP_TIME = 10000;
 
     /**
      * Represent the wsCommunicationCloudServer
@@ -78,6 +78,8 @@ public class WsCommunicationsCloudServerPingAgent extends Thread {
                         }catch (RuntimeException ex){
 
                             System.out.println(" WsCommunicationsCloudServerPingAgent - Error occurred sending ping to the node, or pending pong message not received");
+                            System.out.println(" WsCommunicationsCloudServerPingAgent - Pending pong message = "+wsCommunicationCloudServer.getPendingPongMessageByConnection().containsKey(connection.hashCode()));
+
                             wsCommunicationCloudServer.onClose(connection, 1000, " - Connection no alive", true);
                             wsCommunicationCloudServer.getPendingPongMessageByConnection().remove(connection.hashCode());
                             iterator.remove();

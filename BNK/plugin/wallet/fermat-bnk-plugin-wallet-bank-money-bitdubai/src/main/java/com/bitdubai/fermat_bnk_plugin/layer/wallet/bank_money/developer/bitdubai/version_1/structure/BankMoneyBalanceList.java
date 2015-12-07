@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by francisco on 10/11/15.
  */
-public class BankMoneyBalanceList implements BankMoneyWalletBalance {
+public class BankMoneyBalanceList {
     UUID bankTransactionId;
     String publicKeyActorFrom;
     String publicKeyActorTo;
@@ -173,21 +173,6 @@ public class BankMoneyBalanceList implements BankMoneyWalletBalance {
         this.runningAvailableBalance = runningAvailableBalance;
         this.timestamp = timestamp;
         this.getMemo = getMemo;
-    }
-
-    @Override
-    public double getBalance() throws CantCalculateBalanceException {
-        return 0;
-    }
-
-    @Override
-    public void debit(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterDebitException {
-
-    }
-
-    @Override
-    public void credit(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterCreditException {
-
     }
 
 

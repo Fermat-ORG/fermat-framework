@@ -17,7 +17,7 @@ import java.util.UUID;
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
- * Created by Jorge Gonzalez - (jorgeejgonzalez@gmail.com) on 12/10/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 03/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -70,17 +70,20 @@ public class CustomerBrokerSaleNegotiationDatabaseFactory implements DealsWithPl
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
-             * Create Negotiations table.
+             * Create Negotiations Sale table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_EXPIRATION_DATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CANCEL_REASON_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
 
-            table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_FIRST_KEY_COLUMN);
+            table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -88,19 +91,20 @@ public class CustomerBrokerSaleNegotiationDatabaseFactory implements DealsWithPl
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }           /**
-             * Create Clauses table.
+             * Create Clauses Sale table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_CLAUSE_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_VALUE_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_PROPOSED_BY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CLAUSE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_VALUE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_PROPOSED_BY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_INDEX_ORDER_COLUMN_NAME, DatabaseDataType.INTEGER, 20, Boolean.FALSE);
 
-            table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_FIRST_KEY_COLUMN);
+            table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -108,16 +112,62 @@ public class CustomerBrokerSaleNegotiationDatabaseFactory implements DealsWithPl
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }           /**
-             * Create Clause Status Log table.
+             * Create Changes Sale table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_CHANGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_CLAUSE_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_CHANGE_DATETIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_CHANGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_CLAUSE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_START_DATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
-            table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_FIRST_KEY_COLUMN);
+            table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }           /**
+             * Create Locations Broker table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_TABLE_NAME);
+
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_URI_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
+
+            table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }           /**
+             * Create Bank Accounts Broker table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_TABLE_NAME);
+
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
+
+            table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }           /**
+             * Create Payment Currencies Broker table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_TABLE_NAME);
+
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+
+            table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

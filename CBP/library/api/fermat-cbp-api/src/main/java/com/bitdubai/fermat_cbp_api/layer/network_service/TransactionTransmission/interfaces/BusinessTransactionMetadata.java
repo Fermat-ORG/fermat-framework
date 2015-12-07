@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
 
@@ -24,7 +24,7 @@ public interface BusinessTransactionMetadata {
      *
      * @return ContractStatus
      */
-    ContractStatus getContractStatus();
+    ContractTransactionStatus getContractTransactionStatus();
 
     /**
      * Get the Receiver Id

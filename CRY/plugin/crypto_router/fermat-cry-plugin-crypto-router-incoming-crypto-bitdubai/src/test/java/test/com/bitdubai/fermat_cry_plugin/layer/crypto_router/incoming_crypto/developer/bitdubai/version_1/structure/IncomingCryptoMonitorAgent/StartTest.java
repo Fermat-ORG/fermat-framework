@@ -12,10 +12,8 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 
 import static org.fest.assertions.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static com.googlecode.catchexception.CatchException.*;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

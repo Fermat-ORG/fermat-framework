@@ -1,38 +1,37 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.events;
 
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 
 /**
  * Created by Nerio on 25/11/15.
  */
 public class NewReceiveMessageActorNotificationEvent extends AbstractDAPEvent {
 
-    private ActorAssetUser actorAssetUserSender;
-    private ActorAssetIssuer actorAssetIssuerDestination;
-    private CryptoAddress cryptoAddress;
+    private DAPActor actorAssetSender;
+    private DAPActor actorAssetDestination;
+    private DAPMessage message;
 
     public NewReceiveMessageActorNotificationEvent(EventType eventType) {
         super(eventType);
     }
 
-    public ActorAssetUser getActorAssetUserSender() {
-        return actorAssetUserSender;
+    public DAPActor getActorAssetSender() {
+        return actorAssetSender;
     }
 
-    public ActorAssetIssuer getActorAssetIssuerDestination() {
-        return actorAssetIssuerDestination;
+    public DAPActor getActorAssetDestination() {
+        return actorAssetDestination;
     }
 
-    public CryptoAddress getCryptoAddress() {
-        return cryptoAddress;
+    public DAPMessage getMessage() {
+        return message;
     }
 
-    public void setNewCryptoAddressReceive(ActorAssetUser actorAssetUserSender, ActorAssetIssuer actorAssetIssuerDestination, CryptoAddress cryptoAddress){
-        this.actorAssetUserSender=actorAssetUserSender;
-        this.actorAssetIssuerDestination=actorAssetIssuerDestination;
-        this.cryptoAddress=cryptoAddress;
+    public void setNewReceiveMessage(DAPActor actorAssetSender, DAPActor actorAssetDestination, DAPMessage message) {
+        this.actorAssetSender = actorAssetSender;
+        this.actorAssetDestination = actorAssetDestination;
+        this.message = message;
     }
 }

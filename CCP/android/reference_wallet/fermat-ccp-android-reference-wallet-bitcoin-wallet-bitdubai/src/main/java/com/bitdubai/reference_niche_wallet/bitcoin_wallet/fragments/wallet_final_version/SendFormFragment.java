@@ -10,11 +10,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,7 +22,6 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -43,16 +40,14 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.InsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceFragmentsEnumType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,9 +102,12 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         super.onCreate(savedInstanceState);
         referenceWalletSession = (ReferenceWalletSession) walletSession;
         intraUserModuleManager = referenceWalletSession.getIntraUserModuleManager();
+
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
         } catch (CantGetCryptoWalletException e) {
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
@@ -166,7 +164,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                     //You can use own requirement here also.
 
                     if (!connectionDialogIsShow) {
-                        ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity() ,referenceWalletSession, referenceWalletSession.getResourceProviderManager());
+                        ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), referenceWalletSession, referenceWalletSession.getResourceProviderManager());
                         connectionWithCommunityDialog.show();
                         connectionWithCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -182,6 +180,14 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                 return false;
             }
         });
+        contactName.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                InputMethodManager keyboard = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                keyboard.showSoftInput(contactName, 0);
+            }
+        }, 50);
         contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -228,11 +234,11 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
             try {
                 imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
             } catch (Exception e) {
-                imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), R.drawable.profile_image));
+                imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), R.drawable.profile_image_standard));
             }
             contactName.setText(cryptoWalletWalletContact.getActorName());
         }else{
-            imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(),R.drawable.profile_image));
+            imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(),R.drawable.profile_image_standard));
         }
 
     }

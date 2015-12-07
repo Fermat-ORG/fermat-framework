@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CashMoneyTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.exceptions.MissingCashMoneyRestockDataException;
@@ -85,6 +86,8 @@ public class StockTransactionsCashMoneyRestockDatabaseDao {
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_MEMO_COLUMN_NAME, cashMoneyTransaction.getMemo());
         record.setFloatValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_AMOUNT_COLUMN_NAME, cashMoneyTransaction.getAmount());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cashMoneyTransaction.getTransactionStatus().getCode());
+        record.setFloatValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, cashMoneyTransaction.getPriceReference());
+        record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cashMoneyTransaction.getOriginTransaction().getCode());
 
         return record;
     }
@@ -124,6 +127,8 @@ public class StockTransactionsCashMoneyRestockDatabaseDao {
         cashMoneyRestockTransaction.setTimeStamp(Timestamp.valueOf(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME)));
         cashMoneyRestockTransaction.setMemo(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_MEMO_COLUMN_NAME));
         cashMoneyRestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
+        cashMoneyRestockTransaction.setPriceReference(cashMoneyRestockTransactionRecord.getFloatValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME));
+        cashMoneyRestockTransaction.setOriginTransaction(OriginTransaction.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
 
         return cashMoneyRestockTransaction;
     }

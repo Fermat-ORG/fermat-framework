@@ -70,8 +70,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
@@ -143,7 +143,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
      */
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("************** che, pase por aca eh");
 
         /*
          * Validate required resources
@@ -204,8 +203,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
             connectionNewsDao.initialize();
 
-            System.out.println("************** por aca tambien");
-
             final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
             fermatManager = new CryptoBrokerActorNetworkServiceManager(
@@ -214,8 +211,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     errorManager                           ,
                     getPluginVersionReference()
             );
-
-            System.out.println("************** que miras nabo");
 
             /*
              * Its all ok, set the new status
@@ -228,9 +223,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, "", "Problem initializing crypto broker ans dao.");
         }
-
-        System.out.println("************** y aca soy fermat manager: "+fermatManager);
-
     }
 
     private CryptoBrokerActorNetworkServiceManager fermatManager;

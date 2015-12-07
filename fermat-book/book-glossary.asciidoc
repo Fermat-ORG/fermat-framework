@@ -1,0 +1,36 @@
+[glossary]
+:numbered!:
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
+
+== Quick Glossary
+
+This quick glossary contains many of the terms used in relation to *Fermat*, *blockchain technology* and *cryptoworld*.
+
+These terms are used throughout the book, so bookmark this for a quick reference.
+
+address (aka crypto address) ::
+    A crypto address looks like +1DSrfJdB2AnWaFNgSbv3MZC2m74996JafV+. It consists of a string of letters and numbers starting with a "1" (number one). You use an cryptoaddress to send others cryptocurrency or to receive it in your wallet.
+
+
+block::
+    A grouping of transactions, marked with a timestamp, and a fingerprint of the previous block. The block header is hashed to produce a proof of work, thereby validating the transactions. Valid blocks are added to the main blockchain by network consensus.((("block")))
+
+blockchain::
+	A list of validated blocks, each linking to its predecessor all the way to the genesis block.((("blockchain")))
+	
+blockchain technology::
+
+crypto network::
+A peer-to-peer network that propagates crypto transactions and blocks to every node runninmg a specific crypto currency protocol.
+	
+secret key (aka private key)::
+	The secret number that unlocks the cryptocurrency sent to the corresponding crypto address.  A secret key looks like +5J76sF8L5jTtzE96r66Sf8cka9y44wdpJjMwCxR3tzLh3ibVPxh+.((("secret key")))((("private key", see="secret key")))
+	
+transaction::
+In simple terms, a transfer of crypto currency from one address to another. More precisely, a transaction is a signed data structure expressing a transfer of value. Transactions are transmitted over the crypto network, collected by miners, and included into blocks, made permanent on the blockchain.((("transaction")))
+
+wallet::
+Software that holds all your crypto addresses and secret keys. Use it to send, receive, and store your crypto currency.
+
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+

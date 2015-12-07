@@ -31,8 +31,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantDeliverDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantGetActorAssetIssuerException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -231,14 +231,15 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
 
 
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
-        //DigitalAsset Path structure: digital-asset-distribution/hash/digital-asset.xml
-        //DigitalAssetMetadata Path structure: digital-asset-distribution/hash/digital-asset-metadata.xml
-        //TODO: create an UUID for this asset and persists in database
         try {
-            UUID distributionId = UUID.randomUUID();
-            System.out.println("ASSET DISTRIBUTION Internal Id: " + distributionId);
-            this.assetDistributionDao.persistDistributionId(digitalAssetMetadata.getGenesisTransaction(), distributionId);
-            this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, distributionId.toString());
+            System.out.println("ASSET DISTRIBUTION Internal Id: " + digitalAssetMetadata.getGenesisTransaction());
+            this.assetDistributionDao.persistDistributionId(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisTransaction());
+            this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, digitalAssetMetadata.getGenesisTransaction());
+
+//            System.out.println("ASSET DISTRIBUTION Internal Id: " + digitalAssetMetadata.getDigitalAsset().getPublicKey());
+//            this.assetDistributionDao.persistDistributionId(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey());
+//            this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, digitalAssetMetadata.getDigitalAsset().getPublicKey());
+
         } catch (CantPersistsTransactionUUIDException exception) {
             throw new CantCreateDigitalAssetFileException(exception, "Persisting Internal distribution id", "Cannot update the internal Id by genesis transaction");
         }

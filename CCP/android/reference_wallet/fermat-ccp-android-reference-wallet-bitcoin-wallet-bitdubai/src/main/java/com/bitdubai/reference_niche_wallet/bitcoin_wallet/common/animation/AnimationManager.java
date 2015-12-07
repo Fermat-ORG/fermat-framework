@@ -38,28 +38,29 @@ public class AnimationManager implements ElementsWithAnimation{
 
     private void moveViewToOriginalPosition(View view) {
         if(Build.VERSION.SDK_INT>17) {
-            int position[] = new int[2];
-            view.getLocationOnScreen(position);
-            float centreY = rootView.getY() + rootView.getHeight() / 2;
-            TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0  , centreY-250,0);
-            anim.setDuration(1000);
-            anim.setFillAfter(true);
-            view.startAnimation(anim);
+            if(view!=null) {
+                int position[] = new int[2];
+                view.getLocationOnScreen(position);
+                float centreY = rootView.getY() + rootView.getHeight() / 2;
+                TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0, centreY - 250, 0);
+                anim.setDuration(1000);
+                anim.setFillAfter(true);
+                view.startAnimation(anim);
+            }
         }
     }
 
     private void moveViewToScreenCenter( View view ) {
         if (Build.VERSION.SDK_INT > 17) {
-            DisplayMetrics dm = new DisplayMetrics();
-            rootView.getDisplay().getMetrics(dm);
-            int xDest = dm.widthPixels / 2;
-            xDest -= (view.getMeasuredWidth() / 2);
-            float centreY = rootView.getY() + rootView.getHeight() / 2;
-
-            TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
-            anim.setDuration(1000);
-            anim.setFillAfter(true);
-            view.startAnimation(anim);
+            if(view!=null) {
+                DisplayMetrics dm = new DisplayMetrics();
+                rootView.getDisplay().getMetrics(dm);
+                float centreY = rootView.getY() + rootView.getHeight() / 2;
+                TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
+                anim.setDuration(1000);
+                anim.setFillAfter(true);
+                view.startAnimation(anim);
+            }
         }
     }
 

@@ -2,28 +2,26 @@ package com.bitdubai.android_core.app.common.version_1.bottom_navigation;
 
 import android.app.Activity;
 
+import android.graphics.Typeface;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.widget.Scroller;
-import android.widget.Toast;
-
-import com.bitdubai.fermat.R;
 
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.OnStartDragListener;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.SimpleItemTouchHelperCallback;
-import com.bitdubai.sub_app.wallet_manager.holder.DesktopHolderClickCallback;
-import com.bitdubai.sub_app.wallet_manager.structure.Item;
+import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
+import com.bitdubai.fermat_api.layer.desktop.Item;
 
 import java.util.List;
 
 /**
  * Created by mati on 2015.11.25..
  */
-public class BottomNavigation implements DesktopHolderClickCallback<Item>,OnStartDragListener {
+public class BottomNavigation implements  OnStartDragListener {
 
 
+    private DesktopHolderClickCallback<Item> desktopHolderClickCallback;
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
     private ItemTouchHelper mItemTouchHelper;
@@ -31,9 +29,10 @@ public class BottomNavigation implements DesktopHolderClickCallback<Item>,OnStar
     private List<Item> lstItems;
     BottomNavigationAdapter adapter;
 
-    public BottomNavigation(Activity activity,List<Item> lstItems) {
+    public BottomNavigation(Activity activity,List<Item> lstItems,DesktopHolderClickCallback<Item> desktopHolderClickCallback) {
         this.activity = activity;
         this.lstItems = lstItems;
+        this.desktopHolderClickCallback = desktopHolderClickCallback;
         setUp();
     }
 
@@ -53,24 +52,31 @@ public class BottomNavigation implements DesktopHolderClickCallback<Item>,OnStar
             }
         });
         recyclerView.stopScroll();
-        layoutManager = new GridLayoutManager(activity, 5, LinearLayoutManager.VERTICAL, false);
+        layoutManager = new GridLayoutManager(activity, 4, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new BottomNavigationAdapter(activity, lstItems,this);
+        adapter = new BottomNavigationAdapter(activity, lstItems,desktopHolderClickCallback);
         recyclerView.setAdapter(adapter);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-
-    @Override
-    public void onHolderItemClickListener(Item data, int position) {
-        Toast.makeText(activity,"Comming soon",Toast.LENGTH_SHORT).show();
+    public void setDesktopHolderClickCallback(DesktopHolderClickCallback<Item> desktopHolderClickCallback) {
+        adapter.setDesktopHolderClickCallback(desktopHolderClickCallback);
     }
-
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
+    }
+
+    public void reset(){
+        adapter =null;
+        desktopHolderClickCallback = null;
+        activity = null;
+        mItemTouchHelper = null;
+        recyclerView = null;
+        layoutManager = null;
+        lstItems = null;
     }
 }

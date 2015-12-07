@@ -18,8 +18,8 @@ import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.develope
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantUpdateHoldTransactionException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.HoldBankMoneyTransactionInconsistentTableStateException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.structure.BankTransactionImpl;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -220,7 +220,7 @@ public class HoldBankMoneyTransactionDao {
             throw new CantCreateHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Invalid bankTransactionStatus value stored in table"
                     + HoldBankMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME + " for id " + transactionId);
         }
-        return new BankTransactionImpl(transactionId,publicKeyPlugin,publicKeyWallet,publicKeyActor,amount,accountNumber,currency,memo, BankOperationType.HOLD, TransactionType.HOLD,timestampAcknowledged);
+        return new BankTransactionImpl(transactionId,publicKeyPlugin,publicKeyWallet,publicKeyActor,amount,accountNumber,currency,memo, BankOperationType.HOLD, TransactionType.HOLD,timestampAcknowledged,transactionStatus);
         
     }
 

@@ -1,6 +1,5 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.broker_list;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -8,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -22,19 +20,19 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerListAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.NavigationViewAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 
 /**
@@ -86,11 +84,22 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
         configureToolbar();
 
-        configureNavigationDrawer();
-
         noBrokersView = layout.findViewById(R.id.ccw_no_brokers);
 
         showOrHideNoBrokersView(brokerList.isEmpty());
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        try {
+            CustomerNavigationViewPainter navigationViewPainter = new CustomerNavigationViewPainter(getActivity(), null);
+            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+        } catch (Exception e) {
+            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
     }
 
     @Override
@@ -148,18 +157,6 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
         if (toolbar.getMenu() != null) {
             toolbar.getMenu().clear();
-        }
-    }
-
-    private void configureNavigationDrawer() {
-        Activity activity = getActivity();
-        LayoutInflater layoutInflater = activity.getLayoutInflater();
-        try {
-            addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), null));
-            NavigationViewAdapter adapter = new NavigationViewAdapter(activity, null);
-            setNavigationDrawer(adapter);
-        } catch (CantGetActiveLoginIdentityException e) {
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
         }
     }
 
