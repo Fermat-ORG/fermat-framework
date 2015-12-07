@@ -194,8 +194,24 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
      */
     //@Override
     public String toString() {
-        //TODO: create a better to string
-        return XMLParser.parseObject((Contract)this);
+        String contractString="Contract details: {\n" +
+                "Contract Clauses: "+contractClauses+"\n" +
+                "Day time: "+dayTime+"\n" +
+                "Merchandise Currency: "+merchandiseCurrency+"\n" +
+                "Merchandise Amount: "+merchandiseAmount+"\n" +
+                "Merchandise Delivery Expiration Date: "+merchandiseDeliveryExpirationDate+"\n" +
+                "Negotiation Id: "+negotiationId+"\n" +
+                "Payment Amount: "+paymentAmount+"\n" +
+                "Payment Currency: "+paymentCurrency+"\n" +
+                "Payment Expiration Date: "+paymentExpirationDate+"\n" +
+                "Broker Public Key: "+publicKeyBroker+"\n" +
+                "Customer Public Key: "+publicKeyCustomer+"\n" +
+                "Reference Currency: "+referenceCurrency+"\n" +
+                "Reference Price: "+referencePrice+"\n" +
+                "Status: "+status+"\n" +
+                "Contract Hash: "+contractHash+"\n" +
+                "}";
+        return contractString;
     }
 
 }

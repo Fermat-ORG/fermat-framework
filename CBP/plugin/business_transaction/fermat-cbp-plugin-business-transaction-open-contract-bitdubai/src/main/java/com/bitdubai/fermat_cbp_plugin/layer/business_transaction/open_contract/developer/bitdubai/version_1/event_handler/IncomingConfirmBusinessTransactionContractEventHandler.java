@@ -18,14 +18,14 @@ public class IncomingConfirmBusinessTransactionContractEventHandler extends Abst
             try {
                 this.openContractRecorderService.incomingConfirmBusinessTransactionContractEventHandler((IncomingConfirmBusinessTransactionContract) fermatEvent);
             } catch(CantSaveEventException exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingBusinessTransactionContractHashEventHandler", "Check the cause");
+                throw new CantSaveEventException(exception,"Handling the IncomingConfirmBusinessTransactionContractEventHandler", "Check the cause");
             } catch(ClassCastException exception){
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("EXCEPTION DETECTOR----------------------------------");
                 //exception.printStackTrace();
-                throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the IncomingBusinessTransactionContractHashEventHandler", "Cannot cast this event");
+                throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the IncomingConfirmBusinessTransactionContractEventHandler", "Cannot cast this event");
             } catch(Exception exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingBusinessTransactionContractHashEventHandler", "Unexpected exception");
+                throw new CantSaveEventException(exception,"Handling the IncomingConfirmBusinessTransactionContractEventHandler", "Unexpected exception");
             }
 
         }else {

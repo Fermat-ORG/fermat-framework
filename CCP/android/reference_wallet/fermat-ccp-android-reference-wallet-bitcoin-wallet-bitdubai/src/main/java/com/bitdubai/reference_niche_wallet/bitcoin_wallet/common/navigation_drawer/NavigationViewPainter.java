@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_dra
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,9 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.FragmentsCommons;
 
 /**
  * Created by mati on 2015.11.24..
@@ -41,7 +42,6 @@ public class NavigationViewPainter implements com.bitdubai.fermat_android_api.en
     public FermatAdapter addNavigationViewAdapter() {
         try {
             NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(activity);
-            //setNavigationDrawer(navigationViewAdapter);
             return navigationViewAdapter;
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,5 +64,10 @@ public class NavigationViewPainter implements com.bitdubai.fermat_android_api.en
     @Override
     public int addBodyBackgroundColor() {
         return 0;
+    }
+
+    @Override
+    public RecyclerView.ItemDecoration addItemDecoration(){
+        return null;
     }
 }

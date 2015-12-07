@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CashMoneyTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.exceptions.MissingCashMoneyDestockDataException;
@@ -68,7 +69,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
         return database;
     }
 
-    private DatabaseTableRecord getCashMoneyRestockRecord(CashMoneyTransaction cashMoneyTransaction
+    private DatabaseTableRecord getCashMoneyDestockRecord(CashMoneyTransaction cashMoneyTransaction
                                                           ) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
@@ -84,6 +85,8 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
         record.setStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_MEMO_COLUMN_NAME, cashMoneyTransaction.getMemo());
         record.setFloatValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_AMOUNT_COLUMN_NAME, cashMoneyTransaction.getAmount());
         record.setStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cashMoneyTransaction.getTransactionStatus().getCode());
+        record.setFloatValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME, cashMoneyTransaction.getPriceReference());
+        record.setStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cashMoneyTransaction.getOriginTransaction().getCode());
 
         return record;
     }
@@ -108,26 +111,28 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
         return table.getRecords();
     }
 
-    private CashMoneyTransaction getCashMoneyRestockTransaction(final DatabaseTableRecord cashMoneyRestockTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
+    private CashMoneyTransaction getCashMoneyDestockTransaction(final DatabaseTableRecord cashMoneyRestockTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
 
-        CashMoneyDestockTransactionImpl cashMoneyRestockTransaction = new CashMoneyDestockTransactionImpl();
+        CashMoneyDestockTransactionImpl cashMoneyDestockTransaction = new CashMoneyDestockTransactionImpl();
 
-        cashMoneyRestockTransaction.setTransactionId(cashMoneyRestockTransactionRecord.getUUIDValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TRANSACTION_ID_COLUMN_NAME));
-        cashMoneyRestockTransaction.setActorPublicKey(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME));
-        cashMoneyRestockTransaction.setFiatCurrency(FiatCurrency.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_FIAT_CURRENCY_COLUMN_NAME)));
-        cashMoneyRestockTransaction.setCbpWalletPublicKey(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME));
-        cashMoneyRestockTransaction.setCashWalletPublicKey(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CSH_WALLET_PUBLIC_KEY_COLUMN_NAME));
-        cashMoneyRestockTransaction.setCashReference(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CASH_REFERENCE_COLUMN_NAME));
-        cashMoneyRestockTransaction.setConcept(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CONCEPT_COLUMN_NAME));
-        cashMoneyRestockTransaction.setAmount(cashMoneyRestockTransactionRecord.getFloatValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_AMOUNT_COLUMN_NAME));
-        cashMoneyRestockTransaction.setTimeStamp(Timestamp.valueOf(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TIMESTAMP_COLUMN_NAME)));
-        cashMoneyRestockTransaction.setMemo(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_MEMO_COLUMN_NAME));
-        cashMoneyRestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
+        cashMoneyDestockTransaction.setTransactionId(cashMoneyRestockTransactionRecord.getUUIDValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TRANSACTION_ID_COLUMN_NAME));
+        cashMoneyDestockTransaction.setActorPublicKey(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME));
+        cashMoneyDestockTransaction.setFiatCurrency(FiatCurrency.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_FIAT_CURRENCY_COLUMN_NAME)));
+        cashMoneyDestockTransaction.setCbpWalletPublicKey(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME));
+        cashMoneyDestockTransaction.setCashWalletPublicKey(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CSH_WALLET_PUBLIC_KEY_COLUMN_NAME));
+        cashMoneyDestockTransaction.setCashReference(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CASH_REFERENCE_COLUMN_NAME));
+        cashMoneyDestockTransaction.setConcept(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CONCEPT_COLUMN_NAME));
+        cashMoneyDestockTransaction.setAmount(cashMoneyRestockTransactionRecord.getFloatValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_AMOUNT_COLUMN_NAME));
+        cashMoneyDestockTransaction.setTimeStamp(Timestamp.valueOf(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TIMESTAMP_COLUMN_NAME)));
+        cashMoneyDestockTransaction.setMemo(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_MEMO_COLUMN_NAME));
+        cashMoneyDestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
+        cashMoneyDestockTransaction.setPriceReference(cashMoneyRestockTransactionRecord.getFloatValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME));
+        cashMoneyDestockTransaction.setOriginTransaction(OriginTransaction.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
 
-        return cashMoneyRestockTransaction;
+        return cashMoneyDestockTransaction;
     }
 
-    public void saveCashMoneyRestockTransactionData(CashMoneyTransaction cashMoneyTransaction) throws DatabaseOperationException, MissingCashMoneyDestockDataException {
+    public void saveCashMoneyDestockTransactionData(CashMoneyTransaction cashMoneyTransaction) throws DatabaseOperationException, MissingCashMoneyDestockDataException {
 
         try
         {
@@ -135,7 +140,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
             DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseTable(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TABLE_NAME);
-            DatabaseTableRecord bankMoneyRestockRecord = getCashMoneyRestockRecord(cashMoneyTransaction);
+            DatabaseTableRecord bankMoneyRestockRecord = getCashMoneyDestockRecord(cashMoneyTransaction);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(cashMoneyTransaction.getTransactionId().toString());
@@ -167,7 +172,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
             List<CashMoneyTransaction> cashMoneyTransactions = new ArrayList<>();
             // I will add the Asset Factory information from the database
             for (DatabaseTableRecord cashMoneyRestockRecord : getCashMoneyRestockData(filter)) {
-                final CashMoneyTransaction cashMoneyTransaction = getCashMoneyRestockTransaction(cashMoneyRestockRecord);
+                final CashMoneyTransaction cashMoneyTransaction = getCashMoneyDestockTransaction(cashMoneyRestockRecord);
 
                 cashMoneyTransactions.add(cashMoneyTransaction);
             }

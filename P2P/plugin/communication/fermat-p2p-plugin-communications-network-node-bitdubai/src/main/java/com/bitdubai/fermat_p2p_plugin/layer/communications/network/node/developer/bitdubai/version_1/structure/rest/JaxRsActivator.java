@@ -8,8 +8,8 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import javax.enterprise.inject.Instance;
 
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

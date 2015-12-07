@@ -54,6 +54,11 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
 
     @Override
     public BankTransactionStatus getStatus() {
+        try{
+            return BankTransactionStatus.getByCode(status);
+        }catch (Exception e){
+
+        }
         return null;
     }
 

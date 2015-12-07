@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionParameters;
 
 
@@ -9,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 18/11/15.
  */
-public class CashTransactionParametersWrapper implements CashUnholdTransactionParameters {
+public class CashTransactionParametersWrapper implements CashHoldTransactionParameters {
     private final UUID            transactionId;
     private final FiatCurrency fiatCurrency;
     private final String          walletPublicKey;

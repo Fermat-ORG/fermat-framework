@@ -12,7 +12,6 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enum
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.AbstractOpenContract;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractSaleRecord;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantCreateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
@@ -20,7 +19,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClaus
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CannotFindContractHashException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CannotFindKeyValueException;
 
 import java.util.Collection;
 
@@ -99,7 +98,9 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
                     fiatIndex
                     );
             contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
-            this.openContractBusinessTransactionDao.persistContractRecord(contractRecord);
+            this.openContractBusinessTransactionDao.persistContractRecord(
+                    contractRecord,
+                    contractType);
             customerBrokerContractSaleManager.createCustomerBrokerContractSale(contractRecord);
             this.openContractBusinessTransactionDao.updateContractTransactionStatus(
                     contractRecord.getContractId(),
@@ -128,10 +129,6 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Opening a new contract",
                     "Cannot update ContractTransactionStatus");
-        } catch (CannotFindContractHashException exception) {
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                    "Opening a new contract",
-                    "Cannot find the contract status in database");
         }
 
     }

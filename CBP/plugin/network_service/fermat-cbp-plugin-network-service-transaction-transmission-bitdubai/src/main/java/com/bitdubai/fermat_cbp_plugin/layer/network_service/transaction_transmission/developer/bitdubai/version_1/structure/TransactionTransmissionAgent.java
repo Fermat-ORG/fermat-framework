@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -20,13 +22,13 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.messages.TransactionTransmissionResponseMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoMetadataEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
@@ -159,42 +161,48 @@ public class TransactionTransmissionAgent {
             List<PlatformComponentProfile> remoteNetworkServicesRegisteredList,
             ECCKeyPair identity,
             EventManager eventManager) {
+        try{
 
-        this.transactionTransmissionPluginRoot = transactionTransmissionPluginRoot;
-        this.transactionTransmissionConnectionsDAO = transactionTransmissionConnectionsDAO;
-        this.transactionTransmissionContractHashDao = transactionTransmissionContractHashDao;
-        this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
-        this.wsCommunicationsCloudClientManager =wsCommunicationsCloudClientManager;
-        this.errorManager = errorManager;
-        this.remoteNetworkServicesRegisteredList = remoteNetworkServicesRegisteredList;
-        this.identity = identity;
-        this.platformComponentProfile = platformComponentProfile;
-        this.eventManager = eventManager;
-
-
-        cacheResponseMetadataFromRemotes = new HashMap<String, TransactionTransmissionStates>();
-        waitingPlatformComponentProfile = new HashMap<>();
+            this.transactionTransmissionPluginRoot = transactionTransmissionPluginRoot;
+            this.transactionTransmissionConnectionsDAO = transactionTransmissionConnectionsDAO;
+            this.transactionTransmissionContractHashDao = transactionTransmissionContractHashDao;
+            this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
+            this.wsCommunicationsCloudClientManager =wsCommunicationsCloudClientManager;
+            this.errorManager = errorManager;
+            this.remoteNetworkServicesRegisteredList = remoteNetworkServicesRegisteredList;
+            this.identity = identity;
+            this.platformComponentProfile = platformComponentProfile;
+            this.eventManager = eventManager;
 
 
-        poolConnectionsWaitingForResponse = new HashMap<> ();
+            cacheResponseMetadataFromRemotes = new HashMap<String, TransactionTransmissionStates>();
+            waitingPlatformComponentProfile = new HashMap<>();
 
-        //Create a thread to send the messages
-        this.toSend = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (running)
-                    sendCycle();
-            }
-        });
 
-        //Create a thread to receive the messages
-        this.toReceive = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (running)
-                    receiveCycle();
-            }
-        });
+            poolConnectionsWaitingForResponse = new HashMap<> ();
+
+            //Create a thread to send the messages
+            this.toSend = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (running)
+                        sendCycle();
+                }
+            });
+
+            //Create a thread to receive the messages
+            this.toReceive = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (running)
+                        receiveCycle();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE,FermatException.wrapException(e), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
+        }
 
     }
 
@@ -205,18 +213,21 @@ public class TransactionTransmissionAgent {
 
         //Set to running
         this.running  = Boolean.TRUE;
-
         try {
-            transactionTransmissionContractHashDao.initialize();
-        } catch (CantInitializeNetworkServiceDatabaseException e) {
-            e.printStackTrace();
-        }
-
+            try {
+                transactionTransmissionContractHashDao.initialize();
+            } catch (CantInitializeNetworkServiceDatabaseException e) {
+                e.printStackTrace();
         //Start the Thread
         toSend.start();
         toReceive.start();
 
         System.out.println("CryptoTransmissionAgent - started ");
+            }
+        } catch (Exception exception){
+            FermatException ex = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
+        }
 
     }
 
@@ -269,6 +280,11 @@ public class TransactionTransmissionAgent {
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE,FermatException.wrapException(e), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
+
         }
 
     }
@@ -481,13 +497,23 @@ public class TransactionTransmissionAgent {
     }
 
     public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile){
-        this.platformComponentProfile = platformComponentProfile;
+        try{
+            this.platformComponentProfile = platformComponentProfile;
+        }catch (Exception ex){
+           // throw new ObjectNotSetException(ex, "CAN NOT SET THE OBJECT","");
+            ex.printStackTrace();
+            FermatException e = new ObjectNotSetException(FermatException.wrapException(ex), "","Check the cause");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        }
+
     }
 
 
 
     public void connectionFailure(String identityPublicKey){
-        this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
+        if(identityPublicKey != null && identityPublicKey.length()>0){
+            this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
+        }
     }
 
 

@@ -12,7 +12,7 @@
         android:layout_height="180dp"
         android:layout_gravity="center"
         android:scaleType="centerCrop"
-        android:src="@drawable/ginny_profile_picture"
+        android:background="@drawable/profile_image_standard"
         />
 
     <FrameLayout
@@ -28,14 +28,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/black_overlay"
-
-            android:gravity="center"
-            android:paddingBottom="14dip"
+            android:background="#8000bf4a"
+            android:gravity="left"
+            android:paddingLeft="20dp"
+            android:paddingBottom="10dip"
             android:paddingRight="20dp"
-            android:paddingTop="14dip"
+            android:paddingTop="10dip"
             android:text="Jennifer"
-            android:textColor="#DDDDDDDD"
+            android:textColor="#ffffff"
             android:textSize="16sp"
             />
 

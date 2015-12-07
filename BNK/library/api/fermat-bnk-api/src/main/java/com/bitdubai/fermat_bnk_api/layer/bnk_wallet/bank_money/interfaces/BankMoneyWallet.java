@@ -21,7 +21,7 @@ public interface BankMoneyWallet {
 
     List<BankMoneyTransactionRecord> getTransactions(TransactionType type, int max, int offset,String account)throws CantGetBankMoneyWalletTransactionsException;
 
-    double getHeldFunds() throws CantGetHeldFundsException, CantGetHeldFundsException;
+    double getHeldFunds(String account) throws  CantGetHeldFundsException;
 
     void hold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterHoldException;
 

@@ -3,6 +3,9 @@ package com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.int
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
@@ -13,7 +16,10 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 27/11/15.
@@ -43,6 +49,11 @@ public abstract class AbstractOpenContract {
         CurrencyType paymentCurrency;
         long paymentExpirationDate;
         String clauseValue;
+        long dayTime;
+
+        //Contract clauses
+        Collection<ContractClause> contractClauses=new ArrayList<>();
+        ContractClause contractClause;
 
         for(Clause clause : negotiationClauses){
             clauseValue=clause.getValue();
@@ -72,6 +83,17 @@ public abstract class AbstractOpenContract {
                     paymentExpirationDate=parseToLong(clauseValue);
                     contractRecord.setPaymentExpirationDate(paymentExpirationDate);
                     break;
+                case CUSTOMER_PAYMENT_METHOD:
+                    contractClause=createContractClause(clauseValue);
+                    contractClauses.add(contractClause);
+                    break;
+                case BROKER_PAYMENT_METHOD:
+                    contractClause=createContractClause(clauseValue);
+                    contractClauses.add(contractClause);
+                    break;
+                case DATE_TIME_TO_MEET:
+                    dayTime=Long.valueOf(clauseValue);
+                    contractRecord.setDayTime(dayTime);
             }
         }
         //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
@@ -104,6 +126,11 @@ public abstract class AbstractOpenContract {
         CurrencyType paymentCurrency;
         long paymentExpirationDate;
         String clauseValue;
+        long dayTime;
+
+        //Contract clauses
+        Collection<ContractClause> contractClauses=new ArrayList<>();
+        ContractClause contractClause;
 
         for(Clause clause : negotiationClauses){
             clauseValue=clause.getValue();
@@ -133,8 +160,20 @@ public abstract class AbstractOpenContract {
                     paymentExpirationDate=parseToLong(clauseValue);
                     contractRecord.setPaymentExpirationDate(paymentExpirationDate);
                     break;
+                case CUSTOMER_PAYMENT_METHOD:
+                    contractClause=createContractClause(clauseValue);
+                    contractClauses.add(contractClause);
+                    break;
+                case BROKER_PAYMENT_METHOD:
+                    contractClause=createContractClause(clauseValue);
+                    contractClauses.add(contractClause);
+                    break;
+                case DATE_TIME_TO_MEET:
+                    dayTime=Long.valueOf(clauseValue);
+                    contractRecord.setDayTime(dayTime);
             }
         }
+
         //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
         float referencePrice = (float) fiatIndex.getPurchasePrice();
         contractRecord.setNegotiationId(negotiationId);
@@ -146,7 +185,20 @@ public abstract class AbstractOpenContract {
         contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
         //Sets the contractId (hash)
         contractRecord.generateContractHash();
+        contractRecord.setContractClauses(contractClauses);
         return contractRecord;
+    }
+
+    private ContractClause createContractClause(String clauseValue) throws InvalidParameterException {
+        ContractClauseRecord contractClause=new ContractClauseRecord();
+        Integer executionOrder=616;
+        UUID clauseId=UUID.randomUUID();
+        contractClause.setClauseId(clauseId);
+        ContractClauseType contractClauseType=ContractClauseType.getByCode(clauseValue);
+        contractClause.setType(contractClauseType);
+        contractClause.setExecutionOrder(executionOrder);
+        contractClause.setStatus(ContractClauseStatus.PENDING);
+        return contractClause;
     }
 
     /**
@@ -170,7 +222,6 @@ public abstract class AbstractOpenContract {
                 brokerPublicKey,
                 customerPublicKey,
                 negotiationId);
-
         return contractRecord;
 
     }

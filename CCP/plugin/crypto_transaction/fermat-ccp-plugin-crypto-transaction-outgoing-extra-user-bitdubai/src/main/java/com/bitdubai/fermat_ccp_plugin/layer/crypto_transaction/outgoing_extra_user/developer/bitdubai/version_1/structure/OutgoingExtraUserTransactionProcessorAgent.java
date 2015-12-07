@@ -10,9 +10,9 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
@@ -31,7 +31,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
     private Thread agentThread;
 
     private final BitcoinWalletManager bitcoinWalletManager;
-    private final CryptoVaultManager   cryptoVaultManager  ;
+    private final CryptoVaultManager cryptoVaultManager  ;
     private final ErrorManager         errorManager        ;
     private final OutgoingExtraUserDao dao                 ;
 
@@ -39,7 +39,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
      * Constructor with final params...
      */
     public OutgoingExtraUserTransactionProcessorAgent(final BitcoinWalletManager bitcoinWalletManager,
-                                                      final CryptoVaultManager   cryptoVaultManager  ,
+                                                      final CryptoVaultManager cryptoVaultManager  ,
                                                       final ErrorManager         errorManager        ,
                                                       final OutgoingExtraUserDao dao                 ) {
 

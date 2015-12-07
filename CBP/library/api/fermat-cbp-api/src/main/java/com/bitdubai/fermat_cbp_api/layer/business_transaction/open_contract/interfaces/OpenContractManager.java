@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.OpenContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
@@ -34,6 +36,6 @@ public interface OpenContractManager extends FermatManager {
      * @param negotiationId
      * @return
      */
-    OpenContractStatus getOpenContractStatus(String negotiationId);
+    ContractTransactionStatus getOpenContractStatus(String negotiationId) throws UnexpectedResultReturnedFromDatabaseException;
 
 }

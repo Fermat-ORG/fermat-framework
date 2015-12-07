@@ -11,10 +11,15 @@ import java.util.UUID;
  */
 
 public interface Clause {
-    UUID            getClauseId();
-    ClauseType      getType();
-    String          getValue();
-    ClauseStatus    getStatus();
-    String          getProposedBy();
-    short           getIndexOrdery();
+    UUID getClauseId();
+
+    ClauseType getType();
+
+    String getValue();
+
+    ClauseStatus getStatus();
+
+    String getProposedBy();
+
+    short getIndexOrder();
 }

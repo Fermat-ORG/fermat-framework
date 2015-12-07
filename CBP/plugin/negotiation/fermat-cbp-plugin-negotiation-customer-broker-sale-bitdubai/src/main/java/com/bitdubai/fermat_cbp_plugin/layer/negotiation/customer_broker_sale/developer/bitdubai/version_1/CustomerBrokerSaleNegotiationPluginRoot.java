@@ -15,11 +15,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
@@ -30,9 +33,9 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetNextClaus
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -158,8 +161,8 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
         }
 
         @Override
-        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByContractId(UUID negotiationId) throws CantGetListSaleNegotiationsException {
-            return this.customerBrokerSaleNegotiationDao.getNegotiationsByContractId(negotiationId);
+        public CustomerBrokerSaleNegotiation getNegotiationsByNegotiationId(UUID negotiationId) throws CantGetListSaleNegotiationsException {
+            return this.customerBrokerSaleNegotiationDao.getNegotiationsByNegotiationId(negotiationId);
         }
 
         @Override
@@ -211,6 +214,61 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
                 default:
                     throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
             }
+        }
+
+        @Override
+        public void createNewLocation(String location) {
+
+        }
+
+        @Override
+        public void updateLocation(NegotiationLocations location) {
+
+        }
+
+        @Override
+        public void deleteLocation(NegotiationLocations location) {
+
+        }
+
+        @Override
+        public Collection<NegotiationLocations> getAllLocations() {
+            return null;
+        }
+
+        @Override
+        public void createNewBankAccount(NegotiationBankAccount bankAccount) {
+
+        }
+
+        @Override
+        public void updateBankAccount(NegotiationBankAccount bankAccount) {
+
+        }
+
+        @Override
+        public void deleteBankAccount(NegotiationBankAccount bankAccount) {
+
+        }
+
+        @Override
+        public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(Currency currency) {
+            return null;
+        }
+
+        @Override
+        public void createNewPaymentCurrency(Currency currency) {
+
+        }
+
+        @Override
+        public void deletePaymentCurrency(Currency currency) {
+
+        }
+
+        @Override
+        public Collection<Currency> getAllPaymentCurrencies() {
+            return null;
         }
 
     /*

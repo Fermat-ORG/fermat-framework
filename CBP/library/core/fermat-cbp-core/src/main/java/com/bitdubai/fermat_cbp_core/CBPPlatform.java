@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cbp_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPlatformException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_cbp_core.layer.actor_connection.ActorConnectionLayer;
@@ -13,6 +13,7 @@ import com.bitdubai.fermat_cbp_core.layer.negotiation_transaction.NegotiationTra
 import com.bitdubai.fermat_cbp_core.layer.network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_cbp_core.layer.stock_transactions.StockTransactionsLayer;
 import com.bitdubai.fermat_cbp_core.layer.sub_app_module.SubAppModuleLayer;
+import com.bitdubai.fermat_cbp_core.layer.wallet.WalletLayer;
 import com.bitdubai.fermat_cbp_core.layer.wallet_module.WalletModuleLayer;
 import com.bitdubai.fermat_cbp_core.layer.world.WorldLayer;
 
@@ -42,6 +43,7 @@ public class CBPPlatform extends AbstractPlatform {
             registerLayer(new StockTransactionsLayer());
             registerLayer(new SubAppModuleLayer());
             registerLayer(new WalletModuleLayer());
+            registerLayer(new WalletLayer());
 
         } catch (CantRegisterLayerException e) {
 

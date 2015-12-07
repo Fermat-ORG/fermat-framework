@@ -28,6 +28,8 @@ public class BussinessTransactionBankMoneyDestockDatabaseConstants {
     static final String BANK_MONEY_DESTOCK_AMOUNT_COLUMN_NAME                = "amount";
     static final String BANK_MONEY_DESTOCK_TIMESTAMP_COLUMN_NAME             = "timestamp";
     static final String BANK_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME    = "transaction_status";
+    static final String BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME    = "origin_transaction";
+    static final String BANK_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME       = "price_reference";
 
     static final String BANK_MONEY_DESTOCK_FIRST_KEY_COLUMN                    = "transaction_id";
 }

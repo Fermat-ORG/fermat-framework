@@ -49,16 +49,18 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                                   byte[] profileImage,
                                   Location location) {
 
-        this.actorPublicKey         = actorPublicKey            ;
-        this.name                   = name                      ;
-        this.profileImage           = profileImage.clone()      ;
+        this.actorPublicKey         = actorPublicKey                    ;
+        this.name                   = name                              ;
+        this.profileImage           = profileImage.clone()              ;
         if (location != null) {
-            this.locationLatitude   = location.getLatitude()    ;
-            this.locationLongitude  = location.getLongitude()   ;
-        }else{
-            this.locationLatitude   = (double) 0                ;
-            this.locationLongitude  = (double) 0                ;
+            this.locationLatitude   = location.getLatitude()            ;
+            this.locationLongitude  = location.getLongitude()           ;
+        } else {
+            this.locationLatitude   = (double) 0                        ;
+            this.locationLongitude  = (double) 0                        ;
         }
+        this.dapConnectionState = DAPConnectionState.REGISTERED_ONLINE  ;
+
     }
 
     public AssetIssuerActorRecord(String actorPublicKey,

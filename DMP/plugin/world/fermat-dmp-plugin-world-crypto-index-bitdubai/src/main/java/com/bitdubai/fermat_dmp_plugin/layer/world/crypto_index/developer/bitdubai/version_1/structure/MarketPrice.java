@@ -11,7 +11,9 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantGetHistoricalExchangeRateException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantGetMarketPriceException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantInitializeCryptoIndexDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantSelectBestIndexException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.HistoricalExchangeRateNotFoundException;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndex;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndexInterface;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndexProvider;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.MarketPriceInterface;
@@ -29,6 +31,7 @@ public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
     CryptoIndexDao cryptoIndexDao;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
+    //CryptoIndexHelper cryptoIndexHelper;
     /**
      * Get Historical ExchangeRate From Providers
      * @param cryptoCurrency
@@ -148,6 +151,35 @@ public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
             }
         }
         return marketExchangeRate = bestPrice;
+    }
+    public CryptoIndex getBestPrice(List<CryptoIndex> indexList, FiatCurrency fiatCurrency,CryptoCurrency cryptoCurrency){
+        long time = 0;
+
+        try {
+
+            List<Double> priceList = new ArrayList<>();
+
+            for (Providers provider : Providers.values()) {
+                CryptoIndexProvider cryptoIndexProvider = provider.getProviderInstance();
+                //
+                priceList.add(cryptoIndexProvider.getMarketPrice(cryptoCurrency, fiatCurrency, time));
+                Collections.sort(priceList);
+                if (priceList.isEmpty()){
+                    System.out.println("");
+                }
+            }
+            CryptoIndexHelper.selectBestIndex(indexList);
+        } catch (CantSelectBestIndexException e) {
+            e.printStackTrace();
+        } catch (FiatCurrencyNotSupportedException e) {
+            e.printStackTrace();
+        } catch (CantGetMarketPriceException e) {
+            e.printStackTrace();
+        } catch (CryptoCurrencyNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return indexList.get(0);
     }
 
 }
