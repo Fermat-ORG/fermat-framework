@@ -366,14 +366,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         listenersAdded.add(fermatEventListener);
 
 
-        /**
-         *  close connection
-         */
 
-        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
-        fermatEventListener.setEventHandler(new CloseConnectionNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
 
 
 
