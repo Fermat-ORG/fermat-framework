@@ -2,15 +2,16 @@ package com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantChangeCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletTransactionsException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetHeldFundsException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterHoldException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterUnholdException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CashMoneyWalletNotLoadedException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Yordin Alayn on 01,10,15.
@@ -19,11 +20,12 @@ import java.util.List;
 public interface CashMoneyWallet {
 
 
+    String getWalletPublicKey() throws CashMoneyWalletNotLoadedException;
     /**
      * Allows the wallet to be changed, so that the other methods of this class
      * affect that wallet.
      */
-    void changeWalletTo(String walletPublicKey) throws CantChangeCashMoneyWalletException;
+   // void changeWalletTo(String walletPublicKey) throws CashMoneyWalletDoesNotExistException;
 
     /**
      * Returns an object which allows getting and modifying (credit/debit) the Book Balance
@@ -65,15 +67,13 @@ public interface CashMoneyWallet {
     /**
      * Registers a hold on the Available Balance of this CashMoneyWalletBalance.
      *
-     * @param cashMoneyWalletTransaction Contains the details of the hold transaction
      */
-    void hold(CashMoneyWalletTransaction cashMoneyWalletTransaction) throws CantRegisterHoldException;
+    void hold(UUID transactionId, String publicKeyActor, String publicKeyPlugin, float amount, String memo) throws CantRegisterHoldException;
 
     /**
      * Registers an unhold on the Availiable Balance of this CashMoneyWalletBalance.
      *
-     * @param cashMoneyWalletTransaction Contains the details of the unhold transaction
      */
-    void unhold(CashMoneyWalletTransaction cashMoneyWalletTransaction) throws CantRegisterUnholdException;
+    void unhold(UUID transactionId, String publicKeyActor, String publicKeyPlugin, float amount, String memo) throws CantRegisterUnholdException;
 
 }

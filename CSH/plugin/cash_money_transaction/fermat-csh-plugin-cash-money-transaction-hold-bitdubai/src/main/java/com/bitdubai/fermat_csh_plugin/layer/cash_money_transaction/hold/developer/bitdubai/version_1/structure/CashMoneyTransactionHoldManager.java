@@ -10,6 +10,9 @@ import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.excepti
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionManager;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionParameters;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWallet;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.database.HoldCashMoneyTransactionDao;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantInitializeHoldCashMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantUpdateHoldTransactionException;
@@ -26,13 +29,16 @@ public class CashMoneyTransactionHoldManager implements CashHoldTransactionManag
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
     private final ErrorManager errorManager;
+    private final CashMoneyWalletManager cashMoneyWalletManager;
 
     private HoldCashMoneyTransactionDao dao;
 
-    public CashMoneyTransactionHoldManager(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) throws CantStartPluginException{
+    public CashMoneyTransactionHoldManager(final CashMoneyWalletManager cashMoneyWalletManager, final PluginDatabaseSystem pluginDatabaseSystem,
+                                           final UUID pluginId, final ErrorManager errorManager) throws CantStartPluginException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
+        this.cashMoneyWalletManager = cashMoneyWalletManager;
 
         this.dao = new HoldCashMoneyTransactionDao(pluginDatabaseSystem, pluginId, errorManager);
         try {
