@@ -4,19 +4,19 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.MessagesStatus</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 03/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum MessagesStatus {
+public enum MessageStatus {
 
     /**
      * The enum values
@@ -37,7 +37,7 @@ public enum MessagesStatus {
      *
      * @param code the valid code
      */
-    MessagesStatus(String code) {
+    MessageStatus(String code) {
         this.code = code;
     }
 
@@ -52,22 +52,22 @@ public enum MessagesStatus {
      * Return the enum by the code
      *
      * @param code the valid code
-     * @return MessagesStatus enum
+     * @return MessageStatus enum
      * @throws InvalidParameterException error with is no a valid code
      */
-    public static MessagesStatus getByCode(String code) throws InvalidParameterException {
+    public static MessageStatus getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
             case "PTS":
-                return MessagesStatus.PENDING_TO_SEND;
+                return MessageStatus.PENDING_TO_SEND;
             case "S":
-                return MessagesStatus.SENT;
+                return MessageStatus.SENT;
             case "D":
-                return MessagesStatus.DELIVERED;
+                return MessageStatus.DELIVERED;
             case "NR":
-                return MessagesStatus.NEW_RECEIVED;
+                return MessageStatus.NEW_RECEIVED;
             case "R":
-                return MessagesStatus.READ;
+                return MessageStatus.READ;
         }
 
         /**
