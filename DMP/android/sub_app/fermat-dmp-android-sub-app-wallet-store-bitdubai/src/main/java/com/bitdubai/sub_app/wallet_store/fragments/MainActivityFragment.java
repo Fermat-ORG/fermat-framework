@@ -194,9 +194,11 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                catalogueItemList = (ArrayList) result[0];
-                if (adapter != null)
-                    adapter.changeDataSet(catalogueItemList);
+                if (!WalletStoreListItem.started) {
+                    catalogueItemList = (ArrayList) result[0];
+                    if (adapter != null)
+                        adapter.changeDataSet(catalogueItemList);
+                }
             }
         }
     }
@@ -260,6 +262,12 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
         final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, subAppsSession, item, activity, callBack);
         worker.execute();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        WalletStoreListItem.started = false;
     }
 
     private void showDetailsActivityFragment(WalletStoreListItem item) {

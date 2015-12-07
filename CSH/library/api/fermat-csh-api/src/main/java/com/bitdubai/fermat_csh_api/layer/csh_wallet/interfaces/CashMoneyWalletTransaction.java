@@ -20,6 +20,11 @@ public interface CashMoneyWalletTransaction extends CashTransaction {
      */
     TransactionType getTransactionType();
 
+    /**
+     * Returns the type of the balance stored in the CSH wallet
+     * @return      BalanceType, available, book or all
+     */
+    BalanceType getBalanceType();
 
     /**
      * Returns the timestamp when the transaction was applied to the wallet

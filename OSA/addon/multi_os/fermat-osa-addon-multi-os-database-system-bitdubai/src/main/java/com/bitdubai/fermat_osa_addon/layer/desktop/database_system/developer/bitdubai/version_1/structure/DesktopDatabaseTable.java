@@ -54,7 +54,6 @@ public class DesktopDatabaseTable implements  DatabaseTable {
     /**
      * <p>DatabaseTable implementation constructor
      *
-     * @param context Android Context Object
      * @param database name database to use
      * @param tableName name table to use
      */

@@ -28,6 +28,7 @@ dependencies {
 
     //Actor
     compile project(':fermat-cbp-plugin-actor-crypto-broker-bitdubai')
+    compile project(':fermat-cbp-plugin-actor-crypto-customer-bitdubai')
 
     //Actor Connection
     compile project(':fermat-cbp-plugin-actor-connection-crypto-broker-bitdubai')

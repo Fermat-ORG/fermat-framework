@@ -8,6 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestNewsEvent;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestUpdatesEvent;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmResponseEvent;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionUpdateEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingBusinessTransactionContractHash;
@@ -47,9 +49,16 @@ public enum EventType implements FermatEventEnum {
     /**
      * Network Service - Negotiation Transmission
      */
-    INCOMING_NEGOTIATION_TRANSMISSION_UPDATE("INNTR") {
+    INCOMING_NEGOTIATION_TRANSMISSION_UPDATE("INTRU") {
         public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionUpdateEvent(this);}
     },
+    INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION("INTCN") {
+        public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionConfirmNegotiationEvent(this);}
+    },
+    INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_RESPONSE("INTCR") {
+        public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionConfirmResponseEvent(this);}
+    },
+
     INCOMING_NEW_CONTRACT_STATUS_UPDATE("INCSU") {
         public final FermatEvent getNewEvent() { return new IncomingNewContractStatusUpdate(this);}
     },

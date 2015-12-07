@@ -10,6 +10,23 @@ public class AssetUserGroupRecord implements ActorAssetUserGroup {
     private String groupId;
     private String groupName;
 
+
+    public AssetUserGroupRecord() {
+    }
+
+    public AssetUserGroupRecord(String groupId, String groupName) {
+        this.groupId = groupId;
+        this.groupName = groupName;
+    }
+
+    @Override
+    public String toString() {
+        return "AssetUserGroupRecord{" +
+                "groupId='" + groupId + '\'' +
+                ", groupName='" + groupName + '\'' +
+                '}';
+    }
+
     /**
      *
      * @param groupId

@@ -11,7 +11,9 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBr
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActor;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantConfirmNotificationReception;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendBusinessTransactionHashException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
@@ -70,6 +72,8 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
         } catch (CantInsertRecordDataBaseException e) {
             throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+        }catch (Exception e){
+            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
         }
 
     }
@@ -102,6 +106,8 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
         } catch (CantInsertRecordDataBaseException e) {
             throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+        } catch (Exception e){
+            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
         }
     }
 
@@ -109,7 +115,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     public void sendContractNewStatusNotification(String cryptoBrokerActorSenderPublicKey,
                                                   String cryptoCustomerActorReceiverPublicKey,
                                                   String transactionId,
-                                                  ContractTransactionStatus contractStatus) throws CantSendBusinessTransactionHashException {
+                                                  ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException {
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
@@ -130,7 +136,9 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
         } catch (CantInsertRecordDataBaseException e) {
-            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+            throw new CantSendContractNewStatusNotificationException(CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,e,"Cannot persists the contract hash in table","database corrupted");
+        } catch (Exception e){
+            throw new CantSendContractNewStatusNotificationException(CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,e,"Cannot persists the contract hash in table","database corrupted");
         }
 
     }
@@ -139,7 +147,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     public void sendTransactionNewStatusNotification(String cryptoCustomerActorSenderPublicKey,
                                                      String cryptoCustomerBrokerReceiverPublicKey,
                                                      String transactionId,
-                                                     ContractTransactionStatus contractStatus) throws CantSendBusinessTransactionHashException {
+                                                     ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException {
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
@@ -160,14 +168,16 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
         } catch (CantInsertRecordDataBaseException e) {
-            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+            throw new CantSendContractNewStatusNotificationException(CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,e,"Cannot persists the contract hash in table","database corrupted");
+        } catch (Exception e){
+            throw new CantSendContractNewStatusNotificationException(CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,e,"Cannot persists the contract hash in table","database corrupted");
         }
     }
 
     @Override
     public void confirmNotificationReception(String cryptoBrokerActorSenderPublicKey,
                                              String cryptoCustomerActorReceiverPublicKey,
-                                             String transactionId) throws CantSendBusinessTransactionHashException {
+                                             String transactionId) throws CantConfirmNotificationReception {
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
@@ -187,8 +197,10 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
-        } catch (CantInsertRecordDataBaseException e) {
-            throw new CantSendBusinessTransactionHashException(e,"Cannot persists the contract hash in table","database corrupted");
+        }  catch (CantInsertRecordDataBaseException e) {
+            throw new CantConfirmNotificationReception(CantConfirmNotificationReception.DEFAULT_MESSAGE,e,"Cannot persists the contract hash in table","database corrupted");
+        } catch (Exception e){
+            throw new CantConfirmNotificationReception(CantConfirmNotificationReception.DEFAULT_MESSAGE,e,"Cannot persists the contract hash in table","database corrupted");
         }
     }
 
@@ -202,6 +214,8 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             throw new CantConfirmTransactionException(null,e,"Confirm reception","Cannot find the transaction id in database\n"+transactionID);
         } catch (CantGetTransactionTransmissionException e) {
             throw new CantConfirmTransactionException(e.DEFAULT_MESSAGE,e,"Confirm reception","Cannot get the business transaction record from the database");
+        } catch (Exception e){
+            throw new CantConfirmTransactionException(CantConfirmTransactionException.DEFAULT_MESSAGE,e,"Confirm reception","Cannot get the business transaction record from the database");
         }
     }
 
