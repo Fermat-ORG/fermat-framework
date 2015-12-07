@@ -26,6 +26,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  */
 public class ConnectionOtherProfileFragment extends FermatFragment {
 
+    public static final String INTRA_USER_SELECTED = "intra_user";
     private View rootView;
     private IntraUserSubAppSession intraUserSubAppSession;
     private FermatRoundedImageView userProfileAvatar;
@@ -53,6 +54,7 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
 
         // setting up  module
         intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
+        intraUserInformation = (IntraUserInformation)subAppsSession.getData(INTRA_USER_SELECTED);
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = subAppsSession.getErrorManager();
     }

@@ -313,7 +313,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-                /*
+        /**
          * Listen and handle VPN Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
@@ -321,7 +321,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-              /*
+        /**
          * Listen and handle Client Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);

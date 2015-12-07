@@ -84,7 +84,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.btn_connect) {
+        if (i == R.id.positive_button) {
             try {
                 //image null
                 if(intraUserInformation!=null && identity!=null)
@@ -98,7 +98,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
                 Toast.makeText(getContext(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
             dismiss();
-        }else if( i == R.id.btn_close){
+        }else if( i == R.id.negative_button){
             dismiss();
         }
     }
