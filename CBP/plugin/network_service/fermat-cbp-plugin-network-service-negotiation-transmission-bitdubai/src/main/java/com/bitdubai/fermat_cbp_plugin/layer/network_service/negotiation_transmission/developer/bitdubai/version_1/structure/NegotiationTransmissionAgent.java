@@ -180,6 +180,7 @@ public class NegotiationTransmissionAgent {
         //Stop the Thread
         toSend.interrupt();
         toReceive.interrupt();
+        this.running  = Boolean.FALSE;
         //Disconnect from the service
     }
     /*END SERVICE*/

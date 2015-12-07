@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by Yordin Alayn on 13.11.2015.
  */
-public class CantUpdateStatusCustomerBrokerNewNegotiationTransactionException extends FermatException {
+public class CantUpdateStateCustomerBrokerUpdateNegotiationTransactionException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T UPDATE STATUS CUSTOMER BROKER NEW NEGOTIATION TRANSACTION";
 
@@ -17,7 +17,7 @@ public class CantUpdateStatusCustomerBrokerNewNegotiationTransactionException ex
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantUpdateStatusCustomerBrokerNewNegotiationTransactionException(String message, Exception cause, String context, String possibleReason) {
+    public CantUpdateStateCustomerBrokerUpdateNegotiationTransactionException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
