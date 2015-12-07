@@ -43,26 +43,45 @@ public class ClientChannelConfigurator extends ServerEndpointConfig.Configurator
     public void modifyHandshake(ServerEndpointConfig serverEndpointConfig, HandshakeRequest handshakeRequest, HandshakeResponse handshakeResponse) {
 
         /*
-         * Create a node identity for this session
+         * Validate if the client public key identity come in the header
          */
-        ECCKeyPair nodeIdentityForSession = new ECCKeyPair();
+        if (handshakeRequest.getHeaders().containsKey(HeadersAttName.CPKI_ATT_HEADER_NAME)){
 
-        /*
-         * Create the NPKI_ATT_HEADER_NAME header attribute value
-         * to share with the client
-         */
-        List<String> value = new ArrayList<>();
-        value.add(nodeIdentityForSession.getPublicKey());
+            /*
+             * Get the client public key identity
+             */
+            String cpki = handshakeRequest.getHeaders().get(HeadersAttName.CPKI_ATT_HEADER_NAME).get(0);
 
-        /*
-         * Set the new header attribute
-         */
-        handshakeResponse.getHeaders().put(HeadersAttName.NPKI_ATT_HEADER_NAME, value);
+            /*
+             * Pass the identity create to the WebSocketClientChannelServerEndpoint
+             */
+            serverEndpointConfig.getUserProperties().put(HeadersAttName.CPKI_ATT_HEADER_NAME, cpki);
 
-        /*
-         * Pass the identity create to the WebSocketClientChannelServerEndpoint
-         */
-        serverEndpointConfig.getUserProperties().put(HeadersAttName.NPKI_ATT_HEADER_NAME, nodeIdentityForSession);
+            /*
+             * Create a node identity for this session
+             */
+            ECCKeyPair nodeIdentityForSession = new ECCKeyPair();
+
+            /*
+             * Create the node public key identity header attribute value
+             * to share with the client
+             */
+             List<String> value = new ArrayList<>();
+             value.add(nodeIdentityForSession.getPublicKey());
+
+            /*
+             * Set the new header attribute
+             */
+             handshakeResponse.getHeaders().put(HeadersAttName.NPKI_ATT_HEADER_NAME, value);
+
+            /*
+             * Pass the identity create to the WebSocketClientChannelServerEndpoint
+             */
+             serverEndpointConfig.getUserProperties().put(HeadersAttName.NPKI_ATT_HEADER_NAME, nodeIdentityForSession);
+
+        }
+
+
     }
 
     /**

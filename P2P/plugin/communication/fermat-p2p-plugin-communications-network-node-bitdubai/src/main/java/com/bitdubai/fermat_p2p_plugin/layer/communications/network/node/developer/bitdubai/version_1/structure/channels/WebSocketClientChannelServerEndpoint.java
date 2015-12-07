@@ -105,7 +105,10 @@ public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServer
         setChannelIdentity((ECCKeyPair) endpointConfig.getUserProperties().get(HeadersAttName.NPKI_ATT_HEADER_NAME));
         endpointConfig.getUserProperties().remove(HeadersAttName.NPKI_ATT_HEADER_NAME);
 
-        //clientsSessionMemoryCache.add();
+        /*
+         * Mach the session whit the client public key identity
+         */
+        clientsSessionMemoryCache.add((String) endpointConfig.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME), session);
     }
 
     /**

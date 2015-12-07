@@ -9,7 +9,11 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Message;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 
 import javax.websocket.Session;
 
@@ -35,13 +39,40 @@ public abstract class MessageProcessor {
     private MessageType messageType;
 
     /**
+     * Represent the daoFactory instance
+     */
+    private DaoFactory daoFactory;
+
+    /**
+     * Represent the gson instance
+     */
+    private Gson gson;
+
+    /**
+     * Represent the jsonParser instance
+     */
+    private JsonParser jsonParser;
+
+    /**
      * Constructor with parameter
      *
      * @param messageType
      */
     public MessageProcessor(WebSocketChannelServerEndpoint channel, MessageType messageType) {
-        this.channel = channel;
+        this.channel     = channel;
         this.messageType = messageType;
+        this.daoFactory  = (DaoFactory) NodeContext.get(DaoFactory.class.getName());
+        this.gson        = new Gson();
+        this.jsonParser  = new JsonParser();
+    }
+
+    /**
+     * Gets the value of daoFactory and returns
+     *
+     * @return daoFactory
+     */
+    public DaoFactory getDaoFactory() {
+        return daoFactory;
     }
 
     /**
@@ -60,6 +91,24 @@ public abstract class MessageProcessor {
      */
     public MessageType getMessageType() {
         return messageType;
+    }
+
+    /**
+     * Gets the value of gson and returns
+     *
+     * @return gson
+     */
+    public Gson getGson() {
+        return gson;
+    }
+
+    /**
+     * Gets the value of jsonParser and returns
+     *
+     * @return jsonParser
+     */
+    public JsonParser getJsonParser() {
+        return jsonParser;
     }
 
     /**

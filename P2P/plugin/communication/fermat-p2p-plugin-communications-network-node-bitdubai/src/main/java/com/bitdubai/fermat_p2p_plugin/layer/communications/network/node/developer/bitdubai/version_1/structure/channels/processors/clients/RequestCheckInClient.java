@@ -17,7 +17,7 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.RequestCheckInClient</code>
- * process all messages received the type <code>MessageType.REQUEST_REGISTER_CLIENT</code><p/>
+ * process all messages received the type <code>MessageType.REQUEST_CHECK_IN_CLIENT</code><p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 06/12/15.
  *
  * @version 1.0
@@ -36,7 +36,7 @@ public class RequestCheckInClient extends MessageProcessor {
      * @param webSocketChannelServerEndpoint register
      */
     public RequestCheckInClient(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
-        super(webSocketChannelServerEndpoint, MessageType.REQUEST_REGISTER_CLIENT);
+        super(webSocketChannelServerEndpoint, MessageType.REQUEST_CHECK_IN_CLIENT);
     }
 
     /**

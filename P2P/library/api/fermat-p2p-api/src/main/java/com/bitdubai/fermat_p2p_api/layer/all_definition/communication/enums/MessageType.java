@@ -7,7 +7,8 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType</code>
+ * The enum <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType</code> represent
+ * all type can be a <code>Message</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 06/12/15.
  *
@@ -17,9 +18,9 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums;
 public enum MessageType {
 
     // Definition types
-    REQUEST_REGISTER_CLIENT("RRC"),
-    REQUEST_REGISTER_NETWORK_SERVICE("RRNS"),
-    REQUEST_REGISTER_ACTOR("RRA"),
+    REQUEST_CHECK_IN_CLIENT("RCC"),
+    REQUEST_CHECK_IN_NETWORK_SERVICE("RCNS"),
+    REQUEST_CHECK_IN_ACTOR("RCA"),
     REQUEST_NETWORK_SERVICE_LIST("RNSL"),
     REQUEST_ACTOR_LIST("RAL")
     ;
@@ -56,9 +57,9 @@ public enum MessageType {
     public static MessageType getByCode(final String code){
 
         switch (code){
-           case "RRC"  : return REQUEST_REGISTER_CLIENT;
-           case "RRNS" : return REQUEST_REGISTER_NETWORK_SERVICE;
-           case "RRA"  : return REQUEST_REGISTER_ACTOR;
+           case "RCC"  : return REQUEST_CHECK_IN_CLIENT;
+           case "RCNS" : return REQUEST_CHECK_IN_NETWORK_SERVICE;
+           case "RCA"  : return REQUEST_CHECK_IN_ACTOR;
            case "RNSL" : return REQUEST_NETWORK_SERVICE_LIST;
            case "RAL"  : return REQUEST_ACTOR_LIST;
 
