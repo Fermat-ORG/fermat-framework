@@ -2,12 +2,10 @@ package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broke
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetListCustomerBrokerNewNegotiationTransactionException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantReceiveCustomerBrokerNewNegotiationTransactionException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantSendCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantUpdateStatusCustomerBrokerNewNegotiationTransactionException;
 
 import java.util.Collection;
@@ -19,7 +17,7 @@ import java.util.UUID;
  */
 public interface CustomerBrokerNewManager {
 
-    CustomerBrokerNew createCustomerBrokerNewNegotiationTranasction(String publicKeyBroker, String publicKeyCustomer, Collection<Clause> clauses) throws CantCreateCustomerBrokerNewNegotiationTransactionException;
+    CustomerBrokerNew createCustomerBrokerNewNegotiationTranasction(Negotiation negotiation, Collection<Clause> clauses) throws CantCreateCustomerBrokerNewNegotiationTransactionException;
 
     void updateStatusCustomerBrokerNewNegotiationTranasction(UUID transactionId, NegotiationStatus statusTransaction) throws CantUpdateStatusCustomerBrokerNewNegotiationTransactionException;
 
@@ -27,9 +25,4 @@ public interface CustomerBrokerNewManager {
 
     List<CustomerBrokerNew> getAllCustomerBrokerNewNegotiationTranasction() throws CantGetListCustomerBrokerNewNegotiationTransactionException;
 
-    /*
-    void sendCustomerBrokerNewNegotiationTranasction(CustomerBrokerNegotiation negotiation) throws CantSendCustomerBrokerNewNegotiationTransactionException;
-
-    void receiveCustomerBrokerNewNegotiationTranasction(CustomerBrokerNegotiation negotiation) throws CantReceiveCustomerBrokerNewNegotiationTransactionException;
-    */
 }
