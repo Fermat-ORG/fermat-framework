@@ -52,10 +52,10 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
     private Map<String, String> poolConnectionsWaitingForResponse;
 
     private final CryptoBrokerActorNetworkServicePluginRoot cryptoBrokerActorNetworkServicePluginRoot;
-    private final ErrorManager                            errorManager                           ;
-    private final EventManager                            eventManager                           ;
-    private final ConnectionNewsDao                       dao                                    ;
-    private final WsCommunicationsCloudClientManager      wsCommunicationsCloudClientManager     ;
+    private final ErrorManager                              errorManager                             ;
+    private final EventManager                              eventManager                             ;
+    private final ConnectionNewsDao                         dao                                      ;
+    private final WsCommunicationsCloudClientManager        wsCommunicationsCloudClientManager       ;
 
     public CryptoBrokerExecutorAgent(final CryptoBrokerActorNetworkServicePluginRoot cryptoBrokerActorNetworkServicePluginRoot,
                                      final ErrorManager                              errorManager                             ,
