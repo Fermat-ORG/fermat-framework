@@ -501,6 +501,12 @@ public abstract class FermatActivity extends AppCompatActivity
                 mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        // Check if no view has focus:
+                        View view = getCurrentFocus();
+                        if (view != null) {
+                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
                         onBackPressed();
                     }
                 });
@@ -1152,6 +1158,13 @@ public abstract class FermatActivity extends AppCompatActivity
             System.gc();
             closeContextMenu();
             closeOptionsMenu();
+
+            // Check if no view has focus:
+            View view = getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
 
             onRestart();
 

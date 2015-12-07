@@ -21,10 +21,12 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -157,10 +159,10 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                                 if (walletContact.getProfilePicture().length > 0) {
                                     holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), walletContact.getProfilePicture()));
                                 } else {
-                                    holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), R.drawable.profile_image_standard));
+                                    Picasso.with(mContext).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.imageView);
                                 }
                             } else
-                                holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), R.drawable.profile_image_standard));
+                                Picasso.with(mContext).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.imageView);
                         }catch (Exception e){
                             e.printStackTrace();
                             Toast.makeText(mContext,"Image database problem",Toast.LENGTH_SHORT).show();
