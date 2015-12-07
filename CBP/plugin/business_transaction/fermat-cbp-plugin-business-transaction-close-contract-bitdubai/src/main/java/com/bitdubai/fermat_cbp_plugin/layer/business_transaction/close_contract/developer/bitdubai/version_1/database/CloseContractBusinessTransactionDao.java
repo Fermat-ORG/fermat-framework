@@ -131,6 +131,14 @@ public class CloseContractBusinessTransactionDao {
 
     }
 
+    public String getContractXML(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+        return getValue(
+                contractHash,
+                CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_XML_COLUMN_NAME);
+
+    }
+
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
         try{
@@ -145,6 +153,16 @@ public class CloseContractBusinessTransactionDao {
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
         }
+    }
+
+    public String getTransactionId(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+        String transactionId= getValue(
+                contractHash,
+                CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_TRANSACTION_ID_COLUMN_NAME);
+        //return UUID.fromString(transactionId);
+        return transactionId;
+
     }
 
     /**

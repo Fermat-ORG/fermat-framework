@@ -42,7 +42,7 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
      * @param transactionId
      * @param contractStatus
      */
-    void sendContractNewStatusNotification(String cryptoBrokerActorSenderPublicKey, String cryptoCustomerActorReceiverPublicKey, String transactionId, ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException;
+    void sendContractStatusNotificationToCryptoCustomer(String cryptoBrokerActorSenderPublicKey, String cryptoCustomerActorReceiverPublicKey, String transactionHash, String transactionId, ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException;
 
     /**
      * Method that send the a Contract New Status Notification
@@ -50,7 +50,7 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
      * @param transactionId
      * @param contractStatus
      */
-    void sendTransactionNewStatusNotification(String cryptoCustomerActorSenderPublicKey, String cryptoCustomerBrokerReceiverPublicKey, String transactionId, ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException;
+    void sendContractStatusNotificationToCryptoBroker(String cryptoCustomerActorSenderPublicKey, String cryptoCustomerBrokerReceiverPublicKey, String transactionHash, String transactionId, ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException;
 
     /**
      * Method that send the Contract New Status Notification

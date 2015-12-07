@@ -112,15 +112,16 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     }
 
     @Override
-    public void sendContractNewStatusNotification(String cryptoBrokerActorSenderPublicKey,
-                                                  String cryptoCustomerActorReceiverPublicKey,
-                                                  String transactionId,
-                                                  ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException {
+    public void sendContractStatusNotificationToCryptoCustomer(String cryptoBrokerActorSenderPublicKey,
+                                                               String cryptoCustomerActorReceiverPublicKey,
+                                                               String transactionHash,
+                                                               String transactionId,
+                                                               ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException {
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
-                null,
+                transactionHash,
                 contractStatus,
                 cryptoBrokerActorSenderPublicKey,
                 PlatformComponentType.NETWORK_SERVICE,
@@ -144,15 +145,16 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     }
 
     @Override
-    public void sendTransactionNewStatusNotification(String cryptoCustomerActorSenderPublicKey,
-                                                     String cryptoCustomerBrokerReceiverPublicKey,
-                                                     String transactionId,
-                                                     ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException {
+    public void sendContractStatusNotificationToCryptoBroker(String cryptoCustomerActorSenderPublicKey,
+                                                             String cryptoCustomerBrokerReceiverPublicKey,
+                                                             String transactionHash,
+                                                             String transactionId,
+                                                             ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException {
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
-                null,
+                transactionHash,
                 contractStatus,
                 cryptoCustomerActorSenderPublicKey,
                 PlatformComponentType.NETWORK_SERVICE,
