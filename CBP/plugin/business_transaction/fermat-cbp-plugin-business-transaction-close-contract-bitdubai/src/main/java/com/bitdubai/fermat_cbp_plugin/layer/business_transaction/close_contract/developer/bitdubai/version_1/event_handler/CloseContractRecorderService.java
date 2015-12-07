@@ -1,10 +1,15 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.event_handler;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_cbp_api.all_definition.events.CBPService;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingConfirmBusinessTransactionContract;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.database.CloseContractBusinessTransactionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -58,7 +63,7 @@ public class CloseContractRecorderService implements CBPService {
         //LOG.info("CHECK THE DATABASE");
     }*/
 
-    /*public void incomingConfirmBusinessTransactionContractEventHandler(IncomingConfirmBusinessTransactionContract event) throws CantSaveEventException {
+    public void incomingConfirmBusinessTransactionContractEventHandler(IncomingConfirmBusinessTransactionContract event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.closeContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
@@ -70,34 +75,27 @@ public class CloseContractRecorderService implements CBPService {
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.closeContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
-    }*/
+    }
 
     @Override
     public void start() throws CantStartServiceException {
-//TODO: finish this
-        /*try {*/
+        try {
             /**
              * I will initialize the handling of com.bitdubai.platform events.
              */
-            /*FermatEventListener fermatEventListener;
+            FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH);
-            fermatEventHandler = new IncomingBusinessTransactionContractHashEventHandler();
-            ((IncomingBusinessTransactionContractHashEventHandler) fermatEventHandler).setOpenContractRecorderService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
 
             fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);
             fermatEventHandler = new IncomingConfirmBusinessTransactionContractEventHandler();
-            ((IncomingConfirmBusinessTransactionContractEventHandler) fermatEventHandler).setOpenContractRecorderService(this);
+            ((IncomingConfirmBusinessTransactionContractEventHandler) fermatEventHandler).setCloseContractRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
             fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
             fermatEventHandler = new IncomingConfirmBusinessTransactionResponseEventHandler();
-            ((IncomingConfirmBusinessTransactionResponseEventHandler) fermatEventHandler).setOpenContractRecorderService(this);
+            ((IncomingConfirmBusinessTransactionResponseEventHandler) fermatEventHandler).setCloseContractRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
@@ -105,7 +103,7 @@ public class CloseContractRecorderService implements CBPService {
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
             throw new CantStartServiceException(exception,"Starting the AssetDistributionRecorderService", "The AssetDistributionRecorderService is probably null");
-        }*/
+        }
 
     }
 
