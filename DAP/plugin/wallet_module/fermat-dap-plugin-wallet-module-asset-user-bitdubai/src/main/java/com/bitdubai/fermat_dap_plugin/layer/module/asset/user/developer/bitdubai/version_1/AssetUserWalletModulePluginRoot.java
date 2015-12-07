@@ -98,10 +98,10 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void redeemAssetToRedeemPoint(DigitalAssetMetadata digitalAssetMetadata, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantRedeemDigitalAssetException {
+    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantRedeemDigitalAssetException {
         try {
             ActorAssetRedeemPoint hardcodedActorAssetRedeemPoint = actorAssetRedeemPointManager.getAllRedeemPointActorConnected().get(0);
-            assetUserWalletModule.redeemAssetToRedeemPoint(digitalAssetMetadata, hardcodedActorAssetRedeemPoint);
+            assetUserWalletModule.redeemAssetToRedeemPoint(digitalAssetPublicKey, hardcodedActorAssetRedeemPoint);
         } catch (CantGetAssetRedeemPointActorsException e) {
             e.printStackTrace();
         }
@@ -109,10 +109,10 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void appropriateAsset(DigitalAsset digitalAsset, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
         try {
             com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet installedWallet = walletMiddlewareManager.getInstalledWallets().get(0);
-            assetUserWalletModule.appropriateAsset(digitalAsset, installedWallet.getWalletPublicKey());
+            assetUserWalletModule.appropriateAsset(digitalAssetPublicKey, installedWallet.getWalletPublicKey());
         } catch (CantListWalletsException e) {
             e.printStackTrace();
         }

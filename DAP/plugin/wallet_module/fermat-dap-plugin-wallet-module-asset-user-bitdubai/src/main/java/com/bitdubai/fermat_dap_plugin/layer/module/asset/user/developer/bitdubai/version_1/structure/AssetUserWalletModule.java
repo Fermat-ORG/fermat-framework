@@ -11,6 +11,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfa
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.util.List;
@@ -46,13 +47,14 @@ public class AssetUserWalletModule {
     }
 
 
-    public void redeemAssetToRedeemPoint(DigitalAssetMetadata digitalAssetMetadata, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantRedeemDigitalAssetException {
-
-        userRedemptionManager.redeemAssetToRedeemPoint(digitalAssetMetadata, actorAssetRedeemPoint, "PublicKey_Test");
+    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantRedeemDigitalAssetException {
+//        DigitalAssetMetadata digitalAssetMetadata = assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest").getDigitalAssetMetadata("digitalAssetPublicKey");
+//        userRedemptionManager.redeemAssetToRedeemPoint(digitalAssetMetadata, actorAssetRedeemPoint, "PublicKey_Test");
     }
 
 
-    public void appropriateAsset(DigitalAsset digitalAsset, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
-        assetAppropriationManager.appropriateAsset(digitalAsset, "PublicKey_Test", bitcoinWalletPublicKey);
+    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+//        DigitalAsset digitalAsset= assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest").getDigitalAsset("digitalAssetPublicKey");
+//        assetAppropriationManager.appropriateAsset(digitalAsset, "PublicKey_Test", bitcoinWalletPublicKey);
     }
 }

@@ -146,7 +146,7 @@ public class MainFragment extends FermatWalletFragment
             FermatWorker task = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-//                    manager.appropriateAsset();
+                    manager.appropriateAsset(asset.getAssetPublicKey(), null);
                     return true;
                 }
             };
@@ -178,7 +178,7 @@ public class MainFragment extends FermatWalletFragment
             FermatWorker task = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-//                    manager.redeemAsset();
+                    manager.redeemAssetToRedeemPoint(asset.getAssetPublicKey(), null);
                     return true;
                 }
             };
