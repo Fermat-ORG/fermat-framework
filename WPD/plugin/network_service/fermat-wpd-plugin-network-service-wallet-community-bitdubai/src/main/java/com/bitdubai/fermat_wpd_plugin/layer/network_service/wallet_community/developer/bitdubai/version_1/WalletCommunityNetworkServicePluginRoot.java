@@ -225,4 +225,34 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
     public boolean isRegister() {
         return false;
     }
+
+    @Override
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
+
+    }
+
+    @Override
+    public void initializeCommunicationNetworkServiceConnectionManager() {
+
+    }
+
+    @Override
+    public String getIdentityPublicKey() {
+        return null;
+    }
+
+    @Override
+    public String getAlias() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public String getExtraData() {
+        return null;
+    }
 }

@@ -22,6 +22,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
+import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -48,6 +49,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_a
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +109,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         } catch (CantGetCryptoWalletException e) {
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
@@ -234,11 +236,11 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
             try {
                 imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
             } catch (Exception e) {
-                imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), R.drawable.profile_image_standard));
+                Picasso.with(getActivity()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView_contact);
             }
             contactName.setText(cryptoWalletWalletContact.getActorName());
         }else{
-            imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(),R.drawable.profile_image_standard));
+            Picasso.with(getActivity()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView_contact);
         }
 
     }
@@ -413,4 +415,12 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         return contacts;
     }
 
+
+    @Override
+    public void onDestroy() {
+        contactsAdapter = null;
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY,0);
+        super.onDestroy();
+    }
 }

@@ -62,7 +62,6 @@ import static android.widget.Toast.makeText;
 
 public class ConnectionsWorldFragment extends FermatFragment implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
-        ActionBar.OnNavigationListener,
         AdapterView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
@@ -82,7 +81,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     private SearchView mSearchView;
 
     private AppListAdapter adapter;
-    private boolean isStartList;
+    private boolean isStartList=false;
 
 
     private ProgressDialog mDialog;
@@ -163,13 +162,12 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-
             onRefresh();
+
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
 
 
@@ -390,26 +388,6 @@ Updates the count of notifications in the ActionBar.
         }
 
         return true;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(int position, long idItem) {
-        try {
-            IntraUserLoginIdentity intraUserLoginIdentity = moduleManager.showAvailableLoginIdentities().get(position);
-            moduleManager.login(intraUserLoginIdentity.getPublicKey());
-            //TODO: para despues
-            //adapter.changeDataSet(intraUserModuleManager.getAllIntraUsers());
-
-            //mientras tanto testeo
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-
-            return true;
-        } catch (CantShowLoginIdentitiesException e) {
-            e.printStackTrace();
-        } catch (CantLoginIntraUserException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
 

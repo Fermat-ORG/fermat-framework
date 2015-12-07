@@ -6,11 +6,17 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.FermatEmbeddedNodeServer;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.JaxRsActivator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.servlets.HomeServlet;
 
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import javax.servlet.ServletException;
 
 import io.undertow.Handlers;
 import io.undertow.Undertow;
@@ -35,60 +41,59 @@ import io.undertow.util.Headers;
  */
 public class Test {
 
-    public static void main(String[] args) throws Exception {
-        Undertow server = Undertow.builder()
-                .addHttpListener(8080, "localhost")
-                .setHandler(Handlers.path()
-                                .addPrefixPath("/webapp", createStaticResourceHandler())
-                                .addPrefixPath("/api", new InternalRestHandler())
-                                .addPrefixPath("/serv", createServletHandler())
-                                .addPrefixPath("/fermat", createRestApiHandler())
-                ).build();
-        server.start();
-    }
+    public static void main(String [ ] args) throws IOException, ServletException {
 
-    private static HttpHandler createStaticResourceHandler() {
-        final ResourceManager staticResources = new ClassPathResourceManager(Test.class.getClassLoader(),"webapp");
-        final ResourceHandler resourceHandler = new ResourceHandler(staticResources);
-        resourceHandler.setWelcomeFiles("index.html");
-        return resourceHandler;
-    }
+        try {
 
-    private static class InternalRestHandler implements HttpHandler {
-        @Override
-        public void handleRequest(final HttpServerExchange exchange) throws Exception {
-            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-            exchange.getResponseSender().send("Hello World U");
+            System.out.println("***********************************************************************");
+            System.out.println("* FERMAT - Plugin Network Node - Version 1.0 (2015)                   *");
+            System.out.println("* www.fermat.org                                                      *");
+            System.out.println("* www.bitDubai.com                                                    *");
+            System.out.println("* NETWORK NODE STARTING                                               *");
+            System.out.println("***********************************************************************");
+
+            FermatEmbeddedNodeServer fermatEmbeddedNodeServer = new FermatEmbeddedNodeServer();
+            fermatEmbeddedNodeServer.start();
+
+            openUri();
+
+        }catch (Exception e){
+
+            System.out.println("***********************************************************************");
+            System.out.println("*FERMAT - ERROR NETWORK NODE                                          *");
+            System.out.println("***********************************************************************");
+            e.printStackTrace();
+            System.exit(1);
         }
+
+        System.out.println("Network node started satisfactory...");
     }
 
-    private static HttpHandler createServletHandler() throws Exception {
-        DeploymentInfo di = Servlets.deployment()
-                .setClassLoader(Test.class.getClassLoader())
-                .setContextPath("/serv")
-                .setDeploymentName("My Servlets")
-                .addServlets(
-                        Servlets.servlet("helloServlet", HomeServlet.class).addMapping("/home")
-                );
-        DeploymentManager manager = Servlets.defaultContainer().addDeployment(di);
-        manager.deploy();
-        HttpHandler servletHandler = manager.start();
-        return servletHandler;
-    }
+    /**
+     * Open the node uri on the browser
+     * @throws IOException
+     */
+    private static void openUri() throws IOException, URISyntaxException {
 
-    private static HttpHandler createRestApiHandler() throws Exception {
-        final UndertowJaxrsServer server = new UndertowJaxrsServer();
+        if( !java.awt.Desktop.isDesktopSupported() ) {
+            System.out.println("Desktop is not supported.");
+            System.out.println("Go To --> http://localhost:8080/");
+            return;
+        }
 
-        ResteasyDeployment deployment = new ResteasyDeployment();
-        deployment.setApplicationClass(JaxRsActivator.class.getName() );
-        DeploymentInfo di = server.undertowDeployment(deployment, "/rest/api/v1")
-                .setClassLoader(Test.class.getClassLoader())
-                .setContextPath("/fermat")
-                .setDeploymentName("My API");
-        DeploymentManager manager = Servlets.defaultContainer().addDeployment(di);
-        manager.deploy();
-        HttpHandler servletHandler = manager.start();
-        return servletHandler;
+        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+
+        if( !desktop.isSupported(java.awt.Desktop.Action.BROWSE) ) {
+            System.out.println("Desktop doesn't support the browse action.");
+            System.out.println("Go To --> http://localhost:8080/");
+            return;
+        }
+
+        System.out.println("Opening in the browser --> http://localhost:8080/");
+
+        java.net.URI uri = new java.net.URI("http://localhost:8080/");
+        desktop.browse( uri );
+
     }
 }
 

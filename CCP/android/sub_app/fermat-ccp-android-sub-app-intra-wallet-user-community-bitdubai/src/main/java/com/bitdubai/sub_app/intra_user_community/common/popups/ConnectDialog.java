@@ -8,6 +8,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -26,14 +27,14 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  */
 
 @SuppressWarnings("FieldCanBeLocal")
-public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesProviderManager> implements
+public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
     /**
-     *  UI components
+     * UI components
      */
-    FermatTextView positiveBtn;
-    FermatTextView negativeBtn;
+    FermatButton positiveBtn;
+    FermatButton negativeBtn;
     FermatTextView description;
     FermatTextView username;
 
@@ -42,7 +43,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
     IntraUserLoginIdentity identity;
 
 
-    public ConnectDialog(Activity a,IntraUserSubAppSession intraUserSubAppSession,SubAppResourcesProviderManager subAppResources,IntraUserInformation intraUserInformation,IntraUserLoginIdentity identity) {
+    public ConnectDialog(Activity a, IntraUserSubAppSession intraUserSubAppSession, SubAppResourcesProviderManager subAppResources, IntraUserInformation intraUserInformation, IntraUserLoginIdentity identity) {
         super(a, intraUserSubAppSession, subAppResources);
         this.intraUserInformation = intraUserInformation;
         this.identity = identity;
@@ -57,17 +58,15 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
         description = (FermatTextView) findViewById(R.id.description);
         username = (FermatTextView) findViewById(R.id.user_name);
 
-        positiveBtn = (FermatTextView) findViewById(R.id.positive_button);
-        negativeBtn = (FermatTextView) findViewById(R.id.negative_button);
+        positiveBtn = (FermatButton) findViewById(R.id.positive_button);
+        negativeBtn = (FermatButton) findViewById(R.id.negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
-
         description.setText("Want connect with ");
-        //username.setText(intraUserInformation.getName());
+        username.setText(intraUserInformation.getName());
 
     }
-
 
 
     @Override
@@ -87,14 +86,15 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
         if (i == R.id.positive_button) {
             try {
                 //image null
-                if(intraUserInformation!=null && identity!=null)
-                ((IntraUserSubAppSession)getSession()).getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(),identity.getPublicKey(),identity.getAlias());
-                else {
-                    Toast.makeText(getContext(), "Oooops! recovering from system error - " , Toast.LENGTH_SHORT).show();
+                if (intraUserInformation != null && identity != null) {
+                    ((IntraUserSubAppSession) getSession()).getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage(), identity.getPublicKey(), identity.getAlias());
+                    Toast.makeText(getContext(), "Conected", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (CantStartRequestException e) {
-                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
+                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 Toast.makeText(getContext(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
             dismiss();
@@ -102,12 +102,6 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
             dismiss();
         }
     }
-
-
-
-
-
-
 
 
 }

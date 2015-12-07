@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.bitdubai.desktop.sub_app_manager.util.CbpSubAppListGenerator;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 
 
 import java.io.Serializable;
